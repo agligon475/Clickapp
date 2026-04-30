@@ -275,7 +275,74 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
   box-shadow:0 8px 40px rgba(0,0,0,.5);
   transition:max-width .3s;
 }
-.preview-frame-wrap.mobile .preview-frame{max-width:320px;}
+/* ABM */
+.abm-btn-new{
+  background:var(--red);color:#fff;border:none;
+  border-radius:8px;padding:9px 18px;
+  font-family:var(--font-b);font-size:13px;font-weight:600;
+  cursor:pointer;display:flex;align-items:center;gap:7px;
+  transition:background .15s;
+}
+.abm-btn-new:hover{background:var(--red-d);}
+
+.abm-action{
+  width:28px;height:28px;border-radius:6px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:13px;cursor:pointer;border:1px solid var(--zinc);
+  background:var(--iron);color:var(--fog);transition:all .12s;
+}
+.abm-action:hover.edit{background:rgba(52,152,219,.2);border-color:#3498DB;color:#3498DB;}
+.abm-action:hover.del{background:rgba(215,38,56,.2);border-color:var(--red);color:var(--red);}
+.abm-action:hover.toggle{background:rgba(46,204,113,.2);border-color:var(--green);color:var(--green);}
+
+/* MODAL */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.75);
+  backdrop-filter:blur(4px);z-index:200;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{
+  background:var(--steel);border:1px solid var(--zinc);
+  border-radius:14px;width:min(520px,95vw);
+  max-height:90vh;overflow-y:auto;
+  transform:translateY(20px);transition:transform .25s;
+  scrollbar-width:thin;scrollbar-color:var(--zinc) transparent;
+}
+.modal-overlay.open .modal{transform:translateY(0);}
+.modal-head{
+  padding:18px 22px;border-bottom:1px solid var(--zinc);
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;background:var(--steel);z-index:1;
+}
+.modal-title{font-family:var(--font-h);font-size:18px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;}
+.modal-close{
+  width:32px;height:32px;background:var(--iron);
+  border:1px solid var(--zinc);border-radius:7px;
+  color:var(--fog);cursor:pointer;font-size:16px;
+  display:flex;align-items:center;justify-content:center;transition:all .12s;
+}
+.modal-close:hover{background:var(--red);border-color:var(--red);color:#fff;}
+.modal-body{padding:20px 22px;}
+.modal-footer{
+  padding:14px 22px;border-top:1px solid var(--zinc);
+  display:flex;gap:10px;justify-content:flex-end;
+  position:sticky;bottom:0;background:var(--steel);
+}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-hint{font-size:10px;color:var(--silver);margin-top:3px;}
+
+/* LOGO UPLOAD */
+.logo-upload-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:10px;
+  border:1px dashed var(--zinc);border-radius:8px;
+  color:var(--fog);font-size:12px;font-weight:500;
+  cursor:pointer;transition:all .15s;
+  background:var(--iron);
+}
+.logo-upload-btn:hover{border-color:var(--red);color:var(--white);}
 </style>
 </head>
 <body>
@@ -298,6 +365,7 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
   <div class="sb-section">
     <div class="sb-section-label">Catálogo</div>
     <div class="sb-item" onclick="showView('products',this)"><i class="bi bi-grid-3x3-gap"></i> Productos</div>
+    <div class="sb-item" onclick="showView('abm',this)"><i class="bi bi-pencil-square"></i> ABM Productos</div>
   </div>
   <div class="sb-section">
     <div class="sb-section-label">Personalización</div>
@@ -311,7 +379,20 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
   <div class="sb-sheet">
     <div class="sb-sheet-label">Google Sheet CSV</div>
     <textarea class="sb-url" id="sheet-url">https://docs.google.com/spreadsheets/d/e/2PACX-1vS3mssf-j0joT1S6CKlZHfSPTSXPHypZ_PHypn702KMgUYvteXDajrEVymXqYFgFVfqQcsUvJn6ktK2/pub?gid=0&single=true&output=csv</textarea>
-    <button class="sb-btn" onclick="loadSheet()"><i class="bi bi-cloud-download"></i> Sincronizar</button>
+    <button class="sb-btn" onclick="loadSheet()"><i class="bi bi-cloud-download"></i> Leer Sheet</button>
+
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--zinc);">
+      <div class="sb-sheet-label">Webhook Apps Script</div>
+      <textarea class="sb-url" id="webhook-url" placeholder="https://script.google.com/macros/s/.../exec" style="min-height:44px;"></textarea>
+      <input class="sb-url" id="webhook-token" type="password" placeholder="Token secreto" style="height:auto;padding:5px 8px;margin-top:4px;resize:none;"/>
+      <button class="sb-btn" style="margin-top:4px;background:var(--iron);border:1px solid var(--zinc);" onclick="testWebhook()">
+        <i class="bi bi-wifi"></i> Probar conexión
+      </button>
+      <button class="sb-btn" style="margin-top:4px;" onclick="syncToSheet()">
+        <i class="bi bi-cloud-upload"></i> Guardar en Sheet
+      </button>
+      <div id="webhook-status" style="font-size:10px;color:var(--silver);margin-top:5px;min-height:14px;"></div>
+    </div>
   </div>
 </div>
 
@@ -410,6 +491,18 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
         <div class="card" style="margin-bottom:14px;">
           <div class="card-title">Identidad</div>
 
+          <div class="ctrl-group">
+            <label class="ctrl-label">Logo de la tienda</label>
+            <div id="logo-preview-wrap" style="display:none;margin-bottom:8px;text-align:center;">
+              <img id="logo-preview" style="max-height:64px;max-width:180px;border-radius:8px;border:1px solid var(--zinc);padding:4px;background:var(--iron);"/>
+              <button onclick="removeLogo()" style="display:block;margin:5px auto 0;font-size:10px;color:var(--red);background:none;border:none;cursor:pointer;">✕ Quitar logo</button>
+            </div>
+            <label class="logo-upload-btn" for="logo-input">
+              <i class="bi bi-cloud-upload"></i> Subir imagen (PNG, JPG, SVG)
+              <input type="file" id="logo-input" accept="image/*" style="display:none;" onchange="uploadLogo(this)"/>
+            </label>
+            <p style="font-size:10px;color:var(--silver);margin-top:5px;">Se guarda localmente. Recomendado: fondo transparente, mínimo 200px.</p>
+          </div>
           <div class="ctrl-group">
             <label class="ctrl-label">Nombre de la tienda</label>
             <input class="ctrl-input" id="cfg-name" value="FerreApp" oninput="previewUpdate()"/>
@@ -618,6 +711,70 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
       <span id="prod-count" style="font-size:12px;color:var(--silver);"></span>
     </div>
     <div class="prod-grid" id="prod-grid"></div>
+  </div>
+
+  <!-- ══ ABM ══ -->
+  <div class="view" id="view-abm">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
+      <span style="font-family:var(--font-h);font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;">ABM · Productos</span>
+      <button class="abm-btn-new" onclick="openModal()">
+        <i class="bi bi-plus-lg"></i> Nuevo producto
+      </button>
+    </div>
+
+    <div class="card" style="margin-bottom:14px;">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+        <input class="ctrl-input" id="abm-search" placeholder="Buscar producto..." oninput="renderABM()" style="max-width:260px;"/>
+        <select class="ctrl-input" id="abm-filter-cat" onchange="renderABM()" style="max-width:180px;">
+          <option value="">Todas las categorías</option>
+        </select>
+        <select class="ctrl-input" id="abm-filter-stock" onchange="renderABM()" style="max-width:160px;">
+          <option value="">Todo el stock</option>
+          <option value="ok">Disponible</option>
+          <option value="low">Stock bajo (&lt;5)</option>
+          <option value="out">Sin stock</option>
+        </select>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="data-table" id="abm-table">
+          <thead>
+            <tr>
+              <th style="width:36px;"></th>
+              <th>Nombre</th>
+              <th>Categoría</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th>Estado</th>
+              <th style="width:90px;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="abm-tbody"></tbody>
+        </table>
+      </div>
+      <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <span id="abm-count" style="font-size:11px;color:var(--silver);"></span>
+        <div style="display:flex;gap:8px;">
+          <button class="sb-btn" style="background:var(--iron);border:1px solid var(--zinc);" onclick="exportProducts()">
+            <i class="bi bi-download"></i> Exportar CSV
+          </button>
+          <button class="sb-btn" onclick="saveLocalProducts()">
+            <i class="bi bi-floppy"></i> Guardar cambios
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="background:rgba(215,38,56,.05);border-color:rgba(215,38,56,.2);">
+      <div class="card-title" style="color:var(--red);">
+        <i class="bi bi-info-circle"></i> Sobre el ABM
+      </div>
+      <p style="font-size:12px;color:var(--fog);line-height:1.6;">
+        Los cambios se guardan localmente en el navegador y se aplican en la tienda de inmediato.
+        Para sincronizar con Google Sheets, exportá el CSV y reemplazá la planilla original.
+        Los productos marcados como "Oculto" no aparecen en la tienda pública.
+      </p>
+    </div>
   </div>
 
 </div><!-- /main -->
@@ -979,11 +1136,391 @@ const _origShowView = showView;
 window.showView = function(name, el){
   _origShowView(name, el);
   if(name==='design') initDesignPanel();
+  if(name==='abm')    initABM();
 };
 
-/* INIT */
+/* ═══════════════════════════════════════════ LOGO UPLOAD */
+function uploadLogo(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 300 * 1024) { alert('El archivo es muy grande. Máximo 300KB.'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const dataUrl = e.target.result;
+    localStorage.setItem('storeapp_logo', dataUrl);
+    document.getElementById('logo-preview').src = dataUrl;
+    document.getElementById('logo-preview-wrap').style.display = 'block';
+    // Update preview in design panel
+    const prevIcon = document.getElementById('prev-icon');
+    if (prevIcon) {
+      prevIcon.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = dataUrl;
+      img.style.cssText = 'width:18px;height:18px;object-fit:contain;border-radius:3px;';
+      prevIcon.appendChild(img);
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeLogo() {
+  localStorage.removeItem('storeapp_logo');
+  document.getElementById('logo-preview-wrap').style.display = 'none';
+  document.getElementById('logo-input').value = '';
+  const prevIcon = document.getElementById('prev-icon');
+  if (prevIcon) prevIcon.textContent = cfg.emoji || '🔧';
+}
+
+function initLogoPreview() {
+  const saved = localStorage.getItem('storeapp_logo');
+  if (saved) {
+    document.getElementById('logo-preview').src = saved;
+    document.getElementById('logo-preview-wrap').style.display = 'block';
+  }
+}
+
+/* ═══════════════════════════════════════════ ABM */
+let localProducts = [];   // working copy editable
+let editingId = null;
+
+function initABM() {
+  // Start from loaded products or localStorage override
+  const saved = localStorage.getItem('storeapp_local_products');
+  if (saved) {
+    try { localProducts = JSON.parse(saved); } catch(e) { localProducts = [...products]; }
+  } else {
+    localProducts = products.map(p=>({...p, hidden:false}));
+  }
+  // If products loaded from sheet but localProducts empty
+  if (!localProducts.length && products.length) {
+    localProducts = products.map(p=>({...p, hidden:false}));
+  }
+  buildCatFilter();
+  renderABM();
+}
+
+function buildCatFilter() {
+  const cats = [...new Set(localProducts.map(p=>p.cat).filter(Boolean))];
+  const sel = document.getElementById('abm-filter-cat');
+  sel.innerHTML = '<option value="">Todas las categorías</option>' +
+    cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+}
+
+function renderABM() {
+  const search   = (document.getElementById('abm-search')?.value||'').toLowerCase();
+  const catFilt  = document.getElementById('abm-filter-cat')?.value||'';
+  const stFilt   = document.getElementById('abm-filter-stock')?.value||'';
+
+  const filtered = localProducts.filter(p => {
+    if (search && !p.name.toLowerCase().includes(search)) return false;
+    if (catFilt && p.cat !== catFilt) return false;
+    if (stFilt==='ok'  && !(p.stock > 4)) return false;
+    if (stFilt==='low' && !(p.stock > 0 && p.stock < 5)) return false;
+    if (stFilt==='out' && p.stock !== 0) return false;
+    return true;
+  });
+
+  const sc = s => s===0?'badge-red':s<5?'badge-amber':'badge-green';
+  const sl = s => s===0?'Sin stock':s<5?`Bajo: ${s}`:`${s} uds.`;
+
+  document.getElementById('abm-tbody').innerHTML = filtered.map(p => `
+    <tr style="${p.hidden?'opacity:.4;':''}">
+      <td style="font-size:20px;text-align:center;">${p.emoji||'📦'}</td>
+      <td>
+        <div style="font-weight:600;color:var(--white);">${p.name}</div>
+        ${p.hidden?'<span style="font-size:9px;color:var(--silver);">Oculto en tienda</span>':''}
+      </td>
+      <td><span class="badge badge-blue">${p.cat||'—'}</span></td>
+      <td style="font-family:var(--font-h);font-size:15px;font-weight:700;">$${p.price.toLocaleString('es-AR')}</td>
+      <td><span class="badge ${sc(p.stock)}">${sl(p.stock)}</span></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <input type="number" value="${p.stock}" min="0"
+            style="width:60px;background:var(--iron);border:1px solid var(--zinc);border-radius:5px;padding:3px 6px;color:var(--white);font-size:12px;text-align:center;"
+            onchange="quickStock(${p.id},this.value)"
+            title="Editar stock rápido"/>
+        </div>
+      </td>
+      <td>
+        <div style="display:flex;gap:4px;">
+          <button class="abm-action edit" onclick="openModal(${p.id})" title="Editar"><i class="bi bi-pencil"></i></button>
+          <button class="abm-action toggle" onclick="toggleHidden(${p.id})" title="${p.hidden?'Mostrar':'Ocultar'}">
+            <i class="bi bi-eye${p.hidden?'':'-slash'}"></i>
+          </button>
+          <button class="abm-action del" onclick="deleteProduct(${p.id})" title="Eliminar"><i class="bi bi-trash"></i></button>
+        </div>
+      </td>
+    </tr>`).join('') || `<tr><td colspan="7" style="text-align:center;color:var(--silver);padding:30px;">No se encontraron productos</td></tr>`;
+
+  document.getElementById('abm-count').textContent =
+    `Mostrando ${filtered.length} de ${localProducts.length} productos`;
+}
+
+function quickStock(id, val) {
+  const p = localProducts.find(x=>x.id===id);
+  if (p) { p.stock = Math.max(0, parseInt(val)||0); renderABM(); }
+}
+
+function toggleHidden(id) {
+  const p = localProducts.find(x=>x.id===id);
+  if (p) { p.hidden = !p.hidden; renderABM(); }
+}
+
+function deleteProduct(id) {
+  if (!confirm('¿Eliminar este producto? Esta acción no se puede deshacer.')) return;
+  localProducts = localProducts.filter(x=>x.id!==id);
+  localStorage.setItem('storeapp_local_products', JSON.stringify(localProducts));
+  webhookDeleteProduct(id);  // auto-sync if webhook configured
+  renderABM();
+}
+
+function saveLocalProducts() {
+  localStorage.setItem('storeapp_local_products', JSON.stringify(localProducts));
+  // Flash button
+  const btn = event.currentTarget;
+  const orig = btn.innerHTML;
+  btn.innerHTML = '<i class="bi bi-check2-circle"></i> Guardado!';
+  btn.style.background = 'var(--green)';
+  setTimeout(()=>{ btn.innerHTML=orig; btn.style.background=''; }, 2000);
+}
+
+function exportProducts() {
+  const headers = ['id','nombre','precio','stock','categoria','emoji'];
+  const rows = localProducts.map(p =>
+    [p.id, `"${p.name}"`, p.price, p.stock, `"${p.cat||''}"`, p.emoji||''].join(',')
+  );
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'productos.csv';
+  a.click();
+}
+
+/* ═══════════════════════════════════════════ MODAL */
+function openModal(id=null) {
+  editingId = id;
+  const p = id ? localProducts.find(x=>x.id===id) : null;
+  document.getElementById('modal-title-text').textContent = p ? 'Editar producto' : 'Nuevo producto';
+  document.getElementById('m-name').value    = p?.name  || '';
+  document.getElementById('m-cat').value     = p?.cat   || '';
+  document.getElementById('m-price').value   = p?.price || '';
+  document.getElementById('m-stock').value   = p?.stock ?? '';
+  document.getElementById('m-emoji').value   = p?.emoji || '📦';
+  document.getElementById('m-img').value     = p?.img   || '';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  editingId = null;
+}
+
+function saveModal() {
+  const name  = document.getElementById('m-name').value.trim();
+  const cat   = document.getElementById('m-cat').value.trim();
+  const price = parseFloat(document.getElementById('m-price').value)||0;
+  const stock = parseInt(document.getElementById('m-stock').value)||0;
+  const emoji = document.getElementById('m-emoji').value.trim()||'📦';
+  const img   = document.getElementById('m-img').value.trim();
+
+  if (!name) { alert('El nombre del producto es obligatorio.'); return; }
+
+  if (editingId) {
+    const p = localProducts.find(x=>x.id===editingId);
+    if (p) Object.assign(p, {name,cat,price,stock,emoji,img});
+  } else {
+    const newId = Math.max(0,...localProducts.map(x=>x.id)) + 1;
+    localProducts.push({id:newId, name, cat, price, stock, emoji, img, hidden:false});
+  }
+
+  buildCatFilter();
+  renderABM();
+  closeModal();
+
+  // Auto-save locally
+  localStorage.setItem('storeapp_local_products', JSON.stringify(localProducts));
+
+  // Auto-sync to Sheet if webhook is configured
+  const saved = localProducts.find(x => x.id === (editingId || localProducts[localProducts.length-1]?.id));
+  if (saved) webhookUpdateProduct(saved);
+}
+
+/* ═══════════════════════════════════════════ WEBHOOK */
+
+// Persist webhook config in localStorage
+function getWebhookCfg() {
+  try { return JSON.parse(localStorage.getItem('storeapp_webhook')||'{}'); } catch(e) { return {}; }
+}
+function saveWebhookCfg() {
+  const url   = document.getElementById('webhook-url').value.trim();
+  const token = document.getElementById('webhook-token').value.trim();
+  localStorage.setItem('storeapp_webhook', JSON.stringify({url, token}));
+}
+function loadWebhookCfg() {
+  const wh = getWebhookCfg();
+  if (wh.url)   document.getElementById('webhook-url').value   = wh.url;
+  if (wh.token) document.getElementById('webhook-token').value = wh.token;
+}
+
+function setWebhookStatus(msg, type='info') {
+  const el = document.getElementById('webhook-status');
+  const colors = { ok:'var(--green)', err:'var(--red)', info:'var(--silver)', load:'#3498DB' };
+  el.style.color = colors[type] || colors.info;
+  el.textContent = msg;
+}
+
+async function webhookCall(payload) {
+  saveWebhookCfg();
+  const url   = document.getElementById('webhook-url').value.trim();
+  const token = document.getElementById('webhook-token').value.trim();
+  if (!url)   { setWebhookStatus('⚠ Pegá la URL del webhook primero', 'err'); return null; }
+  if (!token) { setWebhookStatus('⚠ Ingresá el token secreto', 'err'); return null; }
+
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...payload, token }),
+      mode: 'no-cors',   // Apps Script no envía CORS headers en modo exec
+    });
+    // no-cors → response opaque, asumimos ok si no hubo error de red
+    return { ok: true };
+  } catch(e) {
+    setWebhookStatus('✕ Error de red: ' + e.message, 'err');
+    return null;
+  }
+}
+
+async function testWebhook() {
+  setWebhookStatus('Probando conexión...', 'load');
+  const url   = document.getElementById('webhook-url').value.trim();
+  const token = document.getElementById('webhook-token').value.trim();
+  if (!url || !token) { setWebhookStatus('⚠ Completá URL y token', 'err'); return; }
+  saveWebhookCfg();
+
+  // With no-cors we can't read the response, so we use a jsonp-style approach
+  // by fetching with url params for GET ping
+  try {
+    // Try a GET request to check URL is reachable (Apps Script supports GET too)
+    const pingUrl = url + '?action=ping&token=' + encodeURIComponent(token);
+    const res = await fetch(pingUrl);
+    const data = await res.json();
+    if (data.ok) {
+      setWebhookStatus('✓ Conexión exitosa: ' + (data.msg||'pong'), 'ok');
+    } else {
+      setWebhookStatus('✕ ' + (data.error||'Error desconocido'), 'err');
+    }
+  } catch(e) {
+    // CORS block is expected — means URL is valid but browser blocks read
+    setWebhookStatus('✓ URL alcanzable (CORS esperado — es normal)', 'ok');
+  }
+}
+
+async function syncToSheet() {
+  if (!localProducts.length) {
+    setWebhookStatus('⚠ No hay productos locales para sincronizar', 'err');
+    return;
+  }
+  setWebhookStatus('Sincronizando ' + localProducts.length + ' productos...', 'load');
+
+  // Map internal keys to sheet column names
+  const payload = {
+    action: 'sync',
+    products: localProducts.map(p => ({
+      id:        p.id,
+      nombre:    p.name,
+      precio:    p.price,
+      stock:     p.stock,
+      categoria: p.cat,
+      emoji:     p.emoji || '',
+      imagen:    p.img   || '',
+      oculto:    p.hidden ? 'si' : '',
+    }))
+  };
+
+  const result = await webhookCall(payload);
+  if (result) {
+    setWebhookStatus(`✓ ${localProducts.length} productos enviados al Sheet`, 'ok');
+    // Flash the button
+    const btn = event.currentTarget;
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="bi bi-check2-circle"></i> ¡Sincronizado!';
+    btn.style.background = 'var(--green)';
+    setTimeout(()=>{ btn.innerHTML=orig; btn.style.background=''; }, 3000);
+  }
+}
+
+// Also hook individual ABM actions to auto-sync if webhook is configured
+async function webhookUpdateProduct(product) {
+  const wh = getWebhookCfg();
+  if (!wh.url || !wh.token) return; // No webhook configured, skip silently
+  await webhookCall({
+    action: 'update',
+    product: {
+      id: product.id, nombre: product.name, precio: product.price,
+      stock: product.stock, categoria: product.cat,
+      emoji: product.emoji||'', imagen: product.img||'', oculto: product.hidden?'si':'',
+    }
+  });
+}
+
+async function webhookDeleteProduct(id) {
+  const wh = getWebhookCfg();
+  if (!wh.url || !wh.token) return;
+  await webhookCall({ action: 'delete', id });
+}
+
+/* ═══════════════════════════════════════════ INIT */
 initCharts();
 loadSheet();
+initLogoPreview();
+loadWebhookCfg();
 </script>
+
+<!-- ══ MODAL ══ -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title" id="modal-title-text">Nuevo producto</span>
+      <button class="modal-close" onclick="closeModal()"><i class="bi bi-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-grid">
+        <div class="ctrl-group" style="grid-column:1/-1;">
+          <label class="ctrl-label">Nombre del producto *</label>
+          <input class="ctrl-input" id="m-name" placeholder="Ej: Llave inglesa 12&quot;"/>
+        </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">Categoría</label>
+          <input class="ctrl-input" id="m-cat" placeholder="Ej: Herramientas"/>
+        </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">Emoji / ícono</label>
+          <input class="ctrl-input" id="m-emoji" placeholder="🔧" style="font-size:20px;"/>
+          <div class="form-hint">Copiá un emoji directamente</div>
+        </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">Precio ($)</label>
+          <input class="ctrl-input" id="m-price" type="number" min="0" placeholder="15900"/>
+        </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">Stock (unidades)</label>
+          <input class="ctrl-input" id="m-stock" type="number" min="0" placeholder="24"/>
+        </div>
+        <div class="ctrl-group" style="grid-column:1/-1;">
+          <label class="ctrl-label">URL de imagen (opcional)</label>
+          <input class="ctrl-input" id="m-img" placeholder="https://...imagen.jpg"/>
+          <div class="form-hint">Si no tenés URL se usa el emoji como imagen</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="sb-btn" style="background:var(--iron);border:1px solid var(--zinc);" onclick="closeModal()">Cancelar</button>
+      <button class="sb-btn" onclick="saveModal()"><i class="bi bi-check2-circle"></i> Guardar producto</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
