@@ -710,14 +710,142 @@ body::before{
 
 <script>
 /* ═══════════════════════════════════════════ CONFIG */
-const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS3mssf-j0joT1S6CKlZHfSPTSXPHypZ_PHypn702KMgUYvteXDajrEVymXqYFgFVfqQcsUvJn6ktK2/pub?gid=0&single=true&output=csv';
-const WHATSAPP_NUMBER = '5491141819344'; // ← reemplazá con el número real
+const SHEET_URL_DEFAULT = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS3mssf-j0joT1S6CKlZHfSPTSXPHypZ_PHypn702KMgUYvteXDajrEVymXqYFgFVfqQcsUvJn6ktK2/pub?gid=0&single=true&output=csv';
+
+// Load config saved by dashboard
+const CFG_DEFAULTS = {
+  name:'FerreApp', tagline:'Tu ferretería digital',
+  emoji:'🔧', color:'#D72638', theme:'dark',
+  font:'Barlow Condensed', fontBody:'Barlow',
+  h1:'Tu ferretería', h2:'sin filas.',
+  desc:'Elegí tus productos, armá tu pedido y coordiná por WhatsApp. Fácil, rápido y sin vueltas.',
+  wapp:'5491141819344', sheetUrl:'', logo:'',
+};
+let CFG = {...CFG_DEFAULTS};
+try {
+  const saved = localStorage.getItem('storeapp_cfg');
+  if (saved) CFG = {...CFG_DEFAULTS, ...JSON.parse(saved)};
+} catch(e) {}
+
+const SHEET_URL       = CFG.sheetUrl || SHEET_URL_DEFAULT;
+let   WHATSAPP_NUMBER = CFG.wapp     || '5491141819344';
+
+function hexToRgba(hex, a=1){
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+function lighten(hex,pct=90){
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  const mix=(c)=>Math.round(c+(255-c)*pct/100);
+  return '#'+[mix(r),mix(g),mix(b)].map(v=>v.toString(16).padStart(2,'0')).join('');
+}
+
+function applyConfig() {
+  const c   = CFG.color   || '#D72638';
+  const th  = CFG.theme   || 'dark';
+  const fH  = CFG.font    || 'Barlow Condensed';
+  const fB  = CFG.fontBody|| 'Barlow';
+
+  // Inject Google Font if non-default
+  const fontsNeeded = {
+    'Playfair Display': 'Playfair+Display:wght@700;800',
+    'Space Grotesk':    'Space+Grotesk:wght@600;700',
+    'Oswald':           'Oswald:wght@600;700',
+  };
+  if (fontsNeeded[fH]) {
+    const link = document.createElement('link');
+    link.rel='stylesheet';
+    link.href=`https://fonts.googleapis.com/css2?family=${fontsNeeded[fH]}&display=swap`;
+    document.head.appendChild(link);
+  }
+
+  // Build theme tokens
+  const themes = {
+    dark:  { bg:'#0E0E0E', body:'#1C1C1E', border:'#3E3E42', text:'#F5F5F0', muted:'#8A8A90', fog:'#C8C8CC', navBg:'rgba(14,14,14,.92)' },
+    light: { bg:'#F2F2EE', body:'#FFFFFF', border:'#E0E0DC', text:'#0E0E0E', muted:'#6A6A70', fog:'#8A8A8A', navBg:'rgba(242,242,238,.95)' },
+    brand: { bg:c,         body:hexToRgba(c,.15), border:hexToRgba(c,.3), text:'#FFFFFF', muted:'rgba(255,255,255,.7)', fog:'rgba(255,255,255,.5)', navBg:hexToRgba(c,.95) },
+  };
+  const T = themes[th] || themes.dark;
+  const glow = hexToRgba(c,.15);
+  const cDark = c; // darken is complex, reuse same
+
+  // Set CSS vars on :root
+  const root = document.documentElement;
+  root.style.setProperty('--red',        c);
+  root.style.setProperty('--red-dark',   c);
+  root.style.setProperty('--red-glow',   glow);
+  root.style.setProperty('--black',      T.bg);
+  root.style.setProperty('--steel',      T.body);
+  root.style.setProperty('--iron',       th==='light'?'#EBEBEB':th==='brand'?hexToRgba(c,.2):'#2A2A2D');
+  root.style.setProperty('--zinc',       T.border);
+  root.style.setProperty('--silver',     T.muted);
+  root.style.setProperty('--fog',        T.fog);
+  root.style.setProperty('--white',      T.text);
+  root.style.setProperty('--font-head',  `'${fH}', sans-serif`);
+  root.style.setProperty('--font-body',  `'${fB}', sans-serif`);
+
+  // Topbar bg
+  const topbar = document.querySelector('.topbar');
+  if (topbar) topbar.style.background = T.navBg;
+
+  // Body bg
+  document.body.style.background = T.bg;
+  document.body.style.color = T.text;
+
+  // Logo
+  const logoIcon = document.getElementById('logo-icon');
+  const logoImg  = document.getElementById('logo-img');
+  const logoText = document.getElementById('logo-text');
+  if (CFG.logo) {
+    logoImg.src = CFG.logo;
+    logoImg.style.display = 'block';
+    logoIcon.style.display = 'none';
+  } else {
+    logoIcon.textContent = CFG.emoji || '🔧';
+    logoIcon.style.display = 'flex';
+    logoImg.style.display = 'none';
+  }
+  if (logoText) logoText.textContent = CFG.name || 'Mi Tienda';
+
+  // Tagline
+  const tl = document.getElementById('tagline');
+  if (tl) tl.textContent = CFG.tagline || '';
+
+  // Hero
+  const h1 = document.getElementById('hero-h1');
+  const h2 = document.getElementById('hero-h2');
+  const hd = document.getElementById('hero-desc');
+  if (h1) { const parts = (CFG.h1||'').split('|'); h1.innerHTML = parts[0]+(parts[1]?`<br/>${parts[1]}`:''); }
+  if (h2) h2.textContent = CFG.h2 || '';
+  if (hd) hd.textContent = CFG.desc || '';
+
+  // Page title
+  document.title = (CFG.name||'Mi Tienda') + ' — ' + (CFG.tagline||'Tu tienda online');
+
+  // Footer name
+  const fn = document.getElementById('footer-name');
+  if (fn) fn.textContent = CFG.name || 'Mi Tienda';
+
+  WHATSAPP_NUMBER = CFG.wapp || WHATSAPP_NUMBER;
+}
 
 /* ═══════════════════════════════════════════ STATE */
 let products = [];
 let cart     = {};
 let activeCat = 'all';
 let searchTerm = '';
+
+// Override products from localStorage ABM if present
+function loadLocalProducts() {
+  try {
+    const local = localStorage.getItem('storeapp_products');
+    if (local) {
+      const parsed = JSON.parse(local);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch(e) {}
+  return null;
+}
 
 /* ═══════════════════════════════════════════ CSV PARSER */
 function parseCSV(text) {
@@ -779,6 +907,17 @@ async function loadSheet() {
         emoji: E>-1 && r[E] ? r[E] : guessEmoji(r[N>-1?N:0]||'', C>-1?r[C]||'':''),
         img:   I>-1 ? r[I] : '',
       }));
+
+    // ── Override with ABM edits from dashboard if present ──
+    const localOverride = localStorage.getItem('storeapp_local_products');
+    if (localOverride) {
+      try {
+        const lp = JSON.parse(localOverride);
+        if (lp.length) {
+          products = lp.filter(p => !p.hidden);
+        }
+      } catch(e) {}
+    }
 
     // Build category rail
     const cats = [...new Set(products.map(p=>p.cat).filter(Boolean))];
@@ -993,6 +1132,82 @@ function showToast(msg) {
 }
 
 /* ═══════════════════════════════════════════ INIT */
+// ── Apply config saved from dashboard ──────────────
+function applyStoredConfig() {
+  let cfg = {};
+  try { cfg = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}'); } catch(e) {}
+
+  const accent = cfg.color || '#D72638';
+  const theme  = cfg.theme || 'dark';
+
+  const hex2rgb = h => { const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16); return `${r},${g},${b}`; };
+  const darken  = (h,p=20) => { let r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16); const f=1-p/100; return '#'+[r,g,b].map(v=>Math.max(0,Math.round(v*f)).toString(16).padStart(2,'0')).join(''); };
+
+  const themes = {
+    dark:  { bg:'#0E0E0E', steel:'#1C1C1E', iron:'#2A2A2D', zinc:'#3E3E42', text:'#F5F5F0', muted:'#8A8A90', fog:'#C8C8CC' },
+    light: { bg:'#F5F5F0', steel:'#EBEBEB', iron:'#E0E0E0', zinc:'#CACACA', text:'#0E0E0E', muted:'#6A6A70', fog:'#4A4A50' },
+    brand: { bg:accent,   steel:darken(accent,15), iron:darken(accent,25), zinc:darken(accent,35), text:'#fff', muted:'rgba(255,255,255,.7)', fog:'rgba(255,255,255,.9)' },
+  };
+  const t = themes[theme] || themes.dark;
+
+  const root = document.documentElement.style;
+  root.setProperty('--red',       accent);
+  root.setProperty('--red-dark',  darken(accent,20));
+  root.setProperty('--red-glow',  `rgba(${hex2rgb(accent)},.15)`);
+  root.setProperty('--black',     t.bg);
+  root.setProperty('--steel',     t.steel);
+  root.setProperty('--iron',      t.iron);
+  root.setProperty('--zinc',      t.zinc);
+  root.setProperty('--white',     t.text);
+  root.setProperty('--silver',    t.muted);
+  root.setProperty('--fog',       t.fog);
+
+  if (cfg.font) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = `https://fonts.googleapis.com/css2?family=${cfg.font.replace(/ /g,'+')}:wght@400;600;700;800&display=swap`;
+    document.head.appendChild(link);
+    root.setProperty('--font-head', `'${cfg.font}', sans-serif`);
+  }
+  if (cfg.fontBody) root.setProperty('--font-body', `'${cfg.fontBody}', sans-serif`);
+
+  // Logo image takes priority over emoji
+  const logoImg = localStorage.getItem('storeapp_logo');
+  const logoEl  = document.querySelector('.logo');
+  if (logoEl) {
+    if (logoImg) {
+      logoEl.innerHTML = `<img src="${logoImg}" alt="${cfg.name||'Logo'}" style="height:32px;width:32px;object-fit:contain;border-radius:6px;"/> ${cfg.name||'Mi Tienda'}`;
+    } else if (cfg.name) {
+      logoEl.innerHTML = `<span class="logo-icon">${cfg.emoji||'🏪'}</span>${cfg.name}`;
+    }
+  }
+
+  if (cfg.name)    document.title = cfg.name + ' — Tu tienda online';
+  if (cfg.tagline) { const el=document.querySelector('.tagline'); if(el) el.textContent=cfg.tagline; }
+
+  const heroTitle = document.querySelector('.hero-title');
+  if (heroTitle && cfg.h1) heroTitle.innerHTML = `${cfg.h1}<br/><span>${cfg.h2||''}</span>`;
+  const heroSub = document.querySelector('.hero-sub');
+  if (heroSub && cfg.desc) heroSub.textContent = cfg.desc;
+  const heroBadge = document.querySelector('.hero-badge');
+  if (heroBadge && cfg.name) heroBadge.textContent = cfg.name.split(' ')[0].toUpperCase();
+
+  if (cfg.wapp) window.WHATSAPP_NUMBER = cfg.wapp;
+}
+
+// ── Merge localProducts (ABM edits) over sheet data ─
+function mergeLocalProducts(sheetProducts) {
+  const local = localStorage.getItem('storeapp_local_products');
+  if (!local) return sheetProducts;
+  try {
+    const lp = JSON.parse(local);
+    if (!lp.length) return sheetProducts;
+    // Use local as source of truth, filter out hidden
+    return lp.filter(p => !p.hidden);
+  } catch(e) { return sheetProducts; }
+}
+
+applyStoredConfig();
 loadSheet();
 </script>
 </body>
