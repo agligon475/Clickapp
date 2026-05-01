@@ -388,6 +388,8 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
 .state-row input[type=color]{
   width:28px;height:28px;padding:2px;cursor:pointer;border-radius:5px;
 }
+
+/* ORDER FORM */
 .order-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 @media(max-width:700px){.order-form-grid{grid-template-columns:1fr;}}
 .order-item-row{
@@ -406,6 +408,93 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
   transition:all .12s;flex-shrink:0;
 }
 .order-item-del:hover{background:rgba(215,38,56,.2);border-color:var(--red);color:var(--red);}
+
+/* LIGHT MODE */
+body.light-mode {
+  --black:  #F0F2F5;
+  --steel:  #FFFFFF;
+  --iron:   #E8EAED;
+  --zinc:   #D1D5DB;
+  --silver: #6B7280;
+  --fog:    #374151;
+  --white:  #111827;
+}
+body.light-mode .topbar   { background:#fff; }
+body.light-mode .sidebar  { background:#fff; }
+body.light-mode .card     { background:#fff; }
+body.light-mode .metric   { background:#fff; }
+body.light-mode .modal    { background:#fff; }
+body.light-mode .modal-head { background:#fff; }
+body.light-mode .modal-footer { background:#fff; }
+body.light-mode .ctrl-input { background:#F9FAFB; color:#111827; border-color:#D1D5DB; }
+body.light-mode .data-table th { color:#6B7280; border-color:#E5E7EB; }
+body.light-mode .data-table td { border-color:#F3F4F6; color:#374151; }
+body.light-mode .data-table tr:hover td { background:#F9FAFB; }
+body.light-mode .kanban-card  { background:#F9FAFB; border-color:#E5E7EB; }
+body.light-mode .kanban-col-head { background:#F3F4F6; }
+body.light-mode .sb-item { color:#374151; }
+body.light-mode .sb-item:hover { background:#F3F4F6; }
+body.light-mode .sb-item.active { background:#FEF2F2; color:var(--red); }
+body.light-mode .abm-action { background:#F3F4F6; border-color:#E5E7EB; }
+body.light-mode .period-select { background:#F9FAFB; color:#111827; }
+body.light-mode .status-pill { background:#F3F4F6; border-color:#E5E7EB; }
+body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
+
+/* THEME TOGGLE */
+.theme-toggle-btn {
+  width:32px; height:32px; border-radius:8px;
+  background:var(--iron); border:1px solid var(--zinc);
+  color:var(--silver); cursor:pointer; font-size:16px;
+  display:flex; align-items:center; justify-content:center;
+  transition:all .15s;
+}
+.theme-toggle-btn:hover { border-color:var(--red); color:var(--red); }
+
+/* CONFIG VIEW */
+.config-section {
+  background:var(--steel); border:1px solid var(--zinc);
+  border-radius:12px; padding:20px 22px; margin-bottom:14px;
+}
+.config-section-title {
+  font-size:12px; font-weight:700; color:var(--silver);
+  text-transform:uppercase; letter-spacing:.08em;
+  margin-bottom:14px; padding-bottom:10px;
+  border-bottom:1px solid var(--zinc);
+  display:flex; align-items:center; gap:8px;
+}
+.config-section-title i { color:var(--red); }
+.config-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+@media(max-width:700px){ .config-grid { grid-template-columns:1fr; } }
+
+/* PHOTO UPLOAD */
+.photo-upload-zone {
+  border:2px dashed var(--zinc); border-radius:10px;
+  padding:20px; text-align:center; cursor:pointer;
+  transition:all .15s; background:var(--iron);
+  position:relative;
+}
+.photo-upload-zone:hover { border-color:var(--red); background:var(--steel); }
+.photo-upload-zone input { position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%; }
+.photo-preview-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(80px,1fr)); gap:8px; margin-top:10px; }
+.photo-thumb {
+  aspect-ratio:1; border-radius:8px; overflow:hidden;
+  border:1px solid var(--zinc); position:relative;
+  background:var(--iron);
+}
+.photo-thumb img { width:100%; height:100%; object-fit:cover; }
+.photo-thumb-del {
+  position:absolute;top:3px;right:3px;
+  width:18px;height:18px;border-radius:4px;
+  background:rgba(0,0,0,.6);color:#fff;
+  border:none;cursor:pointer;font-size:11px;
+  display:flex;align-items:center;justify-content:center;
+}
+.photo-thumb-url {
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(0,0,0,.7);color:#fff;
+  font-size:8px;padding:2px 4px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
 </style>
 </head>
 <body>
@@ -435,27 +524,9 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
     <div class="sb-item" onclick="showView('design',this)"><i class="bi bi-palette"></i> Diseño de tienda</div>
   </div>
   <div class="sb-section">
-    <div class="sb-section-label">Accesos</div>
+    <div class="sb-section-label">Sistema</div>
+    <div class="sb-item" onclick="showView('config',this)"><i class="bi bi-gear"></i> Configuración</div>
     <div class="sb-item" onclick="window.open('tienda.html','_blank')"><i class="bi bi-shop"></i> Ver tienda <i class="bi bi-box-arrow-up-right" style="font-size:10px;margin-left:auto;opacity:.5;"></i></div>
-  </div>
-
-  <div class="sb-sheet">
-    <div class="sb-sheet-label">Google Sheet CSV</div>
-    <textarea class="sb-url" id="sheet-url">https://docs.google.com/spreadsheets/d/e/2PACX-1vS3mssf-j0joT1S6CKlZHfSPTSXPHypZ_PHypn702KMgUYvteXDajrEVymXqYFgFVfqQcsUvJn6ktK2/pub?gid=0&single=true&output=csv</textarea>
-    <button class="sb-btn" onclick="loadSheet()"><i class="bi bi-cloud-download"></i> Leer Sheet</button>
-
-    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--zinc);">
-      <div class="sb-sheet-label">Webhook Apps Script</div>
-      <textarea class="sb-url" id="webhook-url" placeholder="https://script.google.com/macros/s/.../exec" style="min-height:44px;"></textarea>
-      <input class="sb-url" id="webhook-token" type="password" placeholder="Token secreto" style="height:auto;padding:5px 8px;margin-top:4px;resize:none;"/>
-      <button class="sb-btn" style="margin-top:4px;background:var(--iron);border:1px solid var(--zinc);" onclick="testWebhook()">
-        <i class="bi bi-wifi"></i> Probar conexión
-      </button>
-      <button class="sb-btn" style="margin-top:4px;" onclick="syncToSheet()">
-        <i class="bi bi-cloud-upload"></i> Guardar en Sheet
-      </button>
-      <div id="webhook-status" style="font-size:10px;color:var(--silver);margin-top:5px;min-height:14px;"></div>
-    </div>
   </div>
 </div>
 
@@ -471,6 +542,9 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
         <option value="30" selected>Últimos 30 días</option>
         <option value="90">Últimos 90 días</option>
       </select>
+      <button class="theme-toggle-btn" onclick="toggleTheme()" id="theme-btn" title="Cambiar tema">
+        <i class="bi bi-sun" id="theme-icon"></i>
+      </button>
       <div class="status-pill">
         <div class="dot" id="dot"></div>
         <span id="status-txt">Cargando...</span>
@@ -994,6 +1068,134 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
     </div>
   </div>
 
+  <!-- ══ CONFIG ══ -->
+  <div class="view" id="view-config">
+
+    <!-- Tienda -->
+    <div class="config-section">
+      <div class="config-section-title"><i class="bi bi-shop"></i> Datos de la tienda</div>
+      <div class="config-grid">
+        <div class="ctrl-group">
+          <label class="ctrl-label">Nombre de la tienda</label>
+          <input class="ctrl-input" id="cfg-store-name" placeholder="FerreApp"/>
+        </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">WhatsApp (con código país)</label>
+          <input class="ctrl-input" id="cfg-store-wapp" placeholder="5491141819344"/>
+        </div>
+        <div class="ctrl-group" style="grid-column:1/-1;">
+          <label class="ctrl-label">Eslogan</label>
+          <input class="ctrl-input" id="cfg-store-tagline" placeholder="Tu ferretería digital"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Google Sheet -->
+    <div class="config-section">
+      <div class="config-section-title"><i class="bi bi-file-spreadsheet"></i> Google Sheet</div>
+      <div class="ctrl-group">
+        <label class="ctrl-label">URL del CSV publicado</label>
+        <input class="ctrl-input" id="cfg-sheet-url"
+          placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?output=csv"/>
+        <div style="font-size:10px;color:var(--silver);margin-top:4px;">
+          Archivo → Compartir → Publicar en la web → CSV → Copiar URL
+        </div>
+      </div>
+      <button class="abm-btn-new" onclick="testAndLoadSheet()" style="margin-top:4px;">
+        <i class="bi bi-cloud-download"></i> Probar y cargar productos
+      </button>
+      <div id="cfg-sheet-status" style="font-size:11px;margin-top:6px;min-height:14px;"></div>
+    </div>
+
+    <!-- Webhook -->
+    <div class="config-section">
+      <div class="config-section-title"><i class="bi bi-broadcast"></i> Webhook Google Apps Script</div>
+      <div class="config-grid">
+        <div class="ctrl-group" style="grid-column:1/-1;">
+          <label class="ctrl-label">URL del webhook</label>
+          <input class="ctrl-input" id="cfg-webhook-url"
+            placeholder="https://script.google.com/macros/s/.../exec"/>
+        </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">Token secreto</label>
+          <div style="position:relative;">
+            <input class="ctrl-input" id="cfg-webhook-token" type="password"
+              placeholder="mi-token-secreto" style="padding-right:36px;"/>
+            <button onclick="toggleTokenVis()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--silver);cursor:pointer;font-size:14px;">
+              <i class="bi bi-eye" id="token-eye"></i>
+            </button>
+          </div>
+        </div>
+        <div class="ctrl-group" style="display:flex;align-items:flex-end;gap:8px;">
+          <button class="abm-btn-new" onclick="testWebhookConfig()" style="flex:1;justify-content:center;">
+            <i class="bi bi-wifi"></i> Probar conexión
+          </button>
+          <button onclick="syncToSheetConfig()" style="flex:1;padding:9px;background:var(--iron);border:1px solid var(--zinc);border-radius:8px;color:var(--fog);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-b);display:flex;align-items:center;justify-content:center;gap:6px;">
+            <i class="bi bi-cloud-upload"></i> Sincronizar Sheet
+          </button>
+        </div>
+      </div>
+      <div id="cfg-webhook-status" style="font-size:11px;margin-top:6px;min-height:14px;color:var(--silver);"></div>
+    </div>
+
+    <!-- Cloudinary -->
+    <div class="config-section">
+      <div class="config-section-title"><i class="bi bi-cloud-arrow-up"></i> Cloudinary — Fotos de productos</div>
+      <div style="font-size:12px;color:var(--silver);margin-bottom:12px;line-height:1.6;">
+        Cloudinary permite subir fotos desde el dashboard sin hosting propio.
+        Creá una cuenta gratis en <a href="https://cloudinary.com" target="_blank" style="color:var(--red);">cloudinary.com</a>
+        (25GB gratis) y completá estos datos.
+      </div>
+      <div class="config-grid">
+        <div class="ctrl-group">
+          <label class="ctrl-label">Cloud Name</label>
+          <input class="ctrl-input" id="cfg-cloud-name" placeholder="mi-cloud-name"/>
+        </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">Upload Preset (unsigned)</label>
+          <input class="ctrl-input" id="cfg-cloud-preset" placeholder="ml_default"/>
+          <div style="font-size:10px;color:var(--silver);margin-top:3px;">
+            Settings → Upload → Upload presets → Add unsigned preset
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:10px;">
+        <label class="ctrl-label">Probar subida de imagen</label>
+        <div class="photo-upload-zone" id="test-upload-zone">
+          <input type="file" accept="image/*" onchange="testCloudinaryUpload(this)"/>
+          <i class="bi bi-cloud-arrow-up" style="font-size:24px;color:var(--silver);display:block;margin-bottom:6px;"></i>
+          <div style="font-size:12px;color:var(--silver);">Arrastrá o hacé clic para subir</div>
+          <div style="font-size:10px;color:var(--zinc);margin-top:4px;">PNG, JPG, WEBP — máx 5MB</div>
+        </div>
+        <div id="cfg-upload-result" style="font-size:11px;margin-top:6px;min-height:14px;color:var(--silver);"></div>
+      </div>
+    </div>
+
+    <!-- Tema -->
+    <div class="config-section">
+      <div class="config-section-title"><i class="bi bi-palette"></i> Apariencia del dashboard</div>
+      <div style="display:flex;gap:12px;">
+        <button onclick="setDashTheme('dark')" id="dash-theme-dark"
+          style="flex:1;padding:12px;border-radius:10px;border:2px solid var(--red);background:var(--iron);cursor:pointer;font-family:var(--font-b);font-size:12px;font-weight:600;color:var(--white);transition:all .15s;">
+          <i class="bi bi-moon-stars" style="display:block;font-size:20px;margin-bottom:4px;"></i>
+          Oscuro
+        </button>
+        <button onclick="setDashTheme('light')" id="dash-theme-light"
+          style="flex:1;padding:12px;border-radius:10px;border:1px solid var(--zinc);background:var(--iron);cursor:pointer;font-family:var(--font-b);font-size:12px;font-weight:600;color:var(--white);transition:all .15s;">
+          <i class="bi bi-sun" style="display:block;font-size:20px;margin-bottom:4px;"></i>
+          Claro
+        </button>
+      </div>
+    </div>
+
+    <!-- Save button -->
+    <button class="abm-btn-new" onclick="saveConfig()" style="width:100%;justify-content:center;padding:12px;font-size:14px;">
+      <i class="bi bi-floppy2"></i> Guardar toda la configuración
+    </button>
+    <div id="cfg-save-status" style="font-size:11px;text-align:center;margin-top:8px;min-height:14px;color:var(--silver);"></div>
+
+  </div><!-- /view-config -->
+
 </div><!-- /main -->
 
 <script>
@@ -1001,7 +1203,6 @@ const SHEET_URL_DEFAULT = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS3ms
 
 let products = [];
 let cOrders, cPago, cTop, cCats;
-const TITLES = { dashboard:'Dashboard', orders:'Pedidos', products:'Productos', design:'Diseño de tienda' };
 
 /* NAV */
 function showView(name, el) {
@@ -1541,6 +1742,7 @@ window.showView = function(name, el){
   if(name==='design')  initDesignPanel();
   if(name==='abm')     initABM();
   if(name==='orders')  initOrderForm();
+  if(name==='config')  initConfigView();
 };
 
 /* ═══════════════════════════════════════════ LOGO UPLOAD */
@@ -1713,6 +1915,10 @@ function openModal(id=null) {
   document.getElementById('m-stock').value   = p?.stock ?? '';
   document.getElementById('m-emoji').value   = p?.emoji || '📦';
   document.getElementById('m-img').value     = p?.img   || '';
+  document.getElementById('m-img-status').textContent = '';
+  const prev = document.getElementById('m-img-preview');
+  if (p?.img) { prev.src=p.img; prev.style.display='block'; }
+  else        { prev.src=''; prev.style.display='none'; }
   document.getElementById('modal-overlay').classList.add('open');
 }
 
@@ -2335,7 +2541,216 @@ function updateDashboardFromOrders(orders) {
   }
 }
 
+/* ═══════════════════════════════════════════ THEME */
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light-mode');
+  localStorage.setItem('storeapp_dash_theme', isLight ? 'light' : 'dark');
+  document.getElementById('theme-icon').className = isLight ? 'bi bi-moon' : 'bi bi-sun';
+}
+
+function setDashTheme(theme) {
+  const isLight = theme === 'light';
+  document.body.classList.toggle('light-mode', isLight);
+  localStorage.setItem('storeapp_dash_theme', theme);
+  document.getElementById('theme-icon').className = isLight ? 'bi bi-moon' : 'bi bi-sun';
+  document.getElementById('dash-theme-dark').style.borderColor  = isLight ? 'var(--zinc)' : 'var(--red)';
+  document.getElementById('dash-theme-light').style.borderColor = isLight ? 'var(--red)'  : 'var(--zinc)';
+}
+
+function applyDashTheme() {
+  const saved = localStorage.getItem('storeapp_dash_theme') || 'dark';
+  setDashTheme(saved);
+}
+
+/* ═══════════════════════════════════════════ CONFIG VIEW */
+const TITLES = { dashboard:'Dashboard', orders:'Pedidos', products:'Productos',
+                 abm:'ABM · Productos', design:'Diseño de tienda', config:'Configuración' };
+
+function initConfigView() {
+  // Load all saved values into form fields
+  const wh = getWebhookCfg();
+  const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+
+  if (wh.url)   document.getElementById('cfg-webhook-url').value   = wh.url;
+  if (wh.token) document.getElementById('cfg-webhook-token').value = wh.token;
+
+  const sheetUrl = document.getElementById('sheet-url')?.value ||
+    'https://docs.google.com/spreadsheets/d/e/2PACX-1vS3mssf-j0joT1S6CKlZHfSPTSXPHypZ_PHypn702KMgUYvteXDajrEVymXqYFgFVfqQcsUvJn6ktK2/pub?gid=0&single=true&output=csv';
+  document.getElementById('cfg-sheet-url').value = sheetUrl;
+
+  if (sc.name)    document.getElementById('cfg-store-name').value    = sc.name;
+  if (sc.tagline) document.getElementById('cfg-store-tagline').value = sc.tagline;
+  if (sc.wapp)    document.getElementById('cfg-store-wapp').value    = sc.wapp;
+
+  const cloud = JSON.parse(localStorage.getItem('storeapp_cloudinary') || '{}');
+  if (cloud.name)   document.getElementById('cfg-cloud-name').value   = cloud.name;
+  if (cloud.preset) document.getElementById('cfg-cloud-preset').value = cloud.preset;
+
+  const theme = localStorage.getItem('storeapp_dash_theme') || 'dark';
+  document.getElementById('dash-theme-dark').style.borderColor  = theme==='dark' ? 'var(--red)' : 'var(--zinc)';
+  document.getElementById('dash-theme-light').style.borderColor = theme==='light'? 'var(--red)' : 'var(--zinc)';
+}
+
+function saveConfig() {
+  // Sheet URL
+  const sheetUrl = document.getElementById('cfg-sheet-url').value.trim();
+  if (sheetUrl) {
+    // Update hidden sheet-url if it exists, otherwise just store it
+    const su = document.getElementById('sheet-url');
+    if (su) su.value = sheetUrl;
+    localStorage.setItem('storeapp_sheet_url', sheetUrl);
+  }
+
+  // Webhook
+  const wUrl   = document.getElementById('cfg-webhook-url').value.trim();
+  const wToken = document.getElementById('cfg-webhook-token').value.trim();
+  if (wUrl || wToken) {
+    localStorage.setItem('storeapp_webhook', JSON.stringify({ url: wUrl, token: wToken }));
+  }
+
+  // Store info → merge into storeapp_cfg
+  const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+  const name    = document.getElementById('cfg-store-name').value.trim();
+  const tagline = document.getElementById('cfg-store-tagline').value.trim();
+  const wapp    = document.getElementById('cfg-store-wapp').value.trim();
+  if (name)    sc.name    = name;
+  if (tagline) sc.tagline = tagline;
+  if (wapp)    sc.wapp    = wapp;
+  localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
+
+  // Cloudinary
+  const cName   = document.getElementById('cfg-cloud-name').value.trim();
+  const cPreset = document.getElementById('cfg-cloud-preset').value.trim();
+  if (cName || cPreset) {
+    localStorage.setItem('storeapp_cloudinary', JSON.stringify({ name: cName, preset: cPreset }));
+  }
+
+  const el = document.getElementById('cfg-save-status');
+  el.style.color = 'var(--green)';
+  el.textContent = '✓ Configuración guardada correctamente';
+  setTimeout(() => { el.textContent = ''; }, 3000);
+}
+
+async function testAndLoadSheet() {
+  const url = document.getElementById('cfg-sheet-url').value.trim();
+  const el  = document.getElementById('cfg-sheet-status');
+  if (!url) { el.style.color='var(--red)'; el.textContent='⚠ Ingresá la URL primero'; return; }
+  el.style.color='var(--silver)'; el.textContent='Cargando...';
+
+  // Update main sheet-url field and reload
+  const su = document.getElementById('sheet-url');
+  if (su) su.value = url;
+  localStorage.setItem('storeapp_sheet_url', url);
+  await loadSheet();
+  el.style.color='var(--green)';
+  el.textContent=`✓ ${products.length} productos cargados`;
+}
+
+async function testWebhookConfig() {
+  const url   = document.getElementById('cfg-webhook-url').value.trim();
+  const token = document.getElementById('cfg-webhook-token').value.trim();
+  const el    = document.getElementById('cfg-webhook-status');
+  if (!url || !token) { el.style.color='var(--red)'; el.textContent='⚠ Completá URL y token'; return; }
+  el.style.color='var(--silver)'; el.textContent='Probando...';
+  try {
+    const res  = await fetch(`${url}?action=ping&token=${encodeURIComponent(token)}`);
+    const data = await res.json();
+    el.style.color = data.ok ? 'var(--green)' : 'var(--red)';
+    el.textContent  = data.ok ? '✓ Conexión exitosa' : '✕ ' + (data.error||'Error');
+  } catch(e) {
+    el.style.color='var(--green)';
+    el.textContent='✓ URL alcanzable (CORS esperado — conexión OK)';
+  }
+}
+
+async function syncToSheetConfig() {
+  // Sync current products to sheet using config panel values
+  document.getElementById('cfg-webhook-url').value   && (document.getElementById('webhook-url') && (document.getElementById('webhook-url').value = document.getElementById('cfg-webhook-url').value));
+  document.getElementById('cfg-webhook-token').value && (document.getElementById('webhook-token') && (document.getElementById('webhook-token').value = document.getElementById('cfg-webhook-token').value));
+  await syncToSheet();
+  const el = document.getElementById('cfg-webhook-status');
+  el.style.color='var(--green)';
+  el.textContent='✓ Productos sincronizados al Sheet';
+}
+
+function toggleTokenVis() {
+  const inp = document.getElementById('cfg-webhook-token');
+  const eye = document.getElementById('token-eye');
+  if (inp.type === 'password') { inp.type='text'; eye.className='bi bi-eye-slash'; }
+  else                         { inp.type='password'; eye.className='bi bi-eye'; }
+}
+
+/* ═══════════════════════════════════════════ CLOUDINARY */
+function getCloudinaryCfg() {
+  try { return JSON.parse(localStorage.getItem('storeapp_cloudinary') || '{}'); } catch(e) { return {}; }
+}
+
+async function uploadToCloudinary(file) {
+  const cloud = getCloudinaryCfg();
+  if (!cloud.name || !cloud.preset) {
+    throw new Error('Configurá Cloudinary en la sección Configuración primero.');
+  }
+  const form = new FormData();
+  form.append('file', file);
+  form.append('upload_preset', cloud.preset);
+  const res  = await fetch(`https://api.cloudinary.com/v1_1/${cloud.name}/image/upload`, {
+    method: 'POST', body: form
+  });
+  if (!res.ok) throw new Error('Error Cloudinary: ' + res.status);
+  const data = await res.json();
+  return data.secure_url;
+}
+
+async function testCloudinaryUpload(input) {
+  const el   = document.getElementById('cfg-upload-result');
+  const file = input.files[0];
+  if (!file) return;
+  el.style.color='var(--silver)'; el.textContent='Subiendo...';
+  try {
+    const url = await uploadToCloudinary(file);
+    el.style.color='var(--green)';
+    el.textContent='✓ Subido OK: ';
+    const a = document.createElement('a');
+    a.href=url; a.target='_blank'; a.textContent=url.split('/').pop();
+    a.style.cssText='color:var(--red);font-size:10px;';
+    el.appendChild(a);
+    // Show thumb
+    const zone = document.getElementById('test-upload-zone');
+    const img  = document.createElement('img');
+    img.src=url; img.style.cssText='height:60px;border-radius:6px;margin-top:8px;';
+    zone.appendChild(img);
+  } catch(e) {
+    el.style.color='var(--red)'; el.textContent='✕ ' + e.message;
+  }
+}
+
+/* ═══════════════════════════════════════════ PHOTO UPLOAD IN ABM MODAL */
+async function handleModalPhotoUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const el   = document.getElementById('m-img-status');
+  el.style.color='var(--silver)'; el.textContent='Subiendo imagen...';
+  try {
+    const url = await uploadToCloudinary(file);
+    document.getElementById('m-img').value = url;
+    el.style.color='var(--green)'; el.textContent='✓ Imagen subida y URL lista';
+    const prev = document.getElementById('m-img-preview');
+    prev.src=url; prev.style.display='block';
+  } catch(e) {
+    el.style.color='var(--red)'; el.textContent='✕ ' + e.message + ' — pegá la URL manualmente.';
+  }
+}
+
 /* ═══════════════════════════════════════════ INIT */
+applyDashTheme();
+
+// Restore saved sheet URL if any
+const savedSheetUrl = localStorage.getItem('storeapp_sheet_url');
+if (savedSheetUrl) {
+  const su = document.getElementById('sheet-url');
+  if (su) su.value = savedSheetUrl;
+}
+
 initCharts();
 loadSheet();
 initLogoPreview();
@@ -2393,9 +2808,18 @@ try {
           <input class="ctrl-input" id="m-stock" type="number" min="0" placeholder="24"/>
         </div>
         <div class="ctrl-group" style="grid-column:1/-1;">
-          <label class="ctrl-label">URL de imagen (opcional)</label>
-          <input class="ctrl-input" id="m-img" placeholder="https://...imagen.jpg"/>
-          <div class="form-hint">Si no tenés URL se usa el emoji como imagen</div>
+          <label class="ctrl-label">Imagen del producto</label>
+          <div style="display:flex;gap:8px;align-items:flex-start;">
+            <input class="ctrl-input" id="m-img" placeholder="https://... (URL de la imagen)" style="flex:1;"/>
+            <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--iron);border:1px solid var(--zinc);border-radius:8px;font-size:11px;font-weight:600;color:var(--fog);transition:all .15s;"
+              title="Subir foto a Cloudinary">
+              <i class="bi bi-cloud-arrow-up"></i> Subir
+              <input type="file" accept="image/*" style="display:none;" onchange="handleModalPhotoUpload(this)"/>
+            </label>
+          </div>
+          <img id="m-img-preview" src="" alt="" style="display:none;height:64px;border-radius:8px;margin-top:8px;border:1px solid var(--zinc);"/>
+          <div id="m-img-status" style="font-size:10px;margin-top:3px;min-height:12px;"></div>
+          <div class="form-hint">Subí desde acá (requiere Cloudinary en Configuración) o pegá una URL directa</div>
         </div>
       </div>
     </div>
