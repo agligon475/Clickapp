@@ -901,8 +901,17 @@ async function loadSheet() {
     const E = find('emoji','icono');
     const I = find('imagen','image','img','foto','url');
 
+    // Filter out rows that look like stray code (CSS, JS, HTML)
+    const isGarbage = row => {
+      const text = (row[N>-1?N:0]||'').trim();
+      return !text
+        || /[{};]/.test(text)
+        || /^\s*(html|body|div|span|\.[\w-]+|#[\w-]+)\s*[\{]/.test(text)
+        || /^(display|margin|padding|overflow|flex|border|background|color|font|width|height):/.test(text);
+    };
+
     products = rows.slice(1)
-      .filter(r => r[N>-1?N:0]?.trim())
+      .filter(r => r[N>-1?N:0]?.trim() && !isGarbage(r))
       .map((r,i) => ({
         id: i+1,
         name:  r[N>-1?N:0] || 'Producto',
