@@ -344,7 +344,52 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
 }
 .logo-upload-btn:hover{border-color:var(--red);color:var(--white);}
 
-/* ORDER FORM */
+/* KANBAN */
+.kanban-board{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin;scrollbar-color:var(--zinc) transparent;}
+.kanban-col{flex-shrink:0;width:180px;display:flex;flex-direction:column;gap:6px;}
+.kanban-col-head{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--iron);border-radius:8px;padding:8px 10px;
+  font-size:11px;font-weight:700;
+}
+.kanban-count{
+  background:var(--zinc);color:var(--fog);
+  border-radius:10px;padding:1px 7px;font-size:10px;
+}
+.kanban-cards{display:flex;flex-direction:column;gap:6px;}
+.kanban-card{
+  background:var(--steel);border:1px solid var(--zinc);
+  border-radius:8px;padding:10px 10px 8px;
+  transition:border-color .12s;
+}
+.kanban-card:hover{border-color:var(--fog);}
+.kc-id{font-size:9px;font-family:monospace;color:var(--silver);margin-bottom:3px;}
+.kc-client{font-size:12px;font-weight:600;color:var(--white);margin-bottom:2px;}
+.kc-prods{font-size:10px;color:var(--silver);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:6px;}
+.kc-footer{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.kc-total{font-family:var(--font-h);font-size:14px;font-weight:700;color:var(--white);}
+.kc-date{font-size:9px;color:var(--silver);}
+.kc-select{
+  width:100%;font-size:10px;background:var(--iron);
+  border:1px solid var(--zinc);border-radius:5px;
+  color:var(--fog);padding:3px 5px;cursor:pointer;font-family:var(--font-b);
+}
+.state-row{
+  display:flex;align-items:center;gap:7px;
+  background:var(--steel);border:1px solid var(--zinc);
+  border-radius:7px;padding:6px 10px;
+}
+.state-row input{
+  background:var(--iron);border:1px solid var(--zinc);
+  border-radius:5px;padding:4px 8px;font-size:11px;
+  color:var(--white);font-family:var(--font-b);outline:none;
+}
+.state-row input:focus{border-color:var(--red);}
+.state-row input[type=color]{
+  width:28px;height:28px;padding:2px;cursor:pointer;border-radius:5px;
+}
+
+</style>
 .order-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 @media(max-width:700px){.order-form-grid{grid-template-columns:1fr;}}
 .order-item-row{
@@ -531,9 +576,8 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
         <div class="ctrl-group">
           <label class="ctrl-label">Estado inicial</label>
           <select class="ctrl-input" id="of-estado">
-            <option value="pend">Pendiente</option>
-            <option value="ok">Confirmado</option>
-            <option value="ship">En camino</option>
+            <option value="confirmar" selected>A confirmar</option>
+            <option value="en_curso">En curso</option>
           </select>
         </div>
 
@@ -593,12 +637,53 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
       <div id="of-feedback" style="font-size:11px;margin-top:8px;min-height:16px;"></div>
     </div>
 
+    <!-- Kanban board -->
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <span><i class="bi bi-kanban" style="color:var(--red);"></i> Tablero de estados</span>
+        <button onclick="toggleStateConfig()"
+          style="font-size:11px;padding:4px 10px;background:var(--iron);border:1px solid var(--zinc);
+                 border-radius:6px;color:var(--fog);cursor:pointer;font-family:var(--font-b);">
+          <i class="bi bi-gear"></i> Configurar estados
+        </button>
+      </div>
+      <!-- State config panel (hidden by default) -->
+      <div id="state-config" style="display:none;margin-bottom:16px;padding:14px;background:var(--iron);border-radius:10px;border:1px solid var(--zinc);">
+        <div style="font-size:11px;color:var(--silver);margin-bottom:10px;">
+          Editá los estados que aparecen en el tablero y en los selectores de la tabla.
+          Los pedidos sin actividad por más de 15 días pasan a <strong>Perdido</strong> automáticamente.
+        </div>
+        <div id="state-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;"></div>
+        <div style="display:flex;gap:8px;">
+          <button class="abm-btn-new" onclick="addState()" style="font-size:11px;padding:6px 12px;">
+            <i class="bi bi-plus"></i> Agregar estado
+          </button>
+          <button onclick="resetStates()"
+            style="font-size:11px;padding:6px 12px;background:var(--iron);border:1px solid var(--zinc);
+                   border-radius:7px;color:var(--fog);cursor:pointer;font-family:var(--font-b);">
+            <i class="bi bi-arrow-counterclockwise"></i> Restaurar por defecto
+          </button>
+          <button onclick="saveStates()"
+            style="font-size:11px;padding:6px 12px;background:var(--green);border:none;
+                   border-radius:7px;color:#fff;cursor:pointer;font-family:var(--font-b);font-weight:600;">
+            <i class="bi bi-floppy"></i> Guardar estados
+          </button>
+        </div>
+      </div>
+      <div id="kanban-board" class="kanban-board"></div>
+    </div>
+
     <!-- Orders history table -->
     <div class="card">
       <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-        Historial de pedidos
-        <div style="display:flex;gap:8px;">
-          <input class="ctrl-input" id="orders-search" placeholder="Buscar cliente..." oninput="filterOrdersTable()" style="width:180px;font-size:11px;padding:4px 8px;"/>
+        Historial completo
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <select class="ctrl-input" id="orders-filter-estado" onchange="filterOrdersTable()"
+            style="font-size:11px;padding:4px 8px;width:140px;">
+            <option value="">Todos los estados</option>
+          </select>
+          <input class="ctrl-input" id="orders-search" placeholder="Buscar cliente..."
+            oninput="filterOrdersTable()" style="width:160px;font-size:11px;padding:4px 8px;"/>
           <button class="sb-btn" style="background:var(--iron);border:1px solid var(--zinc);" onclick="exportOrders()">
             <i class="bi bi-download"></i> CSV
           </button>
@@ -606,7 +691,7 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
       </div>
       <div style="overflow-x:auto;">
         <table class="data-table">
-          <thead><tr><th>#</th><th>Fecha</th><th>Cliente</th><th>DNI</th><th>Productos</th><th>Pago</th><th>Logística</th><th>Total</th><th>Estado</th><th></th></tr></thead>
+          <thead><tr><th>#</th><th>Fecha</th><th>Cliente</th><th>DNI</th><th>Productos</th><th>Pago</th><th>Logística</th><th>Total</th><th>Estado</th><th>Cambiar</th><th></th></tr></thead>
           <tbody id="all-orders-body"></tbody>
         </table>
       </div>
@@ -1047,40 +1132,88 @@ function initCharts(){
 }
 
 /* ORDERS */
-const DEMO_ORDERS=[
-  {id:'PED-DEMO1',fecha:'30/04/2026',cliente:'Martín R.',dni:'28.xxx.xxx',productos:'Taladro + brocas',pago:'Transferencia',logistica:'Envío',total:48500,estado:'pend'},
-  {id:'PED-DEMO2',fecha:'30/04/2026',cliente:'Claudia P.',dni:'35.xxx.xxx',productos:'Cinta ×3 + tubo',pago:'Efectivo',logistica:'Retiro',total:12200,estado:'pend'},
-];
-const BADGE={
-  ok:  `<span class="badge badge-green"><i class="bi bi-check2"></i> Confirmado</span>`,
-  pend:`<span class="badge badge-amber"><i class="bi bi-clock"></i> Pendiente</span>`,
-  ship:`<span class="badge badge-blue"><i class="bi bi-truck"></i> En camino</span>`,
-};
+const DEMO_ORDERS=[];  // no demo — only real data
 
-// Called both by initCharts (demo fallback) and loadOrders (real data)
+// ── STATE DEFINITIONS ─────────────────────────────
+// Each state: { key, label, color (bg), text, icon }
+const DEFAULT_STATES = [
+  { key:'confirmar',  label:'A confirmar', bg:'rgba(243,156,18,.15)',  text:'#F39C12', icon:'bi-hourglass-split' },
+  { key:'en_curso',   label:'En curso',    bg:'rgba(52,152,219,.15)',  text:'#3498DB', icon:'bi-arrow-repeat'   },
+  { key:'despachado', label:'Despachado',  bg:'rgba(155,89,182,.15)', text:'#9B59B6', icon:'bi-box-seam'       },
+  { key:'cobrado',    label:'Cobrado',     bg:'rgba(46,204,113,.15)',  text:'#2ECC71', icon:'bi-cash-coin'      },
+  { key:'retirado',   label:'Retirado',    bg:'rgba(46,204,113,.15)',  text:'#27AE60', icon:'bi-bag-check'      },
+  { key:'enviado',    label:'Enviado',     bg:'rgba(52,152,219,.25)', text:'#2980B9', icon:'bi-truck'          },
+  { key:'devuelto',   label:'Devuelto',    bg:'rgba(215,38,56,.15)',   text:'#D72638', icon:'bi-arrow-return-left'},
+  { key:'perdido',    label:'Perdido',     bg:'rgba(100,100,100,.2)',  text:'#888',    icon:'bi-x-circle'       },
+];
+
+function getStates() {
+  try {
+    const saved = localStorage.getItem('storeapp_states');
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  return DEFAULT_STATES;
+}
+
+function badge(estado) {
+  const s = getStates().find(x => x.key === estado) || { label: estado, bg:'rgba(255,255,255,.08)', text:'#aaa', icon:'bi-circle' };
+  return `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;background:${s.bg};color:${s.text};">
+    <i class="bi ${s.icon}"></i> ${s.label}</span>`;
+}
+
+function stateSelect(orderId, current) {
+  const states = getStates();
+  const options = states.map(s =>
+    `<option value="${s.key}" ${current===s.key?'selected':''}>${s.label}</option>`
+  ).join('');
+  return `<select onchange="changeOrderEstado('${orderId}',this.value)"
+    style="font-size:10px;background:var(--iron);border:1px solid var(--zinc);
+           border-radius:6px;color:var(--fog);padding:3px 6px;cursor:pointer;
+           font-family:var(--font-b);margin-top:4px;width:100%;">${options}</select>`;
+}
+
+// ── 15-DAY AUTO-LOST RULE ─────────────────────────
+function applyAutoLost(orders) {
+  const FINAL = ['cobrado','retirado','enviado','devuelto','perdido'];
+  const now   = Date.now();
+  let changed = false;
+  orders.forEach(o => {
+    if (FINAL.includes(o.estado)) return;
+    // Parse fecha "dd/mm/yyyy, hh:mm" or "dd/mm/yyyy hh:mm"
+    const parts = (o.fecha||'').replace(',','').trim().split(' ');
+    if (!parts[0]) return;
+    const [d,m,y] = parts[0].split('/');
+    if (!y) return;
+    const orderDate = new Date(+y, +m-1, +d);
+    const diffDays  = (now - orderDate.getTime()) / 86400000;
+    if (diffDays > 15) { o.estado = 'perdido'; changed = true; }
+  });
+  if (changed) localStorage.setItem('storeapp_orders', JSON.stringify(orders));
+  return orders;
+}
+
+// Called both by initCharts and updateDashboardFromOrders
 function renderOrdersTable(orders) {
-  orders = orders || DEMO_ORDERS;
-  const recent = orders.slice(0, 20);
-  document.getElementById('orders-body').innerHTML = recent.map(o=>`
+  orders = applyAutoLost(orders || allOrders || []);
+  const recent = orders.slice(0, 10);
+  const tbody = document.getElementById('orders-body');
+  if (!tbody) return;
+  tbody.innerHTML = recent.map(o => `
     <tr>
-      <td><strong>${o.id}</strong></td>
-      <td>${o.cliente}</td>
-      <td style="color:var(--silver);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${o.productos}</td>
+      <td style="font-size:10px;font-family:monospace;color:var(--silver);">${o.id}</td>
+      <td><strong>${o.cliente}</strong></td>
+      <td style="color:var(--silver);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${o.productos}</td>
       <td>${o.pago}</td>
-      <td>${o.logistica||o.logis||'—'}</td>
-      <td><strong>$${Number(o.total||0).toLocaleString('es-AR')}</strong></td>
-      <td>
-        ${BADGE[o.estado]||BADGE.pend}
-        <select onchange="updateOrderEstado('${o.id}',this.value)"
-          style="font-size:10px;background:var(--iron);border:1px solid var(--zinc);border-radius:5px;color:var(--fog);padding:2px 4px;margin-top:3px;cursor:pointer;">
-          <option value="pend"  ${o.estado==='pend' ?'selected':''}>Pendiente</option>
-          <option value="ok"    ${o.estado==='ok'   ?'selected':''}>Confirmado</option>
-          <option value="ship"  ${o.estado==='ship' ?'selected':''}>En camino</option>
-        </select>
-      </td>
-    </tr>`).join('') || `<tr><td colspan="7" style="text-align:center;color:var(--silver);padding:30px;">
-      No hay pedidos todavía. Los pedidos aparecerán acá automáticamente cuando los clientes usen la tienda.
-    </td></tr>`;
+      <td>${o.logistica}</td>
+      <td style="font-family:var(--font-h);font-size:14px;font-weight:700;">$${Number(o.total||0).toLocaleString('es-AR')}</td>
+      <td>${badge(o.estado)}${stateSelect(o.id, o.estado)}</td>
+    </tr>`).join('') ||
+    `<tr><td colspan="7" style="text-align:center;color:var(--silver);padding:24px;">
+      Sin pedidos. Cargalos desde la sección Pedidos.</td></tr>`;
+  const info = document.getElementById('sheet-sync-info');
+  if (info) info.textContent = orders.length
+    ? `${orders.length} pedido${orders.length!==1?'s':''} · último: ${orders[0]?.fecha||''}`
+    : 'Sin pedidos todavía';
 }
 
 function renderAllOrders(orders) {
@@ -1741,26 +1874,121 @@ async function webhookDeleteProduct(id) {
   await webhookCall({ action: 'delete', id });
 }
 
+/* ═══════════════════════════════════════════ STATE CONFIG */
+
+function toggleStateConfig() {
+  const el = document.getElementById('state-config');
+  if (!el) return;
+  const visible = el.style.display !== 'none';
+  el.style.display = visible ? 'none' : 'block';
+  if (!visible) renderStateConfig();
+}
+
+function renderStateConfig() {
+  const states = getStates();
+  const list = document.getElementById('state-list');
+  if (!list) return;
+  list.innerHTML = states.map((s, i) => `
+    <div class="state-row" id="sr-${i}">
+      <input type="color" value="${s.text}" title="Color" id="sc-color-${i}"
+        style="width:28px;height:28px;flex-shrink:0;"/>
+      <input type="text" value="${s.label}" placeholder="Nombre del estado"
+        id="sc-label-${i}" style="flex:1;min-width:80px;"/>
+      <input type="text" value="${s.icon}" placeholder="bi-circle"
+        id="sc-icon-${i}" style="width:110px;font-size:10px;" title="Bootstrap Icon class (bi-xxx)"/>
+      <button onclick="removeState(${i})"
+        style="width:24px;height:24px;border-radius:5px;background:transparent;
+               border:1px solid var(--zinc);color:var(--silver);cursor:pointer;
+               display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>`).join('');
+}
+
+function addState() {
+  const states = getStates();
+  states.push({ key: 'nuevo_' + Date.now(), label: 'Nuevo estado', bg: 'rgba(100,100,200,.15)', text: '#6464C8', icon: 'bi-circle' });
+  localStorage.setItem('storeapp_states', JSON.stringify(states));
+  renderStateConfig();
+}
+
+function removeState(i) {
+  const states = getStates();
+  states.splice(i, 1);
+  localStorage.setItem('storeapp_states', JSON.stringify(states));
+  renderStateConfig();
+}
+
+function saveStates() {
+  const states = getStates();
+  const updated = states.map((s, i) => {
+    const label = document.getElementById(`sc-label-${i}`)?.value.trim() || s.label;
+    const color = document.getElementById(`sc-color-${i}`)?.value || s.text;
+    const icon  = document.getElementById(`sc-icon-${i}`)?.value.trim() || s.icon;
+    const r=parseInt(color.slice(1,3),16), g=parseInt(color.slice(3,5),16), b=parseInt(color.slice(5,7),16);
+    return {
+      key:   label.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,''),
+      label, text: color,
+      bg:    `rgba(${r},${g},${b},.15)`,
+      icon,
+    };
+  });
+  localStorage.setItem('storeapp_states', JSON.stringify(updated));
+  renderAllOrders(allOrders);
+  buildStateFilter();
+  // Flash
+  const btn = event.currentTarget;
+  const orig = btn.innerHTML;
+  btn.innerHTML = '<i class="bi bi-check2"></i> Guardado!';
+  setTimeout(() => { btn.innerHTML = orig; }, 2000);
+}
+
+function resetStates() {
+  if (!confirm('¿Restaurar los estados por defecto? Se perderán los cambios.')) return;
+  localStorage.removeItem('storeapp_states');
+  renderStateConfig();
+  renderAllOrders(allOrders);
+  buildStateFilter();
+}
+
+function buildStateFilter() {
+  const sel = document.getElementById('orders-filter-estado');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">Todos los estados</option>' +
+    getStates().map(s => `<option value="${s.key}">${s.label}</option>`).join('');
+}
+
 /* ═══════════════════════════════════════════ ORDER FORM */
 
 let orderItems = [];  // { id, name, emoji, price, qty }
 let allOrders  = [];  // master list in memory
 
 function initOrderForm() {
-  // Populate product selector from loaded products
+  // Populate product selector
   const sel = document.getElementById('of-prod-select');
-  if (!sel) return;
-  sel.innerHTML = '<option value="">Seleccioná un producto...</option>' +
-    localProducts.filter(p => !p.hidden && p.stock > 0).map(p =>
-      `<option value="${p.id}">${p.emoji||'📦'} ${p.name} — $${p.price.toLocaleString('es-AR')}</option>`
-    ).join('');
+  if (sel) {
+    sel.innerHTML = '<option value="">Seleccioná un producto...</option>' +
+      (localProducts||[]).filter(p => !p.hidden && p.stock > 0).map(p =>
+        `<option value="${p.id}">${p.emoji||'📦'} ${p.name} — $${p.price.toLocaleString('es-AR')}</option>`
+      ).join('');
+  }
 
-  // Load saved orders from localStorage
+  // Populate estado select with current states
+  const estSel = document.getElementById('of-estado');
+  if (estSel) {
+    estSel.innerHTML = getStates()
+      .filter(s => s.key !== 'perdido')
+      .map(s => `<option value="${s.key}" ${s.key==='confirmar'?'selected':''}>${s.label}</option>`)
+      .join('');
+  }
+
+  // Load saved orders
   try {
     const saved = localStorage.getItem('storeapp_orders');
     if (saved) allOrders = JSON.parse(saved);
   } catch(e) { allOrders = []; }
 
+  buildStateFilter();
   renderAllOrders(allOrders);
   updateDashboardFromOrders(allOrders);
 }
@@ -1847,7 +2075,7 @@ function saveOrder() {
   const pago     = document.getElementById('of-pago').value;
   const logistica= document.getElementById('of-logistica').value;
   const direccion= document.getElementById('of-direccion').value.trim();
-  const estado   = document.getElementById('of-estado').value;
+  const estado   = document.getElementById('of-estado')?.value || 'confirmar';
   const extra    = document.getElementById('of-extra').value.trim();
 
   if (!nombre) { setOrderFeedback('⚠ El nombre del cliente es obligatorio', 'err'); return; }
@@ -1933,7 +2161,40 @@ function clearOrderForm() {
 }
 
 function renderAllOrders(orders) {
-  orders = orders || allOrders;
+  orders = applyAutoLost(orders || allOrders || []);
+
+  // ── KANBAN BOARD ──────────────────────────────────
+  const kanban = document.getElementById('kanban-board');
+  if (kanban) {
+    const states = getStates();
+    kanban.innerHTML = states.map(s => {
+      const cols = orders.filter(o => o.estado === s.key);
+      return `<div class="kanban-col">
+        <div class="kanban-col-head" style="border-top:3px solid ${s.text};">
+          <span style="color:${s.text};"><i class="bi ${s.icon}"></i> ${s.label}</span>
+          <span class="kanban-count">${cols.length}</span>
+        </div>
+        <div class="kanban-cards">
+          ${cols.length ? cols.map(o => `
+            <div class="kanban-card" style="border-left:3px solid ${s.text};">
+              <div class="kc-id">${o.id}</div>
+              <div class="kc-client">${o.cliente}</div>
+              <div class="kc-prods">${o.productos}</div>
+              <div class="kc-footer">
+                <span class="kc-total">$${Number(o.total||0).toLocaleString('es-AR')}</span>
+                <span class="kc-date">${(o.fecha||'').split(' ')[0]}</span>
+              </div>
+              <select onchange="changeOrderEstado('${o.id}',this.value)" class="kc-select">
+                ${getStates().map(st=>`<option value="${st.key}" ${o.estado===st.key?'selected':''}>${st.label}</option>`).join('')}
+              </select>
+            </div>`).join('')
+          : `<div style="font-size:11px;color:var(--silver);text-align:center;padding:16px;">Sin pedidos</div>`}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── FULL TABLE ────────────────────────────────────
   const tbody = document.getElementById('all-orders-body');
   if (!tbody) return;
 
@@ -1941,30 +2202,30 @@ function renderAllOrders(orders) {
     tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:var(--silver);padding:40px;">
       No hay pedidos registrados todavía. Usá el formulario de arriba para cargar el primero.
     </td></tr>`;
-    document.getElementById('orders-count').textContent = '';
+    const count = document.getElementById('orders-count');
+    if (count) count.textContent = '';
     return;
   }
 
   tbody.innerHTML = orders.map(o => `
     <tr>
-      <td style="font-size:11px;font-family:monospace;color:var(--silver);">${o.id}</td>
+      <td style="font-size:10px;font-family:monospace;color:var(--silver);">${o.id}</td>
       <td style="white-space:nowrap;font-size:11px;">${o.fecha}</td>
       <td><strong style="color:var(--white);">${o.cliente}</strong></td>
       <td style="color:var(--silver);font-size:11px;">${o.dni||'—'}</td>
-      <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--fog);font-size:11px;"
-          title="${o.productos}">${o.productos}</td>
+      <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+                 color:var(--fog);font-size:11px;" title="${o.productos}">${o.productos}</td>
       <td style="white-space:nowrap;">${o.pago}</td>
       <td style="white-space:nowrap;">${o.logistica}</td>
       <td style="white-space:nowrap;font-family:var(--font-h);font-size:15px;font-weight:700;">
         $${Number(o.total||0).toLocaleString('es-AR')}
       </td>
+      <td>${badge(o.estado)}</td>
       <td>
         <select onchange="changeOrderEstado('${o.id}',this.value)"
           style="font-size:10px;background:var(--iron);border:1px solid var(--zinc);
-                 border-radius:6px;color:var(--fog);padding:3px 6px;cursor:pointer;font-family:var(--font-b);">
-          <option value="pend"  ${o.estado==='pend' ?'selected':''}>⏳ Pendiente</option>
-          <option value="ok"    ${o.estado==='ok'   ?'selected':''}>✓ Confirmado</option>
-          <option value="ship"  ${o.estado==='ship' ?'selected':''}>🚚 En camino</option>
+                 border-radius:6px;color:var(--fog);padding:3px 5px;cursor:pointer;font-family:var(--font-b);">
+          ${getStates().map(s=>`<option value="${s.key}" ${o.estado===s.key?'selected':''}>${s.label}</option>`).join('')}
         </select>
       </td>
       <td>
@@ -1975,14 +2236,15 @@ function renderAllOrders(orders) {
     </tr>`).join('');
 
   const count = document.getElementById('orders-count');
-  if (count) count.textContent = `${orders.length} pedido${orders.length!==1?'s':''} registrado${orders.length!==1?'s':''}`;
+  if (count) count.textContent = `${orders.length} pedido${orders.length!==1?'s':''} · Total facturado: $${orders.reduce((s,o)=>s+Number(o.total||0),0).toLocaleString('es-AR')}`;
 }
 
 function filterOrdersTable() {
-  const q = (document.getElementById('orders-search')?.value||'').toLowerCase();
-  const filtered = q
-    ? allOrders.filter(o => o.cliente.toLowerCase().includes(q) || o.id.toLowerCase().includes(q) || (o.dni||'').includes(q))
-    : allOrders;
+  const q      = (document.getElementById('orders-search')?.value||'').toLowerCase();
+  const estado = document.getElementById('orders-filter-estado')?.value||'';
+  let filtered = allOrders;
+  if (q)      filtered = filtered.filter(o => o.cliente.toLowerCase().includes(q) || o.id.toLowerCase().includes(q) || (o.dni||'').includes(q));
+  if (estado) filtered = filtered.filter(o => o.estado === estado);
   renderAllOrders(filtered);
 }
 
@@ -1991,9 +2253,10 @@ function changeOrderEstado(id, estado) {
   if (o) {
     o.estado = estado;
     localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
+    renderAllOrders(allOrders);
     updateDashboardFromOrders(allOrders);
-    // Sync to Sheet
-    const label = { ok:'Confirmado', ship:'En camino', pend:'Pendiente' }[estado];
+    // Sync to Sheet with human-readable label
+    const label = getStates().find(s => s.key === estado)?.label || estado;
     updateOrderEstado(id, label);
   }
 }
