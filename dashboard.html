@@ -388,6 +388,8 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
 .state-row input[type=color]{
   width:28px;height:28px;padding:2px;cursor:pointer;border-radius:5px;
 }
+
+</style>
 .order-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 @media(max-width:700px){.order-form-grid{grid-template-columns:1fr;}}
 .order-item-row{
@@ -1032,7 +1034,10 @@ const CAT_EMOJI={herramienta:'🔧',herr:'🔧',llave:'🔧',electr:'⚡',cable:
 function guessEmoji(n,c){const s=(n+' '+c).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');for(const[k,v]of Object.entries(CAT_EMOJI))if(s.includes(k))return v;return '📦';}
 
 async function loadSheet() {
-  const url = document.getElementById('sheet-url').value.trim()||SHEET_URL_DEFAULT;
+  const rawUrl = document.getElementById('sheet-url').value.trim()||SHEET_URL_DEFAULT;
+  const url = rawUrl.includes('output=csv')
+    ? rawUrl.replace('output=csv', 'output=csv&range=A1:Z1000')
+    : rawUrl;
   setDot('','Cargando...');
   try{
     const res=await fetch(url);
@@ -1193,7 +1198,7 @@ function applyAutoLost(orders) {
 // Called both by initCharts and updateDashboardFromOrders
 function renderOrdersTable(orders) {
   orders = applyAutoLost(orders || allOrders || []);
-  const recent = orders.slice(0, 10);
+  const recent = orders.slice(0, 20); // show last 20 in dashboard widget
   const tbody = document.getElementById('orders-body');
   if (!tbody) return;
   tbody.innerHTML = recent.map(o => `
@@ -2338,6 +2343,17 @@ initLogoPreview();
 loadWebhookCfg();
 
 // Load saved orders from localStorage on startup
+try {
+  // Clear stale demo product cache (≤10 items from old sessions)
+  const cachedProds = localStorage.getItem('storeapp_local_products');
+  if (cachedProds) {
+    const cp = JSON.parse(cachedProds);
+    if (cp.length <= 10 && cp.every(p => [1,2,3,4,5,6,7,8,9].includes(p.id))) {
+      localStorage.removeItem('storeapp_local_products');
+      console.info('Caché de productos demo eliminado — se usarán datos del Sheet.');
+    }
+  }
+} catch(e) {}
 try {
   const saved = localStorage.getItem('storeapp_orders');
   if (saved) {
