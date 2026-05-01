@@ -914,14 +914,27 @@ async function loadSheet() {
       }));
 
     // ── Override with ABM edits from dashboard if present ──
+    // Only apply if the local version was explicitly saved via ABM
+    // (detected by presence of storeapp_abm_active flag)
+    const abrActive = localStorage.getItem('storeapp_abm_active');
     const localOverride = localStorage.getItem('storeapp_local_products');
-    if (localOverride) {
+    if (abrActive && localOverride) {
       try {
         const lp = JSON.parse(localOverride);
-        if (lp.length) {
+        // Only use local if it has at least as many products as the sheet
+        if (lp.length >= products.length) {
           products = lp.filter(p => !p.hidden);
+        } else {
+          // Local cache is stale — clear it
+          localStorage.removeItem('storeapp_local_products');
+          localStorage.removeItem('storeapp_abm_active');
         }
-      } catch(e) {}
+      } catch(e) {
+        localStorage.removeItem('storeapp_local_products');
+      }
+    } else if (localOverride && !abrActive) {
+      // Stale cache with no ABM activity — always clear it
+      localStorage.removeItem('storeapp_local_products');
     }
 
     // Build category rail
