@@ -1233,10 +1233,14 @@ const CAT_EMOJI={herramienta:'🔧',herr:'🔧',llave:'🔧',electr:'⚡',cable:
 function guessEmoji(n,c){const s=(n+' '+c).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');for(const[k,v]of Object.entries(CAT_EMOJI))if(s.includes(k))return v;return '📦';}
 
 async function loadSheet() {
-  const rawUrl = document.getElementById('sheet-url').value.trim()||SHEET_URL_DEFAULT;
+  // Read URL from config field, localStorage, or default
+  const cfgField = document.getElementById('cfg-sheet-url');
+  const rawUrl = (cfgField?.value.trim())
+    || localStorage.getItem('storeapp_sheet_url')
+    || SHEET_URL_DEFAULT;
   const url = rawUrl.includes('output=csv')
     ? rawUrl.replace('output=csv', 'output=csv&range=A1:Z1000')
-    : rawUrl;
+    : rawUrl + (rawUrl.includes('?') ? '&' : '?') + 'range=A1:Z1000';
   setDot('','Cargando...');
   try{
     const res=await fetch(url);
@@ -1964,38 +1968,44 @@ function getWebhookCfg() {
   try { return JSON.parse(localStorage.getItem('storeapp_webhook')||'{}'); } catch(e) { return {}; }
 }
 function saveWebhookCfg() {
-  const url   = document.getElementById('webhook-url').value.trim();
-  const token = document.getElementById('webhook-token').value.trim();
-  localStorage.setItem('storeapp_webhook', JSON.stringify({url, token}));
+  // Read from config panel fields
+  const url   = document.getElementById('cfg-webhook-url')?.value.trim()   || '';
+  const token = document.getElementById('cfg-webhook-token')?.value.trim() || '';
+  if (url || token) localStorage.setItem('storeapp_webhook', JSON.stringify({url, token}));
 }
+
 function loadWebhookCfg() {
-  const wh = getWebhookCfg();
-  if (wh.url)   document.getElementById('webhook-url').value   = wh.url;
-  if (wh.token) document.getElementById('webhook-token').value = wh.token;
+  // No-op — config fields are populated in initConfigView()
+  // Just ensure localStorage has the default sheet URL if not set
+  if (!localStorage.getItem('storeapp_sheet_url')) {
+    localStorage.setItem('storeapp_sheet_url', SHEET_URL_DEFAULT);
+  }
 }
 
 function setWebhookStatus(msg, type='info') {
-  const el = document.getElementById('webhook-status');
   const colors = { ok:'var(--green)', err:'var(--red)', info:'var(--silver)', load:'#3498DB' };
-  el.style.color = colors[type] || colors.info;
-  el.textContent = msg;
+  // Update both possible status elements
+  ['webhook-status','cfg-webhook-status'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.color = colors[type]||colors.info; el.textContent = msg; }
+  });
 }
 
 async function webhookCall(payload) {
   saveWebhookCfg();
-  const url   = document.getElementById('webhook-url').value.trim();
-  const token = document.getElementById('webhook-token').value.trim();
-  if (!url)   { setWebhookStatus('⚠ Pegá la URL del webhook primero', 'err'); return null; }
-  if (!token) { setWebhookStatus('⚠ Ingresá el token secreto', 'err'); return null; }
+  const wh = getWebhookCfg();
+  const url   = wh.url   || '';
+  const token = wh.token || '';
+  if (!url)   { setWebhookStatus('⚠ Configurá la URL del webhook en Configuración', 'err'); return null; }
+  if (!token) { setWebhookStatus('⚠ Configurá el token en Configuración', 'err'); return null; }
 
   try {
-    const res = await fetch(url, {
+    await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...payload, token }),
-      mode: 'no-cors',   // Apps Script no envía CORS headers en modo exec
+      mode: 'no-cors',
     });
-    // no-cors → response opaque, asumimos ok si no hubo error de red
     return { ok: true };
   } catch(e) {
     setWebhookStatus('✕ Error de red: ' + e.message, 'err');
@@ -2004,18 +2014,17 @@ async function webhookCall(payload) {
 }
 
 async function testWebhook() {
+  const wh = getWebhookCfg();
+  const url   = wh.url   || '';
+  const token = wh.token || '';
+  if (!url || !token) {
+    setWebhookStatus('⚠ Configurá URL y token en el menú Configuración', 'err');
+    return;
+  }
   setWebhookStatus('Probando conexión...', 'load');
-  const url   = document.getElementById('webhook-url').value.trim();
-  const token = document.getElementById('webhook-token').value.trim();
-  if (!url || !token) { setWebhookStatus('⚠ Completá URL y token', 'err'); return; }
-  saveWebhookCfg();
-
-  // With no-cors we can't read the response, so we use a jsonp-style approach
-  // by fetching with url params for GET ping
   try {
-    // Try a GET request to check URL is reachable (Apps Script supports GET too)
     const pingUrl = url + '?action=ping&token=' + encodeURIComponent(token);
-    const res = await fetch(pingUrl);
+    const res  = await fetch(pingUrl);
     const data = await res.json();
     if (data.ok) {
       setWebhookStatus('✓ Conexión exitosa: ' + (data.msg||'pong'), 'ok');
@@ -2035,30 +2044,17 @@ async function syncToSheet() {
   }
   setWebhookStatus('Sincronizando ' + localProducts.length + ' productos...', 'load');
 
-  // Map internal keys to sheet column names
   const payload = {
     action: 'sync',
     products: localProducts.map(p => ({
-      id:        p.id,
-      nombre:    p.name,
-      precio:    p.price,
-      stock:     p.stock,
-      categoria: p.cat,
-      emoji:     p.emoji || '',
-      imagen:    p.img   || '',
-      oculto:    p.hidden ? 'si' : '',
+      id: p.id, nombre: p.name, precio: p.price, stock: p.stock,
+      categoria: p.cat, emoji: p.emoji||'', imagen: p.img||'', oculto: p.hidden?'si':'',
     }))
   };
 
   const result = await webhookCall(payload);
   if (result) {
     setWebhookStatus(`✓ ${localProducts.length} productos enviados al Sheet`, 'ok');
-    // Flash the button
-    const btn = event.currentTarget;
-    const orig = btn.innerHTML;
-    btn.innerHTML = '<i class="bi bi-check2-circle"></i> ¡Sincronizado!';
-    btn.style.background = 'var(--green)';
-    setTimeout(()=>{ btn.innerHTML=orig; btn.style.background=''; }, 3000);
   }
 }
 
@@ -2574,8 +2570,8 @@ function initConfigView() {
   if (wh.url)   document.getElementById('cfg-webhook-url').value   = wh.url;
   if (wh.token) document.getElementById('cfg-webhook-token').value = wh.token;
 
-  const sheetUrl = document.getElementById('sheet-url')?.value ||
-    'https://docs.google.com/spreadsheets/d/e/2PACX-1vS3mssf-j0joT1S6CKlZHfSPTSXPHypZ_PHypn702KMgUYvteXDajrEVymXqYFgFVfqQcsUvJn6ktK2/pub?gid=0&single=true&output=csv';
+  const sheetUrl = localStorage.getItem('storeapp_sheet_url')
+    || 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS3mssf-j0joT1S6CKlZHfSPTSXPHypZ_PHypn702KMgUYvteXDajrEVymXqYFgFVfqQcsUvJn6ktK2/pub?gid=0&single=true&output=csv';
   document.getElementById('cfg-sheet-url').value = sheetUrl;
 
   if (sc.name)    document.getElementById('cfg-store-name').value    = sc.name;
@@ -2592,14 +2588,9 @@ function initConfigView() {
 }
 
 function saveConfig() {
-  // Sheet URL
+  // Sheet URL — save to localStorage only
   const sheetUrl = document.getElementById('cfg-sheet-url').value.trim();
-  if (sheetUrl) {
-    // Update hidden sheet-url if it exists, otherwise just store it
-    const su = document.getElementById('sheet-url');
-    if (su) su.value = sheetUrl;
-    localStorage.setItem('storeapp_sheet_url', sheetUrl);
-  }
+  if (sheetUrl) localStorage.setItem('storeapp_sheet_url', sheetUrl);
 
   // Webhook
   const wUrl   = document.getElementById('cfg-webhook-url').value.trim();
@@ -2636,14 +2627,12 @@ async function testAndLoadSheet() {
   const el  = document.getElementById('cfg-sheet-status');
   if (!url) { el.style.color='var(--red)'; el.textContent='⚠ Ingresá la URL primero'; return; }
   el.style.color='var(--silver)'; el.textContent='Cargando...';
-
-  // Update main sheet-url field and reload
-  const su = document.getElementById('sheet-url');
-  if (su) su.value = url;
   localStorage.setItem('storeapp_sheet_url', url);
   await loadSheet();
-  el.style.color='var(--green)';
-  el.textContent=`✓ ${products.length} productos cargados`;
+  el.style.color = products.length ? 'var(--green)' : 'var(--red)';
+  el.textContent  = products.length
+    ? `✓ ${products.length} productos cargados correctamente`
+    : '✕ No se encontraron productos — verificá la URL';
 }
 
 async function testWebhookConfig() {
@@ -2664,13 +2653,9 @@ async function testWebhookConfig() {
 }
 
 async function syncToSheetConfig() {
-  // Sync current products to sheet using config panel values
-  document.getElementById('cfg-webhook-url').value   && (document.getElementById('webhook-url') && (document.getElementById('webhook-url').value = document.getElementById('cfg-webhook-url').value));
-  document.getElementById('cfg-webhook-token').value && (document.getElementById('webhook-token') && (document.getElementById('webhook-token').value = document.getElementById('cfg-webhook-token').value));
+  // Save config first so webhookCall picks up the latest values
+  saveConfig();
   await syncToSheet();
-  const el = document.getElementById('cfg-webhook-status');
-  el.style.color='var(--green)';
-  el.textContent='✓ Productos sincronizados al Sheet';
 }
 
 function toggleTokenVis() {
@@ -2743,18 +2728,10 @@ async function handleModalPhotoUpload(input) {
 
 /* ═══════════════════════════════════════════ INIT */
 applyDashTheme();
-
-// Restore saved sheet URL if any
-const savedSheetUrl = localStorage.getItem('storeapp_sheet_url');
-if (savedSheetUrl) {
-  const su = document.getElementById('sheet-url');
-  if (su) su.value = savedSheetUrl;
-}
-
 initCharts();
-loadSheet();
+loadSheet();        // reads from localStorage / SHEET_URL_DEFAULT
 initLogoPreview();
-loadWebhookCfg();
+loadWebhookCfg();   // ensures localStorage defaults are set
 
 // Load saved orders from localStorage on startup
 try {
