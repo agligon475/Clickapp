@@ -343,6 +343,26 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
   background:var(--iron);
 }
 .logo-upload-btn:hover{border-color:var(--red);color:var(--white);}
+
+/* ORDER FORM */
+.order-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:700px){.order-form-grid{grid-template-columns:1fr;}}
+.order-item-row{
+  display:flex;align-items:center;gap:8px;
+  background:var(--iron);border:1px solid var(--zinc);
+  border-radius:8px;padding:8px 12px;
+}
+.order-item-emoji{font-size:18px;flex-shrink:0;}
+.order-item-name{flex:1;font-size:12px;font-weight:500;color:var(--white);}
+.order-item-price{font-size:12px;color:var(--silver);white-space:nowrap;}
+.order-item-del{
+  width:24px;height:24px;border-radius:5px;
+  background:transparent;border:1px solid var(--zinc);
+  color:var(--silver);cursor:pointer;font-size:12px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .12s;flex-shrink:0;
+}
+.order-item-del:hover{background:rgba(215,38,56,.2);border-color:var(--red);color:var(--red);}
 </style>
 </head>
 <body>
@@ -455,8 +475,8 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
 
     <div class="card">
       <div class="card-title">
-        Últimos pedidos (demo)
-        <span style="font-size:10px;color:var(--zinc);font-weight:400;">Conectá una hoja de pedidos para ver datos reales</span>
+        Últimos pedidos
+        <span style="font-size:10px;color:var(--zinc);font-weight:400;" id="sheet-sync-info">Cargando...</span>
       </div>
       <div style="overflow-x:auto;">
         <table class="data-table" id="orders-tbl">
@@ -469,14 +489,128 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
 
   <!-- ══ ORDERS ══ -->
   <div class="view" id="view-orders">
+
+    <!-- New order form -->
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title" style="margin-bottom:16px;">
+        <i class="bi bi-plus-circle" style="color:var(--red);"></i> Cargar nuevo pedido
+      </div>
+
+      <div class="order-form-grid">
+
+        <div class="ctrl-group">
+          <label class="ctrl-label">Cliente (nombre y apellido) *</label>
+          <input class="ctrl-input" id="of-nombre" placeholder="Juan García"/>
+        </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">DNI</label>
+          <input class="ctrl-input" id="of-dni" placeholder="30.123.456"/>
+        </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">Forma de pago *</label>
+          <select class="ctrl-input" id="of-pago">
+            <option value="">Seleccioná...</option>
+            <option>Efectivo</option>
+            <option>Transferencia bancaria</option>
+            <option>Cheque</option>
+            <option>Depósito bancario</option>
+          </select>
+        </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">Logística *</label>
+          <select class="ctrl-input" id="of-logistica">
+            <option value="">Seleccioná...</option>
+            <option>Retiro por la tienda</option>
+            <option>Envío a domicilio</option>
+          </select>
+        </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">Dirección de envío</label>
+          <input class="ctrl-input" id="of-direccion" placeholder="Solo si es envío a domicilio"/>
+        </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">Estado inicial</label>
+          <select class="ctrl-input" id="of-estado">
+            <option value="pend">Pendiente</option>
+            <option value="ok">Confirmado</option>
+            <option value="ship">En camino</option>
+          </select>
+        </div>
+
+        <!-- Products picker -->
+        <div class="ctrl-group" style="grid-column:1/-1;">
+          <label class="ctrl-label">Productos del pedido</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <select class="ctrl-input" id="of-prod-select" style="flex:1;">
+              <option value="">Seleccioná un producto...</option>
+            </select>
+            <input class="ctrl-input" id="of-prod-qty" type="number" min="1" value="1"
+              style="width:70px;text-align:center;" title="Cantidad"/>
+            <button class="abm-btn-new" onclick="addOrderItem()" style="padding:8px 14px;white-space:nowrap;">
+              <i class="bi bi-plus"></i> Agregar
+            </button>
+          </div>
+          <!-- Items list -->
+          <div id="of-items" style="display:flex;flex-direction:column;gap:6px;min-height:32px;">
+            <div id="of-empty" style="font-size:11px;color:var(--silver);padding:8px 0;">
+              Ningún producto agregado aún.
+            </div>
+          </div>
+        </div>
+
+        <!-- Also allow free text for items not in catalog -->
+        <div class="ctrl-group" style="grid-column:1/-1;">
+          <label class="ctrl-label">Productos adicionales (texto libre)</label>
+          <input class="ctrl-input" id="of-extra" placeholder="Ej: Tornillos varios ×50, Grasa ×2 — separados por coma"/>
+          <div style="font-size:10px;color:var(--silver);margin-top:3px;">Para productos que no están en el catálogo</div>
+        </div>
+
+        <!-- Total -->
+        <div class="ctrl-group" style="grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;background:var(--iron);border-radius:10px;padding:12px 16px;">
+          <div>
+            <div style="font-size:10px;color:var(--silver);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Total del pedido</div>
+            <div style="font-family:var(--font-h);font-size:28px;font-weight:800;" id="of-total-display">$0</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+            <div style="font-size:11px;color:var(--silver);">O ingresá el total manualmente:</div>
+            <input class="ctrl-input" id="of-total-manual" type="number" min="0"
+              placeholder="0" style="width:140px;text-align:right;font-size:15px;font-weight:600;"
+              oninput="updateTotalDisplay()"/>
+          </div>
+        </div>
+
+      </div><!-- /order-form-grid -->
+
+      <div style="display:flex;gap:10px;margin-top:16px;">
+        <button class="abm-btn-new" onclick="saveOrder()" style="flex:1;justify-content:center;padding:11px;">
+          <i class="bi bi-floppy"></i> Guardar pedido
+        </button>
+        <button onclick="clearOrderForm()"
+          style="padding:11px 18px;background:var(--iron);border:1px solid var(--zinc);border-radius:8px;color:var(--fog);font-size:13px;cursor:pointer;font-family:var(--font-b);">
+          Limpiar
+        </button>
+      </div>
+      <div id="of-feedback" style="font-size:11px;margin-top:8px;min-height:16px;"></div>
+    </div>
+
+    <!-- Orders history table -->
     <div class="card">
-      <div class="card-title">Historial de pedidos (demo)</div>
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+        Historial de pedidos
+        <div style="display:flex;gap:8px;">
+          <input class="ctrl-input" id="orders-search" placeholder="Buscar cliente..." oninput="filterOrdersTable()" style="width:180px;font-size:11px;padding:4px 8px;"/>
+          <button class="sb-btn" style="background:var(--iron);border:1px solid var(--zinc);" onclick="exportOrders()">
+            <i class="bi bi-download"></i> CSV
+          </button>
+        </div>
+      </div>
       <div style="overflow-x:auto;">
         <table class="data-table">
-          <thead><tr><th>#</th><th>Fecha</th><th>Cliente</th><th>DNI</th><th>Productos</th><th>Pago</th><th>Logística</th><th>Total</th><th>Estado</th></tr></thead>
+          <thead><tr><th>#</th><th>Fecha</th><th>Cliente</th><th>DNI</th><th>Productos</th><th>Pago</th><th>Logística</th><th>Total</th><th>Estado</th><th></th></tr></thead>
           <tbody id="all-orders-body"></tbody>
         </table>
       </div>
+      <div id="orders-count" style="font-size:11px;color:var(--silver);margin-top:10px;"></div>
     </div>
   </div>
 
@@ -912,23 +1046,158 @@ function initCharts(){
   updateMetrics();
 }
 
-/* ORDERS DEMO */
+/* ORDERS */
 const DEMO_ORDERS=[
-  {id:'0142',fecha:'30/04/2026',cliente:'Martín R.',dni:'28.xxx.xxx',prods:'Taladro + brocas',pago:'Transferencia',logis:'Envío',total:48500,estado:'ok'},
-  {id:'0141',fecha:'30/04/2026',cliente:'Claudia P.',dni:'35.xxx.xxx',prods:'Cinta ×3 + tubo',pago:'Efectivo',logis:'Retiro',total:12200,estado:'pend'},
-  {id:'0140',fecha:'29/04/2026',cliente:'Jorge S.',dni:'22.xxx.xxx',prods:'Disyuntor bif.',pago:'Cheque',logis:'Envío',total:35000,estado:'ok'},
-  {id:'0139',fecha:'29/04/2026',cliente:'Ana M.',dni:'31.xxx.xxx',prods:'Llave inglesa + grasa',pago:'Transferencia',logis:'Retiro',total:22800,estado:'ship'},
-  {id:'0138',fecha:'28/04/2026',cliente:'Roberto G.',dni:'19.xxx.xxx',prods:'Caño PVC ×4',pago:'Depósito',logis:'Envío',total:18400,estado:'ok'},
+  {id:'PED-DEMO1',fecha:'30/04/2026',cliente:'Martín R.',dni:'28.xxx.xxx',productos:'Taladro + brocas',pago:'Transferencia',logistica:'Envío',total:48500,estado:'pend'},
+  {id:'PED-DEMO2',fecha:'30/04/2026',cliente:'Claudia P.',dni:'35.xxx.xxx',productos:'Cinta ×3 + tubo',pago:'Efectivo',logistica:'Retiro',total:12200,estado:'pend'},
 ];
-const BADGE={ok:`<span class="badge badge-green"><i class="bi bi-check2"></i> Confirmado</span>`,pend:`<span class="badge badge-amber"><i class="bi bi-clock"></i> Pendiente</span>`,ship:`<span class="badge badge-blue"><i class="bi bi-truck"></i> En camino</span>`};
+const BADGE={
+  ok:  `<span class="badge badge-green"><i class="bi bi-check2"></i> Confirmado</span>`,
+  pend:`<span class="badge badge-amber"><i class="bi bi-clock"></i> Pendiente</span>`,
+  ship:`<span class="badge badge-blue"><i class="bi bi-truck"></i> En camino</span>`,
+};
 
-function renderOrdersTable(){
-  document.getElementById('orders-body').innerHTML=DEMO_ORDERS.map(o=>`
-    <tr><td><strong>#${o.id}</strong></td><td>${o.cliente}</td><td style="color:var(--silver)">${o.prods}</td><td>${o.pago}</td><td>${o.logis}</td><td><strong>$${o.total.toLocaleString('es-AR')}</strong></td><td>${BADGE[o.estado]}</td></tr>`).join('');
+// Called both by initCharts (demo fallback) and loadOrders (real data)
+function renderOrdersTable(orders) {
+  orders = orders || DEMO_ORDERS;
+  const recent = orders.slice(0, 20);
+  document.getElementById('orders-body').innerHTML = recent.map(o=>`
+    <tr>
+      <td><strong>${o.id}</strong></td>
+      <td>${o.cliente}</td>
+      <td style="color:var(--silver);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${o.productos}</td>
+      <td>${o.pago}</td>
+      <td>${o.logistica||o.logis||'—'}</td>
+      <td><strong>$${Number(o.total||0).toLocaleString('es-AR')}</strong></td>
+      <td>
+        ${BADGE[o.estado]||BADGE.pend}
+        <select onchange="updateOrderEstado('${o.id}',this.value)"
+          style="font-size:10px;background:var(--iron);border:1px solid var(--zinc);border-radius:5px;color:var(--fog);padding:2px 4px;margin-top:3px;cursor:pointer;">
+          <option value="pend"  ${o.estado==='pend' ?'selected':''}>Pendiente</option>
+          <option value="ok"    ${o.estado==='ok'   ?'selected':''}>Confirmado</option>
+          <option value="ship"  ${o.estado==='ship' ?'selected':''}>En camino</option>
+        </select>
+      </td>
+    </tr>`).join('') || `<tr><td colspan="7" style="text-align:center;color:var(--silver);padding:30px;">
+      No hay pedidos todavía. Los pedidos aparecerán acá automáticamente cuando los clientes usen la tienda.
+    </td></tr>`;
 }
-function renderAllOrders(){
-  document.getElementById('all-orders-body').innerHTML=DEMO_ORDERS.map(o=>`
-    <tr><td>#${o.id}</td><td>${o.fecha}</td><td>${o.cliente}</td><td>${o.dni}</td><td>${o.prods}</td><td>${o.pago}</td><td>${o.logis}</td><td>$${o.total.toLocaleString('es-AR')}</td><td>${BADGE[o.estado]}</td></tr>`).join('');
+
+function renderAllOrders(orders) {
+  orders = orders || DEMO_ORDERS;
+  document.getElementById('all-orders-body').innerHTML = orders.map(o=>`
+    <tr>
+      <td>${o.id}</td><td>${o.fecha}</td><td>${o.cliente}</td><td>${o.dni||'—'}</td>
+      <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${o.productos}</td>
+      <td>${o.pago}</td><td>${o.logistica||o.logis||'—'}</td>
+      <td>$${Number(o.total||0).toLocaleString('es-AR')}</td>
+      <td>${BADGE[o.estado]||BADGE.pend}</td>
+    </tr>`).join('');
+}
+
+// Update order estado and push to Sheet
+async function updateOrderEstado(id, estado) {
+  const wh = getWebhookCfg();
+  if (!wh.url || !wh.token) return;
+  const estadoLabel = {ok:'Confirmado', ship:'En camino', pend:'Pendiente'}[estado]||estado;
+  await fetch(wh.url, {
+    method:'POST', mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ token: wh.token, action:'update_pedido', id, estado: estadoLabel })
+  }).catch(()=>{});
+}
+
+// Load real orders from Sheet via webhook GET
+async function loadOrders() {
+  const wh = getWebhookCfg();
+  if (!wh.url || !wh.token) {
+    renderOrdersTable(DEMO_ORDERS);
+    document.getElementById('sheet-sync-info').textContent = 'Mostrando datos demo · configurá el webhook para ver pedidos reales';
+    return;
+  }
+
+  try {
+    const url  = wh.url + '?action=pedidos&token=' + encodeURIComponent(wh.token);
+    const res  = await fetch(url);
+    const data = await res.json();
+
+    if (!data.ok || !data.pedidos?.length) {
+      renderOrdersTable([]);
+      document.getElementById('sheet-sync-info').textContent = 'Sin pedidos todavía — los próximos aparecerán acá automáticamente';
+      return;
+    }
+
+    const orders = data.pedidos.map(p => ({
+      id:        p.id        || '—',
+      fecha:     p.fecha     || '—',
+      cliente:   p.cliente   || '—',
+      dni:       p.dni       || '—',
+      productos: p.productos || '—',
+      pago:      p.pago      || '—',
+      logistica: p.logistica || '—',
+      total:     parseFloat(String(p.total||'0').replace(/[^0-9.]/g,'')) || 0,
+      estado:    (p.estado||'').toLowerCase().includes('confirm') ? 'ok'
+                :(p.estado||'').toLowerCase().includes('camino')  ? 'ship'
+                : 'pend',
+    })).reverse();
+
+    renderOrdersTable(orders);
+    renderAllOrders(orders);
+    updateMetricsFromOrders(orders);
+    document.getElementById('sheet-sync-info').textContent =
+      `${orders.length} pedidos reales · ${new Date().toLocaleTimeString('es-AR')}`;
+
+  } catch(e) {
+    console.warn('Error cargando pedidos:', e.message);
+    renderOrdersTable(DEMO_ORDERS);
+    document.getElementById('sheet-sync-info').textContent = 'Error al cargar pedidos reales — mostrando demo';
+  }
+}
+
+function updateMetricsFromOrders(orders) {
+  const total    = orders.reduce((s,o) => s + o.total, 0);
+  const avg      = orders.length ? Math.round(total / orders.length) : 0;
+  const clientes = new Set(orders.map(o => o.dni||o.cliente).filter(Boolean)).size;
+
+  document.getElementById('m-ord').textContent   = orders.length;
+  document.getElementById('m-rev').textContent   = total >= 1000000
+    ? '$' + (total/1000000).toFixed(1) + 'M'
+    : '$' + Math.round(total/1000) + 'K';
+  document.getElementById('m-avg').textContent   = '$' + Math.round(avg/1000) + 'K';
+  document.getElementById('m-prods').textContent = products.length || '—';
+
+  document.getElementById('m-ord-d').innerHTML   = `<i class="bi bi-people"></i> ${clientes} clientes únicos`;
+  document.getElementById('m-rev-d').innerHTML   = `<span style="color:var(--silver);">total acumulado</span>`;
+  document.getElementById('m-avg-d').innerHTML   = `<span style="color:var(--silver);">por pedido</span>`;
+  document.getElementById('m-prods-d').innerHTML = `<span style="color:var(--silver);">en catálogo</span>`;
+
+  // Update daily orders chart
+  if (cOrders && orders.length) {
+    const days30 = Array.from({length:30},(_,i)=>{
+      const d = new Date(); d.setDate(d.getDate()-29+i);
+      return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit'});
+    });
+    const countByDay = {};
+    orders.forEach(o => {
+      const d = (o.fecha||'').split(' ')[0]||'';
+      countByDay[d] = (countByDay[d]||0)+1;
+    });
+    cOrders.data.labels = days30;
+    cOrders.data.datasets[0].data = days30.map(d => countByDay[d]||0);
+    cOrders.update();
+  }
+
+  // Update payment donut
+  if (cPago && orders.length) {
+    const map = {};
+    orders.forEach(o => { map[o.pago] = (map[o.pago]||0)+1; });
+    const entries = Object.entries(map).sort((a,b)=>b[1]-a[1]);
+    const reds = ['#D72638','#E74C3C','#922B21','#F1948A','#CD6155'];
+    cPago.data.labels = entries.map(e=>e[0]);
+    cPago.data.datasets[0].data = entries.map(e=>e[1]);
+    cPago.data.datasets[0].backgroundColor = reds.slice(0, entries.length);
+    cPago.update();
+  }
 }
 
 /* PRODUCTS VIEW */
@@ -1135,8 +1404,9 @@ function initDesignPanel(){
 const _origShowView = showView;
 window.showView = function(name, el){
   _origShowView(name, el);
-  if(name==='design') initDesignPanel();
-  if(name==='abm')    initABM();
+  if(name==='design')  initDesignPanel();
+  if(name==='abm')     initABM();
+  if(name==='orders')  initOrderForm();
 };
 
 /* ═══════════════════════════════════════════ LOGO UPLOAD */
@@ -1471,11 +1741,360 @@ async function webhookDeleteProduct(id) {
   await webhookCall({ action: 'delete', id });
 }
 
+/* ═══════════════════════════════════════════ ORDER FORM */
+
+let orderItems = [];  // { id, name, emoji, price, qty }
+let allOrders  = [];  // master list in memory
+
+function initOrderForm() {
+  // Populate product selector from loaded products
+  const sel = document.getElementById('of-prod-select');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">Seleccioná un producto...</option>' +
+    localProducts.filter(p => !p.hidden && p.stock > 0).map(p =>
+      `<option value="${p.id}">${p.emoji||'📦'} ${p.name} — $${p.price.toLocaleString('es-AR')}</option>`
+    ).join('');
+
+  // Load saved orders from localStorage
+  try {
+    const saved = localStorage.getItem('storeapp_orders');
+    if (saved) allOrders = JSON.parse(saved);
+  } catch(e) { allOrders = []; }
+
+  renderAllOrders(allOrders);
+  updateDashboardFromOrders(allOrders);
+}
+
+function addOrderItem() {
+  const sel = document.getElementById('of-prod-select');
+  const qty = parseInt(document.getElementById('of-prod-qty').value) || 1;
+  const id  = parseInt(sel.value);
+  if (!id) { setOrderFeedback('⚠ Seleccioná un producto primero', 'err'); return; }
+
+  const prod = localProducts.find(p => p.id === id);
+  if (!prod) return;
+
+  const existing = orderItems.find(x => x.id === id);
+  if (existing) {
+    existing.qty += qty;
+  } else {
+    orderItems.push({ id: prod.id, name: prod.name, emoji: prod.emoji||'📦', price: prod.price, qty });
+  }
+
+  sel.value = '';
+  document.getElementById('of-prod-qty').value = 1;
+  renderOrderItems();
+}
+
+function removeOrderItem(id) {
+  orderItems = orderItems.filter(x => x.id !== id);
+  renderOrderItems();
+}
+
+function renderOrderItems() {
+  const wrap = document.getElementById('of-items');
+  const empty = document.getElementById('of-empty');
+
+  if (!orderItems.length) {
+    empty.style.display = 'block';
+    wrap.innerHTML = '';
+    wrap.appendChild(empty);
+    updateTotalDisplay();
+    return;
+  }
+
+  empty.style.display = 'none';
+  wrap.innerHTML = orderItems.map(item => `
+    <div class="order-item-row">
+      <span class="order-item-emoji">${item.emoji}</span>
+      <span class="order-item-name">${item.name}
+        <span style="color:var(--silver);font-weight:400;"> ×${item.qty}</span>
+      </span>
+      <span class="order-item-price">$${(item.price * item.qty).toLocaleString('es-AR')}</span>
+      <button class="order-item-del" onclick="removeOrderItem(${item.id})">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>`).join('');
+
+  updateTotalDisplay();
+}
+
+function updateTotalDisplay() {
+  const autoTotal = orderItems.reduce((s, x) => s + x.price * x.qty, 0);
+  const manualVal = parseFloat(document.getElementById('of-total-manual')?.value) || 0;
+  const display   = manualVal > 0 ? manualVal : autoTotal;
+  const el = document.getElementById('of-total-display');
+  if (el) el.textContent = '$' + display.toLocaleString('es-AR');
+}
+
+function getOrderTotal() {
+  const manual = parseFloat(document.getElementById('of-total-manual')?.value) || 0;
+  const auto   = orderItems.reduce((s, x) => s + x.price * x.qty, 0);
+  return manual > 0 ? manual : auto;
+}
+
+function setOrderFeedback(msg, type='ok') {
+  const el = document.getElementById('of-feedback');
+  if (!el) return;
+  el.style.color = type === 'err' ? 'var(--red)' : 'var(--green)';
+  el.textContent = msg;
+  if (type === 'ok') setTimeout(() => { el.textContent = ''; }, 3000);
+}
+
+function saveOrder() {
+  const nombre   = document.getElementById('of-nombre').value.trim();
+  const dni      = document.getElementById('of-dni').value.trim();
+  const pago     = document.getElementById('of-pago').value;
+  const logistica= document.getElementById('of-logistica').value;
+  const direccion= document.getElementById('of-direccion').value.trim();
+  const estado   = document.getElementById('of-estado').value;
+  const extra    = document.getElementById('of-extra').value.trim();
+
+  if (!nombre) { setOrderFeedback('⚠ El nombre del cliente es obligatorio', 'err'); return; }
+  if (!pago)   { setOrderFeedback('⚠ Seleccioná la forma de pago', 'err'); return; }
+  if (!logistica) { setOrderFeedback('⚠ Seleccioná la logística', 'err'); return; }
+  if (!orderItems.length && !extra) {
+    setOrderFeedback('⚠ Agregá al menos un producto', 'err'); return;
+  }
+
+  const total = getOrderTotal();
+  const id    = 'PED-' + Date.now().toString(36).toUpperCase();
+  const fecha = new Date().toLocaleString('es-AR', {
+    day:'2-digit', month:'2-digit', year:'numeric',
+    hour:'2-digit', minute:'2-digit'
+  });
+
+  // Build products string
+  const prodLines = [
+    ...orderItems.map(x => `${x.name} ×${x.qty}`),
+    ...(extra ? extra.split(',').map(s => s.trim()).filter(Boolean) : [])
+  ].join(' | ');
+
+  const order = {
+    id, fecha, cliente: nombre, dni, productos: prodLines,
+    detalle: JSON.stringify(orderItems),
+    pago, logistica, direccion, total, estado,
+  };
+
+  // Save to local list
+  allOrders.unshift(order);
+  localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
+
+  // Save to Sheet via webhook if configured
+  syncOrderToSheet(order);
+
+  // Update UI
+  renderAllOrders(allOrders);
+  updateDashboardFromOrders(allOrders);
+  clearOrderForm();
+  setOrderFeedback(`✓ Pedido ${id} guardado correctamente`);
+}
+
+async function syncOrderToSheet(order) {
+  const wh = getWebhookCfg();
+  if (!wh.url || !wh.token) return;
+  try {
+    await fetch(wh.url, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'pedido', token: wh.token,
+        pedido: {
+          id:        order.id,
+          fecha:     order.fecha,
+          cliente:   order.cliente,
+          dni:       order.dni,
+          productos: order.productos,
+          detalle:   order.detalle,
+          pago:      order.pago,
+          logistica: order.logistica,
+          direccion: order.direccion,
+          total:     order.total,
+          estado:    { ok:'Confirmado', ship:'En camino', pend:'Pendiente' }[order.estado] || 'Pendiente',
+        }
+      })
+    });
+  } catch(e) { console.warn('Webhook no disponible:', e.message); }
+}
+
+function clearOrderForm() {
+  ['of-nombre','of-dni','of-direccion','of-extra','of-total-manual'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  ['of-pago','of-logistica'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('of-estado').value = 'pend';
+  orderItems = [];
+  renderOrderItems();
+  updateTotalDisplay();
+}
+
+function renderAllOrders(orders) {
+  orders = orders || allOrders;
+  const tbody = document.getElementById('all-orders-body');
+  if (!tbody) return;
+
+  if (!orders.length) {
+    tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:var(--silver);padding:40px;">
+      No hay pedidos registrados todavía. Usá el formulario de arriba para cargar el primero.
+    </td></tr>`;
+    document.getElementById('orders-count').textContent = '';
+    return;
+  }
+
+  tbody.innerHTML = orders.map(o => `
+    <tr>
+      <td style="font-size:11px;font-family:monospace;color:var(--silver);">${o.id}</td>
+      <td style="white-space:nowrap;font-size:11px;">${o.fecha}</td>
+      <td><strong style="color:var(--white);">${o.cliente}</strong></td>
+      <td style="color:var(--silver);font-size:11px;">${o.dni||'—'}</td>
+      <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--fog);font-size:11px;"
+          title="${o.productos}">${o.productos}</td>
+      <td style="white-space:nowrap;">${o.pago}</td>
+      <td style="white-space:nowrap;">${o.logistica}</td>
+      <td style="white-space:nowrap;font-family:var(--font-h);font-size:15px;font-weight:700;">
+        $${Number(o.total||0).toLocaleString('es-AR')}
+      </td>
+      <td>
+        <select onchange="changeOrderEstado('${o.id}',this.value)"
+          style="font-size:10px;background:var(--iron);border:1px solid var(--zinc);
+                 border-radius:6px;color:var(--fog);padding:3px 6px;cursor:pointer;font-family:var(--font-b);">
+          <option value="pend"  ${o.estado==='pend' ?'selected':''}>⏳ Pendiente</option>
+          <option value="ok"    ${o.estado==='ok'   ?'selected':''}>✓ Confirmado</option>
+          <option value="ship"  ${o.estado==='ship' ?'selected':''}>🚚 En camino</option>
+        </select>
+      </td>
+      <td>
+        <button class="abm-action del" onclick="deleteOrder('${o.id}')" title="Eliminar">
+          <i class="bi bi-trash"></i>
+        </button>
+      </td>
+    </tr>`).join('');
+
+  const count = document.getElementById('orders-count');
+  if (count) count.textContent = `${orders.length} pedido${orders.length!==1?'s':''} registrado${orders.length!==1?'s':''}`;
+}
+
+function filterOrdersTable() {
+  const q = (document.getElementById('orders-search')?.value||'').toLowerCase();
+  const filtered = q
+    ? allOrders.filter(o => o.cliente.toLowerCase().includes(q) || o.id.toLowerCase().includes(q) || (o.dni||'').includes(q))
+    : allOrders;
+  renderAllOrders(filtered);
+}
+
+function changeOrderEstado(id, estado) {
+  const o = allOrders.find(x => x.id === id);
+  if (o) {
+    o.estado = estado;
+    localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
+    updateDashboardFromOrders(allOrders);
+    // Sync to Sheet
+    const label = { ok:'Confirmado', ship:'En camino', pend:'Pendiente' }[estado];
+    updateOrderEstado(id, label);
+  }
+}
+
+function deleteOrder(id) {
+  if (!confirm('¿Eliminar este pedido?')) return;
+  allOrders = allOrders.filter(x => x.id !== id);
+  localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
+  renderAllOrders(allOrders);
+  updateDashboardFromOrders(allOrders);
+}
+
+function exportOrders() {
+  const headers = ['id','fecha','cliente','dni','productos','pago','logistica','direccion','total','estado'];
+  const rows = allOrders.map(o =>
+    headers.map(h => {
+      const v = o[h] !== undefined ? String(o[h]) : '';
+      return v.includes(',') ? `"${v}"` : v;
+    }).join(',')
+  );
+  const csv  = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], { type:'text/csv' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `pedidos-${new Date().toLocaleDateString('es-AR').replace(/\//g,'-')}.csv`;
+  a.click();
+}
+
+function updateDashboardFromOrders(orders) {
+  if (!orders || !orders.length) return;
+
+  const total    = orders.reduce((s,o) => s + Number(o.total||0), 0);
+  const avg      = Math.round(total / orders.length);
+  const clientes = new Set(orders.map(o => o.dni||o.cliente).filter(Boolean)).size;
+
+  document.getElementById('m-ord').textContent  = orders.length;
+  document.getElementById('m-rev').textContent  = total >= 1000000
+    ? '$' + (total/1000000).toFixed(1) + 'M'
+    : '$' + Math.round(total/1000) + 'K';
+  document.getElementById('m-avg').textContent  = '$' + Math.round(avg/1000) + 'K';
+  document.getElementById('m-ord-d').innerHTML  = `<i class="bi bi-people"></i> ${clientes} clientes únicos`;
+  document.getElementById('m-rev-d').innerHTML  = `<span style="color:var(--silver);">total acumulado</span>`;
+  document.getElementById('m-avg-d').innerHTML  = `<span style="color:var(--silver);">por pedido</span>`;
+
+  // Update orders table in dashboard view too
+  renderOrdersTable(orders.slice(0, 10));
+
+  // Update daily chart
+  if (cOrders) {
+    const days30 = Array.from({length:30}, (_,i) => {
+      const d = new Date(); d.setDate(d.getDate()-29+i);
+      return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit'});
+    });
+    const countByDay = {};
+    orders.forEach(o => {
+      const d = (o.fecha||'').split(' ')[0] || (o.fecha||'').split(',')[0] || '';
+      countByDay[d] = (countByDay[d]||0)+1;
+    });
+    cOrders.data.labels = days30;
+    cOrders.data.datasets[0].data = days30.map(d => countByDay[d]||0);
+    cOrders.update();
+  }
+
+  // Update payment donut
+  if (cPago) {
+    const map = {};
+    orders.forEach(o => { map[o.pago] = (map[o.pago]||0)+1; });
+    const entries = Object.entries(map).sort((a,b) => b[1]-a[1]);
+    const reds = ['#D72638','#E74C3C','#922B21','#F1948A','#CD6155'];
+    cPago.data.labels = entries.map(e => e[0]);
+    cPago.data.datasets[0].data = entries.map(e => e[1]);
+    cPago.data.datasets[0].backgroundColor = reds.slice(0, entries.length);
+    cPago.update();
+  }
+}
+
 /* ═══════════════════════════════════════════ INIT */
 initCharts();
 loadSheet();
 initLogoPreview();
 loadWebhookCfg();
+
+// Load saved orders from localStorage on startup
+try {
+  const saved = localStorage.getItem('storeapp_orders');
+  if (saved) {
+    allOrders = JSON.parse(saved);
+    if (allOrders.length) {
+      renderOrdersTable(allOrders.slice(0,10));
+      updateDashboardFromOrders(allOrders);
+      document.getElementById('sheet-sync-info').textContent =
+        `${allOrders.length} pedido${allOrders.length!==1?'s':''} guardado${allOrders.length!==1?'s':''}`;
+    } else {
+      renderOrdersTable([]);
+      document.getElementById('sheet-sync-info').textContent = 'Sin pedidos todavía';
+    }
+  } else {
+    renderOrdersTable([]);
+    document.getElementById('sheet-sync-info').textContent = 'Sin pedidos todavía';
+  }
+} catch(e) { renderOrdersTable([]); }
 </script>
 
 <!-- ══ MODAL ══ -->
