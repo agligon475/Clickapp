@@ -1680,6 +1680,7 @@ function deleteProduct(id) {
 
 function saveLocalProducts() {
   localStorage.setItem('storeapp_local_products', JSON.stringify(localProducts));
+  localStorage.setItem('storeapp_abm_active', '1');
   // Flash button
   const btn = event.currentTarget;
   const orig = btn.innerHTML;
@@ -2341,17 +2342,6 @@ initLogoPreview();
 loadWebhookCfg();
 
 // Load saved orders from localStorage on startup
-try {
-  // Clear stale demo product cache (≤10 items from old sessions)
-  const cachedProds = localStorage.getItem('storeapp_local_products');
-  if (cachedProds) {
-    const cp = JSON.parse(cachedProds);
-    if (cp.length <= 10 && cp.every(p => [1,2,3,4,5,6,7,8,9].includes(p.id))) {
-      localStorage.removeItem('storeapp_local_products');
-      console.info('Caché de productos demo eliminado — se usarán datos del Sheet.');
-    }
-  }
-} catch(e) {}
 try {
   const saved = localStorage.getItem('storeapp_orders');
   if (saved) {
