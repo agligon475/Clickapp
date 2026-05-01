@@ -1254,7 +1254,13 @@ async function loadSheet() {
     const C=find('categoria','category','rubro','tipo');
     const E=find('emoji','icono');
 
-    products=rows.slice(1).filter(r=>r[N>-1?N:0]?.trim()).map((r,i)=>({
+    const isGarbage = r => {
+      const t = (r[N>-1?N:0]||'').trim();
+      return !t || /[{};]/.test(t)
+        || /^\s*(html|body|div|span|\.[\w-]+|#[\w-]+)\s*\{/.test(t)
+        || /^(display|margin|padding|overflow|flex|border|background|color|font|width|height):/.test(t);
+    };
+    products=rows.slice(1).filter(r=>r[N>-1?N:0]?.trim()&&!isGarbage(r)).map((r,i)=>({
       id:i+1,
       name: r[N>-1?N:0]||'Producto',
       price:parseFloat((r[P>-1?P:1]||'0').replace(/[^0-9.,]/g,'').replace(',','.'))||0,
