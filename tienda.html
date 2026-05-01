@@ -883,7 +883,12 @@ function guessEmoji(name, cat) {
 /* ═══════════════════════════════════════════ LOAD */
 async function loadSheet() {
   try {
-    const res = await fetch(SHEET_URL);
+    // ── Build sheet URL forcing full range ──────────────
+  const sheetUrl = SHEET_URL.includes('output=csv')
+    ? SHEET_URL.replace('output=csv', 'output=csv&range=A1:Z1000')
+    : SHEET_URL;
+
+  const res = await fetch(sheetUrl);
     if (!res.ok) throw new Error('HTTP '+res.status);
     const rows = parseCSV(await res.text());
     const hdrs = rows[0].map(h=>h.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''));
@@ -1099,17 +1104,22 @@ function enviarWhatsApp() {
   if (!nombre||!dni||!pago||!logis) { showToast('⚠ Completá todos los campos'); return; }
   if (logis==='Envío a domicilio'&&!dir) { showToast('⚠ Ingresá la dirección de envío'); return; }
 
-  const lines = Object.entries(cart).map(([id,q])=>{
+  // Build order items
+  const items = Object.entries(cart).map(([id,q])=>{
     const p = products.find(x=>x.id===parseInt(id));
-    return p ? `  • ${p.name} ×${q}  →  $${(p.price*q).toLocaleString('es-AR')}` : '';
+    return p ? { nombre: p.name, cantidad: q, precio_unitario: p.price, subtotal: p.price*q } : null;
   }).filter(Boolean);
 
+  const total = cartTotal();
+
+  // ── 1. Abrir WhatsApp ────────────────────────────
+  const lines = items.map(i=>`  • ${i.nombre} ×${i.cantidad}  →  $${i.subtotal.toLocaleString('es-AR')}`);
   const msg = [
     `¡Hola! Quiero hacer el siguiente pedido:`,
     ``,
     ...lines,
     ``,
-    `💰 *Total:* $${cartTotal().toLocaleString('es-AR')}`,
+    `💰 *Total:* $${total.toLocaleString('es-AR')}`,
     `💳 *Pago:* ${pago}`,
     `🚚 *Logística:* ${logis}`,
     dir ? `📍 *Dirección:* ${dir}` : '',
@@ -1119,6 +1129,63 @@ function enviarWhatsApp() {
   ].filter(l=>l!==undefined).join('\n');
 
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+
+  // ── 2. Registrar pedido en Sheet (fire & forget) ─
+  registrarPedido({ nombre, dni, pago, logistica: logis, direccion: dir, items, total });
+
+  // ── 3. Limpiar carrito ───────────────────────────
+  cart = {};
+  updateCartUI();
+  closeCart();
+  showToast('✓ Pedido enviado por WhatsApp');
+}
+
+async function registrarPedido(pedido) {
+  // Generar ID único para el pedido
+  const id = 'PED-' + Date.now().toString(36).toUpperCase();
+  const fecha = new Date().toLocaleString('es-AR', {
+    day:'2-digit', month:'2-digit', year:'numeric',
+    hour:'2-digit', minute:'2-digit'
+  });
+
+  const order = {
+    id,
+    fecha,
+    cliente:   pedido.nombre,
+    dni:       pedido.dni,
+    productos: pedido.items.map(i=>`${i.nombre} ×${i.cantidad}`).join(' | '),
+    detalle:   JSON.stringify(pedido.items),
+    pago:      pedido.pago,
+    logistica: pedido.logistica,
+    direccion: pedido.direccion || '',
+    total:     pedido.total,
+    estado:    'confirmar',   // estado inicial = A confirmar
+  };
+
+  // ── 1. Guardar en localStorage (misma key que usa el dashboard) ──
+  try {
+    const existing = JSON.parse(localStorage.getItem('storeapp_orders') || '[]');
+    existing.unshift(order);
+    localStorage.setItem('storeapp_orders', JSON.stringify(existing));
+  } catch(e) {
+    console.warn('No se pudo guardar el pedido localmente:', e.message);
+  }
+
+  // ── 2. Enviar al Sheet vía webhook si está configurado ───────────
+  let wh = {};
+  try { wh = JSON.parse(localStorage.getItem('storeapp_webhook') || '{}'); } catch(e) {}
+  if (!wh.url || !wh.token) return;
+
+  try {
+    await fetch(wh.url, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ action:'pedido', token: wh.token, pedido: {...order, estado:'A confirmar'} }),
+      mode:    'no-cors',
+    });
+  } catch(e) {
+    console.warn('Webhook no disponible, pedido guardado solo localmente:', e.message);
+  }
 }
 
 /* ═══════════════════════════════════════════ TOAST */
