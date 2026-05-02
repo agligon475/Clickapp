@@ -125,20 +125,36 @@ body::before{
 .hero{
   position:relative;overflow:hidden;
   background:var(--steel);
-  border-bottom:1px solid var(--zinc);
-  padding:32px 24px;
+  min-height:220px;
+  display:flex;align-items:center;
 }
+/* Background image layer */
+.hero-img-bg{
+  position:absolute;inset:0;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  transition:opacity .3s;
+}
+/* Dark overlay — always on top of image */
+.hero-overlay{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.48);
+  pointer-events:none;
+}
+/* Diagonal stripe fallback (shown when no image) */
 .hero-bg{
   position:absolute;inset:0;pointer-events:none;
   background:repeating-linear-gradient(
     -55deg,
     transparent,transparent 20px,
-    rgba(215,38,56,.04) 20px,rgba(215,38,56,.04) 21px
+    rgba(215,38,56,.06) 20px,rgba(215,38,56,.06) 21px
   );
 }
 .hero-inner{
-  position:relative;z-index:1;
-  max-width:1100px;margin:0 auto;
+  position:relative;z-index:2;
+  max-width:1100px;margin:0 auto;width:100%;
+  padding:36px 24px;
   display:flex;align-items:center;justify-content:space-between;
   flex-wrap:wrap;gap:16px;
 }
@@ -148,34 +164,39 @@ body::before{
   font-weight:800;line-height:.95;
   letter-spacing:-.02em;
   text-transform:uppercase;
+  color:#fff;
+  text-shadow:0 2px 12px rgba(0,0,0,.3);
 }
 .hero-title span{color:var(--red);}
 .hero-sub{
-  font-size:14px;color:var(--silver);
-  margin-top:8px;max-width:340px;
+  font-size:14px;color:rgba(255,255,255,.85);
+  margin-top:10px;max-width:360px;
   line-height:1.5;
+  text-shadow:0 1px 6px rgba(0,0,0,.4);
 }
 .hero-pills{
-  display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;
+  display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;
 }
 .hero-pill{
-  background:var(--iron);
-  border:1px solid var(--zinc);
-  border-radius:20px;padding:4px 12px;
+  background:var(--red);
+  border:none;
+  border-radius:20px;padding:6px 14px;
   font-size:11px;font-weight:600;
-  color:var(--fog);
-  display:flex;align-items:center;gap:5px;
+  color:#fff;
+  display:flex;align-items:center;gap:6px;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);
 }
-.hero-pill i{color:var(--red);}
+.hero-pill i{color:#fff;}
 
 .hero-badge{
   font-family:var(--font-head);
   font-size:72px;font-weight:800;
-  color:rgba(215,38,56,.12);
+  color:rgba(255,255,255,.06);
   text-transform:uppercase;
   letter-spacing:-.04em;
   line-height:1;
   user-select:none;
+  text-shadow:none;
 }
 
 /* ── LAYOUT ─────────────────────────────────────── */
@@ -561,19 +582,21 @@ body::before{
 </nav>
 
 <!-- ── HERO ── -->
-<div class="hero">
-  <div class="hero-bg"></div>
+<div class="hero" id="hero">
+  <div class="hero-img-bg" id="hero-img-bg"></div>
+  <div class="hero-overlay" id="hero-overlay"></div>
+  <div class="hero-bg" id="hero-stripes"></div>
   <div class="hero-inner">
     <div>
-      <div class="hero-title">Tu ferretería<br/><span>sin filas.</span></div>
-      <div class="hero-sub">Elegí tus productos, armá tu pedido y coordiná por WhatsApp. Fácil, rápido y sin vueltas.</div>
+      <div class="hero-title" id="hero-title">Tu ferretería<br/><span id="hero-title-span">sin demoras.</span></div>
+      <div class="hero-sub" id="hero-sub">Elegí tus productos, armá tu pedido y coordiná por WhatsApp.</div>
       <div class="hero-pills">
         <span class="hero-pill"><i class="bi bi-whatsapp"></i> Pedido por WhatsApp</span>
         <span class="hero-pill"><i class="bi bi-cash-coin"></i> Efectivo · Transferencia · Cheque</span>
         <span class="hero-pill"><i class="bi bi-truck"></i> Retiro o envío</span>
       </div>
     </div>
-    <div class="hero-badge" aria-hidden="true">FERRE</div>
+    <div class="hero-badge" aria-hidden="true" id="hero-badge">FERRE</div>
   </div>
 </div>
 
@@ -1275,11 +1298,34 @@ function applyStoredConfig() {
   if (cfg.tagline) { const el=document.querySelector('.tagline'); if(el) el.textContent=cfg.tagline; }
 
   const heroTitle = document.querySelector('.hero-title');
-  if (heroTitle && cfg.h1) heroTitle.innerHTML = `${cfg.h1}<br/><span>${cfg.h2||''}</span>`;
+  if (heroTitle && cfg.h1) heroTitle.innerHTML = `${cfg.h1}<br/><span id="hero-title-span">${cfg.h2||''}</span>`;
   const heroSub = document.querySelector('.hero-sub');
   if (heroSub && cfg.desc) heroSub.textContent = cfg.desc;
   const heroBadge = document.querySelector('.hero-badge');
   if (heroBadge && cfg.name) heroBadge.textContent = cfg.name.split(' ')[0].toUpperCase();
+
+  // Hero background image
+  const heroBg = document.getElementById('hero-img-bg');
+  const heroOverlay = document.getElementById('hero-overlay');
+  const heroStripes = document.getElementById('hero-stripes');
+  const heroImgUrl = localStorage.getItem('storeapp_hero_img');
+  if (heroImgUrl && heroBg) {
+    heroBg.style.backgroundImage = `url('${heroImgUrl}')`;
+    heroBg.style.opacity = '1';
+    if (heroStripes) heroStripes.style.display = 'none';
+    // Apply overlay color from config or default
+    if (heroOverlay) heroOverlay.style.background = cfg.heroOverlay || 'rgba(0,0,0,.48)';
+  } else {
+    if (heroBg) heroBg.style.backgroundImage = 'none';
+    if (heroOverlay) heroOverlay.style.background = 'transparent';
+  }
+
+  // Update hero title span color (always accent)
+  const span = document.getElementById('hero-title-span');
+  if (span) span.style.color = accent;
+
+  // Update pills background to accent color
+  document.querySelectorAll('.hero-pill').forEach(p => { p.style.background = accent; });
 
   if (cfg.wapp) window.WHATSAPP_NUMBER = cfg.wapp;
 }
