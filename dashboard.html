@@ -894,14 +894,37 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
         </div>
 
         <div class="card" style="margin-bottom:14px;">
-          <div class="card-title">Texto del hero</div>
+          <div class="card-title">Imagen de fondo del banner</div>
+
+          <div id="hero-img-preview-wrap" style="display:none;margin-bottom:10px;position:relative;border-radius:8px;overflow:hidden;">
+            <img id="hero-img-preview" style="width:100%;height:100px;object-fit:cover;display:block;"/>
+            <div style="position:absolute;inset:0;background:rgba(0,0,0,.48);border-radius:8px;"></div>
+            <button onclick="removeHeroImg()" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,.6);border:none;color:#fff;border-radius:5px;padding:3px 8px;font-size:10px;cursor:pointer;">✕ Quitar</button>
+          </div>
+
+          <label class="logo-upload-btn" for="hero-img-input" style="margin-bottom:8px;">
+            <i class="bi bi-image"></i> Subir imagen de fondo (JPG, PNG, WEBP)
+            <input type="file" id="hero-img-input" accept="image/*" style="display:none;" onchange="uploadHeroImg(this)"/>
+          </label>
+          <p style="font-size:10px;color:var(--silver);margin-bottom:10px;">Recomendado: 1400×400px mínimo. Se aplica un overlay oscuro automáticamente.</p>
+
+          <div class="ctrl-group">
+            <label class="ctrl-label">Intensidad del overlay <span id="overlay-val">48%</span></label>
+            <input type="range" id="cfg-overlay" min="0" max="90" value="48" step="2"
+              style="width:100%;accent-color:var(--red);"
+              oninput="updateOverlay(this.value)"/>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-title">Texto del banner</div>
           <div class="ctrl-group">
             <label class="ctrl-label">Título (línea 1)</label>
             <input class="ctrl-input" id="cfg-h1" value="Tu ferretería" oninput="previewUpdate()"/>
           </div>
           <div class="ctrl-group">
-            <label class="ctrl-label">Título (línea 2 — destacada)</label>
-            <input class="ctrl-input" id="cfg-h2" value="sin filas." oninput="previewUpdate()"/>
+            <label class="ctrl-label">Título (línea 2 — color acento)</label>
+            <input class="ctrl-input" id="cfg-h2" value="sin demoras." oninput="previewUpdate()"/>
           </div>
           <div class="ctrl-group">
             <label class="ctrl-label">Descripción</label>
@@ -950,18 +973,23 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
               </div>
 
               <!-- prev hero -->
-              <div id="prev-hero" style="padding:16px 14px 12px;border-bottom:1px solid rgba(255,255,255,.08);position:relative;overflow:hidden;">
-                <div style="position:absolute;inset:0;background:repeating-linear-gradient(-55deg,transparent,transparent 10px,rgba(255,255,255,.02) 10px,rgba(255,255,255,.02) 11px);"></div>
-                <div style="position:relative;">
-                  <div id="prev-h1" style="font-size:20px;font-weight:800;line-height:.95;text-transform:uppercase;color:#F5F5F0;">Tu ferretería</div>
-                  <div id="prev-h2" style="font-size:20px;font-weight:800;line-height:.95;text-transform:uppercase;color:#D72638;">sin filas.</div>
-                  <div id="prev-desc" style="font-size:9px;color:#8A8A90;margin-top:6px;line-height:1.4;font-family:'Barlow',sans-serif;font-weight:400;">Elegí tus productos, armá tu pedido y coordiná por WhatsApp.</div>
+              <div id="prev-hero" style="padding:16px 14px 12px;position:relative;overflow:hidden;min-height:110px;display:flex;align-items:center;">
+                <!-- bg image layer -->
+                <div id="prev-hero-img" style="position:absolute;inset:0;background-size:cover;background-position:center;"></div>
+                <!-- overlay -->
+                <div id="prev-hero-overlay" style="position:absolute;inset:0;background:rgba(0,0,0,.48);"></div>
+                <!-- stripe fallback -->
+                <div id="prev-hero-stripes" style="position:absolute;inset:0;background:repeating-linear-gradient(-55deg,transparent,transparent 10px,rgba(255,255,255,.02) 10px,rgba(255,255,255,.02) 11px);"></div>
+                <div style="position:relative;z-index:1;width:100%;">
+                  <div id="prev-h1" style="font-size:20px;font-weight:800;line-height:.95;text-transform:uppercase;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.4);">Tu ferretería</div>
+                  <div id="prev-h2" style="font-size:20px;font-weight:800;line-height:.95;text-transform:uppercase;color:#D72638;text-shadow:0 1px 6px rgba(0,0,0,.4);">sin demoras.</div>
+                  <div id="prev-desc" style="font-size:9px;color:rgba(255,255,255,.8);margin-top:6px;line-height:1.4;font-family:'Barlow',sans-serif;font-weight:400;text-shadow:0 1px 4px rgba(0,0,0,.4);">Elegí tus productos, armá tu pedido y coordiná por WhatsApp.</div>
                   <div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;">
-                    <span id="prev-pill1" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:2px 7px;font-size:8px;color:#C8C8CC;font-family:'Barlow',sans-serif;">
-                      <i class="bi bi-whatsapp" style="color:#D72638;"></i> WhatsApp
+                    <span id="prev-pill1" style="background:#D72638;border:none;border-radius:20px;padding:3px 8px;font-size:8px;color:#fff;font-weight:600;font-family:'Barlow',sans-serif;display:flex;align-items:center;gap:3px;">
+                      <i class="bi bi-whatsapp"></i> WhatsApp
                     </span>
-                    <span id="prev-pill2" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:2px 7px;font-size:8px;color:#C8C8CC;font-family:'Barlow',sans-serif;">
-                      <i class="bi bi-cash-coin" style="color:#D72638;"></i> Múltiples pagos
+                    <span id="prev-pill2" style="background:#D72638;border:none;border-radius:20px;padding:3px 8px;font-size:8px;color:#fff;font-weight:600;font-family:'Barlow',sans-serif;display:flex;align-items:center;gap:3px;">
+                      <i class="bi bi-cash-coin"></i> Pagos
                     </span>
                   </div>
                 </div>
@@ -1623,16 +1651,36 @@ function previewUpdate(){
   cartBtn.style.background = c;
 
   // Hero
-  document.getElementById('prev-hero').style.borderBottomColor = t.border;
-  document.getElementById('prev-h1').textContent  = cfg.h1;
-  document.getElementById('prev-h1').style.color  = t.text;
-  document.getElementById('prev-h2').textContent  = cfg.h2;
+  document.getElementById('prev-h1').textContent  = cfg.h1 || 'Tu ferretería';
+  document.getElementById('prev-h1').style.color  = '#fff';
+  document.getElementById('prev-h2').textContent  = cfg.h2 || 'sin demoras.';
   document.getElementById('prev-h2').style.color  = c;
-  document.getElementById('prev-desc').textContent = cfg.desc;
-  document.getElementById('prev-desc').style.color  = t.muted;
-  document.getElementById('prev-pill1').style.borderColor = t.border;
-  document.getElementById('prev-pill2').style.borderColor = t.border;
-  document.querySelectorAll('#prev-pill1 i, #prev-pill2 i').forEach(i=>i.style.color=c);
+  document.getElementById('prev-desc').textContent = cfg.desc || '';
+  document.getElementById('prev-desc').style.color  = 'rgba(255,255,255,.8)';
+
+  // Pills — always accent color, white text
+  document.querySelectorAll('#prev-pill1, #prev-pill2').forEach(p => {
+    p.style.background   = c;
+    p.style.border       = 'none';
+    p.style.color        = '#fff';
+    p.querySelectorAll('i').forEach(i => { i.style.color = '#fff'; });
+  });
+
+  // Hero image preview
+  const heroImgUrl = localStorage.getItem('storeapp_hero_img');
+  const prevHeroImg = document.getElementById('prev-hero-img');
+  const prevHeroOverlay = document.getElementById('prev-hero-overlay');
+  const prevHeroStripes = document.getElementById('prev-hero-stripes');
+  if (heroImgUrl && prevHeroImg) {
+    prevHeroImg.style.backgroundImage = `url('${heroImgUrl}')`;
+    if (prevHeroStripes) prevHeroStripes.style.display = 'none';
+    const overlayVal = document.getElementById('cfg-overlay')?.value || 48;
+    if (prevHeroOverlay) prevHeroOverlay.style.background = `rgba(0,0,0,${overlayVal/100})`;
+  } else {
+    if (prevHeroImg) prevHeroImg.style.backgroundImage = 'none';
+    if (prevHeroStripes) prevHeroStripes.style.display = 'block';
+    if (prevHeroOverlay) prevHeroOverlay.style.background = 'rgba(0,0,0,.48)';
+  }
 
   // Category active
   const catAll = document.getElementById('prev-cat-all');
@@ -1743,6 +1791,7 @@ function initDesignPanel(){
   if(themeBtn) themeBtn.classList.add('active');
 
   previewUpdate();
+  initHeroImgPreview();
 }
 
 // Run design init when view opens
@@ -1754,6 +1803,66 @@ window.showView = function(name, el){
   if(name==='orders')  initOrderForm();
   if(name==='config')  initConfigView();
 };
+
+/* ═══════════════════════════════════════════ HERO IMAGE */
+async function uploadHeroImg(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const wrap = document.getElementById('hero-img-preview-wrap');
+  const prev = document.getElementById('hero-img-preview');
+
+  // Try Cloudinary first, fall back to base64
+  const cloud = getCloudinaryCfg();
+  let url = null;
+
+  if (cloud.name && cloud.preset) {
+    try {
+      url = await uploadToCloudinary(file);
+    } catch(e) {
+      console.warn('Cloudinary falló, usando base64:', e.message);
+    }
+  }
+
+  if (!url) {
+    // Base64 fallback
+    url = await new Promise((res, rej) => {
+      if (file.size > 2 * 1024 * 1024) { rej(new Error('Imagen muy grande para base64 (máx 2MB). Configurá Cloudinary.')); return; }
+      const r = new FileReader();
+      r.onload = e => res(e.target.result);
+      r.onerror = () => rej(new Error('Error leyendo archivo'));
+      r.readAsDataURL(file);
+    });
+  }
+
+  localStorage.setItem('storeapp_hero_img', url);
+  prev.src = url;
+  wrap.style.display = 'block';
+  previewUpdate();
+}
+
+function removeHeroImg() {
+  localStorage.removeItem('storeapp_hero_img');
+  document.getElementById('hero-img-preview-wrap').style.display = 'none';
+  document.getElementById('hero-img-preview').src = '';
+  document.getElementById('hero-img-input').value = '';
+  previewUpdate();
+}
+
+function updateOverlay(val) {
+  document.getElementById('overlay-val').textContent = val + '%';
+  // Save to cfg
+  cfg.heroOverlay = `rgba(0,0,0,${val/100})`;
+  previewUpdate();
+}
+
+function initHeroImgPreview() {
+  const saved = localStorage.getItem('storeapp_hero_img');
+  if (saved) {
+    document.getElementById('hero-img-preview').src = saved;
+    document.getElementById('hero-img-preview-wrap').style.display = 'block';
+  }
+}
 
 /* ═══════════════════════════════════════════ LOGO UPLOAD */
 function uploadLogo(input) {
