@@ -47,7 +47,7 @@ body::before{
 /* ── TOPBAR ─────────────────────────────────────── */
 .topbar{
   position:sticky;top:0;z-index:100;
-  background:rgba(250,250,250,.92);
+  background:rgba(14,14,14,.92);
   backdrop-filter:blur(12px);
   border-bottom:1px solid var(--zinc);
   display:flex;align-items:center;
@@ -56,7 +56,7 @@ body::before{
 .logo{
   font-family:var(--font-head);
   font-size:24px;font-weight:800;
-  color:black;letter-spacing:-.01em;
+  color:var(--white);letter-spacing:-.01em;
   display:flex;align-items:center;gap:8px;
   text-decoration:none;
 }
@@ -324,26 +324,123 @@ body::before{
   font-weight:400;
 }
 
-.btn-add{
-  width:100%;margin-top:10px;
-  background:transparent;
+/* ── QUANTITY COUNTER ────────────────────────────── */
+.qty-control{
+  display:flex;align-items:center;
+  margin-top:10px;border-radius:8px;overflow:hidden;
   border:1px solid var(--zinc);
-  border-radius:8px;padding:8px;
-  font-family:var(--font-body);
-  font-size:12px;font-weight:600;
-  color:var(--fog);cursor:pointer;
-  transition:all .15s;
-  display:flex;align-items:center;justify-content:center;gap:6px;
 }
-.btn-add:hover{
-  background:var(--red);color:#fff;
-  border-color:var(--red);
+.qty-control.has-items{border-color:var(--red);}
+.qty-btn{
+  width:36px;height:34px;flex-shrink:0;
+  background:transparent;border:none;
+  color:var(--fog);font-size:18px;
+  cursor:pointer;transition:all .12s;
+  display:flex;align-items:center;justify-content:center;
 }
-.btn-add.added{
-  background:var(--red);color:#fff;
-  border-color:var(--red);
+.qty-btn:hover{background:var(--red);color:#fff;}
+.qty-num{
+  flex:1;text-align:center;
+  font-family:var(--font-head);font-size:15px;font-weight:700;
+  color:var(--white);background:transparent;
+  border:none;outline:none;
+  padding:0;pointer-events:none;
 }
+.qty-control.has-items .qty-num{color:var(--red);}
 
+/* ── PRODUCT DETAIL MODAL ────────────────────────── */
+.pdrawer-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.75);backdrop-filter:blur(4px);
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.pdrawer-overlay.open{opacity:1;pointer-events:all;}
+.pdrawer{
+  position:fixed;top:0;right:0;bottom:0;
+  width:min(480px,100vw);
+  background:var(--steel);
+  border-left:1px solid var(--zinc);
+  z-index:201;overflow-y:auto;
+  transform:translateX(100%);
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+  scrollbar-width:thin;scrollbar-color:var(--zinc) transparent;
+}
+.pdrawer.open{transform:translateX(0);}
+.pdrawer-img{
+  width:100%;aspect-ratio:16/9;
+  background:var(--iron);
+  display:flex;align-items:center;justify-content:center;
+  font-size:72px;position:relative;overflow:hidden;
+}
+.pdrawer-img img{width:100%;height:100%;object-fit:cover;}
+.pdrawer-close{
+  position:absolute;top:12px;right:12px;
+  width:32px;height:32px;border-radius:8px;
+  background:rgba(0,0,0,.5);color:#fff;
+  border:none;font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .12s;z-index:1;
+}
+.pdrawer-close:hover{background:var(--red);}
+.pdrawer-body{padding:20px;}
+.pdrawer-badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.pdrawer-badge{
+  padding:3px 10px;border-radius:20px;
+  font-size:11px;font-weight:600;
+  background:var(--iron);border:1px solid var(--zinc);color:var(--fog);
+}
+.pdrawer-name{
+  font-family:var(--font-head);
+  font-size:28px;font-weight:800;
+  color:var(--white);line-height:1.1;margin-bottom:6px;
+}
+.pdrawer-price{
+  font-family:var(--font-head);
+  font-size:36px;font-weight:800;color:var(--white);
+  margin-bottom:14px;
+}
+.pdrawer-price small{font-size:18px;color:var(--silver);}
+.pdrawer-row{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 0;border-bottom:1px solid var(--iron);
+  font-size:13px;color:var(--fog);
+}
+.pdrawer-row:last-of-type{border-bottom:none;}
+.pdrawer-row strong{color:var(--white);min-width:80px;}
+.pdrawer-detalle{
+  background:var(--iron);border-radius:10px;
+  padding:14px;font-size:13px;color:var(--fog);
+  line-height:1.6;margin:14px 0;
+}
+.pdrawer-add{
+  position:sticky;bottom:0;
+  background:var(--steel);border-top:1px solid var(--zinc);
+  padding:16px 20px;display:flex;align-items:center;gap:12px;
+}
+.pdrawer-add-qty{
+  display:flex;align-items:center;gap:0;
+  border:1px solid var(--zinc);border-radius:10px;overflow:hidden;flex-shrink:0;
+}
+.pdrawer-add-qty button{
+  width:40px;height:44px;background:var(--iron);border:none;
+  color:var(--fog);font-size:20px;cursor:pointer;transition:all .12s;
+}
+.pdrawer-add-qty button:hover{background:var(--red);color:#fff;}
+.pdrawer-add-qty span{
+  width:44px;text-align:center;
+  font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--white);
+}
+.pdrawer-add-btn{
+  flex:1;padding:12px;
+  background:var(--red);color:#fff;border:none;
+  border-radius:10px;font-family:var(--font-head);
+  font-size:18px;font-weight:700;cursor:pointer;
+  transition:all .15s;box-shadow:0 0 0 0 var(--red-glow);
+}
+.pdrawer-add-btn:hover{background:var(--red-dark);box-shadow:0 0 20px var(--red-glow);}
+.origen-flag{font-size:18px;}
+
+/* flag map */
 .empty-state{
   grid-column:1/-1;
   text-align:center;padding:60px 20px;
@@ -1012,30 +1109,38 @@ function render() {
     return;
   }
 
-  document.getElementById('grid').innerHTML = filtered.map((p,i) => `
-    <div class="product-card" style="animation-delay:${Math.min(i,12)*30}ms">
+  document.getElementById('grid').innerHTML = filtered.map((p,i) => {
+    const qty = cart[p.id] || 0;
+    const flag = ORIGIN_FLAGS[p.origen] || '';
+    return `
+    <div class="product-card" style="animation-delay:${Math.min(i,12)*30}ms"
+      onclick="openProductDrawer(${p.id})" style="cursor:pointer;">
       <div class="product-img">
         ${p.img
-          ? `<img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/><div class="product-img-fallback" style="display:none;width:100%;height:100%;align-items:center;justify-content:center;">${p.emoji}</div>`
+          ? `<img src="${p.img}" alt="${p.name}" loading="lazy"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+             <div class="product-img-fallback" style="display:none;width:100%;height:100%;align-items:center;justify-content:center;">${p.emoji}</div>`
           : `<div class="product-img-fallback">${p.emoji}</div>`}
         <span class="stock-chip ${p.stock===0?'out':''}">${p.stock===0?'Sin stock':`Stock: ${p.stock}`}</span>
       </div>
       <div class="product-body">
-        <div class="product-cat">${p.cat}</div>
+        <div class="product-cat">${p.cat}${flag?' <span class="origen-flag">'+flag+'</span>':''}</div>
+        ${p.marca?`<div style="font-size:10px;color:var(--silver);margin-bottom:2px;">${p.marca}</div>`:''}
         <div class="product-name">${p.name}</div>
         <div>
           <span class="product-price-label">$</span>
           <span class="product-price">${p.price.toLocaleString('es-AR')}</span>
         </div>
         ${p.stock > 0
-          ? `<button class="btn-add ${cart[p.id]?'added':''}" id="btn-${p.id}" onclick="addToCart(${p.id})">
-              ${cart[p.id]
-                ? `<i class="bi bi-check2"></i> En carrito (${cart[p.id]})`
-                : `<i class="bi bi-plus-lg"></i> Agregar`}
-            </button>`
-          : `<button class="btn-add" disabled style="opacity:.4;cursor:not-allowed;">Sin stock</button>`}
+          ? `<div class="qty-control ${qty>0?'has-items':''}" id="qc-${p.id}" onclick="event.stopPropagation()">
+              <button class="qty-btn" onclick="changeQtyCard(${p.id},-1)"><i class="bi bi-dash"></i></button>
+              <span class="qty-num">${qty > 0 ? qty : '+'}</span>
+              <button class="qty-btn" onclick="changeQtyCard(${p.id},1)"><i class="bi bi-plus"></i></button>
+            </div>`
+          : `<div style="margin-top:10px;padding:8px;text-align:center;font-size:11px;color:var(--silver);border:1px solid var(--zinc);border-radius:8px;opacity:.5;">Sin stock</div>`}
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 /* ═══════════════════════════════════════════ FILTERS */
@@ -1057,29 +1162,26 @@ function cartTotal() {
 function cartQty() { return Object.values(cart).reduce((a,b)=>a+b,0); }
 
 function addToCart(id) {
-  cart[id] = (cart[id]||0) + 1;
-  updateCartUI();
+  changeQtyCard(id, 1);
   const p = products.find(x=>x.id===id);
-  showToast(`${p.emoji} ${p.name} agregado`);
-  // update button
-  const btn = document.getElementById('btn-'+id);
-  if (btn) {
-    btn.className = 'btn-add added';
-    btn.innerHTML = `<i class="bi bi-check2"></i> En carrito (${cart[id]})`;
-  }
+  if (p) showToast(`${p.emoji} ${p.name} agregado`);
 }
 
 function removeFromCart(id) {
   delete cart[id];
   updateCartUI();
-  render();
-}
-function changeQty(id, delta) {
-  cart[id] = (cart[id]||0) + delta;
-  if (cart[id] <= 0) delete cart[id];
-  updateCartUI();
   renderDrawer();
-  render();
+  // Update card counter
+  const qc = document.getElementById('qc-'+id);
+  if (qc) {
+    qc.querySelector('.qty-num').textContent = '+';
+    qc.classList.remove('has-items');
+  }
+}
+
+function changeQty(id, delta) {
+  changeQtyCard(id, delta);
+  renderDrawer();
 }
 
 function updateCartUI() {
@@ -1243,6 +1345,109 @@ function showToast(msg) {
   toastTimer = setTimeout(()=>t.classList.remove('show'), 2500);
 }
 
+/* ═══════════════════════════════════════════ ORIGIN FLAGS */
+const ORIGIN_FLAGS = {
+  AR:'🇦🇷', CN:'🇨🇳', US:'🇺🇸', DE:'🇩🇪', JP:'🇯🇵',
+  IT:'🇮🇹', BR:'🇧🇷', KR:'🇰🇷', TW:'🇹🇼', MX:'🇲🇽',
+  FR:'🇫🇷', GB:'🇬🇧', ES:'🇪🇸', SE:'🇸🇪', CH:'🇨🇭',
+};
+const ORIGIN_NAMES = {
+  AR:'Argentina', CN:'China', US:'Estados Unidos', DE:'Alemania', JP:'Japón',
+  IT:'Italia', BR:'Brasil', KR:'Corea del Sur', TW:'Taiwán', MX:'México',
+  FR:'Francia', GB:'Reino Unido', ES:'España', SE:'Suecia', CH:'Suiza',
+};
+
+/* ═══════════════════════════════════════════ COUNTER */
+function changeQtyCard(id, delta) {
+  const current = cart[id] || 0;
+  const p = products.find(x=>x.id===id);
+  const newQty = Math.max(0, Math.min(current + delta, p?.stock || 99));
+  if (newQty === 0) delete cart[id]; else cart[id] = newQty;
+  // Update counter in card without full re-render
+  const qc = document.getElementById('qc-'+id);
+  if (qc) {
+    const num = qc.querySelector('.qty-num');
+    if (num) num.textContent = newQty > 0 ? newQty : '+';
+    qc.classList.toggle('has-items', newQty > 0);
+  }
+  // Update drawer if open
+  const drawerQty = document.getElementById('pdrawer-qty-num');
+  if (drawerQty && parseInt(drawerQty.dataset.id) === id) {
+    drawerQty.textContent = newQty || 0;
+  }
+  updateCartUI();
+}
+
+/* ═══════════════════════════════════════════ PRODUCT DRAWER */
+function openProductDrawer(id) {
+  const p = products.find(x=>x.id===id);
+  if (!p) return;
+  const qty = cart[id] || 0;
+  const flag = ORIGIN_FLAGS[p.origen] || '';
+  const originName = ORIGIN_NAMES[p.origen] || '';
+
+  const body = document.getElementById('pdrawer-body');
+  body.innerHTML = `
+    <div class="pdrawer-badges">
+      <span class="pdrawer-badge">${p.cat||'General'}</span>
+      ${p.marca?`<span class="pdrawer-badge"><i class="bi bi-tag"></i> ${p.marca}</span>`:''}
+      ${flag?`<span class="pdrawer-badge">${flag} ${originName}</span>`:''}
+      <span class="pdrawer-badge ${p.stock===0?'':''}">
+        ${p.stock===0?'<span style="color:var(--red);">Sin stock</span>':`Stock: ${p.stock} uds.`}
+      </span>
+    </div>
+    <div class="pdrawer-name">${p.name}</div>
+    <div class="pdrawer-price"><small>$</small>${p.price.toLocaleString('es-AR')}</div>
+    ${p.detalle?`<div class="pdrawer-detalle"><strong style="display:block;font-size:11px;color:var(--silver);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Especificaciones</strong>${p.detalle}</div>`:''}
+    ${p.marca?`<div class="pdrawer-row"><strong>Marca</strong> ${p.marca}</div>`:''}
+    ${originName?`<div class="pdrawer-row"><strong>Origen</strong> ${flag} ${originName}</div>`:''}
+  `;
+
+  // Image
+  const imgWrap = document.getElementById('pdrawer-img');
+  if (p.img) {
+    imgWrap.innerHTML = `<img src="${p.img}" alt="${p.name}" onerror="this.parentElement.innerHTML='<span style=font-size:72px>${p.emoji}</span>'"/>`;
+  } else {
+    imgWrap.innerHTML = `<span style="font-size:72px;">${p.emoji}</span>`;
+  }
+
+  // Footer
+  const qtyNum = document.getElementById('pdrawer-qty-num');
+  qtyNum.textContent = qty;
+  qtyNum.dataset.id  = id;
+  document.getElementById('pdrawer-id').dataset.id = id;
+  document.getElementById('pdrawer-add-btn').onclick = () => addFromDrawer(id);
+  document.getElementById('pdrawer-dec').onclick = () => { changeQtyCard(id,-1); document.getElementById('pdrawer-qty-num').textContent = cart[id]||0; };
+  document.getElementById('pdrawer-inc').onclick = () => { changeQtyCard(id,1);  document.getElementById('pdrawer-qty-num').textContent = cart[id]||0; };
+
+  if (p.stock === 0) {
+    document.getElementById('pdrawer-add-btn').disabled = true;
+    document.getElementById('pdrawer-add-btn').style.opacity = '.4';
+    document.getElementById('pdrawer-add-btn').textContent = 'Sin stock';
+  } else {
+    document.getElementById('pdrawer-add-btn').disabled = false;
+    document.getElementById('pdrawer-add-btn').style.opacity = '1';
+    document.getElementById('pdrawer-add-btn').textContent = qty > 0 ? `Agregar al carrito (${qty})` : 'Agregar al carrito';
+  }
+
+  document.getElementById('pdrawer-overlay').classList.add('open');
+  document.getElementById('pdrawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function addFromDrawer(id) {
+  changeQtyCard(id, 1);
+  const btn = document.getElementById('pdrawer-add-btn');
+  btn.textContent = `Agregar al carrito (${cart[id]||0})`;
+  showToast(`✓ Agregado al carrito`);
+}
+
+function closeProductDrawer() {
+  document.getElementById('pdrawer-overlay').classList.remove('open');
+  document.getElementById('pdrawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
 /* ═══════════════════════════════════════════ INIT */
 // ── Apply config saved from dashboard ──────────────
 function applyStoredConfig() {
@@ -1345,5 +1550,23 @@ function mergeLocalProducts(sheetProducts) {
 applyStoredConfig();
 loadSheet();
 </script>
+<!-- ── PRODUCT DETAIL DRAWER ── -->
+<div class="pdrawer-overlay" id="pdrawer-overlay" onclick="closeProductDrawer()"></div>
+<div class="pdrawer" id="pdrawer">
+  <div class="pdrawer-img" id="pdrawer-img">
+    <span style="font-size:72px;">📦</span>
+  </div>
+  <button class="pdrawer-close" onclick="closeProductDrawer()"><i class="bi bi-x"></i></button>
+  <div class="pdrawer-body" id="pdrawer-body"></div>
+  <div class="pdrawer-add" id="pdrawer-id" data-id="">
+    <div class="pdrawer-add-qty">
+      <button id="pdrawer-dec"><i class="bi bi-dash"></i></button>
+      <span id="pdrawer-qty-num" data-id="">0</span>
+      <button id="pdrawer-inc"><i class="bi bi-plus"></i></button>
+    </div>
+    <button class="pdrawer-add-btn" id="pdrawer-add-btn">Agregar al carrito</button>
+  </div>
+</div>
+
 </body>
 </html>
