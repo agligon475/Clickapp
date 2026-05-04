@@ -2109,6 +2109,12 @@ async function buscarCodigo() {
   const codigo = document.getElementById('m-codigo').value.trim();
   if (!codigo) { setCodStatus('⚠ Ingresá un código primero', 'err'); return; }
 
+  const wh = getWebhookCfg();
+  if (!wh.url || !wh.token) {
+    setCodStatus('⚠ Configurá el webhook en Configuración para usar esta función', 'err');
+    return;
+  }
+
   const btn = document.getElementById('btn-buscar-codigo');
   btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Buscando...';
   btn.disabled = true;
@@ -2117,81 +2123,43 @@ async function buscarCodigo() {
 
   const isBarcode = /^\d{8,14}$/.test(codigo);
 
-  // ── Step 1: Try Open Product Data API (barcode only) ─────
+  // ── Step 1: Try barcode databases via webhook ─────
   if (isBarcode) {
     setCodStatus('🔍 Consultando base de datos de productos...', 'info');
     try {
-      const res = await fetch(`https://world.openfoodfacts.org/api/v2/product/${codigo}.json`);
+      const res  = await fetch(`${wh.url}?action=barcode&token=${encodeURIComponent(wh.token)}&code=${codigo}`);
       const data = await res.json();
-      if (data.status === 1 && data.product) {
-        const p = data.product;
-        _codigoResultData = {
-          name:    p.product_name || p.product_name_es || '',
-          marca:   p.brands || '',
-          cat:     p.categories_tags?.[0]?.replace('en:','') || '',
-          detalle: p.ingredients_text || p.generic_name || '',
-          img:     p.image_url || '',
-          origen:  mapOrigen(p.countries_tags?.[0] || ''),
-        };
-        showCodigoResult(_codigoResultData, 'Open Food Facts');
-        resetBuscarBtn(); return;
-      }
-    } catch(e) { /* fall through */ }
-
-    // ── Step 2: Try UPC Item DB ──────────────────────────
-    setCodStatus('🔍 Buscando en UPC database...', 'info');
-    try {
-      const res = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${codigo}`);
-      const data = await res.json();
-      if (data.code === 'OK' && data.items?.length) {
-        const item = data.items[0];
-        _codigoResultData = {
-          name:    item.title || '',
-          marca:   item.brand || '',
-          cat:     item.category || '',
-          detalle: item.description || '',
-          img:     item.images?.[0] || '',
-          origen:  '',
-        };
-        showCodigoResult(_codigoResultData, 'UPC Item DB');
+      if (data.ok) {
+        _codigoResultData = data;
+        showCodigoResult(data, data.source || 'Base de datos');
         resetBuscarBtn(); return;
       }
     } catch(e) { /* fall through to AI */ }
   }
 
-  // ── Step 3: AI fallback (always available) ───────────────
-  setCodStatus('✨ No encontrado en bases de datos — consultando IA...', 'info');
+  // ── Step 2: AI via webhook proxy ─────────────────
+  setCodStatus('✨ Consultando IA...', 'info');
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const prompt = `Tengo un producto con ${isBarcode ? 'código de barras EAN/UPC' : 'código SKU/modelo'}: "${codigo}"
+Identificá el producto y devolvé SOLO un JSON válido (sin texto adicional, sin markdown):
+{"name":"nombre completo","marca":"marca o fabricante","cat":"categoría","detalle":"especificaciones técnicas en 1-2 oraciones","origen":"código ISO del país (AR/CN/US/DE/JP/IT/BR/KR/TW/MX/FR/GB/ES/SE/CH) o vacío","confianza":"alta/media/baja"}
+Si no reconocés el código, usá confianza "baja" e intentá igual.`;
+
+    const res  = await fetch(wh.url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 400,
-        messages: [{
-          role: 'user',
-          content: `Tengo un producto con ${isBarcode ? 'código de barras EAN/UPC' : 'código SKU/modelo'}: "${codigo}"
-Identificá el producto y devolvé SOLO un JSON con estos campos (sin texto adicional, sin markdown):
-{
-  "name": "nombre completo del producto",
-  "marca": "marca o fabricante",
-  "cat": "categoría (ej: Herramientas, Electrónica, etc)",
-  "detalle": "especificaciones técnicas en 1-2 oraciones",
-  "origen": "código ISO del país de origen (AR, CN, US, DE, JP, IT, BR, KR, TW, MX, FR, GB, ES, SE, CH) o vacío si no sabés",
-  "confianza": "alta/media/baja"
-}
-Si no reconocés el código, usá confianza "baja" e intentá igual con lo que puedas inferir.`
-        }]
-      })
+      body: JSON.stringify({ action: 'ai_proxy', token: wh.token, prompt })
     });
     const data = await res.json();
-    const text = data.content?.[0]?.text || '';
-    const clean = text.replace(/```json|```/g,'').trim();
+
+    if (!data.ok) throw new Error(data.error || 'Error en el proxy');
+
+    const clean  = data.text.replace(/```json|```/g,'').trim();
     const parsed = JSON.parse(clean);
     _codigoResultData = parsed;
     showCodigoResult(parsed, 'IA', parsed.confianza);
   } catch(e) {
-    setCodStatus('✕ No se pudo obtener información: ' + e.message, 'err');
+    setCodStatus('✕ Error: ' + e.message, 'err');
   }
 
   resetBuscarBtn();
@@ -2261,40 +2229,42 @@ const ORIGEN_FLAGS_DB = {
 /* ═══════════════════════════════════════════ AI DETALLE */
 // AI auto-generate detalle
 async function autoDetalle() {
-  const name   = document.getElementById('m-name').value.trim();
-  const cat    = document.getElementById('m-cat').value.trim();
-  const marca  = document.getElementById('m-marca').value.trim();
+  const name  = document.getElementById('m-name').value.trim();
+  const cat   = document.getElementById('m-cat').value.trim();
+  const marca = document.getElementById('m-marca').value.trim();
   if (!name) { alert('Ingresá el nombre del producto primero.'); return; }
+
+  const wh = getWebhookCfg();
+  if (!wh.url || !wh.token) {
+    document.getElementById('m-detalle-status').style.color = 'var(--red)';
+    document.getElementById('m-detalle-status').textContent = '⚠ Configurá el webhook en Configuración para usar la IA';
+    return;
+  }
 
   const statusEl = document.getElementById('m-detalle-status');
   statusEl.style.color = 'var(--silver)';
-  statusEl.textContent = '⏳ Generando especificaciones con IA...';
+  statusEl.textContent = '⏳ Generando especificaciones...';
+
+  const prompt = `Generá una descripción técnica breve (máx 2 oraciones, 80 palabras) para un producto de ferretería/construcción:
+Nombre: ${name}
+${cat   ? 'Categoría: ' + cat   : ''}
+${marca ? 'Marca: '     + marca : ''}
+Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argentino.`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res  = await fetch(wh.url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 200,
-        messages: [{
-          role: 'user',
-          content: `Generá una descripción técnica breve (máx 2 oraciones, 80 palabras) para un producto de ferretería/construcción:
-Nombre: ${name}
-${cat ? 'Categoría: '+cat : ''}
-${marca ? 'Marca: '+marca : ''}
-Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argentino.`
-        }]
-      })
+      body: JSON.stringify({ action: 'ai_proxy', token: wh.token, prompt })
     });
     const data = await res.json();
-    const text = data.content?.[0]?.text || '';
-    document.getElementById('m-detalle').value = text.trim();
+    if (!data.ok) throw new Error(data.error || 'Error en el proxy');
+    document.getElementById('m-detalle').value = data.text.trim();
     statusEl.style.color = 'var(--green)';
     statusEl.textContent = '✓ Especificaciones generadas — editá si querés ajustarlas';
   } catch(e) {
     statusEl.style.color = 'var(--red)';
-    statusEl.textContent = '✕ Error al generar: ' + e.message;
+    statusEl.textContent = '✕ Error: ' + e.message;
   }
 }
 
