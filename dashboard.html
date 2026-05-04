@@ -2105,6 +2105,24 @@ function saveModal() {
 
 let _codigoResultData = null; // stores parsed result for aplicarResultadoCodigo()
 
+// Apps Script POST helper — handles the 302 redirect that GAS returns
+async function webhookPost(payload) {
+  const wh = getWebhookCfg();
+  if (!wh.url || !wh.token) throw new Error('Webhook no configurado');
+
+  // Apps Script redirects POST to GET — we need to follow with redirect:follow
+  // and NOT use no-cors so we can read the response
+  const res = await fetch(wh.url, {
+    method:   'POST',
+    redirect: 'follow',
+    headers:  { 'Content-Type': 'text/plain' }, // text/plain avoids preflight CORS
+    body:     JSON.stringify({ ...payload, token: wh.token }),
+  });
+
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return await res.json();
+}
+
 async function buscarCodigo() {
   const codigo = document.getElementById('m-codigo').value.trim();
   if (!codigo) { setCodStatus('⚠ Ingresá un código primero', 'err'); return; }
@@ -2127,8 +2145,7 @@ async function buscarCodigo() {
   if (isBarcode) {
     setCodStatus('🔍 Consultando base de datos de productos...', 'info');
     try {
-      const res  = await fetch(`${wh.url}?action=barcode&token=${encodeURIComponent(wh.token)}&code=${codigo}`);
-      const data = await res.json();
+      const data = await webhookPost({ action: 'barcode', code: codigo });
       if (data.ok) {
         _codigoResultData = data;
         showCodigoResult(data, data.source || 'Base de datos');
@@ -2145,12 +2162,7 @@ Identificá el producto y devolvé SOLO un JSON válido (sin texto adicional, si
 {"name":"nombre completo","marca":"marca o fabricante","cat":"categoría","detalle":"especificaciones técnicas en 1-2 oraciones","origen":"código ISO del país (AR/CN/US/DE/JP/IT/BR/KR/TW/MX/FR/GB/ES/SE/CH) o vacío","confianza":"alta/media/baja"}
 Si no reconocés el código, usá confianza "baja" e intentá igual.`;
 
-    const res  = await fetch(wh.url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'ai_proxy', token: wh.token, prompt })
-    });
-    const data = await res.json();
+    const data = await webhookPost({ action: 'ai_proxy', prompt });
 
     if (!data.ok) throw new Error(data.error || 'Error en el proxy');
 
@@ -2252,12 +2264,7 @@ ${marca ? 'Marca: '     + marca : ''}
 Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argentino.`;
 
   try {
-    const res  = await fetch(wh.url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'ai_proxy', token: wh.token, prompt })
-    });
-    const data = await res.json();
+    const data = await webhookPost({ action: 'ai_proxy', prompt });
     if (!data.ok) throw new Error(data.error || 'Error en el proxy');
     document.getElementById('m-detalle').value = data.text.trim();
     statusEl.style.color = 'var(--green)';
