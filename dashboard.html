@@ -2028,6 +2028,9 @@ function openModal(id=null) {
   editingId = id;
   const p = id ? localProducts.find(x=>x.id===id) : null;
   document.getElementById('modal-title-text').textContent = p ? 'Editar producto' : 'Nuevo producto';
+  document.getElementById('m-codigo').value   = p?.codigo  || '';
+  document.getElementById('m-codigo-status').textContent = '';
+  document.getElementById('m-codigo-result').style.display = 'none';
   document.getElementById('m-name').value    = p?.name    || '';
   document.getElementById('m-cat').value     = p?.cat     || '';
   document.getElementById('m-marca').value   = p?.marca   || '';
@@ -2068,6 +2071,7 @@ function closeModal() {
 
 function saveModal() {
   const name    = document.getElementById('m-name').value.trim();
+  const codigo  = document.getElementById('m-codigo').value.trim();
   const cat     = document.getElementById('m-cat').value.trim();
   const marca   = document.getElementById('m-marca').value.trim();
   const price   = parseFloat(document.getElementById('m-price').value)||0;
@@ -2081,10 +2085,10 @@ function saveModal() {
 
   if (editingId) {
     const p = localProducts.find(x=>x.id===editingId);
-    if (p) Object.assign(p, {name,cat,marca,price,stock,emoji,origen,detalle,img});
+    if (p) Object.assign(p, {name,codigo,cat,marca,price,stock,emoji,origen,detalle,img});
   } else {
     const newId = Math.max(0,...localProducts.map(x=>x.id)) + 1;
-    localProducts.push({id:newId, name, cat, marca, price, stock, emoji, origen, detalle, img, hidden:false});
+    localProducts.push({id:newId, name, codigo, cat, marca, price, stock, emoji, origen, detalle, img, hidden:false});
   }
 
   buildCatFilter();
@@ -2097,6 +2101,164 @@ function saveModal() {
   if (saved) webhookUpdateProduct(saved);
 }
 
+/* ═══════════════════════════════════════════ BARCODE LOOKUP */
+
+let _codigoResultData = null; // stores parsed result for aplicarResultadoCodigo()
+
+async function buscarCodigo() {
+  const codigo = document.getElementById('m-codigo').value.trim();
+  if (!codigo) { setCodStatus('⚠ Ingresá un código primero', 'err'); return; }
+
+  const btn = document.getElementById('btn-buscar-codigo');
+  btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Buscando...';
+  btn.disabled = true;
+  document.getElementById('m-codigo-result').style.display = 'none';
+  _codigoResultData = null;
+
+  const isBarcode = /^\d{8,14}$/.test(codigo);
+
+  // ── Step 1: Try Open Product Data API (barcode only) ─────
+  if (isBarcode) {
+    setCodStatus('🔍 Consultando base de datos de productos...', 'info');
+    try {
+      const res = await fetch(`https://world.openfoodfacts.org/api/v2/product/${codigo}.json`);
+      const data = await res.json();
+      if (data.status === 1 && data.product) {
+        const p = data.product;
+        _codigoResultData = {
+          name:    p.product_name || p.product_name_es || '',
+          marca:   p.brands || '',
+          cat:     p.categories_tags?.[0]?.replace('en:','') || '',
+          detalle: p.ingredients_text || p.generic_name || '',
+          img:     p.image_url || '',
+          origen:  mapOrigen(p.countries_tags?.[0] || ''),
+        };
+        showCodigoResult(_codigoResultData, 'Open Food Facts');
+        resetBuscarBtn(); return;
+      }
+    } catch(e) { /* fall through */ }
+
+    // ── Step 2: Try UPC Item DB ──────────────────────────
+    setCodStatus('🔍 Buscando en UPC database...', 'info');
+    try {
+      const res = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${codigo}`);
+      const data = await res.json();
+      if (data.code === 'OK' && data.items?.length) {
+        const item = data.items[0];
+        _codigoResultData = {
+          name:    item.title || '',
+          marca:   item.brand || '',
+          cat:     item.category || '',
+          detalle: item.description || '',
+          img:     item.images?.[0] || '',
+          origen:  '',
+        };
+        showCodigoResult(_codigoResultData, 'UPC Item DB');
+        resetBuscarBtn(); return;
+      }
+    } catch(e) { /* fall through to AI */ }
+  }
+
+  // ── Step 3: AI fallback (always available) ───────────────
+  setCodStatus('✨ No encontrado en bases de datos — consultando IA...', 'info');
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 400,
+        messages: [{
+          role: 'user',
+          content: `Tengo un producto con ${isBarcode ? 'código de barras EAN/UPC' : 'código SKU/modelo'}: "${codigo}"
+Identificá el producto y devolvé SOLO un JSON con estos campos (sin texto adicional, sin markdown):
+{
+  "name": "nombre completo del producto",
+  "marca": "marca o fabricante",
+  "cat": "categoría (ej: Herramientas, Electrónica, etc)",
+  "detalle": "especificaciones técnicas en 1-2 oraciones",
+  "origen": "código ISO del país de origen (AR, CN, US, DE, JP, IT, BR, KR, TW, MX, FR, GB, ES, SE, CH) o vacío si no sabés",
+  "confianza": "alta/media/baja"
+}
+Si no reconocés el código, usá confianza "baja" e intentá igual con lo que puedas inferir.`
+        }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.[0]?.text || '';
+    const clean = text.replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(clean);
+    _codigoResultData = parsed;
+    showCodigoResult(parsed, 'IA', parsed.confianza);
+  } catch(e) {
+    setCodStatus('✕ No se pudo obtener información: ' + e.message, 'err');
+  }
+
+  resetBuscarBtn();
+}
+
+function showCodigoResult(data, source, confianza='') {
+  const confBadge = {
+    alta:  '<span style="color:var(--green);font-weight:700;">● Alta confianza</span>',
+    media: '<span style="color:var(--amber,#F39C12);font-weight:700;">● Confianza media — verificar</span>',
+    baja:  '<span style="color:var(--red);font-weight:700;">● Baja confianza — verificar</span>',
+  }[confianza] || '';
+
+  const rows = [
+    data.name    && `<div><strong>Nombre:</strong> ${data.name}</div>`,
+    data.marca   && `<div><strong>Marca:</strong> ${data.marca}</div>`,
+    data.cat     && `<div><strong>Categoría:</strong> ${data.cat}</div>`,
+    data.detalle && `<div><strong>Detalle:</strong> ${data.detalle}</div>`,
+    data.origen  && `<div><strong>Origen:</strong> ${ORIGEN_FLAGS_DB[data.origen]||''} ${data.origen}</div>`,
+  ].filter(Boolean).join('');
+
+  document.getElementById('m-codigo-result-body').innerHTML =
+    `<div style="margin-bottom:6px;font-size:10px;color:var(--silver);">Fuente: ${source} ${confBadge}</div>${rows}`;
+  document.getElementById('m-codigo-result').style.display = 'block';
+  setCodStatus('', '');
+}
+
+function aplicarResultadoCodigo() {
+  if (!_codigoResultData) return;
+  const d = _codigoResultData;
+  if (d.name)    document.getElementById('m-name').value    = d.name;
+  if (d.marca)   document.getElementById('m-marca').value   = d.marca;
+  if (d.cat)     document.getElementById('m-cat').value     = d.cat;
+  if (d.detalle) document.getElementById('m-detalle').value = d.detalle;
+  if (d.img)     { document.getElementById('m-img').value   = d.img; previewImgUrl(d.img); }
+  if (d.origen)  document.getElementById('m-origen').value  = d.origen;
+  document.getElementById('m-codigo-result').style.display = 'none';
+  setCodStatus('✓ Datos aplicados — revisá y ajustá lo que necesites', 'ok');
+}
+
+function setCodStatus(msg, type) {
+  const el = document.getElementById('m-codigo-status');
+  const colors = { ok:'var(--green)', err:'var(--red)', info:'var(--silver)' };
+  el.style.color = colors[type] || colors.info;
+  el.textContent = msg;
+}
+
+function resetBuscarBtn() {
+  const btn = document.getElementById('btn-buscar-codigo');
+  btn.innerHTML = '<i class="bi bi-upc-scan"></i> Buscar';
+  btn.disabled = false;
+}
+
+function mapOrigen(tag) {
+  const map = { 'en:argentina':'AR','en:china':'CN','en:united-states':'US','en:germany':'DE',
+    'en:japan':'JP','en:italy':'IT','en:brazil':'BR','en:south-korea':'KR',
+    'en:taiwan':'TW','en:mexico':'MX','en:france':'FR','en:united-kingdom':'GB',
+    'en:spain':'ES','en:sweden':'SE','en:switzerland':'CH' };
+  return map[tag.toLowerCase()] || '';
+}
+
+const ORIGEN_FLAGS_DB = {
+  AR:'🇦🇷',CN:'🇨🇳',US:'🇺🇸',DE:'🇩🇪',JP:'🇯🇵',
+  IT:'🇮🇹',BR:'🇧🇷',KR:'🇰🇷',TW:'🇹🇼',MX:'🇲🇽',
+  FR:'🇫🇷',GB:'🇬🇧',ES:'🇪🇸',SE:'🇸🇪',CH:'🇨🇭',
+};
+
+/* ═══════════════════════════════════════════ AI DETALLE */
 // AI auto-generate detalle
 async function autoDetalle() {
   const name   = document.getElementById('m-name').value.trim();
@@ -2945,6 +3107,47 @@ try {
       </div>
 
       <div class="modal-grid">
+
+        <!-- Código de barras / SKU -->
+        <div class="ctrl-group" style="grid-column:1/-1;">
+          <label class="ctrl-label" style="display:flex;align-items:center;justify-content:space-between;">
+            Código de barras / SKU
+            <span style="font-size:10px;color:var(--silver);font-weight:400;">EAN, UPC, código de fabricante</span>
+          </label>
+          <div style="display:flex;gap:8px;">
+            <input class="ctrl-input" id="m-codigo"
+              placeholder="Ej: 7798062591234 (EAN) o DCD777C2 (SKU Dewalt)"
+              style="flex:1;font-family:monospace;"
+              onkeydown="if(event.key==='Enter'){event.preventDefault();buscarCodigo();}"/>
+            <button onclick="buscarCodigo()" id="btn-buscar-codigo"
+              style="flex-shrink:0;padding:8px 16px;background:var(--red);border:none;
+                     border-radius:8px;color:#fff;font-size:12px;font-weight:600;
+                     cursor:pointer;font-family:var(--font-b);white-space:nowrap;
+                     display:flex;align-items:center;gap:6px;transition:background .15s;">
+              <i class="bi bi-upc-scan"></i> Buscar
+            </button>
+          </div>
+          <div id="m-codigo-status" style="font-size:11px;margin-top:5px;min-height:14px;"></div>
+          <!-- Result preview card (hidden by default) -->
+          <div id="m-codigo-result" style="display:none;margin-top:10px;background:var(--iron);
+               border:1px solid var(--zinc);border-radius:10px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;color:var(--silver);text-transform:uppercase;
+                        letter-spacing:.06em;margin-bottom:8px;">Datos encontrados — aplicar al producto:</div>
+            <div id="m-codigo-result-body" style="font-size:12px;color:var(--fog);line-height:1.8;"></div>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+              <button onclick="aplicarResultadoCodigo()"
+                style="flex:1;padding:7px;background:var(--red);border:none;border-radius:7px;
+                       color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-b);">
+                <i class="bi bi-check2-circle"></i> Aplicar todos los datos
+              </button>
+              <button onclick="document.getElementById('m-codigo-result').style.display='none'"
+                style="padding:7px 12px;background:var(--iron);border:1px solid var(--zinc);
+                       border-radius:7px;color:var(--fog);font-size:12px;cursor:pointer;font-family:var(--font-b);">
+                Descartar
+              </button>
+            </div>
+          </div>
+        </div>
 
         <!-- Nombre -->
         <div class="ctrl-group" style="grid-column:1/-1;">
