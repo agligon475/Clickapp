@@ -853,15 +853,15 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
             <label class="ctrl-label">Tema de fondo</label>
             <div style="display:flex;gap:8px;">
               <button class="theme-btn active" id="theme-dark" onclick="pickTheme(this,'dark')">
-                <span style="display:block;width:24px;height:24px;background:#F5F5F0;border-radius:5px;border:2px solid var(--zinc);margin:0 auto 4px;color:black;"></span>
+                <span style="display:block;width:24px;height:24px;background:#0E0E0E;border-radius:5px;border:2px solid var(--zinc);margin:0 auto 4px;"></span>
                 Oscuro
               </button>
               <button class="theme-btn" id="theme-light" onclick="pickTheme(this,'light')">
-                <span style="display:block;width:24px;height:24px;background:#F5F5F0;border-radius:5px;border:2px solid var(--zinc);margin:0 auto 4px;color:black;"></span>
+                <span style="display:block;width:24px;height:24px;background:#F5F5F0;border-radius:5px;border:2px solid var(--zinc);margin:0 auto 4px;"></span>
                 Claro
               </button>
               <button class="theme-btn" id="theme-brand" onclick="pickTheme(this,'brand')">
-                <span id="theme-brand-swatch" style="display:block;width:24px;height:24px;background:#F5F5F0;border-radius:5px;border:2px solid var(--zinc);margin:0 auto 4px;color:black;"></span>
+                <span id="theme-brand-swatch" style="display:block;width:24px;height:24px;background:#D72638;border-radius:5px;border:2px solid var(--zinc);margin:0 auto 4px;"></span>
                 Color
               </button>
             </div>
@@ -2028,17 +2028,37 @@ function openModal(id=null) {
   editingId = id;
   const p = id ? localProducts.find(x=>x.id===id) : null;
   document.getElementById('modal-title-text').textContent = p ? 'Editar producto' : 'Nuevo producto';
-  document.getElementById('m-name').value    = p?.name  || '';
-  document.getElementById('m-cat').value     = p?.cat   || '';
-  document.getElementById('m-price').value   = p?.price || '';
+  document.getElementById('m-name').value    = p?.name    || '';
+  document.getElementById('m-cat').value     = p?.cat     || '';
+  document.getElementById('m-marca').value   = p?.marca   || '';
+  document.getElementById('m-price').value   = p?.price   || '';
   document.getElementById('m-stock').value   = p?.stock ?? '';
-  document.getElementById('m-emoji').value   = p?.emoji || '📦';
-  document.getElementById('m-img').value     = p?.img   || '';
+  document.getElementById('m-emoji').value   = p?.emoji   || '📦';
+  document.getElementById('m-origen').value  = p?.origen  || '';
+  document.getElementById('m-detalle').value = p?.detalle || '';
+  document.getElementById('m-img').value     = p?.img     || '';
   document.getElementById('m-img-status').textContent = '';
+  document.getElementById('m-detalle-status').textContent = '';
+
+  // Image preview
+  const wrap = document.getElementById('m-img-preview-wrap');
   const prev = document.getElementById('m-img-preview');
-  if (p?.img) { prev.src=p.img; prev.style.display='block'; }
-  else        { prev.src=''; prev.style.display='none'; }
+  if (p?.img) { prev.src=p.img; wrap.style.display='block'; }
+  else        { prev.src=''; wrap.style.display='none'; }
+
   document.getElementById('modal-overlay').classList.add('open');
+}
+
+function previewImgUrl(url) {
+  const wrap = document.getElementById('m-img-preview-wrap');
+  const prev = document.getElementById('m-img-preview');
+  if (url && url.startsWith('http')) {
+    prev.src = url;
+    wrap.style.display = 'block';
+    prev.onerror = () => { wrap.style.display='none'; };
+  } else {
+    wrap.style.display = 'none';
+  }
 }
 
 function closeModal() {
@@ -2047,33 +2067,73 @@ function closeModal() {
 }
 
 function saveModal() {
-  const name  = document.getElementById('m-name').value.trim();
-  const cat   = document.getElementById('m-cat').value.trim();
-  const price = parseFloat(document.getElementById('m-price').value)||0;
-  const stock = parseInt(document.getElementById('m-stock').value)||0;
-  const emoji = document.getElementById('m-emoji').value.trim()||'📦';
-  const img   = document.getElementById('m-img').value.trim();
+  const name    = document.getElementById('m-name').value.trim();
+  const cat     = document.getElementById('m-cat').value.trim();
+  const marca   = document.getElementById('m-marca').value.trim();
+  const price   = parseFloat(document.getElementById('m-price').value)||0;
+  const stock   = parseInt(document.getElementById('m-stock').value)||0;
+  const emoji   = document.getElementById('m-emoji').value.trim()||'📦';
+  const origen  = document.getElementById('m-origen').value;
+  const detalle = document.getElementById('m-detalle').value.trim();
+  const img     = document.getElementById('m-img').value.trim();
 
   if (!name) { alert('El nombre del producto es obligatorio.'); return; }
 
   if (editingId) {
     const p = localProducts.find(x=>x.id===editingId);
-    if (p) Object.assign(p, {name,cat,price,stock,emoji,img});
+    if (p) Object.assign(p, {name,cat,marca,price,stock,emoji,origen,detalle,img});
   } else {
     const newId = Math.max(0,...localProducts.map(x=>x.id)) + 1;
-    localProducts.push({id:newId, name, cat, price, stock, emoji, img, hidden:false});
+    localProducts.push({id:newId, name, cat, marca, price, stock, emoji, origen, detalle, img, hidden:false});
   }
 
   buildCatFilter();
   renderABM();
   closeModal();
-
-  // Auto-save locally
   localStorage.setItem('storeapp_local_products', JSON.stringify(localProducts));
+  localStorage.setItem('storeapp_abm_active', '1');
 
-  // Auto-sync to Sheet if webhook is configured
   const saved = localProducts.find(x => x.id === (editingId || localProducts[localProducts.length-1]?.id));
   if (saved) webhookUpdateProduct(saved);
+}
+
+// AI auto-generate detalle
+async function autoDetalle() {
+  const name   = document.getElementById('m-name').value.trim();
+  const cat    = document.getElementById('m-cat').value.trim();
+  const marca  = document.getElementById('m-marca').value.trim();
+  if (!name) { alert('Ingresá el nombre del producto primero.'); return; }
+
+  const statusEl = document.getElementById('m-detalle-status');
+  statusEl.style.color = 'var(--silver)';
+  statusEl.textContent = '⏳ Generando especificaciones con IA...';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 200,
+        messages: [{
+          role: 'user',
+          content: `Generá una descripción técnica breve (máx 2 oraciones, 80 palabras) para un producto de ferretería/construcción:
+Nombre: ${name}
+${cat ? 'Categoría: '+cat : ''}
+${marca ? 'Marca: '+marca : ''}
+Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argentino.`
+        }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.[0]?.text || '';
+    document.getElementById('m-detalle').value = text.trim();
+    statusEl.style.color = 'var(--green)';
+    statusEl.textContent = '✓ Especificaciones generadas — editá si querés ajustarlas';
+  } catch(e) {
+    statusEl.style.color = 'var(--red)';
+    statusEl.textContent = '✕ Error al generar: ' + e.message;
+  }
 }
 
 /* ═══════════════════════════════════════════ WEBHOOK */
@@ -2833,9 +2893,10 @@ async function handleModalPhotoUpload(input) {
   try {
     const url = await uploadToCloudinary(file);
     document.getElementById('m-img').value = url;
-    el.style.color='var(--green)'; el.textContent='✓ Imagen subida y URL lista';
+    el.style.color='var(--green)'; el.textContent='✓ Imagen subida';
+    const wrap = document.getElementById('m-img-preview-wrap');
     const prev = document.getElementById('m-img-preview');
-    prev.src=url; prev.style.display='block';
+    prev.src=url; wrap.style.display='block';
   } catch(e) {
     el.style.color='var(--red)'; el.textContent='✕ ' + e.message + ' — pegá la URL manualmente.';
   }
@@ -2871,48 +2932,104 @@ try {
 
 <!-- ══ MODAL ══ -->
 <div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
-  <div class="modal">
+  <div class="modal" style="width:min(600px,95vw);">
     <div class="modal-head">
       <span class="modal-title" id="modal-title-text">Nuevo producto</span>
       <button class="modal-close" onclick="closeModal()"><i class="bi bi-x"></i></button>
     </div>
     <div class="modal-body">
+
+      <!-- Imagen preview grande -->
+      <div id="m-img-preview-wrap" style="display:none;margin-bottom:14px;position:relative;border-radius:10px;overflow:hidden;background:var(--iron);height:140px;">
+        <img id="m-img-preview" src="" alt="" style="width:100%;height:100%;object-fit:cover;"/>
+      </div>
+
       <div class="modal-grid">
+
+        <!-- Nombre -->
         <div class="ctrl-group" style="grid-column:1/-1;">
           <label class="ctrl-label">Nombre del producto *</label>
-          <input class="ctrl-input" id="m-name" placeholder="Ej: Llave inglesa 12&quot;"/>
+          <input class="ctrl-input" id="m-name" placeholder="Ej: Sierra Circular 7¼&quot;"/>
         </div>
+
+        <!-- Categoria + Marca -->
         <div class="ctrl-group">
           <label class="ctrl-label">Categoría</label>
           <input class="ctrl-input" id="m-cat" placeholder="Ej: Herramientas"/>
         </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">Marca</label>
+          <input class="ctrl-input" id="m-marca" placeholder="Ej: Dewalt, Bosch, Stanley"/>
+        </div>
+
+        <!-- Precio + Stock -->
+        <div class="ctrl-group">
+          <label class="ctrl-label">Precio ($)</label>
+          <input class="ctrl-input" id="m-price" type="number" min="0" placeholder="150000"/>
+        </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">Stock (unidades)</label>
+          <input class="ctrl-input" id="m-stock" type="number" min="0" placeholder="24"/>
+        </div>
+
+        <!-- Emoji + Origen -->
         <div class="ctrl-group">
           <label class="ctrl-label">Emoji / ícono</label>
           <input class="ctrl-input" id="m-emoji" placeholder="🔧" style="font-size:20px;"/>
           <div class="form-hint">Copiá un emoji directamente</div>
         </div>
         <div class="ctrl-group">
-          <label class="ctrl-label">Precio ($)</label>
-          <input class="ctrl-input" id="m-price" type="number" min="0" placeholder="15900"/>
+          <label class="ctrl-label">País de origen</label>
+          <select class="ctrl-input" id="m-origen">
+            <option value="">Sin especificar</option>
+            <option value="AR">🇦🇷 Argentina</option>
+            <option value="CN">🇨🇳 China</option>
+            <option value="US">🇺🇸 Estados Unidos</option>
+            <option value="DE">🇩🇪 Alemania</option>
+            <option value="JP">🇯🇵 Japón</option>
+            <option value="IT">🇮🇹 Italia</option>
+            <option value="BR">🇧🇷 Brasil</option>
+            <option value="KR">🇰🇷 Corea del Sur</option>
+            <option value="TW">🇹🇼 Taiwán</option>
+            <option value="MX">🇲🇽 México</option>
+            <option value="FR">🇫🇷 Francia</option>
+            <option value="GB">🇬🇧 Reino Unido</option>
+            <option value="ES">🇪🇸 España</option>
+            <option value="SE">🇸🇪 Suecia</option>
+            <option value="CH">🇨🇭 Suiza</option>
+          </select>
         </div>
-        <div class="ctrl-group">
-          <label class="ctrl-label">Stock (unidades)</label>
-          <input class="ctrl-input" id="m-stock" type="number" min="0" placeholder="24"/>
+
+        <!-- Detalle / especificaciones -->
+        <div class="ctrl-group" style="grid-column:1/-1;">
+          <label class="ctrl-label" style="display:flex;align-items:center;justify-content:space-between;">
+            Detalle / Especificaciones
+            <button onclick="autoDetalle()" style="font-size:10px;padding:2px 8px;background:rgba(215,38,56,.15);border:1px solid rgba(215,38,56,.3);border-radius:5px;color:var(--red);cursor:pointer;font-family:var(--font-b);">
+              <i class="bi bi-stars"></i> Generar con IA
+            </button>
+          </label>
+          <textarea class="ctrl-input" id="m-detalle" rows="3" placeholder="Ej: Disco de 184mm, 5500 RPM, motor 1400W, mango ergonómico, guía paralela incluida..." style="resize:vertical;"></textarea>
+          <div id="m-detalle-status" style="font-size:10px;color:var(--silver);margin-top:3px;min-height:12px;"></div>
         </div>
+
+        <!-- Imagen -->
         <div class="ctrl-group" style="grid-column:1/-1;">
           <label class="ctrl-label">Imagen del producto</label>
           <div style="display:flex;gap:8px;align-items:flex-start;">
-            <input class="ctrl-input" id="m-img" placeholder="https://... (URL de la imagen)" style="flex:1;"/>
-            <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--iron);border:1px solid var(--zinc);border-radius:8px;font-size:11px;font-weight:600;color:var(--fog);transition:all .15s;"
+            <input class="ctrl-input" id="m-img" placeholder="https://... (URL de la imagen)"
+              style="flex:1;" oninput="previewImgUrl(this.value)"/>
+            <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;
+              padding:8px 12px;background:var(--iron);border:1px solid var(--zinc);border-radius:8px;
+              font-size:11px;font-weight:600;color:var(--fog);transition:all .15s;white-space:nowrap;"
               title="Subir foto a Cloudinary">
               <i class="bi bi-cloud-arrow-up"></i> Subir
               <input type="file" accept="image/*" style="display:none;" onchange="handleModalPhotoUpload(this)"/>
             </label>
           </div>
-          <img id="m-img-preview" src="" alt="" style="display:none;height:64px;border-radius:8px;margin-top:8px;border:1px solid var(--zinc);"/>
           <div id="m-img-status" style="font-size:10px;margin-top:3px;min-height:12px;"></div>
-          <div class="form-hint">Subí desde acá (requiere Cloudinary en Configuración) o pegá una URL directa</div>
+          <div class="form-hint">Subí desde acá (requiere Cloudinary) o pegá una URL directa</div>
         </div>
+
       </div>
     </div>
     <div class="modal-footer">
