@@ -1259,10 +1259,13 @@ function enviarWhatsApp() {
 
   const total = cartTotal();
 
-  // ── 1. Abrir WhatsApp ────────────────────────────
+  // ── Generar ID del pedido ────────────────────────
+  const pedidoId = 'PED-' + Date.now().toString(36).toUpperCase();
+
+  // ── 1. Mensaje al dueño por WhatsApp ─────────────
   const lines = items.map(i=>`  • ${i.nombre} ×${i.cantidad}  →  $${i.subtotal.toLocaleString('es-AR')}`);
   const msg = [
-    `¡Hola! Quiero hacer el siguiente pedido:`,
+    `🛒 *Nuevo pedido ${pedidoId}*`,
     ``,
     ...lines,
     ``,
@@ -1271,25 +1274,24 @@ function enviarWhatsApp() {
     `🚚 *Logística:* ${logis}`,
     dir ? `📍 *Dirección:* ${dir}` : '',
     ``,
-    `👤 *Nombre:* ${nombre}`,
+    `👤 *Cliente:* ${nombre}`,
     `🪪 *DNI:* ${dni}`,
   ].filter(l=>l!==undefined).join('\n');
 
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
 
-  // ── 2. Registrar pedido en Sheet (fire & forget) ─
-  registrarPedido({ nombre, dni, pago, logistica: logis, direccion: dir, items, total });
+  // ── 2. Registrar pedido ──────────────────────────
+  registrarPedido({ id: pedidoId, nombre, dni, pago, logistica: logis, direccion: dir, items, total });
 
   // ── 3. Limpiar carrito ───────────────────────────
   cart = {};
   updateCartUI();
   closeCart();
-  showToast('✓ Pedido enviado por WhatsApp');
+  showToast(`✓ Pedido ${pedidoId} enviado por WhatsApp`);
 }
 
 async function registrarPedido(pedido) {
-  // Generar ID único para el pedido
-  const id = 'PED-' + Date.now().toString(36).toUpperCase();
+  const id    = pedido.id || ('PED-' + Date.now().toString(36).toUpperCase());
   const fecha = new Date().toLocaleString('es-AR', {
     day:'2-digit', month:'2-digit', year:'numeric',
     hour:'2-digit', minute:'2-digit'
@@ -1306,7 +1308,7 @@ async function registrarPedido(pedido) {
     logistica: pedido.logistica,
     direccion: pedido.direccion || '',
     total:     pedido.total,
-    estado:    'confirmar',   // estado inicial = A confirmar
+    estado:    'confirmar',
   };
 
   // ── 1. Guardar en localStorage (misma key que usa el dashboard) ──
