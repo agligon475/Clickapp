@@ -1115,6 +1115,34 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
           <label class="ctrl-label">Eslogan</label>
           <input class="ctrl-input" id="cfg-store-tagline" placeholder="Tu ferretería digital"/>
         </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">Rubro de la empresa</label>
+          <select class="ctrl-input" id="cfg-store-rubro">
+            <option value="">Seleccioná...</option>
+            <option value="Ferretería">🔧 Ferretería</option>
+            <option value="Dietética">🌿 Dietética</option>
+            <option value="Rotisería">🍗 Rotisería</option>
+            <option value="Kiosco">🍬 Kiosco</option>
+            <option value="Distribuidora">📦 Distribuidora</option>
+            <option value="Indumentaria">👗 Indumentaria</option>
+            <option value="Electrónica">💻 Electrónica</option>
+            <option value="Librería">📚 Librería</option>
+            <option value="Farmacia">💊 Farmacia</option>
+            <option value="Verdulería">🥦 Verdulería</option>
+            <option value="Panadería">🥖 Panadería</option>
+            <option value="Otro">🏪 Otro</option>
+          </select>
+        </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">Dirección del local</label>
+          <input class="ctrl-input" id="cfg-store-direccion" placeholder="Av. Corrientes 1234, CABA"/>
+          <div style="font-size:10px;color:var(--silver);margin-top:3px;">Se incluye en mensajes de retiro por local</div>
+        </div>
+        <div class="ctrl-group" style="grid-column:1/-1;">
+          <label class="ctrl-label">Horario de atención</label>
+          <input class="ctrl-input" id="cfg-store-horario" placeholder="Lun a Vie 9:00–18:00 · Sáb 9:00–13:00"/>
+          <div style="font-size:10px;color:var(--silver);margin-top:3px;">Se incluye en mensajes de retiro por local</div>
+        </div>
       </div>
     </div>
 
@@ -1377,14 +1405,15 @@ const DEMO_ORDERS=[];  // no demo — only real data
 // ── STATE DEFINITIONS ─────────────────────────────
 // Each state: { key, label, color (bg), text, icon }
 const DEFAULT_STATES = [
-  { key:'confirmar',  label:'A confirmar', bg:'rgba(243,156,18,.15)',  text:'#F39C12', icon:'bi-hourglass-split' },
-  { key:'en_curso',   label:'En curso',    bg:'rgba(52,152,219,.15)',  text:'#3498DB', icon:'bi-arrow-repeat'   },
-  { key:'despachado', label:'Despachado',  bg:'rgba(155,89,182,.15)', text:'#9B59B6', icon:'bi-box-seam'       },
-  { key:'cobrado',    label:'Cobrado',     bg:'rgba(46,204,113,.15)',  text:'#2ECC71', icon:'bi-cash-coin'      },
-  { key:'retirado',   label:'Retirado',    bg:'rgba(46,204,113,.15)',  text:'#27AE60', icon:'bi-bag-check'      },
-  { key:'enviado',    label:'Enviado',     bg:'rgba(52,152,219,.25)', text:'#2980B9', icon:'bi-truck'          },
-  { key:'devuelto',   label:'Devuelto',    bg:'rgba(215,38,56,.15)',   text:'#D72638', icon:'bi-arrow-return-left'},
-  { key:'perdido',    label:'Perdido',     bg:'rgba(100,100,100,.2)',  text:'#888',    icon:'bi-x-circle'       },
+  { key:'confirmar',      label:'A confirmar',        bg:'rgba(243,156,18,.15)',  text:'#F39C12', icon:'bi-hourglass-split'    },
+  { key:'en_curso',       label:'En curso',            bg:'rgba(52,152,219,.15)',  text:'#3498DB', icon:'bi-arrow-repeat'       },
+  { key:'despachado',     label:'Despachado',          bg:'rgba(155,89,182,.15)', text:'#9B59B6', icon:'bi-box-seam'           },
+  { key:'listo_retirar',  label:'Listo para retirar',  bg:'rgba(46,204,113,.15)', text:'#2ECC71', icon:'bi-bag-check'          },
+  { key:'cobrado',        label:'Cobrado',             bg:'rgba(46,204,113,.15)',  text:'#2ECC71', icon:'bi-cash-coin'          },
+  { key:'retirado',       label:'Retirado',            bg:'rgba(46,204,113,.15)',  text:'#27AE60', icon:'bi-bag-check'          },
+  { key:'enviado',        label:'Enviado',             bg:'rgba(52,152,219,.25)', text:'#2980B9', icon:'bi-truck'              },
+  { key:'devuelto',       label:'Devuelto',            bg:'rgba(215,38,56,.15)',   text:'#D72638', icon:'bi-arrow-return-left'  },
+  { key:'perdido',        label:'Perdido',             bg:'rgba(100,100,100,.2)',  text:'#888',    icon:'bi-x-circle'           },
 ];
 
 function getStates() {
@@ -2768,15 +2797,95 @@ function filterOrdersTable() {
 
 function changeOrderEstado(id, estado) {
   const o = allOrders.find(x => x.id === id);
-  if (o) {
-    o.estado = estado;
-    localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
-    renderAllOrders(allOrders);
-    updateDashboardFromOrders(allOrders);
-    // Sync to Sheet with human-readable label
-    const label = getStates().find(s => s.key === estado)?.label || estado;
-    updateOrderEstado(id, label);
+  if (!o) return;
+
+  o.estado = estado;
+  localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
+  renderAllOrders(allOrders);
+  updateDashboardFromOrders(allOrders);
+
+  // Sync to Sheet
+  const label = getStates().find(s => s.key === estado)?.label || estado;
+  updateOrderEstado(id, label);
+
+  // ── Mensajes automáticos según estado ────────────
+  const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+
+  if (estado === 'retirado' || label === 'Listo para retirar') {
+    // Mensaje al cliente: pedido listo para retirar
+    enviarMensajeRetiro(o, sc);
   }
+  if (estado === 'despachado' || label === 'Despachado') {
+    // Mensaje al cliente: pedido en camino
+    enviarMensajeEnCamino(o, sc);
+  }
+}
+
+function enviarMensajeRetiro(order, sc) {
+  const nombre   = sc.name      || 'la tienda';
+  const horario  = sc.horario   || '';
+  const direccion= sc.direccion || '';
+  const wapp     = sc.wapp      || '';
+
+  if (!wapp) { showToastDash('⚠ Configurá el WhatsApp del local para enviar el mensaje al cliente'); return; }
+
+  const msg = [
+    `✅ *Tu pedido está listo para retirar*`,
+    ``,
+    `📋 *Código de pedido:* ${order.id}`,
+    `👤 *Cliente:* ${order.cliente}`,
+    ``,
+    `📦 *Productos:*`,
+    ...order.productos.split(' | ').map(p => `  • ${p}`),
+    ``,
+    `🏪 *Local:* ${nombre}`,
+    direccion ? `📍 *Dirección:* ${direccion}` : '',
+    horario   ? `🕐 *Horario:* ${horario}`     : '',
+    ``,
+    `¡Te esperamos! 😊`,
+  ].filter(Boolean).join('\n');
+
+  // Abrir WhatsApp con el cliente — si tiene teléfono, sino con el dueño
+  const clienteWapp = order.wapp || order.telefono || '';
+  const dest = clienteWapp ? clienteWapp : wapp;
+  window.open(`https://wa.me/${dest}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+function enviarMensajeEnCamino(order, sc) {
+  const nombre = sc.name || 'la tienda';
+  const wapp   = sc.wapp || '';
+  if (!wapp) return;
+
+  const msg = [
+    `🚚 *Tu pedido está en camino*`,
+    ``,
+    `📋 *Código de pedido:* ${order.id}`,
+    `👤 *Cliente:* ${order.cliente}`,
+    ``,
+    `📦 *Productos:*`,
+    ...order.productos.split(' | ').map(p => `  • ${p}`),
+    ``,
+    `Pronto recibirás tu pedido. Ante cualquier consulta respondé este mensaje.`,
+    ``,
+    `— ${nombre}`,
+  ].filter(Boolean).join('\n');
+
+  window.open(`https://wa.me/${wapp}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+function showToastDash(msg) {
+  // Simple dashboard notification
+  const existing = document.getElementById('dash-toast');
+  if (existing) existing.remove();
+  const el = document.createElement('div');
+  el.id = 'dash-toast';
+  el.style.cssText = `position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+    background:var(--steel);border:1px solid var(--zinc);border-left:3px solid var(--red);
+    border-radius:10px;padding:10px 18px;font-size:12px;color:var(--white);z-index:9999;
+    box-shadow:0 8px 32px rgba(0,0,0,.5);`;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 4000);
 }
 
 function deleteOrder(id) {
@@ -2888,9 +2997,12 @@ function initConfigView() {
     || 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS3mssf-j0joT1S6CKlZHfSPTSXPHypZ_PHypn702KMgUYvteXDajrEVymXqYFgFVfqQcsUvJn6ktK2/pub?gid=0&single=true&output=csv';
   document.getElementById('cfg-sheet-url').value = sheetUrl;
 
-  if (sc.name)    document.getElementById('cfg-store-name').value    = sc.name;
-  if (sc.tagline) document.getElementById('cfg-store-tagline').value = sc.tagline;
-  if (sc.wapp)    document.getElementById('cfg-store-wapp').value    = sc.wapp;
+  if (sc.name)      document.getElementById('cfg-store-name').value      = sc.name;
+  if (sc.tagline)   document.getElementById('cfg-store-tagline').value   = sc.tagline;
+  if (sc.wapp)      document.getElementById('cfg-store-wapp').value      = sc.wapp;
+  if (sc.rubro)     document.getElementById('cfg-store-rubro').value     = sc.rubro;
+  if (sc.direccion) document.getElementById('cfg-store-direccion').value = sc.direccion;
+  if (sc.horario)   document.getElementById('cfg-store-horario').value   = sc.horario;
 
   const cloud = JSON.parse(localStorage.getItem('storeapp_cloudinary') || '{}');
   if (cloud.name)   document.getElementById('cfg-cloud-name').value   = cloud.name;
@@ -2915,12 +3027,18 @@ function saveConfig() {
 
   // Store info → merge into storeapp_cfg
   const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
-  const name    = document.getElementById('cfg-store-name').value.trim();
-  const tagline = document.getElementById('cfg-store-tagline').value.trim();
-  const wapp    = document.getElementById('cfg-store-wapp').value.trim();
-  if (name)    sc.name    = name;
-  if (tagline) sc.tagline = tagline;
-  if (wapp)    sc.wapp    = wapp;
+  const name      = document.getElementById('cfg-store-name').value.trim();
+  const tagline   = document.getElementById('cfg-store-tagline').value.trim();
+  const wapp      = document.getElementById('cfg-store-wapp').value.trim();
+  const rubro     = document.getElementById('cfg-store-rubro').value.trim();
+  const direccion = document.getElementById('cfg-store-direccion').value.trim();
+  const horario   = document.getElementById('cfg-store-horario').value.trim();
+  if (name)      sc.name      = name;
+  if (tagline)   sc.tagline   = tagline;
+  if (wapp)      sc.wapp      = wapp;
+  if (rubro)     sc.rubro     = rubro;
+  if (direccion) sc.direccion = direccion;
+  if (horario)   sc.horario   = horario;
   localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
 
   // Cloudinary
