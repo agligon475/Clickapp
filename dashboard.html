@@ -2147,7 +2147,7 @@ function saveModal() {
     const newId = Math.max(0,...localProducts.map(x=>x.id)) + 1;
     localProducts.push({id:newId, name, codigo, cat, marca, price, stock, emoji, origen, detalle, img, img2, img3, hidden:false});
   }
-  }
+  
 
   buildCatFilter();
   renderABM();
