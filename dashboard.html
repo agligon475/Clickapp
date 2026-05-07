@@ -2068,22 +2068,48 @@ function openModal(id=null) {
   document.getElementById('m-emoji').value   = p?.emoji   || '📦';
   document.getElementById('m-origen').value  = p?.origen  || '';
   document.getElementById('m-detalle').value = p?.detalle || '';
+  
+  // Cargar hasta 3 imágenes
   document.getElementById('m-img').value     = p?.img     || '';
+  document.getElementById('m-img2').value    = p?.img2    || '';
+  document.getElementById('m-img3').value    = p?.img3    || '';
   document.getElementById('m-img-status').textContent = '';
+  document.getElementById('m-img2-status').textContent = '';
+  document.getElementById('m-img3-status').textContent = '';
   document.getElementById('m-detalle-status').textContent = '';
 
-  // Image preview
-  const wrap = document.getElementById('m-img-preview-wrap');
-  const prev = document.getElementById('m-img-preview');
-  if (p?.img) { prev.src=p.img; wrap.style.display='block'; }
-  else        { prev.src=''; wrap.style.display='none'; }
+  // Image previews
+  previewImgUrl(p?.img || '', 0);
+  previewImgUrl(p?.img2 || '', 1);
+  previewImgUrl(p?.img3 || '', 2);
 
   document.getElementById('modal-overlay').classList.add('open');
 }
 
-function previewImgUrl(url) {
-  const wrap = document.getElementById('m-img-preview-wrap');
-  const prev = document.getElementById('m-img-preview');
+function previewImgUrl(url, index = 0) {
+  const ids = ['m-img-preview', 'm-img2-preview', 'm-img3-preview'];
+  const wrapIds = ['m-img-preview-wrap', 'm-img2-preview-wrap', 'm-img3-preview-wrap'];
+  
+  // Crear elementos si no existen
+  if (!document.getElementById(ids[index])) {
+    const wrap = document.createElement('div');
+    wrap.id = wrapIds[index];
+    wrap.style.cssText = 'display:none;margin-bottom:10px;position:relative;border-radius:10px;overflow:hidden;background:var(--iron);height:120px;';
+    const img = document.createElement('img');
+    img.id = ids[index];
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+    wrap.appendChild(img);
+    const container = document.querySelector('[style*="grid-column:1/-1"]');
+    if (container && container.previousElementSibling) {
+      container.parentNode.insertBefore(wrap, container);
+    }
+  }
+  
+  const prev = document.getElementById(ids[index]);
+  const wrap = document.getElementById(wrapIds[index]);
+  
+  if (!prev || !wrap) return;
+  
   if (url && url.startsWith('http')) {
     prev.src = url;
     wrap.style.display = 'block';
@@ -2109,15 +2135,18 @@ function saveModal() {
   const origen  = document.getElementById('m-origen').value;
   const detalle = document.getElementById('m-detalle').value.trim();
   const img     = document.getElementById('m-img').value.trim();
+  const img2    = document.getElementById('m-img2').value.trim();
+  const img3    = document.getElementById('m-img3').value.trim();
 
   if (!name) { alert('El nombre del producto es obligatorio.'); return; }
 
   if (editingId) {
     const p = localProducts.find(x=>x.id===editingId);
-    if (p) Object.assign(p, {name,codigo,cat,marca,price,stock,emoji,origen,detalle,img});
+    if (p) Object.assign(p, {name,codigo,cat,marca,price,stock,emoji,origen,detalle,img,img2,img3});
   } else {
     const newId = Math.max(0,...localProducts.map(x=>x.id)) + 1;
-    localProducts.push({id:newId, name, codigo, cat, marca, price, stock, emoji, origen, detalle, img, hidden:false});
+    localProducts.push({id:newId, name, codigo, cat, marca, price, stock, emoji, origen, detalle, img, img2, img3, hidden:false});
+  }
   }
 
   buildCatFilter();
@@ -3142,21 +3171,107 @@ async function testCloudinaryUpload(input) {
 }
 
 /* ═══════════════════════════════════════════ PHOTO UPLOAD IN ABM MODAL */
-async function handleModalPhotoUpload(input) {
+async function handleModalPhotoUpload(input, index = 0) {
   const file = input.files[0];
   if (!file) return;
-  const el   = document.getElementById('m-img-status');
+  
+  const statusIds = ['m-img-status', 'm-img2-status', 'm-img3-status'];
+  const inputIds = ['m-img', 'm-img2', 'm-img3'];
+  
+  const el = document.getElementById(statusIds[index]);
   el.style.color='var(--silver)'; el.textContent='Subiendo imagen...';
+  
   try {
-    const url = await uploadToCloudinary(file);
-    document.getElementById('m-img').value = url;
-    el.style.color='var(--green)'; el.textContent='✓ Imagen subida';
-    const wrap = document.getElementById('m-img-preview-wrap');
-    const prev = document.getElementById('m-img-preview');
-    prev.src=url; wrap.style.display='block';
+    // Aplicar marca de agua antes de subir
+    const watermarkedFile = await applyWatermark(file);
+    const url = await uploadToCloudinary(watermarkedFile);
+    
+    document.getElementById(inputIds[index]).value = url;
+    el.style.color='var(--green)'; el.textContent='✓ Imagen subida con marca de agua';
+    
+    previewImgUrl(url, index);
   } catch(e) {
     el.style.color='var(--red)'; el.textContent='✕ ' + e.message + ' — pegá la URL manualmente.';
   }
+}
+
+/* ═══════════════════════════════════════════ MARCA DE AGUA */
+async function applyWatermark(file) {
+  return new Promise((resolve, reject) => {
+    // Obtener logo guardado
+    const logoData = localStorage.getItem('store-logo');
+    
+    const img = new Image();
+    const reader = new FileReader();
+    
+    reader.onload = (e) => {
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = img.width;
+        canvas.height = img.height;
+        
+        // Dibujar imagen original
+        ctx.drawImage(img, 0, 0);
+        
+        // Si hay logo, aplicar marca de agua
+        if (logoData) {
+          const logo = new Image();
+          logo.onload = () => {
+            // Posicionar logo en esquina inferior derecha
+            const logoSize = Math.min(img.width, img.height) * 0.15; // 15% del tamaño
+            const logoWidth = logoSize;
+            const logoHeight = (logo.height / logo.width) * logoSize;
+            const padding = 20;
+            
+            // Fondo semi-transparente para el logo
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            ctx.fillRect(
+              canvas.width - logoWidth - padding - 10,
+              canvas.height - logoHeight - padding - 10,
+              logoWidth + 20,
+              logoHeight + 20
+            );
+            
+            // Dibujar logo
+            ctx.globalAlpha = 0.8;
+            ctx.drawImage(
+              logo,
+              canvas.width - logoWidth - padding,
+              canvas.height - logoHeight - padding,
+              logoWidth,
+              logoHeight
+            );
+            ctx.globalAlpha = 1.0;
+            
+            // Convertir a blob
+            canvas.toBlob((blob) => {
+              const watermarkedFile = new File([blob], file.name, { type: file.type });
+              resolve(watermarkedFile);
+            }, file.type, 0.95);
+          };
+          logo.onerror = () => {
+            // Si falla el logo, devolver original
+            resolve(file);
+          };
+          logo.src = logoData;
+        } else {
+          // Sin logo, devolver imagen original
+          canvas.toBlob((blob) => {
+            const originalFile = new File([blob], file.name, { type: file.type });
+            resolve(originalFile);
+          }, file.type, 0.95);
+        }
+      };
+      img.onerror = () => reject(new Error('Error al cargar la imagen'));
+      img.src = e.target.result;
+    };
+    
+    reader.onerror = () => reject(new Error('Error al leer el archivo'));
+    reader.readAsDataURL(file);
+  });
+}
 }
 
 /* ═══════════════════════════════════════════ INIT */
@@ -3196,9 +3311,17 @@ try {
     </div>
     <div class="modal-body">
 
-      <!-- Imagen preview grande -->
-      <div id="m-img-preview-wrap" style="display:none;margin-bottom:14px;position:relative;border-radius:10px;overflow:hidden;background:var(--iron);height:140px;">
-        <img id="m-img-preview" src="" alt="" style="width:100%;height:100%;object-fit:cover;"/>
+      <!-- Preview de imágenes (hasta 3) -->
+      <div id="m-img-preview-wrap" style="display:none;margin-bottom:14px;gap:8px;">
+        <div style="position:relative;border-radius:10px;overflow:hidden;background:var(--iron);height:140px;flex:1;">
+          <img id="m-img-preview" src="" alt="" style="width:100%;height:100%;object-fit:cover;"/>
+        </div>
+        <div id="m-img2-preview-wrap" style="display:none;position:relative;border-radius:10px;overflow:hidden;background:var(--iron);height:140px;flex:1;">
+          <img id="m-img2-preview" src="" alt="" style="width:100%;height:100%;object-fit:cover;"/>
+        </div>
+        <div id="m-img3-preview-wrap" style="display:none;position:relative;border-radius:10px;overflow:hidden;background:var(--iron);height:140px;flex:1;">
+          <img id="m-img3-preview" src="" alt="" style="width:100%;height:100%;object-fit:cover;"/>
+        </div>
       </div>
 
       <div class="modal-grid">
@@ -3310,22 +3433,62 @@ try {
           <div id="m-detalle-status" style="font-size:10px;color:var(--silver);margin-top:3px;min-height:12px;"></div>
         </div>
 
-        <!-- Imagen -->
+        <!-- Imágenes (hasta 3) -->
         <div class="ctrl-group" style="grid-column:1/-1;">
-          <label class="ctrl-label">Imagen del producto</label>
-          <div style="display:flex;gap:8px;align-items:flex-start;">
-            <input class="ctrl-input" id="m-img" placeholder="https://... (URL de la imagen)"
-              style="flex:1;" oninput="previewImgUrl(this.value)"/>
-            <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;
-              padding:8px 12px;background:var(--iron);border:1px solid var(--zinc);border-radius:8px;
-              font-size:11px;font-weight:600;color:var(--fog);transition:all .15s;white-space:nowrap;"
-              title="Subir foto a Cloudinary">
-              <i class="bi bi-cloud-arrow-up"></i> Subir
-              <input type="file" accept="image/*" style="display:none;" onchange="handleModalPhotoUpload(this)"/>
-            </label>
+          <label class="ctrl-label">Imágenes del producto (hasta 3)</label>
+          
+          <!-- Imagen 1 -->
+          <div style="margin-bottom:10px;">
+            <div style="font-size:10px;color:var(--silver);margin-bottom:4px;font-weight:600;">Imagen principal</div>
+            <div style="display:flex;gap:8px;align-items:flex-start;">
+              <input class="ctrl-input" id="m-img" placeholder="https://... (URL de la imagen)"
+                style="flex:1;" oninput="previewImgUrl(this.value,0)"/>
+              <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;
+                padding:8px 12px;background:var(--iron);border:1px solid var(--zinc);border-radius:8px;
+                font-size:11px;font-weight:600;color:var(--fog);transition:all .15s;white-space:nowrap;"
+                title="Subir foto a Cloudinary">
+                <i class="bi bi-cloud-arrow-up"></i> Subir
+                <input type="file" accept="image/*" style="display:none;" onchange="handleModalPhotoUpload(this,0)"/>
+              </label>
+            </div>
+            <div id="m-img-status" style="font-size:10px;margin-top:3px;min-height:12px;"></div>
           </div>
-          <div id="m-img-status" style="font-size:10px;margin-top:3px;min-height:12px;"></div>
-          <div class="form-hint">Subí desde acá (requiere Cloudinary) o pegá una URL directa</div>
+
+          <!-- Imagen 2 -->
+          <div style="margin-bottom:10px;">
+            <div style="font-size:10px;color:var(--silver);margin-bottom:4px;font-weight:600;">Imagen 2 (opcional)</div>
+            <div style="display:flex;gap:8px;align-items:flex-start;">
+              <input class="ctrl-input" id="m-img2" placeholder="https://... (URL de la imagen)"
+                style="flex:1;" oninput="previewImgUrl(this.value,1)"/>
+              <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;
+                padding:8px 12px;background:var(--iron);border:1px solid var(--zinc);border-radius:8px;
+                font-size:11px;font-weight:600;color:var(--fog);transition:all .15s;white-space:nowrap;"
+                title="Subir foto a Cloudinary">
+                <i class="bi bi-cloud-arrow-up"></i> Subir
+                <input type="file" accept="image/*" style="display:none;" onchange="handleModalPhotoUpload(this,1)"/>
+              </label>
+            </div>
+            <div id="m-img2-status" style="font-size:10px;margin-top:3px;min-height:12px;"></div>
+          </div>
+
+          <!-- Imagen 3 -->
+          <div style="margin-bottom:10px;">
+            <div style="font-size:10px;color:var(--silver);margin-bottom:4px;font-weight:600;">Imagen 3 (opcional)</div>
+            <div style="display:flex;gap:8px;align-items:flex-start;">
+              <input class="ctrl-input" id="m-img3" placeholder="https://... (URL de la imagen)"
+                style="flex:1;" oninput="previewImgUrl(this.value,2)"/>
+              <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;
+                padding:8px 12px;background:var(--iron);border:1px solid var(--zinc);border-radius:8px;
+                font-size:11px;font-weight:600;color:var(--fog);transition:all .15s;white-space:nowrap;"
+                title="Subir foto a Cloudinary">
+                <i class="bi bi-cloud-arrow-up"></i> Subir
+                <input type="file" accept="image/*" style="display:none;" onchange="handleModalPhotoUpload(this,2)"/>
+              </label>
+            </div>
+            <div id="m-img3-status" style="font-size:10px;margin-top:3px;min-height:12px;"></div>
+          </div>
+
+          <div class="form-hint">Subí desde acá (requiere Cloudinary) o pegá URLs directas. La marca de agua se aplica automáticamente.</div>
         </div>
 
       </div>

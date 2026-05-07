@@ -250,6 +250,67 @@ body::before{
   letter-spacing:.1em;
 }
 
+/* ── PROMOTIONAL BANNERS 50/50 ──────────────────── */
+.promo-banner{
+  position:relative;
+  height:200px;
+  border-radius:12px;
+  overflow:hidden;
+  cursor:pointer;
+  border:1px solid var(--zinc);
+  transition:all .2s;
+  animation:fadeUp .4s ease both;
+  background:var(--iron);
+  display:flex;align-items:center;justify-content:center;
+  font-size:48px;
+}
+.promo-banner:hover{
+  border-color:var(--red);
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(0,0,0,.3),0 0 0 1px var(--red);
+}
+.promo-banner-img{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;
+}
+.promo-banner-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(215,38,56,.4) 0%,rgba(0,0,0,.3) 100%);
+}
+.promo-banner-content{
+  position:relative;z-index:2;
+  text-align:center;padding:20px;
+  color:#fff;
+}
+.promo-banner-label{
+  font-family:var(--font-body);
+  font-size:12px;font-weight:600;
+  color:rgba(255,255,255,.8);
+  text-transform:uppercase;letter-spacing:.1em;
+  margin-bottom:8px;
+}
+.promo-banner-title{
+  font-family:var(--font-head);
+  font-size:28px;font-weight:800;
+  color:#fff;line-height:1.1;
+  margin-bottom:6px;
+}
+.promo-banner-cta{
+  font-size:12px;
+  color:var(--red);font-weight:600;
+  margin-top:10px;display:flex;align-items:center;gap:6px;
+  justify-content:center;
+}
+
+@media(max-width:768px){
+  #banners-container{
+    grid-template-columns:1fr;
+  }
+  .promo-banner{height:160px;}
+  .promo-banner-title{font-size:20px;}
+}
+
 /* ── PRODUCTS GRID ──────────────────────────────── */
 .grid{
   display:grid;
@@ -708,6 +769,14 @@ body::before{
     <!-- populated by JS -->
   </div>
 
+  <!-- BANNERS PROMOCIONALES 50/50 -->
+  <div id="banners-container" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:32px;">
+    <!-- Banner 1 - populated by JS -->
+    <div id="banner-1" class="promo-banner"></div>
+    <!-- Banner 2 - populated by JS -->
+    <div id="banner-2" class="promo-banner"></div>
+  </div>
+
   <div class="section-head">
     <span class="section-label" id="section-label">Cargando productos...</span>
   </div>
@@ -1075,6 +1144,24 @@ async function loadSheet() {
 
     setStatus('ok', `${products.length} productos · catálogo actualizado`);
     document.getElementById('sync-time').textContent = new Date().toLocaleTimeString('es-AR');
+    
+    // Cargar datos de banners (fila 1, si existen)
+    const bannerData = {
+      banner1: {
+        label: hdrs.includes('banner1_label') ? rows[0][hdrs.indexOf('banner1_label')] : 'OFERTA',
+        title: hdrs.includes('banner1_title') ? rows[0][hdrs.indexOf('banner1_title')] : 'Nuevas Herramientas',
+        img: hdrs.includes('banner1_img') ? rows[0][hdrs.indexOf('banner1_img')] : '',
+        cat: hdrs.includes('banner1_cat') ? rows[0][hdrs.indexOf('banner1_cat')] : ''
+      },
+      banner2: {
+        label: hdrs.includes('banner2_label') ? rows[0][hdrs.indexOf('banner2_label')] : 'PROMOCIÓN',
+        title: hdrs.includes('banner2_title') ? rows[0][hdrs.indexOf('banner2_title')] : 'Accesorios Especiales',
+        img: hdrs.includes('banner2_img') ? rows[0][hdrs.indexOf('banner2_img')] : '',
+        cat: hdrs.includes('banner2_cat') ? rows[0][hdrs.indexOf('banner2_cat')] : ''
+      }
+    };
+    
+    renderBanners(bannerData);
     render();
   } catch(e) {
     setStatus('err', 'Error al cargar el catálogo');
@@ -1152,7 +1239,49 @@ function filterCat(btn, cat) {
 }
 function onSearch(val) { searchTerm = val; render(); }
 
-/* ═══════════════════════════════════════════ CART */
+/* ═══════════════════════════════════════════ BANNERS PROMOCIONALES */
+function renderBanners(bannerData) {
+  const banner1El = document.getElementById('banner-1');
+  const banner2El = document.getElementById('banner-2');
+  
+  if (!banner1El || !banner2El) return;
+  
+  const renderBanner = (el, data) => {
+    if (!data || !data.title) {
+      el.style.display = 'none';
+      return;
+    }
+    
+    el.style.display = 'flex';
+    el.style.cursor = 'pointer';
+    const cat = data.cat || 'all';
+    
+    el.innerHTML = `
+      ${data.img ? `<img class="promo-banner-img" src="${data.img}" alt="${data.title}" loading="lazy"/>` : ''}
+      <div class="promo-banner-overlay"></div>
+      <div class="promo-banner-content">
+        ${data.label ? `<div class="promo-banner-label">${data.label}</div>` : ''}
+        <div class="promo-banner-title">${data.title}</div>
+        <div class="promo-banner-cta">Ver productos <i class="bi bi-arrow-right"></i></div>
+      </div>
+    `;
+    
+    el.onclick = () => {
+      if (cat !== 'all') {
+        const btn = document.querySelector(\`[data-cat="\${cat}"]\`);
+        if (btn) filterCat(btn, cat);
+      } else {
+        filterCat(document.querySelector('[data-cat="all"]'), 'all');
+      }
+      window.scrollTo({ top: document.getElementById('banners-container').offsetTop + 300, behavior: 'smooth' });
+    };
+  };
+  
+  renderBanner(banner1El, bannerData.banner1);
+  renderBanner(banner2El, bannerData.banner2);
+}
+
+
 function cartTotal() {
   return Object.entries(cart).reduce((s,[id,q])=>{
     const p = products.find(x=>x.id===parseInt(id));
