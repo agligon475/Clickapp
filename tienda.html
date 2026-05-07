@@ -1268,7 +1268,7 @@ function renderBanners(bannerData) {
     
     el.onclick = () => {
       if (cat !== 'all') {
-        const btn = document.querySelector(\`[data-cat="\${cat}"]\`);
+        document.querySelector(`[data-cat="${cat}"]`);
         if (btn) filterCat(btn, cat);
       } else {
         filterCat(document.querySelector('[data-cat="all"]'), 'all');
