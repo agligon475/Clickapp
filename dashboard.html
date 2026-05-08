@@ -3619,6 +3619,7 @@ try {
 
 
 /* ═══════════════════════════════════════════ BANNERS CONFIG */
+<script>
 function loadBannersConfig() {
   // Cargar desde localStorage (fue guardado en loadSheet)
   const bannerData = JSON.parse(localStorage.getItem('storeapp_banners') || '{}');
@@ -3728,3 +3729,4 @@ function setStatusMsg(elementId, status, msg) {
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => loadBannersConfig(), 500);
 });
+</script>
