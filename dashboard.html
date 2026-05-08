@@ -1146,6 +1146,87 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
       </div>
     </div>
 
+    <!-- BANNERS PROMOCIONALES ← NUEVO -->
+    <div class="config-section">
+      <div class="config-section-title"><i class="bi bi-image"></i> Banners promocionales 50/50</div>
+      
+      <!-- BANNER 1 -->
+      <div style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:16px;margin-bottom:14px;">
+        <div style="font-weight:700;font-size:13px;margin-bottom:12px;color:var(--red);">BANNER 1</div>
+        <div class="config-grid">
+          <div class="ctrl-group">
+            <label class="ctrl-label">Etiqueta (NUEVAS, OFERTA, etc)</label>
+            <input class="ctrl-input" id="banner1-label" placeholder="NUEVAS HERRAMIENTAS" maxlength="30"/>
+          </div>
+          <div class="ctrl-group">
+            <label class="ctrl-label">Categoría para filtrar</label>
+            <input class="ctrl-input" id="banner1-cat" placeholder="Herramientas" maxlength="50"/>
+          </div>
+          <div class="ctrl-group" style="grid-column:1/-1;">
+            <label class="ctrl-label">Título principal (max 30 caracteres)</label>
+            <input class="ctrl-input" id="banner1-title" placeholder="Línea Profesional" maxlength="30"/>
+          </div>
+          <div class="ctrl-group" style="grid-column:1/-1;">
+            <label class="ctrl-label">URL de imagen (1200x400px recomendado)</label>
+            <div style="display:flex;gap:8px;align-items:flex-start;">
+              <input class="ctrl-input" id="banner1-img" placeholder="https://..." style="flex:1;" 
+                oninput="previewBanner('banner1')"/>
+              <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--zinc);border:1px solid var(--silver);border-radius:8px;font-size:11px;font-weight:600;color:var(--fog);">
+                <i class="bi bi-cloud-arrow-up"></i> Subir
+                <input type="file" accept="image/*" style="display:none;" onchange="handleBannerUpload(this,'banner1')"/>
+              </label>
+            </div>
+          </div>
+          <div id="banner1-preview" style="grid-column:1/-1;display:none;height:160px;border-radius:10px;overflow:hidden;background:var(--zinc);margin-top:8px;">
+            <img src="" alt="Preview" style="width:100%;height:100%;object-fit:cover;"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- BANNER 2 -->
+      <div style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:16px;margin-bottom:14px;">
+        <div style="font-weight:700;font-size:13px;margin-bottom:12px;color:var(--red);">BANNER 2</div>
+        <div class="config-grid">
+          <div class="ctrl-group">
+            <label class="ctrl-label">Etiqueta (PROMOCIÓN, DESCUENTO, etc)</label>
+            <input class="ctrl-input" id="banner2-label" placeholder="PROMOCIÓN" maxlength="30"/>
+          </div>
+          <div class="ctrl-group">
+            <label class="ctrl-label">Categoría para filtrar</label>
+            <input class="ctrl-input" id="banner2-cat" placeholder="Accesorios" maxlength="50"/>
+          </div>
+          <div class="ctrl-group" style="grid-column:1/-1;">
+            <label class="ctrl-label">Título principal (max 30 caracteres)</label>
+            <input class="ctrl-input" id="banner2-title" placeholder="Accesorios -30%" maxlength="30"/>
+          </div>
+          <div class="ctrl-group" style="grid-column:1/-1;">
+            <label class="ctrl-label">URL de imagen (1200x400px recomendado)</label>
+            <div style="display:flex;gap:8px;align-items:flex-start;">
+              <input class="ctrl-input" id="banner2-img" placeholder="https://..." style="flex:1;"
+                oninput="previewBanner('banner2')"/>
+              <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--zinc);border:1px solid var(--silver);border-radius:8px;font-size:11px;font-weight:600;color:var(--fog);">
+                <i class="bi bi-cloud-arrow-up"></i> Subir
+                <input type="file" accept="image/*" style="display:none;" onchange="handleBannerUpload(this,'banner2')"/>
+              </label>
+            </div>
+          </div>
+          <div id="banner2-preview" style="grid-column:1/-1;display:none;height:160px;border-radius:10px;overflow:hidden;background:var(--zinc);margin-top:8px;">
+            <img src="" alt="Preview" style="width:100%;height:100%;object-fit:cover;"/>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:14px;">
+        <button class="abm-btn-new" onclick="saveBannersConfig()" style="flex:1;">
+          <i class="bi bi-cloud-upload"></i> Guardar cambios en Google Sheets
+        </button>
+        <button onclick="loadBannersConfig()" style="flex:1;padding:10px;background:var(--zinc);border:1px solid var(--silver);border-radius:8px;color:var(--fog);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;justify-content:center;gap:6px;">
+          <i class="bi bi-arrow-clockwise"></i> Recargar
+        </button>
+      </div>
+      <div id="banners-status" style="font-size:11px;margin-top:8px;min-height:14px;color:var(--silver);"></div>
+    </div>
+
     <!-- Google Sheet -->
     <div class="config-section">
       <div class="config-section-title"><i class="bi bi-file-spreadsheet"></i> Google Sheet</div>
@@ -1309,6 +1390,19 @@ async function loadSheet() {
     const S=find('stock','cantidad','existencia','disponible');
     const C=find('categoria','category','rubro','tipo');
     const E=find('emoji','icono');
+    // ← NUEVO: Mapear imágenes
+    const IMG=find('img','imagen','image');
+    const IMG2=find('img2','imagen2');
+    const IMG3=find('img3','imagen3');
+    // ← NUEVO: Mapear banners (fila 1)
+    const B1L=find('banner1_label');
+    const B1T=find('banner1_title');
+    const B1I=find('banner1_img');
+    const B1C=find('banner1_cat');
+    const B2L=find('banner2_label');
+    const B2T=find('banner2_title');
+    const B2I=find('banner2_img');
+    const B2C=find('banner2_cat');
 
     const isGarbage = r => {
       const t = (r[N>-1?N:0]||'').trim();
@@ -1323,7 +1417,30 @@ async function loadSheet() {
       stock:parseInt((r[S>-1?S:2]||'0').replace(/\D/g,''))||0,
       cat:  C>-1?(r[C]||'General'):'General',
       emoji:E>-1&&r[E]?r[E]:guessEmoji(r[N>-1?N:0]||'',C>-1?r[C]||'':''),
+      // ← NUEVO: Agregar imágenes
+      img:  IMG>-1?r[IMG]||'':'',
+      img2: IMG2>-1?r[IMG2]||'':'',
+      img3: IMG3>-1?r[IMG3]||'':'',
     }));
+
+    // ← NUEVO: Cargar datos de banners (fila 1)
+    const bannerData = {
+      banner1: {
+        label: B1L>-1?rows[0][B1L]||'NUEVAS':'NUEVAS',
+        title: B1T>-1?rows[0][B1T]||'Productos':'Productos',
+        img: B1I>-1?rows[0][B1I]||'':'',
+        cat: B1C>-1?rows[0][B1C]||'':'',
+      },
+      banner2: {
+        label: B2L>-1?rows[0][B2L]||'PROMOCIÓN':'PROMOCIÓN',
+        title: B2T>-1?rows[0][B2T]||'Especiales':'Especiales',
+        img: B2I>-1?rows[0][B2I]||'':'',
+        cat: B2C>-1?rows[0][B2C]||'':'',
+      }
+    };
+    
+    // ← NUEVO: Guardar bannerData en localStorage para panel de edición
+    localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
 
     setDot('ok',`${products.length} productos · ${new Date().toLocaleTimeString('es-AR')}`);
     updateMetrics();
@@ -2147,6 +2264,7 @@ function saveModal() {
     const newId = Math.max(0,...localProducts.map(x=>x.id)) + 1;
     localProducts.push({id:newId, name, codigo, cat, marca, price, stock, emoji, origen, detalle, img, img2, img3, hidden:false});
   }
+  }
 
   buildCatFilter();
   renderABM();
@@ -2156,7 +2274,7 @@ function saveModal() {
 
   const saved = localProducts.find(x => x.id === (editingId || localProducts[localProducts.length-1]?.id));
   if (saved) webhookUpdateProduct(saved);
-}
+
 
 /* ═══════════════════════════════════════════ BARCODE LOOKUP */
 
@@ -3272,6 +3390,7 @@ async function applyWatermark(file) {
   });
 }
 
+
 /* ═══════════════════════════════════════════ INIT */
 applyDashTheme();
 initCharts();
@@ -3498,5 +3617,114 @@ try {
   </div>
 </div>
 
-</body>
-</html>
+
+/* ═══════════════════════════════════════════ BANNERS CONFIG */
+function loadBannersConfig() {
+  // Cargar desde localStorage (fue guardado en loadSheet)
+  const bannerData = JSON.parse(localStorage.getItem('storeapp_banners') || '{}');
+  const b1 = bannerData.banner1 || {};
+  const b2 = bannerData.banner2 || {};
+  
+  document.getElementById('banner1-label').value = b1.label || '';
+  document.getElementById('banner1-title').value = b1.title || '';
+  document.getElementById('banner1-img').value = b1.img || '';
+  document.getElementById('banner1-cat').value = b1.cat || '';
+  
+  document.getElementById('banner2-label').value = b2.label || '';
+  document.getElementById('banner2-title').value = b2.title || '';
+  document.getElementById('banner2-img').value = b2.img || '';
+  document.getElementById('banner2-cat').value = b2.cat || '';
+  
+  previewBanner('banner1');
+  previewBanner('banner2');
+  
+  setStatusMsg('banners-status', 'ok', 'Datos cargados');
+}
+
+function previewBanner(bannerId) {
+  const urlEl = document.getElementById(bannerId + '-img');
+  const previewEl = document.getElementById(bannerId + '-preview');
+  const imgEl = previewEl?.querySelector('img');
+  
+  if (!urlEl || !previewEl || !imgEl) return;
+  
+  const url = urlEl.value.trim();
+  if (url && url.startsWith('http')) {
+    imgEl.src = url;
+    previewEl.style.display = 'block';
+    imgEl.onerror = () => { previewEl.style.display = 'none'; };
+  } else {
+    previewEl.style.display = 'none';
+  }
+}
+
+async function handleBannerUpload(input, bannerId) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  const statusEl = document.getElementById('banners-status');
+  statusEl.style.color = 'var(--silver)';
+  statusEl.textContent = 'Subiendo imagen...';
+  
+  try {
+    const url = await uploadToCloudinary(file);
+    document.getElementById(bannerId + '-img').value = url;
+    statusEl.style.color = 'var(--green)';
+    statusEl.textContent = '✓ Imagen subida correctamente';
+    previewBanner(bannerId);
+  } catch(e) {
+    statusEl.style.color = 'var(--red)';
+    statusEl.textContent = '✕ Error: ' + e.message;
+  }
+}
+
+async function saveBannersConfig() {
+  const b1Label = document.getElementById('banner1-label').value.trim();
+  const b1Title = document.getElementById('banner1-title').value.trim();
+  const b1Img = document.getElementById('banner1-img').value.trim();
+  const b1Cat = document.getElementById('banner1-cat').value.trim();
+  
+  const b2Label = document.getElementById('banner2-label').value.trim();
+  const b2Title = document.getElementById('banner2-title').value.trim();
+  const b2Img = document.getElementById('banner2-img').value.trim();
+  const b2Cat = document.getElementById('banner2-cat').value.trim();
+  
+  // Guardar en localStorage
+  const bannerData = {
+    banner1: { label: b1Label, title: b1Title, img: b1Img, cat: b1Cat },
+    banner2: { label: b2Label, title: b2Title, img: b2Img, cat: b2Cat }
+  };
+  localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
+  
+  // Guardar en Google Sheets vía webhook (opcional)
+  const statusEl = document.getElementById('banners-status');
+  statusEl.style.color = 'var(--silver)';
+  statusEl.textContent = 'Guardando...';
+  
+  try {
+    // Construir CSV row (fila 1)
+    const csvRow = `banner1_label,banner1_title,banner1_img,banner1_cat,banner2_label,banner2_title,banner2_img,banner2_cat
+"${b1Label}","${b1Title}","${b1Img}","${b1Cat}","${b2Label}","${b2Title}","${b2Img}","${b2Cat}"`;
+    
+    // Si tienes webhook, aquí iría la llamada:
+    // await fetch(webhookUrl, { method: 'POST', body: JSON.stringify(bannerData) });
+    
+    statusEl.style.color = 'var(--green)';
+    statusEl.textContent = '✓ Banners guardados en localStorage (actualiza manualmente en Google Sheets si necesitas)';
+  } catch(e) {
+    statusEl.style.color = 'var(--orange)';
+    statusEl.textContent = '⚠ Guardado en local. Sync manual a Sheets: ' + e.message;
+  }
+}
+
+function setStatusMsg(elementId, status, msg) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  el.style.color = status === 'ok' ? 'var(--green)' : status === 'err' ? 'var(--red)' : 'var(--silver)';
+  el.textContent = (status === 'ok' ? '✓ ' : status === 'err' ? '✕ ' : '') + msg;
+}
+
+// Cargar banners al inicializar
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => loadBannersConfig(), 500);
+});

@@ -47,7 +47,7 @@ body::before{
 /* ── TOPBAR ─────────────────────────────────────── */
 .topbar{
   position:sticky;top:0;z-index:100;
-  background:rgba(14,14,14,.92)!important;
+  background:rgba(14,14,14,.92);
   backdrop-filter:blur(12px);
   border-bottom:1px solid var(--zinc);
   display:flex;align-items:center;
@@ -56,13 +56,9 @@ body::before{
 .logo{
   font-family:var(--font-head);
   font-size:24px;font-weight:800;
-  color:white;letter-spacing:-.01em;
+  color:var(--white);letter-spacing:-.01em;
   display:flex;align-items:center;gap:8px;
   text-decoration:none;
-}
-
-a.logo {
-  color:white;
 }
 .logo-icon{
   width:32px;height:32px;background:var(--red);
@@ -1093,6 +1089,18 @@ async function loadSheet() {
     const C = find('categoria','category','rubro','tipo');
     const E = find('emoji','icono');
     const I = find('imagen','image','img','foto','url');
+    // ← NUEVO: Mapear img2, img3
+    const I2 = find('img2','imagen2');
+    const I3 = find('img3','imagen3');
+    // ← NUEVO: Mapear banners
+    const B1L = find('banner1_label');
+    const B1T = find('banner1_title');
+    const B1I = find('banner1_img');
+    const B1C = find('banner1_cat');
+    const B2L = find('banner2_label');
+    const B2T = find('banner2_title');
+    const B2I = find('banner2_img');
+    const B2C = find('banner2_cat');
 
     // Filter out rows that look like stray code (CSS, JS, HTML)
     const isGarbage = row => {
@@ -1113,7 +1121,29 @@ async function loadSheet() {
         cat:   C>-1 ? (r[C]||'General') : 'General',
         emoji: E>-1 && r[E] ? r[E] : guessEmoji(r[N>-1?N:0]||'', C>-1?r[C]||'':''),
         img:   I>-1 ? r[I] : '',
+        // ← NUEVO: img2, img3
+        img2:  I2>-1 ? r[I2] : '',
+        img3:  I3>-1 ? r[I3] : '',
       }));
+
+    // ← NUEVO: Cargar banners desde fila 1
+    const bannerData = {
+      banner1: {
+        label: B1L>-1 ? rows[0][B1L] || 'NUEVAS' : 'NUEVAS',
+        title: B1T>-1 ? rows[0][B1T] || 'Productos' : 'Productos',
+        img: B1I>-1 ? rows[0][B1I] || '' : '',
+        cat: B1C>-1 ? rows[0][B1C] || '' : '',
+      },
+      banner2: {
+        label: B2L>-1 ? rows[0][B2L] || 'PROMOCIÓN' : 'PROMOCIÓN',
+        title: B2T>-1 ? rows[0][B2T] || 'Especiales' : 'Especiales',
+        img: B2I>-1 ? rows[0][B2I] || '' : '',
+        cat: B2C>-1 ? rows[0][B2C] || '' : '',
+      }
+    };
+    
+    // ← NUEVO: Guardar banners en localStorage (se usan en dashboard y tienda)
+    localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
 
     // ── Override with ABM edits from dashboard if present ──
     // Only apply if the local version was explicitly saved via ABM
@@ -1146,26 +1176,11 @@ async function loadSheet() {
       <i class="bi bi-grid-3x3-gap"></i> Todos</button>` +
       cats.map(c=>`<button class="cat-btn" data-cat="${c}" onclick="filterCat(this,'${c}')">${c}</button>`).join('');
 
+    // ← NUEVO: Renderizar banners
+    renderBanners(bannerData);
+
     setStatus('ok', `${products.length} productos · catálogo actualizado`);
     document.getElementById('sync-time').textContent = new Date().toLocaleTimeString('es-AR');
-    
-    // Cargar datos de banners (fila 1, si existen)
-    const bannerData = {
-      banner1: {
-        label: hdrs.includes('banner1_label') ? rows[0][hdrs.indexOf('banner1_label')] : 'OFERTA',
-        title: hdrs.includes('banner1_title') ? rows[0][hdrs.indexOf('banner1_title')] : 'Nuevas Herramientas',
-        img: hdrs.includes('banner1_img') ? rows[0][hdrs.indexOf('banner1_img')] : '',
-        cat: hdrs.includes('banner1_cat') ? rows[0][hdrs.indexOf('banner1_cat')] : ''
-      },
-      banner2: {
-        label: hdrs.includes('banner2_label') ? rows[0][hdrs.indexOf('banner2_label')] : 'PROMOCIÓN',
-        title: hdrs.includes('banner2_title') ? rows[0][hdrs.indexOf('banner2_title')] : 'Accesorios Especiales',
-        img: hdrs.includes('banner2_img') ? rows[0][hdrs.indexOf('banner2_img')] : '',
-        cat: hdrs.includes('banner2_cat') ? rows[0][hdrs.indexOf('banner2_cat')] : ''
-      }
-    };
-    
-    renderBanners(bannerData);
     render();
   } catch(e) {
     setStatus('err', 'Error al cargar el catálogo');
@@ -1272,7 +1287,7 @@ function renderBanners(bannerData) {
     
     el.onclick = () => {
       if (cat !== 'all') {
-        document.querySelector(`[data-cat="${cat}"]`);
+        const btn = document.querySelector(`[data-cat="${cat}"]`);
         if (btn) filterCat(btn, cat);
       } else {
         filterCat(document.querySelector('[data-cat="all"]'), 'all');
