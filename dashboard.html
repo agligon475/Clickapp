@@ -1338,7 +1338,7 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
 <script>
 const SHEET_URL_DEFAULT = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQZYVbjKTV3QFCeqNgvLxYBc6YbxM9DKLMz9lXzktHTzoDtzLYbjkG186RMjHpouHCShr7TRJfJZaNS/pub?output=csv';
 
-// ← FIX: Variables globales importantes (ANTES de cualquier función)
+// ← FIX CRÍTICO: TITLES debe estar ANTES de usarse
 const TITLES = { 
   dashboard:'Dashboard', 
   orders:'Pedidos', 
@@ -2274,6 +2274,7 @@ function saveModal() {
     const newId = Math.max(0,...localProducts.map(x=>x.id)) + 1;
     localProducts.push({id:newId, name, codigo, cat, marca, price, stock, emoji, origen, detalle, img, img2, img3, hidden:false});
   }
+  }
 
   buildCatFilter();
   renderABM();
@@ -2283,7 +2284,6 @@ function saveModal() {
 
   const saved = localProducts.find(x => x.id === (editingId || localProducts[localProducts.length-1]?.id));
   if (saved) webhookUpdateProduct(saved);
-}
 
 
 /* ═══════════════════════════════════════════ BARCODE LOOKUP */
