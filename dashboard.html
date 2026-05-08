@@ -1336,7 +1336,17 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
 </div><!-- /main -->
 
 <script>
-const SHEET_URL_DEFAULT = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS3mssf-j0joT1S6CKlZHfSPTSXPHypZ_PHypn702KMgUYvteXDajrEVymXqYFgFVfqQcsUvJn6ktK2/pub?gid=0&single=true&output=csv';
+const SHEET_URL_DEFAULT = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQZYVbjKTV3QFCeqNgvLxYBc6YbxM9DKLMz9lXzktHTzoDtzLYbjkG186RMjHpouHCShr7TRJfJZaNS/pub?output=csv';
+
+// ← FIX: Variables globales importantes (ANTES de cualquier función)
+const TITLES = { 
+  dashboard:'Dashboard', 
+  orders:'Pedidos', 
+  products:'Productos',
+  abm:'ABM · Productos', 
+  design:'Diseño de tienda', 
+  config:'Configuración' 
+};
 
 let products = [];
 let cOrders, cPago, cTop, cCats;
@@ -2264,7 +2274,6 @@ function saveModal() {
     const newId = Math.max(0,...localProducts.map(x=>x.id)) + 1;
     localProducts.push({id:newId, name, codigo, cat, marca, price, stock, emoji, origen, detalle, img, img2, img3, hidden:false});
   }
-  }
 
   buildCatFilter();
   renderABM();
@@ -2274,6 +2283,7 @@ function saveModal() {
 
   const saved = localProducts.find(x => x.id === (editingId || localProducts[localProducts.length-1]?.id));
   if (saved) webhookUpdateProduct(saved);
+}
 
 
 /* ═══════════════════════════════════════════ BARCODE LOOKUP */
@@ -3128,9 +3138,6 @@ function applyDashTheme() {
 }
 
 /* ═══════════════════════════════════════════ CONFIG VIEW */
-const TITLES = { dashboard:'Dashboard', orders:'Pedidos', products:'Productos',
-                 abm:'ABM · Productos', design:'Diseño de tienda', config:'Configuración' };
-
 function initConfigView() {
   // Load all saved values into form fields
   const wh = getWebhookCfg();
