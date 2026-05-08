@@ -1,0 +1,8 @@
+Sheet
+  https://docs.google.com/spreadsheets/d/e/2PACX-1vS3mssf-j0joT1S6CKlZHfSPTSXPHypZ_PHypn702KMgUYvteXDajrEVymXqYFgFVfqQcsUvJn6ktK2/pub?gid=0&single=true&output=csv
+
+Webhook
+  https://script.google.com/macros/s/AKfycbzhXV3BELsZCsD1WIvTrRX3GzzAvY5ZK0Yc9bo0jHHKjZDxyF5-VNcMbuOMpe-od59s/exec
+
+Key
+  291218ajll
