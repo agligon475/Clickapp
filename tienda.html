@@ -1262,14 +1262,9 @@ function filterCat(btn, cat) {
 function onSearch(val) { searchTerm = val; render(); }
 
 /* ═══════════════════════════════════════════ BANNERS PROMOCIONALES */
-function renderBanners(bannerData) {
-  const banner1El = document.getElementById('banner-1');
-  const banner2El = document.getElementById('banner-2');
-  
-  if (!banner1El || !banner2El) return;
-  
-  const renderBanner = (el, data) => {
-    if (!data || !data.title) {
+const renderBanner = (el, data) => {
+    // Verificamos que data exista y tenga al menos un título válido
+    if (!data || !data.title || data.title.trim() === "") {
       el.style.display = 'none';
       return;
     }
@@ -1278,8 +1273,11 @@ function renderBanners(bannerData) {
     el.style.cursor = 'pointer';
     const cat = data.cat || 'all';
     
+    // Limpiamos la URL por si trae espacios accidentales desde la celda
+    const imgSrc = data.img ? data.img.trim() : null;
+    
     el.innerHTML = `
-      ${data.img ? `<img class="promo-banner-img" src="${data.img}" alt="${data.title}" loading="lazy"/>` : ''}
+      ${imgSrc ? `<img class="promo-banner-img" src="${imgSrc}" alt="${data.title}" loading="lazy"/>` : ''}
       <div class="promo-banner-overlay"></div>
       <div class="promo-banner-content">
         ${data.label ? `<div class="promo-banner-label">${data.label}</div>` : ''}
@@ -1288,20 +1286,8 @@ function renderBanners(bannerData) {
       </div>
     `;
     
-    el.onclick = () => {
-      if (cat !== 'all') {
-        const btn = document.querySelector(`[data-cat="${cat}"]`);
-        if (btn) filterCat(btn, cat);
-      } else {
-        filterCat(document.querySelector('[data-cat="all"]'), 'all');
-      }
-      window.scrollTo({ top: document.getElementById('banners-container').offsetTop + 300, behavior: 'smooth' });
-    };
-  };
-  
-  renderBanner(banner1El, bannerData.banner1);
-  renderBanner(banner2El, bannerData.banner2);
-}
+    // ... resto de tu lógica de onclick
+};
 
 
 function cartTotal() {
