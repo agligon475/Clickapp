@@ -2162,15 +2162,60 @@ function deleteProduct(id) {
   renderABM();
 }
 
-function saveLocalProducts() {
-  localStorage.setItem('storeapp_local_products', JSON.stringify(localProducts));
-  localStorage.setItem('storeapp_abm_active', '1');
-  // Flash button
+async function saveLocalProducts() {
+  if (!localProducts || localProducts.length === 0) {
+    alert('No hay productos para guardar');
+    return;
+  }
+
   const btn = event.currentTarget;
   const orig = btn.innerHTML;
-  btn.innerHTML = '<i class="bi bi-check2-circle"></i> Guardado!';
-  btn.style.background = 'var(--green)';
-  setTimeout(()=>{ btn.innerHTML=orig; btn.style.background=''; }, 2000);
+  btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Guardando...';
+  btn.style.background = 'var(--silver)';
+  
+  try {
+    // Guardar cada producto en Supabase
+    for (const p of localProducts) {
+      const data = {
+        nombre: p.name,
+        marca: p.marca || null,
+        precio: p.price || 0,
+        categoria: p.cat || null,
+        detalles: p.detalle || null,
+        stock: p.stock || 0,
+        emoji: p.emoji || '📦',
+        origen: p.origen || null,
+        img: p.img || null,
+        img2: p.img2 || null,
+        img3: p.img3 || null,
+        oculto: p.hidden || false
+      };
+
+      try {
+        if (p.id && !isNaN(p.id)) {
+          // Actualizar existente
+          await updateInSupabase('products', p.id, data);
+        } else {
+          // Crear nuevo
+          await postToSupabase('products', data);
+        }
+      } catch (err) {
+        console.error(`Error guardando producto ${p.name}:`, err);
+      }
+    }
+
+    btn.innerHTML = '<i class="bi bi-check2-circle"></i> ¡Guardado en Supabase!';
+    btn.style.background = 'var(--green)';
+  } catch (err) {
+    btn.innerHTML = '<i class="bi bi-exclamation-circle"></i> Error';
+    btn.style.background = 'var(--red)';
+    console.error('Error guardando:', err);
+  }
+
+  setTimeout(() => { 
+    btn.innerHTML = orig; 
+    btn.style.background = ''; 
+  }, 3000);
 }
 
 function exportProducts() {
