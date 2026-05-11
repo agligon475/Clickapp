@@ -3150,71 +3150,76 @@ function applyDashTheme() {
 /* ═══════════════════════════════════════════ CONFIG VIEW */
 function initConfigView() {
   // Load all saved values into form fields
-  const wh = getWebhookCfg();
   const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
 
-  if (wh.url)   document.getElementById('cfg-webhook-url').value   = wh.url;
-  if (wh.token) document.getElementById('cfg-webhook-token').value = wh.token;
+  // Store info
+  const nameEl = document.getElementById('cfg-store-name');
+  const taglineEl = document.getElementById('cfg-store-tagline');
+  const wappEl = document.getElementById('cfg-store-wapp');
+  const rubloEl = document.getElementById('cfg-store-rubro');
+  const dirEl = document.getElementById('cfg-store-direccion');
+  const horarioEl = document.getElementById('cfg-store-horario');
 
-  const sheetUrl = localStorage.getItem('storeapp_sheet_url')
-    || 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS3mssf-j0joT1S6CKlZHfSPTSXPHypZ_PHypn702KMgUYvteXDajrEVymXqYFgFVfqQcsUvJn6ktK2/pub?gid=0&single=true&output=csv';
-  document.getElementById('cfg-sheet-url').value = sheetUrl;
+  if (nameEl && sc.name) nameEl.value = sc.name;
+  if (taglineEl && sc.tagline) taglineEl.value = sc.tagline;
+  if (wappEl && sc.wapp) wappEl.value = sc.wapp;
+  if (rubloEl && sc.rubro) rubloEl.value = sc.rubro;
+  if (dirEl && sc.direccion) dirEl.value = sc.direccion;
+  if (horarioEl && sc.horario) horarioEl.value = sc.horario;
 
-  if (sc.name)      document.getElementById('cfg-store-name').value      = sc.name;
-  if (sc.tagline)   document.getElementById('cfg-store-tagline').value   = sc.tagline;
-  if (sc.wapp)      document.getElementById('cfg-store-wapp').value      = sc.wapp;
-  if (sc.rubro)     document.getElementById('cfg-store-rubro').value     = sc.rubro;
-  if (sc.direccion) document.getElementById('cfg-store-direccion').value = sc.direccion;
-  if (sc.horario)   document.getElementById('cfg-store-horario').value   = sc.horario;
-
-  const cloud = JSON.parse(localStorage.getItem('storeapp_cloudinary') || '{}');
-  if (cloud.name)   document.getElementById('cfg-cloud-name').value   = cloud.name;
-  if (cloud.preset) document.getElementById('cfg-cloud-preset').value = cloud.preset;
-
+  // Theme
+  const themeElDark = document.getElementById('dash-theme-dark');
+  const themeElLight = document.getElementById('dash-theme-light');
   const theme = localStorage.getItem('storeapp_dash_theme') || 'dark';
-  document.getElementById('dash-theme-dark').style.borderColor  = theme==='dark' ? 'var(--red)' : 'var(--zinc)';
-  document.getElementById('dash-theme-light').style.borderColor = theme==='light'? 'var(--red)' : 'var(--zinc)';
+  if (themeElDark) themeElDark.style.borderColor = theme === 'dark' ? 'var(--red)' : 'var(--zinc)';
+  if (themeElLight) themeElLight.style.borderColor = theme === 'light' ? 'var(--red)' : 'var(--zinc)';
 }
 
 function saveConfig() {
-  // Sheet URL — save to localStorage only
-  const sheetUrl = document.getElementById('cfg-sheet-url').value.trim();
-  if (sheetUrl) localStorage.setItem('storeapp_sheet_url', sheetUrl);
-
-  // Webhook
-  const wUrl   = document.getElementById('cfg-webhook-url').value.trim();
-  const wToken = document.getElementById('cfg-webhook-token').value.trim();
-  if (wUrl || wToken) {
-    localStorage.setItem('storeapp_webhook', JSON.stringify({ url: wUrl, token: wToken }));
-  }
-
   // Store info → merge into storeapp_cfg
   const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
-  const name      = document.getElementById('cfg-store-name').value.trim();
-  const tagline   = document.getElementById('cfg-store-tagline').value.trim();
-  const wapp      = document.getElementById('cfg-store-wapp').value.trim();
-  const rubro     = document.getElementById('cfg-store-rubro').value.trim();
-  const direccion = document.getElementById('cfg-store-direccion').value.trim();
-  const horario   = document.getElementById('cfg-store-horario').value.trim();
-  if (name)      sc.name      = name;
-  if (tagline)   sc.tagline   = tagline;
-  if (wapp)      sc.wapp      = wapp;
-  if (rubro)     sc.rubro     = rubro;
-  if (direccion) sc.direccion = direccion;
-  if (horario)   sc.horario   = horario;
+  
+  const nameEl = document.getElementById('cfg-store-name');
+  const taglineEl = document.getElementById('cfg-store-tagline');
+  const wappEl = document.getElementById('cfg-store-wapp');
+  const rubloEl = document.getElementById('cfg-store-rubro');
+  const dirEl = document.getElementById('cfg-store-direccion');
+  const horarioEl = document.getElementById('cfg-store-horario');
+
+  if (nameEl) {
+    const name = nameEl.value.trim();
+    if (name) sc.name = name;
+  }
+  if (taglineEl) {
+    const tagline = taglineEl.value.trim();
+    if (tagline) sc.tagline = tagline;
+  }
+  if (wappEl) {
+    const wapp = wappEl.value.trim();
+    if (wapp) sc.wapp = wapp;
+  }
+  if (rubloEl) {
+    const rubro = rubloEl.value.trim();
+    if (rubro) sc.rubro = rubro;
+  }
+  if (dirEl) {
+    const direccion = dirEl.value.trim();
+    if (direccion) sc.direccion = direccion;
+  }
+  if (horarioEl) {
+    const horario = horarioEl.value.trim();
+    if (horario) sc.horario = horario;
+  }
+  
   localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
 
-  // Cloudinary
-  const cName   = document.getElementById('cfg-cloud-name').value.trim();
-  const cPreset = document.getElementById('cfg-cloud-preset').value.trim();
-  if (cName || cPreset) {
-    localStorage.setItem('storeapp_cloudinary', JSON.stringify({ name: cName, preset: cPreset }));
-  }
-
+  // Mostrar confirmación
   const el = document.getElementById('cfg-save-status');
-  el.style.color = 'var(--green)';
-  el.textContent = '✓ Configuración guardada correctamente';
-  setTimeout(() => { el.textContent = ''; }, 3000);
+  if (el) {
+    el.style.color = 'var(--green)';
+    el.textContent = '✓ Configuración guardada correctamente';
+    setTimeout(() => { el.textContent = ''; }, 3000);
+  }
 }
 
 async function testAndLoadSheet() {
