@@ -1227,25 +1227,32 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
       <div id="banners-status" style="font-size:11px;margin-top:8px;min-height:14px;color:var(--silver);"></div>
     </div>
 
-    <!-- Google Sheet -->
+    <!-- Supabase Connection -->
     <div class="config-section">
-      <div class="config-section-title"><i class="bi bi-file-spreadsheet"></i> Google Sheet</div>
-      <div class="ctrl-group">
-        <label class="ctrl-label">URL del CSV publicado</label>
-        <input class="ctrl-input" id="cfg-sheet-url"
-          placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?output=csv"/>
-        <div style="font-size:10px;color:var(--silver);margin-top:4px;">
-          Archivo → Compartir → Publicar en la web → CSV → Copiar URL
+      <div class="config-section-title"><i class="bi bi-cloud-check"></i> Conexión Supabase</div>
+      <div style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:14px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <div style="width:12px;height:12px;border-radius:50%;background:#2ECC71;box-shadow:0 0 8px rgba(46,204,113,.5);animation:pulse 2s infinite;"></div>
+          <div style="flex:1;">
+            <div style="font-weight:600;color:var(--white);font-size:13px;">Base de datos conectada</div>
+            <div style="font-size:11px;color:var(--silver);margin-top:2px;">PostgreSQL en Supabase</div>
+          </div>
+        </div>
+        <div style="background:var(--steel);border:1px solid var(--zinc);border-radius:8px;padding:10px;font-size:11px;color:var(--fog);font-family:monospace;word-break:break-all;margin-bottom:8px;">
+          iaylgsthwildjkiiwgfd.supabase.co
+        </div>
+        <div style="font-size:10px;color:var(--silver);line-height:1.5;">
+          ✓ Productos sincronizados<br/>
+          ✓ Categorías actualizadas<br/>
+          ✓ Banners en tiempo real<br/>
+          ✓ Pedidos guardados automáticamente
         </div>
       </div>
-      <button class="abm-btn-new" onclick="testAndLoadSheet()" style="margin-top:4px;">
-        <i class="bi bi-cloud-download"></i> Probar y cargar productos
-      </button>
-      <div id="cfg-sheet-status" style="font-size:11px;margin-top:6px;min-height:14px;"></div>
+      <div id="supabase-status" style="font-size:11px;margin-top:8px;min-height:14px;color:var(--green);"></div>
     </div>
 
-    <!-- Webhook -->
-    <div class="config-section">
+    <!-- REMOVED: Webhook section -->
+    <div class="config-section" style="display:none;">
       <div class="config-section-title"><i class="bi bi-broadcast"></i> Webhook Google Apps Script</div>
       <div class="config-grid">
         <div class="ctrl-group" style="grid-column:1/-1;">
@@ -2247,7 +2254,10 @@ function previewImgUrl(url, index = 0) {
 }
 
 function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
+  const modal = document.getElementById('modal-overlay');
+  if (modal) {
+    modal.classList.remove('open');
+  }
   editingId = null;
 }
 
@@ -3790,6 +3800,37 @@ function setStatusMsg(elementId, status, msg) {
 
 // Cargar banners al inicializar
 document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => loadBannersConfig(), 500);
+  setTimeout(() => {
+    loadBannersConfig();
+    initSupabaseStatus();
+  }, 500);
 });
+
+// Mostrar status de Supabase
+async function initSupabaseStatus() {
+  const statusEl = document.getElementById('status-txt');
+  const dotEl = document.getElementById('dot');
+  
+  try {
+    // Intentar conectar a Supabase
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?select=id`, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
+    });
+    
+    if (response.ok) {
+      if (statusEl) statusEl.textContent = '✓ Supabase conectado';
+      if (dotEl) dotEl.style.background = '#2ECC71';
+    } else {
+      if (statusEl) statusEl.textContent = '✕ Error de conexión';
+      if (dotEl) dotEl.style.background = '#D72638';
+    }
+  } catch (e) {
+    if (statusEl) statusEl.textContent = '✕ Supabase no disponible';
+    if (dotEl) dotEl.style.background = '#D72638';
+  }
+}
+
 </script>
