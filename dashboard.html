@@ -1227,32 +1227,25 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
       <div id="banners-status" style="font-size:11px;margin-top:8px;min-height:14px;color:var(--silver);"></div>
     </div>
 
-    <!-- Supabase Connection -->
+    <!-- Google Sheet -->
     <div class="config-section">
-      <div class="config-section-title"><i class="bi bi-cloud-check"></i> Conexión Supabase</div>
-      <div style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:14px;margin-bottom:12px;">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-          <div style="width:12px;height:12px;border-radius:50%;background:#2ECC71;box-shadow:0 0 8px rgba(46,204,113,.5);animation:pulse 2s infinite;"></div>
-          <div style="flex:1;">
-            <div style="font-weight:600;color:var(--white);font-size:13px;">Base de datos conectada</div>
-            <div style="font-size:11px;color:var(--silver);margin-top:2px;">PostgreSQL en Supabase</div>
-          </div>
-        </div>
-        <div style="background:var(--steel);border:1px solid var(--zinc);border-radius:8px;padding:10px;font-size:11px;color:var(--fog);font-family:monospace;word-break:break-all;margin-bottom:8px;">
-          iaylgsthwildjkiiwgfd.supabase.co
-        </div>
-        <div style="font-size:10px;color:var(--silver);line-height:1.5;">
-          ✓ Productos sincronizados<br/>
-          ✓ Categorías actualizadas<br/>
-          ✓ Banners en tiempo real<br/>
-          ✓ Pedidos guardados automáticamente
+      <div class="config-section-title"><i class="bi bi-file-spreadsheet"></i> Google Sheet</div>
+      <div class="ctrl-group">
+        <label class="ctrl-label">URL del CSV publicado</label>
+        <input class="ctrl-input" id="cfg-sheet-url"
+          placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?output=csv"/>
+        <div style="font-size:10px;color:var(--silver);margin-top:4px;">
+          Archivo → Compartir → Publicar en la web → CSV → Copiar URL
         </div>
       </div>
-      <div id="supabase-status" style="font-size:11px;margin-top:8px;min-height:14px;color:var(--green);"></div>
+      <button class="abm-btn-new" onclick="testAndLoadSheet()" style="margin-top:4px;">
+        <i class="bi bi-cloud-download"></i> Probar y cargar productos
+      </button>
+      <div id="cfg-sheet-status" style="font-size:11px;margin-top:6px;min-height:14px;"></div>
     </div>
 
-    <!-- REMOVED: Webhook section -->
-    <div class="config-section" style="display:none;">
+    <!-- Webhook -->
+    <div class="config-section">
       <div class="config-section-title"><i class="bi bi-broadcast"></i> Webhook Google Apps Script</div>
       <div class="config-grid">
         <div class="ctrl-group" style="grid-column:1/-1;">
@@ -1343,7 +1336,9 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
 </div><!-- /main -->
 
 <script>
-const SHEET_URL_DEFAULT = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQZYVbjKTV3QFCeqNgvLxYBc6YbxM9DKLMz9lXzktHTzoDtzLYbjkG186RMjHpouHCShr7TRJfJZaNS/pub?output=csv';
+/* ════════════════════════════════════════════ SUPABASE CONFIG */
+const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
 
 // ← FIX CRÍTICO: TITLES debe estar ANTES de usarse
 const TITLES = { 
@@ -1357,6 +1352,89 @@ const TITLES = {
 
 let products = [];
 let cOrders, cPago, cTop, cCats;
+
+/* ════════════════════════════════════════════ SUPABASE FUNCTIONS */
+async function fetchFromSupabase(tabla, opciones = {}) {
+  let url = `${SUPABASE_URL}/rest/v1/${tabla}`;
+  
+  if (opciones.select) url += `?select=${opciones.select}`;
+  if (opciones.filter) url += `${opciones.select ? '&' : '?'}${opciones.filter}`;
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
+    });
+
+    if (!response.ok) throw new Error(`Error ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error('Supabase error:', error);
+    return null;
+  }
+}
+
+async function postToSupabase(tabla, data) {
+  try {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/${tabla}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) throw new Error(`Error ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error('Post error:', error);
+    throw error;
+  }
+}
+
+async function updateInSupabase(tabla, id, data) {
+  try {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/${tabla}?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) throw new Error(`Error ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error('Update error:', error);
+    throw error;
+  }
+}
+
+async function deleteFromSupabase(tabla, id) {
+  try {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/${tabla}?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
+    });
+
+    if (!response.ok) throw new Error(`Error ${response.status}`);
+    return true;
+  } catch (error) {
+    console.error('Delete error:', error);
+    throw error;
+  }
+}
 
 /* NAV */
 function showView(name, el) {
@@ -2162,60 +2240,15 @@ function deleteProduct(id) {
   renderABM();
 }
 
-async function saveLocalProducts() {
-  if (!localProducts || localProducts.length === 0) {
-    alert('No hay productos para guardar');
-    return;
-  }
-
+function saveLocalProducts() {
+  localStorage.setItem('storeapp_local_products', JSON.stringify(localProducts));
+  localStorage.setItem('storeapp_abm_active', '1');
+  // Flash button
   const btn = event.currentTarget;
   const orig = btn.innerHTML;
-  btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Guardando...';
-  btn.style.background = 'var(--silver)';
-  
-  try {
-    // Guardar cada producto en Supabase
-    for (const p of localProducts) {
-      const data = {
-        nombre: p.name,
-        marca: p.marca || null,
-        precio: p.price || 0,
-        categoria: p.cat || null,
-        detalles: p.detalle || null,
-        stock: p.stock || 0,
-        emoji: p.emoji || '📦',
-        origen: p.origen || null,
-        img: p.img || null,
-        img2: p.img2 || null,
-        img3: p.img3 || null,
-        oculto: p.hidden || false
-      };
-
-      try {
-        if (p.id && !isNaN(p.id)) {
-          // Actualizar existente
-          await updateInSupabase('products', p.id, data);
-        } else {
-          // Crear nuevo
-          await postToSupabase('products', data);
-        }
-      } catch (err) {
-        console.error(`Error guardando producto ${p.name}:`, err);
-      }
-    }
-
-    btn.innerHTML = '<i class="bi bi-check2-circle"></i> ¡Guardado en Supabase!';
-    btn.style.background = 'var(--green)';
-  } catch (err) {
-    btn.innerHTML = '<i class="bi bi-exclamation-circle"></i> Error';
-    btn.style.background = 'var(--red)';
-    console.error('Error guardando:', err);
-  }
-
-  setTimeout(() => { 
-    btn.innerHTML = orig; 
-    btn.style.background = ''; 
-  }, 3000);
+  btn.innerHTML = '<i class="bi bi-check2-circle"></i> Guardado!';
+  btn.style.background = 'var(--green)';
+  setTimeout(()=>{ btn.innerHTML=orig; btn.style.background=''; }, 2000);
 }
 
 function exportProducts() {
@@ -2299,10 +2332,7 @@ function previewImgUrl(url, index = 0) {
 }
 
 function closeModal() {
-  const modal = document.getElementById('modal-overlay');
-  if (modal) {
-    modal.classList.remove('open');
-  }
+  document.getElementById('modal-overlay').classList.remove('open');
   editingId = null;
 }
 
@@ -3195,76 +3225,71 @@ function applyDashTheme() {
 /* ═══════════════════════════════════════════ CONFIG VIEW */
 function initConfigView() {
   // Load all saved values into form fields
+  const wh = getWebhookCfg();
   const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
 
-  // Store info
-  const nameEl = document.getElementById('cfg-store-name');
-  const taglineEl = document.getElementById('cfg-store-tagline');
-  const wappEl = document.getElementById('cfg-store-wapp');
-  const rubloEl = document.getElementById('cfg-store-rubro');
-  const dirEl = document.getElementById('cfg-store-direccion');
-  const horarioEl = document.getElementById('cfg-store-horario');
+  if (wh.url)   document.getElementById('cfg-webhook-url').value   = wh.url;
+  if (wh.token) document.getElementById('cfg-webhook-token').value = wh.token;
 
-  if (nameEl && sc.name) nameEl.value = sc.name;
-  if (taglineEl && sc.tagline) taglineEl.value = sc.tagline;
-  if (wappEl && sc.wapp) wappEl.value = sc.wapp;
-  if (rubloEl && sc.rubro) rubloEl.value = sc.rubro;
-  if (dirEl && sc.direccion) dirEl.value = sc.direccion;
-  if (horarioEl && sc.horario) horarioEl.value = sc.horario;
+  const sheetUrl = localStorage.getItem('storeapp_sheet_url')
+    || 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS3mssf-j0joT1S6CKlZHfSPTSXPHypZ_PHypn702KMgUYvteXDajrEVymXqYFgFVfqQcsUvJn6ktK2/pub?gid=0&single=true&output=csv';
+  document.getElementById('cfg-sheet-url').value = sheetUrl;
 
-  // Theme
-  const themeElDark = document.getElementById('dash-theme-dark');
-  const themeElLight = document.getElementById('dash-theme-light');
+  if (sc.name)      document.getElementById('cfg-store-name').value      = sc.name;
+  if (sc.tagline)   document.getElementById('cfg-store-tagline').value   = sc.tagline;
+  if (sc.wapp)      document.getElementById('cfg-store-wapp').value      = sc.wapp;
+  if (sc.rubro)     document.getElementById('cfg-store-rubro').value     = sc.rubro;
+  if (sc.direccion) document.getElementById('cfg-store-direccion').value = sc.direccion;
+  if (sc.horario)   document.getElementById('cfg-store-horario').value   = sc.horario;
+
+  const cloud = JSON.parse(localStorage.getItem('storeapp_cloudinary') || '{}');
+  if (cloud.name)   document.getElementById('cfg-cloud-name').value   = cloud.name;
+  if (cloud.preset) document.getElementById('cfg-cloud-preset').value = cloud.preset;
+
   const theme = localStorage.getItem('storeapp_dash_theme') || 'dark';
-  if (themeElDark) themeElDark.style.borderColor = theme === 'dark' ? 'var(--red)' : 'var(--zinc)';
-  if (themeElLight) themeElLight.style.borderColor = theme === 'light' ? 'var(--red)' : 'var(--zinc)';
+  document.getElementById('dash-theme-dark').style.borderColor  = theme==='dark' ? 'var(--red)' : 'var(--zinc)';
+  document.getElementById('dash-theme-light').style.borderColor = theme==='light'? 'var(--red)' : 'var(--zinc)';
 }
 
 function saveConfig() {
+  // Sheet URL — save to localStorage only
+  const sheetUrl = document.getElementById('cfg-sheet-url').value.trim();
+  if (sheetUrl) localStorage.setItem('storeapp_sheet_url', sheetUrl);
+
+  // Webhook
+  const wUrl   = document.getElementById('cfg-webhook-url').value.trim();
+  const wToken = document.getElementById('cfg-webhook-token').value.trim();
+  if (wUrl || wToken) {
+    localStorage.setItem('storeapp_webhook', JSON.stringify({ url: wUrl, token: wToken }));
+  }
+
   // Store info → merge into storeapp_cfg
   const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
-  
-  const nameEl = document.getElementById('cfg-store-name');
-  const taglineEl = document.getElementById('cfg-store-tagline');
-  const wappEl = document.getElementById('cfg-store-wapp');
-  const rubloEl = document.getElementById('cfg-store-rubro');
-  const dirEl = document.getElementById('cfg-store-direccion');
-  const horarioEl = document.getElementById('cfg-store-horario');
-
-  if (nameEl) {
-    const name = nameEl.value.trim();
-    if (name) sc.name = name;
-  }
-  if (taglineEl) {
-    const tagline = taglineEl.value.trim();
-    if (tagline) sc.tagline = tagline;
-  }
-  if (wappEl) {
-    const wapp = wappEl.value.trim();
-    if (wapp) sc.wapp = wapp;
-  }
-  if (rubloEl) {
-    const rubro = rubloEl.value.trim();
-    if (rubro) sc.rubro = rubro;
-  }
-  if (dirEl) {
-    const direccion = dirEl.value.trim();
-    if (direccion) sc.direccion = direccion;
-  }
-  if (horarioEl) {
-    const horario = horarioEl.value.trim();
-    if (horario) sc.horario = horario;
-  }
-  
+  const name      = document.getElementById('cfg-store-name').value.trim();
+  const tagline   = document.getElementById('cfg-store-tagline').value.trim();
+  const wapp      = document.getElementById('cfg-store-wapp').value.trim();
+  const rubro     = document.getElementById('cfg-store-rubro').value.trim();
+  const direccion = document.getElementById('cfg-store-direccion').value.trim();
+  const horario   = document.getElementById('cfg-store-horario').value.trim();
+  if (name)      sc.name      = name;
+  if (tagline)   sc.tagline   = tagline;
+  if (wapp)      sc.wapp      = wapp;
+  if (rubro)     sc.rubro     = rubro;
+  if (direccion) sc.direccion = direccion;
+  if (horario)   sc.horario   = horario;
   localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
 
-  // Mostrar confirmación
-  const el = document.getElementById('cfg-save-status');
-  if (el) {
-    el.style.color = 'var(--green)';
-    el.textContent = '✓ Configuración guardada correctamente';
-    setTimeout(() => { el.textContent = ''; }, 3000);
+  // Cloudinary
+  const cName   = document.getElementById('cfg-cloud-name').value.trim();
+  const cPreset = document.getElementById('cfg-cloud-preset').value.trim();
+  if (cName || cPreset) {
+    localStorage.setItem('storeapp_cloudinary', JSON.stringify({ name: cName, preset: cPreset }));
   }
+
+  const el = document.getElementById('cfg-save-status');
+  el.style.color = 'var(--green)';
+  el.textContent = '✓ Configuración guardada correctamente';
+  setTimeout(() => { el.textContent = ''; }, 3000);
 }
 
 async function testAndLoadSheet() {
@@ -3687,82 +3712,26 @@ try {
 
 
 <script>
-/* ════════════════════════════════════════════ SUPABASE CONFIG */
-const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
-
-/* ════════════════════════════════════════════ STATE */
-let config = {};
-
-/* ════════════════════════════════════════════ FETCH SUPABASE */
-async function fetchFromSupabase(tabla, opciones = {}) {
-  let url = `${SUPABASE_URL}/rest/v1/${tabla}`;
+function loadBannersConfig() {
+  // Cargar desde localStorage (fue guardado en loadSheet)
+  const bannerData = JSON.parse(localStorage.getItem('storeapp_banners') || '{}');
+  const b1 = bannerData.banner1 || {};
+  const b2 = bannerData.banner2 || {};
   
-  if (opciones.select) url += `?select=${opciones.select}`;
-  if (opciones.filter) url += `${opciones.select ? '&' : '?'}${opciones.filter}`;
-
-  try {
-    const response = await fetch(url, {
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`
-      }
-    });
-
-    if (!response.ok) throw new Error(`Error ${response.status}`);
-    return await response.json();
-  } catch (error) {
-    console.error('Supabase error:', error);
-    return null;
-  }
-}
-
-async function updateInSupabase(tabla, id, data) {
-  try {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/${tabla}?id=eq.${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Prefer': 'return=representation'
-      },
-      body: JSON.stringify(data)
-    });
-
-    if (!response.ok) throw new Error(`Error ${response.status}`);
-    return await response.json();
-  } catch (error) {
-    console.error('Update error:', error);
-    throw error;
-  }
-}
-
-/* ════════════════════════════════════════════ BANNERS CONFIG */
-async function loadBannersConfig() {
-  const configData = await fetchFromSupabase('company_settings');
+  document.getElementById('banner1-label').value = b1.label || '';
+  document.getElementById('banner1-title').value = b1.title || '';
+  document.getElementById('banner1-img').value = b1.img || '';
+  document.getElementById('banner1-cat').value = b1.cat || '';
   
-  if (!configData || configData.length === 0) {
-    setStatusMsg('banners-status', 'err', 'No se encontró configuración');
-    return;
-  }
-
-  config = configData[0];
-  
-  document.getElementById('banner1-label').value = config.banner1_label || '';
-  document.getElementById('banner1-title').value = config.banner1_title || '';
-  document.getElementById('banner1-img').value = config.banner1_img || '';
-  document.getElementById('banner1-cat').value = config.banner1_cat || '';
-  
-  document.getElementById('banner2-label').value = config.banner2_label || '';
-  document.getElementById('banner2-title').value = config.banner2_title || '';
-  document.getElementById('banner2-img').value = config.banner2_img || '';
-  document.getElementById('banner2-cat').value = config.banner2_cat || '';
+  document.getElementById('banner2-label').value = b2.label || '';
+  document.getElementById('banner2-title').value = b2.title || '';
+  document.getElementById('banner2-img').value = b2.img || '';
+  document.getElementById('banner2-cat').value = b2.cat || '';
   
   previewBanner('banner1');
   previewBanner('banner2');
   
-  setStatusMsg('banners-status', 'ok', 'Datos cargados desde Supabase');
+  setStatusMsg('banners-status', 'ok', 'Datos cargados');
 }
 
 function previewBanner(bannerId) {
@@ -3813,31 +3782,31 @@ async function saveBannersConfig() {
   const b2Img = document.getElementById('banner2-img').value.trim();
   const b2Cat = document.getElementById('banner2-cat').value.trim();
   
+  // Guardar en localStorage
+  const bannerData = {
+    banner1: { label: b1Label, title: b1Title, img: b1Img, cat: b1Cat },
+    banner2: { label: b2Label, title: b2Title, img: b2Img, cat: b2Cat }
+  };
+  localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
+  
+  // Guardar en Google Sheets vía webhook (opcional)
   const statusEl = document.getElementById('banners-status');
   statusEl.style.color = 'var(--silver)';
   statusEl.textContent = 'Guardando...';
   
   try {
-    const data = {
-      banner1_label: b1Label,
-      banner1_title: b1Title,
-      banner1_img: b1Img,
-      banner1_cat: b1Cat,
-      banner2_label: b2Label,
-      banner2_title: b2Title,
-      banner2_img: b2Img,
-      banner2_cat: b2Cat
-    };
-
-    if (config.id) {
-      await updateInSupabase('company_settings', config.id, data);
-    }
+    // Construir CSV row (fila 1)
+    const csvRow = `banner1_label,banner1_title,banner1_img,banner1_cat,banner2_label,banner2_title,banner2_img,banner2_cat
+"${b1Label}","${b1Title}","${b1Img}","${b1Cat}","${b2Label}","${b2Title}","${b2Img}","${b2Cat}"`;
+    
+    // Si tienes webhook, aquí iría la llamada:
+    // await fetch(webhookUrl, { method: 'POST', body: JSON.stringify(bannerData) });
     
     statusEl.style.color = 'var(--green)';
-    statusEl.textContent = '✓ Banners guardados en Supabase';
+    statusEl.textContent = '✓ Banners guardados en localStorage (actualiza manualmente en Google Sheets si necesitas)';
   } catch(e) {
-    statusEl.style.color = 'var(--red)';
-    statusEl.textContent = '✕ Error: ' + e.message;
+    statusEl.style.color = 'var(--orange)';
+    statusEl.textContent = '⚠ Guardado en local. Sync manual a Sheets: ' + e.message;
   }
 }
 
@@ -3850,37 +3819,6 @@ function setStatusMsg(elementId, status, msg) {
 
 // Cargar banners al inicializar
 document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => {
-    loadBannersConfig();
-    initSupabaseStatus();
-  }, 500);
+  setTimeout(() => loadBannersConfig(), 500);
 });
-
-// Mostrar status de Supabase
-async function initSupabaseStatus() {
-  const statusEl = document.getElementById('status-txt');
-  const dotEl = document.getElementById('dot');
-  
-  try {
-    // Intentar conectar a Supabase
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?select=id`, {
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`
-      }
-    });
-    
-    if (response.ok) {
-      if (statusEl) statusEl.textContent = '✓ Supabase conectado';
-      if (dotEl) dotEl.style.background = '#2ECC71';
-    } else {
-      if (statusEl) statusEl.textContent = '✕ Error de conexión';
-      if (dotEl) dotEl.style.background = '#D72638';
-    }
-  } catch (e) {
-    if (statusEl) statusEl.textContent = '✕ Supabase no disponible';
-    if (dotEl) dotEl.style.background = '#D72638';
-  }
-}
-
 </script>
