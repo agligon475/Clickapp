@@ -1606,12 +1606,15 @@ function openProductDrawer(id) {
                          <img src="${optimizeImg(imgUrl)}" alt="thumb ${idx+1}"/>
                        </div>`;
       });
-      imgWrap.innerHTML = `
-        <div class="carousel-container">
-          <div class="carousel-track" id="carousel-track">${slidesHtml}</div>
-          <div class="carousel-thumbs">${thumbsHtml}</div>
-        </div>
-      `;
+      imgWrap.innerHTML = slidesHtml;
+      
+      const thumbsWrap = document.createElement('div');
+      thumbsWrap.className = 'carousel-thumbs';
+      thumbsWrap.style.margin = '0 0 16px 0';
+      thumbsWrap.innerHTML = thumbsHtml;
+      
+      const pbody = document.getElementById('pdrawer-body');
+      pbody.insertBefore(thumbsWrap, pbody.firstChild);
     }
   } else {
     imgWrap.innerHTML = `<span style="font-size:72px;">${p.emoji}</span>`;
@@ -1657,7 +1660,7 @@ function closeProductDrawer() {
 function setCarouselSlide(index, total) {
   for (let i=0; i<total; i++) {
     const slide = document.getElementById(`slide-${i}`);
-    const thumb = document.querySelectorAll('#pdrawer-img .carousel-thumb')[i];
+    const thumb = document.querySelectorAll('.carousel-thumb')[i];
     if (slide && thumb) {
       if (i === index) {
         slide.classList.add('active');
