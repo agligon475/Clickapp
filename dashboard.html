@@ -1077,7 +1077,7 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
           <button class="sb-btn" style="background:var(--iron);border:1px solid var(--zinc);" onclick="exportProducts()">
             <i class="bi bi-download"></i> Exportar CSV
           </button>
-          <button class="sb-btn" onclick="saveLocalProducts()">
+          <button class="sb-btn" onclick="saveLocalProducts(this)">
             <i class="bi bi-floppy"></i> Guardar cambios
           </button>
         </div>
@@ -1397,9 +1397,13 @@ async function postToSupabase(tabla, data) {
   }
 }
 
+function supabaseIdFilter(id) {
+  return `id=eq.${encodeURIComponent(String(id))}`;
+}
+
 async function updateInSupabase(tabla, id, data) {
   try {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/${tabla}?id=eq.${id}`, {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/${tabla}?${supabaseIdFilter(id)}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -1410,7 +1414,10 @@ async function updateInSupabase(tabla, id, data) {
       body: JSON.stringify(data)
     });
 
-    if (!response.ok) throw new Error(`Error ${response.status}`);
+    if (!response.ok) {
+      const errTxt = await response.text().catch(() => '');
+      throw new Error(`Error ${response.status}${errTxt ? ': ' + errTxt.slice(0, 200) : ''}`);
+    }
     return await response.json();
   } catch (error) {
     console.error('Update error:', error);
@@ -1420,7 +1427,7 @@ async function updateInSupabase(tabla, id, data) {
 
 async function deleteFromSupabase(tabla, id) {
   try {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/${tabla}?id=eq.${id}`, {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/${tabla}?${supabaseIdFilter(id)}`, {
       method: 'DELETE',
       headers: {
         'apikey': SUPABASE_KEY,
@@ -1434,6 +1441,48 @@ async function deleteFromSupabase(tabla, id) {
     console.error('Delete error:', error);
     throw error;
   }
+}
+
+/** IDs de fila en Supabase (products.id) son UUID. */
+const UUID_ROW_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+function isSupabaseRowId(id) {
+  return UUID_ROW_RE.test(String(id || ''));
+}
+
+function mapSupabaseRowToLocal(p) {
+  return {
+    id: String(p.id),
+    name: p.nombre,
+    price: parseFloat(p.precio) || 0,
+    stock: parseInt(p.stock, 10) || 0,
+    cat: p.categoria || 'General',
+    emoji: p.emoji || '📦',
+    img: p.img || '',
+    img2: p.img2 || '',
+    img3: p.img3 || '',
+    marca: p.marca || '',
+    origen: p.origen || '',
+    detalle: (p.detalles != null && p.detalles !== '') ? p.detalles : (p.detalle || ''),
+    codigo: p.codigo || '',
+    hidden: !!p.oculto
+  };
+}
+
+function mapLocalProductToSupabaseRow(p) {
+  return {
+    nombre: p.name,
+    precio: p.price,
+    stock: p.stock ?? 0,
+    categoria: p.cat || 'General',
+    emoji: p.emoji || '📦',
+    img: p.img || null,
+    img2: p.img2 || null,
+    img3: p.img3 || null,
+    marca: p.marca || null,
+    detalles: p.detalle || '',
+    origen: p.origen || null,
+    oculto: !!p.hidden
+  };
 }
 
 /* NAV */
@@ -2037,10 +2086,10 @@ function initDesignPanel(){
 
 // Run design init when view opens
 const _origShowView = showView;
-window.showView = function(name, el){
+window.showView = async function(name, el){
   _origShowView(name, el);
   if(name==='design')  initDesignPanel();
-  if(name==='abm')     initABM();
+  if(name==='abm')     await initABM();
   if(name==='orders')  initOrderForm();
   if(name==='config')  initConfigView();
 };
@@ -2149,17 +2198,20 @@ function initLogoPreview() {
 let localProducts = [];   // working copy editable
 let editingId = null;
 
-function initABM() {
-  // Start from loaded products or localStorage override
-  const saved = localStorage.getItem('storeapp_local_products');
-  if (saved) {
-    try { localProducts = JSON.parse(saved); } catch(e) { localProducts = [...products]; }
+async function initABM() {
+  const remote = await fetchFromSupabase('products');
+  if (Array.isArray(remote) && remote.length) {
+    localProducts = remote.map(mapSupabaseRowToLocal);
   } else {
-    localProducts = products.map(p=>({...p, hidden:false}));
-  }
-  // If products loaded from sheet but localProducts empty
-  if (!localProducts.length && products.length) {
-    localProducts = products.map(p=>({...p, hidden:false}));
+    const saved = localStorage.getItem('storeapp_local_products');
+    if (saved) {
+      try { localProducts = JSON.parse(saved); } catch(e) { localProducts = [...products]; }
+    } else {
+      localProducts = products.map(p=>({...p, hidden:false}));
+    }
+    if (!localProducts.length && products.length) {
+      localProducts = products.map(p=>({...p, hidden:false}));
+    }
   }
   buildCatFilter();
   renderABM();
@@ -2203,17 +2255,17 @@ function renderABM() {
         <div style="display:flex;align-items:center;gap:4px;">
           <input type="number" value="${p.stock}" min="0"
             style="width:60px;background:var(--iron);border:1px solid var(--zinc);border-radius:5px;padding:3px 6px;color:var(--white);font-size:12px;text-align:center;"
-            onchange="quickStock(${p.id},this.value)"
+            onchange='quickStock(${JSON.stringify(p.id)},this.value)'
             title="Editar stock rápido"/>
         </div>
       </td>
       <td>
         <div style="display:flex;gap:4px;">
-          <button class="abm-action edit" onclick="openModal(${p.id})" title="Editar"><i class="bi bi-pencil"></i></button>
-          <button class="abm-action toggle" onclick="toggleHidden(${p.id})" title="${p.hidden?'Mostrar':'Ocultar'}">
+          <button type="button" class="abm-action edit" onclick='openModal(${JSON.stringify(p.id)})' title="Editar"><i class="bi bi-pencil"></i></button>
+          <button type="button" class="abm-action toggle" onclick='toggleHidden(${JSON.stringify(p.id)})' title="${p.hidden?'Mostrar':'Ocultar'}">
             <i class="bi bi-eye${p.hidden?'':'-slash'}"></i>
           </button>
-          <button class="abm-action del" onclick="deleteProduct(${p.id})" title="Eliminar"><i class="bi bi-trash"></i></button>
+          <button type="button" class="abm-action del" onclick='deleteProduct(${JSON.stringify(p.id)})' title="Eliminar"><i class="bi bi-trash"></i></button>
         </div>
       </td>
     </tr>`).join('') || `<tr><td colspan="7" style="text-align:center;color:var(--silver);padding:30px;">No se encontraron productos</td></tr>`;
@@ -2223,32 +2275,64 @@ function renderABM() {
 }
 
 function quickStock(id, val) {
-  const p = localProducts.find(x=>x.id===id);
+  const p = localProducts.find(x => String(x.id) === String(id));
   if (p) { p.stock = Math.max(0, parseInt(val)||0); renderABM(); }
 }
 
 function toggleHidden(id) {
-  const p = localProducts.find(x=>x.id===id);
+  const p = localProducts.find(x => String(x.id) === String(id));
   if (p) { p.hidden = !p.hidden; renderABM(); }
 }
 
-function deleteProduct(id) {
+async function deleteProduct(id) {
   if (!confirm('¿Eliminar este producto? Esta acción no se puede deshacer.')) return;
-  localProducts = localProducts.filter(x=>x.id!==id);
+  if (isSupabaseRowId(id)) {
+    try {
+      await deleteFromSupabase('products', id);
+    } catch (e) {
+      alert('No se pudo borrar en Supabase: ' + (e.message || e));
+      return;
+    }
+  }
+  localProducts = localProducts.filter(x => String(x.id) !== String(id));
   localStorage.setItem('storeapp_local_products', JSON.stringify(localProducts));
-  webhookDeleteProduct(id);  // auto-sync if webhook configured
+  webhookDeleteProduct(id);
   renderABM();
 }
 
-function saveLocalProducts() {
+async function saveLocalProducts(btn) {
   localStorage.setItem('storeapp_local_products', JSON.stringify(localProducts));
   localStorage.setItem('storeapp_abm_active', '1');
-  // Flash button
-  const btn = event.currentTarget;
-  const orig = btn.innerHTML;
-  btn.innerHTML = '<i class="bi bi-check2-circle"></i> Guardado!';
-  btn.style.background = 'var(--green)';
-  setTimeout(()=>{ btn.innerHTML=orig; btn.style.background=''; }, 2000);
+
+  const syncBtn = btn || (typeof event !== 'undefined' && event.currentTarget);
+  const orig = syncBtn ? syncBtn.innerHTML : '';
+  if (syncBtn) {
+    syncBtn.disabled = true;
+    syncBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Sincronizando...';
+  }
+
+  let syncErr = 0;
+  for (const p of localProducts) {
+    if (!isSupabaseRowId(p.id)) continue;
+    try {
+      await updateInSupabase('products', p.id, mapLocalProductToSupabaseRow(p));
+    } catch (e) {
+      syncErr++;
+      console.error('Error guardando producto ' + p.name + ':', e);
+    }
+  }
+
+  if (syncBtn) {
+    syncBtn.disabled = false;
+    if (syncErr) {
+      syncBtn.innerHTML = '<i class="bi bi-exclamation-triangle"></i> Algunos fallaron';
+      syncBtn.style.background = 'var(--orange)';
+    } else {
+      syncBtn.innerHTML = '<i class="bi bi-check2-circle"></i> Guardado!';
+      syncBtn.style.background = 'var(--green)';
+    }
+    setTimeout(() => { syncBtn.innerHTML = orig; syncBtn.style.background = ''; }, 2200);
+  }
 }
 
 function exportProducts() {
@@ -2267,7 +2351,7 @@ function exportProducts() {
 /* ═══════════════════════════════════════════ MODAL */
 function openModal(id=null) {
   editingId = id;
-  const p = id ? localProducts.find(x=>x.id===id) : null;
+  const p = id != null && id !== '' ? localProducts.find(x => String(x.id) === String(id)) : null;
   document.getElementById('modal-title-text').textContent = p ? 'Editar producto' : 'Nuevo producto';
   document.getElementById('m-codigo').value   = p?.codigo  || '';
   document.getElementById('m-codigo-status').textContent = '';
@@ -2336,7 +2420,7 @@ function closeModal() {
   editingId = null;
 }
 
-function saveModal() {
+async function saveModal() {
   const name    = document.getElementById('m-name').value.trim();
   const codigo  = document.getElementById('m-codigo').value.trim();
   const cat     = document.getElementById('m-cat').value.trim();
@@ -2352,13 +2436,22 @@ function saveModal() {
 
   if (!name) { alert('El nombre del producto es obligatorio.'); return; }
 
-  if (editingId) {
-    const p = localProducts.find(x=>x.id===editingId);
+  const prevEditingId = editingId;
+
+  if (editingId != null && editingId !== '') {
+    const p = localProducts.find(x => String(x.id) === String(editingId));
     if (p) Object.assign(p, {name,codigo,cat,marca,price,stock,emoji,origen,detalle,img,img2,img3});
   } else {
-    const newId = Math.max(0,...localProducts.map(x=>x.id)) + 1;
-    localProducts.push({id:newId, name, codigo, cat, marca, price, stock, emoji, origen, detalle, img, img2, img3, hidden:false});
-  }
+    const draft = { name, codigo, cat, marca, price, stock, emoji, origen, detalle, img, img2, img3, hidden:false };
+    try {
+      const inserted = await postToSupabase('products', mapLocalProductToSupabaseRow(draft));
+      const row0 = Array.isArray(inserted) ? inserted[0] : inserted;
+      if (!row0 || !row0.id) throw new Error('Respuesta inválida de Supabase');
+      localProducts.push({ ...draft, id: String(row0.id) });
+    } catch (e) {
+      alert('No se pudo crear el producto en Supabase: ' + (e.message || e));
+      return;
+    }
   }
 
   buildCatFilter();
@@ -2367,8 +2460,14 @@ function saveModal() {
   localStorage.setItem('storeapp_local_products', JSON.stringify(localProducts));
   localStorage.setItem('storeapp_abm_active', '1');
 
-  const saved = localProducts.find(x => x.id === (editingId || localProducts[localProducts.length-1]?.id));
+  let saved = null;
+  if (prevEditingId != null && prevEditingId !== '') {
+    saved = localProducts.find(x => String(x.id) === String(prevEditingId));
+  } else {
+    saved = localProducts[localProducts.length - 1] || null;
+  }
   if (saved) webhookUpdateProduct(saved);
+}
 
 
 /* ═══════════════════════════════════════════ BARCODE LOOKUP */
