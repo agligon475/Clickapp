@@ -1217,8 +1217,8 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
       </div>
 
       <div style="display:flex;gap:8px;margin-top:14px;">
-        <button class="abm-btn-new" onclick="saveBannersConfig()" style="flex:1;">
-          <i class="bi bi-cloud-upload"></i> Guardar cambios en Google Sheets
+        <button class="abm-btn-new" onclick="saveBannersConfig()" style="flex:1; justify-content: center;">
+          <i class="bi bi-cloud-upload"></i> Guardar banners
         </button>
         <button onclick="loadBannersConfig()" style="flex:1;padding:10px;background:var(--zinc);border:1px solid var(--silver);border-radius:8px;color:var(--fog);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;justify-content:center;gap:6px;">
           <i class="bi bi-arrow-clockwise"></i> Recargar
@@ -1227,53 +1227,6 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
       <div id="banners-status" style="font-size:11px;margin-top:8px;min-height:14px;color:var(--silver);"></div>
     </div>
 
-    <!-- Google Sheet -->
-    <div class="config-section">
-      <div class="config-section-title"><i class="bi bi-file-spreadsheet"></i> Google Sheet</div>
-      <div class="ctrl-group">
-        <label class="ctrl-label">URL del CSV publicado</label>
-        <input class="ctrl-input" id="cfg-sheet-url"
-          placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?output=csv"/>
-        <div style="font-size:10px;color:var(--silver);margin-top:4px;">
-          Archivo → Compartir → Publicar en la web → CSV → Copiar URL
-        </div>
-      </div>
-      <button class="abm-btn-new" onclick="testAndLoadSheet()" style="margin-top:4px;">
-        <i class="bi bi-cloud-download"></i> Probar y cargar productos
-      </button>
-      <div id="cfg-sheet-status" style="font-size:11px;margin-top:6px;min-height:14px;"></div>
-    </div>
-
-    <!-- Webhook -->
-    <div class="config-section">
-      <div class="config-section-title"><i class="bi bi-broadcast"></i> Webhook Google Apps Script</div>
-      <div class="config-grid">
-        <div class="ctrl-group" style="grid-column:1/-1;">
-          <label class="ctrl-label">URL del webhook</label>
-          <input class="ctrl-input" id="cfg-webhook-url"
-            placeholder="https://script.google.com/macros/s/.../exec"/>
-        </div>
-        <div class="ctrl-group">
-          <label class="ctrl-label">Token secreto</label>
-          <div style="position:relative;">
-            <input class="ctrl-input" id="cfg-webhook-token" type="password"
-              placeholder="mi-token-secreto" style="padding-right:36px;"/>
-            <button onclick="toggleTokenVis()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--silver);cursor:pointer;font-size:14px;">
-              <i class="bi bi-eye" id="token-eye"></i>
-            </button>
-          </div>
-        </div>
-        <div class="ctrl-group" style="display:flex;align-items:flex-end;gap:8px;">
-          <button class="abm-btn-new" onclick="testWebhookConfig()" style="flex:1;justify-content:center;">
-            <i class="bi bi-wifi"></i> Probar conexión
-          </button>
-          <button onclick="syncToSheetConfig()" style="flex:1;padding:9px;background:var(--iron);border:1px solid var(--zinc);border-radius:8px;color:var(--fog);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-b);display:flex;align-items:center;justify-content:center;gap:6px;">
-            <i class="bi bi-cloud-upload"></i> Sincronizar Sheet
-          </button>
-        </div>
-      </div>
-      <div id="cfg-webhook-status" style="font-size:11px;margin-top:6px;min-height:14px;color:var(--silver);"></div>
-    </div>
 
     <!-- Cloudinary -->
     <div class="config-section">
