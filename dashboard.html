@@ -1467,84 +1467,36 @@ const CAT_EMOJI={herramienta:'🔧',herr:'🔧',llave:'🔧',electr:'⚡',cable:
 function guessEmoji(n,c){const s=(n+' '+c).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');for(const[k,v]of Object.entries(CAT_EMOJI))if(s.includes(k))return v;return '📦';}
 
 async function loadSheet() {
-  // Read URL from config field, localStorage, or default
-  const cfgField = document.getElementById('cfg-sheet-url');
-  const rawUrl = (cfgField?.value.trim())
-    || localStorage.getItem('storeapp_sheet_url')
-    || SHEET_URL_DEFAULT;
-  const url = rawUrl.includes('output=csv')
-    ? rawUrl.replace('output=csv', 'output=csv&range=A1:Z1000')
-    : rawUrl + (rawUrl.includes('?') ? '&' : '?') + 'range=A1:Z1000';
-  setDot('','Cargando...');
-  try{
-    const res=await fetch(url);
-    if(!res.ok)throw new Error('HTTP '+res.status);
-    const rows=parseCSV(await res.text());
-    const hdrs=rows[0].map(h=>h.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''));
-    const find=(...keys)=>{for(const k of keys){const i=hdrs.findIndex(h=>h.includes(k));if(i>-1)return i;}return -1;};
-    const N=find('nombre','name','producto','articulo','item');
-    const P=find('precio','price','valor','costo');
-    const S=find('stock','cantidad','existencia','disponible');
-    const C=find('categoria','category','rubro','tipo');
-    const E=find('emoji','icono');
-    // ← NUEVO: Mapear imágenes
-    const IMG=find('img','imagen','image');
-    const IMG2=find('img2','imagen2');
-    const IMG3=find('img3','imagen3');
-    // ← NUEVO: Mapear banners (fila 1)
-    const B1L=find('banner1_label');
-    const B1T=find('banner1_title');
-    const B1I=find('banner1_img');
-    const B1C=find('banner1_cat');
-    const B2L=find('banner2_label');
-    const B2T=find('banner2_title');
-    const B2I=find('banner2_img');
-    const B2C=find('banner2_cat');
+  setDot('','Cargando datos...');
+  try {
+    const remote = await fetchFromSupabase('products');
+    products = remote.map(mapSupabaseRowToLocal);
 
-    const isGarbage = r => {
-      const t = (r[N>-1?N:0]||'').trim();
-      return !t || /[{};]/.test(t)
-        || /^\s*(html|body|div|span|\.[\w-]+|#[\w-]+)\s*\{/.test(t)
-        || /^(display|margin|padding|overflow|flex|border|background|color|font|width|height):/.test(t);
-    };
-    products=rows.slice(1).filter(r=>r[N>-1?N:0]?.trim()&&!isGarbage(r)).map((r,i)=>({
-      id:i+1,
-      name: r[N>-1?N:0]||'Producto',
-      price:parseFloat((r[P>-1?P:1]||'0').replace(/[^0-9.,]/g,'').replace(',','.'))||0,
-      stock:parseInt((r[S>-1?S:2]||'0').replace(/\D/g,''))||0,
-      cat:  C>-1?(r[C]||'General'):'General',
-      emoji:E>-1&&r[E]?r[E]:guessEmoji(r[N>-1?N:0]||'',C>-1?r[C]||'':''),
-      // ← NUEVO: Agregar imágenes
-      img:  IMG>-1?r[IMG]||'':'',
-      img2: IMG2>-1?r[IMG2]||'':'',
-      img3: IMG3>-1?r[IMG3]||'':'',
-    }));
-
-    // ← NUEVO: Cargar datos de banners (fila 1)
-    const bannerData = {
-      banner1: {
-        label: B1L>-1?rows[0][B1L]||'NUEVAS':'NUEVAS',
-        title: B1T>-1?rows[0][B1T]||'Productos':'Productos',
-        img: B1I>-1?rows[0][B1I]||'':'',
-        cat: B1C>-1?rows[0][B1C]||'':'',
-      },
-      banner2: {
-        label: B2L>-1?rows[0][B2L]||'PROMOCIÓN':'PROMOCIÓN',
-        title: B2T>-1?rows[0][B2T]||'Especiales':'Especiales',
-        img: B2I>-1?rows[0][B2I]||'':'',
-        cat: B2C>-1?rows[0][B2C]||'':'',
+    // Cargar datos de banners desde Supabase (company_settings)
+    const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings`, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
       }
-    };
-    
-    // ← NUEVO: Guardar bannerData en localStorage para panel de edición
-    localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
+    });
+    if (configRes.ok) {
+      const configData = await configRes.json();
+      if (configData && configData.length > 0) {
+        const cfg = configData[0];
+        const bannerData = {
+          banner1: { label: cfg.banner1_label||'NUEVAS', title: cfg.banner1_title||'Productos', img: cfg.banner1_img||'', cat: cfg.banner1_cat||'' },
+          banner2: { label: cfg.banner2_label||'PROMOCIÓN', title: cfg.banner2_title||'Especiales', img: cfg.banner2_img||'', cat: cfg.banner2_cat||'' }
+        };
+        localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
+      }
+    }
 
     setDot('ok',`${products.length} productos · ${new Date().toLocaleTimeString('es-AR')}`);
     updateMetrics();
     updateCharts();
-    renderProducts();
-  }catch(e){
-    setDot('err','Error al cargar');
+    if (typeof renderProducts === 'function') renderProducts();
+  } catch(e) {
+    setDot('err','Error al cargar desde Supabase');
     console.error(e);
   }
 }
@@ -3285,15 +3237,7 @@ function applyDashTheme() {
 /* ═══════════════════════════════════════════ CONFIG VIEW */
 function initConfigView() {
   // Load all saved values into form fields
-  const wh = getWebhookCfg();
   const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
-
-  if (wh.url)   document.getElementById('cfg-webhook-url').value   = wh.url;
-  if (wh.token) document.getElementById('cfg-webhook-token').value = wh.token;
-
-  const sheetUrl = localStorage.getItem('storeapp_sheet_url')
-    || 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS3mssf-j0joT1S6CKlZHfSPTSXPHypZ_PHypn702KMgUYvteXDajrEVymXqYFgFVfqQcsUvJn6ktK2/pub?gid=0&single=true&output=csv';
-  document.getElementById('cfg-sheet-url').value = sheetUrl;
 
   if (sc.name)      document.getElementById('cfg-store-name').value      = sc.name;
   if (sc.tagline)   document.getElementById('cfg-store-tagline').value   = sc.tagline;
@@ -3312,17 +3256,6 @@ function initConfigView() {
 }
 
 function saveConfig() {
-  // Sheet URL — save to localStorage only
-  const sheetUrl = document.getElementById('cfg-sheet-url').value.trim();
-  if (sheetUrl) localStorage.setItem('storeapp_sheet_url', sheetUrl);
-
-  // Webhook
-  const wUrl   = document.getElementById('cfg-webhook-url').value.trim();
-  const wToken = document.getElementById('cfg-webhook-token').value.trim();
-  if (wUrl || wToken) {
-    localStorage.setItem('storeapp_webhook', JSON.stringify({ url: wUrl, token: wToken }));
-  }
-
   // Store info → merge into storeapp_cfg
   const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
   const name      = document.getElementById('cfg-store-name').value.trim();
