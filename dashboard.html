@@ -2440,7 +2440,15 @@ async function saveModal() {
 
   if (editingId != null && editingId !== '') {
     const p = localProducts.find(x => String(x.id) === String(editingId));
-    if (p) Object.assign(p, {name,codigo,cat,marca,price,stock,emoji,origen,detalle,img,img2,img3});
+    if (p) {
+      Object.assign(p, {name,codigo,cat,marca,price,stock,emoji,origen,detalle,img,img2,img3});
+      try {
+        await updateInSupabase('products', editingId, mapLocalProductToSupabaseRow(p));
+      } catch (e) {
+        alert('No se pudo actualizar el producto en Supabase: ' + (e.message || e));
+        return;
+      }
+    }
   } else {
     const draft = { name, codigo, cat, marca, price, stock, emoji, origen, detalle, img, img2, img3, hidden:false };
     try {
@@ -3888,24 +3896,44 @@ async function saveBannersConfig() {
   };
   localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
   
-  // Guardar en Google Sheets vía webhook (opcional)
   const statusEl = document.getElementById('banners-status');
   statusEl.style.color = 'var(--silver)';
-  statusEl.textContent = 'Guardando...';
+  statusEl.textContent = 'Guardando en Supabase...';
   
   try {
-    // Construir CSV row (fila 1)
-    const csvRow = `banner1_label,banner1_title,banner1_img,banner1_cat,banner2_label,banner2_title,banner2_img,banner2_cat
-"${b1Label}","${b1Title}","${b1Img}","${b1Cat}","${b2Label}","${b2Title}","${b2Img}","${b2Cat}"`;
-    
-    // Si tienes webhook, aquí iría la llamada:
-    // await fetch(webhookUrl, { method: 'POST', body: JSON.stringify(bannerData) });
+    const dataToSave = {
+      banner1_label: b1Label,
+      banner1_title: b1Title,
+      banner1_img: b1Img,
+      banner1_cat: b1Cat,
+      banner2_label: b2Label,
+      banner2_title: b2Title,
+      banner2_img: b2Img,
+      banner2_cat: b2Cat
+    };
+
+    const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings`, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
+    });
+
+    if (!configRes.ok) throw new Error('No se pudo verificar la configuración en Supabase');
+    const configData = await configRes.json();
+
+    if (configData && configData.length > 0) {
+      const id = configData[0].id;
+      await updateInSupabase('company_settings', id, dataToSave);
+    } else {
+      await postToSupabase('company_settings', dataToSave);
+    }
     
     statusEl.style.color = 'var(--green)';
-    statusEl.textContent = '✓ Banners guardados en localStorage (actualiza manualmente en Google Sheets si necesitas)';
+    statusEl.textContent = '✓ Banners guardados en Supabase correctamente';
   } catch(e) {
     statusEl.style.color = 'var(--orange)';
-    statusEl.textContent = '⚠ Guardado en local. Sync manual a Sheets: ' + e.message;
+    statusEl.textContent = '⚠ Error al guardar en Supabase: ' + e.message;
   }
 }
 
