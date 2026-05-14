@@ -1228,6 +1228,23 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
     </div>
 
 
+    <!-- Google Sheet -->
+    <div class="config-section">
+      <div class="config-section-title"><i class="bi bi-file-spreadsheet"></i> Google Sheet</div>
+      <div class="ctrl-group">
+        <label class="ctrl-label">URL del CSV publicado</label>
+        <input class="ctrl-input" id="cfg-sheet-url"
+          placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?output=csv"/>
+        <div style="font-size:10px;color:var(--silver);margin-top:4px;">
+          Archivo → Compartir → Publicar en la web → CSV → Copiar URL
+        </div>
+      </div>
+      <button class="abm-btn-new" onclick="testAndLoadSheet()" style="margin-top:4px;">
+        <i class="bi bi-cloud-download"></i> Probar y cargar productos
+      </button>
+      <div id="cfg-sheet-status" style="font-size:11px;margin-top:6px;min-height:14px;"></div>
+    </div>
+
     <!-- Cloudinary -->
     <div class="config-section">
       <div class="config-section-title"><i class="bi bi-cloud-arrow-up"></i> Cloudinary — Fotos de productos</div>
@@ -1301,6 +1318,8 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
 </div><!-- /main -->
 
 <script>
+const SHEET_URL_DEFAULT = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQZYVbjKTV3QFCeqNgvLxYBc6YbxM9DKLMz9lXzktHTzoDtzLYbjkG186RMjHpouHCShr7TRJfJZaNS/pub?output=csv';
+
 /* ════════════════════════════════════════════ SUPABASE CONFIG */
 const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
@@ -1663,17 +1682,6 @@ function renderOrdersTable(orders) {
     : 'Sin pedidos todavía';
 }
 
-function renderAllOrders(orders) {
-  orders = orders || DEMO_ORDERS;
-  document.getElementById('all-orders-body').innerHTML = orders.map(o=>`
-    <tr>
-      <td>${o.id}</td><td>${o.fecha}</td><td>${o.cliente}</td><td>${o.dni||'—'}</td>
-      <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${o.productos}</td>
-      <td>${o.pago}</td><td>${o.logistica||o.logis||'—'}</td>
-      <td>$${Number(o.total||0).toLocaleString('es-AR')}</td>
-      <td>${BADGE[o.estado]||BADGE.pend}</td>
-    </tr>`).join('');
-}
 
 // Update order estado and push to Sheet
 async function updateOrderEstado(id, estado) {
@@ -3408,7 +3416,7 @@ async function handleModalPhotoUpload(input, index = 0) {
 async function applyWatermark(file) {
   return new Promise((resolve, reject) => {
     // Obtener logo guardado
-    const logoData = localStorage.getItem('store-logo');
+    const logoData = localStorage.getItem('storeapp_logo');
     
     const img = new Image();
     const reader = new FileReader();
