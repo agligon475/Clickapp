@@ -1760,18 +1760,6 @@ function applyStoredConfig() {
   if (cfg.wapp) window.WHATSAPP_NUMBER = cfg.wapp;
 }
 
-// ── Merge localProducts (ABM edits) over sheet data ─
-function mergeLocalProducts(sheetProducts) {
-  const local = localStorage.getItem('storeapp_local_products');
-  if (!local) return sheetProducts;
-  try {
-    const lp = JSON.parse(local);
-    if (!lp.length) return sheetProducts;
-    // Use local as source of truth, filter out hidden
-    return lp.filter(p => !p.hidden);
-  } catch(e) { return sheetProducts; }
-}
-
 applyStoredConfig();
 loadSheet();
 </script>
