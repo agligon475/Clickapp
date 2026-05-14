@@ -69,15 +69,6 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
 .sb-item.active i{color:var(--red);}
 .sb-item i{font-size:15px;width:18px;color:var(--silver);}
 
-.sb-sheet{padding:12px;margin-top:auto;border-top:1px solid var(--zinc);}
-.sb-sheet-label{font-size:10px;color:var(--silver);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em;}
-.sb-url{
-  width:100%;background:var(--iron);border:1px solid var(--zinc);
-  border-radius:7px;padding:6px 8px;
-  font-size:9px;color:var(--fog);font-family:monospace;
-  resize:none;height:52px;outline:none;
-}
-.sb-url:focus{border-color:var(--red);}
 .sb-btn{
   width:100%;margin-top:6px;padding:7px;
   background:var(--red);color:#fff;border:none;
@@ -451,16 +442,39 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
 .theme-toggle-btn:hover { border-color:var(--red); color:var(--red); }
 
 /* CONFIG VIEW */
-.config-section {
+.config-section, .view#view-design .card {
   background:var(--steel); border:1px solid var(--zinc);
-  border-radius:12px; padding:20px 22px; margin-bottom:14px;
+  border-radius:12px; padding:0; margin-bottom:14px;
+  overflow:hidden;
 }
-.config-section-title {
+.config-section-title, .view#view-design .card-title {
   font-size:12px; font-weight:700; color:var(--silver);
   text-transform:uppercase; letter-spacing:.08em;
-  margin-bottom:14px; padding-bottom:10px;
-  border-bottom:1px solid var(--zinc);
+  padding:18px 22px;
   display:flex; align-items:center; gap:8px;
+  cursor:pointer; user-select:none;
+  transition: background 0.2s;
+  margin-bottom:0 !important;
+}
+.config-section-title:hover, .view#view-design .card-title:hover {
+  background: rgba(255,255,255,0.03);
+}
+.config-section-title::after, .view#view-design .card-title::after {
+  content: '\F282'; font-family: 'bootstrap-icons';
+  margin-left: auto; transition: transform 0.3s;
+  font-size: 14px;
+}
+.config-section.collapsed .config-section-title::after,
+.view#view-design .card.collapsed .card-title::after {
+  transform: rotate(-90deg);
+}
+.config-section-content, .card-content {
+  padding:20px 22px;
+  border-top: 1px solid var(--zinc);
+}
+.config-section.collapsed .config-section-content,
+.view#view-design .card.collapsed .card-content {
+  display: none;
 }
 .config-section-title i { color:var(--red); }
 .config-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
@@ -781,7 +795,7 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
 
         <div class="card" style="margin-bottom:14px;">
           <div class="card-title">Identidad</div>
-
+          <div class="card-content">
           <div class="ctrl-group">
             <label class="ctrl-label">Logo de la tienda</label>
             <div id="logo-preview-wrap" style="display:none;margin-bottom:8px;text-align:center;">
@@ -823,11 +837,12 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
             <label class="ctrl-label">Número de WhatsApp (con código país)</label>
             <input class="ctrl-input" id="cfg-wapp" value="5491141819344" placeholder="5491100000000" oninput="previewUpdate()"/>
           </div>
+          </div>
         </div>
 
         <div class="card" style="margin-bottom:14px;">
           <div class="card-title">Paleta de colores</div>
-
+          <div class="card-content">
           <div class="ctrl-group">
             <label class="ctrl-label">Color de acento</label>
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;" id="color-presets">
@@ -866,10 +881,12 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
               </button>
             </div>
           </div>
+          </div>
         </div>
 
         <div class="card" style="margin-bottom:14px;">
           <div class="card-title">Tipografía</div>
+          <div class="card-content">
           <div class="ctrl-group">
             <label class="ctrl-label">Estilo de fuente</label>
             <div style="display:flex;gap:8px;flex-wrap:wrap;" id="font-picker">
@@ -891,10 +908,12 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
               </button>
             </div>
           </div>
+          </div>
         </div>
 
         <div class="card" style="margin-bottom:14px;">
           <div class="card-title">Imagen de fondo del banner</div>
+          <div class="card-content">
 
           <div id="hero-img-preview-wrap" style="display:none;margin-bottom:10px;position:relative;border-radius:8px;overflow:hidden;">
             <img id="hero-img-preview" style="width:100%;height:100px;object-fit:cover;display:block;"/>
@@ -914,10 +933,12 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
               style="width:100%;accent-color:var(--red);"
               oninput="updateOverlay(this.value)"/>
           </div>
+          </div>
         </div>
 
         <div class="card" style="margin-bottom:14px;">
           <div class="card-title">Texto del banner</div>
+          <div class="card-content">
           <div class="ctrl-group">
             <label class="ctrl-label">Título (línea 1)</label>
             <input class="ctrl-input" id="cfg-h1" value="Tu ferretería" oninput="previewUpdate()"/>
@@ -929,6 +950,7 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
           <div class="ctrl-group">
             <label class="ctrl-label">Descripción</label>
             <textarea class="ctrl-input" id="cfg-desc" rows="2" oninput="previewUpdate()" style="resize:vertical;">Elegí tus productos, armá tu pedido y coordiná por WhatsApp.</textarea>
+          </div>
           </div>
         </div>
 
@@ -1102,6 +1124,7 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
     <!-- Tienda -->
     <div class="config-section">
       <div class="config-section-title"><i class="bi bi-shop"></i> Datos de la tienda</div>
+      <div class="config-section-content">
       <div class="config-grid">
         <div class="ctrl-group">
           <label class="ctrl-label">Nombre de la tienda</label>
@@ -1144,12 +1167,13 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
           <div style="font-size:10px;color:var(--silver);margin-top:3px;">Se incluye en mensajes de retiro por local</div>
         </div>
       </div>
+      </div>
     </div>
 
     <!-- BANNERS PROMOCIONALES ← NUEVO -->
     <div class="config-section">
       <div class="config-section-title"><i class="bi bi-image"></i> Banners promocionales 50/50</div>
-      
+      <div class="config-section-content">
       <!-- BANNER 1 -->
       <div style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:16px;margin-bottom:14px;">
         <div style="font-weight:700;font-size:13px;margin-bottom:12px;color:var(--red);">BANNER 1</div>
@@ -1225,29 +1249,15 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
         </button>
       </div>
       <div id="banners-status" style="font-size:11px;margin-top:8px;min-height:14px;color:var(--silver);"></div>
-    </div>
-
-
-    <!-- Google Sheet -->
-    <div class="config-section">
-      <div class="config-section-title"><i class="bi bi-file-spreadsheet"></i> Google Sheet</div>
-      <div class="ctrl-group">
-        <label class="ctrl-label">URL del CSV publicado</label>
-        <input class="ctrl-input" id="cfg-sheet-url"
-          placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?output=csv"/>
-        <div style="font-size:10px;color:var(--silver);margin-top:4px;">
-          Archivo → Compartir → Publicar en la web → CSV → Copiar URL
-        </div>
       </div>
-      <button class="abm-btn-new" onclick="testAndLoadSheet()" style="margin-top:4px;">
-        <i class="bi bi-cloud-download"></i> Probar y cargar productos
-      </button>
-      <div id="cfg-sheet-status" style="font-size:11px;margin-top:6px;min-height:14px;"></div>
     </div>
+
+
 
     <!-- Cloudinary -->
     <div class="config-section">
       <div class="config-section-title"><i class="bi bi-cloud-arrow-up"></i> Cloudinary — Fotos de productos</div>
+      <div class="config-section-content">
       <div style="font-size:12px;color:var(--silver);margin-bottom:12px;line-height:1.6;">
         Cloudinary permite subir fotos desde el dashboard sin hosting propio.
         Creá una cuenta gratis en <a href="https://cloudinary.com" target="_blank" style="color:var(--red);">cloudinary.com</a>
@@ -1288,11 +1298,13 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
           <input class="ctrl-input" type="password" id="cfg-claude-key" placeholder="sk-ant-..."/>
         </div>
       </div>
+      </div>
     </div>
 
     <!-- Tema -->
     <div class="config-section">
       <div class="config-section-title"><i class="bi bi-palette"></i> Apariencia del dashboard</div>
+      <div class="config-section-content">
       <div style="display:flex;gap:12px;">
         <button onclick="setDashTheme('dark')" id="dash-theme-dark"
           style="flex:1;padding:12px;border-radius:10px;border:2px solid var(--red);background:var(--iron);cursor:pointer;font-family:var(--font-b);font-size:12px;font-weight:600;color:var(--white);transition:all .15s;">
@@ -1304,6 +1316,7 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
           <i class="bi bi-sun" style="display:block;font-size:20px;margin-bottom:4px;"></i>
           Claro
         </button>
+      </div>
       </div>
     </div>
 
@@ -1318,7 +1331,6 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
 </div><!-- /main -->
 
 <script>
-const SHEET_URL_DEFAULT = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQZYVbjKTV3QFCeqNgvLxYBc6YbxM9DKLMz9lXzktHTzoDtzLYbjkG186RMjHpouHCShr7TRJfJZaNS/pub?output=csv';
 
 /* ════════════════════════════════════════════ SUPABASE CONFIG */
 const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
@@ -3300,18 +3312,6 @@ function saveConfig() {
   setTimeout(() => { el.textContent = ''; }, 3000);
 }
 
-async function testAndLoadSheet() {
-  const url = document.getElementById('cfg-sheet-url').value.trim();
-  const el  = document.getElementById('cfg-sheet-status');
-  if (!url) { el.style.color='var(--red)'; el.textContent='⚠ Ingresá la URL primero'; return; }
-  el.style.color='var(--silver)'; el.textContent='Cargando...';
-  localStorage.setItem('storeapp_sheet_url', url);
-  await loadSheet();
-  el.style.color = products.length ? 'var(--green)' : 'var(--red)';
-  el.textContent  = products.length
-    ? `✓ ${products.length} productos cargados correctamente`
-    : '✕ No se encontraron productos — verificá la URL';
-}
 
 async function testWebhookConfig() {
   const url   = document.getElementById('cfg-webhook-url').value.trim();
@@ -3848,5 +3848,21 @@ function setStatusMsg(elementId, status, msg) {
 // Cargar banners al inicializar
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => loadBannersConfig(), 500);
+
+  // Accordion functionality
+  document.addEventListener('click', (e) => {
+    const title = e.target.closest('.config-section-title, .view#view-design .card-title');
+    if (title) {
+      const section = title.closest('.config-section, .card');
+      if (section) {
+        section.classList.toggle('collapsed');
+      }
+    }
+  });
+
+  // Collapse all sections by default in Config and Design
+  document.querySelectorAll('.config-section, .view#view-design .card').forEach(s => {
+    s.classList.add('collapsed');
+  });
 });
 </script>
