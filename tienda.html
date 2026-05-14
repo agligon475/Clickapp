@@ -1065,7 +1065,7 @@ let searchTerm = '';
 // Override products from localStorage ABM if present
 function loadLocalProducts() {
   try {
-    const local = localStorage.getItem('storeapp_products');
+    const local = localStorage.getItem('storeapp_local_products');
     if (local) {
       const parsed = JSON.parse(local);
       if (Array.isArray(parsed) && parsed.length > 0) return parsed;
