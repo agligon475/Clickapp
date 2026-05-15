@@ -7,8 +7,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --brand-blue: #005289; /* Azul aproximado de la imagen */
+            --brand-blue: #00558D; /* Azul aproximado de la imagen */
             --bg-color: #f0f4f8;
+            --dtp-white: #fafafa;
+            --dtp-black: #010101;
+            --dtp-brand-light: #3377a4
+            --dtp-brand-dark:#00406a;
         }
 
         body {
@@ -54,16 +58,16 @@
 
         /* Estilo para /tienda.html */
         .btn-tienda {
-            background-color: var(--brand-blue);
-            color: white;
-            border: 2px solid var(--brand-blue);
+            background-color: var(--dtp-white);
+            color: var(--brand-blue);
+            
         }
 
         /* Estilo para /dashboard.html */
         .btn-dashboard {
             background-color: transparent;
-            color: var(--brand-blue);
-            border: 2px solid var(--brand-blue);
+            color: var(--dtp-white);
+            border: 2px solid var(--dtp-white);
         }
 
         .btn:hover {
@@ -72,12 +76,12 @@
         }
 
         .btn-tienda:hover {
-            background-color: #003d66;
+            background-color: var(--dtp-brand-light);
         }
 
         .btn-dashboard:hover {
-            background-color: var(--brand-blue);
-            color: white;
+            background-color: var(--dtp-brand-dark);
+            
         }
     </style>
 </head>
