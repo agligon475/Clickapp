@@ -513,10 +513,14 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<div class="sidebar">
+<header class="topbar-mobile">
+  <div class="sb-logo-icon">🔧</div>
+  <h1>FerreApp Dashboard</h1>
+</header>
+
+<nav class="sidebar" aria-label="Menú principal">
   <div class="sb-logo">
-    <div class="sb-logo-icon">🔧</div>
+    <div class="sb-logo-icon" aria-hidden="true">🔧</div>
     <div>
       <div class="sb-logo-text">FerreApp</div>
       <div class="sb-logo-sub">Panel de control</div>
@@ -525,27 +529,27 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
 
   <div class="sb-section">
     <div class="sb-section-label">Analítica</div>
-    <div class="sb-item active" onclick="showView('dashboard',this)"><i class="bi bi-bar-chart-line"></i> Dashboard</div>
-    <div class="sb-item" onclick="showView('orders',this)"><i class="bi bi-receipt"></i> Pedidos</div>
+    <button class="sb-item active" onclick="showView('dashboard',this)"><i class="bi bi-bar-chart-line" aria-hidden="true"></i> Dashboard</button>
+    <button class="sb-item" onclick="showView('orders',this)"><i class="bi bi-receipt" aria-hidden="true"></i> Pedidos</button>
   </div>
   <div class="sb-section">
     <div class="sb-section-label">Catálogo</div>
-    <div class="sb-item" onclick="showView('products',this)"><i class="bi bi-grid-3x3-gap"></i> Productos</div>
-    <div class="sb-item" onclick="showView('abm',this)"><i class="bi bi-pencil-square"></i> ABM Productos</div>
+    <button class="sb-item" onclick="showView('products',this)"><i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> Productos</button>
+    <button class="sb-item" onclick="showView('abm',this)"><i class="bi bi-pencil-square" aria-hidden="true"></i> ABM Productos</button>
   </div>
   <div class="sb-section">
     <div class="sb-section-label">Personalización</div>
-    <div class="sb-item" onclick="showView('design',this)"><i class="bi bi-palette"></i> Diseño de tienda</div>
+    <button class="sb-item" onclick="showView('design',this)"><i class="bi bi-palette" aria-hidden="true"></i> Diseño de tienda</button>
   </div>
   <div class="sb-section">
     <div class="sb-section-label">Sistema</div>
-    <div class="sb-item" onclick="showView('config',this)"><i class="bi bi-gear"></i> Configuración</div>
-    <div class="sb-item" onclick="window.open('tienda.html','_blank')"><i class="bi bi-shop"></i> Ver tienda <i class="bi bi-box-arrow-up-right" style="font-size:10px;margin-left:auto;opacity:.5;"></i></div>
+    <button class="sb-item" onclick="showView('config',this)"><i class="bi bi-gear" aria-hidden="true"></i> Configuración</button>
+    <button class="sb-item" onclick="window.open('tienda.html','_blank')"><i class="bi bi-shop" aria-hidden="true"></i> Ver tienda <i class="bi bi-box-arrow-up-right" style="font-size:10px;margin-left:auto;opacity:.5;" aria-hidden="true"></i></button>
   </div>
-</div>
+</nav>
 
 <!-- MAIN -->
-<div class="main">
+<main class="main">
 
   <!-- TOPBAR -->
   <div class="topbar">
@@ -607,7 +611,7 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
     <div class="card">
       <div class="card-title">
         Últimos pedidos
-        <span style="font-size:10px;color:var(--zinc);font-weight:400;" id="sheet-sync-info">Cargando...</span>
+        <span style="font-size:10px;color:var(--zinc);font-weight:400;" id="orders-sync-info">Cargando...</span>
       </div>
       <div style="overflow-x:auto;">
         <table class="data-table" id="orders-tbl">
@@ -1111,8 +1115,7 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
         <i class="bi bi-info-circle"></i> Sobre el ABM
       </div>
       <p style="font-size:12px;color:var(--fog);line-height:1.6;">
-        Los cambios se guardan localmente en el navegador y se aplican en la tienda de inmediato.
-        Para sincronizar con Google Sheets, exportá el CSV y reemplazá la planilla original.
+        Los cambios se sincronizan con Supabase y se aplican en la tienda de inmediato.
         Los productos marcados como "Oculto" no aparecen en la tienda pública.
       </p>
     </div>
@@ -1328,7 +1331,7 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
 
   </div><!-- /view-config -->
 
-</div><!-- /main -->
+</main><!-- /main -->
 
 <script>
 
@@ -1509,7 +1512,7 @@ function parseCSV(text) {
 const CAT_EMOJI={herramienta:'🔧',herr:'🔧',llave:'🔧',electr:'⚡',cable:'🔌',plom:'🚰',caño:'🚰',fija:'🔩',tornillo:'🪛',pintura:'🎨',madera:'🪵',default:'📦'};
 function guessEmoji(n,c){const s=(n+' '+c).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');for(const[k,v]of Object.entries(CAT_EMOJI))if(s.includes(k))return v;return '📦';}
 
-async function loadSheet() {
+async function loadSupabase() {
   setDot('','Cargando datos...');
   try {
     const remote = await fetchFromSupabase('products');
@@ -1688,14 +1691,14 @@ function renderOrdersTable(orders) {
     </tr>`).join('') ||
     `<tr><td colspan="7" style="text-align:center;color:var(--silver);padding:24px;">
       Sin pedidos. Cargalos desde la sección Pedidos.</td></tr>`;
-  const info = document.getElementById('sheet-sync-info');
+  const info = document.getElementById('orders-sync-info');
   if (info) info.textContent = orders.length
     ? `${orders.length} pedido${orders.length!==1?'s':''} · último: ${orders[0]?.fecha||''}`
     : 'Sin pedidos todavía';
 }
 
 
-// Update order estado and push to Sheet
+// Update order estado and push to Supabase
 async function updateOrderEstado(id, estado) {
   const wh = getWebhookCfg();
   if (!wh.url || !wh.token) return;
@@ -1707,12 +1710,12 @@ async function updateOrderEstado(id, estado) {
   }).catch(()=>{});
 }
 
-// Load real orders from Sheet via webhook GET
+// Load real orders from Supabase via webhook GET
 async function loadOrders() {
   const wh = getWebhookCfg();
   if (!wh.url || !wh.token) {
     renderOrdersTable(DEMO_ORDERS);
-    document.getElementById('sheet-sync-info').textContent = 'Mostrando datos demo · configurá el webhook para ver pedidos reales';
+    document.getElementById('orders-sync-info').textContent = 'Mostrando datos demo · configurá el webhook para ver pedidos reales';
     return;
   }
 
@@ -1723,7 +1726,7 @@ async function loadOrders() {
 
     if (!data.ok || !data.pedidos?.length) {
       renderOrdersTable([]);
-      document.getElementById('sheet-sync-info').textContent = 'Sin pedidos todavía — los próximos aparecerán acá automáticamente';
+      document.getElementById('orders-sync-info').textContent = 'Sin pedidos todavía — los próximos aparecerán acá automáticamente';
       return;
     }
 
@@ -1744,13 +1747,13 @@ async function loadOrders() {
     renderOrdersTable(orders);
     renderAllOrders(orders);
     updateMetricsFromOrders(orders);
-    document.getElementById('sheet-sync-info').textContent =
+    document.getElementById('orders-sync-info').textContent =
       `${orders.length} pedidos reales · ${new Date().toLocaleTimeString('es-AR')}`;
 
   } catch(e) {
     console.warn('Error cargando pedidos:', e.message);
     renderOrdersTable(DEMO_ORDERS);
-    document.getElementById('sheet-sync-info').textContent = 'Error al cargar pedidos reales — mostrando demo';
+    document.getElementById('orders-sync-info').textContent = 'Error al cargar pedidos reales — mostrando demo';
   }
 }
 
@@ -1802,7 +1805,7 @@ function updateMetricsFromOrders(orders) {
 
 /* PRODUCTS VIEW */
 function renderProducts(){
-  if(!products.length){document.getElementById('prod-grid').innerHTML=`<p style="color:var(--silver);grid-column:1/-1;">Sincronizá tu Sheet para ver los productos.</p>`;return;}
+  if(!products.length){document.getElementById('prod-grid').innerHTML=`<p style="color:var(--silver);grid-column:1/-1;">Sincronizá tu Supabase para ver los productos.</p>`;return;}
   document.getElementById('prod-count').textContent=`${products.length} productos`;
   document.getElementById('prod-grid').innerHTML=products.map(p=>{
     const sc=p.stock===0?'stock-out':p.stock<5?'stock-low':'stock-ok';
@@ -2590,7 +2593,6 @@ function loadWebhookCfg() {
   // No-op — config fields are populated in initConfigView()
   // Just ensure localStorage has the default sheet URL if not set
   if (!localStorage.getItem('storeapp_sheet_url')) {
-    localStorage.setItem('storeapp_sheet_url', SHEET_URL_DEFAULT);
   }
 }
 
@@ -2649,7 +2651,7 @@ async function testWebhook() {
   }
 }
 
-async function syncToSheet() {
+async function syncToSupabase() {
   if (!localProducts.length) {
     setWebhookStatus('⚠ No hay productos locales para sincronizar', 'err');
     return;
@@ -2666,7 +2668,7 @@ async function syncToSheet() {
 
   const result = await webhookCall(payload);
   if (result) {
-    setWebhookStatus(`✓ ${localProducts.length} productos enviados al Sheet`, 'ok');
+    setWebhookStatus(`✓ ${localProducts.length} productos enviados al Supabase`, 'ok');
   }
 }
 
@@ -2924,8 +2926,8 @@ function saveOrder() {
   allOrders.unshift(order);
   localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
 
-  // Save to Sheet via webhook if configured
-  syncOrderToSheet(order);
+  // Save to Supabase via webhook if configured
+  syncOrderToSupabase(order);
 
   // Update UI
   renderAllOrders(allOrders);
@@ -2934,7 +2936,7 @@ function saveOrder() {
   setOrderFeedback(`✓ Pedido ${id} guardado correctamente`);
 }
 
-async function syncOrderToSheet(order) {
+async function syncOrderToSupabase(order) {
   const wh = getWebhookCfg();
   if (!wh.url || !wh.token) return;
   try {
@@ -3073,7 +3075,7 @@ function changeOrderEstado(id, estado) {
   renderAllOrders(allOrders);
   updateDashboardFromOrders(allOrders);
 
-  // Sync to Sheet
+  // Sync to Supabase
   const label = getStates().find(s => s.key === estado)?.label || estado;
   updateOrderEstado(id, label);
 
@@ -3330,10 +3332,10 @@ async function testWebhookConfig() {
   }
 }
 
-async function syncToSheetConfig() {
+async function syncToSupabaseConfig() {
   // Save config first so webhookCall picks up the latest values
   saveConfig();
-  await syncToSheet();
+  await syncToSupabase();
 }
 
 function toggleTokenVis() {
@@ -3494,7 +3496,6 @@ async function applyWatermark(file) {
 /* ═══════════════════════════════════════════ INIT */
 applyDashTheme();
 initCharts();
-loadSheet();        // reads from localStorage / SHEET_URL_DEFAULT
 initLogoPreview();
 loadWebhookCfg();   // ensures localStorage defaults are set
 
@@ -3506,15 +3507,15 @@ try {
     if (allOrders.length) {
       renderOrdersTable(allOrders.slice(0,10));
       updateDashboardFromOrders(allOrders);
-      document.getElementById('sheet-sync-info').textContent =
+      document.getElementById('orders-sync-info').textContent =
         `${allOrders.length} pedido${allOrders.length!==1?'s':''} guardado${allOrders.length!==1?'s':''}`;
     } else {
       renderOrdersTable([]);
-      document.getElementById('sheet-sync-info').textContent = 'Sin pedidos todavía';
+      document.getElementById('orders-sync-info').textContent = 'Sin pedidos todavía';
     }
   } else {
     renderOrdersTable([]);
-    document.getElementById('sheet-sync-info').textContent = 'Sin pedidos todavía';
+    document.getElementById('orders-sync-info').textContent = 'Sin pedidos todavía';
   }
 } catch(e) { renderOrdersTable([]); }
 </script>
@@ -3721,7 +3722,7 @@ try {
 
 <script>
 function loadBannersConfig() {
-  // Cargar desde localStorage (fue guardado en loadSheet)
+  // Cargar desde localStorage (fue guardado en loadSupabase)
   const bannerData = JSON.parse(localStorage.getItem('storeapp_banners') || '{}');
   const b1 = bannerData.banner1 || {};
   const b2 = bannerData.banner2 || {};
@@ -3847,6 +3848,7 @@ function setStatusMsg(elementId, status, msg) {
 
 // Cargar banners al inicializar
 document.addEventListener('DOMContentLoaded', () => {
+  loadSupabase();
   setTimeout(() => loadBannersConfig(), 500);
 
   // Accordion functionality
