@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dale! Te Pido - Micrositio</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
         :root {
             --brand-blue: #00558D; /* Azul aproximado de la imagen */
@@ -14,6 +15,7 @@
             --dtp-brand-light: #3377a4;
             --dtp-brand-dark:#00406a;
         }
+        h1{font-size:56px;margin:0 1rem;padding-bottom: 4rem;}
 
         body {
             font-family: 'Poppins', sans-serif;
@@ -24,6 +26,12 @@
             margin: 0;
             background-color: var(--bg-color);
         }
+
+        .wrapper-home{
+          display:flex;
+          flex-direction: column;
+          align-items: center;
+}
 
         .container {
             text-align: center;
@@ -89,7 +97,9 @@
     </style>
 </head>
 <body>
-
+    <div class="wrapper-home animate__bounce">
+<h3>Estar presente ya no esta en duda</h3>
+<h1>Los limites no existen</h1>
     <div class="container">
         <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" class="logo-img">
         
@@ -98,6 +108,7 @@
             <a href="/dashboard.html" class="btn btn-dashboard">Mi Dashboard</a>
         </div>
     </div>
+  </div>
 
 </body>
 </html>
