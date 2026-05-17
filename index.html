@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="vov.min.css">
     <style>
         :root {
-            --brand-main: #D60000;        /* Rojo vibrante de fondo y acción */
-            --brand-secondary: #281713;   /* Oscuro profundo para textos y secciones */
-            --brand-tertiary: #fafafa;    /* Fondo claro / Blanco limpio */
+            --brand-main: #D60000;        /* Rojo vibrante */
+            --brand-secondary: #281713;   /* Oscuro profundo */
+            --brand-tertiary: #fafafa;    /* Blanco limpio */
             --text-muted: #706765;
         }
 
@@ -28,7 +28,7 @@
             overflow-x: hidden;
         }
 
-        /* --- 1. HERO SECTION (Fondo Rojo, Partículas Blancas y Logo Grande) --- */
+        /* --- 1. HERO SECTION (Fondo Rojo, Más Partículas Variadas) --- */
         .hero {
             position: relative;
             min-height: 100vh;
@@ -37,7 +37,7 @@
             justify-content: center;
             text-align: center;
             padding: 4rem 1.5rem;
-            background-color: var(--brand-main); /* Color primario de fondo */
+            background-color: var(--brand-main);
             overflow: hidden;
         }
 
@@ -59,7 +59,7 @@
 
         .hero-logo {
             width: 100%;
-            max-width: 360px; /* Logo más grande e imponente */
+            max-width: 360px;
             height: auto;
             margin-bottom: 2.5rem;
         }
@@ -105,7 +105,7 @@
             opacity: 0.7;
         }
 
-        /* --- ESTILOS GENERALES DE SECCIONES --- */
+        /* --- ESTILOS GENERALES --- */
         section {
             padding: 6rem 1.5rem;
             position: relative;
@@ -132,7 +132,7 @@
             margin: 0 auto;
         }
 
-        /* --- 2. CÓMO FUNCIONA / REPASO --- */
+        /* --- 2. CARRETE DE IMÁGENES (SLIDER COMPLETAMENTE CSS/JS) --- */
         .features-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -141,38 +141,113 @@
         }
 
         @media (min-width: 768px) {
-            .features-grid { grid-template-columns: 1fr 1fr; }
+            .features-grid { grid-template-columns: 1.1fr 0.9fr; }
         }
 
-        .mockup-container {
-            background: #e5dfde;
-            border-radius: 16px;
-            padding: 1rem;
-            box-shadow: 0 20px 40px rgba(40, 23, 19, 0.04);
+        /* Contenedor del Carrete */
+        .slider-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 550px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(40, 23, 19, 0.06);
+            background: #ffffff;
+            border: 1px solid rgba(40, 23, 19, 0.05);
+        }
+
+        .slider-container {
             display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 300%; /* 3 diapositivas */
+        }
+
+        .slide {
+            width: 100%;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 300px;
-            border: 1px solid rgba(0,0,0,0.02);
-        }
-
-        .mockup-placeholder {
-            color: var(--brand-secondary);
-            font-weight: 500;
+            padding: 2rem;
+            background: #fdfdfd;
             text-align: center;
-            opacity: 0.6;
         }
 
-        .steps-list {
-            list-style: none;
+        .slide-placeholder {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
         }
 
+        .slide h5 {
+            font-size: 1.2rem;
+            color: var(--brand-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .slide p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            max-width: 300px;
+        }
+
+        /* Controles del Carrete */
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--brand-secondary);
+            color: var(--brand-tertiary);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: background 0.2s;
+        }
+
+        .slider-arrow:hover {
+            background: var(--brand-main);
+        }
+
+        .arrow-left { left: 15px; }
+        .arrow-right { right: 15px; }
+
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 1.5rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .dot.active {
+            background: var(--brand-main);
+            width: 24px;
+            border-radius: 10px;
+        }
+
+        .steps-list { list-style: none; }
         .step-item {
             margin-bottom: 2rem;
             padding-left: 1.5rem;
             border-left: 4px solid var(--brand-main);
         }
-
         .step-item h4 {
             font-size: 1.2rem;
             color: var(--brand-secondary);
@@ -180,16 +255,12 @@
         }
 
         /* --- 3. DIFERENCIALES --- */
-        .bg-white-section {
-            background-color: #ffffff;
-        }
-
+        .bg-white-section { background-color: #ffffff; }
         .diff-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
         }
-
         .diff-card {
             padding: 2.5rem;
             border-radius: 16px;
@@ -197,23 +268,12 @@
             border: 1px solid rgba(40, 23, 19, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
         .diff-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(40, 23, 19, 0.05);
         }
-
-        .diff-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            display: inline-block;
-        }
-
-        .diff-card h4 {
-            font-size: 1.25rem;
-            color: var(--brand-secondary);
-            margin-bottom: 0.75rem;
-        }
+        .diff-icon { font-size: 2rem; margin-bottom: 1rem; display: inline-block; }
+        .diff-card h4 { font-size: 1.25rem; color: var(--brand-secondary); margin-bottom: 0.75rem; }
 
         /* --- 4. PRICING --- */
         .pricing-grid {
@@ -222,7 +282,6 @@
             justify-content: center;
             gap: 2rem;
         }
-
         .price-card {
             background: #ffffff;
             padding: 3rem 2.5rem;
@@ -233,13 +292,11 @@
             width: 100%;
             border: 2px solid transparent;
         }
-
         .price-card.featured {
             border-color: var(--brand-main);
             position: relative;
             box-shadow: 0 20px 40px rgba(214, 0, 0, 0.06);
         }
-
         .badge {
             position: absolute;
             top: -15px;
@@ -254,41 +311,13 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-
-        .price-amount {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--brand-secondary);
-            margin: 1.5rem 0;
-        }
-
-        .price-features {
-            list-style: none;
-            margin: 2rem 0;
-            text-align: left;
-            color: var(--text-muted);
-        }
-
-        .price-features li {
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .price-features li::before {
-            content: "✓";
-            color: var(--brand-main);
-            font-weight: bold;
-            margin-right: 10px;
-        }
+        .price-amount { font-size: 3rem; font-weight: 700; color: var(--brand-secondary); margin: 1.5rem 0; }
+        .price-features { list-style: none; margin: 2rem 0; text-align: left; color: var(--text-muted); }
+        .price-features li { margin-bottom: 0.75rem; display: flex; align-items: center; }
+        .price-features li::before { content: "✓"; color: var(--brand-main); font-weight: bold; margin-right: 10px; }
 
         /* --- 5. CTA ACCESOS FINAL --- */
-        .cta-section {
-            background: var(--brand-secondary);
-            color: var(--brand-tertiary);
-            text-align: center;
-        }
-
+        .cta-section { background: var(--brand-secondary); color: var(--brand-tertiary); text-align: center; }
         .cta-container {
             max-width: 450px;
             margin: 0 auto;
@@ -298,19 +327,8 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.06);
         }
-
-        .cta-container .logo-img {
-            max-width: 80%;
-            height: auto;
-            margin-bottom: 2.5rem;
-        }
-
-        .button-group {            
-            display: flex;            
-            flex-direction: column;            
-            gap: 1rem;        
-        }
-
+        .cta-container .logo-img { max-width: 80%; height: auto; margin-bottom: 2.5rem; }
+        .button-group { display: flex; flex-direction: column; gap: 1rem; }
         .btn {            
             padding: 16px 28px;            
             text-decoration: none;            
@@ -319,47 +337,16 @@
             font-size: 1.05rem;            
             transition: all 0.25s ease-in-out;
             display: block;
+            cursor: pointer;
         }
+        .btn-tienda { background-color: var(--brand-main); color: var(--brand-tertiary); border: 2px solid var(--brand-main); }
+        .btn-tienda:hover { background-color: transparent; color: var(--brand-tertiary); border-color: var(--brand-tertiary); transform: translateY(-3px); }
+        
+        .btn-dashboard { background-color: transparent; color: var(--brand-tertiary); border: 2px solid rgba(250, 250, 250, 0.3); }
+        .btn-dashboard:hover { background-color: rgba(255, 255, 255, 0.1); border-color: var(--brand-tertiary); transform: translateY(-3px); }
 
-        /* Botón Destacado de Acción */
-        .btn-tienda {            
-            background-color: var(--brand-main);            
-            color: var(--brand-tertiary);          
-            border: 2px solid var(--brand-main);  
-        }
-
-        .btn-tienda:hover {            
-            background-color: transparent;            
-            color: var(--brand-tertiary);            
-            border-color: var(--brand-tertiary);
-            transform: translateY(-3px);
-        }
-
-        /* Botón Secundario */
-        .btn-dashboard {            
-            background-color: transparent;            
-            color: var(--brand-tertiary);            
-            border: 2px solid rgba(250, 250, 250, 0.3); 
-        }
-
-        .btn-dashboard:hover {            
-            background-color: rgba(255, 255, 255, 0.1);     
-            border-color: var(--brand-tertiary);               
-            transform: translateY(-3px);
-        }
-
-        footer {
-            text-align: center;
-            padding: 2.5rem;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            background: #1e110e; 
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.2rem; }
-            section { padding: 4rem 1rem; }
-        }
+        footer { text-align: center; padding: 2.5rem; color: var(--text-muted); font-size: 0.9rem; background: #1e110e; }
+        @media (max-width: 768px) { .hero h1 { font-size: 2.2rem; } section { padding: 4rem 1rem; } }
     </style>
 </head>
 <body>
@@ -368,7 +355,6 @@
     <header class="hero">
         <canvas id="canvas-connections"></canvas>
         <div class="vov fade-in-down slow hero-content">
-            <!-- Logo Ampliado -->
             <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" class="hero-logo">
             <h3>Estar presente ya no está en duda</h3>
             <h1>Los límites no existen</h1>
@@ -377,16 +363,47 @@
         <div class="scroll-indicator">Scrolleá para descubrir ↓</div>
     </header>
 
-    <!-- 2. REPASO DE LA PLATAFORMA -->
+    <!-- 2. REPASO DE LA PLATAFORMA (CON CARRETE / SLIDER) -->
     <section class="container-wide">
         <div class="section-title">
             <h2>Tu catálogo interactivo</h2>
             <p>Así de simple es vender con Dale! Te Pido</p>
         </div>
         <div class="features-grid">
-            <div class="mockup-container">
-                <div class="mockup-placeholder">[ Capturas / Mockup de la App de cara al Cliente ]</div>
+            
+            <!-- Carrete de 3 diapositivas -->
+            <div>
+                <div class="slider-wrapper">
+                    <button class="slider-arrow arrow-left" onclick="moveSlide(-1)">‹</button>
+                    <div class="slider-container" id="slider">
+                        <!-- Vista 1 -->
+                        <div class="slide">
+                            <div class="slide-placeholder">📱</div>
+                            <h5>Vista del Cliente</h5>
+                            <p>Interfaz limpia para navegar categorías de productos rápido y sin trabas.</p>
+                        </div>
+                        <!-- Vista 2 -->
+                        <div class="slide">
+                            <div class="slide-placeholder">🛒</div>
+                            <h5>Carrito de Compras</h5>
+                            <p>Resumen claro de ítems listos para despachar directo a WhatsApp.</p>
+                        </div>
+                        <!-- Vista 3 -->
+                        <div class="slide">
+                            <div class="slide-placeholder">📊</div>
+                            <h5>Panel de Control</h5>
+                            <p>Administración intuitiva para cambiar precios y stock al instante.</p>
+                        </div>
+                    </div>
+                    <button class="slider-arrow arrow-right" onclick="moveSlide(1)">›</button>
+                </div>
+                <div class="slider-dots">
+                    <div class="dot active" onclick="currentSlide(0)"></div>
+                    <div class="dot" onclick="currentSlide(1)"></div>
+                    <div class="dot" onclick="currentSlide(2)"></div>
+                </div>
             </div>
+
             <div>
                 <ul class="steps-list">
                     <li class="step-item">
@@ -399,7 +416,7 @@
                     </li>
                     <li class="step-item">
                         <h4>3. Cierre en WhatsApp</h4>
-                        <p>La web envía el pedido estructurado al chat de tu negocio para pactar stock, envíos o aplicar descuentos personalizados.</p>
+                        <p>La web envía el pedido estructurado al chat de tu negocio para pactar stock o aplicar descuentos.</p>
                     </li>
                 </ul>
             </div>
@@ -469,7 +486,8 @@
             <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" class="logo-img">
             <div class="button-group">
                 <a href="/tienda.html" class="btn btn-tienda">Probar Demo Tienda</a>
-                <a href="/dashboard.html" class="btn btn-dashboard">Ver Panel de Control</a>
+                <!-- Botón Dashboard con trigger de JS para password -->
+                <button class="btn btn-dashboard" onclick="accessDashboard()">Ver Panel de Control</button>
             </div>
         </div>
     </section>
@@ -478,13 +496,46 @@
         <p>© 2026 Dale! Te Pido. Todos los derechos reservados.</p>
     </footer>
 
-    <!-- SCRIPT DE CONEXIONES AJUSTADO A BLANCO TRANSLÚCIDO PARA EL FONDO ROJO -->
+    <!-- SCRIPT DE LOGICA (CANVAS + SLIDER + PASSWORD) -->
     <script>
+        // --- LOGICA PASSWORD DASHBOARD ---
+        function accessDashboard() {
+            const password = prompt("Por favor, ingresá la clave de acceso a la demo:");
+            if (password === "dtp2026") {
+                window.location.href = "/dashboard.html";
+            } else if (password !== null) {
+                alert("Clave incorrecta. Intentá de nuevo.");
+            }
+        }
+
+        // --- LOGICA DEL CARRETE (SLIDER) ---
+        let currentSlideIndex = 0;
+        const slider = document.getElementById('slider');
+        const dots = document.querySelectorAll('.dot');
+
+        function updateSlider() {
+            slider.style.transform = `translateX(-${currentSlideIndex * 33.333}%)`;
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlideIndex);
+            });
+        }
+
+        function moveSlide(direction) {
+            currentSlideIndex = (currentSlideIndex + direction + 3) % 3;
+            updateSlider();
+        }
+
+        function currentSlide(index) {
+            currentSlideIndex = index;
+            updateSlider();
+        }
+
+        // --- LOGICA CANVAS PARTICULAS (90 NODOS CON TAMAÑO VARIABLE Y NEXOS) ---
         const canvas = document.getElementById('canvas-connections');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        const particleCount = 45;
-        const connectionDistance = 125;
+        const particleCount = 90; // Más cantidad
+        const connectionDistance = 115;
 
         function resizeCanvas() {
             canvas.width = canvas.offsetWidth;
@@ -499,7 +550,8 @@
                 this.y = Math.random() * canvas.height;
                 this.vx = (Math.random() - 0.5) * 0.5;
                 this.vy = (Math.random() - 0.5) * 0.5;
-                this.radius = Math.random() * 2 + 1.2;
+                // Diferentes tamaños
+                this.radius = Math.random() * 3.5 + 1; 
             }
             update() {
                 this.x += this.vx;
@@ -510,8 +562,7 @@
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                // Nodos flotantes en color blanco puro con opacidad
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
                 ctx.fill();
             }
         }
@@ -532,13 +583,15 @@
                     const dx = particles[i].x - particles[j].x;
                     const dy = particles[i].y - particles[j].y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
+                    
                     if (distance < connectionDistance) {
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
-                        // Líneas de red en blanco sutil que se desvanecen con la distancia
-                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 * (1 - distance / connectionDistance)})`;
-                        ctx.lineWidth = 0.8;
+                        // Vector de nexo que se intensifica al acercarse
+                        const opacity = 0.25 * (1 - distance / connectionDistance);
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+                        ctx.lineWidth = 1.2;
                         ctx.stroke();
                     }
                 }
