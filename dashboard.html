@@ -1048,12 +1048,15 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
 
     </div><!-- /design-wrap -->
   </div><!-- /view-design -->
+
+  <!-- ══ PRODUCTOS (catálogo) ══ -->
+  <div class="view" id="view-products">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
       <span style="font-family:var(--font-h);font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;">Catálogo de productos</span>
       <span id="prod-count" style="font-size:12px;color:var(--silver);"></span>
     </div>
     <div class="prod-grid" id="prod-grid"></div>
-  </div>
+  </div><!-- /view-products -->
 
   <!-- ══ ABM ══ -->
   <div class="view" id="view-abm">
@@ -2540,12 +2543,10 @@ Identificá el producto y devolvé SOLO un JSON válido (sin texto adicional, si
 {"name":"nombre completo","marca":"marca o fabricante","cat":"categoría","detalle":"especificaciones técnicas en 1-2 oraciones","origen":"código ISO del país (AR/CN/US/DE/JP/IT/BR/KR/TW/MX/FR/GB/ES/SE/CH) o vacío","confianza":"alta/media/baja"}
 Si no reconocés el código, usá confianza "baja" e intentá igual.`;
 
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/claude', {
       method: 'POST',
       headers: {
-        'x-api-key': claudeKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-allow-browser': 'true',
+        'x-claude-key': claudeKey,
         'content-type': 'application/json'
       },
       body: JSON.stringify({
@@ -3444,12 +3445,10 @@ async function testClaudeKey() {
   }
   if (statusEl) { statusEl.style.color = 'var(--silver)'; statusEl.textContent = 'Probando...'; }
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/claude', {
       method: 'POST',
       headers: {
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-allow-browser': 'true',
+        'x-claude-key': key,
         'content-type': 'application/json'
       },
       body: JSON.stringify({
