@@ -8,13 +8,14 @@
     <link rel="stylesheet" href="vov.min.css">
     <style>
         :root {
-            --brand-blue: #00558D; 
-            --brand-light: #3377a4;
-            --brand-dark: #003659;
-            --bg-light: #f8fafc;
-            --dtp-white: #ffffff;
-            --dtp-black: #0f172a;
-            --text-muted: #64748b;
+            --brand-main: #D60000;        /* Rojo vibrante de acción */
+            --brand-secondary: #281713;   /* Oscuro profundo */
+            --brand-tertiary: #fafafa;    /* Fondo claro / Blanco limpio */
+            --brand-comp-light: #DE9B89;  /* Salmón / Terroso suave */
+            --brand-comp-dark: #4A271E;   /* Marrón rojizo elegante */
+            
+            --bg-light: #fdfdfd;
+            --text-muted: #7c6e6a;
         }
 
         * {
@@ -26,12 +27,12 @@
         body {            
             font-family: 'Poppins', sans-serif;            
             background-color: var(--bg-light);
-            color: var(--dtp-black);
+            color: var(--brand-secondary);
             line-height: 1.6;
             overflow-x: hidden;
         }
 
-        /* --- 1. HERO SECTION (Fondo de Conexiones) --- */
+        /* --- 1. HERO SECTION (Con Logo e Identidad Nueva) --- */
         .hero {
             position: relative;
             min-height: 100vh;
@@ -39,8 +40,8 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 2rem 1rem;
-            background: linear-gradient(135deg, #f0f4f8 0%, #e2eaf0 100%);
+            padding: 3rem 1.5rem;
+            background: linear-gradient(135deg, var(--brand-tertiary) 0%, #f4eae6 100%);
             overflow: hidden;
         }
 
@@ -60,11 +61,19 @@
             max-width: 800px;
         }
 
+        .hero-logo {
+            max-width: 240px;
+            height: auto;
+            margin-bottom: 2.5rem;
+            /* Filtro sutil para asegurar que resalte perfectamente en fondos claros si el logo original es blanco */
+            filter: drop-shadow(0px 4px 10px rgba(40, 23, 19, 0.15));
+        }
+
         .hero h3 {
             font-size: 1.1rem;
             text-transform: uppercase;
             letter-spacing: 3px;
-            color: var(--brand-blue);
+            color: var(--brand-main);
             margin-bottom: 1rem;
             font-weight: 600;
         }
@@ -73,15 +82,15 @@
             font-size: 3rem;
             font-weight: 700;
             line-height: 1.2;
-            color: var(--brand-dark);
+            color: var(--brand-secondary);
             margin-bottom: 1.5rem;
         }
 
         .hero p {
             font-size: 1.2rem;
-            color: var(--text-muted);
+            color: var(--brand-comp-dark);
             max-width: 600px;
-            margin: 0 auto 2.5rem auto;
+            margin: 0 auto;
         }
 
         .scroll-indicator {
@@ -89,9 +98,9 @@
             bottom: 2rem;
             left: 50%;
             transform: translateX(-50%);
-            color: var(--brand-blue);
+            color: var(--brand-main);
             font-size: 0.9rem;
-            font-weight: 500;
+            font-weight: 600;
             letter-spacing: 1px;
             text-transform: uppercase;
             z-index: 2;
@@ -110,7 +119,7 @@
 
         .section-title h2 {
             font-size: 2.2rem;
-            color: var(--brand-dark);
+            color: var(--brand-secondary);
             margin-bottom: 0.5rem;
         }
 
@@ -137,19 +146,19 @@
         }
 
         .mockup-container {
-            background: #e2e8f0;
+            background: #ebdcd7;
             border-radius: 16px;
             padding: 1rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            box-shadow: 0 20px 40px rgba(40, 23, 19, 0.05);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 300px;
-            border: 1px solid rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.03);
         }
 
         .mockup-placeholder {
-            color: var(--text-muted);
+            color: var(--brand-comp-dark);
             font-weight: 500;
             text-align: center;
         }
@@ -161,18 +170,18 @@
         .step-item {
             margin-bottom: 2rem;
             padding-left: 1.5rem;
-            border-left: 4px solid var(--brand-blue);
+            border-left: 4px solid var(--brand-main);
         }
 
         .step-item h4 {
             font-size: 1.2rem;
-            color: var(--brand-dark);
+            color: var(--brand-secondary);
             margin-bottom: 0.5rem;
         }
 
         /* --- 3. DIFERENCIALES --- */
         .bg-white-section {
-            background-color: var(--dtp-white);
+            background-color: var(--brand-tertiary);
         }
 
         .diff-grid {
@@ -185,12 +194,13 @@
             padding: 2.5rem;
             border-radius: 16px;
             background: var(--bg-light);
-            border: 1px solid rgba(0,0,0,0.03);
-            transition: transform 0.3s ease;
+            border: 1px solid rgba(40, 23, 19, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .diff-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(40, 23, 19, 0.05);
         }
 
         .diff-icon {
@@ -201,7 +211,7 @@
 
         .diff-card h4 {
             font-size: 1.25rem;
-            color: var(--brand-dark);
+            color: var(--brand-secondary);
             margin-bottom: 0.75rem;
         }
 
@@ -214,10 +224,10 @@
         }
 
         .price-card {
-            background: var(--dtp-white);
+            background: var(--brand-tertiary);
             padding: 3rem 2.5rem;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+            box-shadow: 0 15px 35px rgba(40, 23, 19, 0.04);
             text-align: center;
             max-width: 360px;
             width: 100%;
@@ -225,8 +235,10 @@
         }
 
         .price-card.featured {
-            border-color: var(--brand-blue);
+            border-color: var(--brand-main);
             position: relative;
+            background: var(--bg-light);
+            box-shadow: 0 20px 40px rgba(214, 0, 0, 0.08);
         }
 
         .badge {
@@ -234,19 +246,20 @@
             top: -15px;
             left: 50%;
             transform: translateX(-50%);
-            background: var(--brand-blue);
-            color: var(--dtp-white);
+            background: var(--brand-main);
+            color: var(--brand-tertiary);
             padding: 0.25rem 1rem;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .price-amount {
             font-size: 3rem;
             font-weight: 700;
-            color: var(--brand-dark);
+            color: var(--brand-secondary);
             margin: 1.5rem 0;
         }
 
@@ -265,30 +278,30 @@
 
         .price-features li::before {
             content: "✓";
-            color: var(--brand-blue);
+            color: var(--brand-main);
             font-weight: bold;
             margin-right: 10px;
         }
 
         /* --- 5. CTA ACCESOS FINAL --- */
         .cta-section {
-            background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-blue) 100%);
-            color: var(--dtp-white);
+            background: linear-gradient(135deg, var(--brand-secondary) 0%, var(--brand-comp-dark) 100%);
+            color: var(--brand-tertiary);
             text-align: center;
         }
 
         .cta-container {
             max-width: 450px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 3rem 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 3.5rem 2.5rem;
             border-radius: 24px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .cta-container .logo-img {
-            max-width: 75%;
+            max-width: 80%;
             height: auto;
             margin-bottom: 2.5rem;
         }
@@ -309,39 +322,41 @@
             display: block;
         }
 
+        /* Botón Destacado de Acción */
         .btn-tienda {            
-            background-color: var(--dtp-white);            
-            color: var(--brand-blue);          
-            border: 2px solid var(--dtp-white);  
+            background-color: var(--brand-main);            
+            color: var(--brand-tertiary);          
+            border: 2px solid var(--brand-main);  
         }
 
         .btn-tienda:hover {            
             background-color: transparent;            
-            color: var(--dtp-white);            
+            color: var(--brand-tertiary);            
+            border-color: var(--brand-tertiary);
             transform: translateY(-3px);
         }
 
+        /* Botón Secundario */
         .btn-dashboard {            
             background-color: transparent;            
-            color: var(--dtp-white);            
-            border: 2px solid rgba(250, 250, 250, 0.4); 
+            color: var(--brand-tertiary);            
+            border: 2px solid rgba(250, 250, 250, 0.3); 
         }
 
         .btn-dashboard:hover {            
-            background-color: var(--brand-dark);     
-            border-color: var(--brand-dark);               
+            background-color: rgba(255, 255, 255, 0.1);     
+            border-color: var(--brand-tertiary);               
             transform: translateY(-3px);
         }
 
         footer {
             text-align: center;
-            padding: 2rem;
-            color: rgba(255,255,255,0.5);
+            padding: 2.5rem;
+            color: var(--brand-comp-light);
             font-size: 0.9rem;
-            background: var(--brand-dark);
+            background: #1b0f0d; /* Fondo un toque más oscuro para el cierre */
         }
 
-        /* Responsive adjustments */
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.2rem; }
             section { padding: 4rem 1rem; }
@@ -354,6 +369,8 @@
     <header class="hero">
         <canvas id="canvas-connections"></canvas>
         <div class="vov fade-in-down slow hero-content">
+            <!-- Logo incorporado al inicio -->
+            <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" class="hero-logo">
             <h3>Estar presente ya no está en duda</h3>
             <h1>Los límites no existen</h1>
             <p>Mostrá tu catálogo online de forma profesional y cerrá todas tus ventas directo en una charla por WhatsApp.</p>
@@ -399,17 +416,17 @@
             </div>
             <div class="diff-grid">
                 <div class="diff-card">
-                    <span class="diff-icon">⚡</span>
+                    <span class="diff-icon" style="color: var(--brand-main);">⚡</span>
                     <h4>Sin Comisiones por Venta</h4>
                     <p>La ganancia es 100% tuya. Pagás un abono fijo mensual sin sorpresas de plataformas tradicionales.</p>
                 </div>
                 <div class="diff-card">
-                    <span class="diff-icon">🗣️</span>
+                    <span class="diff-icon" style="color: var(--brand-main);">🗣️</span>
                     <h4>Venta Humanizada</h4>
                     <p>No pierdas el contacto con tu cliente. Resolvé dudas de stock y fidelizá en el mismo canal de siempre.</p>
                 </div>
                 <div class="diff-card">
-                    <span class="diff-icon">🛠️</span>
+                    <span class="diff-icon" style="color: var(--brand-main);">🛠️</span>
                     <h4>Gestión Simple</h4>
                     <p>Panel auto-gestionable para actualizar precios, productos y fotos en segundos sin saber programar.</p>
                 </div>
@@ -462,13 +479,13 @@
         <p>© 2026 Dale! Te Pido. Todos los derechos reservados.</p>
     </footer>
 
-    <!-- SCRIPT PARA EL FONDO ANIMADO DE CONEXIONES (Nodos Flotantes) -->
+    <!-- SCRIPT DE CONEXIONES ACTUALIZADO CON LA PALETA DE COLOR MARRÓN/ROJO SUTIL -->
     <script>
         const canvas = document.getElementById('canvas-connections');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        const particleCount = 45;
-        const connectionDistance = 120;
+        const particleCount = 40;
+        const connectionDistance = 130;
 
         function resizeCanvas() {
             canvas.width = canvas.offsetWidth;
@@ -481,8 +498,8 @@
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 0.6;
-                this.vy = (Math.random() - 0.5) * 0.6;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
                 this.radius = Math.random() * 2 + 1.5;
             }
             update() {
@@ -494,7 +511,8 @@
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(0, 85, 141, 0.25)';
+                // Usamos el color complementario oscuro con opacidad para los nodos flotantes
+                ctx.fillStyle = 'rgba(74, 39, 30, 0.15)';
                 ctx.fill();
             }
         }
@@ -519,7 +537,8 @@
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.strokeStyle = `rgba(0, 85, 141, ${0.15 * (1 - distance / connectionDistance)})`;
+                        // Líneas de conexión usando la gama cromática terrosa
+                        ctx.strokeStyle = `rgba(74, 39, 30, ${0.12 * (1 - distance / connectionDistance)})`;
                         ctx.lineWidth = 1;
                         ctx.stroke();
                     }
