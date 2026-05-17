@@ -2231,6 +2231,41 @@ function initLogoPreview() {
 /* ═══════════════════════════════════════════ ABM */
 let localProducts = [];   // working copy editable
 let editingId = null;
+let supabaseCategories = []; // categorías cargadas desde Supabase
+
+async function loadCategories() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/categories?active=eq.true&order=display_order.asc`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (Array.isArray(data) && data.length) {
+      supabaseCategories = data;
+    }
+  } catch(e) {
+    console.warn('No se pudieron cargar categorías de Supabase:', e.message);
+    // Fallback: derivar categorías de los productos locales
+    supabaseCategories = [...new Set(localProducts.map(p => p.cat).filter(Boolean))]
+      .map(name => ({ name, emoji: '' }));
+  }
+  populateCatSelect(null);
+}
+
+function populateCatSelect(currentVal) {
+  const sel = document.getElementById('m-cat');
+  if (!sel) return;
+  const cats = supabaseCategories.length
+    ? supabaseCategories
+    : [...new Set(localProducts.map(p => p.cat).filter(Boolean))].map(n => ({ name: n, emoji: '' }));
+
+  sel.innerHTML = '<option value="">— Seleccioná una categoría —</option>' +
+    cats.map(c => {
+      const label = c.emoji ? `${c.emoji} ${c.name}` : c.name;
+      const selected = currentVal && c.name === currentVal ? ' selected' : '';
+      return `<option value="${c.name}"${selected}>${label}</option>`;
+    }).join('');
+}
 
 async function initABM() {
   const remote = await fetchFromSupabase('products');
@@ -2247,6 +2282,7 @@ async function initABM() {
       localProducts = products.map(p=>({...p, hidden:false}));
     }
   }
+  await loadCategories();
   buildCatFilter();
   renderABM();
 }
@@ -2391,7 +2427,7 @@ function openModal(id=null) {
   document.getElementById('m-codigo-status').textContent = '';
   document.getElementById('m-codigo-result').style.display = 'none';
   document.getElementById('m-name').value    = p?.name    || '';
-  document.getElementById('m-cat').value     = p?.cat     || '';
+  populateCatSelect(p?.cat || null);   // select con valor actual preseleccionado
   document.getElementById('m-marca').value   = p?.marca   || '';
   document.getElementById('m-price').value   = p?.price   || '';
   document.getElementById('m-stock').value   = p?.stock ?? '';
@@ -2597,7 +2633,7 @@ function aplicarResultadoCodigo() {
   const d = _codigoResultData;
   if (d.name)    document.getElementById('m-name').value    = d.name;
   if (d.marca)   document.getElementById('m-marca').value   = d.marca;
-  if (d.cat)     document.getElementById('m-cat').value     = d.cat;
+  if (d.cat)     populateCatSelect(d.cat);   // selecciona si existe, sino queda sin selección
   if (d.detalle) document.getElementById('m-detalle').value = d.detalle;
   if (d.img)     { document.getElementById('m-img').value   = d.img; previewImgUrl(d.img); }
   if (d.origen)  document.getElementById('m-origen').value  = d.origen;
@@ -3366,7 +3402,6 @@ function initConfigView() {
   document.getElementById('dash-theme-dark').style.borderColor  = theme==='dark' ? 'var(--red)' : 'var(--zinc)';
   document.getElementById('dash-theme-light').style.borderColor = theme==='light'? 'var(--red)' : 'var(--zinc)';
 
-
   document.getElementById('dash-theme-dark').style.borderColor  = theme==='dark' ? 'var(--red)' : 'var(--zinc)';
   document.getElementById('dash-theme-light').style.borderColor = theme==='light'? 'var(--red)' : 'var(--zinc)';
 }
@@ -3808,7 +3843,12 @@ try {
         <!-- Categoria + Marca -->
         <div class="ctrl-group">
           <label class="ctrl-label">Categoría</label>
-          <input class="ctrl-input" id="m-cat" placeholder="Ej: Herramientas"/>
+          <select class="ctrl-input" id="m-cat">
+            <option value="">Cargando categorías...</option>
+          </select>
+          <div style="font-size:10px;color:var(--silver);margin-top:3px;">
+            Si no aparece la que necesitás, <a href="https://supabase.com/dashboard" target="_blank" style="color:var(--red);">agregála en Supabase → categories</a>.
+          </div>
         </div>
         <div class="ctrl-group">
           <label class="ctrl-label">Marca</label>
