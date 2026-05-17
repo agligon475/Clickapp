@@ -1,45 +1,44 @@
-# Contexto del Proyecto: StoreApp (FerreApp) - Etapa 2
+# Detalle Técnico del Proyecto: StoreApp (FerreApp) - Etapa 2
 
-Este documento resume la arquitectura, funcionalidades y cambios específicos realizados por Jules en el proyecto StoreApp.
+Este documento proporciona un desglose exhaustivo de los cambios técnicos y funcionales realizados por el agente Jules durante la Etapa 2 del proyecto StoreApp.
 
-## 1. Propósito y Alcance
-StoreApp es una solución de comercio electrónico ligera diseñada para pequeños negocios. Permite gestionar un catálogo de productos, personalizar la apariencia de la tienda y recibir pedidos por WhatsApp. Actualmente se encuentra al final de la **Etapa 2**.
+## 1. Migración y Arquitectura de Datos
+*   **Transición a Supabase:** Se migró el sistema de almacenamiento de datos de una arquitectura basada exclusivamente en Google Sheets (CSV) a una integración robusta con **Supabase (PostgreSQL)**.
+    *   Uso de `fetch` con headers de autenticación (`apikey` y `Authorization: Bearer`).
+    *   Manejo de IDs tipo UUID para productos y pedidos.
+    *   Sincronización bidireccional: Los cambios en el Dashboard se impactan en Supabase mediante métodos `PATCH` y `POST`.
+*   **Compatibilidad Legacy:** Se mantuvo el soporte para Google Sheets como fallback y para carga masiva inicial, procesando los datos mediante un parser CSV personalizado que ahora incluye las columnas `img2` e `img3`.
 
-## 2. Arquitectura Técnica
-*   **Frontend:** HTML5, CSS3 y JavaScript puro (Vanilla JS). Sin frameworks.
-*   **Base de Datos:** **Supabase** (principal) y **Google Sheets** (CSV legacy).
-*   **Imágenes:** **Cloudinary** (almacenamiento) y **Canvas API** (procesamiento local).
-*   **Persistencia:** `localStorage` para carrito, logo, banners y estado del ABM.
+## 2. Mejoras en la Experiencia de Usuario (Tienda)
+*   **Sistema de Imágenes Avanzado:**
+    *   **Carrusel Dinámico:** Se implementó un carrusel en el `pdrawer` (detalle del producto) que permite navegar entre las 3 imágenes disponibles (`img`, `img2`, `img3`) con miniaturas interactivas (`carousel-thumb`).
+    *   **Efecto Hover en Grid:** En la vista principal, las tarjetas de producto ahora muestran una segunda imagen (`hover-img`) al pasar el puntero, mejorando la previsualización rápida.
+    *   **Optimización On-the-Fly:** Implementación de la función `optimizeImg(url)` que intercepta URLs de Cloudinary para inyectar parámetros de transformación automática (`f_webp,q_auto`), reduciendo drásticamente el peso de carga.
+*   **Banners Promocionales:**
+    *   Inyección dinámica de banners 50/50 mediante `renderBanners()`.
+    *   Integración con el sistema de filtrado: El clic en un banner dispara `filterCat()` y realiza un `scroll smooth` hacia el grid de productos.
 
-## 3. Cambios Específicos Realizados (Etapa 2)
+## 3. Funcionalidades Administrativas (Dashboard)
+*   **ABM Multi-imagen con Procesamiento Local:**
+    *   El modal de edición fue rediseñado para gestionar 3 archivos/URLs simultáneamente.
+    *   **Watermarking Engine:** Integración de la función `applyWatermark(file)` que utiliza la **Canvas API** para procesar imágenes en el cliente antes del upload. Escala el logo al 15% del tamaño de la imagen y aplica un fondo semi-transparente para asegurar la legibilidad de la marca.
+*   **Catálogo Inteligente (AI-Powered):**
+    *   **Búsqueda EAN/SKU:** Nueva funcionalidad `buscarCodigo()` que consulta a la API de **Claude (Anthropic)** para identificar productos automáticamente a partir de su código de barras.
+    *   **Generación de Descripciones:** Botón "Generar con IA" para crear especificaciones técnicas coherentes basadas en el nombre y categoría del producto.
+*   **Gestión de Pedidos (Kanban):**
+    *   Mejora del tablero Kanban con estados personalizables almacenados en `localStorage`.
+    *   Lógica de **"Auto-Lost"**: Los pedidos sin actividad por más de 15 días cambian automáticamente al estado "Perdido".
+    *   Automatización de mensajes: Funciones `enviarMensajeRetiro` y `enviarMensajeEnCamino` que generan plantillas preformateadas para WhatsApp.
 
-### 3.1 Soporte Multi-imagen
-*   **Dashboard:** Se expandió el modal de producto para soportar 3 URLs/uploads (`m-img`, `m-img2`, `m-img3`).
-*   **Tienda:** Se actualizó `loadSheet()` para mapear y persistir las nuevas columnas de imagen.
-*   **Fix:** Se corrigió el mapeo de columnas en el parser CSV para asegurar que `img2` e `img3` se lean correctamente tanto en el dashboard como en la tienda.
+## 4. Detalles de Implementación (Código)
+*   **Funciones Clave Añadidas:**
+    *   `applyWatermark(file)`: Manipulación de `ImageData` y `toBlob`.
+    *   `optimizeImg(url)`: String manipulation para parámetros Cloudinary.
+    *   `renderBanners(bannerData)`: Generación de DOM dinámico con templates.
+    *   `registrarPedido(pedido)`: Persistencia local y envío vía Webhook.
+*   **Nuevas Variables de Estado:**
+    *   `localStorage.storeapp_banners`: Persistencia de la configuración visual de promociones.
+    *   `localStorage.storeapp_logo`: Almacenamiento en Base64 del logo para procesamiento offline en Canvas.
 
-### 3.2 Marca de Agua Automática
-*   Implementación de la función `applyWatermark(file)` en `dashboard.html`.
-*   **Lógica:** Al subir una imagen, se dibuja en un Canvas, se superpone el logo (esquina inferior derecha, 15% de tamaño, 80% opacidad) y se exporta como Blob para subir a Cloudinary.
-*   **Fallback:** Si no hay logo configurado, se sube la imagen original sin procesar.
-
-### 3.3 Banners Promocionales 50/50
-*   **Tienda:** Inserción de `#banners-container` con layout grid (2 cols desktop / 1 col mobile).
-*   **Lógica:** Función `renderBanners(data)` que crea banners interactivos que filtran el catálogo por categoría mediante `filterCat()`.
-*   **Estilos:** Añadidos efectos de hover (elevación y zoom) y overlays de gradiente.
-
-### 3.4 Panel de Gestión de Banners
-*   Se creó una nueva sección en la configuración del Dashboard para editar los banners sin tocar Google Sheets.
-*   Incluye campos para etiquetas, títulos, imágenes (con upload a Cloudinary) y categorías de destino.
-*   **Sincronización:** Los datos se guardan en `localStorage.storeapp_banners` para que la tienda los consuma inmediatamente.
-
-## 4. Estructura de Archivos
-*   `tienda.html`: Implementa `renderBanners()` y el carrusel de previsualización (hover).
-*   `dashboard.html`: Contiene `applyWatermark()`, el modal ABM expandido y el nuevo panel de configuración de banners.
-*   `ARQUITECTURA-TECNICA.md`: Documenta la lógica detallada de estos cambios.
-
-## 5. Estado del Sistema
-Los arreglos de la Etapa 2 aseguran que:
-1. Las 3 imágenes se guardan y leen correctamente.
-2. El logo se aplica como marca de agua en cada subida.
-3. Los banners son dinámicos y editables desde el panel administrativo.
+## 5. Estado de Sincronización
+El sistema ahora valida la integridad de los datos entre el servidor y el cliente. Si se detectan inconsistencias en el formato de los IDs (UUID vs numéricos), el Dashboard prioriza los datos de Supabase para evitar colisiones de datos locales desactualizados.
