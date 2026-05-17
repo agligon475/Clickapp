@@ -1065,7 +1065,7 @@ let searchTerm = '';
 // Override products from localStorage ABM if present
 function loadLocalProducts() {
   try {
-    const local = localStorage.getItem('storeapp_products');
+    const local = localStorage.getItem('storeapp_local_products');
     if (local) {
       const parsed = JSON.parse(local);
       if (Array.isArray(parsed) && parsed.length > 0) return parsed;
@@ -1758,18 +1758,6 @@ function applyStoredConfig() {
   document.querySelectorAll('.hero-pill').forEach(p => { p.style.background = accent; });
 
   if (cfg.wapp) window.WHATSAPP_NUMBER = cfg.wapp;
-}
-
-// ── Merge localProducts (ABM edits) over sheet data ─
-function mergeLocalProducts(sheetProducts) {
-  const local = localStorage.getItem('storeapp_local_products');
-  if (!local) return sheetProducts;
-  try {
-    const lp = JSON.parse(local);
-    if (!lp.length) return sheetProducts;
-    // Use local as source of truth, filter out hidden
-    return lp.filter(p => !p.hidden);
-  } catch(e) { return sheetProducts; }
 }
 
 applyStoredConfig();
