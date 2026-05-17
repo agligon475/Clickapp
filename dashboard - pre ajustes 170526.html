@@ -540,7 +540,6 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
   <div class="sb-section">
     <div class="sb-section-label">Sistema</div>
     <div class="sb-item" onclick="showView('config',this)"><i class="bi bi-gear"></i> Configuración</div>
-    <div class="sb-item" onclick="showView('advanced',this)"><i class="bi bi-shield-lock"></i> Config. avanzada</div>
     <div class="sb-item" onclick="window.open('tienda.html','_blank')"><i class="bi bi-shop"></i> Ver tienda <i class="bi bi-box-arrow-up-right" style="font-size:10px;margin-left:auto;opacity:.5;"></i></div>
   </div>
 </div>
@@ -1255,6 +1254,53 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
 
 
 
+    <!-- Cloudinary -->
+    <div class="config-section">
+      <div class="config-section-title"><i class="bi bi-cloud-arrow-up"></i> Cloudinary — Fotos de productos</div>
+      <div class="config-section-content">
+      <div style="font-size:12px;color:var(--silver);margin-bottom:12px;line-height:1.6;">
+        Cloudinary permite subir fotos desde el dashboard sin hosting propio.
+        Creá una cuenta gratis en <a href="https://cloudinary.com" target="_blank" style="color:var(--red);">cloudinary.com</a>
+        (25GB gratis) y completá estos datos.
+      </div>
+      <div class="config-grid">
+        <div class="ctrl-group">
+          <label class="ctrl-label">Cloud Name</label>
+          <input class="ctrl-input" id="cfg-cloud-name" placeholder="mi-cloud-name"/>
+        </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">Upload Preset (unsigned)</label>
+          <input class="ctrl-input" id="cfg-cloud-preset" placeholder="ml_default"/>
+          <div style="font-size:10px;color:var(--silver);margin-top:3px;">
+            Settings → Upload → Upload presets → Add unsigned preset
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:10px;">
+        <label class="ctrl-label">Probar subida de imagen</label>
+        <div class="photo-upload-zone" id="test-upload-zone">
+          <input type="file" accept="image/*" onchange="testCloudinaryUpload(this)"/>
+          <i class="bi bi-cloud-arrow-up" style="font-size:24px;color:var(--silver);display:block;margin-bottom:6px;"></i>
+          <div style="font-size:12px;color:var(--silver);">Arrastrá o hacé clic para subir</div>
+          <div style="font-size:10px;color:var(--zinc);margin-top:4px;">PNG, JPG, WEBP — máx 5MB</div>
+        </div>
+        <div id="cfg-upload-result" style="font-size:11px;margin-top:6px;min-height:14px;color:var(--silver);"></div>
+      </div>
+      
+      <hr style="border:0;border-top:1px solid var(--zinc);margin:24px 0;"/>
+      <div class="config-section-title"><i class="bi bi-robot"></i> Inteligencia Artificial (Búsqueda EAN)</div>
+      <div style="font-size:12px;color:var(--silver);margin-bottom:16px;">
+        Pega tu clave de API de Anthropic (Claude) para habilitar la búsqueda automática de productos.
+      </div>
+      <div class="config-grid">
+        <div class="ctrl-group">
+          <label class="ctrl-label">Claude API Key</label>
+          <input class="ctrl-input" type="password" id="cfg-claude-key" placeholder="sk-ant-..."/>
+        </div>
+      </div>
+      </div>
+    </div>
+
     <!-- Tema -->
     <div class="config-section">
       <div class="config-section-title"><i class="bi bi-palette"></i> Apariencia del dashboard</div>
@@ -1274,146 +1320,13 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
       </div>
     </div>
 
-    <!-- Acceso rápido a Config Avanzada -->
-    <div style="background:linear-gradient(135deg,rgba(215,38,56,.08),rgba(215,38,56,.03));border:1px solid rgba(215,38,56,.25);border-radius:12px;padding:16px;display:flex;align-items:center;gap:14px;margin-top:8px;">
-      <i class="bi bi-shield-lock" style="font-size:24px;color:var(--red);flex-shrink:0;"></i>
-      <div style="flex:1;">
-        <div style="font-weight:700;font-size:13px;color:var(--white);margin-bottom:3px;">Configuración avanzada</div>
-        <div style="font-size:11px;color:var(--silver);line-height:1.5;">Supabase, API de Claude (EAN), Cloudinary y dominio personalizado.</div>
-      </div>
-      <button onclick="showView('advanced',document.querySelector('[onclick*=advanced]'))"
-        style="flex-shrink:0;padding:8px 14px;background:var(--red);border:none;border-radius:8px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font-body);">
-        Ir <i class="bi bi-arrow-right"></i>
-      </button>
-    </div>
-
     <!-- Save button -->
-    <button class="abm-btn-new" onclick="saveConfig()" style="width:100%;justify-content:center;padding:12px;font-size:14px;margin-top:12px;">
-      <i class="bi bi-floppy2"></i> Guardar configuración
+    <button class="abm-btn-new" onclick="saveConfig()" style="width:100%;justify-content:center;padding:12px;font-size:14px;">
+      <i class="bi bi-floppy2"></i> Guardar toda la configuración
     </button>
     <div id="cfg-save-status" style="font-size:11px;text-align:center;margin-top:8px;min-height:14px;color:var(--silver);"></div>
 
   </div><!-- /view-config -->
-
-  <!-- ══════════════════════════════ VISTA: CONFIGURACIÓN AVANZADA -->
-  <div class="view" id="view-advanced">
-
-    <!-- Supabase -->
-    <div class="config-section">
-      <div class="config-section-title"><i class="bi bi-database"></i> Conexión a Supabase</div>
-      <div class="config-section-content">
-        <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
-          Base de datos PostgreSQL del proyecto. Modificá estos valores solo si cambiás de proyecto en Supabase.
-          <a href="https://supabase.com/dashboard" target="_blank" style="color:var(--red);">Supabase Dashboard →</a>
-        </div>
-        <div class="config-grid">
-          <div class="ctrl-group" style="grid-column:1/-1;">
-            <label class="ctrl-label">Project URL</label>
-            <input class="ctrl-input" id="adv-supabase-url" placeholder="https://xxxx.supabase.co"/>
-            <div style="font-size:10px;color:var(--silver);margin-top:3px;">Settings → API → Project URL</div>
-          </div>
-          <div class="ctrl-group" style="grid-column:1/-1;">
-            <label class="ctrl-label">API Key (anon / public)</label>
-            <input class="ctrl-input" type="password" id="adv-supabase-key" placeholder="eyJhbGci..."/>
-            <div style="font-size:10px;color:var(--silver);margin-top:3px;">Settings → API → anon key (pública, no la service_role)</div>
-          </div>
-        </div>
-        <div style="margin-top:12px;display:flex;gap:8px;align-items:center;">
-          <button onclick="testSupabaseConnection()" style="padding:8px 16px;background:var(--zinc);border:1px solid var(--silver);border-radius:8px;color:var(--fog);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;gap:6px;">
-            <i class="bi bi-wifi"></i> Probar conexión
-          </button>
-          <div id="adv-supabase-status" style="font-size:11px;color:var(--silver);"></div>
-        </div>
-        <div style="margin-top:14px;padding:12px;background:rgba(215,38,56,.07);border:1px solid rgba(215,38,56,.2);border-radius:8px;font-size:11px;color:var(--silver);line-height:1.6;">
-          <i class="bi bi-info-circle" style="color:var(--red);"></i>
-          <strong style="color:var(--fog);">Columna <code>codigo</code>:</strong> Para activar la búsqueda EAN en la base de datos, ejecutá en Supabase SQL Editor:<br/>
-          <code style="background:var(--iron);padding:2px 6px;border-radius:4px;font-size:10px;color:var(--red);">ALTER TABLE products ADD COLUMN IF NOT EXISTS codigo text;</code>
-        </div>
-      </div>
-    </div>
-
-    <!-- Claude API -->
-    <div class="config-section">
-      <div class="config-section-title"><i class="bi bi-robot"></i> API de Claude — Búsqueda por EAN/SKU</div>
-      <div class="config-section-content">
-        <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
-          Ingresá tu clave de Anthropic para habilitar el autocompletado de productos desde el ABM.
-          Obtenela en <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--red);">console.anthropic.com →</a>
-        </div>
-        <div class="config-grid">
-          <div class="ctrl-group" style="grid-column:1/-1;">
-            <label class="ctrl-label">Claude API Key</label>
-            <input class="ctrl-input" type="password" id="cfg-claude-key" placeholder="sk-ant-api03-..."/>
-            <div style="font-size:10px;color:var(--silver);margin-top:3px;">Se guarda solo en tu navegador (localStorage). No se envía a ningún servidor propio.</div>
-          </div>
-        </div>
-        <div style="margin-top:12px;display:flex;gap:8px;align-items:center;">
-          <button onclick="testClaudeKey()" style="padding:8px 16px;background:var(--zinc);border:1px solid var(--silver);border-radius:8px;color:var(--fog);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;gap:6px;">
-            <i class="bi bi-send"></i> Probar clave
-          </button>
-          <div id="adv-claude-status" style="font-size:11px;color:var(--silver);"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Cloudinary -->
-    <div class="config-section">
-      <div class="config-section-title"><i class="bi bi-cloud-arrow-up"></i> Cloudinary — Almacenamiento de imágenes</div>
-      <div class="config-section-content">
-        <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
-          Cloudinary permite subir y optimizar fotos de productos. Cuenta gratuita en
-          <a href="https://cloudinary.com" target="_blank" style="color:var(--red);">cloudinary.com</a> (25 GB incluidos).
-        </div>
-        <div class="config-grid">
-          <div class="ctrl-group">
-            <label class="ctrl-label">Cloud Name</label>
-            <input class="ctrl-input" id="cfg-cloud-name" placeholder="mi-cloud-name"/>
-          </div>
-          <div class="ctrl-group">
-            <label class="ctrl-label">Upload Preset (unsigned)</label>
-            <input class="ctrl-input" id="cfg-cloud-preset" placeholder="ml_default"/>
-            <div style="font-size:10px;color:var(--silver);margin-top:3px;">Settings → Upload → Upload presets → Add unsigned preset</div>
-          </div>
-        </div>
-        <div style="margin-top:12px;">
-          <label class="ctrl-label">Probar subida de imagen</label>
-          <div class="photo-upload-zone" id="test-upload-zone">
-            <input type="file" accept="image/*" onchange="testCloudinaryUpload(this)"/>
-            <i class="bi bi-cloud-arrow-up" style="font-size:24px;color:var(--silver);display:block;margin-bottom:6px;"></i>
-            <div style="font-size:12px;color:var(--silver);">Arrastrá o hacé clic para subir</div>
-            <div style="font-size:10px;color:var(--zinc);margin-top:4px;">PNG, JPG, WEBP — máx 5MB</div>
-          </div>
-          <div id="cfg-upload-result" style="font-size:11px;margin-top:6px;min-height:14px;color:var(--silver);"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Dominio (futuro) -->
-    <div class="config-section">
-      <div class="config-section-title"><i class="bi bi-globe2"></i> Dominio personalizado <span style="font-size:10px;background:var(--zinc);color:var(--silver);padding:2px 8px;border-radius:20px;margin-left:8px;font-weight:400;">Próximamente</span></div>
-      <div class="config-section-content">
-        <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
-          Configurá un dominio propio para tu tienda (ej: <code style="color:var(--fog);">tienda.ferrenow.com.ar</code>). Esta funcionalidad estará disponible en la Etapa 4.
-        </div>
-        <div class="config-grid">
-          <div class="ctrl-group" style="grid-column:1/-1;">
-            <label class="ctrl-label">Dominio</label>
-            <input class="ctrl-input" id="adv-domain" placeholder="tienda.minegocio.com.ar" disabled style="opacity:.5;cursor:not-allowed;"/>
-          </div>
-        </div>
-        <div style="padding:10px 14px;background:rgba(52,152,219,.07);border:1px solid rgba(52,152,219,.2);border-radius:8px;font-size:11px;color:var(--silver);margin-top:8px;">
-          <i class="bi bi-clock-history" style="color:#3498DB;"></i> En desarrollo — se habilitará junto con la integración de Vercel Custom Domains en la Etapa 4.
-        </div>
-      </div>
-    </div>
-
-    <!-- Save button -->
-    <button class="abm-btn-new" onclick="saveAdvancedConfig()" style="width:100%;justify-content:center;padding:12px;font-size:14px;margin-top:4px;">
-      <i class="bi bi-floppy2"></i> Guardar configuración avanzada
-    </button>
-    <div id="adv-save-status" style="font-size:11px;text-align:center;margin-top:8px;min-height:14px;color:var(--silver);"></div>
-
-  </div><!-- /view-advanced -->
 
 </div><!-- /main -->
 
@@ -1430,8 +1343,7 @@ const TITLES = {
   products:'Productos',
   abm:'ABM · Productos', 
   design:'Diseño de tienda', 
-  config:'Configuración',
-  advanced:'Configuración avanzada'
+  config:'Configuración' 
 };
 
 let products = [];
@@ -1566,8 +1478,8 @@ function mapLocalProductToSupabaseRow(p) {
     marca: p.marca || null,
     detalles: p.detalle || '',
     origen: p.origen || null,
-    oculto: !!p.hidden
-    // nota: 'codigo' no existe en la tabla products de Supabase aún
+    oculto: !!p.hidden,
+    codigo: p.codigo || null
   };
 }
 
@@ -2117,12 +2029,11 @@ function initDesignPanel(){
 const _origShowView = showView;
 window.showView = async function(name, el){
   _origShowView(name, el);
-  if(name==='design')    initDesignPanel();
+  if(name==='design')  initDesignPanel();
   if(name==='abm' && !localProducts.length) await initABM();
   if(name==='abm' &&  localProducts.length) renderABM();
-  if(name==='orders')    initOrderForm();
-  if(name==='config')    initConfigView();
-  if(name==='advanced')  initAdvancedView();
+  if(name==='orders')  initOrderForm();
+  if(name==='config')  initConfigView();
 };
 
 /* ═══════════════════════════════════════════ HERO IMAGE */
@@ -2540,16 +2451,15 @@ Identificá el producto y devolvé SOLO un JSON válido (sin texto adicional, si
 {"name":"nombre completo","marca":"marca o fabricante","cat":"categoría","detalle":"especificaciones técnicas en 1-2 oraciones","origen":"código ISO del país (AR/CN/US/DE/JP/IT/BR/KR/TW/MX/FR/GB/ES/SE/CH) o vacío","confianza":"alta/media/baja"}
 Si no reconocés el código, usá confianza "baja" e intentá igual.`;
 
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://corsproxy.io/?https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'x-api-key': claudeKey,
         'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-allow-browser': 'true',
         'content-type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
+        model: 'claude-3-haiku-20240307',
         max_tokens: 300,
         messages: [{ role: 'user', content: prompt }]
       })
@@ -2683,7 +2593,10 @@ function saveWebhookCfg() {
 
 function loadWebhookCfg() {
   // No-op — config fields are populated in initConfigView()
-  // SHEET_URL_DEFAULT removed: project now uses Supabase exclusively
+  // Just ensure localStorage has the default sheet URL if not set
+  if (!localStorage.getItem('storeapp_sheet_url')) {
+    localStorage.setItem('storeapp_sheet_url', SHEET_URL_DEFAULT);
+  }
 }
 
 function setWebhookStatus(msg, type='info') {
@@ -3364,110 +3277,6 @@ function initConfigView() {
   const theme = localStorage.getItem('storeapp_dash_theme') || 'dark';
   document.getElementById('dash-theme-dark').style.borderColor  = theme==='dark' ? 'var(--red)' : 'var(--zinc)';
   document.getElementById('dash-theme-light').style.borderColor = theme==='light'? 'var(--red)' : 'var(--zinc)';
-}
-
-  document.getElementById('dash-theme-dark').style.borderColor  = theme==='dark' ? 'var(--red)' : 'var(--zinc)';
-  document.getElementById('dash-theme-light').style.borderColor = theme==='light'? 'var(--red)' : 'var(--zinc)';
-}
-
-/* ═══════════════════════════════════════════ VISTA AVANZADA */
-function initAdvancedView() {
-  // Supabase (muestra los valores actuales pero ofuscados)
-  const urlEl = document.getElementById('adv-supabase-url');
-  const keyEl = document.getElementById('adv-supabase-key');
-  if (urlEl && !urlEl.value) urlEl.value = SUPABASE_URL;
-  if (keyEl && !keyEl.value) keyEl.value = SUPABASE_KEY;
-
-  // Cloudinary
-  const cloud = JSON.parse(localStorage.getItem('storeapp_cloudinary') || '{}');
-  const cnEl = document.getElementById('cfg-cloud-name');
-  const cpEl = document.getElementById('cfg-cloud-preset');
-  if (cnEl && cloud.name)   cnEl.value = cloud.name;
-  if (cpEl && cloud.preset) cpEl.value = cloud.preset;
-
-  // Claude key
-  const claudeKey = localStorage.getItem('storeapp_claude_key');
-  const ckEl = document.getElementById('cfg-claude-key');
-  if (ckEl && claudeKey) ckEl.value = claudeKey;
-}
-
-async function saveAdvancedConfig() {
-  // Cloudinary
-  const cName   = (document.getElementById('cfg-cloud-name')?.value   || '').trim();
-  const cPreset = (document.getElementById('cfg-cloud-preset')?.value || '').trim();
-  if (cName || cPreset) {
-    localStorage.setItem('storeapp_cloudinary', JSON.stringify({ name: cName, preset: cPreset }));
-  }
-  // Claude Key
-  const claudeKey = (document.getElementById('cfg-claude-key')?.value || '').trim();
-  if (claudeKey) {
-    localStorage.setItem('storeapp_claude_key', claudeKey);
-  } else {
-    localStorage.removeItem('storeapp_claude_key');
-  }
-  // Nota: Supabase URL/Key se cambian en el HTML directamente (constantes)
-  const el = document.getElementById('adv-save-status');
-  if (el) {
-    el.style.color = 'var(--green)';
-    el.textContent = '✓ Configuración avanzada guardada';
-    setTimeout(() => { el.textContent = ''; }, 3000);
-  }
-}
-
-async function testSupabaseConnection() {
-  const statusEl = document.getElementById('adv-supabase-status');
-  const urlInput = document.getElementById('adv-supabase-url')?.value.trim() || SUPABASE_URL;
-  const keyInput = document.getElementById('adv-supabase-key')?.value.trim() || SUPABASE_KEY;
-  if (statusEl) { statusEl.style.color = 'var(--silver)'; statusEl.textContent = 'Probando...'; }
-  try {
-    const res = await fetch(`${urlInput}/rest/v1/products?limit=1`, {
-      headers: { 'apikey': keyInput, 'Authorization': `Bearer ${keyInput}` }
-    });
-    if (res.ok) {
-      const data = await res.json();
-      if (statusEl) { statusEl.style.color = 'var(--green)'; statusEl.textContent = `✓ Conectado · ${data.length} registro(s) recibido(s)`; }
-    } else {
-      if (statusEl) { statusEl.style.color = 'var(--red)'; statusEl.textContent = `✕ Error ${res.status}`; }
-    }
-  } catch(e) {
-    if (statusEl) { statusEl.style.color = 'var(--red)'; statusEl.textContent = '✕ Sin respuesta: ' + e.message; }
-  }
-}
-
-async function testClaudeKey() {
-  const statusEl = document.getElementById('adv-claude-status');
-  const keyEl = document.getElementById('cfg-claude-key');
-  const key = keyEl?.value.trim() || localStorage.getItem('storeapp_claude_key') || '';
-  if (!key) {
-    if (statusEl) { statusEl.style.color = 'var(--red)'; statusEl.textContent = '✕ Ingresá una API Key primero'; }
-    return;
-  }
-  if (statusEl) { statusEl.style.color = 'var(--silver)'; statusEl.textContent = 'Probando...'; }
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-allow-browser': 'true',
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 10,
-        messages: [{ role: 'user', content: 'ping' }]
-      })
-    });
-    if (res.ok) {
-      if (statusEl) { statusEl.style.color = 'var(--green)'; statusEl.textContent = '✓ Clave válida'; }
-      localStorage.setItem('storeapp_claude_key', key);
-    } else {
-      const err = await res.json().catch(() => ({}));
-      if (statusEl) { statusEl.style.color = 'var(--red)'; statusEl.textContent = `✕ ${err?.error?.message || 'Clave inválida'}`; }
-    }
-  } catch(e) {
-    if (statusEl) { statusEl.style.color = 'var(--red)'; statusEl.textContent = '✕ Error: ' + e.message; }
-  }
 }
 
 function saveConfig() {
