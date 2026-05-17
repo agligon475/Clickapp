@@ -1,37 +1,45 @@
 # Contexto del Proyecto: StoreApp (FerreApp) - Etapa 2
 
-Este documento resume la arquitectura, funcionalidades y estado actual del proyecto StoreApp para ser utilizado como contexto en herramientas de IA.
+Este documento resume la arquitectura, funcionalidades y cambios específicos realizados por Jules en el proyecto StoreApp.
 
 ## 1. Propósito y Alcance
-StoreApp es una solución de comercio electrónico ligera diseñada para pequeños negocios. Permite a los dueños de negocios gestionar un catálogo de productos, personalizar la apariencia de su tienda y recibir pedidos directamente a través de WhatsApp. El proyecto se encuentra actualmente al final de la **Etapa 2**.
+StoreApp es una solución de comercio electrónico ligera diseñada para pequeños negocios. Permite gestionar un catálogo de productos, personalizar la apariencia de la tienda y recibir pedidos por WhatsApp. Actualmente se encuentra al final de la **Etapa 2**.
 
 ## 2. Arquitectura Técnica
-*   **Frontend:** Aplicación web de una sola página (SPA) construida con HTML5, CSS3 (Vanilla + Bootstrap Icons) y JavaScript puro (Vanilla JS). No utiliza frameworks como React o Vue.
-*   **Base de Datos / Backend:**
-    *   **Supabase:** Motor principal para almacenamiento de productos y configuraciones.
-    *   **Google Sheets:** Soporte legado/alternativo mediante publicación CSV.
-*   **Almacenamiento de Imágenes:** **Cloudinary** (upload y optimización).
-*   **Persistencia Local:** `localStorage` para carrito, logo, configuraciones de diseño y pedidos locales.
+*   **Frontend:** HTML5, CSS3 y JavaScript puro (Vanilla JS). Sin frameworks.
+*   **Base de Datos:** **Supabase** (principal) y **Google Sheets** (CSV legacy).
+*   **Imágenes:** **Cloudinary** (almacenamiento) y **Canvas API** (procesamiento local).
+*   **Persistencia:** `localStorage` para carrito, logo, banners y estado del ABM.
 
-## 3. Funcionalidades Clave (Etapa 2)
-*   **Gestión Multi-imagen:** Soporte para hasta 3 imágenes por producto (`img`, `img2`, `img3`).
-*   **Marca de Agua Automática:** Uso de **Canvas API** para aplicar el logo de la tienda como marca de agua en la esquina inferior derecha antes de subir imágenes a Cloudinary.
-*   **Banners Promocionales:** Sistema de banners 50/50 responsivos que permiten filtrar el catálogo por categoría.
-*   **Inteligencia Artificial:** Integración opcional con la API de **Claude (Anthropic)** para autocompletar detalles técnicos de productos mediante códigos EAN/SKU.
-*   **Pedidos WhatsApp:** Generación de mensajes preformateados con el detalle del pedido para el vendedor.
+## 3. Cambios Específicos Realizados (Etapa 2)
+
+### 3.1 Soporte Multi-imagen
+*   **Dashboard:** Se expandió el modal de producto para soportar 3 URLs/uploads (`m-img`, `m-img2`, `m-img3`).
+*   **Tienda:** Se actualizó `loadSheet()` para mapear y persistir las nuevas columnas de imagen.
+*   **Fix:** Se corrigió el mapeo de columnas en el parser CSV para asegurar que `img2` e `img3` se lean correctamente tanto en el dashboard como en la tienda.
+
+### 3.2 Marca de Agua Automática
+*   Implementación de la función `applyWatermark(file)` en `dashboard.html`.
+*   **Lógica:** Al subir una imagen, se dibuja en un Canvas, se superpone el logo (esquina inferior derecha, 15% de tamaño, 80% opacidad) y se exporta como Blob para subir a Cloudinary.
+*   **Fallback:** Si no hay logo configurado, se sube la imagen original sin procesar.
+
+### 3.3 Banners Promocionales 50/50
+*   **Tienda:** Inserción de `#banners-container` con layout grid (2 cols desktop / 1 col mobile).
+*   **Lógica:** Función `renderBanners(data)` que crea banners interactivos que filtran el catálogo por categoría mediante `filterCat()`.
+*   **Estilos:** Añadidos efectos de hover (elevación y zoom) y overlays de gradiente.
+
+### 3.4 Panel de Gestión de Banners
+*   Se creó una nueva sección en la configuración del Dashboard para editar los banners sin tocar Google Sheets.
+*   Incluye campos para etiquetas, títulos, imágenes (con upload a Cloudinary) y categorías de destino.
+*   **Sincronización:** Los datos se guardan en `localStorage.storeapp_banners` para que la tienda los consuma inmediatamente.
 
 ## 4. Estructura de Archivos
-*   `tienda.html`: Interfaz del cliente (catálogo, carrito, carrusel).
-*   `dashboard.html`: Panel de administración (ABM, diseño, banners, Kanban).
-*   `index.html`: Landing page de entrada.
-*   `ARQUITECTURA-TECNICA.md`: Documentación de flujos y lógica de Canvas.
-*   `ESTRUCTURA-GOOGLE-SHEETS.md`: Definición de columnas y headers.
+*   `tienda.html`: Implementa `renderBanners()` y el carrusel de previsualización (hover).
+*   `dashboard.html`: Contiene `applyWatermark()`, el modal ABM expandido y el nuevo panel de configuración de banners.
+*   `ARQUITECTURA-TECNICA.md`: Documenta la lógica detallada de estos cambios.
 
-## 5. Flujos de Datos Críticos
-1.  **Configuración de Marca:** Admin sube logo -> `localStorage`.
-2.  **Carga de Producto:** Admin sube foto -> `applyWatermark()` -> Cloudinary -> Registro en DB.
-3.  **Visualización:** Tienda consume Supabase/CSV -> Renderizado con `lazy loading`.
-4.  **Venta:** Cliente confirma carrito -> Redirección a WhatsApp con string formateado.
-
-## 6. Estado Actual
-La Etapa 2 está 100% funcional y desplegada. El enfoque actual es la estabilidad de la sincronización entre Supabase y el estado local, y la preparación para la Etapa 3 (carrusel de imágenes en el detalle del producto).
+## 5. Estado del Sistema
+Los arreglos de la Etapa 2 aseguran que:
+1. Las 3 imágenes se guardan y leen correctamente.
+2. El logo se aplica como marca de agua en cada subida.
+3. Los banners son dinámicos y editables desde el panel administrativo.
