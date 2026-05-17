@@ -8,14 +8,10 @@
     <link rel="stylesheet" href="vov.min.css">
     <style>
         :root {
-            --brand-main: #D60000;        /* Rojo vibrante de acción */
-            --brand-secondary: #281713;   /* Oscuro profundo */
+            --brand-main: #D60000;        /* Rojo vibrante de fondo y acción */
+            --brand-secondary: #281713;   /* Oscuro profundo para textos y secciones */
             --brand-tertiary: #fafafa;    /* Fondo claro / Blanco limpio */
-            --brand-comp-light: #DE9B89;  /* Salmón / Terroso suave */
-            --brand-comp-dark: #4A271E;   /* Marrón rojizo elegante */
-            
-            --bg-light: #fdfdfd;
-            --text-muted: #7c6e6a;
+            --text-muted: #706765;
         }
 
         * {
@@ -26,13 +22,13 @@
 
         body {            
             font-family: 'Poppins', sans-serif;            
-            background-color: var(--bg-light);
+            background-color: var(--brand-tertiary);
             color: var(--brand-secondary);
             line-height: 1.6;
             overflow-x: hidden;
         }
 
-        /* --- 1. HERO SECTION (Con Logo e Identidad Nueva) --- */
+        /* --- 1. HERO SECTION (Fondo Rojo, Partículas Blancas y Logo Grande) --- */
         .hero {
             position: relative;
             min-height: 100vh;
@@ -40,8 +36,8 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 3rem 1.5rem;
-            background: linear-gradient(135deg, var(--brand-tertiary) 0%, #f4eae6 100%);
+            padding: 4rem 1.5rem;
+            background-color: var(--brand-main); /* Color primario de fondo */
             overflow: hidden;
         }
 
@@ -58,39 +54,41 @@
         .hero-content {
             position: relative;
             z-index: 2;
-            max-width: 800px;
+            max-width: 850px;
         }
 
         .hero-logo {
-            max-width: 240px;
+            width: 100%;
+            max-width: 360px; /* Logo más grande e imponente */
             height: auto;
             margin-bottom: 2.5rem;
-            /* Filtro sutil para asegurar que resalte perfectamente en fondos claros si el logo original es blanco */
-            filter: drop-shadow(0px 4px 10px rgba(40, 23, 19, 0.15));
         }
 
         .hero h3 {
             font-size: 1.1rem;
             text-transform: uppercase;
             letter-spacing: 3px;
-            color: var(--brand-main);
+            color: var(--brand-tertiary);
             margin-bottom: 1rem;
-            font-weight: 600;
+            font-weight: 500;
+            opacity: 0.9;
         }
 
         .hero h1 {
-            font-size: 3rem;
+            font-size: 3.2rem;
             font-weight: 700;
             line-height: 1.2;
-            color: var(--brand-secondary);
+            color: var(--brand-tertiary);
             margin-bottom: 1.5rem;
+            letter-spacing: -0.5px;
         }
 
         .hero p {
-            font-size: 1.2rem;
-            color: var(--brand-comp-dark);
-            max-width: 600px;
+            font-size: 1.25rem;
+            color: var(--brand-tertiary);
+            max-width: 620px;
             margin: 0 auto;
+            opacity: 0.85;
         }
 
         .scroll-indicator {
@@ -98,12 +96,13 @@
             bottom: 2rem;
             left: 50%;
             transform: translateX(-50%);
-            color: var(--brand-main);
+            color: var(--brand-tertiary);
             font-size: 0.9rem;
-            font-weight: 600;
+            font-weight: 500;
             letter-spacing: 1px;
             text-transform: uppercase;
             z-index: 2;
+            opacity: 0.7;
         }
 
         /* --- ESTILOS GENERALES DE SECCIONES --- */
@@ -146,21 +145,22 @@
         }
 
         .mockup-container {
-            background: #ebdcd7;
+            background: #e5dfde;
             border-radius: 16px;
             padding: 1rem;
-            box-shadow: 0 20px 40px rgba(40, 23, 19, 0.05);
+            box-shadow: 0 20px 40px rgba(40, 23, 19, 0.04);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 300px;
-            border: 1px solid rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.02);
         }
 
         .mockup-placeholder {
-            color: var(--brand-comp-dark);
+            color: var(--brand-secondary);
             font-weight: 500;
             text-align: center;
+            opacity: 0.6;
         }
 
         .steps-list {
@@ -181,7 +181,7 @@
 
         /* --- 3. DIFERENCIALES --- */
         .bg-white-section {
-            background-color: var(--brand-tertiary);
+            background-color: #ffffff;
         }
 
         .diff-grid {
@@ -193,7 +193,7 @@
         .diff-card {
             padding: 2.5rem;
             border-radius: 16px;
-            background: var(--bg-light);
+            background: var(--brand-tertiary);
             border: 1px solid rgba(40, 23, 19, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -224,10 +224,10 @@
         }
 
         .price-card {
-            background: var(--brand-tertiary);
+            background: #ffffff;
             padding: 3rem 2.5rem;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(40, 23, 19, 0.04);
+            box-shadow: 0 15px 35px rgba(40, 23, 19, 0.03);
             text-align: center;
             max-width: 360px;
             width: 100%;
@@ -237,8 +237,7 @@
         .price-card.featured {
             border-color: var(--brand-main);
             position: relative;
-            background: var(--bg-light);
-            box-shadow: 0 20px 40px rgba(214, 0, 0, 0.08);
+            box-shadow: 0 20px 40px rgba(214, 0, 0, 0.06);
         }
 
         .badge {
@@ -285,7 +284,7 @@
 
         /* --- 5. CTA ACCESOS FINAL --- */
         .cta-section {
-            background: linear-gradient(135deg, var(--brand-secondary) 0%, var(--brand-comp-dark) 100%);
+            background: var(--brand-secondary);
             color: var(--brand-tertiary);
             text-align: center;
         }
@@ -293,11 +292,11 @@
         .cta-container {
             max-width: 450px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.02);
             padding: 3.5rem 2.5rem;
             border-radius: 24px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.06);
         }
 
         .cta-container .logo-img {
@@ -352,9 +351,9 @@
         footer {
             text-align: center;
             padding: 2.5rem;
-            color: var(--brand-comp-light);
+            color: var(--text-muted);
             font-size: 0.9rem;
-            background: #1b0f0d; /* Fondo un toque más oscuro para el cierre */
+            background: #1e110e; 
         }
 
         @media (max-width: 768px) {
@@ -369,7 +368,7 @@
     <header class="hero">
         <canvas id="canvas-connections"></canvas>
         <div class="vov fade-in-down slow hero-content">
-            <!-- Logo incorporado al inicio -->
+            <!-- Logo Ampliado -->
             <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" class="hero-logo">
             <h3>Estar presente ya no está en duda</h3>
             <h1>Los límites no existen</h1>
@@ -416,17 +415,17 @@
             </div>
             <div class="diff-grid">
                 <div class="diff-card">
-                    <span class="diff-icon" style="color: var(--brand-main);">⚡</span>
+                    <span class="diff-icon">⚡</span>
                     <h4>Sin Comisiones por Venta</h4>
                     <p>La ganancia es 100% tuya. Pagás un abono fijo mensual sin sorpresas de plataformas tradicionales.</p>
                 </div>
                 <div class="diff-card">
-                    <span class="diff-icon" style="color: var(--brand-main);">🗣️</span>
+                    <span class="diff-icon">🗣️</span>
                     <h4>Venta Humanizada</h4>
                     <p>No pierdas el contacto con tu cliente. Resolvé dudas de stock y fidelizá en el mismo canal de siempre.</p>
                 </div>
                 <div class="diff-card">
-                    <span class="diff-icon" style="color: var(--brand-main);">🛠️</span>
+                    <span class="diff-icon">🛠️</span>
                     <h4>Gestión Simple</h4>
                     <p>Panel auto-gestionable para actualizar precios, productos y fotos en segundos sin saber programar.</p>
                 </div>
@@ -479,13 +478,13 @@
         <p>© 2026 Dale! Te Pido. Todos los derechos reservados.</p>
     </footer>
 
-    <!-- SCRIPT DE CONEXIONES ACTUALIZADO CON LA PALETA DE COLOR MARRÓN/ROJO SUTIL -->
+    <!-- SCRIPT DE CONEXIONES AJUSTADO A BLANCO TRANSLÚCIDO PARA EL FONDO ROJO -->
     <script>
         const canvas = document.getElementById('canvas-connections');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        const particleCount = 40;
-        const connectionDistance = 130;
+        const particleCount = 45;
+        const connectionDistance = 125;
 
         function resizeCanvas() {
             canvas.width = canvas.offsetWidth;
@@ -500,7 +499,7 @@
                 this.y = Math.random() * canvas.height;
                 this.vx = (Math.random() - 0.5) * 0.5;
                 this.vy = (Math.random() - 0.5) * 0.5;
-                this.radius = Math.random() * 2 + 1.5;
+                this.radius = Math.random() * 2 + 1.2;
             }
             update() {
                 this.x += this.vx;
@@ -511,8 +510,8 @@
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                // Usamos el color complementario oscuro con opacidad para los nodos flotantes
-                ctx.fillStyle = 'rgba(74, 39, 30, 0.15)';
+                // Nodos flotantes en color blanco puro con opacidad
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
                 ctx.fill();
             }
         }
@@ -537,9 +536,9 @@
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
-                        // Líneas de conexión usando la gama cromática terrosa
-                        ctx.strokeStyle = `rgba(74, 39, 30, ${0.12 * (1 - distance / connectionDistance)})`;
-                        ctx.lineWidth = 1;
+                        // Líneas de red en blanco sutil que se desvanecen con la distancia
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 * (1 - distance / connectionDistance)})`;
+                        ctx.lineWidth = 0.8;
                         ctx.stroke();
                     }
                 }
