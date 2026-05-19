@@ -1346,10 +1346,18 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
           Obtenela en <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--red);">console.anthropic.com →</a>
         </div>
         <div class="config-grid">
-          <div class="ctrl-group" style="grid-column:1/-1;">
+          <div class="ctrl-group">
             <label class="ctrl-label">Claude API Key</label>
             <input class="ctrl-input" type="password" id="cfg-claude-key" placeholder="sk-ant-api03-..."/>
-            <div style="font-size:10px;color:var(--silver);margin-top:3px;">Se guarda solo en tu navegador (localStorage). No se envía a ningún servidor propio.</div>
+            <div style="font-size:10px;color:var(--silver);margin-top:3px;">Se guarda en localStorage.</div>
+          </div>
+          <div class="ctrl-group">
+            <label class="ctrl-label">Modelo de Claude</label>
+            <select class="ctrl-input" id="cfg-claude-model">
+              <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku (Recomendado)</option>
+              <option value="claude-3-haiku-20240307">Claude 3 Haiku (Económico / Gratis)</option>
+            </select>
+            <div style="font-size:10px;color:var(--silver);margin-top:3px;">Elegí según los créditos de tu cuenta.</div>
           </div>
         </div>
         <div style="margin-top:12px;display:flex;gap:8px;align-items:center;">
@@ -2624,7 +2632,7 @@ Si no reconocés el código, usá confianza "baja" e intentá igual.`;
         'content-type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'claude-3-5-haiku-20241022',
+        model: localStorage.getItem('storeapp_claude_model') || 'claude-3-5-haiku-20241022',
         max_tokens: 300,
         messages: [{ role: 'user', content: prompt }]
       })
@@ -3435,6 +3443,8 @@ function initConfigView() {
 
   const claudeKey = localStorage.getItem('storeapp_claude_key');
   if (claudeKey) document.getElementById('cfg-claude-key').value = claudeKey;
+  const claudeModel = localStorage.getItem('storeapp_claude_model') || 'claude-3-5-haiku-20241022';
+  document.getElementById('cfg-claude-model').value = claudeModel;
 
   const theme = localStorage.getItem('storeapp_dash_theme') || 'dark';
   document.getElementById('dash-theme-dark').style.borderColor  = theme==='dark' ? 'var(--red)' : 'var(--zinc)';
@@ -3460,6 +3470,9 @@ function initAdvancedView() {
   const claudeKey = localStorage.getItem('storeapp_claude_key');
   const ckEl = document.getElementById('cfg-claude-key');
   if (ckEl && claudeKey) ckEl.value = claudeKey;
+  const cmEl = document.getElementById('cfg-claude-model');
+  const claudeModel = localStorage.getItem('storeapp_claude_model') || 'claude-3-5-haiku-20241022';
+  if (cmEl) cmEl.value = claudeModel;
 
   // Cargar categorías
   loadAndDisplayCategories();
@@ -3507,6 +3520,8 @@ async function saveAdvancedConfig() {
   } else {
     localStorage.removeItem('storeapp_claude_key');
   }
+  const claudeModel = document.getElementById('cfg-claude-model')?.value || 'claude-3-5-haiku-20241022';
+  localStorage.setItem('storeapp_claude_model', claudeModel);
   // Nota: Supabase URL/Key se cambian en el HTML directamente (constantes)
   const el = document.getElementById('adv-save-status');
   if (el) {
@@ -3553,7 +3568,7 @@ async function testClaudeKey() {
         'content-type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'claude-3-5-haiku-20241022',
+        model: document.getElementById('cfg-claude-model')?.value || localStorage.getItem('storeapp_claude_model') || 'claude-3-5-haiku-20241022',
         max_tokens: 10,
         messages: [{ role: 'user', content: 'ping' }]
       })
@@ -3601,6 +3616,8 @@ function saveConfig() {
   } else {
     localStorage.removeItem('storeapp_claude_key');
   }
+  const claudeModel = document.getElementById('cfg-claude-model').value;
+  localStorage.setItem('storeapp_claude_model', claudeModel);
 
   const el = document.getElementById('cfg-save-status');
   el.style.color = 'var(--green)';
