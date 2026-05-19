@@ -2617,7 +2617,7 @@ Identificá el producto y devolvé SOLO un JSON válido (sin texto adicional, si
 {"name":"nombre completo","marca":"marca o fabricante","cat":"categoría","detalle":"especificaciones técnicas en 1-2 oraciones","origen":"código ISO del país (AR/CN/US/DE/JP/IT/BR/KR/TW/MX/FR/GB/ES/SE/CH) o vacío","confianza":"alta/media/baja"}
 Si no reconocés el código, usá confianza "baja" e intentá igual.`;
 
-    const res = await fetch('/api/claude', {
+    const res = await fetch('/api/helper', {
       method: 'POST',
       headers: {
         'x-claude-key': claudeKey,
@@ -3546,7 +3546,7 @@ async function testClaudeKey() {
   }
   if (statusEl) { statusEl.style.color = 'var(--silver)'; statusEl.textContent = 'Probando...'; }
   try {
-    const res = await fetch('/api/claude', {
+    const res = await fetch('/api/helper', {
       method: 'POST',
       headers: {
         'x-claude-key': key,
