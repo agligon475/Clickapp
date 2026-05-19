@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>FerreApp — Panel de Control</title>
+<title>Panel de Control</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,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"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet"/>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
@@ -516,11 +517,10 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
 <!-- SIDEBAR -->
 <div class="sidebar">
   <div class="sb-logo">
-    <div class="sb-logo-icon">🔧</div>
-    <div>
-      <div class="sb-logo-text">FerreApp</div>
-      <div class="sb-logo-sub">Panel de control</div>
+    <div class="sb-logo-icon" style="background:transparent;box-shadow:none;padding:0;overflow:hidden;">
+      <img src="favicon.png" alt="Panel de Control" style="width:34px;height:34px;border-radius:8px;display:block;"/>
     </div>
+    <div class="sb-logo-text" style="font-size:13px;letter-spacing:0;line-height:1.3;">Panel de Control</div>
   </div>
 
   <div class="sb-section">
@@ -550,7 +550,9 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
 
   <!-- TOPBAR -->
   <div class="topbar">
-    <span class="topbar-title" id="view-title">Dashboard</span>
+    <span class="topbar-title" id="view-title">
+      <i class="bi bi-speedometer" style="margin-right:6px;"></i> Panel de Control
+    </span>
     <div class="topbar-right">
       <select class="period-select" onchange="setPeriod(this.value)">
         <option value="7">Últimos 7 días</option>
@@ -1391,6 +1393,70 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
       </div>
     </div>
 
+    <!-- Categorías -->
+    <div class="config-section">
+      <div class="config-section-title"><i class="bi bi-tags"></i> Gestión de categorías</div>
+      <div class="config-section-content">
+        <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
+          Las categorías se sincronizan con Supabase y se usan en el ABM para clasificar productos.
+        </div>
+
+        <!-- Lista de categorías -->
+        <div id="cat-manager-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
+          <div style="color:var(--silver);font-size:12px;text-align:center;padding:12px;">Cargando categorías...</div>
+        </div>
+
+        <!-- Agregar nueva categoría -->
+        <div style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:14px;">
+          <div style="font-weight:700;font-size:12px;color:var(--fog);margin-bottom:10px;"><i class="bi bi-plus-circle" style="color:var(--red);"></i> Nueva categoría</div>
+          <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">
+            <div class="ctrl-group" style="flex:1;min-width:120px;margin:0;">
+              <label class="ctrl-label">Nombre</label>
+              <input class="ctrl-input" id="new-cat-name" placeholder="Ej: Plomería" style="margin:0;"/>
+            </div>
+            <div class="ctrl-group" style="width:80px;margin:0;">
+              <label class="ctrl-label">Emoji</label>
+              <input class="ctrl-input" id="new-cat-emoji" placeholder="🔧" maxlength="2" style="margin:0;text-align:center;font-size:18px;"/>
+            </div>
+            <div class="ctrl-group" style="width:70px;margin:0;">
+              <label class="ctrl-label">Orden</label>
+              <input class="ctrl-input" id="new-cat-order" type="number" placeholder="8" min="1" style="margin:0;"/>
+            </div>
+            <button onclick="addCategory()" style="height:38px;padding:0 16px;background:var(--red);border:none;border-radius:8px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font-body);flex-shrink:0;">
+              <i class="bi bi-plus-lg"></i> Agregar
+            </button>
+          </div>
+          <div id="new-cat-status" style="font-size:11px;margin-top:8px;min-height:14px;color:var(--silver);"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Categorías -->
+    <div class="config-section">
+      <div class="config-section-title"><i class="bi bi-tags"></i> Categorías de productos</div>
+      <div class="config-section-content">
+        <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
+          Administrá las categorías disponibles en tu tienda. Los productos se asignan a una categoría al crear o editar.
+          <a href="https://supabase.com/dashboard" target="_blank" style="color:var(--red);">Tabla <code>categories</code> en Supabase →</a>
+        </div>
+        <div style="margin-bottom:14px;">
+          <label class="ctrl-label" style="margin-bottom:8px;display:block;">Categorías en Supabase</label>
+          <div id="adv-categories-list" style="background:var(--iron);border:1px solid var(--zinc);border-radius:8px;padding:12px;font-size:12px;color:var(--silver);max-height:200px;overflow-y:auto;line-height:1.8;">
+            <div style="text-align:center;color:var(--silver);">Cargando categorías...</div>
+          </div>
+        </div>
+        <div style="padding:12px;background:rgba(52,152,219,.07);border:1px solid rgba(52,152,219,.2);border-radius:8px;font-size:11px;color:var(--silver);line-height:1.6;margin-top:12px;">
+          <i class="bi bi-info-circle" style="color:#3498DB;"></i>
+          <strong style="color:var(--fog);">Para agregar nuevas categorías:</strong><br/>
+          1. Abrí <a href="https://supabase.com/dashboard" target="_blank" style="color:var(--red);">Supabase Dashboard</a><br/>
+          2. Tabla <code>categories</code> → New row<br/>
+          3. Ingresá: <code>name</code> (ej: "Herramientas"), <code>emoji</code> (ej: "🔧"), <code>active</code> (true)<br/>
+          4. Recargá esta página
+        </div>
+      </div>
+    </div>
+
     <!-- Dominio (futuro) -->
     <div class="config-section">
       <div class="config-section-title"><i class="bi bi-globe2"></i> Dominio personalizado <span style="font-size:10px;background:var(--zinc);color:var(--silver);padding:2px 8px;border-radius:20px;margin-left:8px;font-weight:400;">Próximamente</span></div>
@@ -1579,7 +1645,18 @@ function showView(name, el) {
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
-  document.getElementById('view-title').textContent = TITLES[name];
+  // Setear título con icono
+  const icons = {
+    dashboard: 'bi-speedometer',
+    orders: 'bi-receipt',
+    products: 'bi-grid-3x3-gap',
+    abm: 'bi-pencil-square',
+    design: 'bi-palette',
+    config: 'bi-gear',
+    advanced: 'bi-shield-lock'
+  };
+  const icon = icons[name] || 'bi-speedometer';
+  document.getElementById('view-title').innerHTML = `<i class="bi ${icon}" style="margin-right:6px;"></i> ${TITLES[name]}`;
   if(el) el.classList.add('active');
   if(name==='products') renderProducts();
   if(name==='orders') renderAllOrders();
@@ -3401,9 +3478,6 @@ function initConfigView() {
   const theme = localStorage.getItem('storeapp_dash_theme') || 'dark';
   document.getElementById('dash-theme-dark').style.borderColor  = theme==='dark' ? 'var(--red)' : 'var(--zinc)';
   document.getElementById('dash-theme-light').style.borderColor = theme==='light'? 'var(--red)' : 'var(--zinc)';
-
-  document.getElementById('dash-theme-dark').style.borderColor  = theme==='dark' ? 'var(--red)' : 'var(--zinc)';
-  document.getElementById('dash-theme-light').style.borderColor = theme==='light'? 'var(--red)' : 'var(--zinc)';
 }
 
 /* ═══════════════════════════════════════════ VISTA AVANZADA */
@@ -3425,6 +3499,37 @@ function initAdvancedView() {
   const claudeKey = localStorage.getItem('storeapp_claude_key');
   const ckEl = document.getElementById('cfg-claude-key');
   if (ckEl && claudeKey) ckEl.value = claudeKey;
+
+  // Cargar categorías
+  loadAndDisplayCategories();
+}
+
+async function loadAndDisplayCategories() {
+  const listEl = document.getElementById('adv-categories-list');
+  if (!listEl) return;
+  
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/categories?order=display_order.asc`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const categories = await res.json();
+    
+    if (!Array.isArray(categories) || categories.length === 0) {
+      listEl.innerHTML = '<div style="color:var(--silver);">No hay categorías aún. <a href="https://supabase.com/dashboard" target="_blank" style="color:var(--red);">Agregá una en Supabase</a></div>';
+      return;
+    }
+    
+    listEl.innerHTML = categories.map(c => `
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--zinc);">
+        <span style="font-size:16px;min-width:20px;">${c.emoji || '📦'}</span>
+        <span style="flex:1;color:var(--fog);">${c.name}</span>
+        <span style="font-size:10px;color:var(--silver);">${c.active ? '✓ activa' : '○ inactiva'}</span>
+      </div>
+    `).join('');
+  } catch(e) {
+    listEl.innerHTML = `<div style="color:var(--red);">Error: ${e.message}</div>`;
+  }
 }
 
 async function saveAdvancedConfig() {
