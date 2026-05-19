@@ -1,4 +1,4 @@
-// api/claude.js — Vercel Serverless Function
+// api/helper.js — Vercel Serverless Function
 // Actúa como proxy entre el dashboard y la API de Anthropic
 // evitando el bloqueo CORS del navegador en producción
 

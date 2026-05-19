@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/api/claude", "destination": "/api/claude.js" }
+    { "source": "/api/helper", "destination": "/api/helper.js" }
   ]
 }
