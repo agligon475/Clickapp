@@ -198,7 +198,7 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
 .stock-out{background:rgba(215,38,56,.15);color:var(--red);}
 
 /* DESIGN PANEL */
-.design-wrap{display:grid;grid-template-columns:320px 1fr;gap:16px;align-items:start;}
+.design-wrap{display:grid;grid-template-columns:1fr 30%;gap:16px;align-items:start;}
 @media(max-width:900px){.design-wrap{grid-template-columns:1fr;}}
 .ctrl-group{margin-bottom:14px;}
 .ctrl-label{display:block;font-size:10px;font-weight:700;color:var(--silver);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;}
@@ -210,32 +210,36 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
 .color-swatch.active{border-color:var(--white);box-shadow:0 0 0 2px rgba(255,255,255,.3);}
 
 .theme-btn{
-  flex:1;background:var(--iron);border:1px solid var(--zinc);
-  border-radius:8px;padding:8px 6px;
-  font-size:10px;font-weight:600;color:var(--fog);
-  cursor:pointer;text-align:center;transition:all .15s;
-  font-family:var(--font-b);
+  background:var(--iron);border:1px solid var(--zinc);
+  border-radius:8px;padding:8px 12px;color:var(--silver);
+  font-size:11px;font-weight:600;cursor:pointer;flex:1;
+  transition:all .2s;text-align:center;
 }
-.theme-btn.active{border-color:var(--red);color:var(--white);background:rgba(215,38,56,.1);}
-
-.emoji-opt{
-  width:36px;height:36px;background:var(--iron);
-  border:1px solid var(--zinc);border-radius:8px;
-  font-size:18px;cursor:pointer;transition:all .15s;
-  display:flex;align-items:center;justify-content:center;
-}
-.emoji-opt:hover{border-color:var(--fog);transform:scale(1.1);}
-.emoji-opt.active{border-color:var(--red);background:rgba(215,38,56,.12);box-shadow:0 0 8px var(--red-glow);}
+.theme-btn.active{background:var(--zinc);color:var(--white);border-color:var(--silver);}
 
 .font-opt{
-  flex:1;background:var(--iron);border:1px solid var(--zinc);
-  border-radius:8px;padding:8px 6px;
-  font-size:10px;font-weight:600;color:var(--fog);
-  cursor:pointer;text-align:center;transition:all .15s;
-  font-family:var(--font-b);display:flex;flex-direction:column;gap:2px;
+  background:var(--iron);border:1px solid var(--zinc);border-radius:6px;
+  padding:6px 12px;color:var(--silver);cursor:pointer;
+  transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:2px;
 }
-.font-opt:hover{border-color:var(--fog);}
-.font-opt.active{border-color:var(--red);color:var(--white);background:rgba(215,38,56,.1);}
+.font-opt:hover{background:var(--zinc);}
+.font-opt.active{background:var(--red);color:#fff;border-color:var(--red);}
+
+.emoji-opt{
+  background:var(--iron);border:1px solid var(--zinc);border-radius:6px;
+  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+  font-size:16px;cursor:pointer;transition:all .15s;
+}
+.emoji-opt:hover{background:var(--zinc);}
+.emoji-opt.active{background:var(--red);border-color:var(--red);}
+
+.logo-upload-btn{
+  display:inline-block;padding:6px 12px;
+  background:var(--iron);border:1px dashed var(--silver);border-radius:6px;
+  color:var(--white);font-size:11px;font-weight:600;cursor:pointer;
+  text-align:center;width:100%;transition:all .2s;
+}
+.logo-upload-btn:hover{background:var(--zinc);border-style:solid;}
 
 .design-preview-wrap{
   position:sticky;top:70px;
@@ -248,24 +252,29 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
 }
 .prev-size-btn{
   width:30px;height:28px;background:var(--iron);
-  border:1px solid var(--zinc);border-radius:6px;
-  color:var(--silver);font-size:13px;cursor:pointer;
+  border:1px solid transparent;border-radius:6px;
+  color:var(--silver);cursor:pointer;transition:all .15s;
   display:flex;align-items:center;justify-content:center;
-  transition:all .12s;
 }
-.prev-size-btn.active{background:var(--red);border-color:var(--red);color:#fff;}
+.prev-size-btn:hover{background:var(--zinc);color:var(--white);}
+.prev-size-btn.active{background:var(--zinc);color:var(--red);border-color:var(--zinc);}
 .preview-frame-wrap{
-  border:1px solid var(--zinc);border-radius:0 0 10px 10px;
-  overflow:hidden;background:var(--iron);
+  background:var(--steel);border:1px solid var(--zinc);
+  border-radius:0 0 10px 10px;overflow:hidden;
   display:flex;justify-content:center;
   min-height:520px;padding:16px;transition:all .3s;
 }
-.preview-frame-wrap.mobile{padding:16px 40px;}
+.preview-frame-wrap.mobile{padding:16px 20px;}
 .preview-frame{
   width:100%;max-width:100%;
   border-radius:8px;overflow:hidden;
   box-shadow:0 8px 40px rgba(0,0,0,.5);
-  transition:max-width .3s;
+  transition:all .3s;
+  margin: 0 auto;
+}
+.preview-frame-wrap.mobile .preview-frame{
+  max-width:320px;
+  border-radius:30px;
 }
 /* ABM */
 .abm-btn-new{
@@ -1108,6 +1117,151 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
           </div>
         </div>
 
+        <!-- REDES SOCIALES Y ENLACES -->
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-title"><i class="bi bi-link-45deg"></i> Redes Sociales y Enlaces</div>
+          <div class="card-content">
+            <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
+              Agregá los enlaces a tus redes y sitios. Se mostrarán automáticamente en el pie de página de la tienda. Dejá en blanco los que no uses.
+            </div>
+            <div class="config-grid">
+              <div class="ctrl-group">
+                <label class="ctrl-label">Dominio Propio</label>
+                <input class="ctrl-input" id="cfg-store-domain" placeholder="www.mitienda.com"/>
+              </div>
+              <div class="ctrl-group">
+                <label class="ctrl-label">Sitio Web (alternativo)</label>
+                <input class="ctrl-input" id="cfg-social-web" placeholder="https://..."/>
+              </div>
+              <div class="ctrl-group">
+                <label class="ctrl-label">Instagram</label>
+                <input class="ctrl-input" id="cfg-social-ig" placeholder="https://instagram.com/..."/>
+              </div>
+              <div class="ctrl-group">
+                <label class="ctrl-label">Facebook</label>
+                <input class="ctrl-input" id="cfg-social-fb" placeholder="https://facebook.com/..."/>
+              </div>
+              <div class="ctrl-group">
+                <label class="ctrl-label">X (Twitter)</label>
+                <input class="ctrl-input" id="cfg-social-x" placeholder="https://x.com/..."/>
+              </div>
+              <div class="ctrl-group">
+                <label class="ctrl-label">MercadoLibre</label>
+                <input class="ctrl-input" id="cfg-social-ml" placeholder="Enlace a tu e-shop..."/>
+              </div>
+              <div class="ctrl-group">
+                <label class="ctrl-label">TiendaNube</label>
+                <input class="ctrl-input" id="cfg-social-tn" placeholder="Enlace a tu TiendaNube..."/>
+              </div>
+              <div class="ctrl-group">
+                <label class="ctrl-label">Google Maps</label>
+                <input class="ctrl-input" id="cfg-social-maps" placeholder="Enlace de Google Maps..."/>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BANNERS PROMOCIONALES -->
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-title"><i class="bi bi-image"></i> Banners promocionales 50/50</div>
+          <div class="card-content">
+          <!-- BANNER 1 -->
+          <div style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:16px;margin-bottom:14px;">
+            <div style="font-weight:700;font-size:13px;margin-bottom:12px;color:var(--red);">BANNER 1</div>
+            <div class="config-grid">
+              <div class="ctrl-group">
+                <label class="ctrl-label">Etiqueta (NUEVAS, OFERTA, etc)</label>
+                <input class="ctrl-input" id="banner1-label" placeholder="NUEVAS HERRAMIENTAS" maxlength="30"/>
+              </div>
+              <div class="ctrl-group">
+                <label class="ctrl-label">Categoría para filtrar</label>
+                <input class="ctrl-input" id="banner1-cat" placeholder="Herramientas" maxlength="50"/>
+              </div>
+              <div class="ctrl-group" style="grid-column:1/-1;">
+                <label class="ctrl-label">Título principal (max 30 caracteres)</label>
+                <input class="ctrl-input" id="banner1-title" placeholder="Línea Profesional" maxlength="30"/>
+              </div>
+              <div class="ctrl-group" style="grid-column:1/-1;">
+                <label class="ctrl-label">URL de imagen (1200x400px recomendado)</label>
+                <div style="display:flex;gap:8px;align-items:flex-start;">
+                  <input class="ctrl-input" id="banner1-img" placeholder="https://..." style="flex:1;" 
+                    oninput="previewBanner('banner1')"/>
+                  <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--zinc);border:1px solid var(--silver);border-radius:8px;font-size:11px;font-weight:600;color:var(--fog);">
+                    <i class="bi bi-cloud-arrow-up"></i> Subir
+                    <input type="file" accept="image/*" style="display:none;" onchange="handleBannerUpload(this,'banner1')"/>
+                  </label>
+                </div>
+              </div>
+              <div id="banner1-preview" style="grid-column:1/-1;display:none;height:160px;border-radius:10px;overflow:hidden;background:var(--zinc);margin-top:8px;">
+                <img src="" alt="Preview" style="width:100%;height:100%;object-fit:cover;"/>
+              </div>
+            </div>
+          </div>
+
+          <!-- BANNER 2 -->
+          <div style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:16px;margin-bottom:14px;">
+            <div style="font-weight:700;font-size:13px;margin-bottom:12px;color:var(--red);">BANNER 2</div>
+            <div class="config-grid">
+              <div class="ctrl-group">
+                <label class="ctrl-label">Etiqueta (PROMOCIÓN, DESCUENTO, etc)</label>
+                <input class="ctrl-input" id="banner2-label" placeholder="PROMOCIÓN" maxlength="30"/>
+              </div>
+              <div class="ctrl-group">
+                <label class="ctrl-label">Categoría para filtrar</label>
+                <input class="ctrl-input" id="banner2-cat" placeholder="Accesorios" maxlength="50"/>
+              </div>
+              <div class="ctrl-group" style="grid-column:1/-1;">
+                <label class="ctrl-label">Título principal (max 30 caracteres)</label>
+                <input class="ctrl-input" id="banner2-title" placeholder="Accesorios -30%" maxlength="30"/>
+              </div>
+              <div class="ctrl-group" style="grid-column:1/-1;">
+                <label class="ctrl-label">URL de imagen (1200x400px recomendado)</label>
+                <div style="display:flex;gap:8px;align-items:flex-start;">
+                  <input class="ctrl-input" id="banner2-img" placeholder="https://..." style="flex:1;"
+                    oninput="previewBanner('banner2')"/>
+                  <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--zinc);border:1px solid var(--silver);border-radius:8px;font-size:11px;font-weight:600;color:var(--fog);">
+                    <i class="bi bi-cloud-arrow-up"></i> Subir
+                    <input type="file" accept="image/*" style="display:none;" onchange="handleBannerUpload(this,'banner2')"/>
+                  </label>
+                </div>
+              </div>
+              <div id="banner2-preview" style="grid-column:1/-1;display:none;height:160px;border-radius:10px;overflow:hidden;background:var(--zinc);margin-top:8px;">
+                <img src="" alt="Preview" style="width:100%;height:100%;object-fit:cover;"/>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:14px;">
+            <button class="abm-btn-new" onclick="saveBannersConfig()" style="flex:1; justify-content: center;">
+              <i class="bi bi-cloud-upload"></i> Guardar banners
+            </button>
+            <button onclick="loadBannersConfig()" style="flex:1;padding:10px;background:var(--zinc);border:1px solid var(--silver);border-radius:8px;color:var(--fog);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;justify-content:center;gap:6px;">
+              <i class="bi bi-arrow-clockwise"></i> Recargar
+            </button>
+          </div>
+          <div id="banners-status" style="font-size:11px;margin-top:8px;min-height:14px;color:var(--silver);"></div>
+          </div>
+        </div>
+
+        <!-- Tema -->
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-title"><i class="bi bi-palette"></i> Apariencia del dashboard</div>
+          <div class="card-content">
+          <div style="display:flex;gap:12px;">
+            <button onclick="setDashTheme('dark')" id="dash-theme-dark"
+              style="flex:1;padding:12px;border-radius:10px;border:2px solid var(--red);background:var(--iron);cursor:pointer;font-family:var(--font-b);font-size:12px;font-weight:600;color:var(--white);transition:all .15s;">
+              <i class="bi bi-moon-stars" style="display:block;font-size:20px;margin-bottom:4px;"></i>
+              Oscuro
+            </button>
+            <button onclick="setDashTheme('light')" id="dash-theme-light"
+              style="flex:1;padding:12px;border-radius:10px;border:1px solid var(--zinc);background:var(--iron);cursor:pointer;font-family:var(--font-b);font-size:12px;font-weight:600;color:var(--white);transition:all .15s;">
+              <i class="bi bi-sun" style="display:block;font-size:20px;margin-bottom:4px;"></i>
+              Claro
+            </button>
+          </div>
+          </div>
+        </div>
+
         <div style="display:flex;gap:10px;">
           <button class="sb-btn" style="flex:1;" onclick="applyConfig()">
             <i class="bi bi-check2-circle"></i> Aplicar cambios
@@ -1324,154 +1478,7 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
           <div style="font-size:10px;color:var(--silver);margin-top:3px;">Se incluye en mensajes de retiro por local</div>
         </div>
       </div>
-      </div>
-      </div>
-    </div>
-
-    <!-- REDES SOCIALES Y ENLACES ← NUEVO -->
-    <div class="config-section">
-      <div class="config-section-title"><i class="bi bi-link-45deg"></i> Redes Sociales y Enlaces</div>
-      <div class="config-section-content">
-        <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
-          Agregá los enlaces a tus redes y sitios. Se mostrarán automáticamente en el pie de página de la tienda. Dejá en blanco los que no uses.
         </div>
-        <div class="config-grid">
-          <div class="ctrl-group">
-            <label class="ctrl-label">Dominio Propio</label>
-            <input class="ctrl-input" id="cfg-store-domain" placeholder="www.mitienda.com"/>
-          </div>
-          <div class="ctrl-group">
-            <label class="ctrl-label">Sitio Web (alternativo)</label>
-            <input class="ctrl-input" id="cfg-social-web" placeholder="https://..."/>
-          </div>
-          <div class="ctrl-group">
-            <label class="ctrl-label">Instagram</label>
-            <input class="ctrl-input" id="cfg-social-ig" placeholder="https://instagram.com/..."/>
-          </div>
-          <div class="ctrl-group">
-            <label class="ctrl-label">Facebook</label>
-            <input class="ctrl-input" id="cfg-social-fb" placeholder="https://facebook.com/..."/>
-          </div>
-          <div class="ctrl-group">
-            <label class="ctrl-label">X (Twitter)</label>
-            <input class="ctrl-input" id="cfg-social-x" placeholder="https://x.com/..."/>
-          </div>
-          <div class="ctrl-group">
-            <label class="ctrl-label">MercadoLibre</label>
-            <input class="ctrl-input" id="cfg-social-ml" placeholder="Enlace a tu e-shop..."/>
-          </div>
-          <div class="ctrl-group">
-            <label class="ctrl-label">TiendaNube</label>
-            <input class="ctrl-input" id="cfg-social-tn" placeholder="Enlace a tu TiendaNube..."/>
-          </div>
-          <div class="ctrl-group">
-            <label class="ctrl-label">Google Maps</label>
-            <input class="ctrl-input" id="cfg-social-maps" placeholder="Enlace de Google Maps..."/>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- BANNERS PROMOCIONALES ← NUEVO -->
-    <div class="config-section">
-      <div class="config-section-title"><i class="bi bi-image"></i> Banners promocionales 50/50</div>
-      <div class="config-section-content">
-      <!-- BANNER 1 -->
-      <div style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:16px;margin-bottom:14px;">
-        <div style="font-weight:700;font-size:13px;margin-bottom:12px;color:var(--red);">BANNER 1</div>
-        <div class="config-grid">
-          <div class="ctrl-group">
-            <label class="ctrl-label">Etiqueta (NUEVAS, OFERTA, etc)</label>
-            <input class="ctrl-input" id="banner1-label" placeholder="NUEVAS HERRAMIENTAS" maxlength="30"/>
-          </div>
-          <div class="ctrl-group">
-            <label class="ctrl-label">Categoría para filtrar</label>
-            <input class="ctrl-input" id="banner1-cat" placeholder="Herramientas" maxlength="50"/>
-          </div>
-          <div class="ctrl-group" style="grid-column:1/-1;">
-            <label class="ctrl-label">Título principal (max 30 caracteres)</label>
-            <input class="ctrl-input" id="banner1-title" placeholder="Línea Profesional" maxlength="30"/>
-          </div>
-          <div class="ctrl-group" style="grid-column:1/-1;">
-            <label class="ctrl-label">URL de imagen (1200x400px recomendado)</label>
-            <div style="display:flex;gap:8px;align-items:flex-start;">
-              <input class="ctrl-input" id="banner1-img" placeholder="https://..." style="flex:1;" 
-                oninput="previewBanner('banner1')"/>
-              <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--zinc);border:1px solid var(--silver);border-radius:8px;font-size:11px;font-weight:600;color:var(--fog);">
-                <i class="bi bi-cloud-arrow-up"></i> Subir
-                <input type="file" accept="image/*" style="display:none;" onchange="handleBannerUpload(this,'banner1')"/>
-              </label>
-            </div>
-          </div>
-          <div id="banner1-preview" style="grid-column:1/-1;display:none;height:160px;border-radius:10px;overflow:hidden;background:var(--zinc);margin-top:8px;">
-            <img src="" alt="Preview" style="width:100%;height:100%;object-fit:cover;"/>
-          </div>
-        </div>
-      </div>
-
-      <!-- BANNER 2 -->
-      <div style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:16px;margin-bottom:14px;">
-        <div style="font-weight:700;font-size:13px;margin-bottom:12px;color:var(--red);">BANNER 2</div>
-        <div class="config-grid">
-          <div class="ctrl-group">
-            <label class="ctrl-label">Etiqueta (PROMOCIÓN, DESCUENTO, etc)</label>
-            <input class="ctrl-input" id="banner2-label" placeholder="PROMOCIÓN" maxlength="30"/>
-          </div>
-          <div class="ctrl-group">
-            <label class="ctrl-label">Categoría para filtrar</label>
-            <input class="ctrl-input" id="banner2-cat" placeholder="Accesorios" maxlength="50"/>
-          </div>
-          <div class="ctrl-group" style="grid-column:1/-1;">
-            <label class="ctrl-label">Título principal (max 30 caracteres)</label>
-            <input class="ctrl-input" id="banner2-title" placeholder="Accesorios -30%" maxlength="30"/>
-          </div>
-          <div class="ctrl-group" style="grid-column:1/-1;">
-            <label class="ctrl-label">URL de imagen (1200x400px recomendado)</label>
-            <div style="display:flex;gap:8px;align-items:flex-start;">
-              <input class="ctrl-input" id="banner2-img" placeholder="https://..." style="flex:1;"
-                oninput="previewBanner('banner2')"/>
-              <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--zinc);border:1px solid var(--silver);border-radius:8px;font-size:11px;font-weight:600;color:var(--fog);">
-                <i class="bi bi-cloud-arrow-up"></i> Subir
-                <input type="file" accept="image/*" style="display:none;" onchange="handleBannerUpload(this,'banner2')"/>
-              </label>
-            </div>
-          </div>
-          <div id="banner2-preview" style="grid-column:1/-1;display:none;height:160px;border-radius:10px;overflow:hidden;background:var(--zinc);margin-top:8px;">
-            <img src="" alt="Preview" style="width:100%;height:100%;object-fit:cover;"/>
-          </div>
-        </div>
-      </div>
-
-      <div style="display:flex;gap:8px;margin-top:14px;">
-        <button class="abm-btn-new" onclick="saveBannersConfig()" style="flex:1; justify-content: center;">
-          <i class="bi bi-cloud-upload"></i> Guardar banners
-        </button>
-        <button onclick="loadBannersConfig()" style="flex:1;padding:10px;background:var(--zinc);border:1px solid var(--silver);border-radius:8px;color:var(--fog);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;justify-content:center;gap:6px;">
-          <i class="bi bi-arrow-clockwise"></i> Recargar
-        </button>
-      </div>
-      <div id="banners-status" style="font-size:11px;margin-top:8px;min-height:14px;color:var(--silver);"></div>
-      </div>
-    </div>
-
-
-
-    <!-- Tema -->
-    <div class="config-section">
-      <div class="config-section-title"><i class="bi bi-palette"></i> Apariencia del dashboard</div>
-      <div class="config-section-content">
-      <div style="display:flex;gap:12px;">
-        <button onclick="setDashTheme('dark')" id="dash-theme-dark"
-          style="flex:1;padding:12px;border-radius:10px;border:2px solid var(--red);background:var(--iron);cursor:pointer;font-family:var(--font-b);font-size:12px;font-weight:600;color:var(--white);transition:all .15s;">
-          <i class="bi bi-moon-stars" style="display:block;font-size:20px;margin-bottom:4px;"></i>
-          Oscuro
-        </button>
-        <button onclick="setDashTheme('light')" id="dash-theme-light"
-          style="flex:1;padding:12px;border-radius:10px;border:1px solid var(--zinc);background:var(--iron);cursor:pointer;font-family:var(--font-b);font-size:12px;font-weight:600;color:var(--white);transition:all .15s;">
-          <i class="bi bi-sun" style="display:block;font-size:20px;margin-bottom:4px;"></i>
-          Claro
-        </button>
-      </div>
       </div>
     </div>
 
