@@ -681,6 +681,17 @@ a.logo{
   position:relative;z-index:1;
 }
 .footer a{color:var(--red);text-decoration:none;}
+.social-icon-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--iron); border: 1px solid var(--zinc);
+  color: var(--silver); font-size: 16px;
+  transition: all 0.2s ease; text-decoration: none;
+}
+.social-icon-btn:hover {
+  background: var(--red); color: var(--white);
+  border-color: var(--red); transform: translateY(-2px);
+}
 
 /* ── TOAST ──────────────────────────────────────── */
 .toast{
@@ -840,7 +851,15 @@ a.logo{
 
 <!-- ── FOOTER ── -->
 <footer class="footer">
-  <strong style="color:var(--white);">FerreApp</strong> · Buenos Aires, Argentina<br/>
+  <div style="margin-bottom:16px;" id="footer-store-name-container">
+    <strong id="footer-store-name" style="color:var(--white);font-size:16px;">FerreApp</strong>
+    <div id="footer-store-desc" style="font-size:11px;color:var(--silver);margin-top:4px;">Buenos Aires, Argentina</div>
+  </div>
+  
+  <div id="footer-socials" style="display:flex;justify-content:center;gap:16px;margin-bottom:16px;flex-wrap:wrap;">
+    <!-- Filled dynamically -->
+  </div>
+  
   <span style="opacity:.5;">Powered by <a href="#">StoreApp</a></span>
 </footer>
 
@@ -1761,6 +1780,42 @@ function applyStoredConfig() {
 
   // Update pills background to accent color
   document.querySelectorAll('.hero-pill').forEach(p => { p.style.background = accent; });
+
+  // Update Footer Details
+  const fnContainer = document.getElementById('footer-store-name-container');
+  if (fnContainer) {
+    const fname = document.getElementById('footer-store-name');
+    const fdesc = document.getElementById('footer-store-desc');
+    if (fname) fname.textContent = cfg.name || 'Mi Tienda';
+    if (fdesc) fdesc.textContent = [cfg.direccion, cfg.horario].filter(Boolean).join(' • ') || '¡Gracias por visitarnos!';
+  }
+
+  // Update Social Links
+  const fSocials = document.getElementById('footer-socials');
+  if (fSocials) {
+    fSocials.innerHTML = '';
+    const soc = cfg.socials || {};
+    const links = [
+      { id: 'web', icon: 'bi-globe', title: 'Sitio Web', url: soc.web },
+      { id: 'ig', icon: 'bi-instagram', title: 'Instagram', url: soc.ig },
+      { id: 'fb', icon: 'bi-facebook', title: 'Facebook', url: soc.fb },
+      { id: 'x', icon: 'bi-twitter-x', title: 'X (Twitter)', url: soc.x },
+      { id: 'ml', icon: 'bi-shop-window', title: 'MercadoLibre', url: soc.ml },
+      { id: 'tn', icon: 'bi-cloud-check', title: 'TiendaNube', url: soc.tn },
+      { id: 'maps', icon: 'bi-geo-alt', title: 'Google Maps', url: soc.maps }
+    ];
+    links.forEach(l => {
+      if (l.url) {
+        const a = document.createElement('a');
+        a.href = l.url.startsWith('http') ? l.url : `https://${l.url}`;
+        a.target = '_blank';
+        a.className = 'social-icon-btn';
+        a.title = l.title;
+        a.innerHTML = `<i class="bi ${l.icon}"></i>`;
+        fSocials.appendChild(a);
+      }
+    });
+  }
 
   if (cfg.wapp) window.WHATSAPP_NUMBER = cfg.wapp;
 }

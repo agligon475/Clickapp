@@ -1325,6 +1325,51 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
         </div>
       </div>
       </div>
+      </div>
+    </div>
+
+    <!-- REDES SOCIALES Y ENLACES ← NUEVO -->
+    <div class="config-section">
+      <div class="config-section-title"><i class="bi bi-link-45deg"></i> Redes Sociales y Enlaces</div>
+      <div class="config-section-content">
+        <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
+          Agregá los enlaces a tus redes y sitios. Se mostrarán automáticamente en el pie de página de la tienda. Dejá en blanco los que no uses.
+        </div>
+        <div class="config-grid">
+          <div class="ctrl-group">
+            <label class="ctrl-label">Dominio Propio</label>
+            <input class="ctrl-input" id="cfg-store-domain" placeholder="www.mitienda.com"/>
+          </div>
+          <div class="ctrl-group">
+            <label class="ctrl-label">Sitio Web (alternativo)</label>
+            <input class="ctrl-input" id="cfg-social-web" placeholder="https://..."/>
+          </div>
+          <div class="ctrl-group">
+            <label class="ctrl-label">Instagram</label>
+            <input class="ctrl-input" id="cfg-social-ig" placeholder="https://instagram.com/..."/>
+          </div>
+          <div class="ctrl-group">
+            <label class="ctrl-label">Facebook</label>
+            <input class="ctrl-input" id="cfg-social-fb" placeholder="https://facebook.com/..."/>
+          </div>
+          <div class="ctrl-group">
+            <label class="ctrl-label">X (Twitter)</label>
+            <input class="ctrl-input" id="cfg-social-x" placeholder="https://x.com/..."/>
+          </div>
+          <div class="ctrl-group">
+            <label class="ctrl-label">MercadoLibre</label>
+            <input class="ctrl-input" id="cfg-social-ml" placeholder="Enlace a tu e-shop..."/>
+          </div>
+          <div class="ctrl-group">
+            <label class="ctrl-label">TiendaNube</label>
+            <input class="ctrl-input" id="cfg-social-tn" placeholder="Enlace a tu TiendaNube..."/>
+          </div>
+          <div class="ctrl-group">
+            <label class="ctrl-label">Google Maps</label>
+            <input class="ctrl-input" id="cfg-social-maps" placeholder="Enlace de Google Maps..."/>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- BANNERS PROMOCIONALES ← NUEVO -->
@@ -1874,13 +1919,18 @@ function updateStatusLights() {
   
   // 4. Dominio
   const host = window.location.hostname;
-  const isHttps = window.location.protocol === 'https:';
+  const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+  const customDom = (sc.domain || '').trim().replace(/^(https?:\/\/)?(www\.)?/, '').toLowerCase();
+  const currentDom = host.replace(/^(www\.)?/, '').toLowerCase();
+
   if (host === 'localhost' || host === '127.0.0.1') {
-    setStatusBulb('domain', 'warn', 'Posible falta de configuración (Local)');
-  } else if (isHttps) {
-    setStatusBulb('domain', 'ok', 'Conexión establecida');
+    setStatusBulb('domain', 'warn', 'Entorno local (HTTP)');
+  } else if (customDom && currentDom === customDom) {
+    setStatusBulb('domain', 'ok', 'Dominio personalizado activo');
+  } else if (host.endsWith('.vercel.app')) {
+    setStatusBulb('domain', 'err', 'Sin dominio propio (Vercel genérico)');
   } else {
-    setStatusBulb('domain', 'err', 'Desconectado. Error. Solicitar soporte');
+    setStatusBulb('domain', 'ok', 'Conexión establecida');
   }
 }
 
@@ -3695,6 +3745,17 @@ function initConfigView() {
   if (sc.rubro)     document.getElementById('cfg-store-rubro').value     = sc.rubro;
   if (sc.direccion) document.getElementById('cfg-store-direccion').value = sc.direccion;
   if (sc.horario)   document.getElementById('cfg-store-horario').value   = sc.horario;
+  
+  if (sc.domain)    document.getElementById('cfg-store-domain').value    = sc.domain;
+  
+  const soc = sc.socials || {};
+  if (soc.web) document.getElementById('cfg-social-web').value = soc.web;
+  if (soc.ig)  document.getElementById('cfg-social-ig').value  = soc.ig;
+  if (soc.fb)  document.getElementById('cfg-social-fb').value  = soc.fb;
+  if (soc.x)   document.getElementById('cfg-social-x').value   = soc.x;
+  if (soc.ml)  document.getElementById('cfg-social-ml').value  = soc.ml;
+  if (soc.tn)  document.getElementById('cfg-social-tn').value  = soc.tn;
+  if (soc.maps) document.getElementById('cfg-social-maps').value = soc.maps;
 
   const cloud = JSON.parse(localStorage.getItem('storeapp_cloudinary') || '{}');
   if (cloud.name)   document.getElementById('cfg-cloud-name').value   = cloud.name;
@@ -3876,6 +3937,19 @@ function saveConfig() {
   if (rubro)     sc.rubro     = rubro;
   if (direccion) sc.direccion = direccion;
   if (horario)   sc.horario   = horario;
+  
+  const domain = document.getElementById('cfg-store-domain').value.trim();
+  sc.domain = domain;
+  
+  const web = document.getElementById('cfg-social-web').value.trim();
+  const ig = document.getElementById('cfg-social-ig').value.trim();
+  const fb = document.getElementById('cfg-social-fb').value.trim();
+  const x = document.getElementById('cfg-social-x').value.trim();
+  const ml = document.getElementById('cfg-social-ml').value.trim();
+  const tn = document.getElementById('cfg-social-tn').value.trim();
+  const maps = document.getElementById('cfg-social-maps').value.trim();
+  
+  sc.socials = { web, ig, fb, x, ml, tn, maps };
   localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
   updateWelcomeGreeting();
 
