@@ -726,6 +726,24 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
         </div>
       </div>
 
+      <!-- Resumen de Catálogo -->
+      <div class="card" style="margin-top:16px;">
+        <div class="card-title" style="margin-bottom:16px; font-size:11px;">
+          <i class="bi bi-box-seam" style="color:var(--red);"></i> Resumen de Catálogo
+        </div>
+        <div style="display:flex; justify-content:space-around; text-align:center;">
+          <div>
+            <div id="dash-active-prods" style="font-size:32px; font-weight:800; color:var(--white); font-family:var(--font-h);">0</div>
+            <div style="font-size:11px; color:var(--silver); text-transform:uppercase; letter-spacing:0.05em; font-weight:600; margin-top:4px;">Artículos Activos</div>
+          </div>
+          <div style="width:1px; background:rgba(255,255,255,0.1);"></div>
+          <div>
+            <div id="dash-inactive-prods" style="font-size:32px; font-weight:800; color:var(--red); font-family:var(--font-h);">0</div>
+            <div style="font-size:11px; color:var(--silver); text-transform:uppercase; letter-spacing:0.05em; font-weight:600; margin-top:4px;">Inactivos / Ocultos</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -2667,6 +2685,14 @@ function renderABM() {
     if (stFilt==='out' && p.stock !== 0) return false;
     return true;
   });
+
+  // Actualizar panel de Resumen de Catálogo en Inicio
+  const activeCount = localProducts.filter(p => !p.hidden).length;
+  const inactiveCount = localProducts.length - activeCount;
+  const elActive = document.getElementById('dash-active-prods');
+  const elInactive = document.getElementById('dash-inactive-prods');
+  if (elActive) elActive.textContent = activeCount;
+  if (elInactive) elInactive.textContent = inactiveCount;
 
   const sc = s => s===0?'badge-red':s<5?'badge-amber':'badge-green';
   const sl = s => s===0?'Sin stock':s<5?`Bajo: ${s}`:`${s} uds.`;
