@@ -2625,6 +2625,8 @@ Identificá el producto y devolvé SOLO un JSON válido (sin texto adicional, si
 {"name":"nombre completo","marca":"marca o fabricante","cat":"categoría","detalle":"especificaciones técnicas en 1-2 oraciones","origen":"código ISO del país (AR/CN/US/DE/JP/IT/BR/KR/TW/MX/FR/GB/ES/SE/CH) o vacío","confianza":"alta/media/baja"}
 Si no reconocés el código, usá confianza "baja" e intentá igual.`;
 
+    const modelName = localStorage.getItem('storeapp_claude_model') || 'claude-3-5-haiku-20241022';
+    console.log("buscarCodigo: Consultando modelo:", modelName);
     const res = await fetch('/api/helper', {
       method: 'POST',
       headers: {
@@ -2632,7 +2634,7 @@ Si no reconocés el código, usá confianza "baja" e intentá igual.`;
         'content-type': 'application/json'
       },
       body: JSON.stringify({
-        model: localStorage.getItem('storeapp_claude_model') || 'claude-3-5-haiku-20241022',
+        model: modelName,
         max_tokens: 300,
         messages: [{ role: 'user', content: prompt }]
       })
@@ -3560,6 +3562,8 @@ async function testClaudeKey() {
     return;
   }
   if (statusEl) { statusEl.style.color = 'var(--silver)'; statusEl.textContent = 'Probando...'; }
+  const selectedModel = document.getElementById('cfg-claude-model')?.value || localStorage.getItem('storeapp_claude_model') || 'claude-3-5-haiku-20241022';
+  console.log("testClaudeKey: Probando conexión con modelo:", selectedModel);
   try {
     const res = await fetch('/api/helper', {
       method: 'POST',
@@ -3568,7 +3572,7 @@ async function testClaudeKey() {
         'content-type': 'application/json'
       },
       body: JSON.stringify({
-        model: document.getElementById('cfg-claude-model')?.value || localStorage.getItem('storeapp_claude_model') || 'claude-3-5-haiku-20241022',
+        model: selectedModel,
         max_tokens: 10,
         messages: [{ role: 'user', content: 'ping' }]
       })
@@ -3578,7 +3582,7 @@ async function testClaudeKey() {
       localStorage.setItem('storeapp_claude_key', key);
     } else {
       const err = await res.json().catch(() => ({}));
-      if (statusEl) { statusEl.style.color = 'var(--red)'; statusEl.textContent = `✕ ${err?.error?.message || 'Clave inválida'}`; }
+      if (statusEl) { statusEl.style.color = 'var(--red)'; statusEl.textContent = `✕ [Status ${res.status}] ${err?.error?.message || 'Clave inválida'}`; }
     }
   } catch(e) {
     if (statusEl) { statusEl.style.color = 'var(--red)'; statusEl.textContent = '✕ Error: ' + e.message; }
