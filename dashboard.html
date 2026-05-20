@@ -681,67 +681,72 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
         </div>
       </div>
       
-      <!-- Right side: Status lights -->
-      <div class="card" style="padding:20px; border-radius:12px; background:var(--steel); border:1px solid var(--zinc); animation:fadeUp .35s ease both; margin-bottom:40px;">
-        <div class="card-title" style="margin-bottom:16px; font-size:13px; font-weight:700; color:var(--white); text-transform:uppercase; letter-spacing:0.05em; display:flex; align-items:center; gap:8px;">
-          <i class="bi bi-cpu" style="color:var(--red);"></i> Estado del Sistema
-        </div>
+      <!-- Right side -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
         
-        <div style="display:flex; flex-direction:column; gap:12px;">
-          <!-- Base de datos -->
-          <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
-            <div style="display:flex; flex-direction:column;">
-              <span style="font-size:13px; font-weight:600; color:var(--white);">Base de datos</span>
-              <span id="status-desc-db" style="font-size:10px; color:var(--silver);">Verificando...</span>
-            </div>
-            <div id="status-light-db" style="width:12px; height:12px; border-radius:50%; background:var(--silver); box-shadow:0 0 8px var(--silver); transition:all 0.3s ease;"></div>
+        <!-- Status lights -->
+        <div class="card" style="padding:20px; border-radius:12px; background:var(--steel); border:1px solid var(--zinc); animation:fadeUp .35s ease both;">
+          <div class="card-title" style="margin-bottom:16px; font-size:13px; font-weight:700; color:var(--white); text-transform:uppercase; letter-spacing:0.05em; display:flex; align-items:center; gap:8px;">
+            <i class="bi bi-cpu" style="color:var(--red);"></i> Estado del Sistema
           </div>
           
-          <!-- Consultas AI -->
-          <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
-            <div style="display:flex; flex-direction:column;">
-              <span style="font-size:13px; font-weight:600; color:var(--white);">Consultas AI</span>
-              <span id="status-desc-ai" style="font-size:10px; color:var(--silver);">Verificando...</span>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <!-- Base de datos -->
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+              <div style="display:flex; flex-direction:column;">
+                <span style="font-size:13px; font-weight:600; color:var(--white);">Base de datos</span>
+                <span id="status-desc-db" style="font-size:10px; color:var(--silver);">Verificando...</span>
+              </div>
+              <div id="status-light-db" style="width:12px; height:12px; border-radius:50%; background:var(--silver); box-shadow:0 0 8px var(--silver); transition:all 0.3s ease;"></div>
             </div>
-            <div id="status-light-ai" style="width:12px; height:12px; border-radius:50%; background:var(--silver); box-shadow:0 0 8px var(--silver); transition:all 0.3s ease;"></div>
-          </div>
+            
+            <!-- Consultas AI -->
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+              <div style="display:flex; flex-direction:column;">
+                <span style="font-size:13px; font-weight:600; color:var(--white);">Consultas AI</span>
+                <span id="status-desc-ai" style="font-size:10px; color:var(--silver);">Verificando...</span>
+              </div>
+              <div id="status-light-ai" style="width:12px; height:12px; border-radius:50%; background:var(--silver); box-shadow:0 0 8px var(--silver); transition:all 0.3s ease;"></div>
+            </div>
 
-          <!-- Cloudinary -->
-          <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
-            <div style="display:flex; flex-direction:column;">
-              <span style="font-size:13px; font-weight:600; color:var(--white);">Cloudinary</span>
-              <span id="status-desc-cloudinary" style="font-size:10px; color:var(--silver);">Verificando...</span>
+            <!-- Cloudinary -->
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+              <div style="display:flex; flex-direction:column;">
+                <span style="font-size:13px; font-weight:600; color:var(--white);">Cloudinary</span>
+                <span id="status-desc-cloudinary" style="font-size:10px; color:var(--silver);">Verificando...</span>
+              </div>
+              <div id="status-light-cloudinary" style="width:12px; height:12px; border-radius:50%; background:var(--silver); box-shadow:0 0 8px var(--silver); transition:all 0.3s ease;"></div>
             </div>
-            <div id="status-light-cloudinary" style="width:12px; height:12px; border-radius:50%; background:var(--silver); box-shadow:0 0 8px var(--silver); transition:all 0.3s ease;"></div>
-          </div>
 
-          <!-- Dominio -->
-          <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0;">
-            <div style="display:flex; flex-direction:column;">
-              <span style="font-size:13px; font-weight:600; color:var(--white);">Dominio</span>
-              <span id="status-desc-domain" style="font-size:10px; color:var(--silver);">Verificando...</span>
+            <!-- Dominio -->
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0;">
+              <div style="display:flex; flex-direction:column;">
+                <span style="font-size:13px; font-weight:600; color:var(--white);">Dominio</span>
+                <span id="status-desc-domain" style="font-size:10px; color:var(--silver);">Verificando...</span>
+              </div>
+              <div id="status-light-domain" style="width:12px; height:12px; border-radius:50%; background:var(--silver); box-shadow:0 0 8px var(--silver); transition:all 0.3s ease;"></div>
             </div>
-            <div id="status-light-domain" style="width:12px; height:12px; border-radius:50%; background:var(--silver); box-shadow:0 0 8px var(--silver); transition:all 0.3s ease;"></div>
           </div>
         </div>
-      </div>
 
-      <!-- Resumen de Catálogo -->
-      <div class="card" style="margin-top:16px;">
-        <div class="card-title" style="margin-bottom:16px; font-size:11px;">
-          <i class="bi bi-box-seam" style="color:var(--red);"></i> Resumen de Catálogo
-        </div>
-        <div style="display:flex; justify-content:space-around; text-align:center;">
-          <div>
-            <div id="dash-active-prods" style="font-size:32px; font-weight:800; color:var(--white); font-family:var(--font-h);">0</div>
-            <div style="font-size:11px; color:var(--silver); text-transform:uppercase; letter-spacing:0.05em; font-weight:600; margin-top:4px;">Artículos Activos</div>
+        <!-- Resumen de Catálogo -->
+        <div class="card" style="margin-top:0;">
+          <div class="card-title" style="margin-bottom:16px; font-size:11px;">
+            <i class="bi bi-box-seam" style="color:var(--red);"></i> Resumen de Catálogo
           </div>
-          <div style="width:1px; background:rgba(255,255,255,0.1);"></div>
-          <div>
-            <div id="dash-inactive-prods" style="font-size:32px; font-weight:800; color:var(--red); font-family:var(--font-h);">0</div>
-            <div style="font-size:11px; color:var(--silver); text-transform:uppercase; letter-spacing:0.05em; font-weight:600; margin-top:4px;">Inactivos / Ocultos</div>
+          <div style="display:flex; justify-content:space-around; text-align:center;">
+            <div>
+              <div id="dash-active-prods" style="font-size:32px; font-weight:800; color:var(--white); font-family:var(--font-h);">0</div>
+              <div style="font-size:11px; color:var(--silver); text-transform:uppercase; letter-spacing:0.05em; font-weight:600; margin-top:4px;">Artículos Activos</div>
+            </div>
+            <div style="width:1px; background:rgba(255,255,255,0.1);"></div>
+            <div>
+              <div id="dash-inactive-prods" style="font-size:32px; font-weight:800; color:var(--red); font-family:var(--font-h);">0</div>
+              <div style="font-size:11px; color:var(--silver); text-transform:uppercase; letter-spacing:0.05em; font-weight:600; margin-top:4px;">Inactivos / Ocultos</div>
+            </div>
           </div>
         </div>
+
       </div>
 
     </div>
