@@ -510,6 +510,19 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
   font-size:8px;padding:2px 4px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
+/* SHORTCUTS */
+.shortcut-card{
+  background:var(--steel); border:1px solid var(--zinc);
+  border-radius:12px; padding:20px; cursor:pointer;
+  transition:border-color .15s, transform .15s, box-shadow .15s;
+}
+.shortcut-card:hover{
+  border-color:var(--red) !important;
+  transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(0,0,0,.15);
+}
+body.light-mode .shortcut-card{ background:#fff; }
+body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
 </style>
 </head>
 <body>
@@ -524,8 +537,12 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
   </div>
 
   <div class="sb-section">
-    <div class="sb-section-label">Analítica</div>
-    <div class="sb-item active" onclick="showView('dashboard',this)"><i class="bi bi-bar-chart-line"></i> Dashboard</div>
+    <div class="sb-section-label">Inicio</div>
+    <div class="sb-item active" onclick="showView('dashboard',this)"><i class="bi bi-house"></i> Inicio</div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-label">Informes</div>
+    <div class="sb-item" onclick="showView('reports',this)"><i class="bi bi-bar-chart-line"></i> Informes</div>
     <div class="sb-item" onclick="showView('orders',this)"><i class="bi bi-receipt"></i> Pedidos</div>
   </div>
   <div class="sb-section">
@@ -569,8 +586,82 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
     </div>
   </div>
 
-  <!-- ══ DASHBOARD ══ -->
+  <!-- ══ INICIO (DASHBOARD) ══ -->
   <div class="view active" id="view-dashboard">
+    <!-- Greeting Card -->
+    <div class="welcome-card" style="background:var(--steel); border:1px solid var(--zinc); border-radius:12px; padding:28px; margin-bottom:24px; animation:fadeUp .35s ease both;">
+      <h2 style="font-family:var(--font-h); font-size:24px; font-weight:800; margin-bottom:6px; color:var(--white);">
+        Hola <span id="welcome-store-name" style="color:var(--red);">FerreNow</span>, ¡qué bueno verte de nuevo!
+      </h2>
+      <p style="color:var(--silver); font-size:14px; margin:0;">¿Qué vamos a hacer hoy?</p>
+    </div>
+
+    <!-- Shortcuts Grid -->
+    <h3 style="font-family:var(--font-h); font-size:14px; font-weight:700; margin-bottom:16px; color:var(--white); text-transform:uppercase; letter-spacing:0.05em;">Acceso rápido</h3>
+    
+    <div class="shortcuts-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:16px; margin-bottom:40px;">
+      
+      <!-- Informes -->
+      <div class="shortcut-card" onclick="goToView('reports')">
+        <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">📊</div>
+        <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">Informes</h4>
+        <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Ver reportes, gráficos y métricas de venta.</p>
+      </div>
+
+      <!-- Pedidos -->
+      <div class="shortcut-card" onclick="goToView('orders')">
+        <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">📦</div>
+        <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">Pedidos</h4>
+        <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Cargar nuevos pedidos y gestionar estado de envíos.</p>
+      </div>
+
+      <!-- Productos -->
+      <div class="shortcut-card" onclick="goToView('products')">
+        <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">🛍️</div>
+        <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">Productos</h4>
+        <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Ver la vista previa de los productos cargados.</p>
+      </div>
+
+      <!-- ABM Productos -->
+      <div class="shortcut-card" onclick="goToView('abm')">
+        <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">✏️</div>
+        <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">ABM Productos</h4>
+        <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Crear, editar o eliminar productos en stock.</p>
+      </div>
+
+      <!-- Diseño de tienda -->
+      <div class="shortcut-card" onclick="goToView('design')">
+        <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">🎨</div>
+        <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">Diseño de tienda</h4>
+        <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Personalizar logo, colores y banners de la tienda.</p>
+      </div>
+
+      <!-- Configuración -->
+      <div class="shortcut-card" onclick="goToView('config')">
+        <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">⚙️</div>
+        <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">Configuración</h4>
+        <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Ajustar datos generales de contacto y API keys.</p>
+      </div>
+
+      <!-- Config. avanzada -->
+      <div class="shortcut-card" onclick="goToView('advanced')">
+        <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">🔒</div>
+        <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">Config. avanzada</h4>
+        <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Configurar base de datos Supabase.</p>
+      </div>
+
+      <!-- Ver tienda -->
+      <div class="shortcut-card" onclick="window.open('tienda.html','_blank')">
+        <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">🏪</div>
+        <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">Ver tienda <i class="bi bi-box-arrow-up-right" style="font-size:11px; margin-left:2px; opacity:0.7;"></i></h4>
+        <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Abrir la tienda de cara al cliente en una nueva pestaña.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ REPORTS (INFORMES) ══ -->
+  <div class="view" id="view-reports">
 
     <div class="metrics" id="metrics-row">
       <div class="metric"><div class="metric-icon" style="background:rgba(215,38,56,.15);">📦</div><div class="metric-label">Pedidos</div><div class="metric-val" id="m-ord">—</div><div class="metric-delta up" id="m-ord-d"></div></div>
@@ -1464,7 +1555,8 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 // ← FIX CRÍTICO: TITLES debe estar ANTES de usarse
 const TITLES = { 
-  dashboard:'Dashboard', 
+  dashboard:'Inicio', 
+  reports:'Informes', 
   orders:'Pedidos', 
   products:'Productos',
   abm:'ABM · Productos', 
@@ -1615,9 +1707,17 @@ function showView(name, el) {
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
+  
+  // Mostrar u ocultar el selector de período sólo en Informes
+  const periodSel = document.querySelector('.period-select');
+  if (periodSel) {
+    periodSel.style.display = (name === 'reports') ? 'block' : 'none';
+  }
+
   // Setear título con icono
   const icons = {
-    dashboard: 'bi-speedometer',
+    dashboard: 'bi-house',
+    reports: 'bi-bar-chart-line',
     orders: 'bi-receipt',
     products: 'bi-grid-3x3-gap',
     abm: 'bi-pencil-square',
@@ -1630,6 +1730,29 @@ function showView(name, el) {
   if(el) el.classList.add('active');
   if(name==='products') renderProducts();
   if(name==='orders') renderAllOrders();
+  if(name==='reports') {
+    setTimeout(() => {
+      if(cOrders) cOrders.resize();
+      if(cPago) cPago.resize();
+      if(cTop) cTop.resize();
+      if(cCats) cCats.resize();
+    }, 50);
+  }
+}
+
+function goToView(name) {
+  const el = document.querySelector(`.sb-item[onclick*="'${name}'"]`) || document.querySelector(`.sb-item[onclick*="${name}"]`);
+  showView(name, el);
+}
+
+function updateWelcomeGreeting() {
+  let storeName = 'FerreNow';
+  try {
+    const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+    if (sc.name) storeName = sc.name;
+  } catch(e) {}
+  const el = document.getElementById('welcome-store-name');
+  if (el) el.textContent = storeName;
 }
 
 /* STATUS */
@@ -3606,6 +3729,7 @@ function saveConfig() {
   if (direccion) sc.direccion = direccion;
   if (horario)   sc.horario   = horario;
   localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
+  updateWelcomeGreeting();
 
   // Cloudinary
   const cName   = document.getElementById('cfg-cloud-name').value.trim();
@@ -3855,6 +3979,10 @@ try {
     document.getElementById('sheet-sync-info').textContent = 'Sin pedidos todavía';
   }
 } catch(e) { renderOrdersTable([]); }
+
+// Initialize welcome message and default view state
+updateWelcomeGreeting();
+showView('dashboard', document.querySelector('.sb-item.active'));
 </script>
 
 <!-- ══ MODAL ══ -->
