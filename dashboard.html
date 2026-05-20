@@ -1354,8 +1354,9 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
           <div class="ctrl-group">
             <label class="ctrl-label">Modelo de Claude</label>
             <select class="ctrl-input" id="cfg-claude-model">
-              <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku (Recomendado)</option>
-              <option value="claude-3-haiku-20240307">Claude 3 Haiku (Económico / Gratis)</option>
+              <option value="claude-haiku-4-5-20251001">Claude 4.5 Haiku (Modelo Recomendado)</option>
+              <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku (Legacy)</option>
+              <option value="claude-3-haiku-20240307">Claude 3 Haiku (Deprecado)</option>
             </select>
             <div style="font-size:10px;color:var(--silver);margin-top:3px;">Elegí según los créditos de tu cuenta.</div>
           </div>
@@ -2625,7 +2626,7 @@ Identificá el producto y devolvé SOLO un JSON válido (sin texto adicional, si
 {"name":"nombre completo","marca":"marca o fabricante","cat":"categoría","detalle":"especificaciones técnicas en 1-2 oraciones","origen":"código ISO del país (AR/CN/US/DE/JP/IT/BR/KR/TW/MX/FR/GB/ES/SE/CH) o vacío","confianza":"alta/media/baja"}
 Si no reconocés el código, usá confianza "baja" e intentá igual.`;
 
-    const modelName = localStorage.getItem('storeapp_claude_model') || 'claude-3-5-haiku-20241022';
+    const modelName = localStorage.getItem('storeapp_claude_model') || 'claude-haiku-4-5-20251001';
     console.log("buscarCodigo: Consultando modelo:", modelName);
     const res = await fetch('/api/helper', {
       method: 'POST',
@@ -3445,7 +3446,7 @@ function initConfigView() {
 
   const claudeKey = localStorage.getItem('storeapp_claude_key');
   if (claudeKey) document.getElementById('cfg-claude-key').value = claudeKey;
-  const claudeModel = localStorage.getItem('storeapp_claude_model') || 'claude-3-5-haiku-20241022';
+  const claudeModel = localStorage.getItem('storeapp_claude_model') || 'claude-haiku-4-5-20251001';
   document.getElementById('cfg-claude-model').value = claudeModel;
 
   const theme = localStorage.getItem('storeapp_dash_theme') || 'dark';
@@ -3473,7 +3474,7 @@ function initAdvancedView() {
   const ckEl = document.getElementById('cfg-claude-key');
   if (ckEl && claudeKey) ckEl.value = claudeKey;
   const cmEl = document.getElementById('cfg-claude-model');
-  const claudeModel = localStorage.getItem('storeapp_claude_model') || 'claude-3-5-haiku-20241022';
+  const claudeModel = localStorage.getItem('storeapp_claude_model') || 'claude-haiku-4-5-20251001';
   if (cmEl) cmEl.value = claudeModel;
 
   // Cargar categorías
@@ -3522,7 +3523,7 @@ async function saveAdvancedConfig() {
   } else {
     localStorage.removeItem('storeapp_claude_key');
   }
-  const claudeModel = document.getElementById('cfg-claude-model')?.value || 'claude-3-5-haiku-20241022';
+  const claudeModel = document.getElementById('cfg-claude-model')?.value || 'claude-haiku-4-5-20251001';
   localStorage.setItem('storeapp_claude_model', claudeModel);
   // Nota: Supabase URL/Key se cambian en el HTML directamente (constantes)
   const el = document.getElementById('adv-save-status');
@@ -3562,7 +3563,7 @@ async function testClaudeKey() {
     return;
   }
   if (statusEl) { statusEl.style.color = 'var(--silver)'; statusEl.textContent = 'Probando...'; }
-  const selectedModel = document.getElementById('cfg-claude-model')?.value || localStorage.getItem('storeapp_claude_model') || 'claude-3-5-haiku-20241022';
+  const selectedModel = document.getElementById('cfg-claude-model')?.value || localStorage.getItem('storeapp_claude_model') || 'claude-haiku-4-5-20251001';
   console.log("testClaudeKey: Probando conexión con modelo:", selectedModel);
   try {
     const res = await fetch('/api/helper', {
