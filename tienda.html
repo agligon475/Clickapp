@@ -1397,7 +1397,45 @@ async function loadSheet() {
         name: p.nombre,
         price: parseFloat(p.precio) || 0,
         stock: parseInt(p.stock) || 0,
-           // Build category rail in sidebar
+        cat: p.categoria || 'General',
+        emoji: p.emoji || '📦',
+        img: p.img || '',
+        img2: p.img2 || '',
+        img3: p.img3 || '',
+        marca: p.marca || '',
+        detalles: p.detalles || '',
+        origen: p.origen || ''
+      }));
+
+    // Guardar banners en localStorage (para dashboard)
+    localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
+
+    // ── Override with ABM edits from dashboard if present ──
+    const abrActive = localStorage.getItem('storeapp_abm_active');
+    const localOverride = localStorage.getItem('storeapp_local_products');
+    const serverUsesUuidIds = products.some(p => String(p.id).length > 20 && String(p.id).includes('-'));
+    if (abrActive && localOverride) {
+      try {
+        const lp = JSON.parse(localOverride);
+        const localUsesLegacyIds = lp.some(p => !String(p.id || '').includes('-'));
+        if (lp.length >= products.length) {
+          if (serverUsesUuidIds && localUsesLegacyIds) {
+            console.warn('Clickapp: caché ABM con IDs numéricos ignorada (catálogo Supabase usa UUID).');
+          } else {
+            products = lp.filter(p => !p.hidden);
+          }
+        } else {
+          localStorage.removeItem('storeapp_local_products');
+          localStorage.removeItem('storeapp_abm_active');
+        }
+      } catch (e) {
+        localStorage.removeItem('storeapp_local_products');
+      }
+    } else if (localOverride && !abrActive) {
+      localStorage.removeItem('storeapp_local_products');
+    }
+
+    // Build category rail in sidebar
     const cats = [...new Set(products.map(p => p.cat).filter(Boolean))];
     const sidebarCats = document.getElementById('sidebar-categories');
     if (sidebarCats) {
