@@ -17,7 +17,8 @@
   --green:#2ECC71; --amber:#F39C12; --blue:#3498DB;
   --font-h:'Barlow Condensed',sans-serif;
   --font-b:'Barlow',sans-serif;
-  --sidebar:220px;
+  --sidebar:240px;
+  --sidebar-collapsed:70px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:var(--font-b);background:var(--black);color:var(--white);display:flex;min-height:100vh;font-size:14px;}
@@ -30,12 +31,16 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
   display:flex;flex-direction:column;
   position:fixed;top:0;bottom:0;left:0;
   z-index:50;overflow-y:auto;
+  transition: width 0.3s ease;
+  scrollbar-width:none;
 }
+.sidebar::-webkit-scrollbar{display:none;}
 .sb-logo{
   padding:20px 18px 16px;
   border-bottom:1px solid var(--zinc);
-  display:flex;align-items:center;gap:10px;
+  display:flex;align-items:center;justify-content:space-between;
 }
+.sb-logo-left { display:flex; align-items:center; gap:10px; }
 .sb-logo-icon{
   width:34px;height:34px;background:var(--red);
   border-radius:8px;display:flex;align-items:center;
@@ -46,14 +51,24 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
 .sb-logo-text{
   font-family:var(--font-h);font-size:18px;font-weight:800;
   color:var(--white);letter-spacing:-.01em;line-height:1.1;
+  white-space:nowrap; overflow:hidden;
 }
 .sb-logo-sub{font-size:10px;color:var(--silver);}
+
+.sidebar-toggle-btn {
+  background:transparent; border:none; color:var(--silver);
+  cursor:pointer; font-size:18px; padding:4px;
+  display:flex; align-items:center; justify-content:center;
+  transition:color 0.2s;
+}
+.sidebar-toggle-btn:hover { color:var(--white); }
 
 .sb-section{padding:14px 12px 6px;}
 .sb-section-label{
   font-size:10px;font-weight:700;color:var(--silver);
   text-transform:uppercase;letter-spacing:.1em;
   padding:0 8px;margin-bottom:6px;
+  white-space:nowrap; overflow:hidden;
 }
 .sb-item{
   display:flex;align-items:center;gap:10px;
@@ -61,6 +76,7 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
   font-size:13px;font-weight:500;color:var(--fog);
   cursor:pointer;transition:all .12s;
   border:1px solid transparent;
+  white-space:nowrap; overflow:hidden;
 }
 .sb-item:hover{background:var(--iron);color:var(--white);}
 .sb-item.active{
@@ -68,7 +84,7 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
   border-color:var(--zinc);
 }
 .sb-item.active i{color:var(--red);}
-.sb-item i{font-size:15px;width:18px;color:var(--silver);}
+.sb-item i{font-size:15px;width:18px;color:var(--silver);text-align:center;flex-shrink:0;}
 
 .sb-btn{
   width:100%;margin-top:6px;padding:7px;
@@ -77,11 +93,22 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
   cursor:pointer;font-family:var(--font-b);
   display:flex;align-items:center;justify-content:center;gap:6px;
   transition:background .15s;
+  white-space:nowrap; overflow:hidden;
 }
 .sb-btn:hover{background:var(--red-d);}
 
+/* Collapsed Sidebar */
+body.collapsed-sidebar .sidebar { width: var(--sidebar-collapsed); }
+body.collapsed-sidebar .main { margin-left: var(--sidebar-collapsed); }
+body.collapsed-sidebar .sb-logo-text { display: none; }
+body.collapsed-sidebar .sb-logo-sub { display: none; }
+body.collapsed-sidebar .sb-section-label { display: none; }
+body.collapsed-sidebar .sb-item span { display: none; }
+body.collapsed-sidebar .sb-item { padding: 12px 0; justify-content: center; }
+body.collapsed-sidebar .sb-btn span { display: none; }
+
 /* MAIN */
-.main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh; transition: margin-left 0.3s ease;}
 
 /* TOPBAR */
 .topbar{
@@ -452,11 +479,26 @@ body.light-mode .modal-overlay { background:rgba(0,0,0,.4); }
 .theme-toggle-btn:hover { border-color:var(--red); color:var(--red); }
 
 /* CONFIG VIEW */
+.masonry-grid {
+  column-count: 2;
+  column-gap: 14px;
+}
+@media(max-width: 900px) {
+  .masonry-grid { column-count: 1; }
+}
 .config-section, .view#view-design .card {
   background:var(--steel); border:1px solid var(--zinc);
   border-radius:12px; padding:0; margin-bottom:14px;
-  overflow:hidden;
+  overflow:hidden; break-inside: avoid;
 }
+.config-status {
+  width:10px; height:10px; border-radius:50%;
+  margin-left:8px; display:inline-block;
+  background:var(--zinc); box-shadow:0 0 6px var(--zinc);
+  transition:all 0.3s;
+}
+.config-status.ok { background:var(--green); box-shadow:0 0 6px var(--green); }
+.config-status.err { background:var(--red); box-shadow:0 0 6px var(--red); }
 .config-section-title, .view#view-design .card-title {
   font-size:12px; font-weight:700; color:var(--silver);
   text-transform:uppercase; letter-spacing:.08em;
@@ -550,36 +592,50 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
 <!-- SIDEBAR -->
 <div class="sidebar">
   <div class="sb-logo">
-    <div class="sb-logo-icon" style="background:transparent;box-shadow:none;padding:0;overflow:hidden;">
-      <img src="dashboard-icon.png" alt="Panel de Control" style="width:34px;height:34px;border-radius:8px;display:block;"/>
+    <div class="sb-logo-left">
+      <div class="sb-logo-icon" style="background:transparent;box-shadow:none;padding:0;overflow:hidden;">
+        <img src="dashboard-icon.png" alt="Panel de Control" style="width:34px;height:34px;border-radius:8px;display:block;"/>
+      </div>
+      <div class="sb-logo-text" style="font-size:13px;letter-spacing:0;line-height:1.3;">Panel de Control</div>
     </div>
-    <div class="sb-logo-text" style="font-size:13px;letter-spacing:0;line-height:1.3;">Panel de Control</div>
+    <button class="sidebar-toggle-btn" onclick="document.body.classList.toggle('collapsed-sidebar')" title="Colapsar/Expandir Menú">
+      <i class="bi bi-list"></i>
+    </button>
   </div>
 
   <div class="sb-section">
     <div class="sb-section-label">Inicio</div>
-    <div class="sb-item active" onclick="showView('dashboard',this)"><i class="bi bi-house"></i> Inicio</div>
+    <div class="sb-item active" onclick="showView('dashboard',this)"><i class="bi bi-house"></i> <span>Dashboard</span></div>
   </div>
+  
   <div class="sb-section">
-    <div class="sb-section-label">Informes</div>
-    <div class="sb-item" onclick="showView('reports',this)"><i class="bi bi-bar-chart-line"></i> Informes</div>
-    <div class="sb-item" onclick="showView('new-order',this)"><i class="bi bi-cart-plus"></i> Nuevo Pedido</div>
-    <div class="sb-item" onclick="showView('orders',this)"><i class="bi bi-receipt"></i> Tablero de Pedidos</div>
+    <div class="sb-section-label">Gestión</div>
+    <div class="sb-item" onclick="showView('reports',this)"><i class="bi bi-bar-chart-line"></i> <span>Analítica</span></div>
+    <div class="sb-item" onclick="showView('orders',this)"><i class="bi bi-receipt"></i> <span>Pedidos</span></div>
+    <div class="sb-item" onclick="showView('pickups',this)"><i class="bi bi-truck"></i> <span>PickUp</span></div>
   </div>
+
   <div class="sb-section">
     <div class="sb-section-label">Catálogo</div>
-    <div class="sb-item" onclick="showView('products',this)"><i class="bi bi-grid-3x3-gap"></i> Productos</div>
-    <div class="sb-item" onclick="showView('abm',this)"><i class="bi bi-pencil-square"></i> ABM Productos</div>
+    <div class="sb-item" onclick="showView('products',this)"><i class="bi bi-grid-3x3-gap"></i> <span>Productos</span></div>
+    <div class="sb-item" onclick="showView('abm',this)"><i class="bi bi-pencil-square"></i> <span>ABM</span></div>
+    <div class="sb-item" onclick="showView('categories',this)"><i class="bi bi-tags"></i> <span>Categorías</span></div>
   </div>
+
   <div class="sb-section">
     <div class="sb-section-label">Personalización</div>
-    <div class="sb-item" onclick="showView('design',this)"><i class="bi bi-palette"></i> Diseño de tienda</div>
+    <div class="sb-item" onclick="showView('design',this)"><i class="bi bi-palette"></i> <span>Diseño</span></div>
   </div>
+
   <div class="sb-section">
-    <div class="sb-section-label">Sistema</div>
-    <div class="sb-item" onclick="showView('config',this)"><i class="bi bi-gear"></i> Configuración</div>
-    <div class="sb-item" onclick="showView('advanced',this)"><i class="bi bi-shield-lock"></i> Config. avanzada</div>
-    <div class="sb-item" onclick="window.open('tienda.html','_blank')"><i class="bi bi-shop"></i> Ver tienda <i class="bi bi-box-arrow-up-right" style="font-size:10px;margin-left:auto;opacity:.5;"></i></div>
+    <div class="sb-section-label">Ajustes</div>
+    <div class="sb-item" onclick="showView('config',this)"><i class="bi bi-gear"></i> <span>Configuración</span></div>
+    <div class="sb-item" onclick="showView('advanced',this)"><i class="bi bi-shield-lock"></i> <span>Avanzado</span></div>
+  </div>
+
+  <div style="flex:1;"></div>
+  <div class="sb-item" style="margin:12px; border:1px solid rgba(255,255,255,0.1);" onclick="window.open('tienda.html','_blank')">
+    <i class="bi bi-shop"></i> <span>Ver tienda</span> <i class="bi bi-box-arrow-up-right" style="font-size:10px;margin-left:auto;opacity:.5;"></i>
   </div>
 </div>
 
@@ -624,60 +680,74 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
       <div>
         <h3 style="font-family:var(--font-h); font-size:14px; font-weight:700; margin-bottom:16px; color:var(--white); text-transform:uppercase; letter-spacing:0.05em;">Acceso rápido</h3>
         <div class="shortcuts-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:16px; margin-bottom:40px;">
-          <!-- Informes -->
+          <!-- Analítica -->
           <div class="shortcut-card" onclick="goToView('reports')">
             <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">📊</div>
-            <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">Informes</h4>
-            <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Ver reportes, gráficos y métricas de venta.</p>
+            <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">Analítica</h4>
+            <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Reportes, gráficos y métricas de venta.</p>
           </div>
 
           <!-- Pedidos -->
           <div class="shortcut-card" onclick="goToView('orders')">
             <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">📦</div>
             <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">Pedidos</h4>
-            <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Cargar nuevos pedidos y gestionar estado de envíos.</p>
+            <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Gestionar estados de envíos y pedidos.</p>
+          </div>
+
+          <!-- PickUp -->
+          <div class="shortcut-card" onclick="goToView('pickups')">
+            <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">🚚</div>
+            <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">PickUp</h4>
+            <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Gestionar repartidores y asignar envíos.</p>
           </div>
 
           <!-- Productos -->
           <div class="shortcut-card" onclick="goToView('products')">
             <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">🛍️</div>
             <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">Productos</h4>
-            <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Ver la vista previa de los productos cargados.</p>
+            <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Vista previa de los productos cargados.</p>
           </div>
 
-          <!-- ABM Productos -->
+          <!-- ABM -->
           <div class="shortcut-card" onclick="goToView('abm')">
             <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">✏️</div>
-            <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">ABM Productos</h4>
+            <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">ABM</h4>
             <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Crear, editar o eliminar productos en stock.</p>
           </div>
 
-          <!-- Diseño de tienda -->
+          <!-- Categorías -->
+          <div class="shortcut-card" onclick="goToView('categories')">
+            <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">🏷️</div>
+            <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">Categorías</h4>
+            <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Administrar categorías de productos.</p>
+          </div>
+
+          <!-- Diseño -->
           <div class="shortcut-card" onclick="goToView('design')">
             <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">🎨</div>
-            <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">Diseño de tienda</h4>
-            <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Personalizar logo, colores y banners de la tienda.</p>
+            <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">Diseño</h4>
+            <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Personalizar logo, colores y banners.</p>
           </div>
 
           <!-- Configuración -->
           <div class="shortcut-card" onclick="goToView('config')">
             <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">⚙️</div>
             <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">Configuración</h4>
-            <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Ajustar datos generales de contacto y API keys.</p>
+            <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Datos generales de contacto y tienda.</p>
           </div>
 
-          <!-- Config. avanzada -->
+          <!-- Avanzado -->
           <div class="shortcut-card" onclick="goToView('advanced')">
             <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">🔒</div>
-            <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">Config. avanzada</h4>
-            <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Configurar base de datos Supabase.</p>
+            <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">Avanzado</h4>
+            <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">API keys, base de datos y servicios.</p>
           </div>
 
           <!-- Ver tienda -->
           <div class="shortcut-card" onclick="window.open('tienda.html','_blank')">
             <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">🏪</div>
             <h4 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">Ver tienda <i class="bi bi-box-arrow-up-right" style="font-size:11px; margin-left:2px; opacity:0.7;"></i></h4>
-            <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Abrir la tienda de cara al cliente en una nueva pestaña.</p>
+            <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Abrir la tienda en una nueva pestaña.</p>
           </div>
         </div>
       </div>
@@ -1459,10 +1529,11 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
 
   <!-- ══ CONFIG ══ -->
   <div class="view" id="view-config">
+    <div class="masonry-grid">
 
     <!-- Tienda -->
     <div class="config-section">
-      <div class="config-section-title"><i class="bi bi-shop"></i> Datos de la tienda</div>
+      <div class="config-section-title"><i class="bi bi-shop"></i> Datos de la tienda <div class="config-status ok"></div></div>
       <div class="config-section-content">
       <div class="config-grid">
         <div class="ctrl-group">
@@ -1512,6 +1583,8 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
 
 
 
+    </div><!-- /masonry-grid -->
+
     <!-- Save button -->
     <button class="abm-btn-new" onclick="saveConfig()" style="width:100%;justify-content:center;padding:12px;font-size:14px;margin-top:12px;">
       <i class="bi bi-floppy2"></i> Guardar configuración
@@ -1522,10 +1595,11 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
 
   <!-- ══════════════════════════════ VISTA: CONFIGURACIÓN AVANZADA -->
   <div class="view" id="view-advanced">
+    <div class="masonry-grid">
 
     <!-- Supabase -->
     <div class="config-section">
-      <div class="config-section-title"><i class="bi bi-database"></i> Conexión a Supabase</div>
+      <div class="config-section-title"><i class="bi bi-database"></i> Conexión a Supabase <div class="config-status" id="adv-status-supabase"></div></div>
       <div class="config-section-content">
         <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
           Base de datos PostgreSQL del proyecto. Modificá estos valores solo si cambiás de proyecto en Supabase.
@@ -1559,7 +1633,7 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
 
     <!-- Claude API -->
     <div class="config-section">
-      <div class="config-section-title"><i class="bi bi-robot"></i> API de Claude — Búsqueda por EAN/SKU</div>
+      <div class="config-section-title"><i class="bi bi-robot"></i> API de Claude — Búsqueda por EAN/SKU <div class="config-status" id="adv-status-claude"></div></div>
       <div class="config-section-content">
         <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
           Ingresá tu clave de Anthropic para habilitar el autocompletado de productos desde el ABM.
@@ -1592,7 +1666,7 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
 
     <!-- Cloudinary -->
     <div class="config-section">
-      <div class="config-section-title"><i class="bi bi-cloud-arrow-up"></i> Cloudinary — Almacenamiento de imágenes</div>
+      <div class="config-section-title"><i class="bi bi-cloud-arrow-up"></i> Cloudinary — Almacenamiento de imágenes <div class="config-status" id="adv-status-cloudinary"></div></div>
       <div class="config-section-content">
         <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
           Cloudinary permite subir y optimizar fotos de productos. Cuenta gratuita en
@@ -1624,7 +1698,7 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
 
     <!-- Categorías -->
     <div class="config-section">
-      <div class="config-section-title"><i class="bi bi-tags"></i> Categorías de productos</div>
+      <div class="config-section-title"><i class="bi bi-tags"></i> Categorías de productos <div class="config-status ok"></div></div>
       <div class="config-section-content">
         <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
           Administrá las categorías disponibles en tu tienda. Los productos se asignan a una categoría al crear o editar.
@@ -1666,6 +1740,37 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
       </div>
     </div>
 
+    <!-- Gerente -->
+    <div class="config-section">
+      <div class="config-section-title"><i class="bi bi-person-badge"></i> Gerente de tienda <div class="config-status" id="adv-status-gerente"></div></div>
+      <div class="config-section-content">
+        <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
+          Correo electrónico del gerente de la tienda. Se utilizará para enviar reportes de analítica de forma periódica.
+        </div>
+        <div class="config-grid">
+          <div class="ctrl-group" style="grid-column:1/-1;">
+            <label class="ctrl-label">Email del Gerente</label>
+            <input class="ctrl-input" id="adv-gerente-email" placeholder="gerente@mitienda.com"/>
+            <div style="font-size:10px;color:var(--silver);margin-top:3px;">Se le enviará un resumen periódico de ventas y métricas.</div>
+          </div>
+          <div class="ctrl-group">
+            <label class="ctrl-label">Nombre del Gerente</label>
+            <input class="ctrl-input" id="adv-gerente-nombre" placeholder="Juan Pérez"/>
+          </div>
+          <div class="ctrl-group">
+            <label class="ctrl-label">Frecuencia de reportes</label>
+            <select class="ctrl-input" id="adv-gerente-frecuencia">
+              <option value="semanal">Semanal</option>
+              <option value="quincenal">Quincenal</option>
+              <option value="mensual" selected>Mensual</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    </div><!-- /masonry-grid -->
+
     <!-- Save button -->
     <button class="abm-btn-new" onclick="saveAdvancedConfig()" style="width:100%;justify-content:center;padding:12px;font-size:14px;margin-top:4px;">
       <i class="bi bi-floppy2"></i> Guardar configuración avanzada
@@ -1673,6 +1778,70 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
     <div id="adv-save-status" style="font-size:11px;text-align:center;margin-top:8px;min-height:14px;color:var(--silver);"></div>
 
   </div><!-- /view-advanced -->
+
+  <!-- ══ CATEGORIES ══ -->
+  <div class="view" id="view-categories">
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <span><i class="bi bi-tags" style="color:var(--red);"></i> Gestión de Categorías</span>
+        <button class="abm-btn-new" onclick="openCategoryModal()" style="padding:7px 14px;font-size:12px;">
+          <i class="bi bi-plus-lg"></i> Nueva Categoría
+        </button>
+      </div>
+      <div id="categories-list" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px;">
+        <!-- Categories load dynamically -->
+        <div style="text-align:center;padding:40px;color:var(--silver);font-size:13px;grid-column:1/-1;">
+          <i class="bi bi-tags" style="font-size:32px;display:block;margin-bottom:10px;opacity:.3;"></i>
+          Cargando categorías...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PICKUPS ══ -->
+  <div class="view" id="view-pickups">
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <span><i class="bi bi-truck" style="color:var(--red);"></i> Repartidores (PickUps)</span>
+        <button class="abm-btn-new" onclick="openPickupModal()" style="padding:7px 14px;font-size:12px;">
+          <i class="bi bi-plus-lg"></i> Nuevo Repartidor
+        </button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="data-table" id="pickups-tbl">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Zona</th>
+              <th>WhatsApp</th>
+              <th>DNI</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="pickups-tbody">
+            <tr><td colspan="6" style="text-align:center;color:var(--silver);padding:40px;">
+              <i class="bi bi-truck" style="font-size:32px;display:block;margin-bottom:10px;opacity:.3;"></i>
+              No hay repartidores cargados. Creá uno con el botón "Nuevo Repartidor".
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Pickup assignment panel -->
+    <div class="card">
+      <div class="card-title">
+        <span><i class="bi bi-geo-alt" style="color:var(--red);"></i> Pedidos pendientes de asignación</span>
+      </div>
+      <div id="pickup-pending-orders" style="min-height:80px;">
+        <div style="text-align:center;padding:30px;color:var(--silver);font-size:13px;">
+          <i class="bi bi-inbox" style="font-size:24px;display:block;margin-bottom:8px;opacity:.3;"></i>
+          No hay pedidos con "Envío a domicilio" pendientes de asignar.
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div><!-- /main -->
 
@@ -1684,15 +1853,17 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 // ← FIX CRÍTICO: TITLES debe estar ANTES de usarse
 const TITLES = { 
-  dashboard:'Inicio', 
-  reports:'Informes', 
+  dashboard:'Dashboard', 
+  reports:'Analítica', 
   'new-order':'Nuevo Pedido',
-  orders:'Tablero de Pedidos', 
+  orders:'Pedidos', 
   products:'Productos',
   abm:'ABM · Productos', 
-  design:'Diseño de tienda', 
+  categories:'Categorías',
+  pickups:'PickUp · Repartidores',
+  design:'Diseño', 
   config:'Configuración',
-  advanced:'Configuración avanzada'
+  advanced:'Avanzado'
 };
 
 let products = [];
@@ -1810,6 +1981,7 @@ function mapSupabaseRowToLocal(p) {
     origen: p.origen || '',
     detalle: (p.detalles != null && p.detalles !== '') ? p.detalles : (p.detalle || ''),
     codigo: p.codigo || '',
+    pills: p.pills || '',
     hidden: !!p.oculto
   };
 }
@@ -1827,8 +1999,9 @@ function mapLocalProductToSupabaseRow(p) {
     marca: p.marca || null,
     detalles: p.detalle || '',
     origen: p.origen || null,
+    pills: p.pills || null,
     oculto: !!p.hidden
-    // nota: 'codigo' no existe en la tabla products de Supabase aún
+    // nota: 'codigo' y 'pills' no existen en la tabla products de Supabase aún
   };
 }
 
@@ -2821,6 +2994,12 @@ function openModal(id=null) {
   document.getElementById('m-origen').value  = p?.origen  || '';
   document.getElementById('m-detalle').value = p?.detalle || '';
   
+  // Píldoras
+  const productPills = (p?.pills || '').split(',').map(x => x.trim()).filter(x => x);
+  document.querySelectorAll('input[name="m-pills"]').forEach(cb => {
+    cb.checked = productPills.includes(cb.value);
+  });
+  
   // Cargar hasta 3 imágenes
   document.getElementById('m-img').value     = p?.img     || '';
   document.getElementById('m-img2').value    = p?.img2    || '';
@@ -2889,6 +3068,8 @@ async function saveModal() {
   const img     = document.getElementById('m-img').value.trim();
   const img2    = document.getElementById('m-img2').value.trim();
   const img3    = document.getElementById('m-img3').value.trim();
+  const pills   = Array.from(document.querySelectorAll('input[name="m-pills"]:checked'))
+                       .map(cb => cb.value).slice(0,3).join(',');
 
   if (!name) { alert('El nombre del producto es obligatorio.'); return; }
 
@@ -2897,7 +3078,7 @@ async function saveModal() {
   if (editingId != null && editingId !== '') {
     const p = localProducts.find(x => String(x.id) === String(editingId));
     if (p) {
-      Object.assign(p, {name,codigo,cat,marca,price,stock,emoji,origen,detalle,img,img2,img3});
+      Object.assign(p, {name,codigo,cat,marca,price,stock,emoji,origen,detalle,img,img2,img3,pills});
       try {
         await updateInSupabase('products', editingId, mapLocalProductToSupabaseRow(p));
       } catch (e) {
@@ -2906,7 +3087,7 @@ async function saveModal() {
       }
     }
   } else {
-    const draft = { name, codigo, cat, marca, price, stock, emoji, origen, detalle, img, img2, img3, hidden:false };
+    const draft = { name, codigo, cat, marca, price, stock, emoji, origen, detalle, img, img2, img3, pills, hidden:false };
     try {
       const inserted = await postToSupabase('products', mapLocalProductToSupabaseRow(draft));
       const row0 = Array.isArray(inserted) ? inserted[0] : inserted;
@@ -3831,9 +4012,12 @@ function initAdvancedView() {
   loadAndDisplayCategories();
 }
 
-async function loadAndDisplayCategories() {
-  const listEl = document.getElementById('adv-categories-list');
-  if (!listEl) return;
+async function loadCategoriesList() {
+  const advListEl = document.getElementById('adv-categories-list');
+  const viewListEl = document.getElementById('categories-list');
+  
+  if (advListEl) advListEl.innerHTML = '<div style="color:var(--silver);">Cargando categorías...</div>';
+  if (viewListEl) viewListEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--silver);font-size:13px;grid-column:1/-1;">Cargando categorías...</div>';
   
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/categories?order=display_order.asc`, {
@@ -3842,20 +4026,123 @@ async function loadAndDisplayCategories() {
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const categories = await res.json();
     
+    // Almacenamos temporalmente en window para poder editar
+    window.currentCategories = categories;
+    
     if (!Array.isArray(categories) || categories.length === 0) {
-      listEl.innerHTML = '<div style="color:var(--silver);">No hay categorías aún. <a href="https://supabase.com/dashboard" target="_blank" style="color:var(--red);">Agregá una en Supabase</a></div>';
+      const emptyMsg = '<div style="color:var(--silver);">No hay categorías aún.</div>';
+      if (advListEl) advListEl.innerHTML = emptyMsg;
+      if (viewListEl) viewListEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--silver);font-size:13px;grid-column:1/-1;"><i class="bi bi-tags" style="font-size:32px;display:block;margin-bottom:10px;opacity:.3;"></i>No hay categorías cargadas.</div>';
       return;
     }
     
-    listEl.innerHTML = categories.map(c => `
-      <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--zinc);">
-        <span style="font-size:16px;min-width:20px;">${c.emoji || '📦'}</span>
-        <span style="flex:1;color:var(--fog);">${c.name}</span>
-        <span style="font-size:10px;color:var(--silver);">${c.active ? '✓ activa' : '○ inactiva'}</span>
-      </div>
-    `).join('');
+    // Render in Advanced View
+    if (advListEl) {
+      advListEl.innerHTML = categories.map(c => `
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--zinc);">
+          <span style="font-size:16px;min-width:20px;">${c.emoji || '📦'}</span>
+          <span style="flex:1;color:var(--fog);">${c.name}</span>
+          <span style="font-size:10px;color:var(--silver);">${c.active ? '✓ activa' : '○ inactiva'}</span>
+        </div>
+      `).join('');
+    }
+
+    // Render in Categories View
+    if (viewListEl) {
+      viewListEl.innerHTML = categories.map(c => `
+        <div style="background:var(--steel);border:1px solid var(--zinc);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;left:0;width:4px;height:100%;background:${c.active ? 'var(--green)' : 'var(--silver)'};"></div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:40px;height:40px;border-radius:8px;background:var(--iron);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">
+              ${c.emoji || '🏷️'}
+            </div>
+            <div style="flex:1;overflow:hidden;">
+              <h4 style="margin:0;font-family:var(--font-h);font-size:18px;font-weight:700;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.name}</h4>
+              <div style="font-size:11px;color:var(--silver);margin-top:2px;">${c.active ? 'Activa y visible' : 'Oculta'}</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:auto;padding-top:4px;">
+            <button onclick="openCategoryModal('${c.id}')" style="flex:1;padding:6px;background:var(--iron);border:1px solid var(--zinc);border-radius:6px;color:var(--fog);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;"><i class="bi bi-pencil"></i> Editar</button>
+            <button onclick="deleteCategory('${c.id}')" style="padding:6px 10px;background:rgba(215,38,56,.1);border:1px solid rgba(215,38,56,.2);border-radius:6px;color:var(--red);font-size:11px;cursor:pointer;transition:all .15s;"><i class="bi bi-trash"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
   } catch(e) {
-    listEl.innerHTML = `<div style="color:var(--red);">Error: ${e.message}</div>`;
+    if (advListEl) advListEl.innerHTML = `<div style="color:var(--red);">Error: ${e.message}</div>`;
+    if (viewListEl) viewListEl.innerHTML = `<div style="text-align:center;color:var(--red);grid-column:1/-1;">Error: ${e.message}</div>`;
+  }
+}
+
+// ABM CATEGORIES
+function openCategoryModal(id = null) {
+  const modal = document.getElementById('modal-category');
+  if (!modal) return;
+  
+  if (id && window.currentCategories) {
+    const cat = window.currentCategories.find(c => c.id === id);
+    if (cat) {
+      document.getElementById('cat-modal-title').textContent = 'Editar Categoría';
+      document.getElementById('c-id').value = cat.id;
+      document.getElementById('c-name').value = cat.name || '';
+      document.getElementById('c-emoji').value = cat.emoji || '';
+      document.getElementById('c-active').checked = cat.active !== false;
+    }
+  } else {
+    document.getElementById('cat-modal-title').textContent = 'Nueva Categoría';
+    document.getElementById('c-id').value = '';
+    document.getElementById('c-name').value = '';
+    document.getElementById('c-emoji').value = '';
+    document.getElementById('c-active').checked = true;
+  }
+  
+  modal.classList.add('open');
+}
+
+function closeCategoryModal() {
+  const modal = document.getElementById('modal-category');
+  if (modal) modal.classList.remove('open');
+}
+
+async function saveCategory() {
+  const id = document.getElementById('c-id').value;
+  const name = document.getElementById('c-name').value.trim();
+  const emoji = document.getElementById('c-emoji').value.trim();
+  const active = document.getElementById('c-active').checked;
+  
+  if (!name) return alert('El nombre es obligatorio');
+  
+  const payload = { name, emoji, active };
+  
+  try {
+    if (id) {
+      await updateInSupabase('categories', id, payload);
+    } else {
+      // New category, get max display_order
+      let order = 0;
+      if (window.currentCategories && window.currentCategories.length > 0) {
+        order = Math.max(...window.currentCategories.map(c => c.display_order || 0)) + 10;
+      }
+      payload.display_order = order;
+      await postToSupabase('categories', payload);
+    }
+    closeCategoryModal();
+    loadCategoriesList();
+  } catch(e) {
+    alert('Error al guardar categoría: ' + e.message);
+  }
+}
+
+async function deleteCategory(id) {
+  if (!confirm('¿Seguro que querés eliminar esta categoría? Si tiene productos asociados, no se eliminarán, pero perderán la categoría.')) return;
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/categories?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    loadCategoriesList();
+  } catch(e) {
+    alert('Error al eliminar categoría: ' + e.message);
   }
 }
 
@@ -4391,6 +4678,19 @@ showView('dashboard', document.querySelector('.sb-item.active'));
           <div id="m-detalle-status" style="font-size:10px;color:var(--silver);margin-top:3px;min-height:12px;"></div>
         </div>
 
+        <!-- Píldoras Promocionales -->
+        <div class="ctrl-group" style="grid-column:1/-1;">
+          <label class="ctrl-label">Píldoras Promocionales (hasta 3)</label>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:4px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--fog);cursor:pointer;"><input type="checkbox" name="m-pills" value="Oferta" style="accent-color:var(--red);"> Oferta</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--fog);cursor:pointer;"><input type="checkbox" name="m-pills" value="30% Off" style="accent-color:var(--red);"> 30% Off</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--fog);cursor:pointer;"><input type="checkbox" name="m-pills" value="25% Off" style="accent-color:var(--red);"> 25% Off</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--fog);cursor:pointer;"><input type="checkbox" name="m-pills" value="Últimas unidades" style="accent-color:var(--red);"> Últimas unidades</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--fog);cursor:pointer;"><input type="checkbox" name="m-pills" value="Nuevo ingreso" style="accent-color:var(--red);"> Nuevo ingreso</label>
+          </div>
+          <div style="font-size:10px;color:var(--silver);margin-top:6px;">Se mostrarán sobre la imagen del producto (si la tienda lo soporta). Solo se guardan hasta 3.</div>
+        </div>
+
         <!-- Imágenes (hasta 3) -->
         <div class="ctrl-group" style="grid-column:1/-1;">
           <label class="ctrl-label">Imágenes del producto (hasta 3)</label>
@@ -4458,6 +4758,36 @@ showView('dashboard', document.querySelector('.sb-item.active'));
   </div>
 </div>
 
+<!-- MODAL: CATEGORY -->
+<div class="modal-overlay" id="modal-category" onclick="if(event.target===this)closeCategoryModal()">
+  <div class="modal" style="width:min(400px,95vw);">
+    <div class="modal-head">
+      <span class="modal-title" id="cat-modal-title">Nueva Categoría</span>
+      <button class="modal-close" onclick="closeCategoryModal()"><i class="bi bi-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-grid">
+        <input type="hidden" id="c-id" />
+        <div class="ctrl-group" style="grid-column:1/-1;">
+          <label class="ctrl-label">Nombre de la categoría *</label>
+          <input class="ctrl-input" id="c-name" placeholder="Ej: Herramientas"/>
+        </div>
+        <div class="ctrl-group" style="grid-column:1/-1;">
+          <label class="ctrl-label">Emoji (opcional)</label>
+          <input class="ctrl-input" id="c-emoji" placeholder="Ej: 🔧"/>
+        </div>
+        <div class="ctrl-group" style="grid-column:1/-1; display:flex; align-items:center; gap:8px; margin-top:8px;">
+          <input type="checkbox" id="c-active" checked style="width:16px;height:16px;accent-color:var(--red);"/>
+          <label class="ctrl-label" style="margin:0;cursor:pointer;" for="c-active">Categoría Activa (Visible)</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="sb-btn" style="background:var(--iron);border:1px solid var(--zinc);" onclick="closeCategoryModal()">Cancelar</button>
+      <button class="sb-btn" onclick="saveCategory()"><i class="bi bi-check2-circle"></i> Guardar</button>
+    </div>
+  </div>
+</div>
 
 
 <script>
