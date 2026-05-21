@@ -346,8 +346,8 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);displa
 .logo-upload-btn:hover{border-color:var(--red);color:var(--white);}
 
 /* KANBAN */
-.kanban-board{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin;scrollbar-color:var(--zinc) transparent;}
-.kanban-col{flex-shrink:0;width:180px;display:flex;flex-direction:column;gap:6px;}
+.kanban-board{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:10px;padding-bottom:8px;}
+.kanban-col{display:flex;flex-direction:column;gap:6px;}
 .kanban-col-head{
   display:flex;align-items:center;justify-content:space-between;
   background:var(--iron);border-radius:8px;padding:8px 10px;
@@ -563,7 +563,8 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
   <div class="sb-section">
     <div class="sb-section-label">Informes</div>
     <div class="sb-item" onclick="showView('reports',this)"><i class="bi bi-bar-chart-line"></i> Informes</div>
-    <div class="sb-item" onclick="showView('orders',this)"><i class="bi bi-receipt"></i> Pedidos</div>
+    <div class="sb-item" onclick="showView('new-order',this)"><i class="bi bi-cart-plus"></i> Nuevo Pedido</div>
+    <div class="sb-item" onclick="showView('orders',this)"><i class="bi bi-receipt"></i> Tablero de Pedidos</div>
   </div>
   <div class="sb-section">
     <div class="sb-section-label">Catálogo</div>
@@ -804,8 +805,8 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
     </div>
   </div>
 
-  <!-- ══ ORDERS ══ -->
-  <div class="view" id="view-orders">
+  <!-- ══ NEW ORDER ══ -->
+  <div class="view" id="view-new-order">
 
     <!-- New order form -->
     <div class="card" style="margin-bottom:16px;">
@@ -908,6 +909,10 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
       </div>
       <div id="of-feedback" style="font-size:11px;margin-top:8px;min-height:16px;"></div>
     </div>
+  </div>
+
+  <!-- ══ ORDERS ══ -->
+  <div class="view" id="view-orders">
 
     <!-- Kanban board -->
     <div class="card" style="margin-bottom:16px;">
@@ -1681,7 +1686,8 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const TITLES = { 
   dashboard:'Inicio', 
   reports:'Informes', 
-  orders:'Pedidos', 
+  'new-order':'Nuevo Pedido',
+  orders:'Tablero de Pedidos', 
   products:'Productos',
   abm:'ABM · Productos', 
   design:'Diseño de tienda', 
