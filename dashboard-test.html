@@ -1001,19 +1001,16 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
           Los pedidos sin actividad por más de 15 días pasan a <strong>Perdido</strong> automáticamente.
         </div>
         <div id="state-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;"></div>
-        <div style="display:flex;gap:8px;">
-          <button class="abm-btn-new" onclick="addState()" style="font-size:11px;padding:6px 12px;">
-            <i class="bi bi-plus"></i> Agregar estado
+        <div style="display:flex;gap:8px;position:absolute;top:16px;right:16px;">
+          <button onclick="addState()"
+            style="font-size:11px;padding:6px 12px;background:var(--iron);border:1px solid var(--zinc);
+                   border-radius:7px;color:var(--fog);cursor:pointer;font-family:var(--font-b);">
+            <i class="bi bi-plus"></i> Configurar estados
           </button>
           <button onclick="resetStates()"
             style="font-size:11px;padding:6px 12px;background:var(--iron);border:1px solid var(--zinc);
                    border-radius:7px;color:var(--fog);cursor:pointer;font-family:var(--font-b);">
             <i class="bi bi-arrow-counterclockwise"></i> Restaurar por defecto
-          </button>
-          <button onclick="saveStates()"
-            style="font-size:11px;padding:6px 12px;background:var(--green);border:none;
-                   border-radius:7px;color:#fff;cursor:pointer;font-family:var(--font-b);font-weight:600;">
-            <i class="bi bi-floppy"></i> Guardar estados
           </button>
         </div>
       </div>
@@ -1482,6 +1479,15 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
       <span id="prod-count" style="font-size:12px;color:var(--silver);"></span>
     </div>
     <div class="prod-grid" id="prod-grid"></div>
+    
+    <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px;">
+      <button class="sb-btn" style="background:#444;border:none;color:#fff;padding:12px 24px;font-size:14px;" onclick="exportProducts()">
+        Exportar CSV
+      </button>
+      <button class="abm-btn-new" onclick="saveLocalProducts(this)" style="padding:12px 24px;font-size:14px;">
+        <i class="bi bi-floppy2"></i> Guardar configuración
+      </button>
+    </div>
   </div><!-- /view-products -->
 
   <!-- ══ ABM ══ -->
@@ -1523,14 +1529,14 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
           <tbody id="abm-tbody"></tbody>
         </table>
       </div>
-      <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+      <div style="margin-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
         <span id="abm-count" style="font-size:11px;color:var(--silver);"></span>
-        <div style="display:flex;gap:8px;">
-          <button class="sb-btn" style="background:var(--iron);border:1px solid var(--zinc);" onclick="exportProducts()">
-            <i class="bi bi-download"></i> Exportar CSV
+        <div style="display:flex;gap:12px;">
+          <button class="sb-btn" style="background:#444;border:none;color:#fff;padding:12px 24px;font-size:14px;" onclick="exportProducts()">
+            Exportar CSV
           </button>
-          <button class="sb-btn" onclick="saveLocalProducts(this)">
-            <i class="bi bi-floppy"></i> Guardar cambios
+          <button class="abm-btn-new" onclick="saveLocalProducts(this)" style="padding:12px 24px;font-size:14px;">
+            <i class="bi bi-floppy2"></i> Guardar configuración
           </button>
         </div>
       </div>
@@ -1607,10 +1613,12 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
     </div><!-- /masonry-grid -->
 
     <!-- Save button -->
-    <button class="abm-btn-new" onclick="saveConfig()" style="width:100%;justify-content:center;padding:12px;font-size:14px;margin-top:12px;">
-      <i class="bi bi-floppy2"></i> Guardar configuración
-    </button>
-    <div id="cfg-save-status" style="font-size:11px;text-align:center;margin-top:8px;min-height:14px;color:var(--silver);"></div>
+    <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+      <button class="abm-btn-new" onclick="saveConfig()" style="padding:12px 24px;font-size:14px;">
+        <i class="bi bi-floppy2"></i> Guardar configuración
+      </button>
+    </div>
+    <div id="cfg-save-status" style="font-size:11px;text-align:right;margin-top:8px;min-height:14px;color:var(--silver);"></div>
 
   </div><!-- /view-config -->
 
@@ -1793,10 +1801,12 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
     </div><!-- /masonry-grid -->
 
     <!-- Save button -->
-    <button class="abm-btn-new" onclick="saveAdvancedConfig()" style="width:100%;justify-content:center;padding:12px;font-size:14px;margin-top:4px;">
-      <i class="bi bi-floppy2"></i> Guardar configuración avanzada
-    </button>
-    <div id="adv-save-status" style="font-size:11px;text-align:center;margin-top:8px;min-height:14px;color:var(--silver);"></div>
+    <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+      <button class="abm-btn-new" onclick="saveAdvancedConfig()" style="padding:12px 24px;font-size:14px;">
+        <i class="bi bi-floppy2"></i> Guardar configuración
+      </button>
+    </div>
+    <div id="adv-save-status" style="font-size:11px;text-align:right;margin-top:8px;min-height:14px;color:var(--silver);"></div>
 
   </div><!-- /view-advanced -->
 
