@@ -3988,6 +3988,19 @@ function changeOrderEstado(id, estado) {
 function assignPickUp(orderId, pickupId) {
   const o = allOrders.find(x => x.id === orderId);
   if (!o) return;
+  
+  if (pickupId) {
+    const cost = prompt('¿Qué valor se le va a pagar al repartidor por este envío? (Ingresar solo números)');
+    if (cost === null) {
+      // Si cancela, revertir el select redibujando la tabla
+      renderAllOrders(allOrders);
+      return; 
+    }
+    o.pickup_cost = cost;
+  } else {
+    o.pickup_cost = null;
+  }
+  
   o.pickup_id = pickupId;
   localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
   renderAllOrders(allOrders);
@@ -3996,7 +4009,16 @@ function assignPickUp(orderId, pickupId) {
     const p = window.currentPickups.find(x => x.id === pickupId);
     if (p) {
       // Notificar al PickUp por WhatsApp
-      const text = `*NUEVO ENVÍO ASIGNADO*\n\nHola ${p.name}, tenés un nuevo pedido asignado:\nPedido: ${o.id}\nCliente: ${o.cliente} (DNI: ${o.dni||'—'})\nDirección: ${o.direccion}\nPago: ${o.pago}\nTotal: $${Number(o.total||0).toLocaleString('es-AR')}\n${o.comprobante ? `Comprobante de pago: ${o.comprobante}\n` : ''}`;
+      let text = `*NUEVO ENVÍO ASIGNADO*\n\nHola ${p.name}, tenés un nuevo pedido asignado:\nPedido: ${o.id}\nCliente: ${o.cliente} (DNI: ${o.dni||'—'})\nDirección: ${o.direccion}\nPago: ${o.pago}\nTotal a cobrar al cliente: $${Number(o.total||0).toLocaleString('es-AR')}\n`;
+      
+      if (o.pickup_cost) {
+        text += `\n*Abono por tu servicio:* $${Number(o.pickup_cost).toLocaleString('es-AR')}\n`;
+      }
+      
+      if (o.comprobante) {
+        text += `\nComprobante de pago: ${o.comprobante}`;
+      }
+      
       window.open(`https://wa.me/${p.wapp}?text=${encodeURIComponent(text)}`, '_blank');
     }
   }
