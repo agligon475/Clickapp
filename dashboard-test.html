@@ -825,40 +825,65 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
 
   <!-- ══ REPORTS (INFORMES) ══ -->
   <div class="view" id="view-reports">
-
-    <div class="metrics" id="metrics-row">
-      <div class="metric"><div class="metric-icon" style="background:rgba(215,38,56,.15);">📦</div><div class="metric-label">Pedidos</div><div class="metric-val" id="m-ord">—</div><div class="metric-delta up" id="m-ord-d"></div></div>
-      <div class="metric"><div class="metric-icon" style="background:rgba(46,204,113,.15);">💰</div><div class="metric-label">Facturado</div><div class="metric-val" id="m-rev">—</div><div class="metric-delta up" id="m-rev-d"></div></div>
-      <div class="metric"><div class="metric-icon" style="background:rgba(52,152,219,.15);">🎯</div><div class="metric-label">Ticket promedio</div><div class="metric-val" id="m-avg">—</div><div class="metric-delta dn" id="m-avg-d"></div></div>
-      <div class="metric"><div class="metric-icon" style="background:rgba(243,156,18,.15);">👥</div><div class="metric-label">Productos activos</div><div class="metric-val" id="m-prods">—</div><div class="metric-delta up" id="m-prods-d"></div></div>
-    </div>
-
-    <div class="charts-row charts-2">
-      <div class="card">
-        <div class="card-title">Pedidos por día <span style="font-weight:400;color:var(--zinc);font-size:10px;">(simulado — conectá tu hoja de pedidos)</span></div>
-        <div class="chart-box" style="height:200px;"><canvas id="c-orders"></canvas></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Formas de pago</div>
-        <div class="chart-box" style="height:160px;"><canvas id="c-pago"></canvas></div>
-        <div class="legend">
-          <span><span class="legend-dot" style="background:#D72638;"></span>Transferencia</span>
-          <span><span class="legend-dot" style="background:#E74C3C;"></span>Efectivo</span>
-          <span><span class="legend-dot" style="background:#922B21;"></span>Cheque</span>
-          <span><span class="legend-dot" style="background:#F1948A;"></span>Depósito</span>
+    
+    <div style="display:flex;gap:20px;margin-bottom:20px;flex-wrap:wrap;">
+      
+      <!-- Left Column -->
+      <div style="flex:3;display:flex;flex-direction:column;gap:20px;min-width:320px;">
+        <div class="metrics" id="metrics-row" style="margin-bottom:0;">
+          <div class="metric"><div class="metric-icon" style="background:rgba(215,38,56,.15);">📦</div><div class="metric-label">Pedidos</div><div class="metric-val" id="m-ord">—</div><div class="metric-delta up" id="m-ord-d"></div></div>
+          <div class="metric"><div class="metric-icon" style="background:rgba(46,204,113,.15);">💰</div><div class="metric-label">Facturado</div><div class="metric-val" id="m-rev">—</div><div class="metric-delta up" id="m-rev-d"></div></div>
+          <div class="metric"><div class="metric-icon" style="background:rgba(52,152,219,.15);">🎯</div><div class="metric-label">Ticket promedio</div><div class="metric-val" id="m-avg">—</div><div class="metric-delta dn" id="m-avg-d"></div></div>
+          <div class="metric"><div class="metric-icon" style="background:rgba(243,156,18,.15);">👥</div><div class="metric-label">Productos activos</div><div class="metric-val" id="m-prods">—</div><div class="metric-delta up" id="m-prods-d"></div></div>
+        </div>
+        
+        <div class="card" style="margin:0;">
+          <div class="card-title" style="margin-bottom:12px;">Pedidos por día <span style="font-weight:400;color:var(--zinc);font-size:10px;">(simulado — conectá tu hoja de pedidos)</span></div>
+          <div class="chart-box" style="height:200px;"><canvas id="c-orders"></canvas></div>
+        </div>
+        
+        <div class="card" style="margin:0;">
+          <div class="card-title" style="margin-bottom:12px;">Top productos (por stock)</div>
+          <div class="chart-box" style="height:190px;"><canvas id="c-top"></canvas></div>
         </div>
       </div>
-    </div>
-
-    <div class="charts-row charts-equal">
-      <div class="card">
-        <div class="card-title">Top productos (por stock)</div>
-        <div class="chart-box" style="height:190px;"><canvas id="c-top"></canvas></div>
+      
+      <!-- Right Column -->
+      <div style="flex:2;display:flex;flex-direction:column;gap:20px;min-width:320px;">
+        
+        <div style="display:flex;gap:12px;">
+          <div class="card" style="margin:0;flex:1;padding:16px;">
+            <div style="font-size:11px;font-weight:600;color:var(--silver);margin-bottom:8px;line-height:1.2;">Repartidores activos</div>
+            <div id="m-repartidores" style="font-size:24px;font-family:var(--font-h);font-weight:700;">-</div>
+          </div>
+          <div class="card" style="margin:0;flex:1;padding:16px;">
+            <div style="font-size:11px;font-weight:600;color:var(--silver);margin-bottom:8px;line-height:1.2;">Pedidos en espera</div>
+            <div id="m-pedidos-espera" style="font-size:24px;font-family:var(--font-h);font-weight:700;">-</div>
+          </div>
+          <div class="card" style="margin:0;flex:1;padding:16px;">
+            <div style="font-size:11px;font-weight:600;color:var(--silver);margin-bottom:8px;line-height:1.2;">Artículos con stock bajo</div>
+            <div id="m-stock-bajo" style="font-size:24px;font-family:var(--font-h);font-weight:700;">-</div>
+          </div>
+        </div>
+        
+        <div class="card" style="margin:0;flex:1;">
+          <div class="card-title" style="margin-bottom:12px;">Formas de pago</div>
+          <div class="chart-box" style="height:160px;"><canvas id="c-pago"></canvas></div>
+          <div class="legend" style="margin-top:12px;">
+            <span><span class="legend-dot" style="background:#D72638;"></span>Transferencia</span>
+            <span><span class="legend-dot" style="background:#E74C3C;"></span>Efectivo</span>
+            <span><span class="legend-dot" style="background:#922B21;"></span>Cheque</span>
+            <span><span class="legend-dot" style="background:#F1948A;"></span>Depósito</span>
+          </div>
+        </div>
+        
+        <div class="card" style="margin:0;flex:1;">
+          <div class="card-title" style="margin-bottom:12px;">Distribución por categoría</div>
+          <div class="chart-box" style="height:190px;"><canvas id="c-cats"></canvas></div>
+        </div>
+        
       </div>
-      <div class="card">
-        <div class="card-title">Distribución por categoría</div>
-        <div class="chart-box" style="height:190px;"><canvas id="c-cats"></canvas></div>
-      </div>
+      
     </div>
 
     <div class="card">
@@ -4157,6 +4182,23 @@ function updateDashboardFromOrders(orders) {
   document.getElementById('m-ord-d').innerHTML  = `<i class="bi bi-people"></i> ${clientes} clientes únicos`;
   document.getElementById('m-rev-d').innerHTML  = `<span style="color:var(--silver);">total acumulado</span>`;
   document.getElementById('m-avg-d').innerHTML  = `<span style="color:var(--silver);">por pedido</span>`;
+
+  const repCount = (window.currentPickups || []).filter(p => p.active).length;
+  const pendingOrders = orders.filter(o => o.logistica === 'Envío a domicilio' && !o.pickup_id).length;
+  let lowStock = 0;
+  try {
+    const rawProds = JSON.parse(localStorage.getItem('storeapp_local_products')||'[]');
+    lowStock = rawProds.filter(p => Number(p.stock) <= 5).length;
+  } catch(e) {}
+  
+  const mRep = document.getElementById('m-repartidores');
+  if (mRep) mRep.textContent = repCount;
+  
+  const mPend = document.getElementById('m-pedidos-espera');
+  if (mPend) mPend.textContent = pendingOrders;
+  
+  const mStock = document.getElementById('m-stock-bajo');
+  if (mStock) mStock.textContent = lowStock;
 
   // Update orders table in dashboard view too
   renderOrdersTable(orders.slice(0, 10));
