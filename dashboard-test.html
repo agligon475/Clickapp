@@ -1858,7 +1858,7 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
   <div class="view" id="view-pickups">
     <div class="card" style="margin-bottom:16px;">
       <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-        <span style="font-size:12px;font-weight:700;color:var(--silver);letter-spacing:0.05em;"><i class="bi bi-search" style="color:var(--red);"></i> REPARTIDORES (PICKUPS)</span>
+        <span style="font-size:12px;font-weight:700;color:var(--silver);letter-spacing:0.05em;"><i class="bi bi-speedometer2"></i> REPARTIDORES (PICKUPS)</span>
         <button class="abm-btn-new" onclick="openPickupForm()" style="padding:7px 14px;font-size:12px;">
           <i class="bi bi-plus"></i> Nuevo Repartidor
         </button>
@@ -1888,11 +1888,11 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
     <!-- Pickup assignment panel -->
     <div class="card">
       <div class="card-title">
-        <span style="font-size:12px;font-weight:700;color:var(--silver);letter-spacing:0.05em;"><i class="bi bi-geo-alt" style="color:var(--red);"></i> PEDIDOS PENDIENTES DE ASIGNACIÓN</span>
+        <span style="font-size:12px;font-weight:700;color:var(--silver);letter-spacing:0.05em;"><i class="bi bi-geo-alt"></i> PEDIDOS PENDIENTES DE ASIGNACIÓN</span>
       </div>
       <div id="pickup-pending-orders" style="min-height:80px;">
         <div style="text-align:center;padding:30px;color:var(--silver);font-size:13px;">
-          <i class="bi bi-inbox" style="font-size:24px;display:block;margin-bottom:8px;opacity:.3;"></i>
+          <i class="bi bi-cloud" style="font-size:24px;display:block;margin-bottom:8px;opacity:.3;"></i>
           No hay pedidos con "Envío a domicilio" pendientes de asignar.
         </div>
       </div>
@@ -4970,8 +4970,8 @@ async function loadPickupsList() {
         </td>
         <td>
           <div style="display:flex;gap:6px;">
-            <button onclick="openPickupForm('${p.id}')" class="sb-btn" style="padding:4px 8px;font-size:11px;background:var(--iron);border:1px solid var(--zinc);"><i class="bi bi-pencil"></i></button>
-            <button onclick="deletePickup('${p.id}')" class="sb-btn" style="padding:4px 8px;font-size:11px;background:rgba(215,38,56,.1);border:1px solid rgba(215,38,56,.2);color:var(--red);"><i class="bi bi-trash"></i></button>
+            <button onclick="openPickupForm('${p.id}')" class="sb-btn" style="padding:6px 24px;font-size:12px;background:var(--iron);border:1px solid var(--zinc);border-radius:16px;color:var(--silver);"><i class="bi bi-pencil"></i></button>
+            <button onclick="deletePickup('${p.id}')" class="sb-btn" style="padding:6px 24px;font-size:12px;background:rgba(215,38,56,.1);border:1px solid rgba(215,38,56,.2);border-radius:16px;color:var(--red);"><i class="bi bi-trash"></i></button>
           </div>
         </td>
       </tr>
