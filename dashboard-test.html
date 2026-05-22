@@ -1105,23 +1105,40 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
           <div class="card-title">Paleta de colores</div>
           <div class="card-content">
           <div class="ctrl-group">
-            <label class="ctrl-label">Color de acento</label>
+            <label class="ctrl-label">Color Principal (Acento)</label>
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;" id="color-presets">
-              <button class="color-swatch active" style="background:#D72638;" data-color="#D72638" onclick="pickColor(this,'#D72638')"></button>
-              <button class="color-swatch" style="background:#1A73E8;" data-color="#1A73E8" onclick="pickColor(this,'#1A73E8')"></button>
-              <button class="color-swatch" style="background:#0F9D58;" data-color="#0F9D58" onclick="pickColor(this,'#0F9D58')"></button>
-              <button class="color-swatch" style="background:#F4B400;" data-color="#F4B400" onclick="pickColor(this,'#F4B400')"></button>
-              <button class="color-swatch" style="background:#9C27B0;" data-color="#9C27B0" onclick="pickColor(this,'#9C27B0')"></button>
-              <button class="color-swatch" style="background:#FF6D00;" data-color="#FF6D00" onclick="pickColor(this,'#FF6D00')"></button>
-              <button class="color-swatch" style="background:#00BCD4;" data-color="#00BCD4" onclick="pickColor(this,'#00BCD4')"></button>
-              <button class="color-swatch" style="background:#E91E63;" data-color="#E91E63" onclick="pickColor(this,'#E91E63')"></button>
+              <button class="color-swatch active" style="background:#D72638;" data-color="#D72638" onclick="pickColor(this,'#D72638', 1)"></button>
+              <button class="color-swatch" style="background:#1A73E8;" data-color="#1A73E8" onclick="pickColor(this,'#1A73E8', 1)"></button>
+              <button class="color-swatch" style="background:#0F9D58;" data-color="#0F9D58" onclick="pickColor(this,'#0F9D58', 1)"></button>
+              <button class="color-swatch" style="background:#F4B400;" data-color="#F4B400" onclick="pickColor(this,'#F4B400', 1)"></button>
+              <button class="color-swatch" style="background:#9C27B0;" data-color="#9C27B0" onclick="pickColor(this,'#9C27B0', 1)"></button>
+              <button class="color-swatch" style="background:#FF6D00;" data-color="#FF6D00" onclick="pickColor(this,'#FF6D00', 1)"></button>
+              <button class="color-swatch" style="background:#00BCD4;" data-color="#00BCD4" onclick="pickColor(this,'#00BCD4', 1)"></button>
+              <button class="color-swatch" style="background:#E91E63;" data-color="#E91E63" onclick="pickColor(this,'#E91E63', 1)"></button>
             </div>
-            <div style="display:flex;align-items:center;gap:8px;">
-              <input type="color" id="cfg-color" value="#D72638"
-                style="width:40px;height:32px;border:1px solid var(--zinc);border-radius:6px;background:none;cursor:pointer;padding:2px;"
-                oninput="pickColorCustom(this.value)"/>
-              <span style="font-size:11px;color:var(--silver);">Color personalizado</span>
-              <span id="color-hex" style="font-size:11px;font-family:monospace;color:var(--fog);">#D72638</span>
+            
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:12px;">
+              <div style="background:var(--iron);padding:10px;border-radius:8px;border:1px solid var(--zinc);">
+                <label style="font-size:10px;color:var(--silver);display:block;margin-bottom:6px;">Color Principal</label>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <input type="color" id="cfg-color" value="#D72638" style="width:32px;height:24px;border:1px solid var(--zinc);border-radius:4px;padding:0;cursor:pointer;background:none;" oninput="pickColorCustom(this.value, 1)"/>
+                  <span id="color-hex" style="font-size:10px;font-family:monospace;color:var(--fog);">#D72638</span>
+                </div>
+              </div>
+              <div style="background:var(--iron);padding:10px;border-radius:8px;border:1px solid var(--zinc);">
+                <label style="font-size:10px;color:var(--silver);display:block;margin-bottom:6px;">Color Secundario</label>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <input type="color" id="cfg-color2" value="#1A73E8" style="width:32px;height:24px;border:1px solid var(--zinc);border-radius:4px;padding:0;cursor:pointer;background:none;" oninput="pickColorCustom(this.value, 2)"/>
+                  <span id="color2-hex" style="font-size:10px;font-family:monospace;color:var(--fog);">#1A73E8</span>
+                </div>
+              </div>
+              <div style="background:var(--iron);padding:10px;border-radius:8px;border:1px solid var(--zinc);">
+                <label style="font-size:10px;color:var(--silver);display:block;margin-bottom:6px;">Color Terciario</label>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <input type="color" id="cfg-color3" value="#F4B400" style="width:32px;height:24px;border:1px solid var(--zinc);border-radius:4px;padding:0;cursor:pointer;background:none;" oninput="pickColorCustom(this.value, 3)"/>
+                  <span id="color3-hex" style="font-size:10px;font-family:monospace;color:var(--fog);">#F4B400</span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1272,8 +1289,10 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
                 <input class="ctrl-input" id="banner1-label" placeholder="NUEVAS HERRAMIENTAS" maxlength="30"/>
               </div>
               <div class="ctrl-group">
-                <label class="ctrl-label">Categoría para filtrar</label>
-                <input class="ctrl-input" id="banner1-cat" placeholder="Herramientas" maxlength="50"/>
+                <label class="ctrl-label">Categoría para enlazar</label>
+                <select class="ctrl-input" id="banner1-cat">
+                  <option value="">(Ninguna)</option>
+                </select>
               </div>
               <div class="ctrl-group" style="grid-column:1/-1;">
                 <label class="ctrl-label">Título principal (max 30 caracteres)</label>
@@ -1305,8 +1324,10 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
                 <input class="ctrl-input" id="banner2-label" placeholder="PROMOCIÓN" maxlength="30"/>
               </div>
               <div class="ctrl-group">
-                <label class="ctrl-label">Categoría para filtrar</label>
-                <input class="ctrl-input" id="banner2-cat" placeholder="Accesorios" maxlength="50"/>
+                <label class="ctrl-label">Categoría para enlazar</label>
+                <select class="ctrl-input" id="banner2-cat">
+                  <option value="">(Ninguna)</option>
+                </select>
               </div>
               <div class="ctrl-group" style="grid-column:1/-1;">
                 <label class="ctrl-label">Título principal (max 30 caracteres)</label>
@@ -2519,7 +2540,7 @@ function renderProducts(){
 /* ═══════════════════════════ DESIGN PANEL */
 let cfg = {
   name:'FerreApp', tagline:'Tu ferretería digital',
-  emoji:'🔧', color:'#D72638', theme:'dark',
+  emoji:'🔧', color:'#D72638', color2:'#1A73E8', color3:'#F4B400', theme:'dark',
   font:'Barlow Condensed', fontBody:'Barlow',
   h1:'Tu ferretería', h2:'sin filas.',
   desc:'Elegí tus productos, armá tu pedido y coordiná por WhatsApp.',
@@ -2633,18 +2654,36 @@ function pickEmoji(btn, emoji){
   previewUpdate();
 }
 
-function pickColor(btn, color){
-  cfg.color = color;
-  document.querySelectorAll('.color-swatch').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('cfg-color').value = color;
-  document.getElementById('color-hex').textContent = color;
+function pickColor(btn, color, index) {
+  if (index === 1) {
+    cfg.color = color;
+    document.querySelectorAll('.color-swatch').forEach(b=>b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    document.getElementById('cfg-color').value = color;
+    document.getElementById('color-hex').textContent = color;
+  } else if (index === 2) {
+    cfg.color2 = color;
+    document.getElementById('cfg-color2').value = color;
+    document.getElementById('color2-hex').textContent = color;
+  } else if (index === 3) {
+    cfg.color3 = color;
+    document.getElementById('cfg-color3').value = color;
+    document.getElementById('color3-hex').textContent = color;
+  }
   previewUpdate();
 }
-function pickColorCustom(color){
-  cfg.color = color;
-  document.querySelectorAll('.color-swatch').forEach(b=>b.classList.remove('active'));
-  document.getElementById('color-hex').textContent = color;
+function pickColorCustom(color, index) {
+  if (index === 1) {
+    cfg.color = color;
+    document.querySelectorAll('.color-swatch').forEach(b=>b.classList.remove('active'));
+    document.getElementById('color-hex').textContent = color;
+  } else if (index === 2) {
+    cfg.color2 = color;
+    document.getElementById('color2-hex').textContent = color;
+  } else if (index === 3) {
+    cfg.color3 = color;
+    document.getElementById('color3-hex').textContent = color;
+  }
   previewUpdate();
 }
 
@@ -2700,6 +2739,10 @@ function initDesignPanel(){
   document.getElementById('cfg-wapp').value    = cfg.wapp;
   document.getElementById('cfg-color').value   = cfg.color;
   document.getElementById('color-hex').textContent = cfg.color;
+  document.getElementById('cfg-color2').value  = cfg.color2 || '#1A73E8';
+  document.getElementById('color2-hex').textContent = cfg.color2 || '#1A73E8';
+  document.getElementById('cfg-color3').value  = cfg.color3 || '#F4B400';
+  document.getElementById('color3-hex').textContent = cfg.color3 || '#F4B400';
 
   // Mark active color swatch
   document.querySelectorAll('.color-swatch').forEach(b=>{
@@ -4767,7 +4810,7 @@ async function loadPickupsList() {
   }
 }
 
-function loadBannersConfig() {
+async function loadBannersConfig() {
   const bannerData = JSON.parse(localStorage.getItem('storeapp_banners') || '{}');
   const b1 = bannerData.banner1 || {};
   const b2 = bannerData.banner2 || {};
@@ -4775,12 +4818,32 @@ function loadBannersConfig() {
   const b1Label = document.getElementById('banner1-label'); if (b1Label) b1Label.value = b1.label || '';
   const b1Title = document.getElementById('banner1-title'); if (b1Title) b1Title.value = b1.title || '';
   const b1Img = document.getElementById('banner1-img'); if (b1Img) b1Img.value = b1.img || '';
-  const b1Cat = document.getElementById('banner1-cat'); if (b1Cat) b1Cat.value = b1.cat || '';
+  const b1Cat = document.getElementById('banner1-cat');
   
   const b2Label = document.getElementById('banner2-label'); if (b2Label) b2Label.value = b2.label || '';
   const b2Title = document.getElementById('banner2-title'); if (b2Title) b2Title.value = b2.title || '';
   const b2Img = document.getElementById('banner2-img'); if (b2Img) b2Img.value = b2.img || '';
-  const b2Cat = document.getElementById('banner2-cat'); if (b2Cat) b2Cat.value = b2.cat || '';
+  const b2Cat = document.getElementById('banner2-cat');
+  
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/categories?order=display_order.asc`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    if (res.ok) {
+      const cats = await res.json();
+      let opts = '<option value="">(Ninguna)</option>';
+      opts += cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+      if (b1Cat) { b1Cat.innerHTML = opts; b1Cat.value = b1.cat || ''; }
+      if (b2Cat) { b2Cat.innerHTML = opts; b2Cat.value = b2.cat || ''; }
+    } else {
+      if (b1Cat) b1Cat.value = b1.cat || '';
+      if (b2Cat) b2Cat.value = b2.cat || '';
+    }
+  } catch (e) {
+    console.warn("No se pudieron cargar categorías para banners", e);
+    if (b1Cat) b1Cat.value = b1.cat || '';
+    if (b2Cat) b2Cat.value = b2.cat || '';
+  }
   
   if(typeof previewBanner === 'function') {
     previewBanner('banner1');
