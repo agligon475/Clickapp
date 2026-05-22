@@ -1890,13 +1890,42 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
           <label class="ctrl-label">Zona principal</label>
           <input class="ctrl-input" id="pu-zona" placeholder="Ej: CABA y GBA Norte"/>
         </div>
-        <div class="ctrl-group" style="grid-column:1/-1;">
-          <label class="ctrl-label">Vehículo / Patente (Opcional)</label>
-          <input class="ctrl-input" id="pu-vehiculo" placeholder="Ej: Kangoo Blanca - AB123CD"/>
+        <div class="ctrl-group">
+          <label class="ctrl-label">Horario de trabajo</label>
+          <div style="display:flex;gap:10px;">
+            <div style="flex:1;">
+              <span style="font-size:11px;color:var(--silver);display:block;margin-bottom:2px;">Desde:</span>
+              <input type="time" class="ctrl-input" id="pu-time-from" />
+            </div>
+            <div style="flex:1;">
+              <span style="font-size:11px;color:var(--silver);display:block;margin-bottom:2px;">Hasta:</span>
+              <input type="time" class="ctrl-input" id="pu-time-to" />
+            </div>
+          </div>
         </div>
-        <div class="ctrl-group" style="grid-column:1/-1; display:flex; align-items:center; gap:8px; margin-top:8px;">
-          <input type="checkbox" id="pu-active" checked style="width:16px;height:16px;accent-color:var(--red);"/>
-          <label class="ctrl-label" style="margin:0;cursor:pointer;" for="pu-active">Repartidor Activo (Disponible para asignar)</label>
+        
+        <div class="ctrl-group" style="grid-column:1/-1;">
+          <label class="ctrl-label">Días de trabajo</label>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;background:var(--iron);padding:10px;border-radius:8px;border:1px solid var(--zinc);" id="pu-days-container">
+            <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"><input type="checkbox" value="Lun" class="pu-day-cb" style="accent-color:var(--red);"> Lun</label>
+            <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"><input type="checkbox" value="Mar" class="pu-day-cb" style="accent-color:var(--red);"> Mar</label>
+            <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"><input type="checkbox" value="Mie" class="pu-day-cb" style="accent-color:var(--red);"> Mié</label>
+            <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"><input type="checkbox" value="Jue" class="pu-day-cb" style="accent-color:var(--red);"> Jue</label>
+            <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"><input type="checkbox" value="Vie" class="pu-day-cb" style="accent-color:var(--red);"> Vie</label>
+            <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"><input type="checkbox" value="Sab" class="pu-day-cb" style="accent-color:var(--red);"> Sáb</label>
+            <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"><input type="checkbox" value="Dom" class="pu-day-cb" style="accent-color:var(--red);"> Dom</label>
+          </div>
+        </div>
+
+        <div class="ctrl-group" style="grid-column:1/-1; display:flex; align-items:center; gap:20px; margin-top:8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <input type="checkbox" id="pu-holidays" style="width:16px;height:16px;accent-color:var(--red);"/>
+            <label style="margin:0;cursor:pointer;font-size:13px;" for="pu-holidays">Trabaja Feriados</label>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <input type="checkbox" id="pu-active" checked style="width:16px;height:16px;accent-color:var(--red);"/>
+            <label style="margin:0;cursor:pointer;font-size:13px;" for="pu-active">Repartidor Activo (Disponible)</label>
+          </div>
         </div>
       </div>
       
@@ -4707,7 +4736,15 @@ function openPickupForm(id = null) {
       document.getElementById('pu-wapp').value = pu.wapp || '';
       document.getElementById('pu-zona').value = pu.zona || '';
       document.getElementById('pu-vehiculo').value = pu.vehiculo || '';
+      document.getElementById('pu-time-from').value = pu.time_from || '';
+      document.getElementById('pu-time-to').value = pu.time_to || '';
+      document.getElementById('pu-holidays').checked = pu.holidays === true;
       document.getElementById('pu-active').checked = pu.active !== false;
+      
+      const puDays = (pu.days || '').split(',').map(d => d.trim());
+      document.querySelectorAll('.pu-day-cb').forEach(cb => {
+        cb.checked = puDays.includes(cb.value);
+      });
     }
   } else {
     document.getElementById('pickup-form-title').innerHTML = '<i class="bi bi-person-badge"></i> Nuevo Repartidor';
@@ -4717,7 +4754,12 @@ function openPickupForm(id = null) {
     document.getElementById('pu-wapp').value = '';
     document.getElementById('pu-zona').value = '';
     document.getElementById('pu-vehiculo').value = '';
+    document.getElementById('pu-time-from').value = '';
+    document.getElementById('pu-time-to').value = '';
+    document.getElementById('pu-holidays').checked = false;
     document.getElementById('pu-active').checked = true;
+    
+    document.querySelectorAll('.pu-day-cb').forEach(cb => cb.checked = false);
   }
   
   showView('new-pickup');
@@ -4730,11 +4772,16 @@ async function savePickup() {
   const wapp = document.getElementById('pu-wapp').value.trim();
   const zona = document.getElementById('pu-zona').value.trim();
   const vehiculo = document.getElementById('pu-vehiculo').value.trim();
+  const time_from = document.getElementById('pu-time-from').value;
+  const time_to = document.getElementById('pu-time-to').value;
+  const holidays = document.getElementById('pu-holidays').checked;
   const active = document.getElementById('pu-active').checked;
+  
+  const days = Array.from(document.querySelectorAll('.pu-day-cb:checked')).map(cb => cb.value).join(',');
   
   if (!name || !wapp) return alert('El nombre y el WhatsApp son obligatorios');
   
-  const payload = { name, dni, wapp, zona, vehiculo, active };
+  const payload = { name, dni, wapp, zona, vehiculo, time_from, time_to, holidays, days, active };
   
   try {
     if (id) {
