@@ -1038,7 +1038,7 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
       </div>
       <div style="overflow-x:auto;">
         <table class="data-table">
-          <thead><tr><th>#</th><th>Fecha</th><th>Cliente</th><th>DNI</th><th>Productos</th><th>Pago</th><th>Logística</th><th>Total</th><th>Estado</th><th>Cambiar</th><th></th></tr></thead>
+          <thead><tr><th>#</th><th>Fecha</th><th>Cliente/DNI</th><th>Productos</th><th>Pago</th><th>Logística</th><th>Total</th><th>Estado</th><th>Firma</th><th></th></tr></thead>
           <tbody id="all-orders-body"></tbody>
         </table>
       </div>
@@ -1803,7 +1803,7 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
     <div class="card" style="margin-bottom:16px;">
       <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
         <span><i class="bi bi-truck" style="color:var(--red);"></i> Repartidores (PickUps)</span>
-        <button class="abm-btn-new" onclick="openPickupModal()" style="padding:7px 14px;font-size:12px;">
+        <button class="abm-btn-new" onclick="openPickupForm()" style="padding:7px 14px;font-size:12px;">
           <i class="bi bi-plus-lg"></i> Nuevo Repartidor
         </button>
       </div>
@@ -1843,6 +1843,49 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
     </div>
   </div>
 
+  <!-- ══ NEW PICKUP FORM ══ -->
+  <div class="view" id="view-new-pickup">
+    <div class="card" style="max-width:600px;margin:0 auto;">
+      <div class="card-title" id="pickup-form-title">
+        <i class="bi bi-person-badge"></i> Nuevo Repartidor
+      </div>
+      
+      <div class="modal-grid" style="padding:16px 0;">
+        <input type="hidden" id="pu-id" />
+        <div class="ctrl-group">
+          <label class="ctrl-label">Nombre y Apellido *</label>
+          <input class="ctrl-input" id="pu-name" placeholder="Ej: Carlos Gómez"/>
+        </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">DNI</label>
+          <input class="ctrl-input" id="pu-dni" placeholder="Ej: 30123456"/>
+        </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">WhatsApp *</label>
+          <input class="ctrl-input" id="pu-wapp" placeholder="Ej: 5491141819344"/>
+          <div class="form-hint">Con código de país, sin '+' ni espacios.</div>
+        </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label">Zona principal</label>
+          <input class="ctrl-input" id="pu-zona" placeholder="Ej: CABA y GBA Norte"/>
+        </div>
+        <div class="ctrl-group" style="grid-column:1/-1;">
+          <label class="ctrl-label">Vehículo / Patente (Opcional)</label>
+          <input class="ctrl-input" id="pu-vehiculo" placeholder="Ej: Kangoo Blanca - AB123CD"/>
+        </div>
+        <div class="ctrl-group" style="grid-column:1/-1; display:flex; align-items:center; gap:8px; margin-top:8px;">
+          <input type="checkbox" id="pu-active" checked style="width:16px;height:16px;accent-color:var(--red);"/>
+          <label class="ctrl-label" style="margin:0;cursor:pointer;" for="pu-active">Repartidor Activo (Disponible para asignar)</label>
+        </div>
+      </div>
+      
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px; padding-top:16px; border-top:1px solid var(--iron);">
+        <button class="sb-btn" style="background:var(--iron);border:1px solid var(--zinc);" onclick="showView('pickups')">Cancelar</button>
+        <button class="sb-btn" onclick="savePickup()"><i class="bi bi-check2-circle"></i> Guardar Repartidor</button>
+      </div>
+    </div>
+  </div>
+
 </div><!-- /main -->
 
 <script>
@@ -1861,6 +1904,7 @@ const TITLES = {
   abm:'ABM · Productos', 
   categories:'Categorías',
   pickups:'PickUp · Repartidores',
+  'new-pickup':'Formulario de Repartidor',
   design:'Diseño', 
   config:'Configuración',
   advanced:'Avanzado'
@@ -1905,7 +1949,12 @@ async function postToSupabase(tabla, data) {
       body: JSON.stringify(data)
     });
 
-    if (!response.ok) throw new Error(`Error ${response.status}`);
+    if (!response.ok) {
+      if (response.status === 409) {
+        throw new Error('Error 409: Conflicto. Es probable que ya exista un registro con ese ID o Nombre (Unique Constraint).');
+      }
+      throw new Error(`Error ${response.status}`);
+    }
     return await response.json();
   } catch (error) {
     console.error('Post error:', error);
@@ -2834,6 +2883,8 @@ async function initABM() {
     }
   }
   await loadCategories();
+  loadCategoriesList();
+  loadPickupsList();
   buildCatFilter();
   renderABM();
 }
@@ -3725,22 +3776,45 @@ function renderAllOrders(orders) {
     <tr>
       <td style="font-size:10px;font-family:monospace;color:var(--silver);">${o.id}</td>
       <td style="white-space:nowrap;font-size:11px;">${o.fecha}</td>
-      <td><strong style="color:var(--white);">${o.cliente}</strong></td>
-      <td style="color:var(--silver);font-size:11px;">${o.dni||'—'}</td>
+      <td>
+        <strong style="color:var(--white);">${o.cliente}</strong><br/>
+        <span style="color:var(--silver);font-size:10px;">DNI: ${o.dni||'—'}</span>
+      </td>
       <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
                  color:var(--fog);font-size:11px;" title="${o.productos}">${o.productos}</td>
-      <td style="white-space:nowrap;">${o.pago}</td>
-      <td style="white-space:nowrap;">${o.logistica}</td>
+      <td style="white-space:nowrap;font-size:11px;">
+        ${o.pago}<br/>
+        ${o.comprobante ? `<a href="${o.comprobante}" target="_blank" style="color:var(--red);text-decoration:none;"><i class="bi bi-file-earmark-check"></i> Ver Comprob.</a>` : '<span style="color:var(--zinc);">Sin comprobante</span>'}
+      </td>
+      <td style="white-space:nowrap;font-size:11px;">
+        ${o.logistica}<br/>
+        ${o.logistica === 'Envío a domicilio' ? 
+          `<select class="ctrl-input" style="padding:2px 4px;font-size:10px;margin-top:4px;" onchange="assignPickUp('${o.id}', this.value)">
+            <option value="">Asignar Repartidor...</option>
+            ${(window.currentPickups||[]).filter(p=>p.active).map(p=>`<option value="${p.id}" ${o.pickup_id===p.id?'selected':''}>${p.name}</option>`).join('')}
+           </select>` 
+        : '<span style="color:var(--zinc);">Retira cliente</span>'}
+      </td>
       <td style="white-space:nowrap;font-family:var(--font-h);font-size:15px;font-weight:700;">
         $${Number(o.total||0).toLocaleString('es-AR')}
       </td>
-      <td>${badge(o.estado)}</td>
       <td>
-        <select onchange="changeOrderEstado('${o.id}',this.value)"
-          style="font-size:10px;background:var(--iron);border:1px solid var(--zinc);
-                 border-radius:6px;color:var(--fog);padding:3px 5px;cursor:pointer;font-family:var(--font-b);">
-          ${getStates().map(s=>`<option value="${s.key}" ${o.estado===s.key?'selected':''}>${s.label}</option>`).join('')}
-        </select>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          ${badge(o.estado)}
+          <select onchange="changeOrderEstado('${o.id}',this.value)"
+            style="font-size:10px;background:var(--iron);border:1px solid var(--zinc);
+                   border-radius:6px;color:var(--fog);padding:3px 5px;cursor:pointer;font-family:var(--font-b);">
+            ${getStates().map(s=>`<option value="${s.key}" ${o.estado===s.key?'selected':''}>${s.label}</option>`).join('')}
+          </select>
+        </div>
+      </td>
+      <td>
+        ${o.firma ? 
+          `<a href="${o.firma}" target="_blank" style="color:var(--green);font-size:11px;text-decoration:none;"><i class="bi bi-check2-circle"></i> Ver Firma</a>` : 
+          `<label style="cursor:pointer;color:var(--silver);font-size:11px;"><i class="bi bi-upload"></i> Subir Firma
+             <input type="file" style="display:none;" onchange="uploadSignature('${o.id}', this)" accept="image/*" />
+           </label>`
+        }
       </td>
       <td>
         <button class="abm-action del" onclick="deleteOrder('${o.id}')" title="Eliminar">
@@ -3785,6 +3859,40 @@ function changeOrderEstado(id, estado) {
   if (estado === 'despachado' || label === 'Despachado') {
     // Mensaje al cliente: pedido en camino
     enviarMensajeEnCamino(o, sc);
+  }
+}
+
+function assignPickUp(orderId, pickupId) {
+  const o = allOrders.find(x => x.id === orderId);
+  if (!o) return;
+  o.pickup_id = pickupId;
+  localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
+  renderAllOrders(allOrders);
+  
+  if (pickupId && window.currentPickups) {
+    const p = window.currentPickups.find(x => x.id === pickupId);
+    if (p) {
+      // Notificar al PickUp por WhatsApp
+      const text = `*NUEVO ENVÍO ASIGNADO*\n\nHola ${p.name}, tenés un nuevo pedido asignado:\nPedido: ${o.id}\nCliente: ${o.cliente} (DNI: ${o.dni||'—'})\nDirección: ${o.direccion}\nPago: ${o.pago}\nTotal: $${Number(o.total||0).toLocaleString('es-AR')}\n${o.comprobante ? `Comprobante de pago: ${o.comprobante}\n` : ''}`;
+      window.open(`https://wa.me/${p.wapp}?text=${encodeURIComponent(text)}`, '_blank');
+    }
+  }
+}
+
+async function uploadSignature(orderId, input) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  const o = allOrders.find(x => x.id === orderId);
+  if (!o) return;
+
+  try {
+    const url = await uploadToCloudinary(file);
+    o.firma = url;
+    localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
+    renderAllOrders(allOrders);
+  } catch(e) {
+    alert('Error al subir la firma: ' + e.message);
   }
 }
 
@@ -4009,7 +4117,7 @@ function initAdvancedView() {
   if (cmEl) cmEl.value = claudeModel;
 
   // Cargar categorías
-  loadAndDisplayCategories();
+  loadCategoriesList();
 }
 
 async function loadCategoriesList() {
@@ -4124,6 +4232,8 @@ async function saveCategory() {
         order = Math.max(...window.currentCategories.map(c => c.display_order || 0)) + 10;
       }
       payload.display_order = order;
+      // Generar un ID local por si la base no tiene auto-increment (evita error 409 por id nulo repetido)
+      payload.id = 'CAT-' + Date.now().toString(36).toUpperCase();
       await postToSupabase('categories', payload);
     }
     closeCategoryModal();
@@ -4540,6 +4650,265 @@ try {
 updateWelcomeGreeting();
 updateStatusLights();
 showView('dashboard', document.querySelector('.sb-item.active'));
+
+// ── ABM PICKUPS ─────────────────────────────────
+// ── ABM PICKUPS ─────────────────────────────────
+function openPickupForm(id = null) {
+  if (id && window.currentPickups) {
+    const pu = window.currentPickups.find(p => p.id === id);
+    if (pu) {
+      document.getElementById('pickup-form-title').innerHTML = '<i class="bi bi-pencil-square"></i> Editar Repartidor';
+      document.getElementById('pu-id').value = pu.id;
+      document.getElementById('pu-name').value = pu.name || '';
+      document.getElementById('pu-dni').value = pu.dni || '';
+      document.getElementById('pu-wapp').value = pu.wapp || '';
+      document.getElementById('pu-zona').value = pu.zona || '';
+      document.getElementById('pu-vehiculo').value = pu.vehiculo || '';
+      document.getElementById('pu-active').checked = pu.active !== false;
+    }
+  } else {
+    document.getElementById('pickup-form-title').innerHTML = '<i class="bi bi-person-badge"></i> Nuevo Repartidor';
+    document.getElementById('pu-id').value = '';
+    document.getElementById('pu-name').value = '';
+    document.getElementById('pu-dni').value = '';
+    document.getElementById('pu-wapp').value = '';
+    document.getElementById('pu-zona').value = '';
+    document.getElementById('pu-vehiculo').value = '';
+    document.getElementById('pu-active').checked = true;
+  }
+  
+  showView('new-pickup');
+}
+
+async function savePickup() {
+  const id = document.getElementById('pu-id').value;
+  const name = document.getElementById('pu-name').value.trim();
+  const dni = document.getElementById('pu-dni').value.trim();
+  const wapp = document.getElementById('pu-wapp').value.trim();
+  const zona = document.getElementById('pu-zona').value.trim();
+  const vehiculo = document.getElementById('pu-vehiculo').value.trim();
+  const active = document.getElementById('pu-active').checked;
+  
+  if (!name || !wapp) return alert('El nombre y el WhatsApp son obligatorios');
+  
+  const payload = { name, dni, wapp, zona, vehiculo, active };
+  
+  try {
+    if (id) {
+      await updateInSupabase('pickups', id, payload);
+    } else {
+      await postToSupabase('pickups', payload);
+    }
+    showView('pickups');
+    loadPickupsList();
+  } catch(e) {
+    alert('Error al guardar repartidor: ' + e.message);
+  }
+}
+
+async function deletePickup(id) {
+  if (!confirm('¿Seguro que querés eliminar este repartidor?')) return;
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/pickups?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    loadPickupsList();
+  } catch(e) {
+    alert('Error al eliminar repartidor: ' + e.message);
+  }
+}
+
+async function loadPickupsList() {
+  const tbody = document.getElementById('pickups-tbody');
+  if (!tbody) return;
+  
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--silver);">Cargando repartidores...</td></tr>';
+  
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/pickups?order=id.asc`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const pickups = await res.json();
+    
+    window.currentPickups = pickups;
+    
+    if (!Array.isArray(pickups) || pickups.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--silver);padding:40px;">
+        <i class="bi bi-truck" style="font-size:32px;display:block;margin-bottom:10px;opacity:.3;"></i>
+        No hay repartidores cargados. Creá uno con el botón "Nuevo Repartidor".
+      </td></tr>`;
+      return;
+    }
+    
+    tbody.innerHTML = pickups.map(p => `
+      <tr>
+        <td style="font-weight:600;color:var(--fog);">${p.name}</td>
+        <td style="color:var(--silver);">${p.zona || '-'}</td>
+        <td><a href="https://wa.me/${p.wapp}" target="_blank" style="color:var(--red);text-decoration:none;"><i class="bi bi-whatsapp"></i> ${p.wapp}</a></td>
+        <td style="color:var(--silver);">${p.dni || '-'}</td>
+        <td>
+          <span style="display:inline-block;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:.05em;background:${p.active?'rgba(46,204,113,.15)':'rgba(138,138,144,.15)'};color:${p.active?'#2ECC71':'var(--silver)'};">
+            ${p.active ? 'ACTIVO' : 'INACTIVO'}
+          </span>
+        </td>
+        <td>
+          <div style="display:flex;gap:6px;">
+            <button onclick="openPickupForm('${p.id}')" class="sb-btn" style="padding:4px 8px;font-size:11px;background:var(--iron);border:1px solid var(--zinc);"><i class="bi bi-pencil"></i></button>
+            <button onclick="deletePickup('${p.id}')" class="sb-btn" style="padding:4px 8px;font-size:11px;background:rgba(215,38,56,.1);border:1px solid rgba(215,38,56,.2);color:var(--red);"><i class="bi bi-trash"></i></button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+    
+  } catch(e) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--red);padding:20px;">Error: ${e.message}</td></tr>`;
+  }
+}
+
+function loadBannersConfig() {
+  const bannerData = JSON.parse(localStorage.getItem('storeapp_banners') || '{}');
+  const b1 = bannerData.banner1 || {};
+  const b2 = bannerData.banner2 || {};
+  
+  const b1Label = document.getElementById('banner1-label'); if (b1Label) b1Label.value = b1.label || '';
+  const b1Title = document.getElementById('banner1-title'); if (b1Title) b1Title.value = b1.title || '';
+  const b1Img = document.getElementById('banner1-img'); if (b1Img) b1Img.value = b1.img || '';
+  const b1Cat = document.getElementById('banner1-cat'); if (b1Cat) b1Cat.value = b1.cat || '';
+  
+  const b2Label = document.getElementById('banner2-label'); if (b2Label) b2Label.value = b2.label || '';
+  const b2Title = document.getElementById('banner2-title'); if (b2Title) b2Title.value = b2.title || '';
+  const b2Img = document.getElementById('banner2-img'); if (b2Img) b2Img.value = b2.img || '';
+  const b2Cat = document.getElementById('banner2-cat'); if (b2Cat) b2Cat.value = b2.cat || '';
+  
+  if(typeof previewBanner === 'function') {
+    previewBanner('banner1');
+    previewBanner('banner2');
+  }
+  if(typeof setStatusMsg === 'function') {
+    setStatusMsg('banners-status', 'ok', 'Datos cargados');
+  }
+}
+
+function previewBanner(bannerId) {
+  const urlEl = document.getElementById(bannerId + '-img');
+  const previewEl = document.getElementById(bannerId + '-preview');
+  const imgEl = previewEl?.querySelector('img');
+  
+  if (!urlEl || !previewEl || !imgEl) return;
+  
+  const url = urlEl.value.trim();
+  if (url && url.startsWith('http')) {
+    imgEl.src = url;
+    previewEl.style.display = 'block';
+    imgEl.onerror = () => { previewEl.style.display = 'none'; };
+  } else {
+    previewEl.style.display = 'none';
+  }
+}
+
+async function handleBannerUpload(input, bannerId) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  const statusEl = document.getElementById('banners-status');
+  statusEl.style.color = 'var(--silver)';
+  statusEl.textContent = 'Subiendo imagen...';
+  
+  try {
+    const url = await uploadToCloudinary(file);
+    document.getElementById(bannerId + '-img').value = url;
+    statusEl.style.color = 'var(--green)';
+    statusEl.textContent = '✓ Imagen subida correctamente';
+    previewBanner(bannerId);
+  } catch(e) {
+    statusEl.style.color = 'var(--red)';
+    statusEl.textContent = '✕ Error: ' + e.message;
+  }
+}
+
+async function saveBannersConfig() {
+  const b1Label = document.getElementById('banner1-label').value.trim();
+  const b1Title = document.getElementById('banner1-title').value.trim();
+  const b1Img = document.getElementById('banner1-img').value.trim();
+  const b1Cat = document.getElementById('banner1-cat').value.trim();
+  
+  const b2Label = document.getElementById('banner2-label').value.trim();
+  const b2Title = document.getElementById('banner2-title').value.trim();
+  const b2Img = document.getElementById('banner2-img').value.trim();
+  const b2Cat = document.getElementById('banner2-cat').value.trim();
+  
+  const bannerData = {
+    banner1: { label: b1Label, title: b1Title, img: b1Img, cat: b1Cat },
+    banner2: { label: b2Label, title: b2Title, img: b2Img, cat: b2Cat }
+  };
+  localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
+  
+  const statusEl = document.getElementById('banners-status');
+  statusEl.style.color = 'var(--silver)';
+  statusEl.textContent = 'Guardando en Supabase...';
+  
+  try {
+    const dataToSave = {
+      banner1_label: b1Label, banner1_title: b1Title, banner1_img: b1Img, banner1_cat: b1Cat,
+      banner2_label: b2Label, banner2_title: b2Title, banner2_img: b2Img, banner2_cat: b2Cat
+    };
+
+    const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+
+    if (!configRes.ok) throw new Error('No se pudo verificar la configuración en Supabase');
+    const configData = await configRes.json();
+
+    if (configData && configData.length > 0) {
+      const id = configData[0].id;
+      await updateInSupabase('company_settings', id, dataToSave);
+    } else {
+      await postToSupabase('company_settings', dataToSave);
+    }
+    
+    statusEl.style.color = 'var(--green)';
+    statusEl.textContent = '✓ Banners guardados en Supabase correctamente';
+  } catch(e) {
+    statusEl.style.color = 'var(--orange)';
+    statusEl.textContent = '⚠ Error al guardar en Supabase: ' + e.message;
+  }
+}
+
+function setStatusMsg(elementId, status, msg) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  el.style.color = status === 'ok' ? 'var(--green)' : status === 'err' ? 'var(--red)' : 'var(--silver)';
+  el.textContent = (status === 'ok' ? '✓ ' : status === 'err' ? '✕ ' : '') + msg;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => { if (typeof loadBannersConfig === 'function') loadBannersConfig(); }, 500);
+
+  document.addEventListener('click', (e) => {
+    const title = e.target.closest('.config-section-title, .view#view-design .card-title');
+    if (title) {
+      const section = title.closest('.config-section, .card');
+      if (section) section.classList.toggle('collapsed');
+    }
+  });
+
+  document.querySelectorAll('.config-section, .view#view-design .card').forEach(s => {
+    s.classList.add('collapsed');
+  });
+});
+
+// SES Bypasses for inline onclick handlers (document is in the scope chain)
+document.openPickupForm = openPickupForm;
+document.savePickup = savePickup;
+document.deletePickup = deletePickup;
+document.loadBannersConfig = loadBannersConfig;
+document.previewBanner = previewBanner;
+document.handleBannerUpload = handleBannerUpload;
+document.saveBannersConfig = saveBannersConfig;
+document.setStatusMsg = setStatusMsg;
 </script>
 
 <!-- ══ MODAL ══ -->
@@ -4789,151 +5158,4 @@ showView('dashboard', document.querySelector('.sb-item.active'));
   </div>
 </div>
 
-
-<script>
-function loadBannersConfig() {
-  // Cargar desde localStorage (fue guardado en loadSheet)
-  const bannerData = JSON.parse(localStorage.getItem('storeapp_banners') || '{}');
-  const b1 = bannerData.banner1 || {};
-  const b2 = bannerData.banner2 || {};
-  
-  document.getElementById('banner1-label').value = b1.label || '';
-  document.getElementById('banner1-title').value = b1.title || '';
-  document.getElementById('banner1-img').value = b1.img || '';
-  document.getElementById('banner1-cat').value = b1.cat || '';
-  
-  document.getElementById('banner2-label').value = b2.label || '';
-  document.getElementById('banner2-title').value = b2.title || '';
-  document.getElementById('banner2-img').value = b2.img || '';
-  document.getElementById('banner2-cat').value = b2.cat || '';
-  
-  previewBanner('banner1');
-  previewBanner('banner2');
-  
-  setStatusMsg('banners-status', 'ok', 'Datos cargados');
-}
-
-function previewBanner(bannerId) {
-  const urlEl = document.getElementById(bannerId + '-img');
-  const previewEl = document.getElementById(bannerId + '-preview');
-  const imgEl = previewEl?.querySelector('img');
-  
-  if (!urlEl || !previewEl || !imgEl) return;
-  
-  const url = urlEl.value.trim();
-  if (url && url.startsWith('http')) {
-    imgEl.src = url;
-    previewEl.style.display = 'block';
-    imgEl.onerror = () => { previewEl.style.display = 'none'; };
-  } else {
-    previewEl.style.display = 'none';
-  }
-}
-
-async function handleBannerUpload(input, bannerId) {
-  const file = input.files[0];
-  if (!file) return;
-  
-  const statusEl = document.getElementById('banners-status');
-  statusEl.style.color = 'var(--silver)';
-  statusEl.textContent = 'Subiendo imagen...';
-  
-  try {
-    const url = await uploadToCloudinary(file);
-    document.getElementById(bannerId + '-img').value = url;
-    statusEl.style.color = 'var(--green)';
-    statusEl.textContent = '✓ Imagen subida correctamente';
-    previewBanner(bannerId);
-  } catch(e) {
-    statusEl.style.color = 'var(--red)';
-    statusEl.textContent = '✕ Error: ' + e.message;
-  }
-}
-
-async function saveBannersConfig() {
-  const b1Label = document.getElementById('banner1-label').value.trim();
-  const b1Title = document.getElementById('banner1-title').value.trim();
-  const b1Img = document.getElementById('banner1-img').value.trim();
-  const b1Cat = document.getElementById('banner1-cat').value.trim();
-  
-  const b2Label = document.getElementById('banner2-label').value.trim();
-  const b2Title = document.getElementById('banner2-title').value.trim();
-  const b2Img = document.getElementById('banner2-img').value.trim();
-  const b2Cat = document.getElementById('banner2-cat').value.trim();
-  
-  // Guardar en localStorage
-  const bannerData = {
-    banner1: { label: b1Label, title: b1Title, img: b1Img, cat: b1Cat },
-    banner2: { label: b2Label, title: b2Title, img: b2Img, cat: b2Cat }
-  };
-  localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
-  
-  const statusEl = document.getElementById('banners-status');
-  statusEl.style.color = 'var(--silver)';
-  statusEl.textContent = 'Guardando en Supabase...';
-  
-  try {
-    const dataToSave = {
-      banner1_label: b1Label,
-      banner1_title: b1Title,
-      banner1_img: b1Img,
-      banner1_cat: b1Cat,
-      banner2_label: b2Label,
-      banner2_title: b2Title,
-      banner2_img: b2Img,
-      banner2_cat: b2Cat
-    };
-
-    const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings`, {
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`
-      }
-    });
-
-    if (!configRes.ok) throw new Error('No se pudo verificar la configuración en Supabase');
-    const configData = await configRes.json();
-
-    if (configData && configData.length > 0) {
-      const id = configData[0].id;
-      await updateInSupabase('company_settings', id, dataToSave);
-    } else {
-      await postToSupabase('company_settings', dataToSave);
-    }
-    
-    statusEl.style.color = 'var(--green)';
-    statusEl.textContent = '✓ Banners guardados en Supabase correctamente';
-  } catch(e) {
-    statusEl.style.color = 'var(--orange)';
-    statusEl.textContent = '⚠ Error al guardar en Supabase: ' + e.message;
-  }
-}
-
-function setStatusMsg(elementId, status, msg) {
-  const el = document.getElementById(elementId);
-  if (!el) return;
-  el.style.color = status === 'ok' ? 'var(--green)' : status === 'err' ? 'var(--red)' : 'var(--silver)';
-  el.textContent = (status === 'ok' ? '✓ ' : status === 'err' ? '✕ ' : '') + msg;
-}
-
-// Cargar banners al inicializar
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => loadBannersConfig(), 500);
-
-  // Accordion functionality
-  document.addEventListener('click', (e) => {
-    const title = e.target.closest('.config-section-title, .view#view-design .card-title');
-    if (title) {
-      const section = title.closest('.config-section, .card');
-      if (section) {
-        section.classList.toggle('collapsed');
-      }
-    }
-  });
-
-  // Collapse all sections by default in Config and Design
-  document.querySelectorAll('.config-section, .view#view-design .card').forEach(s => {
-    s.classList.add('collapsed');
-  });
-});
-</script>
+<!-- MODAL: PICKUP (REPARTIDOR) -->

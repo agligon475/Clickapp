@@ -928,20 +928,25 @@ a.logo{
       </div>
       <div class="form-group">
         <label class="form-label">Forma de pago *</label>
-        <select class="form-control" id="f-pago">
+        <select class="form-control" id="f-pago" onchange="togglePago(this.value)">
           <option value="">Seleccioná...</option>
-          <option>Efectivo</option>
-          <option>Transferencia bancaria</option>
-          <option>Cheque</option>
-          <option>Depósito bancario</option>
+          <option value="Efectivo">Efectivo</option>
+          <option value="Transferencia bancaria">Transferencia bancaria</option>
+          <option value="Cheque">Cheque</option>
+          <option value="Depósito bancario">Depósito bancario</option>
         </select>
+      </div>
+      <div class="form-group" id="f-comprobante-wrap" style="display:none;">
+        <label class="form-label">Comprobante de pago *</label>
+        <input type="file" class="form-control" id="f-comprobante" accept="image/*,application/pdf" />
+        <div class="form-hint" id="f-comprobante-status">Subí una foto o PDF de tu pago.</div>
       </div>
       <div class="form-group">
         <label class="form-label">Logística *</label>
         <select class="form-control" id="f-logistica" onchange="toggleDireccion(this.value)">
           <option value="">Seleccioná...</option>
-          <option>Retiro por la tienda</option>
-          <option>Envío a domicilio</option>
+          <option value="Retiro por la tienda">Retiro por la tienda</option>
+          <option value="Envío a domicilio">Envío a domicilio</option>
         </select>
       </div>
       <div class="form-group" id="f-dir-wrap" style="display:none;">
@@ -1470,9 +1475,44 @@ function hideCheckout() {
 }
 function toggleDireccion(val) {
   document.getElementById('f-dir-wrap').style.display = val==='Envío a domicilio' ? 'block' : 'none';
+  
+  // Restringir Efectivo en Envío a Domicilio
+  const pagoSelect = document.getElementById('f-pago');
+  const optionEfectivo = pagoSelect.querySelector('option[value="Efectivo"]');
+  if (val === 'Envío a domicilio') {
+    optionEfectivo.disabled = true;
+    if (pagoSelect.value === 'Efectivo') pagoSelect.value = '';
+  } else {
+    optionEfectivo.disabled = false;
+  }
+  togglePago(pagoSelect.value);
+}
+function togglePago(val) {
+  const isDigital = val === 'Transferencia bancaria' || val === 'Cheque' || val === 'Depósito bancario';
+  document.getElementById('f-comprobante-wrap').style.display = isDigital ? 'block' : 'none';
 }
 
-function enviarWhatsApp() {
+function getCloudinaryCfg() {
+  try { return JSON.parse(localStorage.getItem('storeapp_cloudinary') || '{}'); } catch(e) { return {}; }
+}
+
+async function uploadToCloudinary(file) {
+  const cloud = getCloudinaryCfg();
+  if (!cloud.name || !cloud.preset) {
+    throw new Error('Cloudinary no está configurado.');
+  }
+  const form = new FormData();
+  form.append('file', file);
+  form.append('upload_preset', cloud.preset);
+  const res  = await fetch(`https://api.cloudinary.com/v1_1/${cloud.name}/image/upload`, {
+    method: 'POST', body: form
+  });
+  if (!res.ok) throw new Error('Error Cloudinary: ' + res.status);
+  const data = await res.json();
+  return data.secure_url;
+}
+
+async function enviarWhatsApp() {
   const nombre = document.getElementById('f-nombre').value.trim();
   const dni    = document.getElementById('f-dni').value.trim();
   const pago   = document.getElementById('f-pago').value;
@@ -1481,6 +1521,36 @@ function enviarWhatsApp() {
 
   if (!nombre||!dni||!pago||!logis) { showToast('⚠ Completá todos los campos'); return; }
   if (logis==='Envío a domicilio'&&!dir) { showToast('⚠ Ingresá la dirección de envío'); return; }
+
+  const btn = document.querySelector('.btn-checkout');
+  if(btn) {
+    btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Procesando...';
+    btn.disabled = true;
+  }
+
+  let comprobanteUrl = '';
+  const isDigital = pago === 'Transferencia bancaria' || pago === 'Cheque' || pago === 'Depósito bancario';
+  if (isDigital) {
+    const fileInput = document.getElementById('f-comprobante');
+    if (!fileInput.files.length) {
+      showToast('Por favor subí el comprobante de pago');
+      if(btn) { btn.innerHTML = '<i class="bi bi-clipboard-check"></i> Completar pedido'; btn.disabled = false; }
+      return;
+    }
+    const statusEl = document.getElementById('f-comprobante-status');
+    statusEl.style.color = 'var(--red)';
+    statusEl.textContent = 'Subiendo comprobante...';
+    try {
+      comprobanteUrl = await uploadToCloudinary(fileInput.files[0]);
+      statusEl.style.color = 'var(--green)';
+      statusEl.textContent = 'Comprobante subido correctamente.';
+    } catch(e) {
+      showToast('Error al subir comprobante: ' + e.message);
+      statusEl.textContent = 'Error: ' + e.message;
+      if(btn) { btn.innerHTML = '<i class="bi bi-clipboard-check"></i> Completar pedido'; btn.disabled = false; }
+      return;
+    }
+  }
 
   // Build order items
   const items = Object.entries(cart).map(([id,q])=>{
@@ -1502,17 +1572,19 @@ function enviarWhatsApp() {
     ``,
     `💰 *Total:* $${total.toLocaleString('es-AR')}`,
     `💳 *Pago:* ${pago}`,
+    comprobanteUrl ? `📎 *Comprobante:* ${comprobanteUrl}` : '',
     `🚚 *Logística:* ${logis}`,
+    logis === 'Retiro por la tienda' ? `📝 *Instrucciones para retirar:*\n  - Vení a nuestro local de Lunes a Viernes de 9 a 18hs\n  - Presentá tu código: ${pedidoId.slice(-4)}` : '',
     dir ? `📍 *Dirección:* ${dir}` : '',
     ``,
     `👤 *Cliente:* ${nombre}`,
     `🪪 *DNI:* ${dni}`,
-  ].filter(l=>l!==undefined).join('\n');
+  ].filter(l=>l!==undefined && l!=='').join('\n');
 
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
 
   // ── 2. Registrar pedido ──────────────────────────
-  registrarPedido({ id: pedidoId, nombre, dni, pago, logistica: logis, direccion: dir, items, total });
+  registrarPedido({ id: pedidoId, nombre, dni, pago, logistica: logis, direccion: dir, items, total, comprobante: comprobanteUrl });
 
   // ── 3. Limpiar carrito ───────────────────────────
   cart = {};
@@ -1536,6 +1608,7 @@ async function registrarPedido(pedido) {
     productos: pedido.items.map(i=>`${i.nombre} ×${i.cantidad}`).join(' | '),
     detalle:   JSON.stringify(pedido.items),
     pago:      pedido.pago,
+    comprobante: pedido.comprobante || '',
     logistica: pedido.logistica,
     direccion: pedido.direccion || '',
     total:     pedido.total,
