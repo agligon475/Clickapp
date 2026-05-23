@@ -330,19 +330,19 @@ a.logo{
 .product-card{
   background:var(--steel);
   border:1px solid var(--zinc);
-  border-radius:12px;overflow:hidden;
+  border-radius:16px;overflow:hidden;
   cursor:pointer;
-  transition:border-color .15s,transform .15s,box-shadow .15s;
+  transition:all .25s ease;
   animation:fadeUp .35s ease both;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,.05), 0 2px 4px -1px rgba(0,0,0,.03);
 }
 @keyframes fadeUp{
   from{opacity:0;transform:translateY(16px);}
   to{opacity:1;transform:translateY(0);}
 }
 .product-card:hover{
-  border-color:var(--red);
-  transform:translateY(-3px);
-  box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 0 1px var(--red);
+  transform:translateY(-4px);
+  box-shadow: 0 12px 24px -4px rgba(0,0,0,.15), 0 8px 12px -6px rgba(0,0,0,.1);
 }
 
 .product-img{
@@ -355,7 +355,7 @@ a.logo{
 .product-img img{
   width:100%;height:100%;
   object-fit:cover;
-  transition:transform .4s ease, opacity .4s ease;
+  transition:transform .5s ease, opacity .5s ease;
 }
 .product-img .hover-img {
   position: absolute;
@@ -368,56 +368,65 @@ a.logo{
 .product-img-fallback{font-size:44px;}
 
 .stock-chip{
-  position:absolute;top:8px;right:8px;
-  background:rgba(14,14,14,.8);
-  border:1px solid var(--zinc);
-  border-radius:6px;padding:2px 7px;
+  position:absolute;top:10px;right:10px;
+  background:rgba(14,14,14,.7);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:9999px;padding:4px 10px;
   font-size:10px;font-weight:600;
-  color:var(--fog);
+  color:#fff;
 }
-.stock-chip.out{background:rgba(215,38,56,.2);border-color:var(--red);color:var(--red);}
+.stock-chip.out{background:rgba(215,38,56,.8);border-color:rgba(215,38,56,.4);}
 
-.product-body{padding:12px 14px 14px;}
+.product-body{padding:16px;}
 .product-cat{
-  font-size:10px;font-weight:700;
-  color:var(--red);text-transform:uppercase;
-  letter-spacing:.08em;margin-bottom:4px;
+  font-size:11px;font-weight:600;
+  color:var(--silver);text-transform:uppercase;
+  letter-spacing:.05em;margin-bottom:6px;
 }
 .product-name{
-  font-family:var(--font-head);
-  font-size:16px;font-weight:700;
-  color:var(--white);line-height:1.2;
-  margin-bottom:8px;
+  font-family:var(--font-body);
+  font-size:15px;font-weight:600;
+  color:var(--white);line-height:1.4;
+  margin-bottom:12px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
 }
 .product-price{
-  font-family:var(--font-head);
-  font-size:22px;font-weight:800;
+  font-family:var(--font-body);
+  font-size:18px;font-weight:700;
   color:var(--white);
 }
 .product-price-label{
-  font-size:10px;color:var(--silver);
-  font-family:var(--font-body);
-  font-weight:400;
+  font-size:14px;color:var(--silver);
+  font-weight:500;
 }
 
 /* ── QUANTITY COUNTER ────────────────────────────── */
 .qty-control{
   display:flex;align-items:center;
-  margin-top:10px;border-radius:8px;overflow:hidden;
+  margin-top:16px;border-radius:9999px;
   border:1px solid var(--zinc);
+  background:var(--iron);
+  padding:2px;
+  transition:all .2s ease;
 }
-.qty-control.has-items{border-color:var(--red);}
+.qty-control.has-items{
+  border-color:var(--red);
+  background:var(--red-glow);
+}
 .qty-btn{
-  width:36px;height:34px;flex-shrink:0;
-  background:transparent;border:none;
-  color:var(--fog);font-size:18px;
-  cursor:pointer;transition:all .12s;
+  width:32px;height:32px;flex-shrink:0;
+  background:var(--steel);border:1px solid var(--zinc);
+  border-radius:50%;
+  color:var(--fog);font-size:16px;
+  cursor:pointer;transition:all .15s ease;
   display:flex;align-items:center;justify-content:center;
+  box-shadow:0 1px 2px rgba(0,0,0,.05);
 }
-.qty-btn:hover{background:var(--red);color:#fff;}
+.qty-btn:hover{background:var(--red);color:#fff;border-color:var(--red);}
 .qty-num{
   flex:1;text-align:center;
-  font-family:var(--font-head);font-size:15px;font-weight:700;
+  font-family:var(--font-body);font-size:14px;font-weight:600;
   color:var(--white);background:transparent;
   border:none;outline:none;
   padding:0;pointer-events:none;
