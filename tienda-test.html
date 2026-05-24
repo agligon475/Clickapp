@@ -1355,7 +1355,8 @@ function render() {
 
   document.getElementById('grid').innerHTML = filtered.map((p,i) => {
     const qty = cart[String(p.id)] || 0;
-    const flag = ORIGIN_FLAGS[p.origen] || '';
+    const orig = (p.origen || '').trim().toUpperCase();
+    const flag = ORIGIN_FLAGS[orig] || Object.values(ORIGIN_FLAGS).find((_, idx) => Object.values(ORIGIN_NAMES)[idx].toUpperCase() === orig) || '';
     const stockClass = p.stock === 0 ? 'out' : p.stock <= 5 ? 'low' : '';
     const stockLabel = p.stock === 0
       ? 'Sin stock'
@@ -1749,8 +1750,9 @@ function openProductDrawer(id) {
   if (!p) return;
   const key = String(id);
   const qty = cart[key] || 0;
-  const flag = ORIGIN_FLAGS[p.origen] || '';
-  const originName = ORIGIN_NAMES[p.origen] || '';
+  const orig = (p.origen || '').trim().toUpperCase();
+  const flag = ORIGIN_FLAGS[orig] || Object.values(ORIGIN_FLAGS).find((_, idx) => Object.values(ORIGIN_NAMES)[idx].toUpperCase() === orig) || '';
+  const originName = ORIGIN_NAMES[orig] || Object.values(ORIGIN_NAMES).find(n => n.toUpperCase() === orig) || '';
 
   const body = document.getElementById('pdrawer-body');
   body.innerHTML = `
