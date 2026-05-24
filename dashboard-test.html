@@ -2276,7 +2276,7 @@ function mapLocalProductToSupabaseRow(p) {
     nombre: p.name,
     precio: p.price,
     stock: p.stock ?? 0,
-    categoria: p.cat || 'General',
+    categoria: p.cat || null,
     emoji: p.emoji || '📦',
     img: p.img || null,
     img2: p.img2 || null,
@@ -3427,6 +3427,7 @@ async function saveModal() {
                        .map(cb => cb.value).slice(0,3).join(',');
 
   if (!name) { alert('El nombre del producto es obligatorio.'); return; }
+  if (!cat) { alert('La categoría es obligatoria. Por favor seleccioná una categoría válida.'); return; }
 
   const prevEditingId = editingId;
 
