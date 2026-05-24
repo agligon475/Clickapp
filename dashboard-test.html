@@ -630,6 +630,8 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
   }
 }
 </style>
+  <!-- Emoji Picker Element -->
+  <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
 </head>
 <body>
 
@@ -5340,6 +5342,50 @@ document.previewBanner = previewBanner;
 document.handleBannerUpload = handleBannerUpload;
 document.saveBannersConfig = saveBannersConfig;
 document.setStatusMsg = setStatusMsg;
+// ── EMOJI PICKER ──────────────────────────
+let activeEmojiTarget = null;
+const emojiContainer = document.createElement('div');
+emojiContainer.style.cssText = 'display:none;position:absolute;z-index:99999;margin-top:4px;box-shadow:0 10px 25px rgba(0,0,0,.5);border-radius:8px;overflow:hidden;';
+const picker = document.createElement('emoji-picker');
+picker.classList.add('dark');
+emojiContainer.appendChild(picker);
+document.body.appendChild(emojiContainer);
+
+picker.addEventListener('emoji-click', event => {
+  if (activeEmojiTarget) {
+    document.getElementById(activeEmojiTarget).value = event.detail.unicode;
+  }
+  emojiContainer.style.display = 'none';
+  activeEmojiTarget = null;
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('emoji-picker') && !e.target.closest('button[onclick^="openEmojiPicker"]')) {
+    emojiContainer.style.display = 'none';
+    activeEmojiTarget = null;
+  }
+});
+
+function openEmojiPicker(btn, targetId) {
+  if (activeEmojiTarget === targetId && emojiContainer.style.display === 'block') {
+    emojiContainer.style.display = 'none';
+    activeEmojiTarget = null;
+    return;
+  }
+  activeEmojiTarget = targetId;
+  const rect = btn.getBoundingClientRect();
+  emojiContainer.style.top = (rect.bottom + window.scrollY) + 'px';
+  // Check if it goes off screen to the right
+  if (rect.right + 350 > window.innerWidth) {
+    emojiContainer.style.left = 'auto';
+    emojiContainer.style.right = (window.innerWidth - rect.right) + 'px';
+  } else {
+    emojiContainer.style.left = rect.left + 'px';
+    emojiContainer.style.right = 'auto';
+  }
+  emojiContainer.style.display = 'block';
+}
+
 </script>
 
 <!-- ══ MODAL ══ -->
@@ -5441,8 +5487,11 @@ document.setStatusMsg = setStatusMsg;
         <!-- Emoji + Origen -->
         <div class="ctrl-group">
           <label class="ctrl-label">Emoji / ícono</label>
-          <input class="ctrl-input" id="m-emoji" placeholder="🔧" style="font-size:20px;"/>
-          <div class="form-hint">Copiá un emoji directamente</div>
+          <div style="display:flex;gap:8px;">
+            <input class="ctrl-input" id="m-emoji" placeholder="🔧" style="font-size:20px;flex:1;"/>
+            <button type="button" class="btn" onclick="openEmojiPicker(this, 'm-emoji')" style="padding:0 14px;font-size:20px;background:var(--iron);border:1px solid var(--zinc);border-radius:10px;cursor:pointer;">😀</button>
+          </div>
+          <div class="form-hint">Elegí un emoji para representar el producto</div>
         </div>
         <div class="ctrl-group">
           <label class="ctrl-label">País de origen</label>
@@ -5574,7 +5623,10 @@ document.setStatusMsg = setStatusMsg;
         </div>
         <div class="ctrl-group" style="grid-column:1/-1;">
           <label class="ctrl-label">Emoji (opcional)</label>
-          <input class="ctrl-input" id="c-emoji" placeholder="Ej: 🔧"/>
+          <div style="display:flex;gap:8px;">
+            <input class="ctrl-input" id="c-emoji" placeholder="Ej: 🔧" style="font-size:16px;flex:1;"/>
+            <button type="button" class="btn" onclick="openEmojiPicker(this, 'c-emoji')" style="padding:0 14px;font-size:18px;background:var(--iron);border:1px solid var(--zinc);border-radius:10px;cursor:pointer;">😀</button>
+          </div>
         </div>
         <div class="ctrl-group" style="grid-column:1/-1; display:flex; align-items:center; gap:8px; margin-top:8px;">
           <input type="checkbox" id="c-active" checked style="width:16px;height:16px;accent-color:var(--red);"/>
