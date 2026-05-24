@@ -398,6 +398,7 @@ a.logo{
   display:flex;flex-direction:column;flex:1;
 }
 .product-cat{
+  display:flex; justify-content:space-between; align-items:center;
   font-size:10px;font-weight:700;
   color:var(--silver);text-transform:uppercase;
   letter-spacing:.06em;margin-bottom:5px;
@@ -1376,7 +1377,7 @@ function render() {
         <span class="stock-chip ${stockClass}">${stockLabel}</span>
       </div>
       <div class="product-body">
-        <div class="product-cat">${p.cat}${flag?' <span class="origen-flag">'+flag+'</span>':''}</div>
+        <div class="product-cat"><span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.cat}</span>${flag?'<span class="origen-flag" style="margin-left:6px;flex-shrink:0;">'+flag+'</span>':''}</div>
         ${p.marca ? `<div class="product-marca"><i class="bi bi-award"></i>${p.marca}</div>` : ''}
         <div class="product-name">${p.name}</div>
         <div class="product-footer">
