@@ -180,30 +180,8 @@ body::before{
 <main class="page">
   <h1 class="page-title">Sobre <span>Nosotros</span></h1>
   
-  <div class="content-box">
-    <h2>Nuestra Historia</h2>
-    <p>Somos una ferretería con más de 20 años de experiencia en el rubro, ofreciendo soluciones tanto para profesionales de la construcción como para proyectos del hogar.</p>
-    <p>Nacimos como un pequeño emprendimiento familiar y gracias a la confianza de nuestros clientes, hoy nos expandimos al mundo digital para estar más cerca tuyo y facilitarte la compra de tus herramientas y materiales desde la comodidad de tu casa o taller.</p>
-    
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-number">+20</div>
-        <div class="stat-label">Años de experiencia</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">+5k</div>
-        <div class="stat-label">Productos en stock</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">24hs</div>
-        <div class="stat-label">Envíos rápidos</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="content-box">
-    <h2>Nuestra Misión</h2>
-    <p>Brindar el mejor asesoramiento técnico y ofrecer herramientas de primera calidad a precios competitivos. Queremos que cada cliente encuentre exactamente lo que necesita para llevar a cabo su proyecto con éxito.</p>
+  <div class="content-box" id="nosotros-content">
+    <p style="color:var(--silver);">Cargando información...</p>
   </div>
 </main>
 
@@ -221,6 +199,33 @@ body::before{
   
   <span style="opacity:.5;font-size:12px;">Powered by <a href="#" style="color:var(--silver);">StoreApp</a></span>
 </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    const dataStr = localStorage.getItem('storeapp_pages');
+    if (dataStr) {
+      const data = JSON.parse(dataStr);
+      if (data.nosotros) {
+        // Convert newlines to <p> tags
+        const htmlContent = data.nosotros
+          .split('\\n')
+          .filter(p => p.trim())
+          .map(p => \`<p>\${p.replace(/</g, '&lt;')}</p>\`)
+          .join('');
+        
+        document.getElementById('nosotros-content').innerHTML = htmlContent;
+      } else {
+        document.getElementById('nosotros-content').innerHTML = '<p>No hay información disponible.</p>';
+      }
+    } else {
+      document.getElementById('nosotros-content').innerHTML = '<p>No hay información disponible.</p>';
+    }
+  } catch(e) {
+    document.getElementById('nosotros-content').innerHTML = '<p>Error al cargar la información.</p>';
+  }
+});
+</script>
 
 </body>
 </html>

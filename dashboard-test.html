@@ -671,6 +671,7 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
   <div class="sb-section">
     <div class="sb-section-label">Personalización</div>
     <div class="sb-item" onclick="showView('design',this)"><i class="bi bi-palette"></i> <span>Diseño</span></div>
+    <div class="sb-item" onclick="showView('pages',this)"><i class="bi bi-file-text"></i> <span>Páginas</span></div>
   </div>
 
   <div class="sb-section">
@@ -1649,6 +1650,32 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
     </div><!-- /design-wrap -->
   </div><!-- /view-design -->
 
+  <!-- ══ PÁGINAS ══ -->
+  <div class="view" id="view-pages">
+    <div class="card" style="margin-bottom:24px;">
+      <h3 style="margin-bottom:16px;">Página "Nosotros"</h3>
+      <div class="ctrl-group">
+        <label class="ctrl-label">Historia y Misión (acepta saltos de línea)</label>
+        <textarea class="ctrl-input" id="pages-nosotros-text" rows="8" placeholder="Escribe aquí la historia de la ferretería..."></textarea>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:24px;">
+      <h3 style="margin-bottom:16px;">Preguntas Frecuentes (FAQ)</h3>
+      <div id="faq-list">
+        <!-- Generado por JS -->
+      </div>
+      <button class="btn" style="background:var(--iron);border:1px dashed var(--zinc);color:var(--fog);width:100%;margin-top:16px;" onclick="addFaqItem()">
+        <i class="bi bi-plus"></i> Agregar Pregunta
+      </button>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:16px;margin-top:24px;">
+      <button class="btn" style="background:var(--red);color:var(--white);" onclick="savePages()"><i class="bi bi-save"></i> Guardar Páginas</button>
+      <span id="pages-status" style="font-size:13px;color:var(--silver);"></span>
+    </div>
+  </div>
+
   <!-- ══ PRODUCTOS (catálogo) ══ -->
   <div class="view" id="view-products">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
@@ -2143,7 +2170,8 @@ const TITLES = {
   categories:'Categorías',
   pickups:'PickUp · Repartidores',
   'new-pickup':'Formulario de Repartidor',
-  design:'Diseño', 
+  design:'Diseño de Tienda', 
+  pages:'Páginas',
   config:'Configuración',
   advanced:'Avanzado'
 };
@@ -5317,8 +5345,65 @@ function setStatusMsg(elementId, status, msg) {
   el.textContent = (status === 'ok' ? '✓ ' : status === 'err' ? '✕ ' : '') + msg;
 }
 
+/* ════════════════════════════════════════════ PAGES LOGIC */
+function addFaqItem(q = '', a = '') {
+  const list = document.getElementById('faq-list');
+  const div = document.createElement('div');
+  div.className = 'faq-item-edit card';
+  div.style.marginBottom = '12px';
+  div.style.padding = '16px';
+  div.style.background = 'var(--black)';
+  div.style.border = '1px solid var(--zinc)';
+  div.innerHTML = `
+    <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+      <strong style="color:var(--white);">Pregunta / Respuesta</strong>
+      <button class="btn" style="padding:4px 8px;font-size:12px;background:var(--red);border-radius:6px;color:white;" onclick="this.closest('.faq-item-edit').remove()"><i class="bi bi-trash"></i></button>
+    </div>
+    <input type="text" class="ctrl-input faq-q" placeholder="Pregunta (ej: ¿Cuáles son los métodos de envío?)" value="${q.replace(/"/g, '&quot;')}" style="margin-bottom:8px;"/>
+    <textarea class="ctrl-input faq-a" rows="3" placeholder="Respuesta detallada...">${a}</textarea>
+  `;
+  list.appendChild(div);
+}
+
+function loadPages() {
+  try {
+    const data = JSON.parse(localStorage.getItem('storeapp_pages') || '{"nosotros":"","faq":[]}');
+    document.getElementById('pages-nosotros-text').value = data.nosotros || '';
+    
+    const list = document.getElementById('faq-list');
+    list.innerHTML = '';
+    if (data.faq && data.faq.length > 0) {
+      data.faq.forEach(item => addFaqItem(item.q, item.a));
+    } else {
+      addFaqItem('¿Cuáles son los métodos de envío?', 'Hacemos envíos a todo el país...');
+      addFaqItem('¿Qué medios de pago aceptan?', 'Aceptamos transferencias bancarias, Mercado Pago, tarjetas de crédito (hasta 3 cuotas sin interés) y efectivo si retirás por nuestro local.');
+    }
+  } catch(e) { console.error('Error loading pages', e); }
+}
+
+function savePages() {
+  const nosotrosText = document.getElementById('pages-nosotros-text').value;
+  const faqItems = [];
+  document.querySelectorAll('.faq-item-edit').forEach(el => {
+    const q = el.querySelector('.faq-q').value.trim();
+    const a = el.querySelector('.faq-a').value.trim();
+    if(q || a) faqItems.push({q, a});
+  });
+  
+  const pagesData = { nosotros: nosotrosText, faq: faqItems };
+  localStorage.setItem('storeapp_pages', JSON.stringify(pagesData));
+  
+  const statusEl = document.getElementById('pages-status');
+  statusEl.style.color = 'var(--green)';
+  statusEl.textContent = '✓ Páginas guardadas correctamente en el navegador';
+  setTimeout(() => statusEl.textContent = '', 3000);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => { if (typeof loadBannersConfig === 'function') loadBannersConfig(); }, 500);
+  setTimeout(() => { 
+    if (typeof loadBannersConfig === 'function') loadBannersConfig(); 
+    if (typeof loadPages === 'function') loadPages();
+  }, 500);
 
   document.addEventListener('click', (e) => {
     const title = e.target.closest('.config-section-title, .view#view-design .card-title');
