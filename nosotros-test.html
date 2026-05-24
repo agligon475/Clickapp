@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Nosotros — FerreApp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+
+<style>
+:root {
+  --red:        #D72638;
+  --red-dark:   #A81D2A;
+  --red-glow:   rgba(215,38,56,.15);
+  --black:      #0E0E0E;
+  --steel:      #1C1C1E;
+  --iron:       #2A2A2D;
+  --zinc:       #3E3E42;
+  --silver:     #8A8A90;
+  --fog:        #C8C8CC;
+  --white:      #F5F5F0;
+  --font-head:  'Barlow Condensed', sans-serif;
+  --font-body:  'Barlow', sans-serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+
+body{
+  font-family:var(--font-body);
+  background:var(--black);
+  color:var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
+  display:flex;
+  flex-direction:column;
+}
+
+body::before{
+  content:'';
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.6;
+}
+
+/* TOPBAR */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(14,14,14,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--zinc);
+  display:flex;align-items:center;
+  padding:0 24px;height:60px;gap:16px;
+}
+.logo{
+  font-family:var(--font-head);
+  font-size:24px;font-weight:800;
+  color:white;letter-spacing:-.01em;
+  display:flex;align-items:center;gap:8px;
+  text-decoration:none;
+}
+.logo-icon{
+  width:32px;height:32px;background:var(--red);
+  border-radius:6px;display:flex;align-items:center;
+  justify-content:center;font-size:16px;
+  box-shadow:0 0 12px var(--red-glow);
+}
+.tagline{
+  font-size:11px;color:var(--silver);
+  border-left:1px solid var(--zinc);
+  padding-left:12px;margin-left:4px;
+  display:none;
+}
+@media(min-width:500px){.tagline{display:block;}}
+
+/* PAGE CONTENT */
+.page{
+  flex:1;
+  max-width:800px;
+  margin:0 auto;
+  width: 100%;
+  padding:40px 20px;
+  position:relative;z-index:1;
+}
+
+.page-title {
+  font-family:var(--font-head);
+  font-size:42px;
+  font-weight:800;
+  text-transform:uppercase;
+  margin-bottom:24px;
+  color:var(--white);
+}
+
+.page-title span {
+  color:var(--red);
+}
+
+.content-box {
+  background:var(--steel);
+  border:1px solid var(--zinc);
+  border-radius:12px;
+  padding:32px;
+  margin-bottom:24px;
+}
+
+.content-box h2 {
+  font-family:var(--font-head);
+  font-size:24px;
+  color:var(--white);
+  margin-bottom:16px;
+  text-transform:uppercase;
+  letter-spacing:0.02em;
+}
+
+.content-box p {
+  color:var(--fog);
+  line-height:1.6;
+  margin-bottom:16px;
+}
+
+.content-box p:last-child {
+  margin-bottom:0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.stat-card {
+  background:var(--iron);
+  border:1px solid var(--zinc);
+  border-radius:8px;
+  padding:20px;
+  text-align:center;
+}
+
+.stat-number {
+  font-family:var(--font-head);
+  font-size:32px;
+  font-weight:800;
+  color:var(--red);
+  margin-bottom:8px;
+}
+
+.stat-label {
+  font-size:12px;
+  color:var(--silver);
+  text-transform:uppercase;
+  font-weight:600;
+  letter-spacing:0.05em;
+}
+
+/* FOOTER */
+.footer{
+  border-top:1px solid var(--zinc);
+  background:var(--steel);
+  padding:32px 24px;
+  text-align:center;
+  position:relative;z-index:1;
+  margin-top:auto;
+}
+
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a href="tienda-test.html" class="logo">
+    <div class="logo-icon"><i class="bi bi-tools"></i></div>
+    FerreApp
+  </a>
+  <span class="tagline">Volver a la tienda</span>
+</header>
+
+<main class="page">
+  <h1 class="page-title">Sobre <span>Nosotros</span></h1>
+  
+  <div class="content-box">
+    <h2>Nuestra Historia</h2>
+    <p>Somos una ferretería con más de 20 años de experiencia en el rubro, ofreciendo soluciones tanto para profesionales de la construcción como para proyectos del hogar.</p>
+    <p>Nacimos como un pequeño emprendimiento familiar y gracias a la confianza de nuestros clientes, hoy nos expandimos al mundo digital para estar más cerca tuyo y facilitarte la compra de tus herramientas y materiales desde la comodidad de tu casa o taller.</p>
+    
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number">+20</div>
+        <div class="stat-label">Años de experiencia</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">+5k</div>
+        <div class="stat-label">Productos en stock</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">24hs</div>
+        <div class="stat-label">Envíos rápidos</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-box">
+    <h2>Nuestra Misión</h2>
+    <p>Brindar el mejor asesoramiento técnico y ofrecer herramientas de primera calidad a precios competitivos. Queremos que cada cliente encuentre exactamente lo que necesita para llevar a cabo su proyecto con éxito.</p>
+  </div>
+</main>
+
+<footer class="footer">
+  <div style="margin-bottom:16px;">
+    <strong style="color:var(--white);font-size:16px;">FerreApp</strong>
+    <div style="font-size:11px;color:var(--silver);margin-top:4px;">Buenos Aires, Argentina</div>
+  </div>
+  
+  <div style="display:flex;justify-content:center;gap:16px;margin-bottom:16px;flex-wrap:wrap;font-size:12px;">
+    <a href="nosotros-test.html" style="color:var(--red);text-decoration:none;">Nosotros</a>
+    <span style="color:var(--zinc);">|</span>
+    <a href="faq-test.html" style="color:var(--fog);text-decoration:none;">Preguntas Frecuentes</a>
+  </div>
+  
+  <span style="opacity:.5;font-size:12px;">Powered by <a href="#" style="color:var(--silver);">StoreApp</a></span>
+</footer>
+
+</body>
+</html>
