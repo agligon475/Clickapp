@@ -332,17 +332,17 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
     
-    container.innerHTML = faqList.map(item => \`
+    container.innerHTML = faqList.map(item => `
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          \${item.q.replace(/</g, '&lt;')}
+          ${item.q.replace(/</g, '&lt;')}
           <i class="bi bi-chevron-down faq-icon"></i>
         </button>
         <div class="faq-answer">
-          \${item.a.replace(/</g, '&lt;').replace(/\\n/g, '<br/>')}
+          ${item.a.replace(/</g, '&lt;').replace(/\n/g, '<br/>')}
         </div>
       </div>
-    \`).join('');
+    `).join('');
     
   } catch(e) {
     document.getElementById('faq-container').innerHTML = '<p style="color:var(--red);padding:20px;">Error al cargar las preguntas.</p>';

@@ -325,9 +325,9 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     }
     
     const htmlContent = content
-      .split('\\n')
+      .split('\n')
       .filter(p => p.trim())
-      .map(p => \`<p>\${p.replace(/</g, '&lt;')}</p>\`)
+      .map(p => `<p>${p.replace(/</g, '&lt;')}</p>`)
       .join('');
     
     document.getElementById('nosotros-content').innerHTML = htmlContent;
