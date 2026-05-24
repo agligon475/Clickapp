@@ -268,6 +268,50 @@ body.collapsed-sidebar .sb-btn span { display: none; }
 }
 .logo-upload-btn:hover{background:var(--zinc);border-style:solid;}
 
+/* ── PREVIEW SPOTLIGHT ── */
+.prev-spotlight-label{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(.9);
+  background:rgba(10,10,10,.85);
+  backdrop-filter:blur(4px);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:20px;padding:3px 8px;
+  font-size:7px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;color:#fff;
+  pointer-events:none;z-index:20;white-space:nowrap;
+  opacity:0;transition:opacity .2s, transform .2s;
+}
+.prev-spotlight-label.show{
+  opacity:1;transform:translate(-50%,-50%) scale(1);
+}
+/* Wrapper needed for positioning */
+.prev-spotlight-wrap{position:relative;display:contents;}
+
+/* ── COMING SOON BADGE ── */
+.badge-soon{
+  display:inline-block;
+  font-size:9px;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;
+  background:var(--iron);border:1px solid var(--zinc);
+  color:var(--silver);border-radius:20px;
+  padding:1px 7px;margin-left:6px;vertical-align:middle;
+}
+
+/* ── COLOR INFO BOX ── */
+.color-applies-box{
+  margin-top:10px;
+  background:var(--iron);border:1px solid var(--zinc);
+  border-radius:8px;padding:9px 12px;
+}
+.color-applies-box ul{
+  list-style:none;margin:0;padding:0;
+  display:flex;flex-direction:column;gap:4px;
+}
+.color-applies-box li{
+  font-size:10px;color:var(--silver);
+  display:flex;align-items:center;gap:5px;
+}
+
 .design-preview-wrap{
   position:sticky;top:70px;
 }
@@ -1147,22 +1191,46 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
                   <span id="color-hex" style="font-size:10px;font-family:monospace;color:var(--fog);">#D72638</span>
                 </div>
               </div>
-              <div style="background:var(--iron);padding:10px;border-radius:8px;border:1px solid var(--zinc);">
-                <label style="font-size:10px;color:var(--silver);display:block;margin-bottom:6px;">Color Secundario</label>
+              <div style="background:var(--iron);padding:10px;border-radius:8px;border:1px solid var(--zinc);opacity:0.45;pointer-events:none;" title="Esta función estará disponible próximamente">
+                <label style="font-size:10px;color:var(--silver);display:flex;align-items:center;margin-bottom:6px;">
+                  Color Secundario
+                  <span class="badge-soon">Próximamente</span>
+                </label>
                 <div style="display:flex;align-items:center;gap:6px;">
-                  <input type="color" id="cfg-color2" value="#1A73E8" style="width:32px;height:24px;border:1px solid var(--zinc);border-radius:4px;padding:0;cursor:pointer;background:none;" oninput="pickColorCustom(this.value, 2)"/>
+                  <input type="color" id="cfg-color2" value="#1A73E8" disabled style="width:32px;height:24px;border:1px solid var(--zinc);border-radius:4px;padding:0;cursor:not-allowed;background:none;"/>
                   <span id="color2-hex" style="font-size:10px;font-family:monospace;color:var(--fog);">#1A73E8</span>
                 </div>
               </div>
-              <div style="background:var(--iron);padding:10px;border-radius:8px;border:1px solid var(--zinc);">
-                <label style="font-size:10px;color:var(--silver);display:block;margin-bottom:6px;">Color Terciario</label>
+              <div style="background:var(--iron);padding:10px;border-radius:8px;border:1px solid var(--zinc);opacity:0.45;pointer-events:none;" title="Esta función estará disponible próximamente">
+                <label style="font-size:10px;color:var(--silver);display:flex;align-items:center;margin-bottom:6px;">
+                  Color Terciario
+                  <span class="badge-soon">Próximamente</span>
+                </label>
                 <div style="display:flex;align-items:center;gap:6px;">
-                  <input type="color" id="cfg-color3" value="#F4B400" style="width:32px;height:24px;border:1px solid var(--zinc);border-radius:4px;padding:0;cursor:pointer;background:none;" oninput="pickColorCustom(this.value, 3)"/>
+                  <input type="color" id="cfg-color3" value="#F4B400" disabled style="width:32px;height:24px;border:1px solid var(--zinc);border-radius:4px;padding:0;cursor:not-allowed;background:none;"/>
                   <span id="color3-hex" style="font-size:10px;font-family:monospace;color:var(--fog);">#F4B400</span>
                 </div>
               </div>
             </div>
+
+            <!-- Info: ¿Dónde se aplica el color principal? -->
+            <div class="color-applies-box">
+              <div style="font-size:10px;font-weight:700;color:var(--fog);margin-bottom:7px;display:flex;align-items:center;gap:5px;">
+                <i class="bi bi-cursor-fill" style="color:var(--red);font-size:9px;"></i>
+                ¿Dónde se aplica el color principal?
+              </div>
+              <ul>
+                <li><i class="bi bi-display" style="color:var(--red);font-size:9px;flex-shrink:0;"></i> Ícono y botón del carrito (barra de navegación)</li>
+                <li><i class="bi bi-type-h2" style="color:var(--red);font-size:9px;flex-shrink:0;"></i> Segunda línea del banner (título en acento)</li>
+                <li><i class="bi bi-tag" style="color:var(--red);font-size:9px;flex-shrink:0;"></i> Pills de "WhatsApp" y "Pagos" en el hero</li>
+                <li><i class="bi bi-grid-1x2" style="color:var(--red);font-size:9px;flex-shrink:0;"></i> Botón de categoría activa ("Todos")</li>
+                <li><i class="bi bi-box" style="color:var(--red);font-size:9px;flex-shrink:0;"></i> Etiqueta de categoría en cada tarjeta de producto</li>
+                <li><i class="bi bi-hand-index" style="color:var(--red);font-size:9px;flex-shrink:0;"></i> Hover del botón "+ Agregar al carrito"</li>
+                <li><i class="bi bi-check-circle" style="color:var(--red);font-size:9px;flex-shrink:0;"></i> Botón de finalizar pedido en el carrito</li>
+              </ul>
+            </div>
           </div>
+
 
           <div class="ctrl-group">
             <label class="ctrl-label">Tema de fondo</label>
@@ -1436,10 +1504,16 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
 
               <!-- prev topbar -->
               <div id="prev-nav" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);">
-                <div id="prev-icon" style="width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;background:#D72638;">🔧</div>
+                <div style="position:relative;display:inline-flex;">
+                  <div id="prev-icon" style="width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;background:#D72638;">🔧</div>
+                  <div class="prev-spotlight-label" id="spl-nav-icon">Ícono nav</div>
+                </div>
                 <span id="prev-name" style="font-weight:800;font-size:14px;color:#F5F5F0;">FerreApp</span>
-                <div style="margin-left:auto;display:flex;align-items:center;gap:6px;background:#D72638;border-radius:5px;padding:3px 8px;color:#fff;font-size:10px;font-weight:600;" id="prev-cart-btn">
-                  <i class="bi bi-bag"></i> 0
+                <div style="position:relative;margin-left:auto;display:inline-flex;">
+                  <div style="display:flex;align-items:center;gap:6px;background:#D72638;border-radius:5px;padding:3px 8px;color:#fff;font-size:10px;font-weight:600;" id="prev-cart-btn">
+                    <i class="bi bi-bag"></i> 0
+                  </div>
+                  <div class="prev-spotlight-label" id="spl-cart">Carrito</div>
                 </div>
               </div>
 
@@ -1453,39 +1527,115 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
                 <div id="prev-hero-stripes" style="position:absolute;inset:0;background:repeating-linear-gradient(-55deg,transparent,transparent 10px,rgba(255,255,255,.02) 10px,rgba(255,255,255,.02) 11px);"></div>
                 <div style="position:relative;z-index:1;width:100%;">
                   <div id="prev-h1" style="font-size:20px;font-weight:800;line-height:.95;text-transform:uppercase;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.4);">Tu ferretería</div>
-                  <div id="prev-h2" style="font-size:20px;font-weight:800;line-height:.95;text-transform:uppercase;color:#D72638;text-shadow:0 1px 6px rgba(0,0,0,.4);">sin demoras.</div>
+                  <div style="position:relative;display:inline-block;">
+                    <div id="prev-h2" style="font-size:20px;font-weight:800;line-height:.95;text-transform:uppercase;color:#D72638;text-shadow:0 1px 6px rgba(0,0,0,.4);">sin demoras.</div>
+                    <div class="prev-spotlight-label" id="spl-h2">Título acento</div>
+                  </div>
                   <div id="prev-desc" style="font-size:9px;color:rgba(255,255,255,.8);margin-top:6px;line-height:1.4;font-family:'Barlow',sans-serif;font-weight:400;text-shadow:0 1px 4px rgba(0,0,0,.4);">Elegí tus productos, armá tu pedido y coordiná por WhatsApp.</div>
                   <div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;">
-                    <span id="prev-pill1" style="background:#D72638;border:none;border-radius:20px;padding:3px 8px;font-size:8px;color:#fff;font-weight:600;font-family:'Barlow',sans-serif;display:flex;align-items:center;gap:3px;">
-                      <i class="bi bi-whatsapp"></i> WhatsApp
-                    </span>
-                    <span id="prev-pill2" style="background:#D72638;border:none;border-radius:20px;padding:3px 8px;font-size:8px;color:#fff;font-weight:600;font-family:'Barlow',sans-serif;display:flex;align-items:center;gap:3px;">
-                      <i class="bi bi-cash-coin"></i> Pagos
-                    </span>
+                    <div style="position:relative;display:inline-flex;">
+                      <span id="prev-pill1" style="background:#D72638;border:none;border-radius:20px;padding:3px 8px;font-size:8px;color:#fff;font-weight:600;font-family:'Barlow',sans-serif;display:flex;align-items:center;gap:3px;">
+                        <i class="bi bi-whatsapp"></i> WhatsApp
+                      </span>
+                      <div class="prev-spotlight-label" id="spl-pill1">Pill</div>
+                    </div>
+                    <div style="position:relative;display:inline-flex;">
+                      <span id="prev-pill2" style="background:#D72638;border:none;border-radius:20px;padding:3px 8px;font-size:8px;color:#fff;font-weight:600;font-family:'Barlow',sans-serif;display:flex;align-items:center;gap:3px;">
+                        <i class="bi bi-cash-coin"></i> Pagos
+                      </span>
+                      <div class="prev-spotlight-label" id="spl-pill2">Pill</div>
+                    </div>
                   </div>
                 </div>
               </div>
 
               <!-- prev products -->
               <div style="padding:12px 14px;">
+                <!-- Categories -->
                 <div style="display:flex;gap:6px;margin-bottom:10px;overflow:hidden;">
-                  <div id="prev-cat-all" style="border-radius:5px;padding:4px 9px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:#D72638;color:#fff;border:1px solid #D72638;">Todos</div>
+                  <div style="position:relative;display:inline-flex;">
+                    <div id="prev-cat-all" style="border-radius:5px;padding:4px 9px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:#D72638;color:#fff;border:1px solid #D72638;">Todos</div>
+                    <div class="prev-spotlight-label" id="spl-cat-active">Categoría activa</div>
+                  </div>
                   <div style="border-radius:5px;padding:4px 9px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:rgba(255,255,255,.05);color:#8A8A90;border:1px solid rgba(255,255,255,.08);">Herramientas</div>
-                  <div style="border-radius:5px;padding:4px 9px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:rgba(255,255,255,.05);color:#8A8A90;border:1px solid rgba(255,255,255,.08);">Electricidad</div>
+                  <div style="border-radius:5px;padding:4px 9px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:rgba(255,255,255,.05);color:#8A8A90;border:1px solid rgba(255,255,255,.08);">Eléctrica</div>
                 </div>
+
+                <!-- Product cards — diseño fiel a la tienda real -->
                 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">
-                  ${[{e:'🔧',n:'Llave inglesa',p:'$15.900',c:'Herramientas'},
-                     {e:'⚡',n:'Cinta aisladora',p:'$4.200',c:'Electricidad'},
-                     {e:'🔌',n:'Disyuntor 20A',p:'$28.000',c:'Electricidad'}].map(p=>`
-                    <div id="prev-card-${p.e}" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:6px;overflow:hidden;transition:border-color .2s;">
-                      <div style="aspect-ratio:1;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;font-size:22px;">${p.e}</div>
-                      <div style="padding:5px 6px;">
-                        <div style="font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;" class="prev-cat-label">${p.c}</div>
-                        <div style="font-size:9px;font-weight:700;color:#F0F0EC;line-height:1.2;margin-bottom:4px;">${p.n}</div>
-                        <div style="font-size:12px;font-weight:800;color:#F0F0EC;">${p.p}</div>
-                        <div class="prev-add-btn" style="margin-top:5px;width:100%;border-radius:4px;padding:3px;font-size:7px;font-weight:600;text-align:center;border:1px solid rgba(255,255,255,.15);color:#B0B0B8;cursor:pointer;">+ Agregar</div>
+
+                  <!-- Card 1 -->
+                  <div id="prev-card-1" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;transition:all .2s;">
+                    <div style="position:relative;aspect-ratio:1;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:26px;">
+                      🔧
+                      <div style="position:absolute;top:5px;right:5px;background:rgba(14,14,14,.7);backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.1);border-radius:9999px;padding:2px 6px;font-size:6px;font-weight:600;color:#fff;">Stock: 12</div>
+                    </div>
+                    <div style="padding:6px 7px;">
+                      <div style="position:relative;display:inline-block;width:100%;">
+                        <div class="prev-cat-label" style="font-size:6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Herramientas</div>
+                        <div class="prev-spotlight-label" id="spl-cat-label" style="font-size:6px;">Etiqueta categoría</div>
                       </div>
-                    </div>`).join('')}
+                      <div style="font-size:8px;font-weight:700;color:#F0F0EC;line-height:1.2;margin-bottom:3px;">Llave inglesa</div>
+                      <div style="font-size:10px;font-weight:800;color:#F0F0EC;margin-bottom:4px;">$15.900</div>
+                      <div style="position:relative;">
+                        <div class="prev-add-btn" style="border-radius:9999px;padding:3px 5px;font-size:6px;font-weight:600;text-align:center;border:1px solid rgba(255,255,255,.15);color:#B0B0B8;display:flex;align-items:center;justify-content:space-between;gap:2px;">
+                          <span style="width:14px;height:14px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">−</span>
+                          <span>+</span>
+                          <span style="width:14px;height:14px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">+</span>
+                        </div>
+                        <div class="prev-spotlight-label" id="spl-add-btn">Botón agregar</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Card 2 -->
+                  <div id="prev-card-2" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;transition:all .2s;">
+                    <div style="position:relative;aspect-ratio:1;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:26px;">
+                      ⚡
+                      <div style="position:absolute;top:5px;right:5px;background:rgba(14,14,14,.7);backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.1);border-radius:9999px;padding:2px 6px;font-size:6px;font-weight:600;color:#fff;">Stock: 8</div>
+                    </div>
+                    <div style="padding:6px 7px;">
+                      <div class="prev-cat-label" style="font-size:6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Electricidad</div>
+                      <div style="font-size:8px;font-weight:700;color:#F0F0EC;line-height:1.2;margin-bottom:3px;">Cinta aisladora</div>
+                      <div style="font-size:10px;font-weight:800;color:#F0F0EC;margin-bottom:4px;">$4.200</div>
+                      <div class="prev-add-btn" style="border-radius:9999px;padding:3px 5px;font-size:6px;font-weight:600;text-align:center;border:1px solid rgba(255,255,255,.15);color:#B0B0B8;display:flex;align-items:center;justify-content:space-between;gap:2px;">
+                        <span style="width:14px;height:14px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">−</span>
+                        <span>+</span>
+                        <span style="width:14px;height:14px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">+</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Card 3 -->
+                  <div id="prev-card-3" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;transition:all .2s;">
+                    <div style="position:relative;aspect-ratio:1;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:26px;">
+                      🔌
+                      <div style="position:absolute;top:5px;right:5px;background:rgba(215,38,56,.8);backdrop-filter:blur(3px);border:1px solid rgba(215,38,56,.4);border-radius:9999px;padding:2px 6px;font-size:6px;font-weight:600;color:#fff;">Sin stock</div>
+                    </div>
+                    <div style="padding:6px 7px;">
+                      <div class="prev-cat-label" style="font-size:6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Electricidad</div>
+                      <div style="font-size:8px;font-weight:700;color:#F0F0EC;line-height:1.2;margin-bottom:3px;">Disyuntor 20A</div>
+                      <div style="font-size:10px;font-weight:800;color:#F0F0EC;margin-bottom:4px;">$28.000</div>
+                      <div style="padding:3px;text-align:center;font-size:6px;color:#8A8A90;border:1px solid rgba(255,255,255,.08);border-radius:5px;opacity:.6;">Sin stock</div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- prev footer -->
+              <div id="prev-footer" style="padding:10px 14px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
+                <span id="prev-footer-name" style="font-size:8px;font-weight:700;color:#8A8A90;">© FerreApp</span>
+                <div style="display:flex;gap:5px;align-items:center;">
+                  <div style="position:relative;display:inline-flex;">
+                    <div id="prev-wapp-btn" style="width:18px;height:18px;border-radius:50%;background:#D72638;display:flex;align-items:center;justify-content:center;">
+                      <i class="bi bi-whatsapp" style="font-size:8px;color:#fff;"></i>
+                    </div>
+                    <div class="prev-spotlight-label" id="spl-footer">WhatsApp</div>
+                  </div>
+                  <div style="width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;">
+                    <i class="bi bi-instagram" style="font-size:8px;color:#8A8A90;"></i>
+                  </div>
                 </div>
               </div>
 
@@ -2711,6 +2861,14 @@ function previewUpdate(){
 
   // Brand swatch on theme button
   document.getElementById('theme-brand-swatch').style.background = c;
+
+  // Footer
+  const footerWapp = document.getElementById('prev-wapp-btn');
+  if (footerWapp) footerWapp.style.background = c;
+  const footerName = document.getElementById('prev-footer-name');
+  if (footerName) {
+    footerName.textContent = '© ' + (cfg.name || 'FerreApp');
+  }
 }
 
 function pickEmoji(btn, emoji){
@@ -2727,6 +2885,7 @@ function pickColor(btn, color, index) {
     if (btn) btn.classList.add('active');
     document.getElementById('cfg-color').value = color;
     document.getElementById('color-hex').textContent = color;
+    flashSpotlight();
   } else if (index === 2) {
     cfg.color2 = color;
     document.getElementById('cfg-color2').value = color;
@@ -2743,6 +2902,7 @@ function pickColorCustom(color, index) {
     cfg.color = color;
     document.querySelectorAll('.color-swatch').forEach(b=>b.classList.remove('active'));
     document.getElementById('color-hex').textContent = color;
+    flashSpotlight();
   } else if (index === 2) {
     cfg.color2 = color;
     document.getElementById('color2-hex').textContent = color;
@@ -2751,6 +2911,39 @@ function pickColorCustom(color, index) {
     document.getElementById('color3-hex').textContent = color;
   }
   previewUpdate();
+}
+
+/* ── SPOTLIGHT FLASH: muestra brevemente qué elementos cambian con el color ── */
+function flashSpotlight() {
+  // IDs de todos los spotlight labels del preview
+  const ids = [
+    'spl-nav-icon',
+    'spl-cart',
+    'spl-h2',
+    'spl-pill1',
+    'spl-pill2',
+    'spl-cat-active',
+    'spl-cat-label',
+    'spl-add-btn',
+    'spl-footer'
+  ];
+
+  // Limpiar timers previos
+  if (window._splTimer) clearTimeout(window._splTimer);
+
+  // Mostrar todos
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('show');
+  });
+
+  // Ocultar después de 1.8s
+  window._splTimer = setTimeout(() => {
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('show');
+    });
+  }, 1800);
 }
 
 function pickTheme(btn, theme){
