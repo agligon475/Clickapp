@@ -164,6 +164,19 @@ body::before{
   position:relative;z-index:1;
   margin-top:auto;
 }
+.footer a{color:var(--red);text-decoration:none;}
+.social-icon-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--iron); border: 1px solid var(--zinc);
+  color: var(--silver); font-size: 16px;
+  transition: all 0.2s ease; text-decoration: none;
+}
+.social-icon-btn:hover {
+  background: var(--red); color: var(--white);
+  border-color: var(--red); transform: translateY(-2px);
+}
+
 
 </style>
 </head>
@@ -186,9 +199,13 @@ body::before{
 </main>
 
 <footer class="footer">
-  <div style="margin-bottom:16px;">
-    <strong style="color:var(--white);font-size:16px;">FerreApp</strong>
-    <div style="font-size:11px;color:var(--silver);margin-top:4px;">Buenos Aires, Argentina</div>
+  <div style="margin-bottom:16px;" id="footer-store-name-container">
+    <strong id="footer-store-name" style="color:var(--white);font-size:16px;">FerreApp</strong>
+    <div id="footer-store-desc" style="font-size:11px;color:var(--silver);margin-top:4px;">Buenos Aires, Argentina</div>
+  </div>
+  
+  <div id="footer-socials" style="display:flex;justify-content:center;gap:16px;margin-bottom:16px;flex-wrap:wrap;">
+    <!-- Filled dynamically -->
   </div>
   
   <div style="display:flex;justify-content:center;gap:16px;margin-bottom:16px;flex-wrap:wrap;font-size:12px;">
@@ -201,7 +218,95 @@ body::before{
 </footer>
 
 <script>
+function applyStoredConfig() {
+  let cfg = {};
+  try { cfg = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}'); } catch(e) {}
+
+  const accent = cfg.color || '#D72638';
+  const theme  = cfg.theme || 'dark';
+
+  const hex2rgb = h => { const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16); return `${r},${g},${b}`; };
+  const darken  = (h,p=20) => { let r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16); const f=1-p/100; return '#'+[r,g,b].map(v=>Math.max(0,Math.round(v*f)).toString(16).padStart(2,'0')).join(''); };
+
+  const themes = {
+    dark:  { bg:'#0E0E0E', steel:'#1C1C1E', iron:'#2A2A2D', zinc:'#3E3E42', text:'#F5F5F0', muted:'#8A8A90', fog:'#C8C8CC' },
+    light: { bg:'#F5F5F0', steel:'#EBEBEB', iron:'#E0E0E0', zinc:'#CACACA', text:'#0E0E0E', muted:'#6A6A70', fog:'#4A4A50' },
+    brand: { bg:accent,   steel:darken(accent,15), iron:darken(accent,25), zinc:darken(accent,35), text:'#fff', muted:'rgba(255,255,255,.7)', fog:'rgba(255,255,255,.9)' },
+  };
+  const t = themes[theme] || themes.dark;
+
+  const root = document.documentElement.style;
+  root.setProperty('--red',       accent);
+  root.setProperty('--red-dark',  darken(accent,20));
+  root.setProperty('--red-glow',  `rgba(${hex2rgb(accent)},.15)`);
+  root.setProperty('--black',     t.bg);
+  root.setProperty('--steel',     t.steel);
+  root.setProperty('--iron',      t.iron);
+  root.setProperty('--zinc',      t.zinc);
+  root.setProperty('--white',     t.text);
+  root.setProperty('--silver',    t.muted);
+  root.setProperty('--fog',       t.fog);
+
+  if (cfg.font) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = `https://fonts.googleapis.com/css2?family=${cfg.font.replace(/ /g,'+')}:wght@400;600;700;800&display=swap`;
+    document.head.appendChild(link);
+    root.setProperty('--font-head', `'${cfg.font}', sans-serif`);
+  }
+  if (cfg.fontBody) root.setProperty('--font-body', `'${cfg.fontBody}', sans-serif`);
+
+  const logoImg = localStorage.getItem('storeapp_logo');
+  const logoEl  = document.querySelector('.logo');
+  if (logoEl) {
+    if (logoImg) {
+      logoEl.innerHTML = `<img src="${logoImg}" alt="${cfg.name||'Logo'}" style="height:32px;width:32px;object-fit:contain;border-radius:6px;"/> ${cfg.name||'Mi Tienda'}`;
+    } else if (cfg.name) {
+      logoEl.innerHTML = `<span class="logo-icon">${cfg.emoji||'🏪'}</span>${cfg.name}`;
+    }
+  }
+
+  if (cfg.name) document.title = cfg.name + ' — Nosotros';
+
+  // Update Footer Details
+  const fnContainer = document.getElementById('footer-store-name-container');
+  if (fnContainer) {
+    const fname = document.getElementById('footer-store-name');
+    const fdesc = document.getElementById('footer-store-desc');
+    if (fname) fname.textContent = cfg.name || 'Mi Tienda';
+    if (fdesc) fdesc.textContent = [cfg.direccion, cfg.horario].filter(Boolean).join(' • ') || '¡Gracias por visitarnos!';
+  }
+
+  // Update Social Links
+  const fSocials = document.getElementById('footer-socials');
+  if (fSocials) {
+    fSocials.innerHTML = '';
+    const soc = cfg.socials || {};
+    const links = [
+      { id: 'web', icon: 'bi-globe', title: 'Sitio Web', url: soc.web },
+      { id: 'ig', icon: 'bi-instagram', title: 'Instagram', url: soc.ig },
+      { id: 'fb', icon: 'bi-facebook', title: 'Facebook', url: soc.fb },
+      { id: 'x', icon: 'bi-twitter-x', title: 'X (Twitter)', url: soc.x },
+      { id: 'ml', icon: 'bi-shop-window', title: 'MercadoLibre', url: soc.ml },
+      { id: 'tn', icon: 'bi-cloud-check', title: 'TiendaNube', url: soc.tn },
+      { id: 'maps', icon: 'bi-geo-alt', title: 'Google Maps', url: soc.maps }
+    ];
+    links.forEach(l => {
+      if (l.url) {
+        const a = document.createElement('a');
+        a.href = l.url.startsWith('http') ? l.url : `https://${l.url}`;
+        a.target = '_blank';
+        a.className = 'social-icon-btn';
+        a.title = l.title;
+        a.innerHTML = `<i class="bi ${l.icon}"></i>`;
+        fSocials.appendChild(a);
+      }
+    });
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  applyStoredConfig();
   const defaultNosotros = `Somos una ferretería con más de 20 años de experiencia en el rubro, ofreciendo soluciones tanto para profesionales de la construcción como para proyectos del hogar.
 
 Nacimos como un pequeño emprendimiento familiar y gracias a la confianza de nuestros clientes, hoy nos expandimos al mundo digital para estar más cerca tuyo y facilitarte la compra de tus herramientas y materiales desde la comodidad de tu casa o taller.
