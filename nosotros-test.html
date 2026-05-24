@@ -202,25 +202,30 @@ body::before{
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  const defaultNosotros = `Somos una ferretería con más de 20 años de experiencia en el rubro, ofreciendo soluciones tanto para profesionales de la construcción como para proyectos del hogar.
+
+Nacimos como un pequeño emprendimiento familiar y gracias a la confianza de nuestros clientes, hoy nos expandimos al mundo digital para estar más cerca tuyo y facilitarte la compra de tus herramientas y materiales desde la comodidad de tu casa o taller.
+
+Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera calidad a precios competitivos. Queremos que cada cliente encuentre exactamente lo que necesita para llevar a cabo su proyecto con éxito.`;
+
   try {
     const dataStr = localStorage.getItem('storeapp_pages');
+    let content = defaultNosotros;
+    
     if (dataStr) {
       const data = JSON.parse(dataStr);
-      if (data.nosotros) {
-        // Convert newlines to <p> tags
-        const htmlContent = data.nosotros
-          .split('\\n')
-          .filter(p => p.trim())
-          .map(p => \`<p>\${p.replace(/</g, '&lt;')}</p>\`)
-          .join('');
-        
-        document.getElementById('nosotros-content').innerHTML = htmlContent;
-      } else {
-        document.getElementById('nosotros-content').innerHTML = '<p>No hay información disponible.</p>';
+      if (data.nosotros && data.nosotros.trim() !== '') {
+        content = data.nosotros;
       }
-    } else {
-      document.getElementById('nosotros-content').innerHTML = '<p>No hay información disponible.</p>';
     }
+    
+    const htmlContent = content
+      .split('\\n')
+      .filter(p => p.trim())
+      .map(p => \`<p>\${p.replace(/</g, '&lt;')}</p>\`)
+      .join('');
+    
+    document.getElementById('nosotros-content').innerHTML = htmlContent;
   } catch(e) {
     document.getElementById('nosotros-content').innerHTML = '<p>Error al cargar la información.</p>';
   }

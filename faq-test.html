@@ -208,30 +208,37 @@ function toggleFaq(btn) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  const defaultFaq = [
+    { q: '¿Cuáles son los métodos de envío?', a: 'Hacemos envíos a todo el país. Trabajamos con cadetería propia para CABA y GBA entregando en el día para pedidos realizados antes de las 14hs. Para el interior del país despachamos a través de Correo Argentino o la encomienda que prefieras.' },
+    { q: '¿Qué medios de pago aceptan?', a: 'Aceptamos transferencias bancarias, Mercado Pago, tarjetas de crédito (hasta 3 cuotas sin interés) y efectivo si retirás por nuestro local. Al finalizar tu pedido por WhatsApp te enviaremos los links de pago.' },
+    { q: '¿Puedo retirar mi pedido en persona?', a: 'Sí, podés seleccionar la opción "Retiro en local" al realizar tu pedido. Una vez que te confirmemos que tu pedido está listo, podés pasar a retirarlo de Lunes a Viernes de 9 a 18hs y Sábados de 9 a 13hs.' },
+    { q: '¿Los productos tienen garantía?', a: 'Todos nuestros productos cuentan con garantía oficial de fábrica. El plazo depende de la marca y el tipo de herramienta, variando generalmente entre 6 y 24 meses. Conservá tu factura de compra para validarla.' }
+  ];
+
   try {
     const dataStr = localStorage.getItem('storeapp_pages');
     const container = document.getElementById('faq-container');
+    let faqList = defaultFaq;
     
     if (dataStr) {
       const data = JSON.parse(dataStr);
       if (data.faq && data.faq.length > 0) {
-        container.innerHTML = data.faq.map(item => \`
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
-              \${item.q.replace(/</g, '&lt;')}
-              <i class="bi bi-chevron-down faq-icon"></i>
-            </button>
-            <div class="faq-answer">
-              \${item.a.replace(/</g, '&lt;').replace(/\\n/g, '<br/>')}
-            </div>
-          </div>
-        \`).join('');
-      } else {
-        container.innerHTML = '<p style="color:var(--silver);padding:20px;">No hay preguntas frecuentes disponibles.</p>';
+        faqList = data.faq;
       }
-    } else {
-      container.innerHTML = '<p style="color:var(--silver);padding:20px;">No hay preguntas frecuentes disponibles.</p>';
     }
+    
+    container.innerHTML = faqList.map(item => \`
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          \${item.q.replace(/</g, '&lt;')}
+          <i class="bi bi-chevron-down faq-icon"></i>
+        </button>
+        <div class="faq-answer">
+          \${item.a.replace(/</g, '&lt;').replace(/\\n/g, '<br/>')}
+        </div>
+      </div>
+    \`).join('');
+    
   } catch(e) {
     document.getElementById('faq-container').innerHTML = '<p style="color:var(--red);padding:20px;">Error al cargar las preguntas.</p>';
   }

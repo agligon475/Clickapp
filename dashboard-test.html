@@ -5368,15 +5368,25 @@ function addFaqItem(q = '', a = '') {
 function loadPages() {
   try {
     const data = JSON.parse(localStorage.getItem('storeapp_pages') || '{"nosotros":"","faq":[]}');
-    document.getElementById('pages-nosotros-text').value = data.nosotros || '';
+    
+    // Default Nosotros Text
+    const defaultNosotros = `Somos una ferretería con más de 20 años de experiencia en el rubro, ofreciendo soluciones tanto para profesionales de la construcción como para proyectos del hogar.
+
+Nacimos como un pequeño emprendimiento familiar y gracias a la confianza de nuestros clientes, hoy nos expandimos al mundo digital para estar más cerca tuyo y facilitarte la compra de tus herramientas y materiales desde la comodidad de tu casa o taller.
+
+Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera calidad a precios competitivos. Queremos que cada cliente encuentre exactamente lo que necesita para llevar a cabo su proyecto con éxito.`;
+
+    document.getElementById('pages-nosotros-text').value = data.nosotros || defaultNosotros;
     
     const list = document.getElementById('faq-list');
     list.innerHTML = '';
     if (data.faq && data.faq.length > 0) {
       data.faq.forEach(item => addFaqItem(item.q, item.a));
     } else {
-      addFaqItem('¿Cuáles son los métodos de envío?', 'Hacemos envíos a todo el país...');
-      addFaqItem('¿Qué medios de pago aceptan?', 'Aceptamos transferencias bancarias, Mercado Pago, tarjetas de crédito (hasta 3 cuotas sin interés) y efectivo si retirás por nuestro local.');
+      addFaqItem('¿Cuáles son los métodos de envío?', 'Hacemos envíos a todo el país. Trabajamos con cadetería propia para CABA y GBA entregando en el día para pedidos realizados antes de las 14hs. Para el interior del país despachamos a través de Correo Argentino o la encomienda que prefieras.');
+      addFaqItem('¿Qué medios de pago aceptan?', 'Aceptamos transferencias bancarias, Mercado Pago, tarjetas de crédito (hasta 3 cuotas sin interés) y efectivo si retirás por nuestro local. Al finalizar tu pedido por WhatsApp te enviaremos los links de pago.');
+      addFaqItem('¿Puedo retirar mi pedido en persona?', 'Sí, podés seleccionar la opción "Retiro en local" al realizar tu pedido. Una vez que te confirmemos que tu pedido está listo, podés pasar a retirarlo de Lunes a Viernes de 9 a 18hs y Sábados de 9 a 13hs.');
+      addFaqItem('¿Los productos tienen garantía?', 'Todos nuestros productos cuentan con garantía oficial de fábrica. El plazo depende de la marca y el tipo de herramienta, variando generalmente entre 6 y 24 meses. Conservá tu factura de compra para validarla.');
     }
   } catch(e) { console.error('Error loading pages', e); }
 }
