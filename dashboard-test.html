@@ -5417,53 +5417,89 @@ function applyRubro(tipo) {
     cfg.name = 'FerreApp';
     cfg.emoji = '🛠️';
     cfg.color = '#D72638';
+    cfg.h1 = 'Herramientas';
+    cfg.h2 = 'Y MATERIALES';
+    cfg.tagline = 'Tu ferretería sin filas.';
+    cfg.desc = 'Encontrá todo lo que necesitás para tu obra o arreglo en casa. Comprá fácil, retirá rápido o te lo llevamos.';
     cats = [
       { id: '1', name: 'Herramientas', icon: '🔧', active: true },
       { id: '2', name: 'Electricidad', icon: '⚡', active: true },
-      { id: '3', name: 'Pintura', icon: '🎨', active: true }
+      { id: '3', name: 'Pintura', icon: '🎨', active: true },
+      { id: '4', name: 'Construcción', icon: '🧱', active: true }
     ];
     prods = [
-      { id: 'p1', cat: '1', name: 'Taladro Percutor 500W', price: 45000, desc: 'Ideal para uso doméstico', stock: 5, active: true },
-      { id: 'p2', cat: '2', name: 'Cable Taller 2x1.5 (10m)', price: 12000, desc: 'Rollo x 10 metros normalizado', stock: 12, active: true }
+      { id: 'p1', cat: '1', name: 'Taladro Percutor 500W', price: 45000, desc: 'Ideal para uso doméstico. Mandril 13mm.', stock: 5, active: true },
+      { id: 'p2', cat: '1', name: 'Amoladora Angular 115mm', price: 38000, desc: '800W de potencia. Incluye disco.', stock: 3, active: true },
+      { id: 'p3', cat: '2', name: 'Cable Taller 2x1.5 (10m)', price: 12000, desc: 'Rollo x 10 metros normalizado.', stock: 12, active: true },
+      { id: 'p4', cat: '2', name: 'Cinta Aisladora 3M', price: 1500, desc: '19mm x 20m. Color negro.', stock: 50, active: true },
+      { id: 'p5', cat: '3', name: 'Látex Interior 20L', price: 28000, desc: 'Blanco mate. Alto poder cubritivo.', stock: 8, active: true },
+      { id: 'p6', cat: '4', name: 'Cemento Loma Negra 50kg', price: 7500, desc: 'Cemento portland normal.', stock: 100, active: true }
     ];
   } else if (tipo === 'kiosco') {
     cfg.name = 'MaxiKiosco El Sol';
     cfg.emoji = '🏪';
-    cfg.color = '#F39C12'; // Naranja
+    cfg.color = '#F39C12';
+    cfg.h1 = 'MaxiKiosco';
+    cfg.h2 = 'EL SOL';
+    cfg.tagline = 'Tus antojos, al toque.';
+    cfg.desc = 'Bebidas súper frías, golosinas, snacks y todo lo que te salva el día. Pedí por WhatsApp y pasá a retirar sin hacer fila.';
     cats = [
       { id: '1', name: 'Bebidas', icon: '🥤', active: true },
-      { id: '2', name: 'Golosinas', icon: '🍫', active: true },
-      { id: '3', name: 'Snacks', icon: '🍿', active: true }
+      { id: '2', name: 'Cervezas', icon: '🍺', active: true },
+      { id: '3', name: 'Golosinas', icon: '🍫', active: true },
+      { id: '4', name: 'Snacks', icon: '🍿', active: true }
     ];
     prods = [
       { id: 'p1', cat: '1', name: 'Coca Cola 2.25L', price: 2500, desc: 'Línea retornable', stock: 24, active: true },
-      { id: 'p2', cat: '2', name: 'Alfajor Triple', price: 900, desc: 'Sabor chocolate', stock: 50, active: true }
+      { id: 'p2', cat: '1', name: 'Agua Mineral 1.5L', price: 900, desc: 'Sin gas', stock: 30, active: true },
+      { id: 'p3', cat: '2', name: 'Cerveza Quilmes 1L', price: 1800, desc: 'Retornable bien fría', stock: 40, active: true },
+      { id: 'p4', cat: '3', name: 'Alfajor Triple', price: 900, desc: 'Sabor chocolate', stock: 50, active: true },
+      { id: 'p5', cat: '3', name: 'Gomitas Mogul 120g', price: 1200, desc: 'Sabores frutales', stock: 20, active: true },
+      { id: 'p6', cat: '4', name: 'Papas Lays Clásicas', price: 1500, desc: 'Paquete grande 140g', stock: 15, active: true }
     ];
   } else if (tipo === 'gastronomia') {
     cfg.name = 'Burger House';
     cfg.emoji = '🍔';
-    cfg.color = '#E74C3C'; // Rojo tomate
+    cfg.color = '#E74C3C';
+    cfg.h1 = 'Burger';
+    cfg.h2 = 'HOUSE';
+    cfg.tagline = 'Las mejores de la zona.';
+    cfg.desc = 'Hamburguesas 100% carne vacuna, papas crocantes y mucho cheddar. Hacé tu pedido online y disfrutá sin moverte de tu casa.';
     cats = [
       { id: '1', name: 'Hamburguesas', icon: '🍔', active: true },
-      { id: '2', name: 'Papas & Guarniciones', icon: '🍟', active: true },
-      { id: '3', name: 'Bebidas', icon: '🥤', active: true }
+      { id: '2', name: 'Papas & Snacks', icon: '🍟', active: true },
+      { id: '3', name: 'Bebidas', icon: '🥤', active: true },
+      { id: '4', name: 'Postres', icon: '🍰', active: true }
     ];
     prods = [
-      { id: 'p1', cat: '1', name: 'Doble Cheddar Bacon', price: 8500, desc: 'Medallones 120g, cheddar, panceta crocante', stock: 100, active: true },
-      { id: 'p2', cat: '2', name: 'Papas con Cheddar', price: 4000, desc: 'Porción grande', stock: 100, active: true }
+      { id: 'p1', cat: '1', name: 'Doble Cheddar Bacon', price: 8500, desc: 'Doble medallón 120g, doble cheddar, panceta crocante y salsa de la casa.', stock: 100, active: true },
+      { id: 'p2', cat: '1', name: 'Onion Smash', price: 7900, desc: 'Medallón 150g, cebolla crispy, queso provolone.', stock: 100, active: true },
+      { id: 'p3', cat: '2', name: 'Papas con Cheddar', price: 4000, desc: 'Porción grande para compartir', stock: 100, active: true },
+      { id: 'p4', cat: '2', name: 'Nuggets de Pollo (x10)', price: 4500, desc: 'Acompañados con salsa barbacoa', stock: 50, active: true },
+      { id: 'p5', cat: '3', name: 'Lata Coca Cola 354ml', price: 1200, desc: 'Bien fría', stock: 200, active: true },
+      { id: 'p6', cat: '4', name: 'Chocotorta', price: 3500, desc: 'Porción individual casera', stock: 15, active: true }
     ];
   } else if (tipo === 'electronica') {
     cfg.name = 'Electro Store';
     cfg.emoji = '📱';
-    cfg.color = '#3498DB'; // Azul tecno
+    cfg.color = '#3498DB';
+    cfg.h1 = 'Electro';
+    cfg.h2 = 'STORE';
+    cfg.tagline = 'Tecnología a tu alcance.';
+    cfg.desc = 'Celulares, auriculares, accesorios y lo último en tecnología. Comprá seguro con garantía oficial.';
     cats = [
       { id: '1', name: 'Smartphones', icon: '📱', active: true },
-      { id: '2', name: 'Accesorios', icon: '🎧', active: true },
-      { id: '3', name: 'Gaming', icon: '🎮', active: true }
+      { id: '2', name: 'Auriculares', icon: '🎧', active: true },
+      { id: '3', name: 'Accesorios', icon: '🔌', active: true },
+      { id: '4', name: 'Gaming', icon: '🎮', active: true }
     ];
     prods = [
-      { id: 'p1', cat: '1', name: 'iPhone 13 128GB', price: 900000, desc: 'Cerrado en caja, garantía oficial', stock: 2, active: true },
-      { id: 'p2', cat: '2', name: 'Auriculares Inalámbricos', price: 25000, desc: 'Bluetooth 5.0 con cancelación de ruido', stock: 15, active: true }
+      { id: 'p1', cat: '1', name: 'iPhone 13 128GB', price: 900000, desc: 'Cerrado en caja, garantía oficial Apple', stock: 2, active: true },
+      { id: 'p2', cat: '1', name: 'Samsung Galaxy S23', price: 850000, desc: 'Color negro, 256GB', stock: 4, active: true },
+      { id: 'p3', cat: '2', name: 'AirPods Pro 2', price: 250000, desc: 'Cancelación de ruido activa', stock: 5, active: true },
+      { id: 'p4', cat: '3', name: 'Cargador Rápido 20W', price: 15000, desc: 'Ficha tipo C', stock: 30, active: true },
+      { id: 'p5', cat: '3', name: 'Funda Silicona', price: 8000, desc: 'Consultar colores por WhatsApp', stock: 50, active: true },
+      { id: 'p6', cat: '4', name: 'Joystick PS5 DualSense', price: 120000, desc: 'Original en caja sellada', stock: 8, active: true }
     ];
   }
   
