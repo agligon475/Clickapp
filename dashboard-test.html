@@ -5065,24 +5065,7 @@ async function applyWatermark(file) {
 applyDashTheme();
 initCharts();
 
-// ── Limpiar localStorage si tiene IDs legacy (numéricos de Google Sheets) ──
-// Si los IDs no son UUID, son del Sheet viejo y rompen los PATCH a Supabase
-(function purgeLegacyCache() {
-  try {
-    const saved = localStorage.getItem('storeapp_local_products');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        const hasLegacyIds = parsed.some(p => !UUID_ROW_RE.test(String(p.id || '')));
-        if (hasLegacyIds) {
-          console.warn('[FerreApp] Cache local tiene IDs legacy (Sheets). Limpiando para usar Supabase UUID.');
-          localStorage.removeItem('storeapp_local_products');
-          localStorage.removeItem('storeapp_abm_active');
-        }
-      }
-    }
-  } catch(e) { /* ignorar */ }
-})();
+// (purgeLegacyCache ha sido removido para permitir el uso de plantillas con IDs personalizados)
 
 loadSheet();        // carga desde Supabase
 initLogoPreview();

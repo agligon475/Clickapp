@@ -1297,13 +1297,8 @@ async function loadSheet() {
     if (localOverride) {
       try {
         const lp = JSON.parse(localOverride);
-        const localUsesLegacyIds = lp.some(p => !String(p.id || '').includes('-'));
-        if (serverUsesUuidIds && localUsesLegacyIds) {
-          console.warn('Clickapp: caché ABM con IDs numéricos ignorada (catálogo Supabase usa UUID).');
-        } else {
-          // Aceptar localOverride siempre (permite plantillas con menos productos)
-          products = lp.filter(p => !p.hidden);
-        }
+        // Aceptar localOverride siempre (permite plantillas con menos productos e IDs personalizados)
+        products = lp.filter(p => !p.hidden);
       } catch (e) {
         console.error("Error parsing local products:", e);
       }
