@@ -5471,7 +5471,7 @@ function applyRubro(tipo) {
   localStorage.setItem('storeapp_categories', JSON.stringify(cats));
   localStorage.setItem('storeapp_local_products', JSON.stringify(prods));
   
-  showToast('Plantilla aplicada correctamente. Refrescando...', 'success');
+  showToastDash('Plantilla aplicada correctamente. Refrescando...');
   setTimeout(() => window.location.reload(), 1500);
 }
 
