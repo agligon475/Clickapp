@@ -1978,7 +1978,15 @@ function applyStoredConfig() {
   const fSocials = document.getElementById('footer-socials');
   if (fSocials) {
     fSocials.innerHTML = '';
-    const soc = cfg.socials || {};
+    let soc = cfg.socials || {};
+    if (!soc.ig && !soc.fb && !soc.web && !soc.x && !soc.ml && !soc.tn && !soc.maps) {
+      soc = {
+        ig: 'instagram.com/tu_cuenta',
+        fb: 'facebook.com/tu_pagina',
+        web: 'tumarca.com',
+        maps: 'maps.google.com'
+      };
+    }
     const links = [
       { id: 'web', icon: 'bi-globe', title: 'Sitio Web', url: soc.web },
       { id: 'ig', icon: 'bi-instagram', title: 'Instagram', url: soc.ig },
