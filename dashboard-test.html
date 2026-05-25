@@ -5412,6 +5412,7 @@ function applyRubro(tipo) {
   let cfg = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
   let cats = [];
   let prods = [];
+  let banners = [];
   
   if (tipo === 'ferreteria') {
     cfg.name = 'FerreApp';
@@ -5421,6 +5422,7 @@ function applyRubro(tipo) {
     cfg.h2 = 'Y MATERIALES';
     cfg.tagline = 'Tu ferretería sin filas.';
     cfg.desc = 'Encontrá todo lo que necesitás para tu obra o arreglo en casa. Comprá fácil, retirá rápido o te lo llevamos.';
+    cfg.bg = 'https://images.unsplash.com/photo-1542013936693-884638332954?auto=format&fit=crop&q=80&w=2000';
     cats = [
       { id: '1', name: 'Herramientas', icon: '🔧', active: true },
       { id: '2', name: 'Electricidad', icon: '⚡', active: true },
@@ -5435,6 +5437,10 @@ function applyRubro(tipo) {
       { id: 'p5', cat: '3', name: 'Látex Interior 20L', price: 28000, desc: 'Blanco mate. Alto poder cubritivo.', stock: 8, active: true },
       { id: 'p6', cat: '4', name: 'Cemento Loma Negra 50kg', price: 7500, desc: 'Cemento portland normal.', stock: 100, active: true }
     ];
+    banners = [
+      { id: 'b1', title: 'Kits de seguridad', subtitle: 'NUEVAS OFERTAS', url: 'https://images.unsplash.com/photo-1582216503945-8f6dfad8f90d?auto=format&fit=crop&w=800&q=80', active: true },
+      { id: 'b2', title: 'En insumos para máquinas', subtitle: 'PROMOCIONES', url: 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?auto=format&fit=crop&w=800&q=80', active: true }
+    ];
   } else if (tipo === 'kiosco') {
     cfg.name = 'MaxiKiosco El Sol';
     cfg.emoji = '🏪';
@@ -5443,6 +5449,7 @@ function applyRubro(tipo) {
     cfg.h2 = 'EL SOL';
     cfg.tagline = 'Tus antojos, al toque.';
     cfg.desc = 'Bebidas súper frías, golosinas, snacks y todo lo que te salva el día. Pedí por WhatsApp y pasá a retirar sin hacer fila.';
+    cfg.bg = 'https://images.unsplash.com/photo-1567360425618-1594206637d2?auto=format&fit=crop&q=80&w=2000';
     cats = [
       { id: '1', name: 'Bebidas', icon: '🥤', active: true },
       { id: '2', name: 'Cervezas', icon: '🍺', active: true },
@@ -5457,6 +5464,10 @@ function applyRubro(tipo) {
       { id: 'p5', cat: '3', name: 'Gomitas Mogul 120g', price: 1200, desc: 'Sabores frutales', stock: 20, active: true },
       { id: 'p6', cat: '4', name: 'Papas Lays Clásicas', price: 1500, desc: 'Paquete grande 140g', stock: 15, active: true }
     ];
+    banners = [
+      { id: 'b1', title: 'Cervezas Heladas', subtitle: 'LLEVÁ MÁS PAGÁ MENOS', url: 'https://images.unsplash.com/photo-1605270012917-bf158ecae29a?auto=format&fit=crop&w=800&q=80', active: true },
+      { id: 'b2', title: 'Snacks para tu juntada', subtitle: 'Combos Fin de Semana', url: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=800&q=80', active: true }
+    ];
   } else if (tipo === 'gastronomia') {
     cfg.name = 'Burger House';
     cfg.emoji = '🍔';
@@ -5465,6 +5476,7 @@ function applyRubro(tipo) {
     cfg.h2 = 'HOUSE';
     cfg.tagline = 'Las mejores de la zona.';
     cfg.desc = 'Hamburguesas 100% carne vacuna, papas crocantes y mucho cheddar. Hacé tu pedido online y disfrutá sin moverte de tu casa.';
+    cfg.bg = 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&q=80&w=2000';
     cats = [
       { id: '1', name: 'Hamburguesas', icon: '🍔', active: true },
       { id: '2', name: 'Papas & Snacks', icon: '🍟', active: true },
@@ -5479,6 +5491,10 @@ function applyRubro(tipo) {
       { id: 'p5', cat: '3', name: 'Lata Coca Cola 354ml', price: 1200, desc: 'Bien fría', stock: 200, active: true },
       { id: 'p6', cat: '4', name: 'Chocotorta', price: 3500, desc: 'Porción individual casera', stock: 15, active: true }
     ];
+    banners = [
+      { id: 'b1', title: '20% OFF en Dobles', subtitle: 'PROMO MARTES', url: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80', active: true },
+      { id: 'b2', title: 'Papas con Cheddar Gratis', subtitle: 'Con tu menú grande', url: 'https://images.unsplash.com/photo-1576107232684-1279f390859f?auto=format&fit=crop&w=800&q=80', active: true }
+    ];
   } else if (tipo === 'electronica') {
     cfg.name = 'Electro Store';
     cfg.emoji = '📱';
@@ -5487,6 +5503,7 @@ function applyRubro(tipo) {
     cfg.h2 = 'STORE';
     cfg.tagline = 'Tecnología a tu alcance.';
     cfg.desc = 'Celulares, auriculares, accesorios y lo último en tecnología. Comprá seguro con garantía oficial.';
+    cfg.bg = 'https://images.unsplash.com/photo-1550009158-9effb6ce170c?auto=format&fit=crop&q=80&w=2000';
     cats = [
       { id: '1', name: 'Smartphones', icon: '📱', active: true },
       { id: '2', name: 'Auriculares', icon: '🎧', active: true },
@@ -5501,11 +5518,17 @@ function applyRubro(tipo) {
       { id: 'p5', cat: '3', name: 'Funda Silicona', price: 8000, desc: 'Consultar colores por WhatsApp', stock: 50, active: true },
       { id: 'p6', cat: '4', name: 'Joystick PS5 DualSense', price: 120000, desc: 'Original en caja sellada', stock: 8, active: true }
     ];
+    banners = [
+      { id: 'b1', title: 'Hasta 12 cuotas sin interés', subtitle: 'En celulares seleccionados', url: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', active: true },
+      { id: 'b2', title: 'Accesorios Gamers', subtitle: 'Envíos en el día', url: 'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?auto=format&fit=crop&w=800&q=80', active: true }
+    ];
   }
   
   localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
   localStorage.setItem('storeapp_categories', JSON.stringify(cats));
   localStorage.setItem('storeapp_local_products', JSON.stringify(prods));
+  localStorage.setItem('storeapp_banners', JSON.stringify(banners));
+  localStorage.setItem('storeapp_abm_active', 'true');
   
   showToastDash('Plantilla aplicada correctamente. Refrescando...');
   setTimeout(() => window.location.reload(), 1500);
