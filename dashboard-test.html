@@ -5417,7 +5417,11 @@ function applyRubro(tipo) {
       { id: 'p2', cat: 'Herramientas', name: 'Amoladora Angular 115mm', price: 38000, desc: '800W de potencia. Incluye disco.', stock: 3, active: true },
       { id: 'p3', cat: 'Electricidad', name: 'Cable Taller 2x1.5 (10m)', price: 12000, desc: 'Rollo x 10 metros normalizado.', stock: 12, active: true },
       { id: 'p4', cat: 'Electricidad', name: 'Cinta Aisladora 3M', price: 1500, desc: '19mm x 20m. Color negro.', stock: 50, active: true },
-      { id: 'p5', cat: 'Pintura', name: 'Látex Interior 20L', price: 28000, desc: 'Blanco mate. Alto poder cubritivo.', stock: 8, active: true },
+      { id: 'p5', cat: 'Pintura', name: 'Látex Interior 20L', price: 28000, desc: 'Blanco mate. Alto poder cubritivo.', stock: 8, active: true,
+        variants: [
+          { name: 'Color', options: [ {name:'Blanco', priceDelta:0}, {name:'Colores Pastel', priceDelta:3000} ] }
+        ]
+      },
       { id: 'p6', cat: 'Construcción', name: 'Cemento Loma Negra 50kg', price: 7500, desc: 'Cemento portland normal.', stock: 100, active: true }
     ];
     banners = [
@@ -5440,11 +5444,19 @@ function applyRubro(tipo) {
       { id: '4', name: 'Snacks', icon: '🍿', active: true }
     ];
     prods = [
-      { id: 'p1', cat: 'Bebidas', name: 'Coca Cola 2.25L', price: 2500, desc: 'Línea retornable', stock: 24, active: true },
+      { id: 'p1', cat: 'Bebidas', name: 'Coca Cola', price: 2500, desc: 'Línea retornable', stock: 24, active: true,
+        variants: [
+          { name: 'Tamaño', options: [ {name:'2.25L', priceDelta:0}, {name:'1.5L', priceDelta:-600}, {name:'Lata 354ml', priceDelta:-1300} ] }
+        ]
+      },
       { id: 'p2', cat: 'Bebidas', name: 'Agua Mineral 1.5L', price: 900, desc: 'Sin gas', stock: 30, active: true },
       { id: 'p3', cat: 'Cervezas', name: 'Cerveza Quilmes 1L', price: 1800, desc: 'Retornable bien fría', stock: 40, active: true },
-      { id: 'p4', cat: 'Golosinas', name: 'Alfajor Triple', price: 900, desc: 'Sabor chocolate', stock: 50, active: true },
-      { id: 'p5', cat: 'Golosinas', name: 'Gomitas Mogul 120g', price: 1200, desc: 'Sabores frutales', stock: 20, active: true },
+      { id: 'p4', cat: 'Golosinas', name: 'Gomitas Mogul Sueltas', price: 1200, desc: 'Sabores frutales surtidos', stock: 20, active: true,
+        variants: [
+          { name: 'Peso', options: [ {name:'100gr', priceDelta:0}, {name:'250gr', priceDelta:1500}, {name:'500gr', priceDelta:4000} ] }
+        ]
+      },
+      { id: 'p5', cat: 'Golosinas', name: 'Alfajor Triple', price: 900, desc: 'Sabor chocolate', stock: 50, active: true },
       { id: 'p6', cat: 'Snacks', name: 'Papas Lays Clásicas', price: 1500, desc: 'Paquete grande 140g', stock: 15, active: true }
     ];
     banners = [
@@ -5467,9 +5479,21 @@ function applyRubro(tipo) {
       { id: '4', name: 'Postres', icon: '🍰', active: true }
     ];
     prods = [
-      { id: 'p1', cat: 'Hamburguesas', name: 'Doble Cheddar Bacon', price: 8500, desc: 'Doble medallón 120g, doble cheddar, panceta crocante y salsa de la casa.', stock: 100, active: true },
+      { id: 'p1', cat: 'Hamburguesas', name: 'Doble Cheddar Bacon', price: 8500, desc: 'Doble medallón 120g, doble cheddar, panceta crocante y salsa de la casa.', stock: 100, active: true,
+        variants: [
+          { name: 'Punto de la carne', options: [ {name:'A punto (Rojo medio)', priceDelta:0}, {name:'Cocido (Sin rojo)', priceDelta:0} ] }
+        ],
+        modifiers: [
+          { name: 'Extras', options: [ {name:'Extra Cheddar', priceDelta:800}, {name:'Medallón Extra', priceDelta:2500}, {name:'Panceta Extra', priceDelta:1000} ] },
+          { name: 'Aclaraciones', options: [ {name:'Sin Cebolla', priceDelta:0}, {name:'Sin Salsa', priceDelta:0} ] }
+        ]
+      },
       { id: 'p2', cat: 'Hamburguesas', name: 'Onion Smash', price: 7900, desc: 'Medallón 150g, cebolla crispy, queso provolone.', stock: 100, active: true },
-      { id: 'p3', cat: 'Papas & Snacks', name: 'Papas con Cheddar', price: 4000, desc: 'Porción grande para compartir', stock: 100, active: true },
+      { id: 'p3', cat: 'Papas & Snacks', name: 'Papas Fritas', price: 4000, desc: 'Porción grande para compartir', stock: 100, active: true,
+        modifiers: [
+          { name: 'Salsas', options: [ {name:'Bañadas en Cheddar', priceDelta:1500}, {name:'Verdeo y Bacon', priceDelta:2000} ] }
+        ]
+      },
       { id: 'p4', cat: 'Papas & Snacks', name: 'Nuggets de Pollo (x10)', price: 4500, desc: 'Acompañados con salsa barbacoa', stock: 50, active: true },
       { id: 'p5', cat: 'Bebidas', name: 'Lata Coca Cola 354ml', price: 1200, desc: 'Bien fría', stock: 200, active: true },
       { id: 'p6', cat: 'Postres', name: 'Chocotorta', price: 3500, desc: 'Porción individual casera', stock: 15, active: true }
@@ -5494,7 +5518,12 @@ function applyRubro(tipo) {
       { id: '4', name: 'Gaming', icon: '🎮', active: true }
     ];
     prods = [
-      { id: 'p1', cat: 'Smartphones', name: 'iPhone 13 128GB', price: 900000, desc: 'Cerrado en caja, garantía oficial Apple', stock: 2, active: true },
+      { id: 'p1', cat: 'Smartphones', name: 'iPhone 13', price: 900000, desc: 'Cerrado en caja, garantía oficial Apple', stock: 5, active: true,
+        variants: [
+          { name: 'Almacenamiento', options: [ {name:'128GB', priceDelta:0}, {name:'256GB', priceDelta:150000} ] },
+          { name: 'Color', options: [ {name:'Midnight', priceDelta:0}, {name:'Starlight', priceDelta:0}, {name:'Blue', priceDelta:0} ] }
+        ]
+      },
       { id: 'p2', cat: 'Smartphones', name: 'Samsung Galaxy S23', price: 850000, desc: 'Color negro, 256GB', stock: 4, active: true },
       { id: 'p3', cat: 'Auriculares', name: 'AirPods Pro 2', price: 250000, desc: 'Cancelación de ruido activa', stock: 5, active: true },
       { id: 'p4', cat: 'Accesorios', name: 'Cargador Rápido 20W', price: 15000, desc: 'Ficha tipo C', stock: 30, active: true },
