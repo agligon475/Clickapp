@@ -1170,6 +1170,7 @@ function applyConfig() {
 /* ═══════════════════════════════════════════ STATE */
 let products = [];
 let cart     = {};
+let cartDetails = {}; // Stores { baseId, price, optionsText } for complex keys
 /** Supabase usa UUID string; el carrito guarda claves string. */
 function findProduct(id) {
   if (id == null || id === '') return undefined;
@@ -1298,21 +1299,19 @@ async function loadSheet() {
     const abrActive = localStorage.getItem(`storeapp_abm_active_${STORE_ID}`);
     const localOverride = localStorage.getItem(`storeapp_local_products_${STORE_ID}`);
     const serverUsesUuidIds = products.some(p => String(p.id).length > 20 && String(p.id).includes('-'));
-    if (abrActive && localOverride) {
+    
+    if (localOverride && abrActive) {
       try {
         const lp = JSON.parse(localOverride);
         const localUsesLegacyIds = lp.some(p => !String(p.id || '').includes('-'));
-        if (lp.length >= products.length) {
-          if (serverUsesUuidIds && localUsesLegacyIds) {
-            console.warn('Clickapp: caché ABM con IDs numéricos ignorada (catálogo Supabase usa UUID).');
-          } else {
-            products = lp.filter(p => !p.hidden);
-          }
+        if (serverUsesUuidIds && localUsesLegacyIds) {
+          console.warn('Clickapp: caché ABM con IDs numéricos ignorada (catálogo Supabase usa UUID).');
         } else {
-          localStorage.removeItem(`storeapp_local_products_${STORE_ID}`);
-          localStorage.removeItem(`storeapp_abm_active_${STORE_ID}`);
+          // Aceptar localOverride siempre (permite plantillas con menos productos e IDs personalizados)
+          products = lp.filter(p => !p.hidden);
         }
       } catch (e) {
+        console.error("Error parsing local products:", e);
         localStorage.removeItem(`storeapp_local_products_${STORE_ID}`);
       }
     } else if (localOverride && !abrActive) {
@@ -1383,8 +1382,8 @@ function render() {
         ${p.img
           ? `<img src="${optimizeImg(p.img)}" alt="${p.name}" loading="lazy" class="main-img" onerror="this.style.display='none';this.parentElement.querySelector('.product-img-fallback').style.display='flex'"/>
              ${p.img2 ? `<img src="${optimizeImg(p.img2)}" alt="${p.name} detalle" loading="lazy" class="hover-img"/>` : ''}
-             <div class="product-img-fallback" style="display:none;width:100%;height:100%;align-items:center;justify-content:center;">${p.emoji}</div>`
-          : `<div class="product-img-fallback">${p.emoji}</div>`}
+             <div class="product-img-fallback" style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:40px;">${p.emoji || CFG.emoji || '🛒'}</div>`
+          : `<div class="product-img-fallback" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:40px;background:var(--iron);">${p.emoji || CFG.emoji || '🛒'}</div>`}
         <span class="stock-chip ${stockClass}">${stockLabel}</span>
       </div>
       <div class="product-body">
@@ -1396,11 +1395,15 @@ function render() {
             <span class="product-price-label">$&nbsp;</span><span class="product-price">${p.price.toLocaleString('es-AR')}</span>
           </div>
           ${p.stock > 0
-            ? `<div class="qty-control ${qty > 0 ? 'has-items' : ''}" id="qc-${p.id}" onclick="event.stopPropagation()">
-                <button type="button" class="qty-btn qty-dec" onclick='changeQtyCard(${JSON.stringify(p.id)},-1)'><i class="bi bi-dash"></i></button>
-                <span class="qty-num">${qty > 0 ? qty : 'Agregar'}</span>
-                <button type="button" class="qty-btn qty-inc" onclick='changeQtyCard(${JSON.stringify(p.id)},1)'><i class="bi bi-plus"></i></button>
-              </div>`
+            ? ((p.variants && p.variants.length > 0) || (p.modifiers && p.modifiers.length > 0)
+               ? `<div class="qty-control" onclick="event.stopPropagation(); openProductDrawer('${p.id}')">
+                   <span class="qty-num" style="width:100%;text-align:center;">Agregar</span>
+                  </div>`
+               : `<div class="qty-control ${qty > 0 ? 'has-items' : ''}" id="qc-${p.id}" onclick="event.stopPropagation()">
+                   <button type="button" class="qty-btn qty-dec" onclick='changeQtyCard(${JSON.stringify(p.id)},-1)'><i class="bi bi-dash"></i></button>
+                   <span class="qty-num">${qty > 0 ? qty : 'Agregar'}</span>
+                   <button type="button" class="qty-btn qty-inc" onclick='changeQtyCard(${JSON.stringify(p.id)},1)'><i class="bi bi-plus"></i></button>
+                 </div>`)
             : `<div style="font-size:11px;color:var(--silver);padding:4px 10px;border:1px solid var(--zinc);border-radius:9999px;opacity:.5;">Sin stock</div>`}
         </div>
       </div>
@@ -1460,9 +1463,12 @@ function renderBanners(bannerData) {
 
 
 function cartTotal() {
-  return Object.entries(cart).reduce((s,[id,q])=>{
-    const p = findProduct(id);
-    return s + (p?p.price*q:0);
+  return Object.entries(cart).reduce((s,[key,q])=>{
+    const baseId = cartDetails[key] ? cartDetails[key].baseId : key;
+    const p = findProduct(baseId);
+    if (!p) return s;
+    const price = cartDetails[key] ? cartDetails[key].price : p.price;
+    return s + (price * q);
   },0);
 }
 function cartQty() { return Object.values(cart).reduce((a,b)=>a+b,0); }
@@ -1624,9 +1630,13 @@ async function enviarWhatsApp() {
   }
 
   // Build order items
-  const items = Object.entries(cart).map(([id,q])=>{
-    const p = findProduct(id);
-    return p ? { nombre: p.name, cantidad: q, precio_unitario: p.price, subtotal: p.price*q } : null;
+  const items = Object.entries(cart).map(([key,q])=>{
+    const baseId = cartDetails[key] ? cartDetails[key].baseId : key;
+    const p = findProduct(baseId);
+    if (!p) return null;
+    const price = cartDetails[key] ? cartDetails[key].price : p.price;
+    const opts = cartDetails[key] ? ` (${cartDetails[key].optionsText})` : '';
+    return { nombre: p.name + opts, cantidad: q, precio_unitario: price, subtotal: price*q };
   }).filter(Boolean);
 
   const total = cartTotal();
@@ -1749,16 +1759,28 @@ const ORIGIN_NAMES = {
 /* ═══════════════════════════════════════════ COUNTER */
 function changeQtyCard(id, delta) {
   const key = String(id);
+  const baseId = cartDetails[key] ? cartDetails[key].baseId : key;
   const current = cart[key] || 0;
-  const p = findProduct(id);
+  const p = findProduct(baseId);
   const newQty = Math.max(0, Math.min(current + delta, p?.stock || 99));
-  if (newQty === 0) delete cart[key]; else cart[key] = newQty;
-  // Update counter in card without full re-render
-  const qc = document.getElementById('qc-'+key);
-  if (qc) {
+  if (newQty === 0) {
+    delete cart[key];
+    delete cartDetails[key];
+  } else {
+    cart[key] = newQty;
+  }
+  // Update counter in card without full re-render (only if it's the base key, otherwise it has 'Agregar' button)
+  const qc = document.getElementById('qc-'+baseId);
+  if (qc && !((p.variants && p.variants.length) || (p.modifiers && p.modifiers.length))) {
     const num = qc.querySelector('.qty-num');
     if (num) num.textContent = newQty > 0 ? newQty : '+';
     qc.classList.toggle('has-items', newQty > 0);
+  } else if (qc) {
+    // If it's a complex product, update the total count across all variants
+    const totalQtyThisProduct = Object.keys(cart).filter(k => k === baseId || k.startsWith(baseId + '_')).reduce((sum, k) => sum + cart[k], 0);
+    const num = qc.querySelector('.qty-num');
+    if (num) num.textContent = totalQtyThisProduct > 0 ? totalQtyThisProduct : '+';
+    qc.classList.toggle('has-items', totalQtyThisProduct > 0);
   }
   // Update drawer if open
   const drawerQty = document.getElementById('pdrawer-qty-num');
@@ -1773,7 +1795,7 @@ function openProductDrawer(id) {
   const p = findProduct(id);
   if (!p) return;
   const key = String(id);
-  const qty = cart[key] || 0;
+  const qty = Object.keys(cart).filter(k => k === key || k.startsWith(key + '_')).reduce((sum, k) => sum + cart[k], 0);
   const orig = (p.origen || '').trim().toUpperCase();
   const flag = ORIGIN_FLAGS[orig] || Object.values(ORIGIN_FLAGS).find((_, idx) => Object.values(ORIGIN_NAMES)[idx].toUpperCase() === orig) || '';
   const originName = ORIGIN_NAMES[orig] || Object.values(ORIGIN_NAMES).find(n => n.toUpperCase() === orig) || '';
@@ -1789,11 +1811,60 @@ function openProductDrawer(id) {
       </span>
     </div>
     <div class="pdrawer-name">${p.name}</div>
-    <div class="pdrawer-price"><small>$</small>${p.price.toLocaleString('es-AR')}</div>
+    <div class="pdrawer-price" id="pdrawer-price-display" data-base-price="${p.price}"><small>$</small>${p.price.toLocaleString('es-AR')}</div>
     ${(p.detalles||p.detalle)?`<div class="pdrawer-detalle"><strong style="display:block;font-size:11px;color:var(--silver);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Especificaciones</strong>${p.detalles||p.detalle}</div>`:''}
     ${p.marca?`<div class="pdrawer-row"><strong>Marca</strong> ${p.marca}</div>`:''}
     ${originName?`<div class="pdrawer-row"><strong>Origen</strong> ${flag} ${originName}</div>`:''}
+    <div id="pdrawer-options"></div>
   `;
+
+  // Render Variants and Modifiers
+  const optionsWrap = document.getElementById('pdrawer-options');
+  let optionsHtml = '';
+  
+  if (p.variants && p.variants.length > 0) {
+    optionsHtml += `<div class="pdrawer-variants" style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.05);">`;
+    p.variants.forEach((v, vIdx) => {
+      optionsHtml += `<div style="margin-bottom:12px;">
+        <strong style="display:block;font-size:12px;color:var(--silver);margin-bottom:8px;text-transform:uppercase;">${v.name}</strong>
+        <div style="display:flex;flex-direction:column;gap:8px;">`;
+      v.options.forEach((opt, oIdx) => {
+        const idStr = `var-${vIdx}-${oIdx}`;
+        const checked = oIdx === 0 ? 'checked' : ''; 
+        optionsHtml += `
+          <label for="${idStr}" class="variant-label" style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;">
+            <input type="radio" name="var-${vIdx}" id="${idStr}" value="${opt.name}" data-price="${opt.priceDelta}" ${checked} onchange="updateDrawerPrice()" style="width:16px;height:16px;margin:0;">
+            <span style="flex:1;">${opt.name}</span>
+            ${opt.priceDelta > 0 ? `<span style="color:var(--silver);font-size:13px;">+ $${opt.priceDelta.toLocaleString('es-AR')}</span>` : (opt.priceDelta < 0 ? `<span style="color:var(--silver);font-size:13px;">- $${Math.abs(opt.priceDelta).toLocaleString('es-AR')}</span>` : '')}
+          </label>
+        `;
+      });
+      optionsHtml += `</div></div>`;
+    });
+    optionsHtml += `</div>`;
+  }
+
+  if (p.modifiers && p.modifiers.length > 0) {
+    optionsHtml += `<div class="pdrawer-modifiers" style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.05);">`;
+    p.modifiers.forEach((m, mIdx) => {
+      optionsHtml += `<div style="margin-bottom:12px;">
+        <strong style="display:block;font-size:12px;color:var(--silver);margin-bottom:8px;text-transform:uppercase;">${m.name}</strong>
+        <div style="display:flex;flex-direction:column;gap:8px;">`;
+      m.options.forEach((opt, oIdx) => {
+        const idStr = `mod-${mIdx}-${oIdx}`;
+        optionsHtml += `
+          <label for="${idStr}" class="modifier-label" style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;">
+            <input type="checkbox" class="mod-checkbox" id="${idStr}" value="${opt.name}" data-price="${opt.priceDelta}" onchange="updateDrawerPrice()" style="width:16px;height:16px;margin:0;">
+            <span style="flex:1;">${opt.name}</span>
+            ${opt.priceDelta > 0 ? `<span style="color:var(--silver);font-size:13px;">+ $${opt.priceDelta.toLocaleString('es-AR')}</span>` : ''}
+          </label>
+        `;
+      });
+      optionsHtml += `</div></div>`;
+    });
+    optionsHtml += `</div>`;
+  }
+  optionsWrap.innerHTML = optionsHtml;
 
   // Image Carousel
   const imgWrap = document.getElementById('pdrawer-img');
@@ -1857,10 +1928,78 @@ function openProductDrawer(id) {
   document.body.style.overflow = 'hidden';
 }
 
+window.updateDrawerPrice = function() {
+  const priceDisplay = document.getElementById('pdrawer-price-display');
+  if (!priceDisplay) return;
+  let basePrice = parseFloat(priceDisplay.dataset.basePrice) || 0;
+  
+  // Sum selected variants
+  const radios = document.querySelectorAll('#pdrawer-options input[type="radio"]:checked');
+  radios.forEach(r => { basePrice += parseFloat(r.dataset.price) || 0; });
+  
+  // Sum selected modifiers
+  const checks = document.querySelectorAll('#pdrawer-options input[type="checkbox"]:checked');
+  checks.forEach(c => { basePrice += parseFloat(c.dataset.price) || 0; });
+  
+  priceDisplay.innerHTML = `<small>$</small>${basePrice.toLocaleString('es-AR')}`;
+};
+
 function addFromDrawer(id) {
-  changeQtyCard(id, 1);
+  const p = findProduct(id);
+  if (!p) return;
+
+  let basePrice = p.price;
+  let optionsTextArr = [];
+  
+  // Collect Variants
+  const radios = document.querySelectorAll('#pdrawer-options input[type="radio"]:checked');
+  radios.forEach(r => {
+    basePrice += parseFloat(r.dataset.price) || 0;
+    optionsTextArr.push(r.value);
+  });
+  
+  // Collect Modifiers
+  const checks = document.querySelectorAll('#pdrawer-options input[type="checkbox"]:checked');
+  checks.forEach(c => {
+    basePrice += parseFloat(c.dataset.price) || 0;
+    optionsTextArr.push(`+${c.value}`);
+  });
+
+  // Generate composite key
+  let key = String(id);
+  if (optionsTextArr.length > 0) {
+    // encode to base64 to avoid weird characters in keys, or just use a safe join
+    const hash = optionsTextArr.join('|').replace(/[^a-zA-Z0-9|+\- ]/g, '');
+    key = `${id}_${hash}`;
+  }
+
+  // Save to cart Details if it's complex
+  if (optionsTextArr.length > 0) {
+    cartDetails[key] = {
+      baseId: String(id),
+      price: basePrice,
+      optionsText: optionsTextArr.join(' - ')
+    };
+  }
+
+  // Increment qty
+  cart[key] = (cart[key] || 0) + 1;
+
+  // Update UI
+  updateCartUI();
+  
   const btn = document.getElementById('pdrawer-add-btn');
-  btn.textContent = `Agregar al carrito (${cart[String(id)]||0})`;
+  const totalQtyThisProduct = Object.keys(cart).filter(k => k === String(id) || k.startsWith(id + '_')).reduce((sum, k) => sum + cart[k], 0);
+  btn.textContent = `Agregar al carrito (${totalQtyThisProduct})`;
+  
+  // Also update product card pill
+  const qc = document.getElementById('qc-'+id);
+  if (qc) {
+    const num = qc.querySelector('.qty-num');
+    if (num) num.textContent = totalQtyThisProduct > 0 ? totalQtyThisProduct : '+';
+    qc.classList.toggle('has-items', totalQtyThisProduct > 0);
+  }
+
   showToast(`✓ Agregado al carrito`);
 }
 
