@@ -948,6 +948,11 @@ a.logo{
 const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
 
+// Obtener store_id del parámetro de URL '?store=...' o localStorage o 'ferre-now' por defecto
+const urlParams = new URLSearchParams(window.location.search);
+const STORE_ID = urlParams.get('store') || localStorage.getItem('storeapp_store_id') || 'ferre-now';
+localStorage.setItem('storeapp_store_id', STORE_ID);
+
 // Load config saved by dashboard
 const CFG_DEFAULTS = {
   name:'FerreApp', tagline:'Tu ferretería digital',
@@ -959,7 +964,7 @@ const CFG_DEFAULTS = {
 };
 let CFG = {...CFG_DEFAULTS};
 try {
-  const saved = localStorage.getItem('storeapp_cfg');
+  const saved = localStorage.getItem(`storeapp_cfg_${STORE_ID}`) || localStorage.getItem('storeapp_cfg');
   if (saved) CFG = {...CFG_DEFAULTS, ...JSON.parse(saved)};
 } catch(e) {}
 
@@ -1089,7 +1094,7 @@ let searchTerm = '';
 // Override products from localStorage ABM if present
 function loadLocalProducts() {
   try {
-    const local = localStorage.getItem('storeapp_local_products');
+    const local = localStorage.getItem(`storeapp_local_products_${STORE_ID}`);
     if (local) {
       const parsed = JSON.parse(local);
       if (Array.isArray(parsed) && parsed.length > 0) return parsed;
@@ -1135,7 +1140,7 @@ function guessEmoji(name, cat) {
 async function loadSheet() {
   try {
     // Cargar productos desde Supabase
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/products?oculto=eq.false`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/products?oculto=eq.false&store_id=eq.${encodeURIComponent(STORE_ID)}`, {
       headers: {
         'apikey': SUPABASE_KEY,
         'Authorization': `Bearer ${SUPABASE_KEY}`
@@ -1146,7 +1151,7 @@ async function loadSheet() {
     if (!Array.isArray(supabaseProducts)) throw new Error('Respuesta catálogo no es lista');
 
     // Cargar configuración (banners) desde Supabase
-    const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings`, {
+    const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
       headers: {
         'apikey': SUPABASE_KEY,
         'Authorization': `Bearer ${SUPABASE_KEY}`
@@ -1198,11 +1203,11 @@ async function loadSheet() {
       }));
 
     // Guardar banners en localStorage (para dashboard)
-    localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
+    localStorage.setItem(`storeapp_banners_${STORE_ID}`, JSON.stringify(bannerData));
 
     // ── Override with ABM edits from dashboard if present ──
-    const abrActive = localStorage.getItem('storeapp_abm_active');
-    const localOverride = localStorage.getItem('storeapp_local_products');
+    const abrActive = localStorage.getItem(`storeapp_abm_active_${STORE_ID}`);
+    const localOverride = localStorage.getItem(`storeapp_local_products_${STORE_ID}`);
     const serverUsesUuidIds = products.some(p => String(p.id).length > 20 && String(p.id).includes('-'));
     if (abrActive && localOverride) {
       try {
@@ -1215,14 +1220,14 @@ async function loadSheet() {
             products = lp.filter(p => !p.hidden);
           }
         } else {
-          localStorage.removeItem('storeapp_local_products');
-          localStorage.removeItem('storeapp_abm_active');
+          localStorage.removeItem(`storeapp_local_products_${STORE_ID}`);
+          localStorage.removeItem(`storeapp_abm_active_${STORE_ID}`);
         }
       } catch (e) {
-        localStorage.removeItem('storeapp_local_products');
+        localStorage.removeItem(`storeapp_local_products_${STORE_ID}`);
       }
     } else if (localOverride && !abrActive) {
-      localStorage.removeItem('storeapp_local_products');
+      localStorage.removeItem(`storeapp_local_products_${STORE_ID}`);
     }
 
     // Build category rail
@@ -1518,16 +1523,16 @@ async function registrarPedido(pedido) {
 
   // ── 1. Guardar en localStorage (misma key que usa el dashboard) ──
   try {
-    const existing = JSON.parse(localStorage.getItem('storeapp_orders') || '[]');
+    const existing = JSON.parse(localStorage.getItem(`storeapp_orders_${STORE_ID}`) || localStorage.getItem('storeapp_orders') || '[]');
     existing.unshift(order);
-    localStorage.setItem('storeapp_orders', JSON.stringify(existing));
+    localStorage.setItem(`storeapp_orders_${STORE_ID}`, JSON.stringify(existing));
   } catch(e) {
     console.warn('No se pudo guardar el pedido localmente:', e.message);
   }
 
   // ── 2. Enviar al Sheet vía webhook si está configurado ───────────
   let wh = {};
-  try { wh = JSON.parse(localStorage.getItem('storeapp_webhook') || '{}'); } catch(e) {}
+  try { wh = JSON.parse(localStorage.getItem(`storeapp_webhook_${STORE_ID}`) || localStorage.getItem('storeapp_webhook') || '{}'); } catch(e) {}
   if (!wh.url || !wh.token) return;
 
   try {
@@ -1701,7 +1706,7 @@ function setCarouselSlide(index, total) {
 // ── Apply config saved from dashboard ──────────────
 function applyStoredConfig() {
   let cfg = {};
-  try { cfg = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}'); } catch(e) {}
+  try { cfg = JSON.parse(localStorage.getItem(`storeapp_cfg_${STORE_ID}`) || localStorage.getItem('storeapp_cfg') || '{}'); } catch(e) {}
 
   const accent = cfg.color || '#D72638';
   const theme  = cfg.theme || 'dark';
@@ -1738,7 +1743,7 @@ function applyStoredConfig() {
   if (cfg.fontBody) root.setProperty('--font-body', `'${cfg.fontBody}', sans-serif`);
 
   // Logo image takes priority over emoji
-  const logoImg = localStorage.getItem('storeapp_logo');
+  const logoImg = localStorage.getItem(`storeapp_logo_${STORE_ID}`) || localStorage.getItem('storeapp_logo');
   const logoEl  = document.querySelector('.logo');
   if (logoEl) {
     if (logoImg) {
@@ -1762,7 +1767,7 @@ function applyStoredConfig() {
   const heroBg = document.getElementById('hero-img-bg');
   const heroOverlay = document.getElementById('hero-overlay');
   const heroStripes = document.getElementById('hero-stripes');
-  const heroImgUrl = localStorage.getItem('storeapp_hero_img');
+  const heroImgUrl = localStorage.getItem(`storeapp_hero_img_${STORE_ID}`) || localStorage.getItem('storeapp_hero_img');
   if (heroImgUrl && heroBg) {
     heroBg.style.backgroundImage = `url('${heroImgUrl}')`;
     heroBg.style.opacity = '1';

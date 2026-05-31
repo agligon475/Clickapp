@@ -2199,6 +2199,57 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
 const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
 
+// Obtener store_id del parámetro de URL '?store=...' o localStorage o 'ferre-now' por defecto
+const urlParams = new URLSearchParams(window.location.search);
+const STORE_ID = urlParams.get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now';
+window.localStorage.setItem('storeapp_store_id', STORE_ID);
+
+// Shadow localStorage to automatically namespace all calls under the active STORE_ID
+const originalLocalStorage = window.localStorage;
+const localStorage = {
+  getItem(key) {
+    const globalKeys = [
+      'storeapp_store_id', 
+      'storeapp_claude_key', 
+      'storeapp_claude_status', 
+      'storeapp_cloudinary', 
+      'storeapp_cloudinary_status',
+      'storeapp_webhook', 
+      'storeapp_dash_theme'
+    ];
+    if (globalKeys.includes(key)) {
+      return originalLocalStorage.getItem(key);
+    }
+    const namespacedKey = `${key}_${STORE_ID}`;
+    return originalLocalStorage.getItem(namespacedKey) || originalLocalStorage.getItem(key);
+  },
+  setItem(key, value) {
+    const globalKeys = [
+      'storeapp_store_id', 
+      'storeapp_claude_key', 
+      'storeapp_claude_status', 
+      'storeapp_cloudinary', 
+      'storeapp_cloudinary_status',
+      'storeapp_webhook', 
+      'storeapp_dash_theme'
+    ];
+    if (globalKeys.includes(key)) {
+      originalLocalStorage.setItem(key, value);
+    } else {
+      const namespacedKey = `${key}_${STORE_ID}`;
+      originalLocalStorage.setItem(namespacedKey, value);
+    }
+  },
+  removeItem(key) {
+    const namespacedKey = `${key}_${STORE_ID}`;
+    originalLocalStorage.removeItem(namespacedKey);
+    originalLocalStorage.removeItem(key);
+  },
+  clear() {
+    originalLocalStorage.clear();
+  }
+};
+
 // ← FIX CRÍTICO: TITLES debe estar ANTES de usarse
 const TITLES = { 
   dashboard:'Dashboard', 
@@ -2224,8 +2275,21 @@ let cOrders, cPago, cTop, cCats;
 async function fetchFromSupabase(tabla, opciones = {}) {
   let url = `${SUPABASE_URL}/rest/v1/${tabla}`;
   
-  if (opciones.select) url += `?select=${opciones.select}`;
-  if (opciones.filter) url += `${opciones.select ? '&' : '?'}${opciones.filter}`;
+  // Agregar automáticamente el filtro de store_id a todas las tablas del inquilino
+  const tenantTables = ['products', 'company_settings', 'categories', 'pickups'];
+  let tenantFilter = '';
+  if (tenantTables.includes(tabla)) {
+    tenantFilter = `store_id=eq.${encodeURIComponent(STORE_ID)}`;
+  }
+  
+  let queryParts = [];
+  if (opciones.select) queryParts.push(`select=${opciones.select}`);
+  if (opciones.filter) queryParts.push(opciones.filter);
+  if (tenantFilter) queryParts.push(tenantFilter);
+  
+  if (queryParts.length > 0) {
+    url += '?' + queryParts.join('&');
+  }
 
   try {
     const response = await fetch(url, {
@@ -2244,6 +2308,15 @@ async function fetchFromSupabase(tabla, opciones = {}) {
 }
 
 async function postToSupabase(tabla, data) {
+  const tenantTables = ['products', 'company_settings', 'categories', 'pickups'];
+  if (tenantTables.includes(tabla)) {
+    if (Array.isArray(data)) {
+      data.forEach(item => { item.store_id = STORE_ID; });
+    } else if (typeof data === 'object' && data !== null) {
+      data.store_id = STORE_ID;
+    }
+  }
+
   try {
     const response = await fetch(`${SUPABASE_URL}/rest/v1/${tabla}`, {
       method: 'POST',
@@ -2275,7 +2348,16 @@ function supabaseIdFilter(id) {
 
 async function updateInSupabase(tabla, id, data) {
   try {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/${tabla}?${supabaseIdFilter(id)}`, {
+    let url = `${SUPABASE_URL}/rest/v1/${tabla}?${supabaseIdFilter(id)}`;
+    const tenantTables = ['products', 'company_settings', 'categories', 'pickups'];
+    if (tenantTables.includes(tabla)) {
+      url += `&store_id=eq.${encodeURIComponent(STORE_ID)}`;
+      if (typeof data === 'object' && data !== null) {
+        data.store_id = STORE_ID;
+      }
+    }
+
+    const response = await fetch(url, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -2300,7 +2382,13 @@ async function updateInSupabase(tabla, id, data) {
 
 async function deleteFromSupabase(tabla, id) {
   try {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/${tabla}?${supabaseIdFilter(id)}`, {
+    let url = `${SUPABASE_URL}/rest/v1/${tabla}?${supabaseIdFilter(id)}`;
+    const tenantTables = ['products', 'company_settings', 'categories', 'pickups'];
+    if (tenantTables.includes(tabla)) {
+      url += `&store_id=eq.${encodeURIComponent(STORE_ID)}`;
+    }
+
+    const response = await fetch(url, {
       method: 'DELETE',
       headers: {
         'apikey': SUPABASE_KEY,
@@ -2512,7 +2600,7 @@ async function loadSheet() {
     products = remote.map(mapSupabaseRowToLocal);
 
     // Cargar datos de banners desde Supabase (company_settings)
-    const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings`, {
+    const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
       headers: {
         'apikey': SUPABASE_KEY,
         'Authorization': `Bearer ${SUPABASE_KEY}`
@@ -3210,7 +3298,7 @@ let supabaseCategories = []; // categorías cargadas desde Supabase
 
 async function loadCategories() {
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/categories?active=eq.true&order=display_order.asc`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/categories?store_id=eq.${encodeURIComponent(STORE_ID)}&active=eq.true&order=display_order.asc`, {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -5189,7 +5277,7 @@ async function savePickup() {
 async function deletePickup(id) {
   if (!confirm('¿Seguro que querés eliminar este repartidor?')) return;
   try {
-    await fetch(`${SUPABASE_URL}/rest/v1/pickups?id=eq.${id}`, {
+    await fetch(`${SUPABASE_URL}/rest/v1/pickups?id=eq.${id}&store_id=eq.${encodeURIComponent(STORE_ID)}`, {
       method: 'DELETE',
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
@@ -5206,7 +5294,7 @@ async function loadPickupsList() {
   tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--silver);">Cargando repartidores...</td></tr>';
   
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/pickups?order=id.asc`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/pickups?store_id=eq.${encodeURIComponent(STORE_ID)}&order=id.asc`, {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -5250,7 +5338,7 @@ async function loadPickupsList() {
 }
 
 async function loadBannersConfig() {
-  const bannerData = JSON.parse(localStorage.getItem('storeapp_banners') || '{}');
+  const bannerData = JSON.parse(localStorage.getItem(`storeapp_banners_${STORE_ID}`) || localStorage.getItem('storeapp_banners') || '{}');
   const b1 = bannerData.banner1 || {};
   const b2 = bannerData.banner2 || {};
   
@@ -5265,7 +5353,7 @@ async function loadBannersConfig() {
   const b2Cat = document.getElementById('banner2-cat');
   
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/categories?order=display_order.asc`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/categories?store_id=eq.${encodeURIComponent(STORE_ID)}&order=display_order.asc`, {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
     if (res.ok) {
@@ -5345,7 +5433,7 @@ async function saveBannersConfig() {
     banner1: { label: b1Label, title: b1Title, img: b1Img, cat: b1Cat },
     banner2: { label: b2Label, title: b2Title, img: b2Img, cat: b2Cat }
   };
-  localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
+  localStorage.setItem(`storeapp_banners_${STORE_ID}`, JSON.stringify(bannerData));
   
   const statusEl = document.getElementById('banners-status');
   statusEl.style.color = 'var(--silver)';
@@ -5357,7 +5445,7 @@ async function saveBannersConfig() {
       banner2_label: b2Label, banner2_title: b2Title, banner2_img: b2Img, banner2_cat: b2Cat
     };
 
-    const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings`, {
+    const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
 
@@ -5406,10 +5494,21 @@ function addFaqItem(q = '', a = '') {
   list.appendChild(div);
 }
 
-function applyRubro(tipo) {
+async function applyRubro(tipo) {
   if (!confirm('⚠️ ¡Atención! Al aplicar una plantilla se sobrescribirán tus productos y categorías de prueba. ¿Estás seguro de continuar?')) return;
   
-  let cfg = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+  // Mapeamos el rubro a un nuevo store_id para evitar pisar otros rubros
+  const new_store_id = tipo === 'kiosco' ? 'kiosco' : tipo; // 'ferreteria', 'kiosco', 'gastronomia', 'electronica'
+  
+  let cfg = {
+    name: 'FerreApp',
+    emoji: '🛠️',
+    color: '#D72638',
+    theme: 'dark',
+    font: 'Barlow Condensed',
+    fontBody: 'Barlow',
+    wapp: '5491141819344'
+  };
   let cats = [];
   let prods = [];
   
@@ -5423,10 +5522,10 @@ function applyRubro(tipo) {
       { id: '3', name: 'Pintura', icon: '🎨', active: true }
     ];
     prods = [
-      { id: 'p1', cat: '1', name: 'Taladro Percutor 500W', price: 45000, desc: 'Ideal para uso doméstico', stock: 5, active: true },
-      { id: 'p2', cat: '2', name: 'Cable Taller 2x1.5 (10m)', price: 12000, desc: 'Rollo x 10 metros normalizado', stock: 12, active: true }
+      { id: 'p1', cat: '1', name: 'Taladro Percutor 500W', price: 45000, desc: 'Ideal para uso doméstico', emoji: '🔌', stock: 5, active: true },
+      { id: 'p2', cat: '2', name: 'Cable Taller 2x1.5 (10m)', price: 12000, desc: 'Rollo x 10 metros normalizado', emoji: '🔌', stock: 12, active: true }
     ];
-  } else if (tipo === 'kiosco') {
+  } else if (tipo === 'kiosco' || tipo === 'kiosco') {
     cfg.name = 'MaxiKiosco El Sol';
     cfg.emoji = '🏪';
     cfg.color = '#F39C12'; // Naranja
@@ -5436,8 +5535,8 @@ function applyRubro(tipo) {
       { id: '3', name: 'Snacks', icon: '🍿', active: true }
     ];
     prods = [
-      { id: 'p1', cat: '1', name: 'Coca Cola 2.25L', price: 2500, desc: 'Línea retornable', stock: 24, active: true },
-      { id: 'p2', cat: '2', name: 'Alfajor Triple', price: 900, desc: 'Sabor chocolate', stock: 50, active: true }
+      { id: 'p1', cat: '1', name: 'Coca Cola 2.25L', price: 2500, desc: 'Línea retornable', emoji: '🥤', stock: 24, active: true },
+      { id: 'p2', cat: '2', name: 'Alfajor Triple', price: 900, desc: 'Sabor chocolate', emoji: '🍫', stock: 50, active: true }
     ];
   } else if (tipo === 'gastronomia') {
     cfg.name = 'Burger House';
@@ -5449,8 +5548,8 @@ function applyRubro(tipo) {
       { id: '3', name: 'Bebidas', icon: '🥤', active: true }
     ];
     prods = [
-      { id: 'p1', cat: '1', name: 'Doble Cheddar Bacon', price: 8500, desc: 'Medallones 120g, cheddar, panceta crocante', stock: 100, active: true },
-      { id: 'p2', cat: '2', name: 'Papas con Cheddar', price: 4000, desc: 'Porción grande', stock: 100, active: true }
+      { id: 'p1', cat: '1', name: 'Doble Cheddar Bacon', price: 8500, desc: 'Medallones 120g, cheddar, panceta crocante', emoji: '🍔', stock: 100, active: true },
+      { id: 'p2', cat: '2', name: 'Papas con Cheddar', price: 4000, desc: 'Porción grande', emoji: '🍟', stock: 100, active: true }
     ];
   } else if (tipo === 'electronica') {
     cfg.name = 'Electro Store';
@@ -5462,17 +5561,121 @@ function applyRubro(tipo) {
       { id: '3', name: 'Gaming', icon: '🎮', active: true }
     ];
     prods = [
-      { id: 'p1', cat: '1', name: 'iPhone 13 128GB', price: 900000, desc: 'Cerrado en caja, garantía oficial', stock: 2, active: true },
-      { id: 'p2', cat: '2', name: 'Auriculares Inalámbricos', price: 25000, desc: 'Bluetooth 5.0 con cancelación de ruido', stock: 15, active: true }
+      { id: 'p1', cat: '1', name: 'iPhone 13 128GB', price: 900000, desc: 'Cerrado en caja, garantía oficial', emoji: '📱', stock: 2, active: true },
+      { id: 'p2', cat: '2', name: 'Auriculares Inalámbricos', price: 25000, desc: 'Bluetooth 5.0 con cancelación de ruido', emoji: '🎧', stock: 15, active: true }
     ];
   }
+
+  showToast('Iniciando importación en Supabase...', 'info');
   
-  localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
-  localStorage.setItem('storeapp_categories', JSON.stringify(cats));
-  localStorage.setItem('storeapp_local_products', JSON.stringify(prods));
-  
-  showToast('Plantilla aplicada correctamente. Refrescando...', 'success');
-  setTimeout(() => window.location.reload(), 1500);
+  try {
+    // 1. Limpiar e importar categorías en Supabase
+    await fetch(`${SUPABASE_URL}/rest/v1/categories?store_id=eq.${new_store_id}`, {
+      method: 'DELETE',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    
+    const dbCats = cats.map(c => ({
+      name: c.name,
+      emoji: c.icon,
+      display_order: parseInt(c.id),
+      active: true,
+      store_id: new_store_id
+    }));
+    
+    await fetch(`${SUPABASE_URL}/rest/v1/categories`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      },
+      body: JSON.stringify(dbCats)
+    });
+
+    // 2. Limpiar e importar productos en Supabase
+    await fetch(`${SUPABASE_URL}/rest/v1/products?store_id=eq.${new_store_id}`, {
+      method: 'DELETE',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    
+    const catMap = {};
+    cats.forEach(c => { catMap[c.id] = c.name; });
+    
+    const dbProds = prods.map(p => ({
+      nombre: p.name,
+      precio: p.price,
+      stock: p.stock ?? 0,
+      categoria: catMap[p.cat] || 'General',
+      emoji: p.emoji || '📦',
+      detalles: p.desc || '',
+      oculto: false,
+      store_id: new_store_id
+    }));
+    
+    await fetch(`${SUPABASE_URL}/rest/v1/products`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      },
+      body: JSON.stringify(dbProds)
+    });
+
+    // 3. Limpiar e importar banners en Supabase (company_settings)
+    await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${new_store_id}`, {
+      method: 'DELETE',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    
+    const defaultSettings = {
+      business_name: cfg.name,
+      primary_color: cfg.color,
+      secondary_color: cfg.color,
+      banner1_label: 'NUEVO INGRESO',
+      banner1_title: 'Ver novedades del rubro',
+      banner1_img: '',
+      banner1_cat: cats[0]?.name || '',
+      banner2_label: 'OFERTAS',
+      banner2_title: 'Imperdibles de la semana',
+      banner2_img: '',
+      banner2_cat: cats[1]?.name || '',
+      store_id: new_store_id
+    };
+    
+    await fetch(`${SUPABASE_URL}/rest/v1/company_settings`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      },
+      body: JSON.stringify(defaultSettings)
+    });
+
+    // 4. Guardar configuraciones en localStorage (específicas de la nueva tienda)
+    localStorage.setItem(`storeapp_cfg_${new_store_id}`, JSON.stringify(cfg));
+    localStorage.setItem(`storeapp_categories_${new_store_id}`, JSON.stringify(cats));
+    localStorage.setItem(`storeapp_local_products_${new_store_id}`, JSON.stringify(prods));
+    
+    // Cambiar la sesión activa de tienda
+    localStorage.setItem('storeapp_store_id', new_store_id);
+    
+    // Borrar la bandera de anulación local para forzar carga limpia de Supabase
+    localStorage.removeItem(`storeapp_abm_active_${new_store_id}`);
+
+    showToast('Plantilla cargada en Supabase correctamente. Redireccionando...', 'success');
+    
+    // Redireccionar al dashboard con el parámetro del nuevo store
+    setTimeout(() => {
+      window.location.search = `?store=${new_store_id}`;
+    }, 1500);
+
+  } catch(e) {
+    showToast('Error al importar la plantilla: ' + e.message, 'error');
+    console.error(e);
+  }
 }
 
 function loadPages() {
