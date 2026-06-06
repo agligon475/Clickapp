@@ -164,7 +164,8 @@
         }
 
         .slide {
-            width: 100%;
+            width: 33.333%;
+            flex-shrink: 0;
             min-height: 350px;
             display: flex;
             flex-direction: column;
@@ -258,8 +259,14 @@
         .bg-white-section { background-color: #ffffff; }
         .diff-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        @media (min-width: 576px) {
+            .diff-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 2rem;
+            }
         }
         .diff-card {
             padding: 2.5rem;
@@ -346,7 +353,90 @@
         .btn-dashboard:hover { background-color: rgba(255, 255, 255, 0.1); border-color: var(--brand-tertiary); transform: translateY(-3px); }
 
         footer { text-align: center; padding: 2.5rem; color: var(--text-muted); font-size: 0.9rem; background: #1e110e; }
-        @media (max-width: 768px) { .hero h1 { font-size: 2.2rem; } section { padding: 4rem 1rem; } }
+        @media (max-width: 768px) {
+            .hero h1 { 
+                font-size: 2.2rem; 
+            }
+            .hero p {
+                font-size: 1.1rem;
+                padding: 0 0.5rem;
+            }
+            section { 
+                padding: 4rem 1rem; 
+            }
+            .section-title {
+                margin-bottom: 2.5rem;
+            }
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            .diff-card {
+                padding: 1.75rem 1.5rem;
+            }
+            .price-card {
+                padding: 2.5rem 1.75rem;
+            }
+            .price-card.featured {
+                margin-top: 1rem;
+            }
+            .cta-container {
+                padding: 2.5rem 1.5rem;
+                border-radius: 20px;
+            }
+            .cta-container .logo-img {
+                max-width: 90%;
+                margin-bottom: 2rem;
+            }
+            .btn {
+                padding: 14px 20px;
+                font-size: 1rem;
+                border-radius: 12px;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero h1 { 
+                font-size: 1.8rem; 
+            }
+            .hero-logo {
+                max-width: 280px;
+                margin-bottom: 1.5rem;
+            }
+            .slider-arrow {
+                width: 34px;
+                height: 34px;
+                font-size: 1rem;
+            }
+            .arrow-left { left: 8px; }
+            .arrow-right { right: 8px; }
+            .slide {
+                padding: 1.5rem 1rem;
+                min-height: 300px;
+            }
+            .slide-placeholder {
+                font-size: 3rem;
+                margin-bottom: 0.75rem;
+            }
+            .slide h5 {
+                font-size: 1.1rem;
+            }
+            .slide p {
+                font-size: 0.9rem;
+            }
+            .price-amount {
+                font-size: 2.5rem;
+                margin: 1rem 0;
+            }
+            .price-card {
+                padding: 2rem 1.25rem;
+            }
+            .cta-container {
+                padding: 2rem 1rem;
+                border-radius: 16px;
+            }
+            footer {
+                padding: 2rem 1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -530,12 +620,12 @@
             updateSlider();
         }
 
-        // --- LOGICA CANVAS PARTICULAS (90 NODOS CON TAMAÑO VARIABLE Y NEXOS) ---
+        // --- LOGICA CANVAS PARTICULAS (DINÁMICAS PARA RENDIMIENTO Y NEXOS) ---
         const canvas = document.getElementById('canvas-connections');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        const particleCount = 90; // Más cantidad
-        const connectionDistance = 115;
+        const particleCount = window.innerWidth < 768 ? 40 : 90; // Menos partículas en móvil para rendimiento
+        const connectionDistance = window.innerWidth < 768 ? 95 : 115; // Distancia adaptada para pantallas chicas
 
         function resizeCanvas() {
             canvas.width = canvas.offsetWidth;

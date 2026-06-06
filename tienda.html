@@ -317,13 +317,46 @@ a.logo{
 /* ── PRODUCTS GRID ──────────────────────────────── */
 .grid{
   display:grid;
-  grid-template-columns:1fr;
-  gap:14px;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
   margin-bottom:40px;
+}
+@media(min-width:480px){
+  .grid{
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+  }
 }
 @media(min-width:768px){
   .grid{
     grid-template-columns:repeat(4,1fr);
+  }
+}
+
+@media(max-width:576px){
+  .topbar{
+    flex-wrap:wrap;
+    height:auto;
+    padding:10px 16px;
+    gap:10px;
+  }
+  .search-wrap{
+    order:3;
+    flex:0 0 100%;
+    max-width:100%;
+    margin-top:4px;
+  }
+  .cart-btn{
+    margin-left:auto;
+  }
+  .product-name{
+    font-size:14px;
+  }
+  .product-price{
+    font-size:18px;
+  }
+  .product-body{
+    padding:8px 10px 10px;
   }
 }
 
