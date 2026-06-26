@@ -15,18 +15,18 @@ function Get-Emoji([int]$code) {
 function Clear-Store([string]$storeId) {
     Write-Host "Limpiando $storeId..."
     try {
-        $null = Invoke-RestMethod -Uri "$SUPABASE_URL/rest/v1/categories?store_id=eq.$storeId" -Method Delete -Headers $headers -ErrorAction Stop
+        # Delete products FIRST to avoid foreign key conflicts
         $null = Invoke-RestMethod -Uri "$SUPABASE_URL/rest/v1/products?store_id=eq.$storeId" -Method Delete -Headers $headers -ErrorAction Stop
-        $null = Invoke-RestMethod -Uri "$SUPABASE_URL/rest/v1/company_settings?store_id=eq.$storeId" -Method Delete -Headers $headers -ErrorAction Stop
+        $null = Invoke-RestMethod -Uri "$SUPABASE_URL/rest/v1/categories?store_id=eq.$storeId" -Method Delete -Headers $headers -ErrorAction Stop
     } catch {
-        Write-Warning "Fallo al limpiar $storeId"
+        Write-Warning "Fallo al limpiar productos/categorias para $storeId"
     }
 }
 
 function Insert-Store([string]$storeId, $cfg, $cats, $prods) {
     Write-Host "Configurando $storeId..."
     
-    # 1. Company Settings
+    # 1. Company Settings (Upsert using GET + POST/PATCH to avoid DELETE RLS errors)
     if ($cfg) {
         $settings = @{
             business_name = $cfg.name
@@ -43,7 +43,22 @@ function Insert-Store([string]$storeId, $cfg, $cats, $prods) {
             store_id = $storeId
         }
         $body = $settings | ConvertTo-Json -Depth 5
-        $null = Invoke-RestMethod -Uri "$SUPABASE_URL/rest/v1/company_settings" -Method Post -Headers $headers -Body $body
+        
+        # Check if settings already exist
+        try {
+            $existing = Invoke-RestMethod -Uri "$SUPABASE_URL/rest/v1/company_settings?store_id=eq.$storeId" -Method Get -Headers $headers -ErrorAction Stop
+            if ($existing.Count -gt 0) {
+                # Update existing
+                $null = Invoke-RestMethod -Uri "$SUPABASE_URL/rest/v1/company_settings?store_id=eq.$storeId" -Method Patch -Headers $headers -Body $body -ErrorAction Stop
+                Write-Host "Settings actualizados para $storeId"
+            } else {
+                # Insert new
+                $null = Invoke-RestMethod -Uri "$SUPABASE_URL/rest/v1/company_settings" -Method Post -Headers $headers -Body $body -ErrorAction Stop
+                Write-Host "Settings creados para $storeId"
+            }
+        } catch {
+            Write-Warning "Error al gestionar company_settings"
+        }
     }
 
     # 2. Categories
