@@ -3068,12 +3068,21 @@
         <div
           style="margin-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
           <span id="abm-count" style="font-size:11px;color:var(--silver);"></span>
-          <div style="display:flex;gap:12px;">
-            <button class="sb-btn" style="background:#444;border:none;color:#fff;padding:12px 24px;font-size:14px;"
-              onclick="exportProducts()">
-              Exportar CSV
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <button class="sb-btn" style="background:#2ecc71;border:none;color:#fff;padding:12px 24px;font-size:14px;width:auto;"
+              onclick="loadDemoProductsToABM()">
+              <i class="bi bi-cloud-arrow-down"></i> Cargar datos de demostración al ABM
             </button>
-            <button class="abm-btn-new" onclick="saveLocalProducts(this)" style="padding:12px 24px;font-size:14px;">
+            <button class="sb-btn" style="background:#555;border:none;color:#fff;padding:12px 24px;font-size:14px;width:auto;"
+              onclick="document.getElementById('abm-csv-file').click()">
+              <i class="bi bi-upload"></i> Cargar ABM mediante CSV
+            </button>
+            <input type="file" id="abm-csv-file" accept=".csv" style="display:none;" onchange="importProductsFromCSV(this)"/>
+            <button class="sb-btn" style="background:#444;border:none;color:#fff;padding:12px 24px;font-size:14px;width:auto;"
+              onclick="exportProducts()">
+              <i class="bi bi-download"></i> Descargar ABM
+            </button>
+            <button class="abm-btn-new" onclick="saveLocalProducts(this)" style="padding:12px 24px;font-size:14px;width:auto;">
               <i class="bi bi-floppy2"></i> Guardar configuración
             </button>
           </div>
@@ -4857,6 +4866,131 @@
       a.href = URL.createObjectURL(blob);
       a.download = 'productos.csv';
       a.click();
+    }
+
+    function loadDemoProductsToABM() {
+      if (!confirm('¿Estás seguro de que quieres cargar los datos de demostración en el ABM? Esto reemplazará tus productos en memoria.')) return;
+      const rubro = document.getElementById('cfg-store-rubro')?.value || JSON.parse(localStorage.getItem('storeapp_cfg') || '{}').rubro || 'ferreteria';
+      let demoProds = [];
+      if (rubro === 'ferreteria') {
+        demoProds = [
+          { id: 'p1', name: 'Taladro Percutor 500W', price: 45000, stock: 5, cat: 'Herramientas', emoji: '🔨', desc: 'Ideal para uso doméstico. Mandril 13mm.' },
+          { id: 'p2', name: 'Amoladora Angular 115mm', price: 38000, stock: 3, cat: 'Herramientas', emoji: '🔧', desc: '800W de potencia. Incluye disco.' },
+          { id: 'p3', name: 'Cable Taller 2x1.5 (10m)', price: 12000, stock: 12, cat: 'Electricidad', emoji: '🔌', desc: 'Rollo x 10 metros normalizado.' },
+          { id: 'p4', name: 'Cinta Aisladora 3M', price: 1500, stock: 50, cat: 'Electricidad', emoji: '⚡', desc: '19mm x 20m. Color negro.' },
+          { id: 'p5', name: 'Látex Interior Blanco 20L', price: 28000, stock: 8, cat: 'Pintura', emoji: '🎨', desc: 'Blanco mate. Alto poder cubritivo.' },
+          { id: 'p6', name: 'Cemento Loma Negra 50kg', price: 7500, stock: 100, cat: 'Construcción', emoji: '🧱', desc: 'Cemento portland normal.' }
+        ];
+      } else if (rubro === 'kiosco') {
+        demoProds = [
+          { id: 'p1', name: 'Coca Cola 2.25L', price: 2500, stock: 24, cat: 'Bebidas', emoji: '🥤', desc: 'Sabor original' },
+          { id: 'p2', name: 'Agua Mineral 1.5L', price: 900, stock: 30, cat: 'Bebidas', emoji: '💧', desc: 'Sin gas' },
+          { id: 'p3', name: 'Cerveza Quilmes 1L', price: 1800, stock: 40, cat: 'Cervezas', emoji: '🍺', desc: 'Retornable bien fría' },
+          { id: 'p4', name: 'Gomitas Mogul Sueltas 100g', price: 1200, stock: 20, cat: 'Golosinas', emoji: '🍬', desc: 'Sabores frutales surtidos' },
+          { id: 'p5', name: 'Alfajor Triple', price: 900, stock: 50, cat: 'Golosinas', emoji: '🍫', desc: 'Sabor chocolate' },
+          { id: 'p6', name: 'Papas Lays Clásicas 140g', price: 1500, stock: 15, cat: 'Snacks', emoji: '🍿', desc: 'Paquete grande' }
+        ];
+      } else if (rubro === 'gastronomia') {
+        demoProds = [
+          { id: 'p1', name: 'Doble Cheddar Bacon', price: 8500, stock: 100, cat: 'Hamburguesas', emoji: '🍔', desc: 'Doble medallón 120g, doble cheddar, panceta crocante y salsa de la casa.' },
+          { id: 'p2', name: 'Onion Smash', price: 7900, stock: 100, cat: 'Hamburguesas', emoji: '🍔', desc: 'Medallón 150g, cebolla crispy, queso provolone.' },
+          { id: 'p3', name: 'Papas Fritas Grandes', price: 4000, stock: 100, cat: 'Papas & Snacks', emoji: '🍟', desc: 'Porción grande para compartir' },
+          { id: 'p4', name: 'Nuggets de Pollo (x10)', price: 4500, stock: 50, cat: 'Papas & Snacks', emoji: '🍗', desc: 'Acompañados con salsa barbacoa' },
+          { id: 'p5', name: 'Lata Coca Cola 354ml', price: 1200, stock: 200, cat: 'Bebidas', emoji: '🥤', desc: 'Bien fría' },
+          { id: 'p6', name: 'Chocotorta', price: 3500, stock: 15, cat: 'Postres', emoji: '🍰', desc: 'Porción individual casera' }
+        ];
+      } else {
+        demoProds = [
+          { id: 'p1', name: 'iPhone 13 128GB', price: 900000, stock: 5, cat: 'Smartphones', emoji: '📱', desc: 'Cerrado en caja, garantía oficial Apple' },
+          { id: 'p2', name: 'Samsung Galaxy S23', price: 850000, stock: 4, cat: 'Smartphones', emoji: '📱', desc: 'Color negro, 256GB' },
+          { id: 'p3', name: 'AirPods Pro 2', price: 250000, stock: 5, cat: 'Auriculares', emoji: '🎧', desc: 'Cancelación de ruido activa' },
+          { id: 'p4', name: 'Cargador Rápido 20W', price: 15000, stock: 30, cat: 'Accesorios', emoji: '🔌', desc: 'Ficha tipo C' },
+          { id: 'p5', name: 'Funda Silicona', price: 8000, stock: 50, cat: 'Accesorios', emoji: '🛡️', desc: 'Consultar colores por WhatsApp' },
+          { id: 'p6', name: 'Joystick PS5 DualSense', price: 120000, stock: 8, cat: 'Gaming', emoji: '🎮', desc: 'Original en caja sellada' }
+        ];
+      }
+
+      localProducts = demoProds.map(dp => ({
+        id: dp.id,
+        codigo: '',
+        name: dp.name,
+        cat: dp.cat,
+        marca: '',
+        price: dp.price,
+        stock: dp.stock,
+        emoji: dp.emoji,
+        origen: '',
+        detalle: dp.desc,
+        pills: '',
+        img: '',
+        img2: '',
+        img3: '',
+        oculto: false
+      }));
+
+      renderABM();
+      showToastDash('Datos de demostración cargados en memoria. Hacé click en "Guardar configuración" para guardar.');
+    }
+
+    function importProductsFromCSV(input) {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const text = e.target.result;
+        try {
+          const rows = parseCSV(text);
+          if (rows.length < 2) throw new Error('El archivo CSV está vacío o no tiene la estructura correcta.');
+          
+          const headers = rows[0].map(h => h.toLowerCase().trim());
+          const idxId = headers.indexOf('id');
+          const idxNombre = headers.findIndex(h => ['nombre', 'name', 'producto', 'articulo'].includes(h));
+          const idxPrecio = headers.findIndex(h => ['precio', 'price', 'valor'].includes(h));
+          const idxStock = headers.findIndex(h => ['stock', 'cantidad', 'existencia'].includes(h));
+          const idxCategoria = headers.findIndex(h => ['categoria', 'category', 'rubro'].includes(h));
+          const idxEmoji = headers.findIndex(h => ['emoji', 'icono'].includes(h));
+          
+          if (idxNombre === -1 || idxPrecio === -1) {
+            throw new Error('El CSV debe contener al menos las columnas "nombre" y "precio".');
+          }
+          
+          const imported = [];
+          for (let i = 1; i < rows.length; i++) {
+            const row = rows[i];
+            if (row.length < 2 || !row[idxNombre]) continue;
+            
+            imported.push({
+              id: idxId !== -1 && row[idxId] ? row[idxId].trim() : 'p_' + Math.random().toString(36).substr(2, 9),
+              codigo: '',
+              name: row[idxNombre].trim(),
+              cat: idxCategoria !== -1 && row[idxCategoria] ? row[idxCategoria].trim() : 'General',
+              marca: '',
+              price: parseFloat(row[idxPrecio]) || 0,
+              stock: idxStock !== -1 ? parseInt(row[idxStock]) || 0 : 0,
+              emoji: idxEmoji !== -1 && row[idxEmoji] ? row[idxEmoji].trim() : '📦',
+              origen: '',
+              detalle: '',
+              pills: '',
+              img: '',
+              img2: '',
+              img3: '',
+              oculto: false
+            });
+          }
+          
+          if (imported.length === 0) throw new Error('No se encontraron productos válidos para importar.');
+          
+          if (confirm(`¿Estás seguro de que deseas importar ${imported.length} productos? Esto reemplazará tu lista actual en memoria.`)) {
+            localProducts = imported;
+            renderABM();
+            showToastDash('CSV cargado con éxito. Hacé click en "Guardar configuración" para persistir los cambios.');
+          }
+        } catch (err) {
+          alert('Error al importar CSV: ' + err.message);
+        }
+        input.value = '';
+      };
+      reader.readAsText(file);
     }
 
     /* ═══════════════════════════════════════════ MODAL */
