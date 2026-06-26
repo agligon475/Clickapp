@@ -3056,10 +3056,8 @@
                 <th style="width:36px;"></th>
                 <th>Nombre</th>
                 <th>Categoría</th>
-                <th>Precio</th>
-                <th>Stock</th>
-                <th>Estado</th>
-                <th style="width:90px;">Acciones</th>
+                <th>Estado visible</th>
+                <th style="width:120px;">Acciones</th>
               </tr>
             </thead>
             <tbody id="abm-tbody"></tbody>
@@ -4758,37 +4756,27 @@
       if (elActive) elActive.textContent = activeCount;
       if (elInactive) elInactive.textContent = inactiveCount;
 
-      const sc = s => s === 0 ? 'badge-red' : s < 5 ? 'badge-amber' : 'badge-green';
-      const sl = s => s === 0 ? 'Sin stock' : s < 5 ? `Bajo: ${s}` : `${s} uds.`;
-
       document.getElementById('abm-tbody').innerHTML = filtered.map(p => `
     <tr style="${p.hidden ? 'opacity:.4;' : ''}">
       <td style="font-size:20px;text-align:center;">${p.emoji || '📦'}</td>
       <td>
         <div style="font-weight:600;color:var(--white);">${p.name}</div>
-        ${p.hidden ? '<span style="font-size:9px;color:var(--silver);">Oculto en tienda</span>' : ''}
       </td>
       <td><span class="badge badge-blue">${p.cat || '—'}</span></td>
-      <td style="font-family:var(--font-h);font-size:15px;font-weight:700;">$${p.price.toLocaleString('es-AR')}</td>
-      <td><span class="badge ${sc(p.stock)}">${sl(p.stock)}</span></td>
       <td>
-        <div style="display:flex;align-items:center;gap:4px;">
-          <input type="number" value="${p.stock}" min="0"
-            style="width:60px;background:var(--iron);border:1px solid var(--zinc);border-radius:5px;padding:3px 6px;color:var(--white);font-size:12px;text-align:center;"
-            onchange='quickStock(${JSON.stringify(p.id)},this.value)'
-            title="Editar stock rápido"/>
-        </div>
+        <span class="badge ${p.hidden ? 'badge-red' : 'badge-green'}">${p.hidden ? 'Oculto' : 'Visible'}</span>
       </td>
       <td>
         <div style="display:flex;gap:4px;">
           <button type="button" class="abm-action edit" onclick='openModal(${JSON.stringify(p.id)})' title="Editar"><i class="bi bi-pencil"></i></button>
+          <button type="button" class="abm-action clone" onclick='cloneProduct(${JSON.stringify(p.id)})' style="background:var(--zinc);border:1px solid var(--zinc);color:var(--fog);" title="Clonar"><i class="bi bi-copy"></i></button>
           <button type="button" class="abm-action toggle" onclick='toggleHidden(${JSON.stringify(p.id)})' title="${p.hidden ? 'Mostrar' : 'Ocultar'}">
             <i class="bi bi-eye${p.hidden ? '' : '-slash'}"></i>
           </button>
           <button type="button" class="abm-action del" onclick='deleteProduct(${JSON.stringify(p.id)})' title="Eliminar"><i class="bi bi-trash"></i></button>
         </div>
       </td>
-    </tr>`).join('') || `<tr><td colspan="7" style="text-align:center;color:var(--silver);padding:30px;">No se encontraron productos</td></tr>`;
+    </tr>`).join('') || `<tr><td colspan="5" style="text-align:center;color:var(--silver);padding:30px;">No se encontraron productos</td></tr>`;
 
       document.getElementById('abm-count').textContent =
         `Mostrando ${filtered.length} de ${localProducts.length} productos`;
@@ -4796,7 +4784,21 @@
 
     function quickStock(id, val) {
       const p = localProducts.find(x => String(x.id) === String(id));
-      if (p) { p.stock = Math.max(0, parseInt(val) || 0); renderABM(); }
+      if (p) { p.stock = Math.max(0, parseFloat(val) || 0); renderABM(); }
+    }
+
+    function cloneProduct(id) {
+      const p = localProducts.find(x => String(x.id) === String(id));
+      if (!p) return;
+      const clone = {
+        ...p,
+        id: 'clone_' + Math.random().toString(36).substr(2, 9),
+        name: p.name + ' (Copia)',
+        hidden: false
+      };
+      localProducts.push(clone);
+      renderABM();
+      showToastDash('Producto clonado. Acordate de guardar los cambios.');
     }
 
     function toggleHidden(id) {
@@ -4833,9 +4835,14 @@
 
       let syncErr = 0;
       for (const p of localProducts) {
-        if (!isSupabaseRowId(p.id)) continue;
         try {
-          await updateInSupabase('products', p.id, mapLocalProductToSupabaseRow(p));
+          if (isSupabaseRowId(p.id)) {
+            await updateInSupabase('products', p.id, mapLocalProductToSupabaseRow(p));
+          } else {
+            const inserted = await postToSupabase('products', mapLocalProductToSupabaseRow(p));
+            const row0 = Array.isArray(inserted) ? inserted[0] : inserted;
+            if (row0 && row0.id) p.id = String(row0.id);
+          }
         } catch (e) {
           syncErr++;
           console.error('Error guardando producto ' + p.name + ':', e);
@@ -4853,12 +4860,14 @@
         }
         setTimeout(() => { syncBtn.innerHTML = orig; syncBtn.style.background = ''; }, 2200);
       }
+      // Volver a renderizar e inicializar para usar los nuevos UUIDs de Supabase
+      renderABM();
     }
 
     function exportProducts() {
-      const headers = ['id', 'nombre', 'precio', 'stock', 'categoria', 'emoji'];
+      const headers = ['id', 'nombre', 'precio', 'stock', 'categoria', 'emoji', 'oculto', 'detalles'];
       const rows = localProducts.map(p =>
-        [p.id, `"${p.name}"`, p.price, p.stock, `"${p.cat || ''}"`, p.emoji || ''].join(',')
+        [p.id, `"${p.name}"`, p.price, p.stock, `"${p.cat || ''}"`, p.emoji || '', p.hidden ? 'si' : '', `"${(p.detalle || '').replace(/"/g, '""')}"`].join(',')
       );
       const csv = [headers.join(','), ...rows].join('\n');
       const blob = new Blob([csv], { type: 'text/csv' });
@@ -4884,7 +4893,7 @@
       }
       
       let demoProds = [];
-      if (rubro === 'ferreteria') {
+      if (rubro === 'ferreteria' || rubro === 'Ferretería') {
         demoProds = [
           { id: 'p1', name: 'Taladro Percutor 500W', price: 45000, stock: 5, cat: 'Herramientas', emoji: '🔨', desc: 'Ideal para uso doméstico. Mandril 13mm.' },
           { id: 'p2', name: 'Amoladora Angular 115mm', price: 38000, stock: 3, cat: 'Herramientas', emoji: '🔧', desc: '800W de potencia. Incluye disco.' },
@@ -4893,20 +4902,20 @@
           { id: 'p5', name: 'Látex Interior Blanco 20L', price: 28000, stock: 8, cat: 'Pintura', emoji: '🎨', desc: 'Blanco mate. Alto poder cubritivo.' },
           { id: 'p6', name: 'Cemento Loma Negra 50kg', price: 7500, stock: 100, cat: 'Construcción', emoji: '🧱', desc: 'Cemento portland normal.' }
         ];
-      } else if (rubro === 'kiosco') {
+      } else if (rubro === 'kiosco' || rubro === 'Kiosco') {
         demoProds = [
           { id: 'p1', name: 'Coca Cola 2.25L', price: 2500, stock: 24, cat: 'Bebidas', emoji: '🥤', desc: 'Sabor original' },
           { id: 'p2', name: 'Agua Mineral 1.5L', price: 900, stock: 30, cat: 'Bebidas', emoji: '💧', desc: 'Sin gas' },
           { id: 'p3', name: 'Cerveza Quilmes 1L', price: 1800, stock: 40, cat: 'Cervezas', emoji: '🍺', desc: 'Retornable bien fría' },
-          { id: 'p4', name: 'Gomitas Mogul Sueltas 100g', price: 1200, stock: 20, cat: 'Golosinas', emoji: '🍬', desc: 'Sabores frutales surtidos' },
+          { id: 'p4', name: 'Gomitas Mogul Sueltas 100g', price: 1200, stock: 20.5, cat: 'Golosinas', emoji: '🍬', desc: 'Sabores frutales surtidos' },
           { id: 'p5', name: 'Alfajor Triple', price: 900, stock: 50, cat: 'Golosinas', emoji: '🍫', desc: 'Sabor chocolate' },
           { id: 'p6', name: 'Papas Lays Clásicas 140g', price: 1500, stock: 15, cat: 'Snacks', emoji: '🍿', desc: 'Paquete grande' }
         ];
-      } else if (rubro === 'gastronomia') {
+      } else if (rubro === 'gastronomia' || rubro === 'Rotisería' || rubro === 'Gastronomía') {
         demoProds = [
-          { id: 'p1', name: 'Doble Cheddar Bacon', price: 8500, stock: 100, cat: 'Hamburguesas', emoji: '🍔', desc: 'Doble medallón 120g, doble cheddar, panceta crocante y salsa de la casa.' },
+          { id: 'p1', name: 'Doble Cheddar Bacon', price: 8500, stock: 100, cat: 'Hamburguesas', emoji: '🍔', desc: 'Doble medallón 120g, cheddar, panceta crocante ||| {"variants":[{"name":"Punto de la carne","options":[{"name":"A punto","priceDelta":0},{"name":"Cocido","priceDelta":0}]},{"name":"Pan","options":[{"name":"Brioche","priceDelta":0},{"name":"Sin TACC","priceDelta":500}]}], "modifiers":[{"name":"Extras","options":[{"name":"Extra Cheddar","priceDelta":800},{"name":"Medallón Extra","priceDelta":2500}]}]}' },
           { id: 'p2', name: 'Onion Smash', price: 7900, stock: 100, cat: 'Hamburguesas', emoji: '🍔', desc: 'Medallón 150g, cebolla crispy, queso provolone.' },
-          { id: 'p3', name: 'Papas Fritas Grandes', price: 4000, stock: 100, cat: 'Papas & Snacks', emoji: '🍟', desc: 'Porción grande para compartir' },
+          { id: 'p3', name: 'Papas Fritas Grandes', price: 4000, stock: 100, cat: 'Papas & Snacks', emoji: '🍟', desc: 'Porción grande para compartir ||| {"modifiers":[{"name":"Salsas","options":[{"name":"Bañadas en Cheddar","priceDelta":1500},{"name":"Verdeo y Bacon","priceDelta":2000}]}]}' },
           { id: 'p4', name: 'Nuggets de Pollo (x10)', price: 4500, stock: 50, cat: 'Papas & Snacks', emoji: '🍗', desc: 'Acompañados con salsa barbacoa' },
           { id: 'p5', name: 'Lata Coca Cola 354ml', price: 1200, stock: 200, cat: 'Bebidas', emoji: '🥤', desc: 'Bien fría' },
           { id: 'p6', name: 'Chocotorta', price: 3500, stock: 15, cat: 'Postres', emoji: '🍰', desc: 'Porción individual casera' }
@@ -4921,7 +4930,7 @@
           { id: 'p6', name: 'Joystick PS5 DualSense', price: 120000, stock: 8, cat: 'Gaming', emoji: '🎮', desc: 'Original en caja sellada' }
         ];
       }
-
+      
       localProducts = demoProds.map(dp => ({
         id: dp.id,
         codigo: '',
@@ -4961,6 +4970,7 @@
           const idxStock = headers.findIndex(h => ['stock', 'cantidad', 'existencia'].includes(h));
           const idxCategoria = headers.findIndex(h => ['categoria', 'category', 'rubro'].includes(h));
           const idxEmoji = headers.findIndex(h => ['emoji', 'icono'].includes(h));
+          const idxDetalles = headers.findIndex(h => ['detalles', 'detalle', 'desc', 'description'].includes(h));
           
           if (idxNombre === -1 || idxPrecio === -1) {
             throw new Error('El CSV debe contener al menos las columnas "nombre" y "precio".');
@@ -4978,10 +4988,10 @@
               cat: idxCategoria !== -1 && row[idxCategoria] ? row[idxCategoria].trim() : 'General',
               marca: '',
               price: parseFloat(row[idxPrecio]) || 0,
-              stock: idxStock !== -1 ? parseInt(row[idxStock]) || 0 : 0,
+              stock: idxStock !== -1 ? parseFloat(row[idxStock]) || 0 : 0,
               emoji: idxEmoji !== -1 && row[idxEmoji] ? row[idxEmoji].trim() : '📦',
               origen: '',
-              detalle: '',
+              detalle: idxDetalles !== -1 && row[idxDetalles] ? row[idxDetalles].trim() : '',
               pills: '',
               img: '',
               img2: '',
@@ -5017,10 +5027,66 @@
       populateCatSelect(p?.cat || null);   // select con valor actual preseleccionado
       document.getElementById('m-marca').value = p?.marca || '';
       document.getElementById('m-price').value = p?.price || '';
-      document.getElementById('m-stock').value = p?.stock ?? '';
+
+      // Configuración de stock y rubros
+      const rubro = document.getElementById('cfg-store-rubro')?.value || 
+                    JSON.parse(localStorage.getItem(`storeapp_cfg_${STORE_ID}`) || localStorage.getItem('storeapp_cfg') || '{}').rubro || '';
+      
+      const stockInput = document.getElementById('m-stock');
+      if (rubro === 'kiosco' || rubro === 'Kiosco') {
+        stockInput.setAttribute('step', 'any');
+        stockInput.value = p?.stock ?? '';
+      } else {
+        stockInput.setAttribute('step', '1');
+        stockInput.value = p ? Math.round(p.stock) : '';
+      }
+
+      // Detalle y rubro gastronomia
+      let rawDetalle = p?.detalle || '';
+      let textDetalle = rawDetalle;
+      let variantsJsonStr = '';
+      let modifiersJsonStr = '';
+      
+      if (rawDetalle.includes('|||')) {
+        const parts = rawDetalle.split('|||');
+        textDetalle = parts[0].trim();
+        try {
+          const jsonOpts = JSON.parse(parts[1].trim());
+          if (jsonOpts.variants) variantsJsonStr = JSON.stringify(jsonOpts.variants, null, 2);
+          if (jsonOpts.modifiers) modifiersJsonStr = JSON.stringify(jsonOpts.modifiers, null, 2);
+        } catch (e) {
+          console.error("Error parsing JSON options from details:", e);
+        }
+      }
+
+      document.getElementById('m-detalle').value = textDetalle;
+      
+      // Mostrar u ocultar campos según rubro
+      const brandGroup = document.getElementById('m-marca')?.closest('.ctrl-group');
+      const originGroup = document.getElementById('m-origen')?.closest('.ctrl-group');
+      const barcodeGroup = document.getElementById('m-codigo')?.closest('.ctrl-group');
+      const gastronomySection = document.getElementById('m-gastronomy-section');
+      
+      if (rubro === 'gastronomia' || rubro === 'Rotisería' || rubro === 'Gastronomía') {
+        if (brandGroup) brandGroup.style.display = 'none';
+        if (originGroup) originGroup.style.display = 'none';
+        if (barcodeGroup) barcodeGroup.style.display = 'none';
+        if (gastronomySection) {
+          gastronomySection.style.display = 'block';
+          document.getElementById('m-variants-text').value = variantsJsonStr;
+          document.getElementById('m-modifiers-text').value = modifiersJsonStr;
+        }
+      } else {
+        if (brandGroup) brandGroup.style.display = 'block';
+        if (originGroup) originGroup.style.display = 'block';
+        if (barcodeGroup) barcodeGroup.style.display = 'block';
+        if (gastronomySection) gastronomySection.style.display = 'none';
+      }
+
       document.getElementById('m-emoji').value = p?.emoji || '📦';
-      document.getElementById('m-origen').value = p?.origen || '';
-      document.getElementById('m-detalle').value = p?.detalle || '';
+      if (document.getElementById('m-origen')) {
+        document.getElementById('m-origen').value = p?.origen || '';
+      }
 
       // Píldoras
       const productPills = (p?.pills || '').split(',').map(x => x.trim()).filter(x => x);
@@ -5089,10 +5155,14 @@
       const cat = document.getElementById('m-cat').value.trim();
       const marca = document.getElementById('m-marca').value.trim();
       const price = parseFloat(document.getElementById('m-price').value) || 0;
-      const stock = parseInt(document.getElementById('m-stock').value) || 0;
+      
+      const rubro = document.getElementById('cfg-store-rubro')?.value || 
+                    JSON.parse(localStorage.getItem(`storeapp_cfg_${STORE_ID}`) || localStorage.getItem('storeapp_cfg') || '{}').rubro || '';
+      
+      const stock = parseFloat(document.getElementById('m-stock').value) || 0;
       const emoji = document.getElementById('m-emoji').value.trim() || '📦';
-      const origen = document.getElementById('m-origen').value;
-      const detalle = document.getElementById('m-detalle').value.trim();
+      const origen = document.getElementById('m-origen')?.value || '';
+      let textDetalle = document.getElementById('m-detalle').value.trim();
       const img = document.getElementById('m-img').value.trim();
       const img2 = document.getElementById('m-img2').value.trim();
       const img3 = document.getElementById('m-img3').value.trim();
@@ -5102,12 +5172,39 @@
       if (!name) { alert('El nombre del producto es obligatorio.'); return; }
       if (!cat) { alert('La categoría es obligatoria. Por favor seleccioná una categoría válida.'); return; }
 
+      // Serialización de variantes/modificadores para Gastronomía
+      if (rubro === 'gastronomia' || rubro === 'Rotisería' || rubro === 'Gastronomía') {
+        const variantsVal = document.getElementById('m-variants-text').value.trim();
+        const modifiersVal = document.getElementById('m-modifiers-text').value.trim();
+        
+        let customOpts = {};
+        if (variantsVal) {
+          try {
+            customOpts.variants = JSON.parse(variantsVal);
+          } catch(e) {
+            alert('Error en formato JSON de Variantes. Revisalo.');
+            return;
+          }
+        }
+        if (modifiersVal) {
+          try {
+            customOpts.modifiers = JSON.parse(modifiersVal);
+          } catch(e) {
+            alert('Error en formato JSON de Adicionales/Extras. Revisalo.');
+            return;
+          }
+        }
+        if (Object.keys(customOpts).length > 0) {
+          textDetalle = textDetalle + ' ||| ' + JSON.stringify(customOpts);
+        }
+      }
+
       const prevEditingId = editingId;
 
       if (editingId != null && editingId !== '') {
         const p = localProducts.find(x => String(x.id) === String(editingId));
         if (p) {
-          Object.assign(p, { name, codigo, cat, marca, price, stock, emoji, origen, detalle, img, img2, img3, pills });
+          Object.assign(p, { name, codigo, cat, marca, price, stock, emoji, origen, detalle: textDetalle, img, img2, img3, pills });
           try {
             await updateInSupabase('products', editingId, mapLocalProductToSupabaseRow(p));
           } catch (e) {
@@ -5116,7 +5213,7 @@
           }
         }
       } else {
-        const draft = { name, codigo, cat, marca, price, stock, emoji, origen, detalle, img, img2, img3, pills, hidden: false };
+        const draft = { name, codigo, cat, marca, price, stock, emoji, origen, detalle: textDetalle, img, img2, img3, pills, hidden: false };
         try {
           const inserted = await postToSupabase('products', mapLocalProductToSupabaseRow(draft));
           const row0 = Array.isArray(inserted) ? inserted[0] : inserted;
@@ -7528,16 +7625,34 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           <!-- Detalle / especificaciones -->
           <div class="ctrl-group" style="grid-column:1/-1;">
             <label class="ctrl-label" style="display:flex;align-items:center;justify-content:space-between;">
-              Detalle / Especificaciones
+               Detalle / Especificaciones
               <button onclick="autoDetalle()"
                 style="font-size:10px;padding:2px 8px;background:rgba(215,38,56,.15);border:1px solid rgba(215,38,56,.3);border-radius:5px;color:var(--red);cursor:pointer;font-family:var(--font-b);">
                 <i class="bi bi-stars"></i> Generar con IA
               </button>
             </label>
             <textarea class="ctrl-input" id="m-detalle" rows="3"
-              placeholder="Ej: Disco de 184mm, 5500 RPM, motor 1400W, mango ergonómico, guía paralela incluida..."
+              placeholder="Ej: Disco de 184mm, 5500 RPM, motor 1400W..."
               style="resize:vertical;"></textarea>
             <div id="m-detalle-status" style="font-size:10px;color:var(--silver);margin-top:3px;min-height:12px;"></div>
+          </div>
+
+          <!-- Gastronomía: Opciones y Variantes -->
+          <div id="m-gastronomy-section" class="ctrl-group" style="grid-column:1/-1; display:none;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+              <div>
+                <label class="ctrl-label">Variantes (JSON)</label>
+                <textarea class="ctrl-input" id="m-variants-text" rows="4" style="font-family:monospace; font-size:11px;"
+                  placeholder='Ej: [{"name":"Punto","options":[{"name":"Jugoso","priceDelta":0},{"name":"Cocido","priceDelta":0}]}]'></textarea>
+                <div style="font-size:9px; color:var(--silver); margin-top:2px;">Define selecciones obligatorias de radio button.</div>
+              </div>
+              <div>
+                <label class="ctrl-label">Adicionales / Extras (JSON)</label>
+                <textarea class="ctrl-input" id="m-modifiers-text" rows="4" style="font-family:monospace; font-size:11px;"
+                  placeholder='Ej: [{"name":"Agregados","options":[{"name":"Cheddar","priceDelta":500},{"name":"Bacon","priceDelta":700}]}]'></textarea>
+                <div style="font-size:9px; color:var(--silver); margin-top:2px;">Define opciones opcionales con checkbox.</div>
+              </div>
+            </div>
           </div>
 
           <!-- Píldoras Promocionales -->

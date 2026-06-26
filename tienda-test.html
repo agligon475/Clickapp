@@ -1276,21 +1276,42 @@ async function loadSheet() {
     // Convertir datos de Supabase al formato esperado
     products = supabaseProducts
       .filter(p => p.nombre && p.nombre.trim())
-      .map((p, i) => ({
-        id: (p.id != null && p.id !== '') ? String(p.id) : String(i + 1),
-        name: p.nombre,
-        price: parseFloat(p.precio) || 0,
-        stock: parseInt(p.stock) || 0,
-        cat: p.categoria || 'General',
-        emoji: p.emoji || '📦',
-        img: p.img || '',
-        img2: p.img2 || '',
-        img3: p.img3 || '',
-        marca: p.marca || '',
-        detalles: p.detalles || '',
-        origen: p.origen || '',
-        pills: p.pills || ''
-      }));
+      .map((p, i) => {
+        let rawDetalles = p.detalles || '';
+        let textDetalles = rawDetalles;
+        let variants = null;
+        let modifiers = null;
+
+        if (rawDetalles.includes('|||')) {
+          const parts = rawDetalles.split('|||');
+          textDetalles = parts[0].trim();
+          try {
+            const parsedOpts = JSON.parse(parts[1].trim());
+            if (parsedOpts.variants) variants = parsedOpts.variants;
+            if (parsedOpts.modifiers) modifiers = parsedOpts.modifiers;
+          } catch (e) {
+            console.error("Error parsing JSON options in tienda loadSheet:", e);
+          }
+        }
+
+        return {
+          id: (p.id != null && p.id !== '') ? String(p.id) : String(i + 1),
+          name: p.nombre,
+          price: parseFloat(p.precio) || 0,
+          stock: parseFloat(p.stock) || 0,
+          cat: p.categoria || 'General',
+          emoji: p.emoji || '📦',
+          img: p.img || '',
+          img2: p.img2 || '',
+          img3: p.img3 || '',
+          marca: p.marca || '',
+          detalles: textDetalles,
+          origen: p.origen || '',
+          pills: p.pills || '',
+          variants: variants,
+          modifiers: modifiers
+        };
+      });
 
     // Guardar banners en localStorage (para dashboard)
     localStorage.setItem(`storeapp_banners_${STORE_ID}`, JSON.stringify(bannerData));
