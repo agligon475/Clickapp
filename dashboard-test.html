@@ -4870,7 +4870,19 @@
 
     function loadDemoProductsToABM() {
       if (!confirm('¿Estás seguro de que quieres cargar los datos de demostración en el ABM? Esto reemplazará tus productos en memoria.')) return;
-      const rubro = document.getElementById('cfg-store-rubro')?.value || JSON.parse(localStorage.getItem('storeapp_cfg') || '{}').rubro || 'ferreteria';
+      
+      let rubro = document.getElementById('cfg-store-rubro')?.value || 
+                  JSON.parse(localStorage.getItem(`storeapp_cfg_${STORE_ID}`) || localStorage.getItem('storeapp_cfg') || '{}').rubro || '';
+      
+      if (!rubro) {
+        const lowerStore = String(STORE_ID).toLowerCase();
+        if (lowerStore.includes('ferreteria') || lowerStore.includes('ferre')) rubro = 'ferreteria';
+        else if (lowerStore.includes('kiosco')) rubro = 'kiosco';
+        else if (lowerStore.includes('gastronomia') || lowerStore.includes('burger')) rubro = 'gastronomia';
+        else if (lowerStore.includes('electronica') || lowerStore.includes('electro')) rubro = 'electronica';
+        else rubro = 'ferreteria'; // Default
+      }
+      
       let demoProds = [];
       if (rubro === 'ferreteria') {
         demoProds = [
