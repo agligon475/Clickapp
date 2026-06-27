@@ -7220,7 +7220,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         ];
       }
 
-      showToast('Iniciando importación en Supabase...', 'info');
+      showToastDash('Iniciando importación en Supabase...');
 
       try {
         // 1. Limpiar e importar categorías en Supabase
@@ -7319,7 +7319,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         // Borrar la bandera de anulación local para forzar carga limpia de Supabase
         localStorage.removeItem(`storeapp_abm_active_${new_store_id}`);
 
-        showToast('Plantilla cargada en Supabase correctamente. Redireccionando...', 'success');
+        showToastDash('Plantilla cargada en Supabase correctamente. Redireccionando...');
 
         // Redireccionar al dashboard con el parámetro del nuevo store
         setTimeout(() => {
@@ -7327,7 +7327,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         }, 1500);
 
       } catch (e) {
-        showToast('Error al importar la plantilla: ' + e.message, 'error');
+        showToastDash('Error al importar la plantilla: ' + e.message);
         console.error(e);
       }
       localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
