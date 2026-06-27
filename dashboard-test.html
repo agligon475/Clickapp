@@ -7497,8 +7497,8 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       document.getElementById('wiz-store-direccion').value = sc.direccion || document.getElementById('cfg-store-direccion')?.value || '';
       document.getElementById('wiz-store-horario').value = sc.horario || document.getElementById('cfg-store-horario')?.value || '';
       
-      document.getElementById('wiz-supabase-url').value = localStorage.getItem('storeapp_supabase_url') || SUPABASE_URL;
-      document.getElementById('wiz-supabase-key').value = localStorage.getItem('storeapp_supabase_key') || SUPABASE_KEY;
+      document.getElementById('wiz-supabase-url').value = localStorage.getItem('storeapp_supabase_url') || (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : '');
+      document.getElementById('wiz-supabase-key').value = localStorage.getItem('storeapp_supabase_key') || (typeof SUPABASE_KEY !== 'undefined' ? SUPABASE_KEY : '');
 
       currentWizardStep = 1;
       updateWizardUI();
@@ -7647,11 +7647,11 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       // Supabase config
       if (sbUrl) {
         localStorage.setItem('storeapp_supabase_url', sbUrl);
-        SUPABASE_URL = sbUrl;
+        window.SUPABASE_URL = sbUrl;
       }
       if (sbKey) {
         localStorage.setItem('storeapp_supabase_key', sbKey);
-        SUPABASE_KEY = sbKey;
+        window.SUPABASE_KEY = sbKey;
       }
 
       // 4. Update greeting & interface
