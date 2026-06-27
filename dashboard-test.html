@@ -4895,39 +4895,39 @@
       let demoProds = [];
       if (rubro === 'ferreteria' || rubro === 'Ferretería') {
         demoProds = [
-          { id: 'p1', name: 'Taladro Percutor 500W', price: 45000, stock: 5, cat: 'Herramientas', emoji: '🔨', desc: 'Ideal para uso doméstico. Mandril 13mm.' },
-          { id: 'p2', name: 'Amoladora Angular 115mm', price: 38000, stock: 3, cat: 'Herramientas', emoji: '🔧', desc: '800W de potencia. Incluye disco.' },
-          { id: 'p3', name: 'Cable Taller 2x1.5 (10m)', price: 12000, stock: 12, cat: 'Electricidad', emoji: '🔌', desc: 'Rollo x 10 metros normalizado.' },
-          { id: 'p4', name: 'Cinta Aisladora 3M', price: 1500, stock: 50, cat: 'Electricidad', emoji: '⚡', desc: '19mm x 20m. Color negro.' },
-          { id: 'p5', name: 'Látex Interior Blanco 20L', price: 28000, stock: 8, cat: 'Pintura', emoji: '🎨', desc: 'Blanco mate. Alto poder cubritivo.' },
-          { id: 'p6', name: 'Cemento Loma Negra 50kg', price: 7500, stock: 100, cat: 'Construcción', emoji: '🧱', desc: 'Cemento portland normal.' }
+          { id: 'p1', name: 'Cinta aisladora', price: 950, stock: 40, cat: 'Electricidad', emoji: '⚡', desc: 'Cinta aisladora de PVC de alta calidad. Unidad.' },
+          { id: 'p2', name: 'Candado de 40mm', price: 3400, stock: 15, cat: 'Herramientas', emoji: '🔒', desc: 'Candado de seguridad con combinación o llaves. Unidad.' },
+          { id: 'p3', name: 'Martillo de goma', price: 4200, stock: 8, cat: 'Herramientas', emoji: '🔨', desc: 'Martillo de goma ideal para colocación de cerámicas. Unidad.' },
+          { id: 'p4', name: 'Set de destornilladores', price: 9800, stock: 10, cat: 'Herramientas', emoji: '🪛', desc: 'Caja con juego de destornilladores planos y phillips.' },
+          { id: 'p5', name: 'Aerosol de pintura', price: 2900, stock: 24, cat: 'Pintura', emoji: '🎨', desc: 'Pintura en aerosol de secado rápido. Unidad.' },
+          { id: 'p6', name: 'Pinza universal', price: 5500, stock: 12, cat: 'Herramientas', emoji: '🔧', desc: 'Pinza universal aislada de alta resistencia. Unidad.' }
         ];
       } else if (rubro === 'kiosco' || rubro === 'Kiosco') {
         demoProds = [
-          { id: 'p1', name: 'Coca Cola 2.25L', price: 2500, stock: 24, cat: 'Bebidas', emoji: '🥤', desc: 'Sabor original' },
-          { id: 'p2', name: 'Agua Mineral 1.5L', price: 900, stock: 30, cat: 'Bebidas', emoji: '💧', desc: 'Sin gas' },
-          { id: 'p3', name: 'Cerveza Quilmes 1L', price: 1800, stock: 40, cat: 'Cervezas', emoji: '🍺', desc: 'Retornable bien fría' },
-          { id: 'p4', name: 'Gomitas Mogul Sueltas 100g', price: 1200, stock: 20.5, cat: 'Golosinas', emoji: '🍬', desc: 'Sabores frutales surtidos' },
-          { id: 'p5', name: 'Alfajor Triple', price: 900, stock: 50, cat: 'Golosinas', emoji: '🍫', desc: 'Sabor chocolate' },
-          { id: 'p6', name: 'Papas Lays Clásicas 140g', price: 1500, stock: 15, cat: 'Snacks', emoji: '🍿', desc: 'Paquete grande' }
+          { id: 'p1', name: 'Caramelos sueltos (por 100g)', price: 450, stock: 25.5, cat: 'Golosinas', emoji: '🍬', desc: 'Caramelos masticables frutales. Peso en gramos.' },
+          { id: 'p2', name: 'Gomitas frutales (por 100g)', price: 650, stock: 18.2, cat: 'Golosinas', emoji: '🐻', desc: 'Gomitas azucaradas frutales tipo osito. Peso en gramos.' },
+          { id: 'p3', name: 'Chocolates en rama (por 100g)', price: 1800, stock: 9.5, cat: 'Chocolates', emoji: '🍫', desc: 'Chocolate en rama blanco y negro suelto por gramaje.' },
+          { id: 'p4', name: 'Medialunas (por docena)', price: 3900, stock: 10, cat: 'Panadería', emoji: '🥐', desc: 'Medialunas de manteca o grasa horneadas en el día. Venta por docena.' },
+          { id: 'p5', name: 'Facturas surtidas (por docena)', price: 4500, stock: 8, cat: 'Panadería', emoji: '🧁', desc: 'Facturas surtidas con crema pastelera y dulce de leche. Venta por docena.' },
+          { id: 'p6', name: 'Alfajores de maicena (por docena)', price: 3200, stock: 15, cat: 'Panadería', emoji: '🍪', desc: 'Alfajores caseros de maicena con coco rallado. Venta por docena.' }
         ];
       } else if (rubro === 'gastronomia' || rubro === 'Rotisería' || rubro === 'Gastronomía') {
         demoProds = [
-          { id: 'p1', name: 'Doble Cheddar Bacon', price: 8500, stock: 100, cat: 'Hamburguesas', emoji: '🍔', desc: 'Doble medallón 120g, cheddar, panceta crocante ||| {"variants":[{"name":"Punto de la carne","options":[{"name":"A punto","priceDelta":0},{"name":"Cocido","priceDelta":0}]},{"name":"Pan","options":[{"name":"Brioche","priceDelta":0},{"name":"Sin TACC","priceDelta":500}]}], "modifiers":[{"name":"Extras","options":[{"name":"Extra Cheddar","priceDelta":800},{"name":"Medallón Extra","priceDelta":2500}]}]}' },
-          { id: 'p2', name: 'Onion Smash', price: 7900, stock: 100, cat: 'Hamburguesas', emoji: '🍔', desc: 'Medallón 150g, cebolla crispy, queso provolone.' },
-          { id: 'p3', name: 'Papas Fritas Grandes', price: 4000, stock: 100, cat: 'Papas & Snacks', emoji: '🍟', desc: 'Porción grande para compartir ||| {"modifiers":[{"name":"Salsas","options":[{"name":"Bañadas en Cheddar","priceDelta":1500},{"name":"Verdeo y Bacon","priceDelta":2000}]}]}' },
-          { id: 'p4', name: 'Nuggets de Pollo (x10)', price: 4500, stock: 50, cat: 'Papas & Snacks', emoji: '🍗', desc: 'Acompañados con salsa barbacoa' },
-          { id: 'p5', name: 'Lata Coca Cola 354ml', price: 1200, stock: 200, cat: 'Bebidas', emoji: '🥤', desc: 'Bien fría' },
-          { id: 'p6', name: 'Chocotorta', price: 3500, stock: 15, cat: 'Postres', emoji: '🍰', desc: 'Porción individual casera' }
+          { id: 'p1', name: 'Hamburguesa Clásica', price: 6500, stock: 100, cat: 'Hamburguesas', emoji: '🍔', desc: 'Hamburguesa con lechuga, tomate y salsa especial ||| {"variants":[{"name":"Tamaño","options":[{"name":"Simple","priceDelta":0},{"name":"Doble","priceDelta":1500}]}]}' },
+          { id: 'p2', name: 'Hamburguesa con Cheddar y Bacon', price: 7900, stock: 100, cat: 'Hamburguesas', emoji: '🍔', desc: 'Hamburguesa bañada en queso cheddar con bacon crocante ||| {"variants":[{"name":"Tamaño","options":[{"name":"Doble","priceDelta":0},{"name":"Triple","priceDelta":1800}]}]}' },
+          { id: 'p3', name: 'Hamburguesa con Huevo', price: 7200, stock: 100, cat: 'Hamburguesas', emoji: '🍔', desc: 'Hamburguesa con huevo a la plancha ||| {"modifiers":[{"name":"Opciones","options":[{"name":"Con cebolla frita","priceDelta":0},{"name":"Sin cebolla frita","priceDelta":0}]}]}' },
+          { id: 'p4', name: 'Papas Fritas', price: 2500, stock: 100, cat: 'Acompañamientos', emoji: '🍟', desc: 'Papas fritas cortadas a mano super crocantes ||| {"variants":[{"name":"Porción","options":[{"name":"Medianas","priceDelta":0},{"name":"Grandes","priceDelta":1000}]}]}' },
+          { id: 'p5', name: 'Nuggets de Pollo', price: 3200, stock: 100, cat: 'Entradas', emoji: '🍗', desc: 'Nuggets de pollo crujientes con aderezo ||| {"variants":[{"name":"Cantidad","options":[{"name":"Por 6 unidades","priceDelta":0},{"name":"Por 12 unidades","priceDelta":2000}]}]}' },
+          { id: 'p6', name: 'Gaseosa', price: 1200, stock: 200, cat: 'Bebidas', emoji: '🥤', desc: 'Bebida en lata de 354ml bien fría ||| {"variants":[{"name":"Tipo","options":[{"name":"Común","priceDelta":0},{"name":"Zero","priceDelta":0}]}]}' }
         ];
       } else {
         demoProds = [
-          { id: 'p1', name: 'iPhone 13 128GB', price: 900000, stock: 5, cat: 'Smartphones', emoji: '📱', desc: 'Cerrado en caja, garantía oficial Apple' },
-          { id: 'p2', name: 'Samsung Galaxy S23', price: 850000, stock: 4, cat: 'Smartphones', emoji: '📱', desc: 'Color negro, 256GB' },
-          { id: 'p3', name: 'AirPods Pro 2', price: 250000, stock: 5, cat: 'Auriculares', emoji: '🎧', desc: 'Cancelación de ruido activa' },
-          { id: 'p4', name: 'Cargador Rápido 20W', price: 15000, stock: 30, cat: 'Accesorios', emoji: '🔌', desc: 'Ficha tipo C' },
-          { id: 'p5', name: 'Funda Silicona', price: 8000, stock: 50, cat: 'Accesorios', emoji: '🛡️', desc: 'Consultar colores por WhatsApp' },
-          { id: 'p6', name: 'Joystick PS5 DualSense', price: 120000, stock: 8, cat: 'Gaming', emoji: '🎮', desc: 'Original en caja sellada' }
+          { id: 'p1', name: 'Teléfono Celular', price: 750000, stock: 10, cat: 'Smartphones', emoji: '📱', desc: 'Smartphone con pantalla de alta resolución y cámara pro ||| {"variants":[{"name":"Almacenamiento","options":[{"name":"128GB","priceDelta":0},{"name":"256GB","priceDelta":95000}]},{"name":"Color","options":[{"name":"Negro","priceDelta":0},{"name":"Plata","priceDelta":0}]}]}' },
+          { id: 'p2', name: 'Tablet', price: 380000, stock: 8, cat: 'Tablets', emoji: '📟', desc: 'Tablet de 10 pulgadas ideal para estudio o trabajo ||| {"variants":[{"name":"Conectividad","options":[{"name":"Wi-Fi","priceDelta":0},{"name":"Con chip 4G","priceDelta":60000}]}]}' },
+          { id: 'p3', name: 'Auriculares Bluetooth', price: 75000, stock: 25, cat: 'Audio', emoji: '🎧', desc: 'Auriculares inalámbricos con cancelación activa de ruido ||| {"variants":[{"name":"Color","options":[{"name":"Blanco","priceDelta":0},{"name":"Negro","priceDelta":0},{"name":"Grafito","priceDelta":0}]}]}' },
+          { id: 'p4', name: 'Disco Externo SSD', price: 120000, stock: 15, cat: 'Almacenamiento', emoji: '💾', desc: 'Unidad de estado sólido portátil de alta velocidad ||| {"variants":[{"name":"Capacidad","options":[{"name":"1TB","priceDelta":0},{"name":"2TB","priceDelta":85000}]}]}' },
+          { id: 'p5', name: 'Consola de Juegos', price: 690000, stock: 5, cat: 'Gaming', emoji: '🎮', desc: 'Consola de última generación con gráficos 4K ||| {"variants":[{"name":"Modelo","options":[{"name":"Digital","priceDelta":0},{"name":"Con lectora de disco","priceDelta":100000}]}]}' },
+          { id: 'p6', name: 'Smartwatch', price: 160000, stock: 12, cat: 'Wearables', emoji: '⌚', desc: 'Reloj inteligente con sensores deportivos y notificaciones ||| {"variants":[{"name":"Modelo","options":[{"name":"Sport","priceDelta":0},{"name":"Classic","priceDelta":30000}]},{"name":"Malla","options":[{"name":"Negra","priceDelta":0},{"name":"Gris","priceDelta":0}]}]}' }
         ];
       }
       
@@ -7125,17 +7125,12 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
           { id: '4', name: 'Construcción', icon: '🧱', active: true }
         ];
         prods = [
-          { id: 'p1', cat: '1', name: 'Taladro Percutor 500W', price: 45000, desc: 'Ideal para uso doméstico. Mandril 13mm.', stock: 5, active: true },
-          { id: 'p2', cat: '1', name: 'Amoladora Angular 115mm', price: 38000, desc: '800W de potencia. Incluye disco.', stock: 3, active: true },
-          { id: 'p3', cat: '2', name: 'Cable Taller 2x1.5 (10m)', price: 12000, desc: 'Rollo x 10 metros normalizado.', stock: 12, active: true },
-          { id: 'p4', cat: '2', name: 'Cinta Aisladora 3M', price: 1500, desc: '19mm x 20m. Color negro.', stock: 50, active: true },
-          {
-            id: 'p5', cat: '3', name: 'Látex Interior 20L', price: 28000, desc: 'Blanco mate. Alto poder cubritivo.', stock: 8, active: true,
-            variants: [
-              { name: 'Color', options: [{ name: 'Blanco', priceDelta: 0 }, { name: 'Colores Pastel', priceDelta: 3000 }] }
-            ]
-          },
-          { id: 'p6', cat: '4', name: 'Cemento Loma Negra 50kg', price: 7500, desc: 'Cemento portland normal.', stock: 100, active: true }
+          { id: 'p1', cat: '2', name: 'Cinta aisladora', price: 950, desc: 'Cinta aisladora de PVC de alta calidad. Unidad.', stock: 40, active: true },
+          { id: 'p2', cat: '1', name: 'Candado de 40mm', price: 3400, desc: 'Candado de seguridad con combinación o llaves. Unidad.', stock: 15, active: true },
+          { id: 'p3', cat: '1', name: 'Martillo de goma', price: 4200, desc: 'Martillo de goma ideal para colocación de cerámicas. Unidad.', stock: 8, active: true },
+          { id: 'p4', cat: '1', name: 'Set de destornilladores', price: 9800, desc: 'Caja con juego de destornilladores planos y phillips.', stock: 10, active: true },
+          { id: 'p5', cat: '3', name: 'Aerosol de pintura', price: 2900, desc: 'Pintura en aerosol de secado rápido. Unidad.', stock: 24, active: true },
+          { id: 'p6', cat: '1', name: 'Pinza universal', price: 5500, desc: 'Pinza universal aislada de alta resistencia. Unidad.', stock: 12, active: true }
         ];
         banners = [
           { id: 'b1', title: 'Kits de seguridad', subtitle: 'NUEVAS OFERTAS', url: 'https://images.unsplash.com/photo-1582216503945-8f6dfad8f90d?auto=format&fit=crop&w=800&q=80', active: true },
@@ -7151,32 +7146,21 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         cfg.desc = 'Bebidas súper frías, golosinas, snacks y todo lo que te salva el día. Pedí por WhatsApp y pasá a retirar sin hacer fila.';
         cfg.bg = 'https://images.unsplash.com/photo-1567360425618-1594206637d2?auto=format&fit=crop&q=80&w=2000';
         cats = [
-          { id: '1', name: 'Bebidas', icon: '🥤', active: true },
-          { id: '2', name: 'Cervezas', icon: '🍺', active: true },
-          { id: '3', name: 'Golosinas', icon: '🍫', active: true },
-          { id: '4', name: 'Snacks', icon: '🍿', active: true }
+          { id: '1', name: 'Golosinas', icon: '🍬', active: true },
+          { id: '2', name: 'Chocolates', icon: '🍫', active: true },
+          { id: '3', name: 'Panadería', icon: '🥐', active: true }
         ];
         prods = [
-          {
-            id: 'p1', cat: '1', name: 'Coca Cola', price: 2500, desc: 'Línea retornable', stock: 24, active: true,
-            variants: [
-              { name: 'Tamaño', options: [{ name: '2.25L', priceDelta: 0 }, { name: '1.5L', priceDelta: -600 }, { name: 'Lata 354ml', priceDelta: -1300 }] }
-            ]
-          },
-          { id: 'p2', cat: '1', name: 'Agua Mineral 1.5L', price: 900, desc: 'Sin gas', stock: 30, active: true },
-          { id: 'p3', cat: '2', name: 'Cerveza Quilmes 1L', price: 1800, desc: 'Retornable bien fría', stock: 40, active: true },
-          {
-            id: 'p4', cat: '3', name: 'Gomitas Mogul Sueltas', price: 1200, desc: 'Sabores frutales surtidos', stock: 20, active: true,
-            variants: [
-              { name: 'Peso', options: [{ name: '100gr', priceDelta: 0 }, { name: '250gr', priceDelta: 1500 }, { name: '500gr', priceDelta: 4000 }] }
-            ]
-          },
-          { id: 'p5', cat: '3', name: 'Alfajor Triple', price: 900, desc: 'Sabor chocolate', stock: 50, active: true },
-          { id: 'p6', cat: '4', name: 'Papas Lays Clásicas', price: 1500, desc: 'Paquete grande 140g', stock: 15, active: true }
+          { id: 'p1', cat: '1', name: 'Caramelos sueltos (por 100g)', price: 450, desc: 'Caramelos masticables frutales. Peso en gramos.', stock: 25.5, active: true },
+          { id: 'p2', cat: '1', name: 'Gomitas frutales (por 100g)', price: 650, desc: 'Gomitas azucaradas frutales tipo osito. Peso en gramos.', stock: 18.2, active: true },
+          { id: 'p3', cat: '2', name: 'Chocolates en rama (por 100g)', price: 1800, desc: 'Chocolate en rama blanco y negro suelto por gramaje.', stock: 9.5, active: true },
+          { id: 'p4', cat: '3', name: 'Medialunas (por docena)', price: 3900, desc: 'Medialunas de manteca o grasa horneadas en el día. Venta por docena.', stock: 10, active: true },
+          { id: 'p5', cat: '3', name: 'Facturas surtidas (por docena)', price: 4500, desc: 'Facturas surtidas con crema pastelera y dulce de leche. Venta por docena.', stock: 8, active: true },
+          { id: 'p6', cat: '3', name: 'Alfajores de maicena (por docena)', price: 3200, desc: 'Alfajores caseros de maicena con coco rallado. Venta por docena.', stock: 15, active: true }
         ];
         banners = [
-          { id: 'b1', title: 'Cervezas Heladas', subtitle: 'LLEVÁ MÁS PAGÁ MENOS', url: 'https://images.unsplash.com/photo-1605270012917-bf158ecae29a?auto=format&fit=crop&w=800&q=80', active: true },
-          { id: 'b2', title: 'Snacks para tu juntada', subtitle: 'Combos Fin de Semana', url: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=800&q=80', active: true }
+          { id: 'b1', title: 'Tentaciones Dulces', subtitle: 'LLEVÁ MÁS PAGÁ MENOS', url: 'https://images.unsplash.com/photo-1605270012917-bf158ecae29a?auto=format&fit=crop&w=800&q=80', active: true },
+          { id: 'b2', title: 'Facturas Calentitas', subtitle: 'Combos Fin de Semana', url: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=800&q=80', active: true }
         ];
       } else if (tipo === 'gastronomia') {
         cfg.name = 'Burger House';
@@ -7189,31 +7173,17 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         cfg.bg = 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&q=80&w=2000';
         cats = [
           { id: '1', name: 'Hamburguesas', icon: '🍔', active: true },
-          { id: '2', name: 'Papas & Snacks', icon: '🍟', active: true },
-          { id: '3', name: 'Bebidas', icon: '🥤', active: true },
-          { id: '4', name: 'Postres', icon: '🍰', active: true }
+          { id: '2', name: 'Acompañamientos', icon: '🍟', active: true },
+          { id: '3', name: 'Entradas', icon: '🍗', active: true },
+          { id: '4', name: 'Bebidas', icon: '🥤', active: true }
         ];
         prods = [
-          {
-            id: 'p1', cat: '1', name: 'Doble Cheddar Bacon', price: 8500, desc: 'Doble medallón 120g, doble cheddar, panceta crocante y salsa de la casa.', stock: 100, active: true,
-            variants: [
-              { name: 'Punto de la carne', options: [{ name: 'A punto (Rojo medio)', priceDelta: 0 }, { name: 'Cocido (Sin rojo)', priceDelta: 0 }] }
-            ],
-            modifiers: [
-              { name: 'Extras', options: [{ name: 'Extra Cheddar', priceDelta: 800 }, { name: 'Medallón Extra', priceDelta: 2500 }, { name: 'Panceta Extra', priceDelta: 1000 }] },
-              { name: 'Aclaraciones', options: [{ name: 'Sin Cebolla', priceDelta: 0 }, { name: 'Sin Salsa', priceDelta: 0 }] }
-            ]
-          },
-          { id: 'p2', cat: '1', name: 'Onion Smash', price: 7900, desc: 'Medallón 150g, cebolla crispy, queso provolone.', stock: 100, active: true },
-          {
-            id: 'p3', cat: '2', name: 'Papas Fritas', price: 4000, desc: 'Porción grande para compartir', stock: 100, active: true,
-            modifiers: [
-              { name: 'Salsas', options: [{ name: 'Bañadas en Cheddar', priceDelta: 1500 }, { name: 'Verdeo y Bacon', priceDelta: 2000 }] }
-            ]
-          },
-          { id: 'p4', cat: '2', name: 'Nuggets de Pollo (x10)', price: 4500, desc: 'Acompañados con salsa barbacoa', stock: 50, active: true },
-          { id: 'p5', cat: '3', name: 'Lata Coca Cola 354ml', price: 1200, desc: 'Bien fría', stock: 200, active: true },
-          { id: 'p6', cat: '4', name: 'Chocotorta', price: 3500, desc: 'Porción individual casera', stock: 15, active: true }
+          { id: 'p1', cat: '1', name: 'Hamburguesa Clásica', price: 6500, desc: 'Hamburguesa con lechuga, tomate y salsa especial ||| {"variants":[{"name":"Tamaño","options":[{"name":"Simple","priceDelta":0},{"name":"Doble","priceDelta":1500}]}]}', stock: 100, active: true },
+          { id: 'p2', cat: '1', name: 'Hamburguesa con Cheddar y Bacon', price: 7900, desc: 'Hamburguesa bañada en queso cheddar con bacon crocante ||| {"variants":[{"name":"Tamaño","options":[{"name":"Doble","priceDelta":0},{"name":"Triple","priceDelta":1800}]}]}', stock: 100, active: true },
+          { id: 'p3', cat: '1', name: 'Hamburguesa con Huevo', price: 7200, desc: 'Hamburguesa con huevo a la plancha ||| {"modifiers":[{"name":"Opciones","options":[{"name":"Con cebolla frita","priceDelta":0},{"name":"Sin cebolla frita","priceDelta":0}]}]}', stock: 100, active: true },
+          { id: 'p4', cat: '2', name: 'Papas Fritas', price: 2500, desc: 'Papas fritas cortadas a mano super crocantes ||| {"variants":[{"name":"Porción","options":[{"name":"Medianas","priceDelta":0},{"name":"Grandes","priceDelta":1000}]}]}', stock: 100, active: true },
+          { id: 'p5', cat: '3', name: 'Nuggets de Pollo', price: 3200, desc: 'Nuggets de pollo crujientes con aderezo ||| {"variants":[{"name":"Cantidad","options":[{"name":"Por 6 unidades","priceDelta":0},{"name":"Por 12 unidades","priceDelta":2000}]}]}', stock: 100, active: true },
+          { id: 'p6', cat: '4', name: 'Gaseosa', price: 1200, desc: 'Bebida en lata de 354ml bien fría ||| {"variants":[{"name":"Tipo","options":[{"name":"Común","priceDelta":0},{"name":"Zero","priceDelta":0}]}]}', stock: 200, active: true }
         ];
         banners = [
           { id: 'b1', title: '20% OFF en Dobles', subtitle: 'PROMO MARTES', url: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80', active: true },
@@ -7230,23 +7200,19 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         cfg.bg = 'https://images.unsplash.com/photo-1550009158-9effb6ce170c?auto=format&fit=crop&q=80&w=2000';
         cats = [
           { id: '1', name: 'Smartphones', icon: '📱', active: true },
-          { id: '2', name: 'Auriculares', icon: '🎧', active: true },
-          { id: '3', name: 'Accesorios', icon: '🔌', active: true },
-          { id: '4', name: 'Gaming', icon: '🎮', active: true }
+          { id: '2', name: 'Tablets', icon: '📟', active: true },
+          { id: '3', name: 'Audio', icon: '🎧', active: true },
+          { id: '4', name: 'Almacenamiento', icon: '💾', active: true },
+          { id: '5', name: 'Gaming', icon: '🎮', active: true },
+          { id: '6', name: 'Wearables', icon: '⌚', active: true }
         ];
         prods = [
-          {
-            id: 'p1', cat: '1', name: 'iPhone 13', price: 900000, desc: 'Cerrado en caja, garantía oficial Apple', stock: 5, active: true,
-            variants: [
-              { name: 'Almacenamiento', options: [{ name: '128GB', priceDelta: 0 }, { name: '256GB', priceDelta: 150000 }] },
-              { name: 'Color', options: [{ name: 'Midnight', priceDelta: 0 }, { name: 'Starlight', priceDelta: 0 }, { name: 'Blue', priceDelta: 0 }] }
-            ]
-          },
-          { id: 'p2', cat: '1', name: 'Samsung Galaxy S23', price: 850000, desc: 'Color negro, 256GB', stock: 4, active: true },
-          { id: 'p3', cat: '2', name: 'AirPods Pro 2', price: 250000, desc: 'Cancelación de ruido activa', stock: 5, active: true },
-          { id: 'p4', cat: '3', name: 'Cargador Rápido 20W', price: 15000, desc: 'Ficha tipo C', stock: 30, active: true },
-          { id: 'p5', cat: '3', name: 'Funda Silicona', price: 8000, desc: 'Consultar colores por WhatsApp', stock: 50, active: true },
-          { id: 'p6', cat: '4', name: 'Joystick PS5 DualSense', price: 120000, desc: 'Original en caja sellada', stock: 8, active: true }
+          { id: 'p1', cat: '1', name: 'Teléfono Celular', price: 750000, desc: 'Smartphone con pantalla de alta resolución y cámara pro ||| {"variants":[{"name":"Almacenamiento","options":[{"name":"128GB","priceDelta":0},{"name":"256GB","priceDelta":95000}]},{"name":"Color","options":[{"name":"Negro","priceDelta":0},{"name":"Plata","priceDelta":0}]}]}', stock: 10, active: true },
+          { id: 'p2', cat: '2', name: 'Tablet', price: 380000, desc: 'Tablet de 10 pulgadas ideal para estudio o trabajo ||| {"variants":[{"name":"Conectividad","options":[{"name":"Wi-Fi","priceDelta":0},{"name":"Con chip 4G","priceDelta":60000}]}]}', stock: 8, active: true },
+          { id: 'p3', cat: '3', name: 'Auriculares Bluetooth', price: 75000, desc: 'Auriculares inalámbricos con cancelación activa de ruido ||| {"variants":[{"name":"Color","options":[{"name":"Blanco","priceDelta":0},{"name":"Negro","priceDelta":0},{"name":"Grafito","priceDelta":0}]}]}', stock: 25, active: true },
+          { id: 'p4', cat: '4', name: 'Disco Externo SSD', price: 120000, desc: 'Unidad de estado sólido portátil de alta velocidad ||| {"variants":[{"name":"Capacidad","options":[{"name":"1TB","priceDelta":0},{"name":"2TB","priceDelta":85000}]}]}', stock: 15, active: true },
+          { id: 'p5', cat: '5', name: 'Consola de Juegos', price: 690000, desc: 'Consola de última generación con gráficos 4K ||| {"variants":[{"name":"Modelo","options":[{"name":"Digital","priceDelta":0},{"name":"Con lectora de disco","priceDelta":100000}]}]}', stock: 5, active: true },
+          { id: 'p6', cat: '6', name: 'Smartwatch', price: 160000, desc: 'Reloj inteligente con sensores deportivos y notificaciones ||| {"variants":[{"name":"Modelo","options":[{"name":"Sport","priceDelta":0},{"name":"Classic","priceDelta":30000}]},{"name":"Malla","options":[{"name":"Negra","priceDelta":0},{"name":"Gris","priceDelta":0}]}]}', stock: 12, active: true }
         ];
         banners = [
           { id: 'b1', title: 'Hasta 12 cuotas sin interés', subtitle: 'En celulares seleccionados', url: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', active: true },
