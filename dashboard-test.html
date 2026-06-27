@@ -7326,6 +7326,8 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
           window.location.search = `?store=${new_store_id}`;
         }, 1500);
 
+        return; // Evita que se ejecute la sección de fallback local y el doble refresh
+
       } catch (e) {
         showToastDash('Error al importar la plantilla: ' + e.message);
         console.error(e);
