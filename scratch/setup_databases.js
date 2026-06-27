@@ -9,9 +9,14 @@ const headers = {
 
 async function deleteExisting(store_id) {
   console.log(`Limpiando datos para ${store_id}...`);
-  await fetch(`${SUPABASE_URL}/rest/v1/categories?store_id=eq.${store_id}`, { method: 'DELETE', headers });
-  await fetch(`${SUPABASE_URL}/rest/v1/products?store_id=eq.${store_id}`, { method: 'DELETE', headers });
-  await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${store_id}`, { method: 'DELETE', headers });
+  const r2 = await fetch(`${SUPABASE_URL}/rest/v1/products?store_id=eq.${store_id}`, { method: 'DELETE', headers });
+  if (!r2.ok) console.error(`Error deleting products: ${r2.status} - ${await r2.text()}`);
+  
+  const r1 = await fetch(`${SUPABASE_URL}/rest/v1/categories?store_id=eq.${store_id}`, { method: 'DELETE', headers });
+  if (!r1.ok) console.error(`Error deleting categories: ${r1.status} - ${await r1.text()}`);
+  
+  const r3 = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${store_id}`, { method: 'DELETE', headers });
+  if (!r3.ok) console.error(`Error deleting settings: ${r3.status} - ${await r3.text()}`);
 }
 
 async function insertData(store_id, cfg, cats, prods) {
@@ -38,7 +43,9 @@ async function insertData(store_id, cfg, cats, prods) {
       headers,
       body: JSON.stringify(settings)
     });
-    if (!res.ok) console.error(`Error settings: ${res.statusText}`);
+    if (!res.ok) {
+      console.error(`Error settings: ${res.status} - ${await res.text()}`);
+    }
   }
 
   // 2. Insert Categories
@@ -55,7 +62,9 @@ async function insertData(store_id, cfg, cats, prods) {
       headers,
       body: JSON.stringify(dbCats)
     });
-    if (!res.ok) console.error(`Error categories: ${res.statusText}`);
+    if (!res.ok) {
+      console.error(`Error categories: ${res.status} - ${await res.text()}`);
+    }
   }
 
   // 3. Insert Products
@@ -75,7 +84,9 @@ async function insertData(store_id, cfg, cats, prods) {
       headers,
       body: JSON.stringify(dbProds)
     });
-    if (!res.ok) console.error(`Error products: ${res.statusText}`);
+    if (!res.ok) {
+      console.error(`Error products: ${res.status} - ${await res.text()}`);
+    }
   }
   console.log(`¡Store ${store_id} completado con éxito!`);
 }
@@ -87,15 +98,15 @@ async function run() {
     { name: 'FerreApp Demo', color: '#D72638' },
     [
       { name: 'Herramientas', icon: '🔧' },
-      { name: 'Electricidad', icon: '⚡' },
+      { name: 'Electricidad y Cables', icon: '⚡' },
       { name: 'Pintura', icon: '🎨' },
       { name: 'Construcción', icon: '🧱' }
     ],
     [
       { name: 'Taladro Percutor 500W', price: 45000, stock: 5, cat: 'Herramientas', emoji: '🔨', desc: 'Ideal para uso doméstico. Mandril 13mm.' },
       { name: 'Amoladora Angular 115mm', price: 38000, stock: 3, cat: 'Herramientas', emoji: '🔧', desc: '800W de potencia. Incluye disco.' },
-      { name: 'Cable Taller 2x1.5 (10m)', price: 12000, stock: 12, cat: 'Electricidad', emoji: '🔌', desc: 'Rollo x 10 metros normalizado.' },
-      { name: 'Cinta Aisladora 3M', price: 1500, stock: 50, cat: 'Electricidad', emoji: '⚡', desc: '19mm x 20m. Color negro.' },
+      { name: 'Cable Taller 2x1.5 (10m)', price: 12000, stock: 12, cat: 'Electricidad y Cables', emoji: '🔌', desc: 'Rollo x 10 metros normalizado.' },
+      { name: 'Cinta Aisladora 3M', price: 1500, stock: 50, cat: 'Electricidad y Cables', emoji: '⚡', desc: '19mm x 20m. Color negro.' },
       { name: 'Látex Interior Blanco 20L', price: 28000, stock: 8, cat: 'Pintura', emoji: '🎨', desc: 'Blanco mate. Alto poder cubritivo.' },
       { name: 'Cemento Loma Negra 50kg', price: 7500, stock: 100, cat: 'Construcción', emoji: '🧱', desc: 'Cemento portland normal.' }
     ]
@@ -128,7 +139,7 @@ async function run() {
     [
       { name: 'Hamburguesas', icon: '🍔' },
       { name: 'Papas & Snacks', icon: '🍟' },
-      { name: 'Bebidas', icon: '🥤' },
+      { name: 'Bebidas y Gaseosas', icon: '🥤' },
       { name: 'Postres', icon: '🍰' }
     ],
     [
@@ -136,7 +147,7 @@ async function run() {
       { name: 'Onion Smash', price: 7900, stock: 100, cat: 'Hamburguesas', emoji: '🍔', desc: 'Medallón 150g, cebolla crispy, queso provolone.' },
       { name: 'Papas Fritas Grandes', price: 4000, stock: 100, cat: 'Papas & Snacks', emoji: '🍟', desc: 'Porción grande para compartir' },
       { name: 'Nuggets de Pollo (x10)', price: 4500, stock: 50, cat: 'Papas & Snacks', emoji: '🍗', desc: 'Acompañados con salsa barbacoa' },
-      { name: 'Lata Coca Cola 354ml', price: 1200, stock: 200, cat: 'Bebidas', emoji: '🥤', desc: 'Bien fría' },
+      { name: 'Lata Coca Cola 354ml', price: 1200, stock: 200, cat: 'Bebidas y Gaseosas', emoji: '🥤', desc: 'Bien fría' },
       { name: 'Chocotorta', price: 3500, stock: 15, cat: 'Postres', emoji: '🍰', desc: 'Porción individual casera' }
     ]
   );
@@ -173,7 +184,7 @@ async function run() {
   await deleteExisting('kiosco-vacia');
   await insertData('kiosco-vacia',
     { name: 'Mi Kiosco', color: '#F39C12' },
-    [{ name: 'General', icon: '📦' }],
+    [{ name: 'General Kiosco', icon: '📦' }],
     []
   );
 
@@ -181,7 +192,7 @@ async function run() {
   await deleteExisting('gastronomia-vacia');
   await insertData('gastronomia-vacia',
     { name: 'Mi Local Gastronómico', color: '#E74C3C' },
-    [{ name: 'General', icon: '📦' }],
+    [{ name: 'General Gastro', icon: '📦' }],
     []
   );
 
@@ -189,7 +200,7 @@ async function run() {
   await deleteExisting('electronica-vacia');
   await insertData('electronica-vacia',
     { name: 'Mi Tienda Electrónica', color: '#3498DB' },
-    [{ name: 'General', icon: '📦' }],
+    [{ name: 'General Electro', icon: '📦' }],
     []
   );
 
