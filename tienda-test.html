@@ -1033,8 +1033,8 @@ a.logo{
 
 <script>
 /* ═══════════════════════════════════════════ SUPABASE CONFIG */
-const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+let SUPABASE_URL = localStorage.getItem('storeapp_supabase_url') || 'https://iaylgsthwildjkiiwgfd.supabase.co';
+let SUPABASE_KEY = localStorage.getItem('storeapp_supabase_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
 
 // Obtener store_id del parámetro de URL '?store=...' o localStorage o 'ferre-now' por defecto
 const urlParams = new URLSearchParams(window.location.search);

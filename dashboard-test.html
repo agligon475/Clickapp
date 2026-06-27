@@ -1785,11 +1785,18 @@
     <div class="view active" id="view-dashboard">
       <!-- Greeting Card -->
       <div class="welcome-card"
-        style="background:var(--steel); border:1px solid var(--zinc); border-radius:12px; padding:28px; margin-bottom:24px; animation:fadeUp .35s ease both;">
-        <h2 style="font-family:var(--font-h); font-size:24px; font-weight:800; margin-bottom:6px; color:var(--white);">
-          Hola <span id="welcome-store-name" style="color:var(--red);">FerreNow</span>, ¡qué bueno verte de nuevo!
-        </h2>
-        <p style="color:var(--silver); font-size:14px; margin:0;">¿Qué vamos a hacer hoy?</p>
+        style="background:var(--steel); border:1px solid var(--zinc); border-radius:12px; padding:28px; margin-bottom:24px; animation:fadeUp .35s ease both; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+        <div>
+          <h2 style="font-family:var(--font-h); font-size:24px; font-weight:800; margin-bottom:6px; color:var(--white);">
+            Hola <span id="welcome-store-name" style="color:var(--red);">FerreNow</span>, ¡qué bueno verte de nuevo!
+          </h2>
+          <p style="color:var(--silver); font-size:14px; margin:0;">¿Qué vamos a hacer hoy?</p>
+        </div>
+        <div>
+          <button onclick="openStepByStepConfig()" class="sb-btn" style="width:auto; margin:0; padding:10px 20px; font-size:13px; display:inline-flex; align-items:center; gap:8px; background:var(--red);">
+            <i class="bi bi-magic"></i> Configuración paso a paso
+          </button>
+        </div>
       </div>
 
       <!-- Connection Error Card -->
@@ -3562,8 +3569,8 @@
   <script>
 
     /* ════════════════════════════════════════════ SUPABASE CONFIG */
-    const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+    let SUPABASE_URL = window.localStorage.getItem('storeapp_supabase_url') || 'https://iaylgsthwildjkiiwgfd.supabase.co';
+    let SUPABASE_KEY = window.localStorage.getItem('storeapp_supabase_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
 
     // Obtener store_id del parámetro de URL '?store=...' o localStorage o 'ferre-now' por defecto
     const urlParams = new URLSearchParams(window.location.search);
@@ -3581,7 +3588,9 @@
           'storeapp_cloudinary',
           'storeapp_cloudinary_status',
           'storeapp_webhook',
-          'storeapp_dash_theme'
+          'storeapp_dash_theme',
+          'storeapp_supabase_url',
+          'storeapp_supabase_key'
         ];
         if (globalKeys.includes(key)) {
           return originalLocalStorage.getItem(key);
@@ -3597,7 +3606,9 @@
           'storeapp_cloudinary',
           'storeapp_cloudinary_status',
           'storeapp_webhook',
-          'storeapp_dash_theme'
+          'storeapp_dash_theme',
+          'storeapp_supabase_url',
+          'storeapp_supabase_key'
         ];
         if (globalKeys.includes(key)) {
           originalLocalStorage.setItem(key, value);
@@ -6563,6 +6574,18 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const claudeModel = document.getElementById('cfg-claude-model').value;
       localStorage.setItem('storeapp_claude_model', claudeModel);
 
+      // Supabase
+      const sbUrlEl = document.getElementById('adv-supabase-url');
+      const sbKeyEl = document.getElementById('adv-supabase-key');
+      if (sbUrlEl && sbUrlEl.value.trim()) {
+        localStorage.setItem('storeapp_supabase_url', sbUrlEl.value.trim());
+        SUPABASE_URL = sbUrlEl.value.trim();
+      }
+      if (sbKeyEl && sbKeyEl.value.trim()) {
+        localStorage.setItem('storeapp_supabase_key', sbKeyEl.value.trim());
+        SUPABASE_KEY = sbKeyEl.value.trim();
+      }
+
       if (typeof updateStatusLights === 'function') updateStatusLights();
 
       const el = document.getElementById('cfg-save-status');
@@ -7461,6 +7484,192 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       emojiContainer.style.display = 'block';
     }
 
+    /* ═══════════════════════════════════════════ STEP-BY-STEP WIZARD */
+    let currentWizardStep = 1;
+
+    function openStepByStepConfig() {
+      // Load current configurations
+      const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+      document.getElementById('wiz-store-name').value = sc.name || document.getElementById('cfg-store-name')?.value || '';
+      document.getElementById('wiz-store-rubro').value = sc.rubro || document.getElementById('cfg-store-rubro')?.value || '';
+      document.getElementById('wiz-store-tagline').value = sc.tagline || document.getElementById('cfg-store-tagline')?.value || '';
+      document.getElementById('wiz-store-wapp').value = sc.wapp || document.getElementById('cfg-store-wapp')?.value || '';
+      document.getElementById('wiz-store-direccion').value = sc.direccion || document.getElementById('cfg-store-direccion')?.value || '';
+      document.getElementById('wiz-store-horario').value = sc.horario || document.getElementById('cfg-store-horario')?.value || '';
+      
+      document.getElementById('wiz-supabase-url').value = localStorage.getItem('storeapp_supabase_url') || SUPABASE_URL;
+      document.getElementById('wiz-supabase-key').value = localStorage.getItem('storeapp_supabase_key') || SUPABASE_KEY;
+
+      currentWizardStep = 1;
+      updateWizardUI();
+      document.getElementById('modal-step-by-step').classList.add('open');
+    }
+
+    function closeStepByStepModal() {
+      document.getElementById('modal-step-by-step').classList.remove('open');
+    }
+
+    function updateWizardUI() {
+      // Hide all steps
+      for (let i = 1; i <= 3; i++) {
+        document.getElementById(`wizard-step-${i}`).style.display = 'none';
+        document.getElementById(`step-dot-${i}`).classList.remove('active');
+        document.getElementById(`step-dot-${i}`).style.background = 'var(--zinc)';
+        document.getElementById(`step-lbl-${i}`).style.color = 'var(--silver)';
+      }
+
+      // Show active step
+      document.getElementById(`wizard-step-${currentWizardStep}`).style.display = 'block';
+      
+      // Update active dots and labels up to current step
+      for (let i = 1; i <= currentWizardStep; i++) {
+        document.getElementById(`step-dot-${i}`).classList.add('active');
+        document.getElementById(`step-dot-${i}`).style.background = 'var(--red)';
+        document.getElementById(`step-lbl-${i}`).style.color = 'var(--white)';
+      }
+
+      // Buttons visibility
+      document.getElementById('wiz-btn-back').style.display = currentWizardStep > 1 ? 'inline-block' : 'none';
+      document.getElementById('wiz-btn-next').style.display = currentWizardStep < 3 ? 'inline-block' : 'none';
+      document.getElementById('wiz-btn-save').style.display = currentWizardStep === 3 ? 'inline-block' : 'none';
+      
+      // Clear wizard test status
+      document.getElementById('wiz-supabase-status').textContent = '';
+    }
+
+    function nextStep() {
+      // Basic validation for Step 1
+      if (currentWizardStep === 1) {
+        const name = document.getElementById('wiz-store-name').value.trim();
+        if (!name) {
+          alert('Por favor, ingresá el nombre de tu tienda.');
+          return;
+        }
+      }
+      // Basic validation for Step 2
+      if (currentWizardStep === 2) {
+        const wapp = document.getElementById('wiz-store-wapp').value.trim();
+        if (!wapp) {
+          alert('Por favor, ingresá tu número de WhatsApp para recibir pedidos.');
+          return;
+        }
+      }
+      
+      if (currentWizardStep < 3) {
+        currentWizardStep++;
+        updateWizardUI();
+      }
+    }
+
+    function prevStep() {
+      if (currentWizardStep > 1) {
+        currentWizardStep--;
+        updateWizardUI();
+      }
+    }
+
+    async function testWizardSupabaseConnection() {
+      const statusEl = document.getElementById('wiz-supabase-status');
+      const urlInput = document.getElementById('wiz-supabase-url').value.trim();
+      const keyInput = document.getElementById('wiz-supabase-key').value.trim();
+      if (!urlInput || !keyInput) {
+        statusEl.style.color = 'var(--red)';
+        statusEl.textContent = '✕ Completá URL y Key';
+        return;
+      }
+      statusEl.style.color = 'var(--silver)';
+      statusEl.textContent = 'Probando conexión...';
+      try {
+        const res = await fetch(`${urlInput}/rest/v1/products?limit=1`, {
+          headers: { 'apikey': keyInput, 'Authorization': `Bearer ${keyInput}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          statusEl.style.color = 'var(--green)';
+          statusEl.textContent = `✓ Conectado (${data.length} registros)`;
+        } else {
+          statusEl.style.color = 'var(--red)';
+          statusEl.textContent = `✕ Error ${res.status}`;
+        }
+      } catch (e) {
+        statusEl.style.color = 'var(--red)';
+        statusEl.textContent = '✕ Error: ' + e.message;
+      }
+    }
+
+    function saveStepByStepConfig() {
+      // 1. Get values from wizard inputs
+      const name = document.getElementById('wiz-store-name').value.trim();
+      const rubro = document.getElementById('wiz-store-rubro').value.trim();
+      const tagline = document.getElementById('wiz-store-tagline').value.trim();
+      const wapp = document.getElementById('wiz-store-wapp').value.trim();
+      const direccion = document.getElementById('wiz-store-direccion').value.trim();
+      const horario = document.getElementById('wiz-store-horario').value.trim();
+      const sbUrl = document.getElementById('wiz-supabase-url').value.trim();
+      const sbKey = document.getElementById('wiz-supabase-key').value.trim();
+
+      if (!name || !wapp) {
+        alert('Nombre de la tienda y WhatsApp son requeridos.');
+        return;
+      }
+
+      // 2. Sync to other views inputs (view-config & view-design)
+      const inputsMap = {
+        'cfg-store-name': name,
+        'cfg-name': name,
+        'cfg-store-rubro': rubro,
+        'cfg-store-tagline': tagline,
+        'cfg-tagline': tagline,
+        'cfg-store-wapp': wapp,
+        'cfg-wapp': wapp,
+        'cfg-store-direccion': direccion,
+        'cfg-store-horario': horario,
+        'adv-supabase-url': sbUrl,
+        'adv-supabase-key': sbKey
+      };
+
+      for (const [id, value] of Object.entries(inputsMap)) {
+        const el = document.getElementById(id);
+        if (el) el.value = value;
+      }
+
+      // 3. Save to localStorage
+      // Store settings config
+      const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+      sc.name = name;
+      sc.tagline = tagline;
+      sc.wapp = wapp;
+      sc.rubro = rubro;
+      sc.direccion = direccion;
+      sc.horario = horario;
+      localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
+
+      // Supabase config
+      if (sbUrl) {
+        localStorage.setItem('storeapp_supabase_url', sbUrl);
+        SUPABASE_URL = sbUrl;
+      }
+      if (sbKey) {
+        localStorage.setItem('storeapp_supabase_key', sbKey);
+        SUPABASE_KEY = sbKey;
+      }
+
+      // 4. Update greeting & interface
+      updateWelcomeGreeting();
+      if (typeof updateStatusLights === 'function') updateStatusLights();
+      
+      // Close modal
+      closeStepByStepModal();
+
+      // Alert success
+      alert('¡Configuración guardada con éxito!');
+      
+      // Reload lists if database changed
+      if (typeof initAdvancedView === 'function') initAdvancedView();
+      if (typeof loadProducts === 'function') loadProducts();
+      if (typeof loadSheet === 'function') loadSheet();
+    }
+
   </script>
 
   <!-- ══ MODAL ══ -->
@@ -7746,8 +7955,6 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
             <input type="checkbox" id="c-active" checked style="width:16px;height:16px;accent-color:var(--red);" />
             <label class="ctrl-label" style="margin:0;cursor:pointer;" for="c-active">Categoría Activa (Visible)</label>
           </div>
-        </div>
-      </div>
       <div class="modal-footer">
         <button class="sb-btn" style="background:var(--iron);border:1px solid var(--zinc);"
           onclick="closeCategoryModal()">Cancelar</button>
@@ -7756,4 +7963,120 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     </div>
   </div>
 
-  <!-- MODAL: PICKUP (REPARTIDOR) -->
+  <!-- MODAL: STEP-BY-STEP CONFIGURATION -->
+  <div class="modal-overlay" id="modal-step-by-step" onclick="if(event.target===this)closeStepByStepModal()">
+    <div class="modal" style="width:min(600px, 95vw);">
+      <div class="modal-head">
+        <span class="modal-title"><i class="bi bi-magic" style="color:var(--red);margin-right:6px;"></i>Configuración Paso a Paso</span>
+        <button class="modal-close" onclick="closeStepByStepModal()"><i class="bi bi-x"></i></button>
+      </div>
+      
+      <!-- Progress Bar / Steps indicator -->
+      <div style="padding: 16px 22px 0; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+        <div id="step-dot-1" class="step-indicator active" style="flex: 1; height: 4px; background: var(--red); border-radius: 2px; transition: all 0.3s;"></div>
+        <div id="step-dot-2" class="step-indicator" style="flex: 1; height: 4px; background: var(--zinc); border-radius: 2px; transition: all 0.3s;"></div>
+        <div id="step-dot-3" class="step-indicator" style="flex: 1; height: 4px; background: var(--zinc); border-radius: 2px; transition: all 0.3s;"></div>
+      </div>
+      <div style="padding: 6px 22px 0; display: flex; justify-content: space-between; font-size: 10px; color: var(--silver); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">
+        <span id="step-lbl-1" style="color: var(--white);">1. Tienda</span>
+        <span id="step-lbl-2">2. Contacto</span>
+        <span id="step-lbl-3">3. Base de Datos</span>
+      </div>
+
+      <div class="modal-body" style="min-height: 250px;">
+        
+        <!-- STEP 1: Datos de la Tienda -->
+        <div id="wizard-step-1" class="wizard-step">
+          <h3 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:14px; color:var(--white); text-transform:uppercase;">Datos de tu Tienda</h3>
+          <div class="ctrl-group">
+            <label class="ctrl-label">Nombre de la tienda *</label>
+            <input class="ctrl-input" id="wiz-store-name" placeholder="Ej: Mi Tienda Online" />
+          </div>
+          <div class="ctrl-group" style="margin-top:12px;">
+            <label class="ctrl-label">Rubro principal</label>
+            <select class="ctrl-input" id="wiz-store-rubro">
+              <option value="">Seleccioná...</option>
+              <option value="Ferretería">🔧 Ferretería</option>
+              <option value="Dietética">🌿 Dietética</option>
+              <option value="Rotisería">🍗 Rotisería</option>
+              <option value="Kiosco">🍬 Kiosco</option>
+              <option value="Distribuidora">📦 Distribuidora</option>
+              <option value="Indumentaria">👗 Indumentaria</option>
+              <option value="Electrónica">💻 Electrónica</option>
+              <option value="Librería">📚 Librería</option>
+              <option value="Farmacia">💊 Farmacia</option>
+              <option value="Verdulería">🥦 Verdulería</option>
+              <option value="Panadería">🥖 Panadería</option>
+              <option value="Otro">🏪 Otro</option>
+            </select>
+          </div>
+          <div class="ctrl-group" style="margin-top:12px;">
+            <label class="ctrl-label">Eslogan o Frase corta</label>
+            <input class="ctrl-input" id="wiz-store-tagline" placeholder="Ej: Tu ferretería digital de confianza" />
+          </div>
+        </div>
+
+        <!-- STEP 2: Contacto y Sucursal -->
+        <div id="wizard-step-2" class="wizard-step" style="display:none;">
+          <h3 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:14px; color:var(--white); text-transform:uppercase;">Contacto y Sucursal</h3>
+          <div class="ctrl-group">
+            <label class="ctrl-label">Número de WhatsApp (con código de país, ej: 5491100000000) *</label>
+            <input class="ctrl-input" id="wiz-store-wapp" placeholder="54911..." />
+            <div style="font-size:10px;color:var(--silver);margin-top:3px;">Los pedidos se enviarán a este número.</div>
+          </div>
+          <div class="ctrl-group" style="margin-top:12px;">
+            <label class="ctrl-label">Dirección física</label>
+            <input class="ctrl-input" id="wiz-store-direccion" placeholder="Ej: Av. Corrientes 1234, CABA" />
+          </div>
+          <div class="ctrl-group" style="margin-top:12px;">
+            <label class="ctrl-label">Horario de atención</label>
+            <input class="ctrl-input" id="wiz-store-horario" placeholder="Ej: Lun a Vie 9 a 18 · Sab 9 a 13" />
+          </div>
+        </div>
+
+        <!-- STEP 3: Base de Datos Supabase -->
+        <div id="wizard-step-3" class="wizard-step" style="display:none;">
+          <h3 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:14px; color:var(--white); text-transform:uppercase;">Conexión a Base de Datos (Supabase)</h3>
+          <div style="font-size:12px;color:var(--silver);margin-bottom:12px;line-height:1.5;">
+            Conectá tu base de datos de Supabase para poder guardar productos, categorías y pedidos de forma remota.
+          </div>
+          <div class="ctrl-group">
+            <label class="ctrl-label">Supabase URL (Project URL)</label>
+            <input class="ctrl-input" id="wiz-supabase-url" placeholder="https://xxxx.supabase.co" />
+          </div>
+          <div class="ctrl-group" style="margin-top:12px;">
+            <label class="ctrl-label">Supabase Anon Key (API Key pública)</label>
+            <input class="ctrl-input" type="password" id="wiz-supabase-key" placeholder="eyJhbGci..." />
+          </div>
+          <div style="margin-top:14px; display:flex; gap:8px; align-items:center;">
+            <button onclick="testWizardSupabaseConnection()" class="sb-btn" style="width:auto; margin:0; padding:8px 16px; background:var(--zinc); border:1px solid var(--silver); color:var(--fog); font-size:12px;">
+              <i class="bi bi-wifi"></i> Probar Conexión
+            </button>
+            <span id="wiz-supabase-status" style="font-size:11px; color:var(--silver);"></span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="sb-btn" id="wiz-btn-back" style="background:var(--iron); border:1px solid var(--zinc); display:none;" onclick="prevStep()">Atrás</button>
+        <button class="sb-btn" id="wiz-btn-next" onclick="nextStep()">Siguiente <i class="bi bi-arrow-right"></i></button>
+        <button class="sb-btn" id="wiz-btn-save" style="display:none;" onclick="saveStepByStepConfig()"><i class="bi bi-check2-circle"></i> Guardar Todo</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .step-indicator {
+      height: 4px;
+      background: var(--zinc);
+      flex: 1;
+      border-radius: 2px;
+    }
+    .step-indicator.active {
+      background: var(--red);
+    }
+  </style>
+
+</body>
+</html>
