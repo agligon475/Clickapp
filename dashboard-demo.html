@@ -7489,28 +7489,32 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
 
     function openStepByStepConfig() {
       alert("1. Botón presionado. Cargando configuración paso a paso...");
-      let sc = {};
       try {
-        const stored = localStorage.getItem('storeapp_cfg');
-        if (stored && stored !== 'undefined') {
-          sc = JSON.parse(stored);
+        let sc = {};
+        try {
+          const stored = localStorage.getItem('storeapp_cfg');
+          if (stored && stored !== 'undefined') {
+            sc = JSON.parse(stored);
+          }
+        } catch (e) {
+          console.warn('Error parseando storeapp_cfg de localStorage:', e);
         }
-      } catch (e) {
-        console.warn('Error parseando storeapp_cfg de localStorage:', e);
-      }
-      document.getElementById('wiz-store-name').value = sc.name || document.getElementById('cfg-store-name')?.value || '';
-      document.getElementById('wiz-store-rubro').value = sc.rubro || document.getElementById('cfg-store-rubro')?.value || '';
-      document.getElementById('wiz-store-tagline').value = sc.tagline || document.getElementById('cfg-store-tagline')?.value || '';
-      document.getElementById('wiz-store-wapp').value = sc.wapp || document.getElementById('cfg-store-wapp')?.value || '';
-      document.getElementById('wiz-store-direccion').value = sc.direccion || document.getElementById('cfg-store-direccion')?.value || '';
-      document.getElementById('wiz-store-horario').value = sc.horario || document.getElementById('cfg-store-horario')?.value || '';
-      
-      document.getElementById('wiz-supabase-url').value = localStorage.getItem('storeapp_supabase_url') || (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : '');
-      document.getElementById('wiz-supabase-key').value = localStorage.getItem('storeapp_supabase_key') || (typeof SUPABASE_KEY !== 'undefined' ? SUPABASE_KEY : '');
+        document.getElementById('wiz-store-name').value = sc.name || document.getElementById('cfg-store-name')?.value || '';
+        document.getElementById('wiz-store-rubro').value = sc.rubro || document.getElementById('cfg-store-rubro')?.value || '';
+        document.getElementById('wiz-store-tagline').value = sc.tagline || document.getElementById('cfg-store-tagline')?.value || '';
+        document.getElementById('wiz-store-wapp').value = sc.wapp || document.getElementById('cfg-store-wapp')?.value || '';
+        document.getElementById('wiz-store-direccion').value = sc.direccion || document.getElementById('cfg-store-direccion')?.value || '';
+        document.getElementById('wiz-store-horario').value = sc.horario || document.getElementById('cfg-store-horario')?.value || '';
+        
+        document.getElementById('wiz-supabase-url').value = localStorage.getItem('storeapp_supabase_url') || (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : '');
+        document.getElementById('wiz-supabase-key').value = localStorage.getItem('storeapp_supabase_key') || (typeof SUPABASE_KEY !== 'undefined' ? SUPABASE_KEY : '');
 
-      currentWizardStep = 1;
-      updateWizardUI();
-      document.getElementById('modal-step-by-step').classList.add('open');
+        currentWizardStep = 1;
+        updateWizardUI();
+        document.getElementById('modal-step-by-step').classList.add('open');
+      } catch (err) {
+        alert("ERROR FATAL: " + err.message + "\nEn la línea: " + err.stack);
+      }
     }
 
     function closeStepByStepModal() {
