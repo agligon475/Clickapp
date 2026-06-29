@@ -7488,8 +7488,15 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     let currentWizardStep = 1;
 
     function openStepByStepConfig() {
-      // Load current configurations
-      const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+      let sc = {};
+      try {
+        const stored = localStorage.getItem('storeapp_cfg');
+        if (stored && stored !== 'undefined') {
+          sc = JSON.parse(stored);
+        }
+      } catch (e) {
+        console.warn('Error parseando storeapp_cfg de localStorage:', e);
+      }
       document.getElementById('wiz-store-name').value = sc.name || document.getElementById('cfg-store-name')?.value || '';
       document.getElementById('wiz-store-rubro').value = sc.rubro || document.getElementById('cfg-store-rubro')?.value || '';
       document.getElementById('wiz-store-tagline').value = sc.tagline || document.getElementById('cfg-store-tagline')?.value || '';
