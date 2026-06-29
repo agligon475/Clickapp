@@ -7495,7 +7495,8 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       try {
         let sc = {};
         try {
-          const stored = localStorage.getItem('storeapp_cfg');
+          const activeStore = new URLSearchParams(window.location.search).get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now';
+          const stored = localStorage.getItem('storeapp_cfg_' + activeStore) || localStorage.getItem('storeapp_cfg');
           if (stored && stored !== 'undefined') {
             sc = JSON.parse(stored);
           }
@@ -7650,7 +7651,8 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
 
       // 3. Save to localStorage
       // Store settings config
-      const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+      const activeStore = new URLSearchParams(window.location.search).get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now';
+      const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + activeStore) || localStorage.getItem('storeapp_cfg') || '{}');
       sc.name = name;
       sc.tagline = tagline;
       sc.wapp = wapp;
@@ -7658,6 +7660,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       sc.direccion = direccion;
       sc.horario = horario;
       localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
+      localStorage.setItem('storeapp_cfg_' + activeStore, JSON.stringify(sc));
 
       // Supabase config
       if (sbUrl) {
