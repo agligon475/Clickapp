@@ -1256,6 +1256,17 @@ async function loadSheet() {
       const configData = await configRes.json();
       if (configData && configData.length > 0) {
         const cfg = configData[0];
+        
+        // --- OVERRIDE GLOBAL CFG WITH SUPABASE CONFIG ---
+        if (cfg.business_name) CFG.name = cfg.business_name;
+        if (cfg.tagline) CFG.tagline = cfg.tagline;
+        if (cfg.wapp) CFG.wapp = cfg.wapp;
+        if (cfg.rubro) CFG.rubro = cfg.rubro;
+        if (cfg.direccion) CFG.direccion = cfg.direccion;
+        if (cfg.horario) CFG.horario = cfg.horario;
+        if (cfg.primary_color) CFG.color = cfg.primary_color;
+        // ------------------------------------------------
+        
         bannerData = {
           banner1: {
             label: cfg.banner1_label || 'NUEVAS',
@@ -1272,6 +1283,9 @@ async function loadSheet() {
         };
       }
     }
+    
+    // Aplicar diseño visual tras cargar config en la nube
+    applyBrand();
 
     // Convertir datos de Supabase al formato esperado
     products = supabaseProducts

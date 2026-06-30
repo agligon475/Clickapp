@@ -7490,19 +7490,46 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     /* ═══════════════════════════════════════════ STEP-BY-STEP WIZARD */
     let currentWizardStep = 1;
 
-    function openStepByStepConfig() {
-      alert("1. Botón presionado. Cargando configuración paso a paso...");
+    async function openStepByStepConfig() {
+      // alert("1. Botón presionado. Cargando configuración paso a paso...");
       try {
         let sc = {};
-        try {
-          const activeStore = new URLSearchParams(window.location.search).get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now';
-          const stored = localStorage.getItem('storeapp_cfg_' + activeStore) || localStorage.getItem('storeapp_cfg');
-          if (stored && stored !== 'undefined') {
-            sc = JSON.parse(stored);
-          }
-        } catch (e) {
-          console.warn('Error parseando storeapp_cfg de localStorage:', e);
+        const activeStore = new URLSearchParams(window.location.search).get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now';
+        const sbUrl = localStorage.getItem('storeapp_supabase_url') || (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : '');
+        const sbKey = localStorage.getItem('storeapp_supabase_key') || (typeof SUPABASE_KEY !== 'undefined' ? SUPABASE_KEY : '');
+        
+        if (sbUrl && sbKey) {
+           try {
+             const res = await fetch(`${sbUrl}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(activeStore)}`, {
+               headers: { 'apikey': sbKey, 'Authorization': `Bearer ${sbKey}` }
+             });
+             if (res.ok) {
+               const data = await res.json();
+               if (data && data.length > 0) {
+                 const cfg = data[0];
+                 sc.name = cfg.business_name || '';
+                 sc.tagline = cfg.tagline || '';
+                 sc.wapp = cfg.wapp || '';
+                 sc.rubro = cfg.rubro || '';
+                 sc.direccion = cfg.direccion || '';
+                 sc.horario = cfg.horario || '';
+               }
+             }
+           } catch(e) { console.error('Error fetching Supabase in wizard', e); }
         }
+
+        // Fallback to localStorage if not found in Supabase
+        if (!sc.name) {
+          try {
+            const stored = localStorage.getItem('storeapp_cfg_' + activeStore) || localStorage.getItem('storeapp_cfg');
+            if (stored && stored !== 'undefined') {
+              sc = JSON.parse(stored);
+            }
+          } catch (e) {
+            console.warn('Error parseando storeapp_cfg de localStorage:', e);
+          }
+        }
+        
         document.getElementById('wiz-store-name').value = sc.name || document.getElementById('cfg-store-name')?.value || '';
         document.getElementById('wiz-store-rubro').value = sc.rubro || document.getElementById('cfg-store-rubro')?.value || '';
         document.getElementById('wiz-store-tagline').value = sc.tagline || document.getElementById('cfg-store-tagline')?.value || '';
@@ -7510,8 +7537,8 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         document.getElementById('wiz-store-direccion').value = sc.direccion || document.getElementById('cfg-store-direccion')?.value || '';
         document.getElementById('wiz-store-horario').value = sc.horario || document.getElementById('cfg-store-horario')?.value || '';
         
-        document.getElementById('wiz-supabase-url').value = localStorage.getItem('storeapp_supabase_url') || (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : '');
-        document.getElementById('wiz-supabase-key').value = localStorage.getItem('storeapp_supabase_key') || (typeof SUPABASE_KEY !== 'undefined' ? SUPABASE_KEY : '');
+        document.getElementById('wiz-supabase-url').value = sbUrl;
+        document.getElementById('wiz-supabase-key').value = sbKey;
 
         currentWizardStep = 1;
         updateWizardUI();
