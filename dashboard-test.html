@@ -3570,6 +3570,69 @@
   </div><!-- /main -->
 
   <script>
+    // Sobrescribir alert del navegador con una notificación flotante premium integrada en el sitio
+    window.alert = function(msg) {
+      const existing = document.getElementById('dash-toast-alert');
+      if (existing) existing.remove();
+      const el = document.createElement('div');
+      el.id = 'dash-toast-alert';
+      el.style.cssText = `
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1e1e24;
+        border: 1px solid #3f3f46;
+        border-left: 4px solid #ef4444;
+        border-radius: 10px;
+        padding: 12px 20px;
+        font-size: 13px;
+        color: #f4f4f5;
+        z-index: 100000;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: system-ui, -apple-system, sans-serif;
+        min-width: 280px;
+        max-width: 90%;
+        animation: toast-slide-in 0.3s ease forwards;
+      `;
+      
+      let icon = 'ℹ️';
+      if (msg.toLowerCase().includes('éxito') || msg.toLowerCase().includes('guardado') || msg.includes('✓') || msg.includes('¡') || msg.toLowerCase().includes('correcto')) {
+        icon = '✅';
+        el.style.borderLeftColor = '#10b981';
+      } else if (msg.toLowerCase().includes('error') || msg.toLowerCase().includes('falló') || msg.includes('✕') || msg.toLowerCase().includes('fatal')) {
+        icon = '❌';
+        el.style.borderLeftColor = '#ef4444';
+      } else if (msg.toLowerCase().includes('advertencia') || msg.toLowerCase().includes('requerido') || msg.includes('⚠')) {
+        icon = '⚠️';
+        el.style.borderLeftColor = '#f59e0b';
+      }
+      
+      el.innerHTML = `<span>${icon}</span><span style="flex:1;">${msg}</span>`;
+      document.body.appendChild(el);
+      
+      if (!document.getElementById('toast-style')) {
+        const style = document.createElement('style');
+        style.id = 'toast-style';
+        style.textContent = `
+          @keyframes toast-slide-in {
+            from { transform: translate(-50%, 40px); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+      
+      setTimeout(() => {
+        el.style.animation = 'none';
+        el.style.transition = 'opacity 0.5s ease';
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 500);
+      }, 4000);
+    };
 
     /* ════════════════════════════════════════════ SUPABASE CONFIG */
     let rawSupabaseUrl = window.localStorage.getItem('storeapp_supabase_url');
