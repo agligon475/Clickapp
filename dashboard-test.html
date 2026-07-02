@@ -7716,6 +7716,8 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
             sc.h1 = storedCfg.h1;
             sc.h2 = storedCfg.h2;
             sc.desc = storedCfg.desc;
+            sc.emoji = storedCfg.emoji;
+            sc.logo = storedCfg.logo;
           }
         } catch(e) {}
 
@@ -7732,12 +7734,55 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         document.getElementById('wiz-supabase-url').value = sbUrl;
         document.getElementById('wiz-supabase-key').value = sbKey;
 
+        // Set wizard emoji picker state
+        wizSelectedEmoji = sc.emoji || '🏪';
+        document.querySelectorAll('#wiz-emoji-picker .emoji-opt').forEach(b => {
+          if (b.textContent.trim() === wizSelectedEmoji) b.classList.add('active');
+          else b.classList.remove('active');
+        });
+
+        // Set wizard logo preview state
+        const currentLogo = sc.logo || localStorage.getItem('storeapp_logo') || '';
+        if (currentLogo && currentLogo.startsWith('data:image')) {
+          document.getElementById('wiz-logo-preview').src = currentLogo;
+          document.getElementById('wiz-logo-preview-wrap').style.display = 'block';
+        } else {
+          document.getElementById('wiz-logo-preview-wrap').style.display = 'none';
+        }
+
         currentWizardStep = 1;
         updateWizardUI();
         document.getElementById('modal-step-by-step').classList.add('open');
       } catch (err) {
         alert("ERROR FATAL: " + err.message + "\nEn la línea: " + err.stack);
       }
+    }
+
+    let wizSelectedEmoji = '🏪';
+
+    function pickWizEmoji(btn, emoji) {
+      wizSelectedEmoji = emoji;
+      document.querySelectorAll('#wiz-emoji-picker .emoji-opt').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function uploadWizLogo(input) {
+      const file = input.files[0];
+      if (!file) return;
+      if (file.size > 300 * 1024) { alert('El archivo es muy grande. Máximo 300KB.'); return; }
+      const reader = new FileReader();
+      reader.onload = e => {
+        const dataUrl = e.target.result;
+        document.getElementById('wiz-logo-preview').src = dataUrl;
+        document.getElementById('wiz-logo-preview-wrap').style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeWizLogo() {
+      document.getElementById('wiz-logo-preview-wrap').style.display = 'none';
+      document.getElementById('wiz-logo-preview').src = '';
+      document.getElementById('wiz-logo-input').value = '';
     }
 
     function closeStepByStepModal() {
@@ -7847,6 +7892,9 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       const h2 = document.getElementById('wiz-store-h2').value.trim();
       const desc = document.getElementById('wiz-store-desc').value.trim();
 
+      const logoUrl = document.getElementById('wiz-logo-preview').src || '';
+      const emoji = wizSelectedEmoji;
+
       if (!name || !wapp) {
         alert('Nombre de la tienda y WhatsApp son requeridos.');
         return;
@@ -7888,6 +7936,28 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       sc.h1 = h1;
       sc.h2 = h2;
       sc.desc = desc;
+      sc.emoji = emoji;
+      sc.logo = logoUrl;
+
+      // Sync logo to localStorage and main panel Design view
+      if (logoUrl && logoUrl.startsWith('data:image')) {
+        localStorage.setItem('storeapp_logo', logoUrl);
+        const logoPreview = document.getElementById('logo-preview');
+        if (logoPreview) logoPreview.src = logoUrl;
+        const logoPreviewWrap = document.getElementById('logo-preview-wrap');
+        if (logoPreviewWrap) logoPreviewWrap.style.display = 'block';
+      } else {
+        localStorage.removeItem('storeapp_logo');
+        const logoPreviewWrap = document.getElementById('logo-preview-wrap');
+        if (logoPreviewWrap) logoPreviewWrap.style.display = 'none';
+      }
+
+      // Sync emoji picker active state in main Design panel view
+      document.querySelectorAll('#emoji-picker .emoji-opt').forEach(b => {
+        if (b.textContent.trim() === emoji) b.classList.add('active');
+        else b.classList.remove('active');
+      });
+
       localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
       localStorage.setItem('storeapp_cfg_' + activeStore, JSON.stringify(sc));
 
@@ -8280,6 +8350,31 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           <div class="ctrl-group" style="margin-top:12px;">
             <label class="ctrl-label">Banner Descripción</label>
             <input class="ctrl-input" id="wiz-store-desc" placeholder="Ej: Pedí online y retirás en 5 minutos" />
+          </div>
+          <div class="ctrl-group" style="margin-top:12px;">
+            <label class="ctrl-label">Icono de la tienda (Emoji)</label>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;" id="wiz-emoji-picker">
+              <button class="emoji-opt active" onclick="pickWizEmoji(this,'🏪')" style="padding:4px 8px;font-size:16px;">🏪</button>
+              <button class="emoji-opt" onclick="pickWizEmoji(this,'🍬')" style="padding:4px 8px;font-size:16px;">🍬</button>
+              <button class="emoji-opt" onclick="pickWizEmoji(this,'🔧')" style="padding:4px 8px;font-size:16px;">🔧</button>
+              <button class="emoji-opt" onclick="pickWizEmoji(this,'🍟')" style="padding:4px 8px;font-size:16px;">🍟</button>
+              <button class="emoji-opt" onclick="pickWizEmoji(this,'🛒')" style="padding:4px 8px;font-size:16px;">🛒</button>
+              <button class="emoji-opt" onclick="pickWizEmoji(this,'⚡')" style="padding:4px 8px;font-size:16px;">⚡</button>
+              <button class="emoji-opt" onclick="pickWizEmoji(this,'👗')" style="padding:4px 8px;font-size:16px;">👗</button>
+              <button class="emoji-opt" onclick="pickWizEmoji(this,'📦')" style="padding:4px 8px;font-size:16px;">📦</button>
+            </div>
+          </div>
+          <div class="ctrl-group" style="margin-top:12px;">
+            <label class="ctrl-label">Logo de la tienda (Imagen)</label>
+            <div id="wiz-logo-preview-wrap" style="display:none;margin-bottom:8px;text-align:center;">
+              <img id="wiz-logo-preview" style="max-height:40px;object-fit:contain;border-radius:4px;border:1px solid var(--zinc);padding:4px;" />
+              <br/>
+              <button class="sb-btn" style="background:var(--red);color:#fff;border:none;padding:4px 8px;font-size:10px;margin-top:4px;width:auto;" onclick="removeWizLogo()">Quitar logo</button>
+            </div>
+            <label class="logo-upload-btn" for="wiz-logo-input" style="display:block;text-align:center;padding:10px;border:1px dashed var(--zinc);border-radius:6px;cursor:pointer;color:var(--silver);font-size:12px;">
+              <i class="bi bi-image"></i> Subir imagen de logo
+              <input type="file" id="wiz-logo-input" accept="image/*" style="display:none;" onchange="uploadWizLogo(this)" />
+            </label>
           </div>
         </div>
 
