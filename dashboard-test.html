@@ -7707,9 +7707,24 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           }
         }
         
+        // Parse design if available
+        let parsedDesign = {};
+        try {
+          const stored = localStorage.getItem('storeapp_cfg_' + activeStore) || localStorage.getItem('storeapp_cfg');
+          if (stored) {
+            const storedCfg = JSON.parse(stored);
+            sc.h1 = storedCfg.h1;
+            sc.h2 = storedCfg.h2;
+            sc.desc = storedCfg.desc;
+          }
+        } catch(e) {}
+
         document.getElementById('wiz-store-name').value = sc.name || document.getElementById('cfg-store-name')?.value || '';
         document.getElementById('wiz-store-rubro').value = sc.rubro || document.getElementById('cfg-store-rubro')?.value || '';
         document.getElementById('wiz-store-tagline').value = sc.tagline || document.getElementById('cfg-store-tagline')?.value || '';
+        document.getElementById('wiz-store-h1').value = sc.h1 || document.getElementById('cfg-h1')?.value || '';
+        document.getElementById('wiz-store-h2').value = sc.h2 || document.getElementById('cfg-h2')?.value || '';
+        document.getElementById('wiz-store-desc').value = sc.desc || document.getElementById('cfg-desc')?.value || '';
         document.getElementById('wiz-store-wapp').value = sc.wapp || document.getElementById('cfg-store-wapp')?.value || '';
         document.getElementById('wiz-store-direccion').value = sc.direccion || document.getElementById('cfg-store-direccion')?.value || '';
         document.getElementById('wiz-store-horario').value = sc.horario || document.getElementById('cfg-store-horario')?.value || '';
@@ -7828,6 +7843,10 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       const sbUrl = document.getElementById('wiz-supabase-url').value.trim();
       const sbKey = document.getElementById('wiz-supabase-key').value.trim();
 
+      const h1 = document.getElementById('wiz-store-h1').value.trim();
+      const h2 = document.getElementById('wiz-store-h2').value.trim();
+      const desc = document.getElementById('wiz-store-desc').value.trim();
+
       if (!name || !wapp) {
         alert('Nombre de la tienda y WhatsApp son requeridos.');
         return;
@@ -7840,6 +7859,9 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         'cfg-store-rubro': rubro,
         'cfg-store-tagline': tagline,
         'cfg-tagline': tagline,
+        'cfg-h1': h1,
+        'cfg-h2': h2,
+        'cfg-desc': desc,
         'cfg-store-wapp': wapp,
         'cfg-wapp': wapp,
         'cfg-store-direccion': direccion,
@@ -7863,6 +7885,9 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       sc.rubro = rubro;
       sc.direccion = direccion;
       sc.horario = horario;
+      sc.h1 = h1;
+      sc.h2 = h2;
+      sc.desc = desc;
       localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
       localStorage.setItem('storeapp_cfg_' + activeStore, JSON.stringify(sc));
 
@@ -8243,6 +8268,18 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           <div class="ctrl-group" style="margin-top:12px;">
             <label class="ctrl-label">Eslogan o Frase corta</label>
             <input class="ctrl-input" id="wiz-store-tagline" placeholder="Ej: Tu ferretería digital de confianza" />
+          </div>
+          <div class="ctrl-group" style="margin-top:12px;">
+            <label class="ctrl-label">Banner Título Línea 1</label>
+            <input class="ctrl-input" id="wiz-store-h1" placeholder="Ej: TU KIOSCO" />
+          </div>
+          <div class="ctrl-group" style="margin-top:12px;">
+            <label class="ctrl-label">Banner Título Línea 2 (Destacado)</label>
+            <input class="ctrl-input" id="wiz-store-h2" placeholder="Ej: AL MEJOR PRECIO" />
+          </div>
+          <div class="ctrl-group" style="margin-top:12px;">
+            <label class="ctrl-label">Banner Descripción</label>
+            <input class="ctrl-input" id="wiz-store-desc" placeholder="Ej: Pedí online y retirás en 5 minutos" />
           </div>
         </div>
 
