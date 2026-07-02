@@ -1321,7 +1321,9 @@ async function loadSheet() {
     }
     
     // Aplicar diseño visual tras cargar config en la nube
-    applyConfig();
+    localStorage.setItem('storeapp_cfg', JSON.stringify(CFG));
+    localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(CFG));
+    applyStoredConfig();
 
     // Convertir datos de Supabase al formato esperado
     products = supabaseProducts
