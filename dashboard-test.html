@@ -4565,9 +4565,19 @@
           direccion: cfgObj.direccion || '',
           horario: cfgObj.horario || '',
           rubro: cfgObj.rubro || '',
+          logo_url: cfgObj.logo || '',
           phone: JSON.stringify(cfgObj.socials || {}),
           instagram: cfgObj.socials?.ig || '',
-          facebook: cfgObj.socials?.fb || ''
+          facebook: cfgObj.socials?.fb || '',
+          email: JSON.stringify({
+            h1: cfgObj.h1 || '',
+            h2: cfgObj.h2 || '',
+            desc: cfgObj.desc || '',
+            emoji: cfgObj.emoji || '🏪',
+            theme: cfgObj.theme || 'dark',
+            font: cfgObj.font || '',
+            fontBody: cfgObj.fontBody || ''
+          })
         };
 
         const activeStore = new URLSearchParams(window.location.search).get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now';

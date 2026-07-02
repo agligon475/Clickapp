@@ -1272,6 +1272,7 @@ async function loadSheet() {
         if (cfg.direccion) CFG.direccion = cfg.direccion;
         if (cfg.horario) CFG.horario = cfg.horario;
         if (cfg.primary_color) CFG.color = cfg.primary_color;
+        if (cfg.logo_url) CFG.logo = cfg.logo_url;
         
         let parsedSocials = {};
         try {
@@ -1287,6 +1288,19 @@ async function loadSheet() {
           tn: parsedSocials.tn || '',
           maps: parsedSocials.maps || ''
         };
+
+        let parsedDesign = {};
+        try {
+          if (cfg.email) parsedDesign = JSON.parse(cfg.email);
+        } catch (e) {}
+
+        if (parsedDesign.h1) CFG.h1 = parsedDesign.h1;
+        if (parsedDesign.h2) CFG.h2 = parsedDesign.h2;
+        if (parsedDesign.desc) CFG.desc = parsedDesign.desc;
+        if (parsedDesign.emoji) CFG.emoji = parsedDesign.emoji;
+        if (parsedDesign.theme) CFG.theme = parsedDesign.theme;
+        if (parsedDesign.font) CFG.font = parsedDesign.font;
+        if (parsedDesign.fontBody) CFG.fontBody = parsedDesign.fontBody;
         // ------------------------------------------------
         
         bannerData = {
