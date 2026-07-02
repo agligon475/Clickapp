@@ -1214,6 +1214,39 @@ async function loadSheet() {
             cat: cfg.banner2_cat || ''
           }
         };
+
+        // Extract and save general store configuration
+        let parsedSocials = {};
+        try {
+          if (cfg.phone) parsedSocials = JSON.parse(cfg.phone);
+        } catch (e) {}
+
+        const remoteStoreCfg = {
+          name: cfg.business_name || '',
+          tagline: cfg.tagline || '',
+          color: cfg.primary_color || '#D72638',
+          theme: cfg.theme || 'dark',
+          wapp: cfg.wapp || '',
+          direccion: cfg.direccion || '',
+          horario: cfg.horario || '',
+          rubro: cfg.rubro || '',
+          socials: {
+            web: parsedSocials.web || '',
+            ig: cfg.instagram || parsedSocials.ig || '',
+            fb: cfg.facebook || parsedSocials.fb || '',
+            x: parsedSocials.x || '',
+            ml: parsedSocials.ml || '',
+            tn: parsedSocials.tn || '',
+            maps: parsedSocials.maps || ''
+          }
+        };
+
+        // Merge into global CFG object and save to localStorage
+        CFG = { ...CFG, ...remoteStoreCfg };
+        localStorage.setItem(`storeapp_cfg_${STORE_ID}`, JSON.stringify(CFG));
+        
+        // Apply configuration immediately to update logo, color, font, title, tagline
+        applyStoredConfig();
       }
     }
 

@@ -2080,12 +2080,46 @@ async function loadSheet() {
     if (configRes.ok) {
       const configData = await configRes.json();
       if (configData && configData.length > 0) {
-        const cfg = configData[0];
+        const dbCfg = configData[0];
         const bannerData = {
-          banner1: { label: cfg.banner1_label||'NUEVAS', title: cfg.banner1_title||'Productos', img: cfg.banner1_img||'', cat: cfg.banner1_cat||'' },
-          banner2: { label: cfg.banner2_label||'PROMOCIÓN', title: cfg.banner2_title||'Especiales', img: cfg.banner2_img||'', cat: cfg.banner2_cat||'' }
+          banner1: { label: dbCfg.banner1_label||'NUEVAS', title: dbCfg.banner1_title||'Productos', img: dbCfg.banner1_img||'', cat: dbCfg.banner1_cat||'' },
+          banner2: { label: dbCfg.banner2_label||'PROMOCIÓN', title: dbCfg.banner2_title||'Especiales', img: dbCfg.banner2_img||'', cat: dbCfg.banner2_cat||'' }
         };
         localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
+
+        // Pull and merge settings into local config
+        let parsedSocials = {};
+        try {
+          if (dbCfg.phone) parsedSocials = JSON.parse(dbCfg.phone);
+        } catch (e) {}
+
+        const remoteStoreCfg = {
+          name: dbCfg.business_name || cfg.name,
+          tagline: dbCfg.tagline || cfg.tagline,
+          color: dbCfg.primary_color || cfg.color,
+          wapp: dbCfg.wapp || cfg.wapp,
+          direccion: dbCfg.direccion || '',
+          horario: dbCfg.horario || '',
+          rubro: dbCfg.rubro || '',
+          socials: {
+            web: parsedSocials.web || '',
+            ig: dbCfg.instagram || parsedSocials.ig || '',
+            fb: dbCfg.facebook || parsedSocials.fb || '',
+            x: parsedSocials.x || '',
+            ml: parsedSocials.ml || '',
+            tn: parsedSocials.tn || '',
+            maps: parsedSocials.maps || ''
+          }
+        };
+
+        // Merge into global cfg and localStorage
+        cfg = { ...cfg, ...remoteStoreCfg };
+        localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
+
+        // Update UI
+        if (typeof initDesignPanel === 'function') initDesignPanel();
+        if (typeof initConfigView === 'function') initConfigView();
+        if (typeof previewUpdate === 'function') previewUpdate();
       }
     }
 
@@ -2535,9 +2569,47 @@ function setPreviewSize(btn, size){
   wrap.classList.toggle('mobile', size==='mobile');
 }
 
-function applyConfig(){
+async function syncStoreConfigToSupabase(cfgObj) {
+  try {
+    const dataToSave = {
+      business_name: cfgObj.name || '',
+      tagline: cfgObj.tagline || '',
+      primary_color: cfgObj.color || '#D72638',
+      wapp: cfgObj.wapp || '',
+      direccion: cfgObj.direccion || '',
+      horario: cfgObj.horario || '',
+      rubro: cfgObj.rubro || '',
+      phone: JSON.stringify(cfgObj.socials || {}),
+      instagram: cfgObj.socials?.ig || '',
+      facebook: cfgObj.socials?.fb || ''
+    };
+
+    const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
+    });
+
+    if (configRes.ok) {
+      const configData = await configRes.json();
+      if (configData && configData.length > 0) {
+        const id = configData[0].id;
+        await updateInSupabase('company_settings', id, dataToSave);
+      } else {
+        dataToSave.store_id = STORE_ID;
+        await postToSupabase('company_settings', dataToSave);
+      }
+    }
+  } catch (e) {
+    console.error('Error syncing config to Supabase:', e);
+  }
+}
+
+async function applyConfig(){
   try{
     localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
+    await syncStoreConfigToSupabase(cfg);
     // Flash success
     const btn = event.currentTarget;
     const orig = btn.innerHTML;
@@ -4043,7 +4115,7 @@ async function testClaudeKey() {
   }
 }
 
-function saveConfig() {
+async function saveConfig() {
   // Store info → merge into storeapp_cfg
   const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
   const name      = document.getElementById('cfg-store-name').value.trim();
@@ -4072,6 +4144,10 @@ function saveConfig() {
   
   sc.socials = { web, ig, fb, x, ml, tn, maps };
   localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
+  
+  // also merge into global cfg object so design panel and design previews are in sync
+  cfg = { ...cfg, ...sc };
+  
   updateWelcomeGreeting();
 
   // Cloudinary
@@ -4092,6 +4168,9 @@ function saveConfig() {
   localStorage.setItem('storeapp_claude_model', claudeModel);
 
   if (typeof updateStatusLights === 'function') updateStatusLights();
+
+  // Sync to Supabase
+  await syncStoreConfigToSupabase(cfg);
 
   const el = document.getElementById('cfg-save-status');
   el.style.color = 'var(--green)';

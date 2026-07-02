@@ -1033,7 +1033,12 @@ a.logo{
 
 <script>
 /* ═══════════════════════════════════════════ SUPABASE CONFIG */
-let SUPABASE_URL = localStorage.getItem('storeapp_supabase_url') || 'https://iaylgsthwildjkiiwgfd.supabase.co';
+let rawSupabaseUrl = localStorage.getItem('storeapp_supabase_url');
+if (rawSupabaseUrl && !rawSupabaseUrl.startsWith('http')) {
+  localStorage.removeItem('storeapp_supabase_url');
+  rawSupabaseUrl = null;
+}
+let SUPABASE_URL = rawSupabaseUrl || 'https://iaylgsthwildjkiiwgfd.supabase.co';
 let SUPABASE_KEY = localStorage.getItem('storeapp_supabase_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
 
 // Obtener store_id del parámetro de URL '?store=...' o localStorage o 'ferre-now' por defecto
@@ -1265,6 +1270,21 @@ async function loadSheet() {
         if (cfg.direccion) CFG.direccion = cfg.direccion;
         if (cfg.horario) CFG.horario = cfg.horario;
         if (cfg.primary_color) CFG.color = cfg.primary_color;
+        
+        let parsedSocials = {};
+        try {
+          if (cfg.phone) parsedSocials = JSON.parse(cfg.phone);
+        } catch (e) {}
+        
+        CFG.socials = {
+          web: parsedSocials.web || '',
+          ig: cfg.instagram || parsedSocials.ig || '',
+          fb: cfg.facebook || parsedSocials.fb || '',
+          x: parsedSocials.x || '',
+          ml: parsedSocials.ml || '',
+          tn: parsedSocials.tn || '',
+          maps: parsedSocials.maps || ''
+        };
         // ------------------------------------------------
         
         bannerData = {

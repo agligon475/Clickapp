@@ -3572,7 +3572,12 @@
   <script>
 
     /* ════════════════════════════════════════════ SUPABASE CONFIG */
-    let SUPABASE_URL = window.localStorage.getItem('storeapp_supabase_url') || 'https://iaylgsthwildjkiiwgfd.supabase.co';
+    let rawSupabaseUrl = window.localStorage.getItem('storeapp_supabase_url');
+    if (rawSupabaseUrl && !rawSupabaseUrl.startsWith('http')) {
+      window.localStorage.removeItem('storeapp_supabase_url');
+      rawSupabaseUrl = null;
+    }
+    let SUPABASE_URL = rawSupabaseUrl || 'https://iaylgsthwildjkiiwgfd.supabase.co';
     let SUPABASE_KEY = window.localStorage.getItem('storeapp_supabase_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
 
     // Obtener store_id del parámetro de URL '?store=...' o localStorage o 'ferre-now' por defecto
@@ -3990,12 +3995,47 @@
         if (configRes.ok) {
           const configData = await configRes.json();
           if (configData && configData.length > 0) {
-            const cfg = configData[0];
+            const dbCfg = configData[0];
             const bannerData = {
-              banner1: { label: cfg.banner1_label || 'NUEVAS', title: cfg.banner1_title || 'Productos', img: cfg.banner1_img || '', cat: cfg.banner1_cat || '' },
-              banner2: { label: cfg.banner2_label || 'PROMOCIÓN', title: cfg.banner2_title || 'Especiales', img: cfg.banner2_img || '', cat: cfg.banner2_cat || '' }
+              banner1: { label: dbCfg.banner1_label || 'NUEVAS', title: dbCfg.banner1_title || 'Productos', img: dbCfg.banner1_img || '', cat: dbCfg.banner1_cat || '' },
+              banner2: { label: dbCfg.banner2_label || 'PROMOCIÓN', title: dbCfg.banner2_title || 'Especiales', img: dbCfg.banner2_img || '', cat: dbCfg.banner2_cat || '' }
             };
             localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
+
+            // Pull and merge settings into local config
+            let parsedSocials = {};
+            try {
+              if (dbCfg.phone) parsedSocials = JSON.parse(dbCfg.phone);
+            } catch (e) {}
+
+            const remoteStoreCfg = {
+              name: dbCfg.business_name || cfg.name,
+              tagline: dbCfg.tagline || cfg.tagline,
+              color: dbCfg.primary_color || cfg.color,
+              wapp: dbCfg.wapp || cfg.wapp,
+              direccion: dbCfg.direccion || '',
+              horario: dbCfg.horario || '',
+              rubro: dbCfg.rubro || '',
+              socials: {
+                web: parsedSocials.web || '',
+                ig: dbCfg.instagram || parsedSocials.ig || '',
+                fb: dbCfg.facebook || parsedSocials.fb || '',
+                x: parsedSocials.x || '',
+                ml: parsedSocials.ml || '',
+                tn: parsedSocials.tn || '',
+                maps: parsedSocials.maps || ''
+              }
+            };
+
+            // Merge into global cfg and localStorage
+            cfg = { ...cfg, ...remoteStoreCfg };
+            localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
+            localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
+
+            // Update UI
+            if (typeof initDesignPanel === 'function') initDesignPanel();
+            if (typeof initConfigView === 'function') initConfigView();
+            if (typeof previewUpdate === 'function') previewUpdate();
           }
         }
 
@@ -4515,9 +4555,53 @@
       wrap.classList.toggle('mobile', size === 'mobile');
     }
 
-    function applyConfig() {
+    async function syncStoreConfigToSupabase(cfgObj) {
+      try {
+        const dataToSave = {
+          business_name: cfgObj.name || '',
+          tagline: cfgObj.tagline || '',
+          primary_color: cfgObj.color || '#D72638',
+          wapp: cfgObj.wapp || '',
+          direccion: cfgObj.direccion || '',
+          horario: cfgObj.horario || '',
+          rubro: cfgObj.rubro || '',
+          phone: JSON.stringify(cfgObj.socials || {}),
+          instagram: cfgObj.socials?.ig || '',
+          facebook: cfgObj.socials?.fb || ''
+        };
+
+        const activeStore = new URLSearchParams(window.location.search).get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now';
+        const sbUrl = localStorage.getItem('storeapp_supabase_url') || (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : '');
+        const sbKey = localStorage.getItem('storeapp_supabase_key') || (typeof SUPABASE_KEY !== 'undefined' ? SUPABASE_KEY : '');
+
+        if (!sbUrl || !sbKey) return;
+
+        const configRes = await fetch(`${sbUrl}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(activeStore)}`, {
+          headers: {
+            'apikey': sbKey,
+            'Authorization': `Bearer ${sbKey}`
+          }
+        });
+
+        if (configRes.ok) {
+          const configData = await configRes.json();
+          if (configData && configData.length > 0) {
+            const id = configData[0].id;
+            await updateInSupabase('company_settings', id, dataToSave);
+          } else {
+            dataToSave.store_id = activeStore;
+            await postToSupabase('company_settings', dataToSave);
+          }
+        }
+      } catch (e) {
+        console.error('Error syncing config to Supabase:', e);
+      }
+    }
+
+    async function applyConfig() {
       try {
         localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
+        await syncStoreConfigToSupabase(cfg);
         // Flash success
         const btn = window.event && window.event.currentTarget ? window.event.currentTarget : document.querySelector('button[onclick="applyConfig()"]');
         if (btn) {
@@ -6529,7 +6613,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       }
     }
 
-    function saveConfig() {
+    async function saveConfig() {
       // Store info → merge into storeapp_cfg
       const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
       const name = document.getElementById('cfg-store-name').value.trim();
@@ -6558,6 +6642,10 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
       sc.socials = { web, ig, fb, x, ml, tn, maps };
       localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
+      
+      // also merge into global cfg object
+      cfg = { ...cfg, ...sc };
+      
       updateWelcomeGreeting();
 
       // Cloudinary
@@ -6590,6 +6678,9 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       }
 
       if (typeof updateStatusLights === 'function') updateStatusLights();
+
+      // Sync to Supabase
+      await syncStoreConfigToSupabase(cfg);
 
       const el = document.getElementById('cfg-save-status');
       el.style.color = 'var(--green)';
@@ -7640,7 +7731,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       }
     }
 
-    function saveStepByStepConfig() {
+    async function saveStepByStepConfig() {
       // 1. Get values from wizard inputs
       const name = document.getElementById('wiz-store-name').value.trim();
       const rubro = document.getElementById('wiz-store-rubro').value.trim();
@@ -7689,6 +7780,9 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
       localStorage.setItem('storeapp_cfg_' + activeStore, JSON.stringify(sc));
 
+      // also merge into global cfg object
+      cfg = { ...cfg, ...sc };
+
       // Supabase config
       if (sbUrl) {
         localStorage.setItem('storeapp_supabase_url', sbUrl);
@@ -7702,6 +7796,9 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       // 4. Update greeting & interface
       updateWelcomeGreeting();
       if (typeof updateStatusLights === 'function') updateStatusLights();
+
+      // Sync to Supabase
+      await syncStoreConfigToSupabase(cfg);
       
       // Close modal
       closeStepByStepModal();
