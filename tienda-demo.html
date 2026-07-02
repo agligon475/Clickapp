@@ -1139,14 +1139,16 @@ function applyConfig() {
   const logoIcon = document.getElementById('logo-icon');
   const logoImg  = document.getElementById('logo-img');
   const logoText = document.getElementById('logo-text');
-  if (CFG.logo) {
-    logoImg.src = CFG.logo;
-    logoImg.style.display = 'block';
-    logoIcon.style.display = 'none';
-  } else {
-    logoIcon.textContent = CFG.emoji || '🔧';
-    logoIcon.style.display = 'flex';
-    logoImg.style.display = 'none';
+  if (logoIcon && logoImg) {
+    if (CFG.logo) {
+      logoImg.src = CFG.logo;
+      logoImg.style.display = 'block';
+      logoIcon.style.display = 'none';
+    } else {
+      logoIcon.textContent = CFG.emoji || '🔧';
+      logoIcon.style.display = 'flex';
+      logoImg.style.display = 'none';
+    }
   }
   if (logoText) logoText.textContent = CFG.name || 'Mi Tienda';
 
