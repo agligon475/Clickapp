@@ -4008,6 +4008,11 @@
               if (dbCfg.phone) parsedSocials = JSON.parse(dbCfg.phone);
             } catch (e) {}
 
+            let parsedDesign = {};
+            try {
+              if (dbCfg.email) parsedDesign = JSON.parse(dbCfg.email);
+            } catch (e) {}
+
             const remoteStoreCfg = {
               name: dbCfg.business_name || cfg.name,
               tagline: dbCfg.tagline || cfg.tagline,
@@ -4016,6 +4021,14 @@
               direccion: dbCfg.direccion || '',
               horario: dbCfg.horario || '',
               rubro: dbCfg.rubro || '',
+              logo: dbCfg.logo_url || cfg.logo || '',
+              h1: parsedDesign.h1 || cfg.h1 || '',
+              h2: parsedDesign.h2 || cfg.h2 || '',
+              desc: parsedDesign.desc || cfg.desc || '',
+              emoji: parsedDesign.emoji || cfg.emoji || '🏪',
+              theme: parsedDesign.theme || cfg.theme || 'dark',
+              font: parsedDesign.font || cfg.font || '',
+              fontBody: parsedDesign.fontBody || cfg.fontBody || '',
               socials: {
                 web: parsedSocials.web || '',
                 ig: dbCfg.instagram || parsedSocials.ig || '',
