@@ -2638,7 +2638,10 @@
               <!-- BANNER 1 -->
               <div
                 style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:16px;margin-bottom:14px;">
-                <div style="font-weight:700;font-size:13px;margin-bottom:12px;color:var(--red);">BANNER 1</div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                  <div style="font-weight:700;font-size:13px;color:var(--red);">BANNER 1</div>
+                  <label style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--silver);"><input type="checkbox" id="banner1-active" checked style="accent-color:var(--red);width:14px;height:14px;"/> Activo</label>
+                </div>
                 <div class="config-grid">
                   <div class="ctrl-group">
                     <label class="ctrl-label">Etiqueta (NUEVAS, OFERTA, etc)</label>
@@ -2677,7 +2680,10 @@
               <!-- BANNER 2 -->
               <div
                 style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:16px;margin-bottom:14px;">
-                <div style="font-weight:700;font-size:13px;margin-bottom:12px;color:var(--red);">BANNER 2</div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                  <div style="font-weight:700;font-size:13px;color:var(--red);">BANNER 2</div>
+                  <label style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--silver);"><input type="checkbox" id="banner2-active" checked style="accent-color:var(--red);width:14px;height:14px;"/> Activo</label>
+                </div>
                 <div class="config-grid">
                   <div class="ctrl-group">
                     <label class="ctrl-label">Etiqueta (PROMOCIÓN, DESCUENTO, etc)</label>
@@ -4059,22 +4065,35 @@
           const configData = await configRes.json();
           if (configData && configData.length > 0) {
             const dbCfg = configData[0];
-            const bannerData = {
-              banner1: { label: dbCfg.banner1_label || 'NUEVAS', title: dbCfg.banner1_title || 'Productos', img: dbCfg.banner1_img || '', cat: dbCfg.banner1_cat || '' },
-              banner2: { label: dbCfg.banner2_label || 'PROMOCIÓN', title: dbCfg.banner2_title || 'Especiales', img: dbCfg.banner2_img || '', cat: dbCfg.banner2_cat || '' }
-            };
-            localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
+            
+            let parsedDesign = {};
+            try {
+              if (dbCfg.email) parsedDesign = JSON.parse(dbCfg.email);
+            } catch (e) {}
 
-            // Pull and merge settings into local config
             let parsedSocials = {};
             try {
               if (dbCfg.phone) parsedSocials = JSON.parse(dbCfg.phone);
             } catch (e) {}
 
-            let parsedDesign = {};
-            try {
-              if (dbCfg.email) parsedDesign = JSON.parse(dbCfg.email);
-            } catch (e) {}
+            const bannerData = {
+              banner1: { 
+                label: dbCfg.banner1_label || 'NUEVAS', 
+                title: dbCfg.banner1_title || 'Productos', 
+                img: dbCfg.banner1_img || '', 
+                cat: dbCfg.banner1_cat || '',
+                active: parsedDesign.banner1_active !== false
+              },
+              banner2: { 
+                label: dbCfg.banner2_label || 'PROMOCIÓN', 
+                title: dbCfg.banner2_title || 'Especiales', 
+                img: dbCfg.banner2_img || '', 
+                cat: dbCfg.banner2_cat || '',
+                active: parsedDesign.banner2_active !== false
+              }
+            };
+            localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
+            localStorage.setItem('storeapp_banners_' + STORE_ID, JSON.stringify(bannerData));
 
             const remoteStoreCfg = {
               name: dbCfg.business_name || cfg.name,
@@ -7141,6 +7160,9 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const b1 = bannerData.banner1 || {};
       const b2 = bannerData.banner2 || {};
 
+      const b1Active = document.getElementById('banner1-active'); if (b1Active) b1Active.checked = b1.active !== false;
+      const b2Active = document.getElementById('banner2-active'); if (b2Active) b2Active.checked = b2.active !== false;
+
       const b1Label = document.getElementById('banner1-label'); if (b1Label) b1Label.value = b1.label || '';
       const b1Title = document.getElementById('banner1-title'); if (b1Title) b1Title.value = b1.title || '';
       const b1Img = document.getElementById('banner1-img'); if (b1Img) b1Img.value = b1.img || '';
@@ -7222,17 +7244,20 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const b1Title = document.getElementById('banner1-title').value.trim();
       const b1Img = document.getElementById('banner1-img').value.trim();
       const b1Cat = document.getElementById('banner1-cat').value.trim();
+      const b1Active = document.getElementById('banner1-active') ? document.getElementById('banner1-active').checked : true;
 
       const b2Label = document.getElementById('banner2-label').value.trim();
       const b2Title = document.getElementById('banner2-title').value.trim();
       const b2Img = document.getElementById('banner2-img').value.trim();
       const b2Cat = document.getElementById('banner2-cat').value.trim();
+      const b2Active = document.getElementById('banner2-active') ? document.getElementById('banner2-active').checked : true;
 
       const bannerData = {
-        banner1: { label: b1Label, title: b1Title, img: b1Img, cat: b1Cat },
-        banner2: { label: b2Label, title: b2Title, img: b2Img, cat: b2Cat }
+        banner1: { label: b1Label, title: b1Title, img: b1Img, cat: b1Cat, active: b1Active },
+        banner2: { label: b2Label, title: b2Title, img: b2Img, cat: b2Cat, active: b2Active }
       };
       localStorage.setItem(`storeapp_banners_${STORE_ID}`, JSON.stringify(bannerData));
+      localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
 
       const statusEl = document.getElementById('banners-status');
       statusEl.style.color = 'var(--silver)';
@@ -7252,9 +7277,25 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         const configData = await configRes.json();
 
         if (configData && configData.length > 0) {
-          const id = configData[0].id;
+          const dbRow = configData[0];
+          const id = dbRow.id;
+
+          let parsedEmail = {};
+          try {
+            if (dbRow.email) parsedEmail = JSON.parse(dbRow.email);
+          } catch(e) {}
+
+          parsedEmail.banner1_active = b1Active;
+          parsedEmail.banner2_active = b2Active;
+          dataToSave.email = JSON.stringify(parsedEmail);
+
           await updateInSupabase('company_settings', id, dataToSave);
         } else {
+          const parsedEmail = {
+            banner1_active: b1Active,
+            banner2_active: b2Active
+          };
+          dataToSave.email = JSON.stringify(parsedEmail);
           await postToSupabase('company_settings', dataToSave);
         }
 

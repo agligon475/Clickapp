@@ -1308,13 +1308,15 @@ async function loadSheet() {
             label: cfg.banner1_label || 'NUEVAS',
             title: cfg.banner1_title || 'Productos',
             img: cfg.banner1_img || '',
-            cat: cfg.banner1_cat || ''
+            cat: cfg.banner1_cat || '',
+            active: parsedDesign.banner1_active !== false
           },
           banner2: {
             label: cfg.banner2_label || 'PROMOCIÓN',
             title: cfg.banner2_title || 'Especiales',
             img: cfg.banner2_img || '',
-            cat: cfg.banner2_cat || ''
+            cat: cfg.banner2_cat || '',
+            active: parsedDesign.banner2_active !== false
           }
         };
       }
@@ -1494,13 +1496,17 @@ function onSearch(val) { searchTerm = val; render(); }
 
 /* ═══════════════════════════════════════════ BANNERS PROMOCIONALES */
 function renderBanners(bannerData) {
+  const container = document.getElementById('banners-container');
   const banner1El = document.getElementById('banner-1');
   const banner2El = document.getElementById('banner-2');
   
-  if (!banner1El || !banner2El) return;
+  if (!banner1El || !banner2El || !container) return;
+
+  const b1Active = bannerData.banner1 && bannerData.banner1.active !== false && bannerData.banner1.title;
+  const b2Active = bannerData.banner2 && bannerData.banner2.active !== false && bannerData.banner2.title;
   
-  const renderBanner = (el, data) => {
-    if (!data || !data.title) {
+  const renderBanner = (el, data, isActive) => {
+    if (!isActive) {
       el.style.display = 'none';
       return;
     }
@@ -1530,8 +1536,19 @@ function renderBanners(bannerData) {
     };
   };
   
-  renderBanner(banner1El, bannerData.banner1);
-  renderBanner(banner2El, bannerData.banner2);
+  renderBanner(banner1El, bannerData.banner1, b1Active);
+  renderBanner(banner2El, bannerData.banner2, b2Active);
+
+  if (!b1Active && !b2Active) {
+    container.style.display = 'none';
+  } else {
+    container.style.display = 'grid';
+    if (b1Active && b2Active) {
+      container.style.gridTemplateColumns = '1fr 1fr';
+    } else {
+      container.style.gridTemplateColumns = '1fr';
+    }
+  }
 }
 
 
