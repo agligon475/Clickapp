@@ -218,9 +218,23 @@ body::before{
 </footer>
 
 <script>
+const rawSupabaseUrl = localStorage.getItem('storeapp_supabase_url');
+const SUPABASE_URL = (rawSupabaseUrl && rawSupabaseUrl.startsWith('http')) ? rawSupabaseUrl : 'https://iaylgsthwildjkiiwgfd.supabase.co';
+const SUPABASE_KEY = localStorage.getItem('storeapp_supabase_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+
+const urlParams = new URLSearchParams(window.location.search);
+const STORE_ID = urlParams.get('store') || localStorage.getItem('storeapp_store_id') || 'ferre-now';
+localStorage.setItem('storeapp_store_id', STORE_ID);
+
+const defaultNosotros = `Somos una ferretería con más de 20 años de experiencia en el rubro, ofreciendo soluciones tanto para profesionales de la construcción como para proyectos del hogar.
+
+Nacimos como un pequeño emprendimiento familiar y gracias a la confianza de nuestros clientes, hoy nos expandimos al mundo digital para estar más cerca tuyo y facilitarte la compra de tus herramientas y materiales desde la comodidad de tu casa o taller.
+
+Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera calidad a precios competitivos. Queremos que cada cliente encuentre exactamente lo que necesita para llevar a cabo su proyecto con éxito.`;
+
 function applyStoredConfig() {
   let cfg = {};
-  try { cfg = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}'); } catch(e) {}
+  try { cfg = JSON.parse(localStorage.getItem('storeapp_cfg_' + STORE_ID) || localStorage.getItem('storeapp_cfg') || '{}'); } catch(e) {}
 
   const accent = cfg.color || '#D72638';
   const theme  = cfg.theme || 'dark';
@@ -256,7 +270,8 @@ function applyStoredConfig() {
   }
   if (cfg.fontBody) root.setProperty('--font-body', `'${cfg.fontBody}', sans-serif`);
 
-  const logoImg = localStorage.getItem('storeapp_logo');
+  // logoImg priority: cfg.logo (Supabase URL) -> namespaced localStorage -> default localStorage
+  const logoImg = cfg.logo || localStorage.getItem(`storeapp_logo_${STORE_ID}`) || localStorage.getItem('storeapp_logo');
   const logoEl  = document.querySelector('.logo');
   if (logoEl) {
     if (logoImg) {
@@ -311,18 +326,89 @@ function applyStoredConfig() {
       }
     });
   }
+
+  // Update all internal links to preserve the store parameter
+  document.querySelectorAll('a').forEach(a => {
+    const href = a.getAttribute('href');
+    if (href && (href.startsWith('tienda-test.html') || href.startsWith('nosotros-test.html') || href.startsWith('faq-test.html') || href.startsWith('tienda-demo.html'))) {
+      try {
+        const url = new URL(href, window.location.href);
+        url.searchParams.set('store', STORE_ID);
+        a.href = url.pathname + url.search + url.hash;
+      } catch(e) {
+        // Fallback for relative paths without domain if URL parsing fails
+        const separator = href.includes('?') ? '&' : '?';
+        a.href = href.split('#')[0] + separator + 'store=' + encodeURIComponent(STORE_ID) + (href.includes('#') ? '#' + href.split('#')[1] : '');
+      }
+    }
+  });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  applyStoredConfig();
-  const defaultNosotros = `Somos una ferretería con más de 20 años de experiencia en el rubro, ofreciendo soluciones tanto para profesionales de la construcción como para proyectos del hogar.
-
-Nacimos como un pequeño emprendimiento familiar y gracias a la confianza de nuestros clientes, hoy nos expandimos al mundo digital para estar más cerca tuyo y facilitarte la compra de tus herramientas y materiales desde la comodidad de tu casa o taller.
-
-Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera calidad a precios competitivos. Queremos que cada cliente encuentre exactamente lo que necesita para llevar a cabo su proyecto con éxito.`;
-
+async function loadNosotrosFromSupabase() {
   try {
-    const dataStr = localStorage.getItem('storeapp_pages');
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+      cache: 'no-cache',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.length > 0) {
+        const dbCfg = data[0];
+        
+        let parsedDesign = {};
+        try {
+          if (dbCfg.email) parsedDesign = JSON.parse(dbCfg.email);
+        } catch(e) {}
+
+        const remoteStoreCfg = {
+          name: dbCfg.business_name || '',
+          tagline: dbCfg.tagline || '',
+          color: dbCfg.primary_color || '',
+          logo: dbCfg.logo_url || '',
+          theme: parsedDesign.theme || 'dark',
+          font: parsedDesign.font || '',
+          fontBody: parsedDesign.fontBody || '',
+          emoji: parsedDesign.emoji || '🏪',
+          direccion: dbCfg.direccion || '',
+          horario: dbCfg.horario || '',
+          socials: dbCfg.phone ? JSON.parse(dbCfg.phone) : {}
+        };
+        
+        localStorage.setItem('storeapp_cfg', JSON.stringify(remoteStoreCfg));
+        localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(remoteStoreCfg));
+        
+        applyStoredConfig();
+
+        let content = parsedDesign.nosotros || '';
+        if (!content) {
+          const localPages = JSON.parse(localStorage.getItem(`storeapp_pages_${STORE_ID}`) || localStorage.getItem('storeapp_pages') || '{}');
+          content = localPages.nosotros || defaultNosotros;
+        }
+
+        const htmlContent = content
+          .split('\n')
+          .filter(p => p.trim())
+          .map(p => `<p>${p.replace(/</g, '&lt;')}</p>`)
+          .join('');
+        
+        document.getElementById('nosotros-content').innerHTML = htmlContent;
+        return;
+      }
+    }
+  } catch(e) {
+    console.error("Error loading nosotros from Supabase", e);
+  }
+
+  // Fallback if fetch failed
+  renderLocalNosotros();
+}
+
+function renderLocalNosotros() {
+  try {
+    const dataStr = localStorage.getItem(`storeapp_pages_${STORE_ID}`) || localStorage.getItem('storeapp_pages');
     let content = defaultNosotros;
     
     if (dataStr) {
@@ -342,6 +428,11 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
   } catch(e) {
     document.getElementById('nosotros-content').innerHTML = '<p>Error al cargar la información.</p>';
   }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  applyStoredConfig();
+  loadNosotrosFromSupabase();
 });
 </script>
 

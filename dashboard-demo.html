@@ -4096,6 +4096,15 @@
             localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
             localStorage.setItem('storeapp_banners_' + STORE_ID, JSON.stringify(bannerData));
 
+            if (parsedDesign.nosotros || parsedDesign.faq) {
+              const pagesData = {
+                nosotros: parsedDesign.nosotros || '',
+                faq: parsedDesign.faq || []
+              };
+              localStorage.setItem('storeapp_pages', JSON.stringify(pagesData));
+              localStorage.setItem(`storeapp_pages_${STORE_ID}`, JSON.stringify(pagesData));
+            }
+
             const remoteStoreCfg = {
               name: dbCfg.business_name || cfg.name,
               tagline: dbCfg.tagline || cfg.tagline,
@@ -7593,7 +7602,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
     function loadPages() {
       try {
-        const data = JSON.parse(localStorage.getItem('storeapp_pages') || '{"nosotros":"","faq":[]}');
+        const data = JSON.parse(localStorage.getItem(`storeapp_pages_${STORE_ID}`) || localStorage.getItem('storeapp_pages') || '{"nosotros":"","faq":[]}');
 
         // Default Nosotros Text
         const defaultNosotros = `Somos una ferretería con más de 20 años de experiencia en el rubro, ofreciendo soluciones tanto para profesionales de la construcción como para proyectos del hogar.
@@ -7609,15 +7618,15 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         if (data.faq && data.faq.length > 0) {
           data.faq.forEach(item => addFaqItem(item.q, item.a));
         } else {
-          addFaqItem('¿Cuáles son los métodos de envío?', 'Hacemos envíos a todo el país. Trabajamos con cadetería propia para CABA y GBA entregando en el día para pedidos realizados antes de las 14hs. Para el interior del país despachamos a través de Correo Argentino o la encomienda que prefieras.');
+          addFaqItem('¿Cuáles son los métodos de envío?', 'Hacemos envíos a todo el país. Trabajos con cadetería propia para CABA y GBA entregando en el día para pedidos realizados antes de las 14hs. Para el interior del país despachamos a través de Correo Argentino o la encomienda que prefieras.');
           addFaqItem('¿Qué medios de pago aceptan?', 'Aceptamos transferencias bancarias, Mercado Pago, tarjetas de crédito (hasta 3 cuotas sin interés) y efectivo si retirás por nuestro local. Al finalizar tu pedido por WhatsApp te enviaremos los links de pago.');
-          addFaqItem('¿Puedo retirar mi pedido en persona?', 'Sí, podés seleccionar la opción "Retiro en local" al realizar tu pedido. Una vez que te confirmemos que tu pedido está listo, podés pasar a retirarlo de Lunes a Viernes de 9 a 18hs y Sábados de 9 a 13hs.');
+          addFaqItem('¿Puedo retirar mi pedido en persona?', 'Sí, podés seleccionar la opción "Retiro en local" al realizar tu pedido. Once que te confirmemos que tu pedido está listo, podés pasar a retirarlo de Lunes a Viernes de 9 a 18hs y Sábados de 9 a 13hs.');
           addFaqItem('¿Los productos tienen garantía?', 'Todos nuestros productos cuentan con garantía oficial de fábrica. El plazo depende de la marca y el tipo de herramienta, variando generalmente entre 6 y 24 meses. Conservá tu factura de compra para validarla.');
         }
       } catch (e) { console.error('Error loading pages', e); }
     }
 
-    function savePages() {
+    async function savePages() {
       const nosotrosText = document.getElementById('pages-nosotros-text').value;
       const faqItems = [];
       document.querySelectorAll('.faq-item-edit').forEach(el => {
@@ -7628,10 +7637,55 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
 
       const pagesData = { nosotros: nosotrosText, faq: faqItems };
       localStorage.setItem('storeapp_pages', JSON.stringify(pagesData));
+      localStorage.setItem(`storeapp_pages_${STORE_ID}`, JSON.stringify(pagesData));
 
       const statusEl = document.getElementById('pages-status');
-      statusEl.style.color = 'var(--green)';
-      statusEl.textContent = '✓ Páginas guardadas correctamente en el navegador';
+      statusEl.style.color = 'var(--silver)';
+      statusEl.textContent = 'Guardando en Supabase...';
+
+      try {
+        const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+          cache: 'no-cache',
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+
+        if (!configRes.ok) throw new Error('No se pudo verificar la configuración en Supabase');
+        const configData = await configRes.json();
+
+        if (configData && configData.length > 0) {
+          const dbRow = configData[0];
+          const id = dbRow.id;
+
+          let parsedEmail = {};
+          try {
+            if (dbRow.email) parsedEmail = JSON.parse(dbRow.email);
+          } catch(e) {}
+
+          parsedEmail.nosotros = nosotrosText;
+          parsedEmail.faq = faqItems;
+
+          const dataToSave = {
+            email: JSON.stringify(parsedEmail)
+          };
+
+          await updateInSupabase('company_settings', id, dataToSave);
+        } else {
+          const parsedEmail = {
+            nosotros: nosotrosText,
+            faq: faqItems
+          };
+          const dataToSave = {
+            email: JSON.stringify(parsedEmail)
+          };
+          await postToSupabase('company_settings', dataToSave);
+        }
+
+        statusEl.style.color = 'var(--green)';
+        statusEl.textContent = '✓ Páginas guardadas correctamente';
+      } catch (e) {
+        statusEl.style.color = 'var(--orange)';
+        statusEl.textContent = '⚠ Error al guardar en Supabase: ' + e.message;
+      }
       setTimeout(() => statusEl.textContent = '', 3000);
     }
 
