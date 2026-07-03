@@ -222,8 +222,22 @@ const rawSupabaseUrl = localStorage.getItem('storeapp_supabase_url');
 const SUPABASE_URL = (rawSupabaseUrl && rawSupabaseUrl.startsWith('http')) ? rawSupabaseUrl : 'https://iaylgsthwildjkiiwgfd.supabase.co';
 const SUPABASE_KEY = localStorage.getItem('storeapp_supabase_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
 
-const urlParams = new URLSearchParams(window.location.search);
-const STORE_ID = urlParams.get('store') || localStorage.getItem('storeapp_store_id') || 'ferre-now';
+// Obtener store_id dinámicamente desde el subdominio, parámetro de URL o localStorage
+const getStoreId = () => {
+  const hostname = window.location.hostname.toLowerCase();
+  
+  if (hostname.endsWith('.daletepido.com.ar') && hostname !== 'daletepido.com.ar' && hostname !== 'www.daletepido.com.ar') {
+    return hostname.replace('.daletepido.com.ar', '');
+  }
+  if (hostname.endsWith('.clickapp.com') && hostname !== 'clickapp.com' && hostname !== 'www.clickapp.com') {
+    return hostname.replace('.clickapp.com', '');
+  }
+  
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('store') || localStorage.getItem('storeapp_store_id') || 'ferre-now';
+};
+
+const STORE_ID = getStoreId();
 localStorage.setItem('storeapp_store_id', STORE_ID);
 
 const defaultFaq = [
