@@ -3126,6 +3126,16 @@
           </div>
           <div class="config-section-content">
             <div class="config-grid">
+              <div class="ctrl-group" style="grid-column:1/-1;">
+                <label class="ctrl-label">Tu Tienda Online (Dirección Web)</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input class="ctrl-input" id="cfg-store-subdomain" readonly style="flex:1;background:var(--zinc);color:var(--silver);cursor:not-allowed;" />
+                  <a id="cfg-store-url-btn" href="#" target="_blank" class="sb-btn" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:10px 14px;background:var(--red);color:#fff;border-radius:6px;font-size:12px;font-weight:600;height:40px;">
+                    <i class="bi bi-box-arrow-up-right"></i> Ver Tienda
+                  </a>
+                </div>
+                <div style="font-size:10px;color:var(--silver);margin-top:3px;">Tu dirección web para compartir con clientes.</div>
+              </div>
               <div class="ctrl-group">
                 <label class="ctrl-label">Nombre de la tienda</label>
                 <input class="ctrl-input" id="cfg-store-name" placeholder="FerreApp" />
@@ -6437,6 +6447,14 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       // Load all saved values into form fields
       const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
 
+      const subdomainEl = document.getElementById('cfg-store-subdomain');
+      const urlBtnEl = document.getElementById('cfg-store-url-btn');
+      if (subdomainEl && urlBtnEl) {
+        const subdomain = `${STORE_ID}.daletepido.com.ar`;
+        subdomainEl.value = subdomain;
+        urlBtnEl.href = `https://${subdomain}`;
+      }
+
       if (sc.name) document.getElementById('cfg-store-name').value = sc.name;
       if (sc.tagline) document.getElementById('cfg-store-tagline').value = sc.tagline;
       if (sc.wapp) document.getElementById('cfg-store-wapp').value = sc.wapp;
@@ -7818,6 +7836,11 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           }
         } catch(e) {}
 
+        const previewEl = document.getElementById('wiz-subdomain-preview');
+        if (previewEl) {
+          previewEl.textContent = `${activeStore}.daletepido.com.ar`;
+        }
+
         document.getElementById('wiz-store-name').value = sc.name || document.getElementById('cfg-store-name')?.value || '';
         document.getElementById('wiz-store-rubro').value = sc.rubro || document.getElementById('cfg-store-rubro')?.value || '';
         document.getElementById('wiz-store-tagline').value = sc.tagline || document.getElementById('cfg-store-tagline')?.value || '';
@@ -8472,6 +8495,9 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
               <i class="bi bi-image"></i> Subir imagen de logo
               <input type="file" id="wiz-logo-input" accept="image/*" style="display:none;" onchange="uploadWizLogo(this)" />
             </label>
+          </div>
+          <div style="margin-top:14px;padding:10px;background:var(--zinc);border-radius:6px;font-size:11px;color:var(--silver);border:1px solid var(--iron);">
+            <i class="bi bi-info-circle"></i> Tu tienda estará disponible en: <strong id="wiz-subdomain-preview" style="color:var(--white);">...</strong>
           </div>
         </div>
 
