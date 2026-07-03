@@ -3128,13 +3128,19 @@
             <div class="config-grid">
               <div class="ctrl-group" style="grid-column:1/-1;">
                 <label class="ctrl-label">Tu Tienda Online (Dirección Web)</label>
-                <div style="display:flex;gap:8px;align-items:center;">
-                  <input class="ctrl-input" id="cfg-store-subdomain" readonly style="flex:1;background:var(--zinc);color:var(--silver);cursor:not-allowed;" />
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                  <div style="display:flex;align-items:center;flex:1;min-width:200px;background:var(--zinc);border:1px solid var(--iron);border-radius:8px;padding-right:12px;overflow:hidden;height:40px;">
+                    <input class="ctrl-input" id="cfg-store-subdomain" placeholder="mi-tienda" style="flex:1;border:none;background:transparent;padding-right:0;height:100%;" />
+                    <span style="color:var(--silver);font-size:13px;font-weight:600;user-select:none;margin-left:8px;">.daletepido.com.ar</span>
+                  </div>
+                  <button onclick="changeSubdomain()" class="sb-btn" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:10px 14px;background:var(--iron);color:var(--white);border:1px solid var(--zinc);border-radius:6px;font-size:12px;font-weight:600;height:40px;">
+                    <i class="bi bi-check-circle"></i> Aplicar cambio
+                  </button>
                   <a id="cfg-store-url-btn" href="#" target="_blank" class="sb-btn" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:10px 14px;background:var(--red);color:#fff;border-radius:6px;font-size:12px;font-weight:600;height:40px;">
                     <i class="bi bi-box-arrow-up-right"></i> Ver Tienda
                   </a>
                 </div>
-                <div style="font-size:10px;color:var(--silver);margin-top:3px;">Tu dirección web para compartir con clientes.</div>
+                <div style="font-size:10px;color:var(--silver);margin-top:3px;">Podés cambiar tu dirección web una vez cada 15 días. Usá solo letras minúsculas, números y guiones.</div>
               </div>
               <div class="ctrl-group">
                 <label class="ctrl-label">Nombre de la tienda</label>
@@ -6450,9 +6456,8 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const subdomainEl = document.getElementById('cfg-store-subdomain');
       const urlBtnEl = document.getElementById('cfg-store-url-btn');
       if (subdomainEl && urlBtnEl) {
-        const subdomain = `${STORE_ID}.daletepido.com.ar`;
-        subdomainEl.value = subdomain;
-        urlBtnEl.href = `https://${subdomain}`;
+        subdomainEl.value = STORE_ID;
+        urlBtnEl.href = `https://${STORE_ID}.daletepido.com.ar`;
       }
 
       if (sc.name) document.getElementById('cfg-store-name').value = sc.name;
@@ -6819,6 +6824,133 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       el.style.color = 'var(--green)';
       el.textContent = '✓ Configuración guardada correctamente';
       setTimeout(() => { el.textContent = ''; }, 3000);
+    }
+
+    async function changeSubdomain() {
+      const inputVal = document.getElementById('cfg-store-subdomain').value.trim().toLowerCase();
+      
+      if (!inputVal) {
+        alert('Por favor ingresá un subdominio válido.');
+        return;
+      }
+      
+      const regex = /^[a-z0-9-]+$/;
+      if (!regex.test(inputVal)) {
+        alert('El subdominio solo puede contener letras minúsculas, números y guiones medios (sin espacios ni caracteres especiales).');
+        return;
+      }
+      
+      if (inputVal === STORE_ID.toLowerCase()) {
+        alert('El subdominio ingresado es el mismo que el actual.');
+        return;
+      }
+
+      if (confirm(`¿Estás seguro de que deseas cambiar tu dirección web a https://${inputVal}.daletepido.com.ar?\n\nEsto migrará todos tus productos, categorías y configuraciones de inmediato.`)) {
+        const el = document.getElementById('cfg-save-status');
+        if (el) {
+          el.style.color = 'var(--silver)';
+          el.textContent = 'Verificando límites y migrando subdominio...';
+        }
+        
+        try {
+          // 1. Fetch current settings to read the last changed timestamp
+          const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+            cache: 'no-cache',
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+          });
+          
+          if (!configRes.ok) throw new Error('No se pudo verificar la configuración actual en Supabase');
+          const configData = await configRes.json();
+          if (!configData || configData.length === 0) throw new Error('No se encontró la configuración de la tienda');
+          
+          const dbRow = configData[0];
+          let parsedEmail = {};
+          try {
+            if (dbRow.email) parsedEmail = JSON.parse(dbRow.email);
+          } catch(e) {}
+          
+          // 2. Check 15-day limit
+          const now = new Date();
+          if (parsedEmail.subdomain_last_changed) {
+            const lastChanged = new Date(parsedEmail.subdomain_last_changed);
+            const diffTime = Math.abs(now - lastChanged);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            if (diffDays < 15) {
+              const nextAllowedDate = new Date(lastChanged.getTime() + 15 * 24 * 60 * 60 * 1000);
+              const dateStr = nextAllowedDate.toLocaleDateString('es-AR');
+              throw new Error(`Solo podés cambiar tu subdominio una vez cada 15 días. Próximo cambio disponible el ${dateStr}.`);
+            }
+          }
+          
+          // 3. Migrate related tables
+          // A. categories
+          const catRes = await fetch(`${SUPABASE_URL}/rest/v1/categories?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${SUPABASE_KEY}`
+            },
+            body: JSON.stringify({ store_id: inputVal })
+          });
+          if (!catRes.ok) throw new Error('Error al migrar categorías');
+
+          // B. products
+          const prodRes = await fetch(`${SUPABASE_URL}/rest/v1/products?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${SUPABASE_KEY}`
+            },
+            body: JSON.stringify({ store_id: inputVal })
+          });
+          if (!prodRes.ok) throw new Error('Error al migrar productos');
+
+          // C. pickups
+          const pickupRes = await fetch(`${SUPABASE_URL}/rest/v1/pickups?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${SUPABASE_KEY}`
+            },
+            body: JSON.stringify({ store_id: inputVal })
+          });
+          if (!pickupRes.ok) throw new Error('Error al migrar puntos de retiro');
+
+          // D. company_settings
+          parsedEmail.subdomain_last_changed = now.toISOString();
+          const settingsRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${SUPABASE_KEY}`
+            },
+            body: JSON.stringify({
+              store_id: inputVal,
+              email: JSON.stringify(parsedEmail)
+            })
+          });
+          if (!settingsRes.ok) throw new Error('Error al migrar configuración general');
+
+          // 4. Update local namespaces
+          localStorage.setItem('storeapp_store_id', inputVal);
+          
+          alert('¡Subdominio cambiado con éxito! Redireccionando al nuevo panel...');
+          const newUrl = new URL(window.location.href);
+          newUrl.searchParams.set('store', inputVal);
+          window.location.href = newUrl.toString();
+          
+        } catch(e) {
+          alert('Error al cambiar subdominio: ' + e.message);
+          if (el) {
+            el.style.color = 'var(--orange)';
+            el.textContent = 'Error al migrar';
+          }
+        }
+      }
     }
 
 
