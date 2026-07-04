@@ -822,9 +822,23 @@ a.logo{
   box-shadow: 0 2px 4px rgba(0,0,0,0.3);
   width: max-content;
 }
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; transform: scale(0.98); }
+  50% { opacity: 1; transform: scale(1.02); }
+}
 </style>
 </head>
 <body>
+
+<!-- ── FULLSCREEN LOADER ── -->
+<div id="store-loader" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #121212; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.4s ease, visibility 0.4s ease;">
+  <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" style="max-width: 220px; height: auto; margin-bottom: 24px; animation: pulse 1.8s infinite ease-in-out;">
+  <div style="width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #D60000; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+</div>
 
 <!-- ── STATUS BAR ── -->
 <div class="status-bar">
@@ -1425,6 +1439,15 @@ async function loadSheet() {
     setStatus('err', 'Error al cargar el catálogo');
     console.error(e);
     document.getElementById('grid').innerHTML = `<div class="empty-state"><i class="bi bi-wifi-off"></i><p>No se pudo cargar el catálogo.<br/>Revisá tu conexión e intentá de nuevo.</p></div>`;
+  } finally {
+    const loader = document.getElementById('store-loader');
+    if (loader) {
+      loader.style.opacity = '0';
+      loader.style.pointerEvents = 'none';
+      setTimeout(() => {
+        loader.remove();
+      }, 400);
+    }
   }
 }
 
