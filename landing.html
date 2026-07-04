@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script>
+        (function() {
+            const hostname = window.location.hostname.toLowerCase();
+            if (hostname.endsWith('.daletepido.com.ar') && hostname !== 'daletepido.com.ar' && hostname !== 'www.daletepido.com.ar') {
+                window.location.replace('/' + window.location.search + window.location.hash);
+            }
+            if (hostname.endsWith('.clickapp.com') && hostname !== 'clickapp.com' && hostname !== 'www.clickapp.com') {
+                window.location.replace('/' + window.location.search + window.location.hash);
+            }
+        })();
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dale! Te Pido - Conectá tu Catálogo con WhatsApp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="vov.min.css">
+    <style>
+        :root {
+            --brand-main: #D60000;        /* Rojo vibrante */
+            --brand-secondary: #281713;   /* Oscuro profundo */
+            --brand-tertiary: #fafafa;    /* Blanco limpio */
+            --text-muted: #706765;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {            
+            font-family: 'Poppins', sans-serif;            
+            background-color: var(--brand-tertiary);
+            color: var(--brand-secondary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- 1. HERO SECTION (Fondo Rojo, Más Partículas Variadas) --- */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4rem 1.5rem;
+            background-color: var(--brand-main);
+            overflow: hidden;
+        }
+
+        #canvas-connections {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 850px;
+        }
+
+        .hero-logo {
+            width: 100%;
+            max-width: 360px;
+            height: auto;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero h3 {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--brand-tertiary);
+            margin-bottom: 1rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .hero h1 {
+            font-size: 3.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--brand-tertiary);
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--brand-tertiary);
+            max-width: 620px;
+            margin: 0 auto;
+            opacity: 0.85;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--brand-tertiary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            z-index: 2;
+            opacity: 0.7;
+        }
+
+        /* --- ESTILOS GENERALES --- */
+        section {
+            padding: 6rem 1.5rem;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.2rem;
+            color: var(--brand-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .container-wide {
+            max-width: 1140px;
+            margin: 0 auto;
+        }
+
+        /* --- 2. CARRETE DE IMÁGENES (SLIDER COMPLETAMENTE CSS/JS) --- */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .features-grid { grid-template-columns: 1.1fr 0.9fr; }
+        }
+
+        /* Contenedor del Carrete */
+        .slider-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 550px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(40, 23, 19, 0.06);
+            background: #ffffff;
+            border: 1px solid rgba(40, 23, 19, 0.05);
+        }
+
+        .slider-container {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 300%; /* 3 diapositivas */
+        }
+
+        .slide {
+            width: 33.333%;
+            flex-shrink: 0;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background: #fdfdfd;
+            text-align: center;
+        }
+
+        .slide-placeholder {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .slide h5 {
+            font-size: 1.2rem;
+            color: var(--brand-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .slide p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            max-width: 300px;
+        }
+
+        /* Controles del Carrete */
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--brand-secondary);
+            color: var(--brand-tertiary);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: background 0.2s;
+        }
+
+        .slider-arrow:hover {
+            background: var(--brand-main);
+        }
+
+        .arrow-left { left: 15px; }
+        .arrow-right { right: 15px; }
+
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 1.5rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .dot.active {
+            background: var(--brand-main);
+            width: 24px;
+            border-radius: 10px;
+        }
+
+        .steps-list { list-style: none; }
+        .step-item {
+            margin-bottom: 2rem;
+            padding-left: 1.5rem;
+            border-left: 4px solid var(--brand-main);
+        }
+        .step-item h4 {
+            font-size: 1.2rem;
+            color: var(--brand-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* --- 3. DIFERENCIALES --- */
+        .bg-white-section { background-color: #ffffff; }
+        .diff-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        @media (min-width: 576px) {
+            .diff-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 2rem;
+            }
+        }
+        .diff-card {
+            padding: 2.5rem;
+            border-radius: 16px;
+            background: var(--brand-tertiary);
+            border: 1px solid rgba(40, 23, 19, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .diff-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(40, 23, 19, 0.05);
+        }
+        .diff-icon { font-size: 2rem; margin-bottom: 1rem; display: inline-block; }
+        .diff-card h4 { font-size: 1.25rem; color: var(--brand-secondary); margin-bottom: 0.75rem; }
+
+        /* --- 4. PRICING --- */
+        .pricing-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+        .price-card {
+            background: #ffffff;
+            padding: 3rem 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(40, 23, 19, 0.03);
+            text-align: center;
+            max-width: 360px;
+            width: 100%;
+            border: 2px solid transparent;
+        }
+        .price-card.featured {
+            border-color: var(--brand-main);
+            position: relative;
+            box-shadow: 0 20px 40px rgba(214, 0, 0, 0.06);
+        }
+        .badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--brand-main);
+            color: var(--brand-tertiary);
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .price-amount { font-size: 3rem; font-weight: 700; color: var(--brand-secondary); margin: 1.5rem 0; }
+        .price-features { list-style: none; margin: 2rem 0; text-align: left; color: var(--text-muted); }
+        .price-features li { margin-bottom: 0.75rem; display: flex; align-items: center; }
+        .price-features li::before { content: "✓"; color: var(--brand-main); font-weight: bold; margin-right: 10px; }
+
+        /* --- 5. CTA ACCESOS FINAL --- */
+        .cta-section { background: var(--brand-secondary); color: var(--brand-tertiary); text-align: center; }
+        .cta-container {
+            max-width: 450px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 3.5rem 2.5rem;
+            border-radius: 24px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .cta-container .logo-img { max-width: 80%; height: auto; margin-bottom: 2.5rem; }
+        .button-group { display: flex; flex-direction: column; gap: 1rem; }
+        .btn {            
+            padding: 16px 28px;            
+            text-decoration: none;            
+            border-radius: 14px;            
+            font-weight: 600;            
+            font-size: 1.05rem;            
+            transition: all 0.25s ease-in-out;
+            display: block;
+            cursor: pointer;
+        }
+        .btn-tienda { background-color: var(--brand-main); color: var(--brand-tertiary); border: 2px solid var(--brand-main); }
+        .btn-tienda:hover { background-color: transparent; color: var(--brand-tertiary); border-color: var(--brand-tertiary); transform: translateY(-3px); }
+        
+        .btn-dashboard { background-color: transparent; color: var(--brand-tertiary); border: 2px solid rgba(250, 250, 250, 0.3); }
+        .btn-dashboard:hover { background-color: rgba(255, 255, 255, 0.1); border-color: var(--brand-tertiary); transform: translateY(-3px); }
+
+        footer { text-align: center; padding: 2.5rem; color: var(--text-muted); font-size: 0.9rem; background: #1e110e; }
+        @media (max-width: 768px) {
+            .hero h1 { 
+                font-size: 2.2rem; 
+            }
+            .hero p {
+                font-size: 1.1rem;
+                padding: 0 0.5rem;
+            }
+            section { 
+                padding: 4rem 1rem; 
+            }
+            .section-title {
+                margin-bottom: 2.5rem;
+            }
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            .diff-card {
+                padding: 1.75rem 1.5rem;
+            }
+            .price-card {
+                padding: 2.5rem 1.75rem;
+            }
+            .price-card.featured {
+                margin-top: 1rem;
+            }
+            .cta-container {
+                padding: 2.5rem 1.5rem;
+                border-radius: 20px;
+            }
+            .cta-container .logo-img {
+                max-width: 90%;
+                margin-bottom: 2rem;
+            }
+            .btn {
+                padding: 14px 20px;
+                font-size: 1rem;
+                border-radius: 12px;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero h1 { 
+                font-size: 1.8rem; 
+            }
+            .hero-logo {
+                max-width: 280px;
+                margin-bottom: 1.5rem;
+            }
+            .slider-arrow {
+                width: 34px;
+                height: 34px;
+                font-size: 1rem;
+            }
+            .arrow-left { left: 8px; }
+            .arrow-right { right: 8px; }
+            .slide {
+                padding: 1.5rem 1rem;
+                min-height: 300px;
+            }
+            .slide-placeholder {
+                font-size: 3rem;
+                margin-bottom: 0.75rem;
+            }
+            .slide h5 {
+                font-size: 1.1rem;
+            }
+            .slide p {
+                font-size: 0.9rem;
+            }
+            .price-amount {
+                font-size: 2.5rem;
+                margin: 1rem 0;
+            }
+            .price-card {
+                padding: 2rem 1.25rem;
+            }
+            .cta-container {
+                padding: 2rem 1rem;
+                border-radius: 16px;
+            }
+            footer {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. HERO SECTION -->
+    <header class="hero">
+        <canvas id="canvas-connections"></canvas>
+        <div class="vov fade-in-down slow hero-content">
+            <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" class="hero-logo">
+            <h3>Estar presente ya no está en duda</h3>
+            <h1>Los límites no existen</h1>
+            <p>Mostrá tu catálogo online de forma profesional y cerrá todas tus ventas directo en una charla por WhatsApp.</p>
+        </div>
+        <div class="scroll-indicator">Scrolleá para descubrir ↓</div>
+    </header>
+
+    <!-- 2. REPASO DE LA PLATAFORMA (CON CARRETE / SLIDER) -->
+    <section class="container-wide">
+        <div class="section-title">
+            <h2>Tu catálogo interactivo</h2>
+            <p>Así de simple es vender con Dale! Te Pido</p>
+        </div>
+        <div class="features-grid">
+            
+            <!-- Carrete de 3 diapositivas -->
+            <div>
+                <div class="slider-wrapper">
+                    <button class="slider-arrow arrow-left" onclick="moveSlide(-1)">‹</button>
+                    <div class="slider-container" id="slider">
+                        <!-- Vista 1 -->
+                        <div class="slide">
+                            <div class="slide-placeholder">📱</div>
+                            <h5>Vista del Cliente</h5>
+                            <p>Interfaz limpia para navegar categorías de productos rápido y sin trabas.</p>
+                        </div>
+                        <!-- Vista 2 -->
+                        <div class="slide">
+                            <div class="slide-placeholder">🛒</div>
+                            <h5>Carrito de Compras</h5>
+                            <p>Resumen claro de ítems listos para despachar directo a WhatsApp.</p>
+                        </div>
+                        <!-- Vista 3 -->
+                        <div class="slide">
+                            <div class="slide-placeholder">📊</div>
+                            <h5>Panel de Control</h5>
+                            <p>Administración intuitiva para cambiar precios y stock al instante.</p>
+                        </div>
+                    </div>
+                    <button class="slider-arrow arrow-right" onclick="moveSlide(1)">›</button>
+                </div>
+                <div class="slider-dots">
+                    <div class="dot active" onclick="currentSlide(0)"></div>
+                    <div class="dot" onclick="currentSlide(1)"></div>
+                    <div class="dot" onclick="currentSlide(2)"></div>
+                </div>
+            </div>
+
+            <div>
+                <ul class="steps-list">
+                    <li class="step-item">
+                        <h4>1. Exploración del Catálogo</h4>
+                        <p>Los clientes navegan tus productos desde cualquier dispositivo de forma fluida y rápida.</p>
+                    </li>
+                    <li class="step-item">
+                        <h4>2. Armado de Carrito</h4>
+                        <p>Seleccionan lo que quieren sin fricciones ni registros obligatorios complejos.</p>
+                    </li>
+                    <li class="step-item">
+                        <h4>3. Cierre en WhatsApp</h4>
+                        <p>La web envía el pedido estructurado al chat de tu negocio para pactar stock o aplicar descuentos.</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. DIFERENCIALES -->
+    <section class="bg-white-section">
+        <div class="container-wide">
+            <div class="section-title">
+                <h2>¿Por qué elegirnos?</h2>
+                <p>Diseñado especialmente para el comercio dinámico actual</p>
+            </div>
+            <div class="diff-grid">
+                <div class="diff-card">
+                    <span class="diff-icon">⚡</span>
+                    <h4>Sin Comisiones por Venta</h4>
+                    <p>La ganancia es 100% tuya. Pagás un abono fijo mensual sin sorpresas de plataformas tradicionales.</p>
+                </div>
+                <div class="diff-card">
+                    <span class="diff-icon">🗣️</span>
+                    <h4>Venta Humanizada</h4>
+                    <p>No pierdas el contacto con tu cliente. Resolvé dudas de stock y fidelizá en el mismo canal de siempre.</p>
+                </div>
+                <div class="diff-card">
+                    <span class="diff-icon">🛠️</span>
+                    <h4>Gestión Simple</h4>
+                    <p>Panel auto-gestionable para actualizar precios, productos y fotos en segundos sin saber programar.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. PRICING -->
+    <section class="container-wide">
+        <div class="section-title">
+            <h2>Planes a tu medida</h2>
+            <p>Contenido genérico para iterar según tus necesidades de negocio</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="price-card">
+                <h3>Plan Emprendedor</h3>
+                <div class="price-amount">$0<span style="font-size: 1rem; color: var(--text-muted);">/mes</span></div>
+                <ul class="price-features">
+                    <li>Hasta 50 productos</li>
+                    <li>Link de WhatsApp directo</li>
+                    <li>Soporte básico por mail</li>
+                </ul>
+            </div>
+            <div class="price-card featured">
+                <div class="badge">Recomendado</div>
+                <h3>Plan Comercio Pro</h3>
+                <div class="price-amount">$10<span style="font-size: 1rem; color: var(--text-muted);">/mes</span></div>
+                <ul class="price-features">
+                    <li>Productos ilimitados</li>
+                    <li>Dashboard de estadísticas</li>
+                    <li>Descuentos configurables</li>
+                    <li>Soporte prioritario</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. CTA FINAL Y ACCESOS -->
+    <section class="cta-section">
+        <div class="vov fade-in-up cta-container">
+            <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" class="logo-img">
+            <div class="button-group">
+                <a href="/tienda.html" class="btn btn-tienda">Probar Demo Tienda</a>
+                <!-- Botón Dashboard con trigger de JS para password -->
+                <button class="btn btn-dashboard" onclick="accessDashboard()">Ver Panel de Control</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Dale! Te Pido. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- SCRIPT DE LOGICA (CANVAS + SLIDER + PASSWORD) -->
+    <script>
+        // --- LOGICA PASSWORD DASHBOARD ---
+        function accessDashboard() {
+            const password = prompt("Por favor, ingresá la clave de acceso a la demo:");
+            if (password === "dtp2026") {
+                window.location.href = "/dashboard.html";
+            } else if (password !== null) {
+                alert("Clave incorrecta. Intentá de nuevo.");
+            }
+        }
+
+        // --- LOGICA DEL CARRETE (SLIDER) ---
+        let currentSlideIndex = 0;
+        const slider = document.getElementById('slider');
+        const dots = document.querySelectorAll('.dot');
+
+        function updateSlider() {
+            slider.style.transform = `translateX(-${currentSlideIndex * 33.333}%)`;
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlideIndex);
+            });
+        }
+
+        function moveSlide(direction) {
+            currentSlideIndex = (currentSlideIndex + direction + 3) % 3;
+            updateSlider();
+        }
+
+        function currentSlide(index) {
+            currentSlideIndex = index;
+            updateSlider();
+        }
+
+        // --- LOGICA CANVAS PARTICULAS (DINÁMICAS PARA RENDIMIENTO Y NEXOS) ---
+        const canvas = document.getElementById('canvas-connections');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const particleCount = window.innerWidth < 768 ? 40 : 90; // Menos partículas en móvil para rendimiento
+        const connectionDistance = window.innerWidth < 768 ? 95 : 115; // Distancia adaptada para pantallas chicas
+
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                // Diferentes tamaños
+                this.radius = Math.random() * 3.5 + 1; 
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < connectionDistance) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        // Vector de nexo que se intensifica al acercarse
+                        const opacity = 0.25 * (1 - distance / connectionDistance);
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+                        ctx.lineWidth = 1.2;
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+    </script>
+</body>
+</html>

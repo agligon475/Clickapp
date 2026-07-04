@@ -183,7 +183,7 @@ body::before{
 <body>
 
 <header class="topbar">
-  <a href="tienda-test.html" class="logo">
+  <a href="index.html" class="logo">
     <div class="logo-icon"><i class="bi bi-tools"></i></div>
     FerreApp
   </a>
@@ -341,10 +341,9 @@ function applyStoredConfig() {
     });
   }
 
-  // Update all internal links to preserve the store parameter
   document.querySelectorAll('a').forEach(a => {
     const href = a.getAttribute('href');
-    if (href && (href.startsWith('tienda-test.html') || href.startsWith('nosotros-test.html') || href.startsWith('faq-test.html') || href.startsWith('tienda-demo.html'))) {
+    if (href && (href.startsWith('index.html') || href === '/' || href.startsWith('tienda-test.html') || href.startsWith('nosotros-test.html') || href.startsWith('faq-test.html') || href.startsWith('tienda-demo.html'))) {
       try {
         const url = new URL(href, window.location.href);
         url.searchParams.set('store', STORE_ID);

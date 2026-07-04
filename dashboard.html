@@ -1696,14 +1696,7 @@ function getStoreUrl() {
   if (isCustomSubdomain) {
     return `https://${STORE_ID}.daletepido.com.ar`;
   } else {
-    const currentPath = window.location.pathname;
-    let tiendaFile = 'tienda-test.html';
-    if (currentPath.includes('dashboard-demo.html')) {
-      tiendaFile = 'tienda-demo.html';
-    } else if (currentPath.includes('dashboard.html')) {
-      tiendaFile = 'tienda.html';
-    }
-    return `${tiendaFile}?store=${STORE_ID}`;
+    return `index.html?store=${STORE_ID}`;
   }
 }
 
