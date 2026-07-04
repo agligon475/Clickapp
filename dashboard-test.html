@@ -5210,7 +5210,15 @@
                 active: true,
                 display_order: 100
               };
-              await postToSupabase('categories', payload);
+              try {
+                await postToSupabase('categories', payload);
+              } catch (catPostErr) {
+                const isConflict = catPostErr.message.includes('409') || catPostErr.message.includes('unique_violation') || 
+                                   catPostErr.message.includes('already exists') || catPostErr.message.includes('duplicate');
+                if (!isConflict) {
+                  throw catPostErr;
+                }
+              }
               dbCatNames.add(catName.toLowerCase());
             }
           }
