@@ -1650,6 +1650,34 @@
 
 <body>
 
+  <!-- ── DASHBOARD LOGIN OVERLAY ── -->
+  <div id="dash-login-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--black); z-index: 100000; display: flex; align-items: center; justify-content: center; padding: 20px;">
+    <div class="card" style="width: 100%; max-width: 400px; padding: 32px; background: var(--steel); border: 1px solid var(--zinc); border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" style="max-width: 180px; height: auto; margin-bottom: 12px;">
+        <h3 style="color: var(--white); font-size: 18px; font-weight: 700; margin: 0;">Ingreso al Panel</h3>
+        <p style="color: var(--silver); font-size: 12px; margin-top: 4px;">Administrá tu catálogo y pedidos</p>
+      </div>
+      
+      <div class="ctrl-group" style="margin-bottom: 16px;">
+        <label class="ctrl-label">Nombre de tu tienda (ID)</label>
+        <input class="ctrl-input" id="login-store-id" placeholder="ej: mi-tienda" style="background: var(--black);" />
+      </div>
+      
+      <div class="ctrl-group" style="margin-bottom: 24px;">
+        <label class="ctrl-label">Contraseña</label>
+        <input class="ctrl-input" type="password" id="login-password" placeholder="Ingresá tu contraseña" style="background: var(--black);" />
+        <div id="login-info-msg" style="font-size: 10px; color: var(--silver); margin-top: 6px;">Si es tu primera vez o no tiene contraseña, dejalo en blanco.</div>
+      </div>
+      
+      <button id="login-submit-btn" onclick="handleLoginSubmit()" class="sb-btn" style="width: 100%; justify-content: center; background: var(--red); color: white; border: none; height: 44px; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+        <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+      </button>
+      
+      <div id="login-error-msg" style="color: var(--red); font-size: 12px; text-align: center; margin-top: 12px; display: none;"></div>
+    </div>
+  </div>
+
   <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sb-logo">
@@ -3150,6 +3178,10 @@
                 <label class="ctrl-label">WhatsApp (con código país)</label>
                 <input class="ctrl-input" id="cfg-store-wapp" placeholder="5491141819344" />
               </div>
+              <div class="ctrl-group">
+                <label class="ctrl-label">Contraseña del Panel</label>
+                <input class="ctrl-input" type="password" id="cfg-store-password" placeholder="Clave para proteger el acceso a este panel" />
+              </div>
               <div class="ctrl-group" style="grid-column:1/-1;">
                 <label class="ctrl-label">Eslogan</label>
                 <input class="ctrl-input" id="cfg-store-tagline" placeholder="Tu ferretería digital" />
@@ -3685,6 +3717,84 @@
 
     function openStore() {
       window.open(getStoreUrl(), '_blank');
+    }
+
+    async function handleLoginSubmit() {
+      const storeInput = document.getElementById('login-store-id').value.trim().toLowerCase();
+      const passInput = document.getElementById('login-password').value.trim();
+      const errorEl = document.getElementById('login-error-msg');
+      const submitBtn = document.getElementById('login-submit-btn');
+      
+      if (!storeInput) {
+        errorEl.textContent = 'Por favor ingresá el nombre de tu tienda.';
+        errorEl.style.display = 'block';
+        return;
+      }
+      
+      errorEl.style.display = 'none';
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Verificando...';
+      
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeInput)}`, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        
+        if (!res.ok) throw new Error('Error al conectar con el servidor.');
+        const data = await res.json();
+        
+        if (!data || data.length === 0) {
+          throw new Error('La tienda ingresada no existe.');
+        }
+        
+        const settings = data[0];
+        let parsedDesign = {};
+        try {
+          if (settings.email) parsedDesign = JSON.parse(settings.email);
+        } catch(e) {}
+        
+        const dbPassword = parsedDesign.password || '';
+        
+        // Si hay una contraseña configurada, debemos validarla
+        if (dbPassword && dbPassword !== passInput) {
+          throw new Error('Contraseña incorrecta.');
+        }
+        
+        // Logueado exitosamente
+        sessionStorage.setItem('storeapp_logged_in_' + storeInput, 'true');
+        
+        // Si cambió la tienda actual en el input, redireccionar
+        if (storeInput !== STORE_ID.toLowerCase()) {
+          window.localStorage.setItem('storeapp_store_id', storeInput);
+          window.location.search = `?store=${storeInput}`;
+        } else {
+          // Si es la misma tienda, ocultar overlay y continuar
+          document.getElementById('dash-login-overlay').style.display = 'none';
+        }
+        
+      } catch(err) {
+        errorEl.textContent = err.message;
+        errorEl.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión';
+      }
+    }
+
+    function initDashboardAuth() {
+      const isDemoStore = ['ferre-now', 'ferreteria', 'kiosco', 'gastronomia', 'electronica'].includes(STORE_ID.toLowerCase());
+      if (isDemoStore) {
+        // Para las plantillas de demo, no exigir login
+        document.getElementById('dash-login-overlay').style.display = 'none';
+        return;
+      }
+      
+      const loggedIn = sessionStorage.getItem('storeapp_logged_in_' + STORE_ID);
+      if (loggedIn === 'true') {
+        document.getElementById('dash-login-overlay').style.display = 'none';
+      } else {
+        document.getElementById('dash-login-overlay').style.display = 'flex';
+        document.getElementById('login-store-id').value = STORE_ID;
+      }
     }
 
     // Shadow localStorage to automatically namespace all calls under the active STORE_ID
@@ -4714,7 +4824,8 @@
             emoji: cfgObj.emoji || '🏪',
             theme: cfgObj.theme || 'dark',
             font: cfgObj.font || '',
-            fontBody: cfgObj.fontBody || ''
+            fontBody: cfgObj.fontBody || '',
+            password: cfgObj.password || ''
           })
         };
 
@@ -6480,6 +6591,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (sc.name) document.getElementById('cfg-store-name').value = sc.name;
       if (sc.tagline) document.getElementById('cfg-store-tagline').value = sc.tagline;
       if (sc.wapp) document.getElementById('cfg-store-wapp').value = sc.wapp;
+      if (sc.password) document.getElementById('cfg-store-password').value = sc.password;
       if (sc.rubro) document.getElementById('cfg-store-rubro').value = sc.rubro;
       if (sc.direccion) document.getElementById('cfg-store-direccion').value = sc.direccion;
       if (sc.horario) document.getElementById('cfg-store-horario').value = sc.horario;
@@ -6783,6 +6895,9 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (rubro) sc.rubro = rubro;
       if (direccion) sc.direccion = direccion;
       if (horario) sc.horario = horario;
+      
+      const password = document.getElementById('cfg-store-password').value.trim();
+      sc.password = password;
 
       const domain = document.getElementById('cfg-store-domain').value.trim();
       sc.domain = domain;
@@ -7163,6 +7278,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
     /* ═══════════════════════════════════════════ INIT */
     applyDashTheme();
+    initDashboardAuth();
     initCharts();
 
     // (purgeLegacyCache ha sido removido para permitir el uso de plantillas con IDs personalizados)
