@@ -4032,7 +4032,7 @@
       return {
         nombre: p.name,
         precio: p.price,
-        stock: p.stock ?? 0,
+        stock: Math.round(parseFloat(p.stock) || 0),
         categoria: p.cat || null,
         emoji: p.emoji || '📦',
         img: p.img || null,
@@ -5191,6 +5191,35 @@
       }
 
       let syncErr = 0;
+
+      // Pre-sincronizar categorías locales inexistentes para evitar violaciones de clave foránea
+      try {
+        const catRes = await fetch(`${SUPABASE_URL}/rest/v1/categories?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        if (catRes.ok) {
+          const dbCats = await catRes.json();
+          const dbCatNames = new Set(dbCats.map(c => String(c.name).trim().toLowerCase()));
+          const localCatNames = [...new Set(localProducts.map(p => String(p.cat || 'General').trim()))].filter(Boolean);
+          
+          for (const catName of localCatNames) {
+            if (!dbCatNames.has(catName.toLowerCase())) {
+              const payload = {
+                name: catName,
+                emoji: '📦',
+                active: true,
+                display_order: 100,
+                id: 'CAT-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 5).toUpperCase()
+              };
+              await postToSupabase('categories', payload);
+              dbCatNames.add(catName.toLowerCase());
+            }
+          }
+        }
+      } catch (catErr) {
+        console.error('Error al pre-sincronizar categorías:', catErr);
+      }
+
       for (const p of localProducts) {
         try {
           if (isSupabaseRowId(p.id)) {

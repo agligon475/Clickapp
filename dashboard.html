@@ -2039,7 +2039,7 @@ function mapLocalProductToSupabaseRow(p) {
   return {
     nombre: p.name,
     precio: p.price,
-    stock: p.stock ?? 0,
+    stock: Math.round(parseFloat(p.stock) || 0),
     categoria: p.cat || 'General',
     emoji: p.emoji || '📦',
     img: p.img || null,
