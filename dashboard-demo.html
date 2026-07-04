@@ -1710,7 +1710,7 @@
 
     <div style="flex:1;"></div>
     <div class="sb-item" style="margin:12px; border:1px solid rgba(255,255,255,0.1);"
-      onclick="window.open('tienda-test.html','_blank')">
+      onclick="openStore()">
       <i class="bi bi-shop"></i> <span>Ver tienda</span> <i class="bi bi-box-arrow-up-right"
         style="font-size:10px;margin-left:auto;opacity:.5;"></i>
     </div>
@@ -1928,7 +1928,7 @@
             </div>
 
             <!-- Ver tienda -->
-            <div class="shortcut-card" onclick="window.open('tienda-test.html','_blank')">
+            <div class="shortcut-card" onclick="openStore()">
               <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">🏪</div>
               <h4
                 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">
@@ -3669,6 +3669,30 @@
     const urlParams = new URLSearchParams(window.location.search);
     const STORE_ID = urlParams.get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now';
     window.localStorage.setItem('storeapp_store_id', STORE_ID);
+
+    function getStoreUrl() {
+      const defaultStores = ['ferre-now', 'ferreteria', 'kiosco', 'gastronomia', 'electronica'];
+      const isCustomSubdomain = !defaultStores.includes(STORE_ID.toLowerCase()) || 
+                                window.localStorage.getItem('storeapp_subdomain_assigned') === 'true' ||
+                                window.localStorage.getItem(`storeapp_subdomain_assigned_${STORE_ID}`) === 'true';
+      
+      if (isCustomSubdomain) {
+        return `https://${STORE_ID}.daletepido.com.ar`;
+      } else {
+        const currentPath = window.location.pathname;
+        let tiendaFile = 'tienda-test.html';
+        if (currentPath.includes('dashboard-demo.html')) {
+          tiendaFile = 'tienda-demo.html';
+        } else if (currentPath.includes('dashboard.html')) {
+          tiendaFile = 'tienda.html';
+        }
+        return `${tiendaFile}?store=${STORE_ID}`;
+      }
+    }
+
+    function openStore() {
+      window.open(getStoreUrl(), '_blank');
+    }
 
     // Shadow localStorage to automatically namespace all calls under the active STORE_ID
     const originalLocalStorage = window.localStorage;
@@ -6457,7 +6481,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const urlBtnEl = document.getElementById('cfg-store-url-btn');
       if (subdomainEl && urlBtnEl) {
         subdomainEl.value = STORE_ID;
-        urlBtnEl.href = `https://${STORE_ID}.daletepido.com.ar`;
+        urlBtnEl.href = getStoreUrl();
       }
 
       if (sc.name) document.getElementById('cfg-store-name').value = sc.name;
@@ -6937,6 +6961,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
           // 4. Update local namespaces
           localStorage.setItem('storeapp_store_id', inputVal);
+          window.localStorage.setItem('storeapp_subdomain_assigned_' + inputVal, 'true');
           
           alert('¡Subdominio cambiado con éxito! Redireccionando al nuevo panel...');
           const newUrl = new URL(window.location.href);
