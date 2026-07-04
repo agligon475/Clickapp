@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <script>
+        (function() {
+            const hostname = window.location.hostname.toLowerCase();
+            if (hostname.endsWith('.daletepido.com.ar') && hostname !== 'daletepido.com.ar' && hostname !== 'www.daletepido.com.ar') {
+                window.location.replace('/tienda-test.html' + window.location.search + window.location.hash);
+            }
+            if (hostname.endsWith('.clickapp.com') && hostname !== 'clickapp.com' && hostname !== 'www.clickapp.com') {
+                window.location.replace('/tienda-test.html' + window.location.search + window.location.hash);
+            }
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dale! Te Pido - Conectá tu Catálogo con WhatsApp</title>
