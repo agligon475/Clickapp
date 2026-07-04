@@ -1934,7 +1934,13 @@ async function postToSupabase(tabla, data) {
       body: JSON.stringify(data)
     });
 
-    if (!response.ok) throw new Error(`Error ${response.status}`);
+    if (!response.ok) {
+      const errTxt = await response.text().catch(() => '');
+      if (response.status === 409) {
+        throw new Error(`Error 409 (Conflicto): Ya existe un registro con ese ID o Nombre. Detalle: ${errTxt}`);
+      }
+      throw new Error(`Error ${response.status}: ${errTxt}`);
+    }
     return await response.json();
   } catch (error) {
     console.error('Post error:', error);
