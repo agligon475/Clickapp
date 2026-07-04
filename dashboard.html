@@ -1943,7 +1943,9 @@ async function postToSupabase(tabla, data) {
     }
     return await response.json();
   } catch (error) {
-    console.error('Post error:', error);
+    if (!error.message.includes('409') && !error.message.includes('Conflicto')) {
+      console.error('Post error:', error);
+    }
     throw error;
   }
 }
@@ -2996,6 +2998,9 @@ function renderABM() {
   const elInactive = document.getElementById('dash-inactive-prods');
   if (elActive) elActive.textContent = activeCount;
   if (elInactive) elInactive.textContent = inactiveCount;
+
+  // Actualizar indicador en la barra superior (topbar)
+  setDot('ok', `${localProducts.length} productos · ${new Date().toLocaleTimeString('es-AR')}`);
 
   const sc = s => s===0?'badge-red':s<5?'badge-amber':'badge-green';
   const sl = s => s===0?'Sin stock':s<5?`Bajo: ${s}`:`${s} uds.`;

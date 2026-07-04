@@ -3935,7 +3935,9 @@
         }
         return await response.json();
       } catch (error) {
-        console.error('Post error:', error);
+        if (!error.message.includes('409') && !error.message.includes('Conflicto')) {
+          console.error('Post error:', error);
+        }
         throw error;
       }
     }
@@ -5112,6 +5114,9 @@
       const elInactive = document.getElementById('dash-inactive-prods');
       if (elActive) elActive.textContent = activeCount;
       if (elInactive) elInactive.textContent = inactiveCount;
+
+      // Actualizar indicador en la barra superior (topbar)
+      setDot('ok', `${localProducts.length} productos · ${new Date().toLocaleTimeString('es-AR')}`);
 
       document.getElementById('abm-tbody').innerHTML = filtered.map(p => `
     <tr style="${p.hidden ? 'opacity:.4;' : ''}">
