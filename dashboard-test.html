@@ -5208,8 +5208,7 @@
                 name: catName,
                 emoji: '📦',
                 active: true,
-                display_order: 100,
-                id: 'CAT-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 5).toUpperCase()
+                display_order: 100
               };
               await postToSupabase('categories', payload);
               dbCatNames.add(catName.toLowerCase());
@@ -6811,8 +6810,6 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
             order = Math.max(...window.currentCategories.map(c => c.display_order || 0)) + 10;
           }
           payload.display_order = order;
-          // Generar un ID local por si la base no tiene auto-increment (evita error 409 por id nulo repetido)
-          payload.id = 'CAT-' + Date.now().toString(36).toUpperCase();
           await postToSupabase('categories', payload);
         }
         closeCategoryModal();
