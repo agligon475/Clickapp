@@ -5073,6 +5073,7 @@
       reader.onload = e => {
         const dataUrl = e.target.result;
         localStorage.setItem('storeapp_logo', dataUrl);
+        cfg.logo = dataUrl;
         document.getElementById('logo-preview').src = dataUrl;
         document.getElementById('logo-preview-wrap').style.display = 'block';
         // Update preview in design panel
@@ -5090,6 +5091,7 @@
 
     function removeLogo() {
       localStorage.removeItem('storeapp_logo');
+      cfg.logo = '';
       document.getElementById('logo-preview-wrap').style.display = 'none';
       document.getElementById('logo-input').value = '';
       const prevIcon = document.getElementById('prev-icon');
@@ -8589,7 +8591,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       sc.logo = logoUrl;
 
       // Sync logo to localStorage and main panel Design view
-      if (logoUrl && logoUrl.startsWith('data:image')) {
+      if (logoUrl && (logoUrl.startsWith('data:image') || logoUrl.startsWith('http'))) {
         localStorage.setItem('storeapp_logo', logoUrl);
         const logoPreview = document.getElementById('logo-preview');
         if (logoPreview) logoPreview.src = logoUrl;

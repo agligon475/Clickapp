@@ -1213,55 +1213,69 @@ async function loadSheet() {
       const configData = await configRes.json();
       if (configData && configData.length > 0) {
         const cfg = configData[0];
+        
+        // --- OVERRIDE GLOBAL CFG WITH SUPABASE CONFIG ---
+        if (cfg.business_name) CFG.name = cfg.business_name;
+        if (cfg.tagline) CFG.tagline = cfg.tagline;
+        if (cfg.wapp) CFG.wapp = cfg.wapp;
+        if (cfg.rubro) CFG.rubro = cfg.rubro;
+        if (cfg.direccion) CFG.direccion = cfg.direccion;
+        if (cfg.horario) CFG.horario = cfg.horario;
+        if (cfg.primary_color) CFG.color = cfg.primary_color;
+        if (cfg.logo_url) CFG.logo = cfg.logo_url;
+        
+        let parsedSocials = {};
+        try {
+          if (cfg.phone) parsedSocials = JSON.parse(cfg.phone);
+        } catch (e) {}
+        
+        CFG.socials = {
+          web: parsedSocials.web || '',
+          ig: cfg.instagram || parsedSocials.ig || '',
+          fb: cfg.facebook || parsedSocials.fb || '',
+          x: parsedSocials.x || '',
+          ml: parsedSocials.ml || '',
+          tn: parsedSocials.tn || '',
+          maps: parsedSocials.maps || ''
+        };
+
+        let parsedDesign = {};
+        try {
+          if (cfg.email) parsedDesign = JSON.parse(cfg.email);
+        } catch (e) {}
+
+        if (parsedDesign.h1) CFG.h1 = parsedDesign.h1;
+        if (parsedDesign.h2) CFG.h2 = parsedDesign.h2;
+        if (parsedDesign.desc) CFG.desc = parsedDesign.desc;
+        if (parsedDesign.emoji) CFG.emoji = parsedDesign.emoji;
+        if (parsedDesign.theme) CFG.theme = parsedDesign.theme;
+        if (parsedDesign.font) CFG.font = parsedDesign.font;
+        if (parsedDesign.fontBody) CFG.fontBody = parsedDesign.fontBody;
+        // ------------------------------------------------
+        
         bannerData = {
           banner1: {
             label: cfg.banner1_label || 'NUEVAS',
             title: cfg.banner1_title || 'Productos',
             img: cfg.banner1_img || '',
-            cat: cfg.banner1_cat || ''
+            cat: cfg.banner1_cat || '',
+            active: parsedDesign.banner1_active !== false
           },
           banner2: {
             label: cfg.banner2_label || 'PROMOCIÓN',
             title: cfg.banner2_title || 'Especiales',
             img: cfg.banner2_img || '',
-            cat: cfg.banner2_cat || ''
+            cat: cfg.banner2_cat || '',
+            active: parsedDesign.banner2_active !== false
           }
         };
-
-        // Extract and save general store configuration
-        let parsedSocials = {};
-        try {
-          if (cfg.phone) parsedSocials = JSON.parse(cfg.phone);
-        } catch (e) {}
-
-        const remoteStoreCfg = {
-          name: cfg.business_name || '',
-          tagline: cfg.tagline || '',
-          color: cfg.primary_color || '#D72638',
-          theme: cfg.theme || 'dark',
-          wapp: cfg.wapp || '',
-          direccion: cfg.direccion || '',
-          horario: cfg.horario || '',
-          rubro: cfg.rubro || '',
-          socials: {
-            web: parsedSocials.web || '',
-            ig: cfg.instagram || parsedSocials.ig || '',
-            fb: cfg.facebook || parsedSocials.fb || '',
-            x: parsedSocials.x || '',
-            ml: parsedSocials.ml || '',
-            tn: parsedSocials.tn || '',
-            maps: parsedSocials.maps || ''
-          }
-        };
-
-        // Merge into global CFG object and save to localStorage
-        CFG = { ...CFG, ...remoteStoreCfg };
-        localStorage.setItem(`storeapp_cfg_${STORE_ID}`, JSON.stringify(CFG));
-        
-        // Apply configuration immediately to update logo, color, font, title, tagline
-        applyStoredConfig();
       }
     }
+    
+    // Aplicar diseño visual tras cargar config en la nube
+    localStorage.setItem('storeapp_cfg', JSON.stringify(CFG));
+    localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(CFG));
+    applyStoredConfig();
 
     // Convertir datos de Supabase al formato esperado
     products = supabaseProducts
@@ -1836,6 +1850,8 @@ function applyStoredConfig() {
   if (logoEl) {
     if (logoImg) {
       logoEl.innerHTML = `<img src="${logoImg}" alt="${cfg.name||'Logo'}" style="height:32px;width:32px;object-fit:contain;border-radius:6px;"/> ${cfg.name||'Mi Tienda'}`;
+    } else if (cfg.logo) {
+      logoEl.innerHTML = `<img src="${cfg.logo}" alt="${cfg.name||'Logo'}" style="height:32px;width:32px;object-fit:contain;border-radius:6px;"/> ${cfg.name||'Mi Tienda'}`;
     } else if (cfg.name) {
       logoEl.innerHTML = `<span class="logo-icon">${cfg.emoji||'🏪'}</span>${cfg.name}`;
     }
