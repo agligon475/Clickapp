@@ -7083,6 +7083,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         if (statusEl) { statusEl.style.color = 'var(--red)'; statusEl.textContent = '✕ Error: ' + e.message; }
         localStorage.setItem('storeapp_claude_status', 'err');
         if (typeof updateStatusLights === 'function') updateStatusLights();
+      }
     }
 
     function toggleAIProviderFields() {
