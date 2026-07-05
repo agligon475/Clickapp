@@ -1589,35 +1589,80 @@ body.light-mode .shortcut-card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.06); }
       </div>
     </div>
 
-    <!-- Claude API -->
+    <!-- AI API Config (Claude / Gemini) -->
     <div class="config-section">
-      <div class="config-section-title"><i class="bi bi-robot"></i> API de Claude — Búsqueda por EAN/SKU</div>
+      <div class="config-section-title"><i class="bi bi-robot"></i> API de Inteligencia Artificial — Búsqueda por EAN/SKU</div>
       <div class="config-section-content">
         <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
-          Ingresá tu clave de Anthropic para habilitar el autocompletado de productos desde el ABM.
-          Obtenela en <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--red);">console.anthropic.com →</a>
+          Configurá la inteligencia artificial para habilitar el autocompletado de productos desde el ABM.
         </div>
-        <div class="config-grid">
+        <div class="config-grid" style="grid-template-columns: 1fr; margin-bottom: 14px;">
           <div class="ctrl-group">
-            <label class="ctrl-label">Claude API Key</label>
-            <input class="ctrl-input" type="password" id="cfg-claude-key" placeholder="sk-ant-api03-..."/>
-            <div style="font-size:10px;color:var(--silver);margin-top:3px;">Se guarda en localStorage.</div>
-          </div>
-          <div class="ctrl-group">
-            <label class="ctrl-label">Modelo de Claude</label>
-            <select class="ctrl-input" id="cfg-claude-model">
-              <option value="claude-haiku-4-5-20251001">Claude 4.5 Haiku (Modelo Recomendado)</option>
-              <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku (Legacy)</option>
-              <option value="claude-3-haiku-20240307">Claude 3 Haiku (Deprecado)</option>
+            <label class="ctrl-label">Proveedor de IA</label>
+            <select class="ctrl-input" id="cfg-ai-provider" onchange="toggleAIProviderFields()">
+              <option value="claude">Claude (Anthropic)</option>
+              <option value="gemini">Gemini (Google AI)</option>
             </select>
-            <div style="font-size:10px;color:var(--silver);margin-top:3px;">Elegí según los créditos de tu cuenta.</div>
           </div>
         </div>
-        <div style="margin-top:12px;display:flex;gap:8px;align-items:center;">
-          <button onclick="testClaudeKey()" style="padding:8px 16px;background:var(--zinc);border:1px solid var(--silver);border-radius:8px;color:var(--fog);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;gap:6px;">
-            <i class="bi bi-send"></i> Probar clave
-          </button>
-          <div id="adv-claude-status" style="font-size:11px;color:var(--silver);"></div>
+        
+        <!-- Claude Fields -->
+        <div id="config-claude-fields">
+          <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
+            Obtené tu clave en <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--red);">console.anthropic.com →</a>
+          </div>
+          <div class="config-grid">
+            <div class="ctrl-group">
+              <label class="ctrl-label">Claude API Key</label>
+              <input class="ctrl-input" type="password" id="cfg-claude-key" placeholder="sk-ant-api03-..."/>
+              <div style="font-size:10px;color:var(--silver);margin-top:3px;">Se guarda en localStorage.</div>
+            </div>
+            <div class="ctrl-group">
+              <label class="ctrl-label">Modelo de Claude</label>
+              <select class="ctrl-input" id="cfg-claude-model">
+                <option value="claude-haiku-4-5-20251001">Claude 4.5 Haiku (Modelo Recomendado)</option>
+                <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku (Legacy)</option>
+                <option value="claude-3-haiku-20240307">Claude 3 Haiku (Deprecado)</option>
+              </select>
+              <div style="font-size:10px;color:var(--silver);margin-top:3px;">Elegí según los créditos de tu cuenta.</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px;align-items:center;">
+            <button onclick="testClaudeKey()" style="padding:8px 16px;background:var(--zinc);border:1px solid var(--silver);border-radius:8px;color:var(--fog);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;gap:6px;">
+              <i class="bi bi-send"></i> Probar clave Claude
+            </button>
+            <div id="adv-claude-status" style="font-size:11px;color:var(--silver);"></div>
+          </div>
+        </div>
+
+        <!-- Gemini Fields -->
+        <div id="config-gemini-fields" style="display:none;">
+          <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
+            Obtené tu clave en Google AI Studio: <a href="https://aistudio.google.com/" target="_blank" style="color:var(--red);">aistudio.google.com →</a>
+          </div>
+          <div class="config-grid">
+            <div class="ctrl-group">
+              <label class="ctrl-label">Gemini API Key</label>
+              <input class="ctrl-input" type="password" id="cfg-gemini-key" placeholder="AIzaSy..."/>
+              <div style="font-size:10px;color:var(--silver);margin-top:3px;">Se guarda en localStorage.</div>
+            </div>
+            <div class="ctrl-group">
+              <label class="ctrl-label">Modelo de Gemini</label>
+              <select class="ctrl-input" id="cfg-gemini-model">
+                <option value="gemini-2.5-flash">Gemini 2.5 Flash (Recomendado)</option>
+                <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+              </select>
+              <div style="font-size:10px;color:var(--silver);margin-top:3px;">Modelo rápido y eficiente de Google.</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px;align-items:center;">
+            <button onclick="testGeminiKey()" style="padding:8px 16px;background:var(--zinc);border:1px solid var(--silver);border-radius:8px;color:var(--fog);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;gap:6px;">
+              <i class="bi bi-send"></i> Probar clave Gemini
+            </button>
+            <div id="adv-gemini-status" style="font-size:11px;color:var(--silver);"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -1822,6 +1867,11 @@ const localStorage = {
       'storeapp_store_id', 
       'storeapp_claude_key', 
       'storeapp_claude_status', 
+      'storeapp_claude_model',
+      'storeapp_ai_provider',
+      'storeapp_gemini_key',
+      'storeapp_gemini_status',
+      'storeapp_gemini_model',
       'storeapp_cloudinary', 
       'storeapp_cloudinary_status',
       'storeapp_webhook', 
@@ -1838,6 +1888,11 @@ const localStorage = {
       'storeapp_store_id', 
       'storeapp_claude_key', 
       'storeapp_claude_status', 
+      'storeapp_claude_model',
+      'storeapp_ai_provider',
+      'storeapp_gemini_key',
+      'storeapp_gemini_status',
+      'storeapp_gemini_model',
       'storeapp_cloudinary', 
       'storeapp_cloudinary_status',
       'storeapp_webhook', 
@@ -2144,14 +2199,27 @@ function updateStatusLights() {
   }
   
   // 2. Consultas AI
-  const claudeKey = localStorage.getItem('storeapp_claude_key');
-  const claudeStatus = localStorage.getItem('storeapp_claude_status');
-  if (!claudeKey) {
-    setStatusBulb('ai', 'warn', 'Posible falta de configuración');
-  } else if (claudeStatus === 'err') {
-    setStatusBulb('ai', 'err', 'Desconectado. Error. Solicitar soporte');
+  const provider = localStorage.getItem('storeapp_ai_provider') || 'claude';
+  if (provider === 'gemini') {
+    const geminiKey = localStorage.getItem('storeapp_gemini_key');
+    const geminiStatus = localStorage.getItem('storeapp_gemini_status');
+    if (!geminiKey) {
+      setStatusBulb('ai', 'warn', 'Posible falta de configuración (Gemini)');
+    } else if (geminiStatus === 'err') {
+      setStatusBulb('ai', 'err', 'Desconectado. Error (Gemini)');
+    } else {
+      setStatusBulb('ai', 'ok', 'Conexión establecida (Gemini)');
+    }
   } else {
-    setStatusBulb('ai', 'ok', 'Conexión establecida');
+    const claudeKey = localStorage.getItem('storeapp_claude_key');
+    const claudeStatus = localStorage.getItem('storeapp_claude_status');
+    if (!claudeKey) {
+      setStatusBulb('ai', 'warn', 'Posible falta de configuración (Claude)');
+    } else if (claudeStatus === 'err') {
+      setStatusBulb('ai', 'err', 'Desconectado. Error (Claude)');
+    } else {
+      setStatusBulb('ai', 'ok', 'Conexión establecida (Claude)');
+    }
   }
   
   // 3. Cloudinary
@@ -3258,46 +3326,88 @@ async function buscarCodigo() {
 
   const isBarcode = /^\\d{8,14}$/.test(codigo);
 
-  // ── Step 1: Claude API via CORS Proxy ─────────────────
-  const claudeKey = localStorage.getItem('storeapp_claude_key');
-  if (!claudeKey) {
-    setCodStatus('✕ Configura tu API Key de Claude en Configuraciones', 'err');
-    resetBuscarBtn();
-    return;
-  }
-
-  setCodStatus('✨ Consultando a Claude IA...', 'info');
-  try {
-    const prompt = `Tengo un producto con ${isBarcode ? 'código de barras EAN/UPC' : 'código SKU/modelo'}: "${codigo}"
+  // ── Step 1: AI API via CORS Proxy ─────────────────
+  const provider = localStorage.getItem('storeapp_ai_provider') || 'claude';
+  const prompt = `Tengo un producto con ${isBarcode ? 'código de barras EAN/UPC' : 'código SKU/modelo'}: "${codigo}"
 Identificá el producto y devolvé SOLO un JSON válido (sin texto adicional, sin markdown):
 {"name":"nombre completo","marca":"marca o fabricante","cat":"categoría","detalle":"especificaciones técnicas en 1-2 oraciones","origen":"código ISO del país (AR/CN/US/DE/JP/IT/BR/KR/TW/MX/FR/GB/ES/SE/CH) o vacío","confianza":"alta/media/baja"}
 Si no reconocés el código, usá confianza "baja" e intentá igual.`;
 
-    const modelName = localStorage.getItem('storeapp_claude_model') || 'claude-haiku-4-5-20251001';
-    console.log("buscarCodigo: Consultando modelo:", modelName);
-    const res = await fetch('/api/helper', {
-      method: 'POST',
-      headers: {
-        'x-claude-key': claudeKey,
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: modelName,
-        max_tokens: 300,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
+  if (provider === 'gemini') {
+    const geminiKey = localStorage.getItem('storeapp_gemini_key');
+    if (!geminiKey) {
+      setCodStatus('✕ Configura tu API Key de Gemini en Configuraciones', 'err');
+      resetBuscarBtn();
+      return;
+    }
 
-    if (!res.ok) throw new Error(`Error API: ${res.status}`);
-    const data = await res.json();
-    const textRes = data.content[0].text;
-    
-    const clean  = textRes.replace(/```json|```/g,'').trim();
-    const parsed = JSON.parse(clean);
-    _codigoResultData = parsed;
-    showCodigoResult(parsed, 'Claude IA', parsed.confianza);
-  } catch(e) {
-    setCodStatus('✕ Error: ' + e.message, 'err');
+    setCodStatus('✨ Consultando a Gemini IA...', 'info');
+    try {
+      const modelName = localStorage.getItem('storeapp_gemini_model') || 'gemini-2.5-flash';
+      console.log("buscarCodigo: Consultando Gemini modelo:", modelName);
+      const res = await fetch('/api/gemini', {
+        method: 'POST',
+        headers: {
+          'x-gemini-key': geminiKey,
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: modelName,
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            responseMimeType: 'application/json'
+          }
+        })
+      });
+
+      if (!res.ok) throw new Error(`Error API: ${res.status}`);
+      const data = await res.json();
+      const textRes = data.candidates[0].content.parts[0].text;
+      
+      const clean  = textRes.replace(/```json|```/g,'').trim();
+      const parsed = JSON.parse(clean);
+      _codigoResultData = parsed;
+      showCodigoResult(parsed, 'Gemini IA', parsed.confianza);
+    } catch(e) {
+      setCodStatus('✕ Error: ' + e.message, 'err');
+    }
+  } else {
+    // Claude
+    const claudeKey = localStorage.getItem('storeapp_claude_key');
+    if (!claudeKey) {
+      setCodStatus('✕ Configura tu API Key de Claude en Configuraciones', 'err');
+      resetBuscarBtn();
+      return;
+    }
+
+    setCodStatus('✨ Consultando a Claude IA...', 'info');
+    try {
+      const modelName = localStorage.getItem('storeapp_claude_model') || 'claude-haiku-4-5-20251001';
+      console.log("buscarCodigo: Consultando Claude modelo:", modelName);
+      const res = await fetch('/api/helper', {
+        method: 'POST',
+        headers: {
+          'x-claude-key': claudeKey,
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: modelName,
+          max_tokens: 300,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+
+      if (!res.ok) throw new Error(`Error API: ${res.status}`);
+      const data = await res.json();
+      const textRes = data.content[0].text;
+      
+      const clean  = textRes.replace(/```json|```/g,'').trim();
+      const parsed = JSON.parse(clean);
+      _codigoResultData = parsed;
+      showCodigoResult(parsed, 'Claude IA', parsed.confianza);
+    } catch(e) {
+      setCodStatus('✕ Error: ' + e.message, 'err');
+    }
   }
 
   resetBuscarBtn();
@@ -4103,10 +4213,21 @@ function initConfigView() {
   if (cloud.name)   document.getElementById('cfg-cloud-name').value   = cloud.name;
   if (cloud.preset) document.getElementById('cfg-cloud-preset').value = cloud.preset;
 
+  const aiProvider = localStorage.getItem('storeapp_ai_provider') || 'claude';
+  const providerEl = document.getElementById('cfg-ai-provider');
+  if (providerEl) providerEl.value = aiProvider;
+
   const claudeKey = localStorage.getItem('storeapp_claude_key');
-  if (claudeKey) document.getElementById('cfg-claude-key').value = claudeKey;
+  if (claudeKey && document.getElementById('cfg-claude-key')) document.getElementById('cfg-claude-key').value = claudeKey;
   const claudeModel = localStorage.getItem('storeapp_claude_model') || 'claude-haiku-4-5-20251001';
-  document.getElementById('cfg-claude-model').value = claudeModel;
+  if (document.getElementById('cfg-claude-model')) document.getElementById('cfg-claude-model').value = claudeModel;
+
+  const geminiKey = localStorage.getItem('storeapp_gemini_key');
+  if (geminiKey && document.getElementById('cfg-gemini-key')) document.getElementById('cfg-gemini-key').value = geminiKey;
+  const geminiModel = localStorage.getItem('storeapp_gemini_model') || 'gemini-2.5-flash';
+  if (document.getElementById('cfg-gemini-model')) document.getElementById('cfg-gemini-model').value = geminiModel;
+
+  if (typeof toggleAIProviderFields === 'function') toggleAIProviderFields();
 
   const theme = localStorage.getItem('storeapp_dash_theme') || 'dark';
   document.getElementById('dash-theme-dark').style.borderColor  = theme==='dark' ? 'var(--red)' : 'var(--zinc)';
@@ -4128,13 +4249,26 @@ function initAdvancedView() {
   if (cnEl && cloud.name)   cnEl.value = cloud.name;
   if (cpEl && cloud.preset) cpEl.value = cloud.preset;
 
-  // Claude key
+  // AI Config
+  const aiProvider = localStorage.getItem('storeapp_ai_provider') || 'claude';
+  const providerEl = document.getElementById('cfg-ai-provider');
+  if (providerEl) providerEl.value = aiProvider;
+
   const claudeKey = localStorage.getItem('storeapp_claude_key');
   const ckEl = document.getElementById('cfg-claude-key');
   if (ckEl && claudeKey) ckEl.value = claudeKey;
   const cmEl = document.getElementById('cfg-claude-model');
   const claudeModel = localStorage.getItem('storeapp_claude_model') || 'claude-haiku-4-5-20251001';
   if (cmEl) cmEl.value = claudeModel;
+
+  const geminiKey = localStorage.getItem('storeapp_gemini_key');
+  const gkEl = document.getElementById('cfg-gemini-key');
+  if (gkEl && geminiKey) gkEl.value = geminiKey;
+  const gmEl = document.getElementById('cfg-gemini-model');
+  const geminiModel = localStorage.getItem('storeapp_gemini_model') || 'gemini-2.5-flash';
+  if (gmEl) gmEl.value = geminiModel;
+
+  if (typeof toggleAIProviderFields === 'function') toggleAIProviderFields();
 
   // Cargar categorías
   loadAndDisplayCategories();
@@ -4175,6 +4309,10 @@ async function saveAdvancedConfig() {
   if (cName || cPreset) {
     localStorage.setItem('storeapp_cloudinary', JSON.stringify({ name: cName, preset: cPreset }));
   }
+  // AI Provider
+  const aiProvider = document.getElementById('cfg-ai-provider')?.value || 'claude';
+  localStorage.setItem('storeapp_ai_provider', aiProvider);
+
   // Claude Key
   const claudeKey = (document.getElementById('cfg-claude-key')?.value || '').trim();
   if (claudeKey) {
@@ -4184,6 +4322,16 @@ async function saveAdvancedConfig() {
   }
   const claudeModel = document.getElementById('cfg-claude-model')?.value || 'claude-haiku-4-5-20251001';
   localStorage.setItem('storeapp_claude_model', claudeModel);
+
+  // Gemini Key
+  const geminiKey = (document.getElementById('cfg-gemini-key')?.value || '').trim();
+  if (geminiKey) {
+    localStorage.setItem('storeapp_gemini_key', geminiKey);
+  } else {
+    localStorage.removeItem('storeapp_gemini_key');
+  }
+  const geminiModel = document.getElementById('cfg-gemini-model')?.value || 'gemini-2.5-flash';
+  localStorage.setItem('storeapp_gemini_model', geminiModel);
 
   if (typeof updateStatusLights === 'function') updateStatusLights();
 
@@ -4260,6 +4408,63 @@ async function testClaudeKey() {
   } catch(e) {
     if (statusEl) { statusEl.style.color = 'var(--red)'; statusEl.textContent = '✕ Error: ' + e.message; }
     localStorage.setItem('storeapp_claude_status', 'err');
+    if (typeof updateStatusLights === 'function') updateStatusLights();
+  }
+}
+
+function toggleAIProviderFields() {
+  const provider = document.getElementById('cfg-ai-provider')?.value || 'claude';
+  const claudeFields = document.getElementById('config-claude-fields');
+  const geminiFields = document.getElementById('config-gemini-fields');
+  if (provider === 'gemini') {
+    if (claudeFields) claudeFields.style.display = 'none';
+    if (geminiFields) geminiFields.style.display = 'block';
+  } else {
+    if (claudeFields) claudeFields.style.display = 'block';
+    if (geminiFields) geminiFields.style.display = 'none';
+  }
+}
+
+async function testGeminiKey() {
+  const statusEl = document.getElementById('adv-gemini-status');
+  const keyEl = document.getElementById('cfg-gemini-key');
+  const key = keyEl?.value.trim() || localStorage.getItem('storeapp_gemini_key') || '';
+  if (!key) {
+    if (statusEl) { statusEl.style.color = 'var(--red)'; statusEl.textContent = '✕ Ingresá una API Key primero'; }
+    return;
+  }
+  if (statusEl) { statusEl.style.color = 'var(--silver)'; statusEl.textContent = 'Probando...'; }
+  const selectedModel = document.getElementById('cfg-gemini-model')?.value || localStorage.getItem('storeapp_gemini_model') || 'gemini-2.5-flash';
+  console.log("testGeminiKey: Probando conexión con modelo:", selectedModel);
+  try {
+    const res = await fetch('/api/gemini', {
+      method: 'POST',
+      headers: {
+        'x-gemini-key': key,
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: selectedModel,
+        contents: [{ parts: [{ text: 'ping' }] }],
+        generationConfig: {
+          responseMimeType: 'text/plain'
+        }
+      })
+    });
+    if (res.ok) {
+      if (statusEl) { statusEl.style.color = 'var(--green)'; statusEl.textContent = '✓ Clave válida'; }
+      localStorage.setItem('storeapp_gemini_key', key);
+      localStorage.setItem('storeapp_gemini_status', 'ok');
+      if (typeof updateStatusLights === 'function') updateStatusLights();
+    } else {
+      const err = await res.json().catch(() => ({}));
+      if (statusEl) { statusEl.style.color = 'var(--red)'; statusEl.textContent = `✕ [Status ${res.status}] ${err?.error?.message || 'Clave inválida'}`; }
+      localStorage.setItem('storeapp_gemini_status', 'err');
+      if (typeof updateStatusLights === 'function') updateStatusLights();
+    }
+  } catch(e) {
+    if (statusEl) { statusEl.style.color = 'var(--red)'; statusEl.textContent = '✕ Error: ' + e.message; }
+    localStorage.setItem('storeapp_gemini_status', 'err');
     if (typeof updateStatusLights === 'function') updateStatusLights();
   }
 }
