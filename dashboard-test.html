@@ -1742,6 +1742,10 @@
       <i class="bi bi-shop"></i> <span>Ver tienda</span> <i class="bi bi-box-arrow-up-right"
         style="font-size:10px;margin-left:auto;opacity:.5;"></i>
     </div>
+    <div class="sb-item logout-btn" style="margin:0 12px 12px; border:1px solid rgba(215,38,56,0.2); color:var(--red);"
+      onclick="handleLogout()">
+      <i class="bi bi-box-arrow-right"></i> <span>Cerrar sesión</span>
+    </div>
   </div>
 
   <!-- MAIN -->
@@ -3915,6 +3919,13 @@
         submitBtn.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión';
       }
     }
+
+    function handleLogout() {
+      sessionStorage.removeItem('storeapp_logged_in_' + STORE_ID);
+      window.location.reload();
+    }
+    document.handleLogout = handleLogout;
+    window.handleLogout = handleLogout;
 
     function initDashboardAuth() {
       const isDemoStore = ['ferre-now', 'ferreteria', 'kiosco', 'gastronomia', 'electronica'].includes(STORE_ID.toLowerCase());
