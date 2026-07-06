@@ -8,15 +8,14 @@
   <!-- Premium Fonts and Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
 
   <style>
     :root {
       --brand-main: #D60000;
-      --brand-secondary: #281713;
+      --brand-secondary: #000000;
       --brand-muted: #706765;
-      --border-dash: #a09896;
       --font: 'Poppins', sans-serif;
     }
 
@@ -28,7 +27,7 @@
 
     body {
       font-family: var(--font);
-      background: #e2e8f0;
+      background: #f1f5f9;
       color: var(--brand-secondary);
       padding: 20px;
       display: flex;
@@ -52,6 +51,7 @@
         box-shadow: none !important;
         margin: 0 !important;
         border: none !important;
+        padding: 0 !important;
       }
     }
 
@@ -60,7 +60,7 @@
       background: #fff;
       padding: 16px 24px;
       border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
       margin-bottom: 20px;
       display: flex;
       gap: 16px;
@@ -94,168 +94,147 @@
     }
 
     .btn-secondary {
-      background: #f1f5f9;
+      background: #f8fafc;
       color: var(--brand-secondary);
       border: 1px solid #cbd5e1;
     }
 
     .btn-secondary:hover {
-      background: #e2e8f0;
+      background: #f1f5f9;
     }
 
-    /* A4 Container (approx proportions) */
+    /* A4 Container (exact scale) */
     .a4-page {
       background: #fff;
       width: 210mm;
       height: 297mm;
-      padding: 10mm;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      padding: 12mm 8mm;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.08);
       border: 1px solid #e2e8f0;
-      position: relative;
       display: grid;
       grid-template-columns: 110mm 1fr;
-      gap: 5mm;
+      gap: 8mm;
       overflow: hidden;
       box-sizing: border-box;
     }
 
-    /* Fold and Cut indicators */
-    .line-fold {
-      border-top: 1.5px dashed var(--border-dash);
-      position: relative;
-    }
-    .line-fold::after {
-      content: 'DOBLAR';
-      position: absolute;
-      left: 10px;
-      top: -9px;
-      background: #fff;
-      padding: 0 6px;
-      font-size: 8px;
-      font-weight: 700;
-      color: var(--brand-muted);
-      letter-spacing: 0.05em;
-    }
-
-    .line-cut {
-      border: 1.2px dotted #000;
-      position: relative;
-    }
-    
     /* ------------------- PIECE 1: EXPOSITOR DE MESA (STAND) ------------------- */
     .stand-container {
-      border: 1.5px dotted #000;
-      height: 275mm;
-      width: 100mm;
+      border: 0.8px solid #000;
+      height: 272mm;
+      width: 102mm;
       display: flex;
       flex-direction: column;
       position: relative;
       background: #fff;
+    }
+
+    /* Fold line annotations */
+    .fold-line-dashed {
+      border-top: 1.2px dashed #000;
+      width: 100%;
+      position: relative;
+    }
+
+    .fold-label {
+      position: absolute;
+      font-size: 11px;
+      font-weight: 700;
+      color: #000000;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
     /* Top flap (will go backward to lock) */
     .stand-top-flap {
-      height: 45mm;
-      background: #fafafa;
-      border-bottom: 1.5px dashed var(--border-dash);
+      height: 48mm;
+      background: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
+      padding: 10px;
     }
 
     /* Front Body Top Half */
     .stand-body-top {
-      height: 100mm;
-      padding: 6mm;
+      height: 98mm;
+      padding: 8mm 6mm;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      border-bottom: 1.5px dashed var(--border-dash);
       justify-content: space-between;
+      position: relative;
     }
 
     /* Front Body Bottom Half */
     .stand-body-bottom {
-      height: 90mm;
+      height: 86mm;
       display: flex;
       flex-direction: column;
       align-items: center;
-      border-bottom: 1.5px dashed var(--border-dash);
       position: relative;
     }
 
     /* Bottom flap */
     .stand-bottom-flap {
       height: 40mm;
-      background: #fafafa;
+      background: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
+      padding: 10px;
     }
 
-    /* ------------------- PIECE 2: COLGANTES/STICKERS CIRCULARES ------------------- */
+    /* ------------------- PIECE 2: COLGANTES CIRCULARES ------------------- */
     .right-column {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      height: 275mm;
-      padding: 5mm 0;
+      height: 272mm;
+      padding: 2mm 0;
+    }
+
+    .circle-hanger-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .circle-hanger {
       width: 78mm;
       height: 78mm;
-      border: 1.2px dotted #000;
+      border: 0.8px solid #000;
       border-radius: 50%;
       background: #fff;
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
       overflow: hidden;
     }
 
-    .circle-hanger-top-tab {
-      width: 44mm;
-      height: 18mm;
+    .circle-red-header {
+      width: 100%;
+      height: 24mm;
       background: var(--brand-main);
       color: #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      border-radius: 6px 6px 0 0;
-      position: absolute;
-      top: 4mm;
-      text-align: center;
-      z-index: 2;
-    }
-
-    .circle-hanger-top-tab-alt {
-      width: 100%;
-      height: 16mm;
-      background: var(--brand-main);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: absolute;
-      top: 0;
-      z-index: 2;
+      padding-top: 2mm;
     }
 
     .circle-hanger-content {
-      margin-top: 10mm;
+      margin-top: 4mm;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      z-index: 1;
     }
 
     .circle-qr-box {
@@ -263,12 +242,22 @@
       height: 32mm;
       background: #fff;
       border: 1px solid #e2e8f0;
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 2mm;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    }
+
+    .cut-label-bottom {
+      margin-top: 2mm;
+      font-size: 9px;
+      color: var(--brand-muted);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     /* ------------------- INSTRUCTIONS / DIAGRAMS ------------------- */
@@ -276,27 +265,36 @@
       width: 78mm;
       border: 1px solid #e2e8f0;
       border-radius: 12px;
-      padding: 12px;
-      font-size: 11px;
-      color: var(--brand-secondary);
+      padding: 14px;
+      font-size: 10.5px;
+      color: #334155;
       background: #f8fafc;
     }
 
     .assembly-title {
       font-weight: 700;
-      font-size: 12px;
+      font-size: 11.5px;
       text-transform: uppercase;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       color: var(--brand-main);
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    /* Helper styles */
-    .brand-logo-white {
-      height: 12px;
-      width: auto;
+    .num-badge {
+      background: var(--brand-main);
+      color: #fff;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 9.5px;
+      flex-shrink: 0;
+      margin-top: 1px;
     }
   </style>
 </head>
@@ -322,82 +320,87 @@
       
       <!-- 1. SOLAPA SUPERIOR (PLIEGUE HACIA ATRÁS) -->
       <div class="stand-top-flap">
-        <div style="transform: rotate(180deg); font-size: 9px; color: var(--brand-muted); text-align: center; font-weight: 600;">
-          <i class="bi bi-arrow-down"></i> SOLAPA DE SOPORTE TRASERO <i class="bi bi-arrow-down"></i><br/>
-          (Doblar hacia atrás y enganchar en la solapa inferior)
+        <div style="transform: rotate(180deg); font-size: 9px; color: var(--brand-muted); text-align: center; font-weight: 600; line-height: 1.5;">
+          (Doblar hacia atrás y enganchar en la solapa inferior)<br/>
+          <span style="font-size:10px; font-weight:700;">↑ SOLAPA DE SOPORTE TRASERO ↑</span>
         </div>
-        <div style="position: absolute; bottom: 0; left: 0; right: 0; border-top: 1.5px dashed var(--border-dash);"></div>
+        <!-- Fold line dashed with label -->
+        <div class="fold-line-dashed" style="position: absolute; bottom: 0; left: 0; right: 0;">
+          <span class="fold-label" style="left: 0; top: -16px;">DOBLAR</span>
+        </div>
       </div>
 
       <!-- 2. CUERPO SUPERIOR (FRENTE INFORMATIVO) -->
       <div class="stand-body-top">
-        <div style="font-size: 10px; font-weight: 600; color: var(--brand-muted); letter-spacing: 0.1em; text-transform: uppercase;">
+        <div style="font-size: 10px; font-weight: 700; color: var(--brand-muted); letter-spacing: 0.12em; text-transform: uppercase;">
           www.daletepido.com.ar
         </div>
         
-        <!-- Red Logo Badge -->
-        <div style="background: var(--brand-main); padding: 10px 30px; border-radius: 8px; display: inline-flex; align-items: center; margin: 4px 0;">
-          <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" style="height: 30px; width: auto;" />
+        <!-- Large Red Logo Badge -->
+        <div style="background: var(--brand-main); padding: 10px 32px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; margin: 4px 0; width: 85%;">
+          <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" style="height: 26px; width: auto;" />
         </div>
 
-        <div style="margin: 6px 0;">
-          <h4 style="font-size: 15px; font-weight: 800; color: var(--brand-secondary); text-transform: uppercase; margin-bottom: 2px;">¡Te escuchamos!</h4>
-          <p style="font-size: 10px; font-weight: 500; color: var(--brand-muted); line-height: 1.4; max-width: 90%;">
+        <div style="margin: 4px 0;">
+          <h4 style="font-size: 16px; font-weight: 800; color: var(--brand-secondary); text-transform: uppercase; letter-spacing: 0.02em; margin-bottom: 2px;">¡Te escuchamos!</h4>
+          <p style="font-size: 10px; font-weight: 500; color: var(--brand-muted); line-height: 1.4; max-width: 90%; margin: 0 auto;">
             Hacé tu pedido online y recibilo o retíralo sin ninguna demora.
           </p>
         </div>
 
         <!-- Instructions card -->
-        <div style="background: #fafafa; border: 1px solid #eaeaea; border-radius: 10px; padding: 10px; width: 100%; text-align: left;">
-          <div style="font-size: 11px; font-weight: 700; color: var(--brand-main); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.02em;">
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; width: 100%; text-align: left;">
+          <div style="font-size: 11px; font-weight: 800; color: var(--brand-main); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.04em;">
             ¿Cómo realizar tu pedido?
           </div>
-          <div style="display:flex; flex-direction:column; gap:6px; font-size: 10px; color: var(--brand-secondary); line-height: 1.3;">
-            <div style="display:flex; gap:8px;">
-              <span style="background:var(--brand-main); color:#fff; border-radius:50%; width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:9px; flex-shrink:0;">1</span>
+          <div style="display:flex; flex-direction:column; gap:8px; font-size: 10.5px; color: var(--brand-secondary); line-height: 1.4;">
+            <div style="display:flex; gap:8px; align-items: flex-start;">
+              <span class="num-badge">1</span>
               <span><strong>Escaneá</strong> el código QR de abajo.</span>
             </div>
-            <div style="display:flex; gap:8px;">
-              <span style="background:var(--brand-main); color:#fff; border-radius:50%; width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:9px; flex-shrink:0;">2</span>
+            <div style="display:flex; gap:8px; align-items: flex-start;">
+              <span class="num-badge">2</span>
               <span><strong>Elegí</strong> tus productos y armá tu carrito.</span>
             </div>
-            <div style="display:flex; gap:8px;">
-              <span style="background:var(--brand-main); color:#fff; border-radius:50%; width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:9px; flex-shrink:0;">3</span>
+            <div style="display:flex; gap:8px; align-items: flex-start;">
+              <span class="num-badge">3</span>
               <span><strong>Enviá</strong> tu pedido directo por WhatsApp.</span>
             </div>
           </div>
         </div>
 
-        <div style="font-size: 9px; font-weight: 600; color: var(--brand-muted); opacity: 0.8; margin-top: 2px;">
+        <div style="font-size: 9px; font-weight: 600; color: var(--brand-muted); opacity: 0.8;">
           ¡Listo! Tu pedido ya se procesa al instante.
         </div>
       </div>
 
       <!-- 3. CUERPO INFERIOR (FRENTE QR) -->
       <div class="stand-body-bottom">
-        
-        <!-- Header banner -->
-        <div style="background: var(--brand-main); width: 100%; height: 16mm; display: flex; align-items: center; justify-content: center; color: #fff;">
-          <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" style="height: 28px; width: auto;" />
+        <!-- Fold line dashed -->
+        <div class="fold-line-dashed" style="position: absolute; top: 0; left: 0; right: 0;"></div>
+
+        <!-- Header banner stretching fully -->
+        <div style="background: var(--brand-main); width: 100%; height: 14mm; display: flex; align-items: center; justify-content: center; color: #fff;">
+          <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" style="height: 24px; width: auto;" />
         </div>
 
         <!-- QR Display Space -->
-        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; padding-top: 3mm;">
-          <div style="font-size: 8.5px; font-weight: 700; color: var(--brand-main); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 2mm;">
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; padding-top: 2mm;">
+          <div style="font-size: 8px; font-weight: 800; color: var(--brand-main); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2mm;">
             ESCANEÁ EL CÓDIGO QR PARA PEDIR
           </div>
 
           <!-- QR Box -->
-          <div style="background:#fff; border: 1.5px solid var(--brand-secondary); border-radius: 16px; padding: 4mm; display: inline-block; box-shadow: 0 8px 20px rgba(0,0,0,0.06); width: 44mm; height: 44mm;">
-            <img id="stand-qr-img" src="" alt="Código QR de la Tienda" style="width: 100%; height: 100%; display: block;" />
+          <div style="background:#fff; border: 1.2px solid #000; border-radius: 16px; padding: 3mm; display: inline-flex; align-items: center; justify-content: center; width: 42mm; height: 42mm;">
+            <img id="stand-qr-img" src="" alt="Código QR de la Tienda" style="width: 100%; height: 100%; display: block; border-radius: 8px;" />
           </div>
 
           <!-- Store Name display -->
-          <div id="stand-store-name" style="font-size: 15px; font-weight: 800; color: var(--brand-secondary); text-transform: uppercase; margin-top: 2mm; text-align:center;">
+          <div id="stand-store-name" style="font-size: 15px; font-weight: 800; color: var(--brand-secondary); text-transform: uppercase; margin-top: 3mm; text-align:center; letter-spacing:0.02em;">
             CARGANDO TIENDA...
           </div>
           
-          <div id="stand-store-url" style="font-size: 9px; font-weight: 500; color: var(--brand-muted); margin-top: 1px; letter-spacing: 0.02em;">
+          <div id="stand-store-url" style="font-size: 9px; font-weight: 500; color: var(--brand-muted); margin-top: 1px;">
             ...
           </div>
         </div>
@@ -405,77 +408,80 @@
 
       <!-- 4. SOLAPA INFERIOR (CIERRE Y PLIEGUE) -->
       <div class="stand-bottom-flap">
-        <div style="font-size: 9px; color: var(--brand-muted); text-align: center; font-weight: 600;">
-          <i class="bi bi-arrow-up"></i> SOLAPA DE CIERRE <i class="bi bi-arrow-up"></i><br/>
+        <!-- Fold line dashed with label -->
+        <div class="fold-line-dashed" style="position: absolute; top: 0; left: 0; right: 0;">
+          <span class="fold-label" style="right: 0; top: -16px;">DOBLAR</span>
+        </div>
+        <div style="font-size: 9px; color: var(--brand-muted); text-align: center; font-weight: 600; line-height: 1.5; margin-top: 10px;">
+          <span style="font-size:10px; font-weight:700;">↑ SOLAPA DE CIERRE ↑</span><br/>
           (Doblar hacia atrás y trabar con la solapa superior)
         </div>
       </div>
 
-      <!-- Scissor cut markings on left/right outer borders -->
-      <div style="position:absolute; top:45mm; left:-12px; font-size:12px; color:var(--brand-muted); transform:rotate(90deg);"><i class="bi bi-scissors"></i> CORTE</div>
-      <div style="position:absolute; bottom:40mm; right:-12px; font-size:12px; color:var(--brand-muted); transform:rotate(-90deg);"><i class="bi bi-scissors"></i> CORTE</div>
     </div>
 
-    <!-- RIGHT SIDE: COLGANTES/STICKERS Y DIAGRAMA -->
+    <!-- RIGHT SIDE: COLGANTES Y DIAGRAMA -->
     <div class="right-column">
       
       <!-- HANGER 1 -->
-      <div class="circle-hanger">
-        <!-- Top tab border cut line -->
-        <div class="circle-hanger-top-tab">
-          <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" style="height: 13px; width: auto; margin-bottom: 2px;" />
-          <span style="font-size: 7px; font-weight: 700; letter-spacing: 0.05em; text-transform:uppercase;">Escaneá y Pedí</span>
+      <div class="circle-hanger-wrapper">
+        <div class="circle-hanger">
+          <!-- Top circle segment header -->
+          <div class="circle-red-header">
+            <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" style="height: 15px; width: auto; margin-bottom: 2px;" />
+            <span style="font-size: 7.5px; font-weight: 700; letter-spacing: 0.08em; text-transform:uppercase;">Escaneá y Pedí</span>
+          </div>
+          
+          <div class="circle-hanger-content">
+            <div class="circle-qr-box">
+              <img class="hanger-qr-img" src="" alt="QR" style="width:100%; height:100%; border-radius:6px;" />
+            </div>
+            <div class="hanger-store-name" style="font-size: 11px; font-weight: 800; color: var(--brand-secondary); text-transform: uppercase; margin-top: 2mm; text-align:center;">
+              Cargando...
+            </div>
+            <div class="hanger-store-url" style="font-size: 7.5px; font-weight: 500; color: var(--brand-muted); margin-top: 0.5px;">
+              ...
+            </div>
+          </div>
         </div>
-        
-        <div class="circle-hanger-content">
-          <div class="circle-qr-box" style="margin-top: 8mm;">
-            <img class="hanger-qr-img" src="" alt="QR" style="width:100%; height:100%;" />
-          </div>
-          <div class="hanger-store-name" style="font-size: 11px; font-weight: 800; color: var(--brand-secondary); text-transform: uppercase; margin-top: 2.5mm; text-align:center;">
-            Cargando...
-          </div>
-          <div class="hanger-store-url" style="font-size: 7.5px; font-weight: 500; color: var(--brand-muted); margin-top: 0.5px;">
-            ...
-          </div>
-        </div>
-        
-        <!-- Scissor icon border helper -->
-        <div style="position:absolute; bottom:6px; font-size:10px; color:var(--brand-muted);"><i class="bi bi-scissors"></i> LÍNEA DE CORTE</div>
+        <div class="cut-label-bottom"><i class="bi bi-scissors"></i> LÍNEA DE CORTE</div>
       </div>
 
       <!-- HANGER 2 -->
-      <div class="circle-hanger">
-        <!-- Alt style header -->
-        <div class="circle-hanger-top-tab-alt">
-          <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" style="height: 16px; width: auto;" />
+      <div class="circle-hanger-wrapper">
+        <div class="circle-hanger">
+          <!-- Top circle segment header -->
+          <div class="circle-red-header" style="height: 22mm;">
+            <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" style="height: 16px; width: auto;" />
+          </div>
+          
+          <div class="circle-hanger-content" style="margin-top: 6mm;">
+            <div class="circle-qr-box">
+              <img class="hanger-qr-img" src="" alt="QR" style="width:100%; height:100%; border-radius:6px;" />
+            </div>
+            <div class="hanger-store-name" style="font-size: 11px; font-weight: 800; color: var(--brand-secondary); text-transform: uppercase; margin-top: 2mm; text-align:center;">
+              Cargando...
+            </div>
+            <div class="hanger-store-url" style="font-size: 7.5px; font-weight: 500; color: var(--brand-muted); margin-top: 0.5px;">
+              ...
+            </div>
+          </div>
         </div>
-        
-        <div class="circle-hanger-content">
-          <div class="circle-qr-box" style="margin-top: 10mm;">
-            <img class="hanger-qr-img" src="" alt="QR" style="width:100%; height:100%;" />
-          </div>
-          <div class="hanger-store-name" style="font-size: 11px; font-weight: 800; color: var(--brand-secondary); text-transform: uppercase; margin-top: 2.5mm; text-align:center;">
-            Cargando...
-          </div>
-          <div class="hanger-store-url" style="font-size: 7.5px; font-weight: 500; color: var(--brand-muted); margin-top: 0.5px;">
-            ...
-          </div>
-        </div>
-        
-        <div style="position:absolute; bottom:6px; font-size:10px; color:var(--brand-muted);"><i class="bi bi-scissors"></i> LÍNEA DE CORTE</div>
+        <div class="cut-label-bottom"><i class="bi bi-scissors"></i> LÍNEA DE CORTE</div>
       </div>
 
       <!-- ASSEMBLY INSTRUCTIONS CARD -->
       <div class="assembly-guide">
         <div class="assembly-title">
-          <i class="bi bi-info-circle-fill"></i> Guía de Armado
+          <span style="background:var(--brand-main); color:#fff; border-radius:50%; width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:10px;">i</span>
+          GUÍA DE ARMADO
         </div>
-        <div style="line-height:1.4; display:flex; flex-direction:column; gap:6px;">
+        <div style="line-height:1.4; display:flex; flex-direction:column; gap:8px;">
           <div>
             <strong>1. Expositor de Mesa:</strong> Recortá por la línea de puntos exterior. Realizá los pliegues en las 3 líneas discontinuas. Enganchá la solapa superior con la inferior por detrás para formar la estructura de soporte triangular.
           </div>
           <div>
-            <strong>2. Colgantes Circulares:</strong> Recortá a lo largo del círculo exterior negro y su pestaña superior. Hacé una perforación en la pestaña superior para colgarlo en góndolas, mesas o vidrieras, o usalos directamente como stickers.
+            <strong>2. Colgantes Circulares:</strong> Recortá a lo largo del círculo exterior negro. Hacé una perforación en la parte superior para colgarlo en góndolas, mesas o vidrieras, o usalos directamente como stickers.
           </div>
         </div>
       </div>
