@@ -3249,22 +3249,6 @@
           </div>
           <div class="config-section-content">
             <div class="config-grid">
-              <div class="ctrl-group" style="grid-column:1/-1;">
-                <label class="ctrl-label">Tu Tienda Online (Dirección Web)</label>
-                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-                  <div style="display:flex;align-items:center;flex:1;min-width:200px;background:var(--zinc);border:1px solid var(--iron);border-radius:8px;padding-right:12px;overflow:hidden;height:40px;">
-                    <input class="ctrl-input" id="cfg-store-subdomain" placeholder="mi-tienda" style="flex:1;border:none;background:transparent;padding-right:0;height:100%;" />
-                    <span style="color:var(--silver);font-size:13px;font-weight:600;user-select:none;margin-left:8px;">.daletepido.com.ar</span>
-                  </div>
-                  <button onclick="changeSubdomain()" class="sb-btn" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:10px 14px;background:var(--iron);color:var(--white);border:1px solid var(--zinc);border-radius:6px;font-size:12px;font-weight:600;height:40px;">
-                    <i class="bi bi-check-circle"></i> Aplicar cambio
-                  </button>
-                  <a id="cfg-store-url-btn" href="#" target="_blank" class="sb-btn" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:10px 14px;background:var(--red);color:#fff;border-radius:6px;font-size:12px;font-weight:600;height:40px;">
-                    <i class="bi bi-box-arrow-up-right"></i> Ver Tienda
-                  </a>
-                </div>
-                <div style="font-size:10px;color:var(--silver);margin-top:3px;">Podés cambiar tu dirección web una vez cada 15 días. Usá solo letras minúsculas, números y guiones.</div>
-              </div>
               <div class="ctrl-group">
                 <label class="ctrl-label">Nombre de la tienda</label>
                 <input class="ctrl-input" id="cfg-store-name" placeholder="FerreApp" />
@@ -3549,61 +3533,30 @@
           </div>
         </div>
 
-        <!-- Categorías -->
+        <!-- Dirección Web / Subdominio -->
         <div class="config-section">
-          <div class="config-section-title"><i class="bi bi-tags"></i> Categorías de productos <div
-              class="config-status ok"></div>
-          </div>
-          <div class="config-section-content">
+          <div class="config-section-title"><i class="bi bi-globe2"></i> Dirección Web y Subdominio</div>
+          <div class="config-section-content" style="padding: 20px;">
             <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
-              Administrá las categorías disponibles en tu tienda. Los productos se asignan a una categoría al crear o
-              editar.
-              <a href="https://supabase.com/dashboard" target="_blank" style="color:var(--red);">Tabla
-                <code>categories</code> en Supabase →</a>
+              Configurá y cambiá el subdominio que te otorgamos para acceder a tu tienda online (ej: <code>mi-tienda.daletepido.com.ar</code>).
             </div>
-            <div style="margin-bottom:14px;">
-              <label class="ctrl-label" style="margin-bottom:8px;display:block;">Categorías en Supabase</label>
-              <div id="adv-categories-list"
-                style="background:var(--iron);border:1px solid var(--zinc);border-radius:8px;padding:12px;font-size:12px;color:var(--silver);max-height:200px;overflow-y:auto;line-height:1.8;">
-                <div style="text-align:center;color:var(--silver);">Cargando categorías...</div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="ctrl-group">
+                <label class="ctrl-label">Tu Tienda Online (Dirección Web)</label>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                  <div style="display:flex;align-items:center;flex:1;min-width:200px;background:var(--zinc);border:1px solid var(--iron);border-radius:8px;padding-right:12px;overflow:hidden;height:40px;">
+                    <input class="ctrl-input" id="cfg-store-subdomain" placeholder="mi-tienda" style="flex:1;border:none;background:transparent;padding-right:0;height:100%;" />
+                    <span style="color:var(--silver);font-size:13px;font-weight:600;user-select:none;margin-left:8px;">.daletepido.com.ar</span>
+                  </div>
+                  <button onclick="changeSubdomain()" class="sb-btn" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:10px 14px;background:var(--iron);color:var(--white);border:1px solid var(--zinc);border-radius:6px;font-size:12px;font-weight:600;height:40px;">
+                    <i class="bi bi-check-circle"></i> Aplicar cambio
+                  </button>
+                  <a id="cfg-store-url-btn" href="#" target="_blank" class="sb-btn" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:10px 14px;background:var(--red);color:#fff;border-radius:6px;font-size:12px;font-weight:600;height:40px;">
+                    <i class="bi bi-box-arrow-up-right"></i> Ver Tienda
+                  </a>
+                </div>
+                <div style="font-size:10px;color:var(--silver);margin-top:3px;">Podés cambiar tu dirección web una vez cada 15 días. Usá solo letras minúsculas, números y guiones.</div>
               </div>
-            </div>
-            <div
-              style="padding:12px;background:rgba(52,152,219,.07);border:1px solid rgba(52,152,219,.2);border-radius:8px;font-size:11px;color:var(--silver);line-height:1.6;margin-top:12px;">
-              <i class="bi bi-info-circle" style="color:#3498DB;"></i>
-              <strong style="color:var(--fog);">Para agregar nuevas categorías:</strong><br />
-              1. Abrí <a href="https://supabase.com/dashboard" target="_blank" style="color:var(--red);">Supabase
-                Dashboard</a><br />
-              2. Tabla <code>categories</code> → New row<br />
-              3. Ingresá: <code>name</code> (ej: "Herramientas"), <code>emoji</code> (ej: "🔧"), <code>active</code>
-              (true)<br />
-              4. Recargá esta página
-            </div>
-          </div>
-        </div>
-
-        <!-- Dominio (futuro) -->
-        <div class="config-section">
-          <div class="config-section-title"><i class="bi bi-globe2"></i> Dominio personalizado <span
-              style="font-size:10px;background:var(--zinc);color:var(--silver);padding:2px 8px;border-radius:20px;margin-left:8px;font-weight:400;">Próximamente</span>
-          </div>
-          <div class="config-section-content">
-            <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
-              Configurá un dominio propio para tu tienda (ej: <code
-                style="color:var(--fog);">tienda.ferrenow.com.ar</code>). Esta funcionalidad estará disponible en la
-              Etapa 4.
-            </div>
-            <div class="config-grid">
-              <div class="ctrl-group" style="grid-column:1/-1;">
-                <label class="ctrl-label">Dominio</label>
-                <input class="ctrl-input" id="adv-domain" placeholder="tienda.minegocio.com.ar" disabled
-                  style="opacity:.5;cursor:not-allowed;" />
-              </div>
-            </div>
-            <div
-              style="padding:10px 14px;background:rgba(52,152,219,.07);border:1px solid rgba(52,152,219,.2);border-radius:8px;font-size:11px;color:var(--silver);margin-top:8px;">
-              <i class="bi bi-clock-history" style="color:#3498DB;"></i> En desarrollo — se habilitará junto con la
-              integración de Vercel Custom Domains en la Etapa 4.
             </div>
           </div>
         </div>
