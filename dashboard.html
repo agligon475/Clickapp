@@ -3279,21 +3279,23 @@
                 <input class="ctrl-input" id="cfg-store-tagline" placeholder="Tu ferretería digital" />
               </div>
               <div class="ctrl-group">
-                <label class="ctrl-label">Rubro de la empresa</label>
-                <select class="ctrl-input" id="cfg-store-rubro">
+                <label class="ctrl-label">Rubro principal</label>
+                <select class="ctrl-input" id="cfg-store-rubro" onchange="updateSubrubros('cfg-store-rubro','cfg-store-subrubro')">
                   <option value="">Seleccioná...</option>
-                  <option value="Ferretería">🔧 Ferretería</option>
-                  <option value="Dietética">🌿 Dietética</option>
-                  <option value="Rotisería">🍗 Rotisería</option>
-                  <option value="Kiosco">🍬 Kiosco</option>
-                  <option value="Distribuidora">📦 Distribuidora</option>
-                  <option value="Indumentaria">👗 Indumentaria</option>
-                  <option value="Electrónica">💻 Electrónica</option>
-                  <option value="Librería">📚 Librería</option>
-                  <option value="Farmacia">💊 Farmacia</option>
-                  <option value="Verdulería">🥦 Verdulería</option>
-                  <option value="Panadería">🥖 Panadería</option>
-                  <option value="Otro">🏪 Otro</option>
+                  <option value="Super">🛒 Súper</option>
+                  <option value="Farmacias">💊 Farmacias</option>
+                  <option value="Bebidas">🍺 Bebidas</option>
+                  <option value="Kioscos">🍬 Kioscos</option>
+                  <option value="Mascotas">🐾 Mascotas</option>
+                  <option value="Cafe">☕ Café &amp; Deli</option>
+                  <option value="Helados">🍦 Helados</option>
+                  <option value="Tiendas">🏪 Tiendas</option>
+                </select>
+              </div>
+              <div class="ctrl-group">
+                <label class="ctrl-label">Subrubro</label>
+                <select class="ctrl-input" id="cfg-store-subrubro">
+                  <option value="">Primero elegí un rubro...</option>
                 </select>
               </div>
               <div class="ctrl-group">
@@ -5122,6 +5124,7 @@
           direccion: cfgObj.direccion || '',
           horario: cfgObj.horario || '',
           rubro: cfgObj.rubro || '',
+          subrubro: cfgObj.subrubro || '',
           logo_url: cfgObj.logo || '',
           phone: JSON.stringify(cfgObj.socials || {}),
           instagram: cfgObj.socials?.ig || '',
@@ -7013,6 +7016,32 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       setDashTheme(saved);
     }
 
+    /* ═════════════════ RUBRO / SUBRUBRO */
+    const SUBRUBROS_MAP = {
+      Super:     [['supermercado','🛒 Supermercado'], ['conveniencia','🏪 Tienda de conveniencia'], ['almacen','🛍 Almacén'], ['dietetica','🌿 Dietética'], ['verduleria','🥦 Verdulería / Frutería']],
+      Farmacias: [['farmacia','💊 Farmacia'], ['perfumeria','🌸 Perfumería'], ['optica','👓 Óptica'], ['salud-natural','🌱 Salud natural']],
+      Bebidas:   [['distribuidora','📦 Distribuidora'], ['licoreria','🍾 Licorería'], ['vinoteca','🍷 Vinoteca'], ['cerveceria','🍺 Cervecería']],
+      Kioscos:   [['kiosco','🍬 Kiosco'], ['tabaqueria','🚬 Tabaquería'], ['libreria-kiosco','📚 Librería / Kiosco']],
+      Mascotas:  [['veterinaria','🏥 Veterinaria'], ['petshop','🐶 Pet shop'], ['alimentos-mascotas','🦴 Alimentos para mascotas']],
+      Cafe:      [['cafeteria','☕ Cafetería'], ['panaderia','🥐 Panadería / Confitería'], ['reposteria','🍰 Repostería'], ['rotiseria','🍗 Rotisería']],
+      Helados:   [['heladeria','🍦 Heladería'], ['postres','🍮 Postres y helados']],
+      Tiendas:   [['regaleria','🎁 Regalería'], ['limpieza','🧹 Artículos de limpieza'], ['tecnologia','💻 Tecnología / Electrónica'], ['indumentaria','👗 Indumentaria'], ['ferreteria','🔧 Ferretería'], ['otro','🏪 Otro']],
+    };
+
+    function updateSubrubros(rubroId, subrubroId) {
+      const rubroEl = document.getElementById(rubroId);
+      const subEl   = document.getElementById(subrubroId);
+      if (!rubroEl || !subEl) return;
+      const val  = rubroEl.value;
+      const opts = SUBRUBROS_MAP[val] || [];
+      if (opts.length === 0) {
+        subEl.innerHTML = '<option value="">— Sin subrubros —</option>';
+        return;
+      }
+      subEl.innerHTML = '<option value="">Seleccioná...</option>' +
+        opts.map(([v,l]) => `<option value="${v}">${l}</option>`).join('');
+    }
+
     /* ═══════════════════════════════════════════ CONFIG VIEW */
     function initConfigView() {
       // Load all saved values into form fields
@@ -7029,7 +7058,11 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (sc.tagline) document.getElementById('cfg-store-tagline').value = sc.tagline;
       if (sc.wapp) document.getElementById('cfg-store-wapp').value = sc.wapp;
       if (sc.password) document.getElementById('cfg-store-password').value = sc.password;
-      if (sc.rubro) document.getElementById('cfg-store-rubro').value = sc.rubro;
+      if (sc.rubro) {
+        document.getElementById('cfg-store-rubro').value = sc.rubro;
+        updateSubrubros('cfg-store-rubro', 'cfg-store-subrubro');
+        if (sc.subrubro) document.getElementById('cfg-store-subrubro').value = sc.subrubro;
+      }
       if (sc.direccion) document.getElementById('cfg-store-direccion').value = sc.direccion;
       if (sc.horario) document.getElementById('cfg-store-horario').value = sc.horario;
 
@@ -7434,6 +7467,8 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const tagline = document.getElementById('cfg-store-tagline').value.trim();
       const wapp = document.getElementById('cfg-store-wapp').value.trim();
       const rubro = document.getElementById('cfg-store-rubro').value.trim();
+      const subrubro = document.getElementById('cfg-store-subrubro')?.value.trim() || '';
+      if (subrubro) sc.subrubro = subrubro; else sc.subrubro = '';
       const direccion = document.getElementById('cfg-store-direccion').value.trim();
       const horario = document.getElementById('cfg-store-horario').value.trim();
       if (name) sc.name = name;
@@ -8663,7 +8698,13 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         }
 
         document.getElementById('wiz-store-name').value = sc.name || document.getElementById('cfg-store-name')?.value || '';
-        document.getElementById('wiz-store-rubro').value = sc.rubro || document.getElementById('cfg-store-rubro')?.value || '';
+        const wizRubroEl = document.getElementById('wiz-store-rubro');
+        if (wizRubroEl) {
+          wizRubroEl.value = sc.rubro || document.getElementById('cfg-store-rubro')?.value || '';
+          updateSubrubros('wiz-store-rubro', 'wiz-store-subrubro');
+          const savedSub = sc.subrubro || document.getElementById('cfg-store-subrubro')?.value || '';
+          if (savedSub) { const s = document.getElementById('wiz-store-subrubro'); if(s) s.value = savedSub; }
+        }
         document.getElementById('wiz-store-tagline').value = sc.tagline || document.getElementById('cfg-store-tagline')?.value || '';
         document.getElementById('wiz-store-h1').value = sc.h1 || document.getElementById('cfg-h1')?.value || '';
         document.getElementById('wiz-store-h2').value = sc.h2 || document.getElementById('cfg-h2')?.value || '';
@@ -8835,6 +8876,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
 
       const logoUrl = document.getElementById('wiz-logo-preview').src || '';
       const emoji = wizSelectedEmoji;
+      const subrubro = document.getElementById('wiz-store-subrubro')?.value.trim() || '';
 
       if (!name || !wapp) {
         alert('Nombre de la tienda y WhatsApp son requeridos.');
@@ -8846,6 +8888,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         'cfg-store-name': name,
         'cfg-name': name,
         'cfg-store-rubro': rubro,
+        'cfg-store-subrubro': subrubro,
         'cfg-store-tagline': tagline,
         'cfg-tagline': tagline,
         'cfg-h1': h1,
@@ -8872,6 +8915,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       sc.tagline = tagline;
       sc.wapp = wapp;
       sc.rubro = rubro;
+      sc.subrubro = subrubro;
       sc.direccion = direccion;
       sc.horario = horario;
       sc.h1 = h1;
@@ -9260,20 +9304,22 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           </div>
           <div class="ctrl-group" style="margin-top:12px;">
             <label class="ctrl-label">Rubro principal</label>
-            <select class="ctrl-input" id="wiz-store-rubro">
+            <select class="ctrl-input" id="wiz-store-rubro" onchange="updateSubrubros('wiz-store-rubro','wiz-store-subrubro')">
               <option value="">Seleccioná...</option>
-              <option value="Ferretería">🔧 Ferretería</option>
-              <option value="Dietética">🌿 Dietética</option>
-              <option value="Rotisería">🍗 Rotisería</option>
-              <option value="Kiosco">🍬 Kiosco</option>
-              <option value="Distribuidora">📦 Distribuidora</option>
-              <option value="Indumentaria">👗 Indumentaria</option>
-              <option value="Electrónica">💻 Electrónica</option>
-              <option value="Librería">📚 Librería</option>
-              <option value="Farmacia">💊 Farmacia</option>
-              <option value="Verdulería">🥦 Verdulería</option>
-              <option value="Panadería">🥖 Panadería</option>
-              <option value="Otro">🏪 Otro</option>
+              <option value="Super">🛒 Súper</option>
+              <option value="Farmacias">💊 Farmacias</option>
+              <option value="Bebidas">🍺 Bebidas</option>
+              <option value="Kioscos">🍬 Kioscos</option>
+              <option value="Mascotas">🐾 Mascotas</option>
+              <option value="Cafe">☕ Café &amp; Deli</option>
+              <option value="Helados">🍦 Helados</option>
+              <option value="Tiendas">🏪 Tiendas</option>
+            </select>
+          </div>
+          <div class="ctrl-group" style="margin-top:12px;">
+            <label class="ctrl-label">Subrubro</label>
+            <select class="ctrl-input" id="wiz-store-subrubro">
+              <option value="">Primero elegí un rubro...</option>
             </select>
           </div>
           <div class="ctrl-group" style="margin-top:12px;">
