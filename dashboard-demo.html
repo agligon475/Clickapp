@@ -5164,6 +5164,8 @@
           parsedEmail.fontBody = cfgObj.fontBody !== undefined ? cfgObj.fontBody : parsedEmail.fontBody || '';
           parsedEmail.password = cfgObj.password !== undefined ? cfgObj.password : parsedEmail.password || '';
           parsedEmail.bg = cfgObj.bg !== undefined ? cfgObj.bg : parsedEmail.bg || '';
+          parsedEmail.subrubro = cfgObj.subrubro !== undefined ? cfgObj.subrubro : parsedEmail.subrubro || '';
+          parsedEmail.payment_methods = cfgObj.payment_methods !== undefined ? cfgObj.payment_methods : parsedEmail.payment_methods || { efectivo: true, transferencia: true, convenir: true };
 
           dataToSave.email = JSON.stringify(parsedEmail);
 
