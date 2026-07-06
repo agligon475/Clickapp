@@ -1814,6 +1814,7 @@
 
     <!-- ══ INICIO (DASHBOARD) ══ -->
     <div class="view active" id="view-dashboard">
+    <div class="view active" id="view-dashboard">
       <!-- Greeting Card -->
       <div class="welcome-card"
         style="background:var(--steel); border:1px solid var(--zinc); border-radius:12px; padding:28px; margin-bottom:24px; animation:fadeUp .35s ease both; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
@@ -1827,6 +1828,97 @@
           <button onclick="openStepByStepConfig()" class="sb-btn" style="width:auto; margin:0; padding:10px 20px; font-size:13px; display:inline-flex; align-items:center; gap:8px; background:var(--red);">
             <i class="bi bi-magic"></i> Configuración paso a paso
           </button>
+        </div>
+      </div>
+
+      <!-- Onboarding Checklist Card -->
+      <div id="onboarding-checklist-card" style="display:none; background:var(--steel); border:1px solid var(--zinc); border-radius:12px; padding:28px; margin-bottom:24px; animation:fadeUp .35s ease both; position:relative; overflow:hidden;">
+        <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, var(--red), var(--silver));"></div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:20px;">
+          <div>
+            <h3 style="font-family:var(--font-h); font-size:18px; font-weight:800; color:var(--white); margin:0 0 6px 0; text-transform:uppercase; letter-spacing:0.02em; display:flex; align-items:center; gap:8px;">
+              <i class="bi bi-rocket-takeoff" style="color:var(--red);"></i> Guía de Configuración Inicial
+            </h3>
+            <p style="color:var(--silver); font-size:13px; margin:0;">
+              Completá estos 5 sencillos pasos para dejar tu tienda online lista y configurada al 100%.
+            </p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="font-size:12px; font-weight:700; color:var(--silver); background:var(--iron); padding:6px 12px; border-radius:20px; border:1px solid var(--zinc);">
+              Progreso: <span id="onboard-progress-text" style="color:var(--red);">0%</span>
+            </div>
+            <button onclick="dismissOnboarding()" class="sb-btn" style="width:auto; margin:0; padding:6px 10px; font-size:11px; background:transparent; border:none; color:var(--silver); cursor:pointer;">
+              Ocultar guía
+            </button>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div style="width:100%; height:6px; background:var(--iron); border-radius:3px; margin-bottom:24px; overflow:hidden;">
+          <div id="onboard-progress-bar" style="width:0%; height:100%; background:var(--red); transition:width 0.4s ease;"></div>
+        </div>
+
+        <!-- Checklist Items -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
+          <!-- Step 1 -->
+          <div class="onboard-item" id="onboard-step-1" style="background:var(--iron); border:1px solid var(--zinc); border-radius:10px; padding:16px; display:flex; gap:12px; transition:all 0.2s;">
+            <div class="onboard-check" style="font-size:20px; color:var(--silver); width:28px; height:28px; border-radius:50%; border:2px solid var(--zinc); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <i class="bi bi-circle"></i>
+            </div>
+            <div style="flex:1;">
+              <h4 style="margin:0 0 4px 0; font-size:14px; font-weight:700; color:var(--white);">1. Datos de tu Comercio</h4>
+              <p style="margin:0 0 10px 0; font-size:12px; color:var(--silver);">Definí el nombre comercial, eslogan y logo.</p>
+              <button onclick="openStepByStepConfig()" class="sb-btn" style="width:auto; margin:0; padding:6px 12px; font-size:11px; background:var(--zinc); border:1px solid var(--silver); color:var(--white); cursor:pointer;">Configurar</button>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="onboard-item" id="onboard-step-2" style="background:var(--iron); border:1px solid var(--zinc); border-radius:10px; padding:16px; display:flex; gap:12px; transition:all 0.2s;">
+            <div class="onboard-check" style="font-size:20px; color:var(--silver); width:28px; height:28px; border-radius:50%; border:2px solid var(--zinc); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <i class="bi bi-circle"></i>
+            </div>
+            <div style="flex:1;">
+              <h4 style="margin:0 0 4px 0; font-size:14px; font-weight:700; color:var(--white);">2. Estética y Colores</h4>
+              <p style="margin:0 0 10px 0; font-size:12px; color:var(--silver);">Personalizá el tema, colores y tipografía.</p>
+              <button onclick="goToView('design')" class="sb-btn" style="width:auto; margin:0; padding:6px 12px; font-size:11px; background:var(--zinc); border:1px solid var(--silver); color:var(--white); cursor:pointer;">Personalizar</button>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="onboard-item" id="onboard-step-3" style="background:var(--iron); border:1px solid var(--zinc); border-radius:10px; padding:16px; display:flex; gap:12px; transition:all 0.2s;">
+            <div class="onboard-check" style="font-size:20px; color:var(--silver); width:28px; height:28px; border-radius:50%; border:2px solid var(--zinc); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <i class="bi bi-circle"></i>
+            </div>
+            <div style="flex:1;">
+              <h4 style="margin:0 0 4px 0; font-size:14px; font-weight:700; color:var(--white);">3. Categorías de Productos</h4>
+              <p style="margin:0 0 10px 0; font-size:12px; color:var(--silver);">Creá rubros/categorías para agrupar tus artículos.</p>
+              <button onclick="goToView('categories')" class="sb-btn" style="width:auto; margin:0; padding:6px 12px; font-size:11px; background:var(--zinc); border:1px solid var(--silver); color:var(--white); cursor:pointer;">Crear Categoría</button>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="onboard-item" id="onboard-step-4" style="background:var(--iron); border:1px solid var(--zinc); border-radius:10px; padding:16px; display:flex; gap:12px; transition:all 0.2s;">
+            <div class="onboard-check" style="font-size:20px; color:var(--silver); width:28px; height:28px; border-radius:50%; border:2px solid var(--zinc); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <i class="bi bi-circle"></i>
+            </div>
+            <div style="flex:1;">
+              <h4 style="margin:0 0 4px 0; font-size:14px; font-weight:700; color:var(--white);">4. Primer Producto</h4>
+              <p style="margin:0 0 10px 0; font-size:12px; color:var(--silver);">Cargá tu primer producto con precio y stock.</p>
+              <button onclick="goToView('abm')" class="sb-btn" style="width:auto; margin:0; padding:6px 12px; font-size:11px; background:var(--zinc); border:1px solid var(--silver); color:var(--white); cursor:pointer;">Cargar Producto</button>
+            </div>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="onboard-item" id="onboard-step-5" style="background:var(--iron); border:1px solid var(--zinc); border-radius:10px; padding:16px; display:flex; gap:12px; transition:all 0.2s;">
+            <div class="onboard-check" style="font-size:20px; color:var(--silver); width:28px; height:28px; border-radius:50%; border:2px solid var(--zinc); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <i class="bi bi-circle"></i>
+            </div>
+            <div style="flex:1;">
+              <h4 style="margin:0 0 4px 0; font-size:14px; font-weight:700; color:var(--white);">5. Ver Tienda Online</h4>
+              <p style="margin:0 0 10px 0; font-size:12px; color:var(--silver);">Abrí la web pública para ver cómo quedó.</p>
+              <a id="onboard-store-link" href="#" target="_blank" class="sb-btn" style="text-decoration:none; text-align:center; width:auto; margin:0; padding:6px 12px; font-size:11px; background:var(--zinc); border:1px solid var(--silver); color:var(--white); cursor:pointer;">Ver Tienda</a>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -4146,13 +4238,96 @@
     }
 
     function updateWelcomeGreeting() {
-      let storeName = 'FerreNow';
+      let storeName = 'Mi Tienda';
       try {
-        const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+        const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + STORE_ID) || localStorage.getItem('storeapp_cfg') || '{}');
         if (sc.name) storeName = sc.name;
       } catch (e) { }
       const el = document.getElementById('welcome-store-name');
       if (el) el.textContent = storeName;
+    }
+
+    function checkOnboardingStatus() {
+      const onboardCard = document.getElementById('onboarding-checklist-card');
+      if (!onboardCard) return;
+
+      if (localStorage.getItem('storeapp_dismiss_onboard_' + STORE_ID)) {
+        onboardCard.style.display = 'none';
+        return;
+      }
+
+      let completedSteps = 0;
+      const totalSteps = 5;
+
+      // Paso 1: Configuración de la tienda
+      const step1Done = !!(localStorage.getItem('storeapp_onboard_step_1_' + STORE_ID) || (cfg && cfg.tagline && cfg.tagline !== 'Tu ferretería digital' && cfg.tagline !== 'Tu catálogo digital'));
+      updateOnboardItemState(1, step1Done);
+      if (step1Done) completedSteps++;
+
+      // Paso 2: Diseño visual
+      const step2Done = !!(localStorage.getItem('storeapp_onboard_step_2_' + STORE_ID) || (cfg && cfg.color && cfg.color !== '#D72638'));
+      updateOnboardItemState(2, step2Done);
+      if (step2Done) completedSteps++;
+
+      // Paso 3: Categorías
+      const step3Done = !!(window.currentCategories && window.currentCategories.length > 0);
+      updateOnboardItemState(3, step3Done);
+      if (step3Done) completedSteps++;
+
+      // Paso 4: Productos
+      const step4Done = !!(products && products.length > 0);
+      updateOnboardItemState(4, step4Done);
+      if (step4Done) completedSteps++;
+
+      // Paso 5: Visitar tienda
+      const step5Done = !!localStorage.getItem('storeapp_onboard_step_5_' + STORE_ID);
+      updateOnboardItemState(5, step5Done);
+      if (step5Done) completedSteps++;
+
+      // Progreso
+      const percentage = Math.round((completedSteps / totalSteps) * 100);
+      document.getElementById('onboard-progress-text').textContent = percentage + '%';
+      document.getElementById('onboard-progress-bar').style.width = percentage + '%';
+
+      // Configurar link de tienda
+      const storeLink = document.getElementById('onboard-store-link');
+      if (storeLink) {
+        storeLink.href = 'index.html?store=' + encodeURIComponent(STORE_ID);
+        storeLink.onclick = () => {
+          localStorage.setItem('storeapp_onboard_step_5_' + STORE_ID, 'true');
+          setTimeout(checkOnboardingStatus, 1000);
+        };
+      }
+
+      // Si todos los pasos están listos, ocultar
+      if (completedSteps < totalSteps) {
+        onboardCard.style.display = 'block';
+      } else {
+        onboardCard.style.display = 'none';
+      }
+    }
+
+    function updateOnboardItemState(stepNum, isDone) {
+      const itemEl = document.getElementById('onboard-step-' + stepNum);
+      if (!itemEl) return;
+      const checkEl = itemEl.querySelector('.onboard-check');
+      if (isDone) {
+        checkEl.innerHTML = '<i class="bi bi-check-circle-fill"></i>';
+        checkEl.style.color = 'var(--success)';
+        checkEl.style.borderColor = 'var(--success)';
+        itemEl.style.opacity = '0.65';
+      } else {
+        checkEl.innerHTML = '<i class="bi bi-circle"></i>';
+        checkEl.style.color = 'var(--silver)';
+        checkEl.style.borderColor = 'var(--zinc)';
+        itemEl.style.opacity = '1';
+      }
+    }
+
+    function dismissOnboarding() {
+      localStorage.setItem('storeapp_dismiss_onboard_' + STORE_ID, 'true');
+      const onboardCard = document.getElementById('onboarding-checklist-card');
+      if (onboardCard) onboardCard.style.display = 'none';
     }
 
     let dbStatusState = 'checking'; // 'checking', 'ok', 'err'
@@ -4228,7 +4403,7 @@
 
       // 4. Dominio
       const host = window.location.hostname;
-      const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+      const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + STORE_ID) || localStorage.getItem('storeapp_cfg') || '{}');
       const customDom = (sc.domain || '').trim().replace(/^(https?:\/\/)?(www\.)?/, '').toLowerCase();
       const currentDom = host.replace(/^(www\.)?/, '').toLowerCase();
 
@@ -4349,6 +4524,8 @@
             cfg = { ...cfg, ...remoteStoreCfg };
             localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
             localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
+            updateWelcomeGreeting();
+            checkOnboardingStatus();
 
             // Update UI
             if (typeof initDesignPanel === 'function') initDesignPanel();
@@ -4670,7 +4847,7 @@
     };
 
     // Load saved config
-    try { const saved = localStorage.getItem('storeapp_cfg'); if (saved) cfg = { ...cfg, ...JSON.parse(saved) }; } catch (e) { }
+    try { const saved = localStorage.getItem('storeapp_cfg_' + STORE_ID) || localStorage.getItem('storeapp_cfg'); if (saved) cfg = { ...cfg, ...JSON.parse(saved) }; } catch (e) { }
 
     function hexToRgba(hex, a = 1) {
       const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
@@ -4944,7 +5121,10 @@
     async function applyConfig() {
       try {
         localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
+        localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
+        localStorage.setItem('storeapp_onboard_step_2_' + STORE_ID, 'true');
         await syncStoreConfigToSupabase(cfg);
+        checkOnboardingStatus();
         // Flash success
         const btn = window.event && window.event.currentTarget ? window.event.currentTarget : document.querySelector('button[onclick="applyConfig()"]');
         if (btn) {
@@ -5265,9 +5445,11 @@
         }
       }
       localProducts = localProducts.filter(x => String(x.id) !== String(id));
+      products = localProducts;
       localStorage.setItem('storeapp_local_products', JSON.stringify(localProducts));
       webhookDeleteProduct(id);
       renderABM();
+      checkOnboardingStatus();
     }
 
     async function saveLocalProducts(btn) {
@@ -5734,8 +5916,10 @@
       buildCatFilter();
       renderABM();
       closeModal();
+      products = localProducts;
       localStorage.setItem('storeapp_local_products', JSON.stringify(localProducts));
       localStorage.setItem('storeapp_abm_active', '1');
+      checkOnboardingStatus();
 
       let saved = null;
       if (prevEditingId != null && prevEditingId !== '') {
@@ -6980,6 +7164,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         }
         closeCategoryModal();
         loadCategoriesList();
+        checkOnboardingStatus();
       } catch (e) {
         alert('Error al guardar categoría: ' + e.message);
       }
@@ -6993,6 +7178,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
           headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
         loadCategoriesList();
+        checkOnboardingStatus();
       } catch (e) {
         alert('Error al eliminar categoría: ' + e.message);
       }
@@ -7197,6 +7383,8 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
       sc.socials = { web, ig, fb, x, ml, tn, maps };
       localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
+      localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(sc));
+      localStorage.setItem('storeapp_onboard_step_1_' + STORE_ID, 'true');
       
       // also merge into global cfg object
       cfg = { ...cfg, ...sc };
@@ -7241,6 +7429,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       el.style.color = 'var(--green)';
       el.textContent = '✓ Configuración guardada correctamente';
       setTimeout(() => { el.textContent = ''; }, 3000);
+      checkOnboardingStatus();
     }
     async function changeSubdomain() {
       const inputVal = document.getElementById('cfg-store-subdomain').value.trim().toLowerCase();
@@ -7595,6 +7784,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     // Initialize welcome message and default view state
     updateWelcomeGreeting();
     updateStatusLights();
+    checkOnboardingStatus();
     showView('dashboard', document.querySelector('.sb-item.active'));
 
     // ── ABM PICKUPS ─────────────────────────────────
