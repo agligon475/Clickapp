@@ -2,6 +2,7 @@
   "rewrites": [
     { "source": "/api/helper", "destination": "/api/helper.js" },
     { "source": "/api/gemini", "destination": "/api/gemini.js" },
+    { "source": "/api/qr", "destination": "/api/qr.js" },
     {
       "source": "/",
       "has": [

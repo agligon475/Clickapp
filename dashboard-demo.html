@@ -3315,6 +3315,24 @@
           </div>
         </div>
 
+        <!-- Código QR -->
+        <div class="config-section">
+          <div class="config-section-title"><i class="bi bi-qr-code"></i> Código QR de tu Tienda</div>
+          <div class="config-section-content" style="text-align:center; padding:24px;">
+            <div style="font-size:12px;color:var(--silver);margin-bottom:16px;line-height:1.6;text-align:left;">
+              Descargá o imprimí el código QR de tu tienda en línea para que tus clientes puedan acceder escaneándolo desde sus teléfonos.
+            </div>
+            <div style="background:#fff; padding:16px; border-radius:16px; display:inline-block; box-shadow:0 10px 25px rgba(0,0,0,.15); margin-bottom:16px; border:1px solid rgba(255,255,255,0.1);">
+              <img id="cfg-qr-img" style="width:200px; height:200px; display:block;" src="" alt="Código QR de la Tienda" />
+            </div>
+            <div>
+              <a id="cfg-qr-download-btn" href="#" download="qr-tienda.png" class="sb-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:8px; width:auto; justify-content:center; background:var(--red); color:#fff; border:none; padding:10px 20px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+                <i class="bi bi-download"></i> Descargar QR (.PNG)
+              </a>
+            </div>
+          </div>
+        </div>
+
       </div><!-- /masonry-grid -->
 
       <!-- Save button -->
@@ -7014,6 +7032,15 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const theme = localStorage.getItem('storeapp_dash_theme') || 'dark';
       document.getElementById('dash-theme-dark').style.borderColor = theme === 'dark' ? 'var(--red)' : 'var(--zinc)';
       document.getElementById('dash-theme-light').style.borderColor = theme === 'light' ? 'var(--red)' : 'var(--zinc)';
+
+      // Cargar QR de la tienda de forma dinámica
+      const qrImg = document.getElementById('cfg-qr-img');
+      const qrDownloadBtn = document.getElementById('cfg-qr-download-btn');
+      if (qrImg && qrDownloadBtn) {
+        const qrUrl = `/api/qr?store=${encodeURIComponent(STORE_ID)}`;
+        qrImg.src = qrUrl;
+        qrDownloadBtn.href = qrUrl;
+      }
     }
 
     /* ═══════════════════════════════════════════ VISTA AVANZADA */
