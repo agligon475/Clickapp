@@ -1,6 +1,16 @@
 {
   "rewrites": [
     { "source": "/api/helper", "destination": "/api/helper.js" },
-    { "source": "/api/gemini", "destination": "/api/gemini.js" }
+    { "source": "/api/gemini", "destination": "/api/gemini.js" },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "^(www\\.)?(daletepido\\.com\\.ar|clickapp\\.com)$"
+        }
+      ],
+      "destination": "/landing.html"
+    }
   ]
 }
