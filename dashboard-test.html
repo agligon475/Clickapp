@@ -4333,6 +4333,7 @@
               theme: parsedDesign.theme || cfg.theme || 'dark',
               font: parsedDesign.font || cfg.font || '',
               fontBody: parsedDesign.fontBody || cfg.fontBody || '',
+              bg: parsedDesign.bg || cfg.bg || '',
               socials: {
                 web: parsedSocials.web || '',
                 ig: dbCfg.instagram || parsedSocials.ig || '',
@@ -4664,7 +4665,8 @@
       font: 'Barlow Condensed', fontBody: 'Barlow',
       h1: 'Tu ferretería', h2: 'sin filas.',
       desc: 'Elegí tus productos, armá tu pedido y coordiná por WhatsApp.',
-      wapp: '5491141819344'
+      wapp: '5491141819344',
+      bg: ''
     };
 
     // Load saved config
@@ -4699,7 +4701,7 @@
 
       // Store background
       const s = document.getElementById('prev-store');
-      s.style.background = t.bg;
+      s.style.background = cfg.bg || t.bg;
       s.style.fontFamily = `'${cfg.font || 'Barlow Condensed'}', sans-serif`;
 
       // Nav
@@ -4731,7 +4733,7 @@
       });
 
       // Hero image preview
-      const heroImgUrl = localStorage.getItem('storeapp_hero_img');
+      const heroImgUrl = cfg.bg || localStorage.getItem('storeapp_hero_img');
       const prevHeroImg = document.getElementById('prev-hero-img');
       const prevHeroOverlay = document.getElementById('prev-hero-overlay');
       const prevHeroStripes = document.getElementById('prev-hero-stripes');
@@ -4923,6 +4925,7 @@
           parsedEmail.font = cfgObj.font !== undefined ? cfgObj.font : parsedEmail.font || '';
           parsedEmail.fontBody = cfgObj.fontBody !== undefined ? cfgObj.fontBody : parsedEmail.fontBody || '';
           parsedEmail.password = cfgObj.password !== undefined ? cfgObj.password : parsedEmail.password || '';
+          parsedEmail.bg = cfgObj.bg !== undefined ? cfgObj.bg : parsedEmail.bg || '';
 
           dataToSave.email = JSON.stringify(parsedEmail);
 
@@ -5036,6 +5039,7 @@
       }
 
       localStorage.setItem('storeapp_hero_img', url);
+      cfg.bg = url;
       prev.src = url;
       wrap.style.display = 'block';
       previewUpdate();
@@ -5043,6 +5047,7 @@
 
     function removeHeroImg() {
       localStorage.removeItem('storeapp_hero_img');
+      cfg.bg = '';
       document.getElementById('hero-img-preview-wrap').style.display = 'none';
       document.getElementById('hero-img-preview').src = '';
       document.getElementById('hero-img-input').value = '';
@@ -5057,7 +5062,7 @@
     }
 
     function initHeroImgPreview() {
-      const saved = localStorage.getItem('storeapp_hero_img');
+      const saved = cfg.bg || localStorage.getItem('storeapp_hero_img');
       if (saved) {
         document.getElementById('hero-img-preview').src = saved;
         document.getElementById('hero-img-preview-wrap').style.display = 'block';

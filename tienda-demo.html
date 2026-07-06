@@ -1330,6 +1330,7 @@ async function loadSheet() {
         if (parsedDesign.theme) CFG.theme = parsedDesign.theme;
         if (parsedDesign.font) CFG.font = parsedDesign.font;
         if (parsedDesign.fontBody) CFG.fontBody = parsedDesign.fontBody;
+        if (parsedDesign.bg) CFG.bg = parsedDesign.bg;
         // ------------------------------------------------
         
         bannerData = {
@@ -2226,6 +2227,11 @@ function applyStoredConfig() {
     heroBg.style.opacity = '1';
     if (heroStripes) heroStripes.style.display = 'none';
     // Apply overlay color from config or default
+    if (heroOverlay) heroOverlay.style.background = cfg.heroOverlay || 'rgba(0,0,0,.48)';
+  } else if (cfg.bg && heroBg) {
+    heroBg.style.backgroundImage = `url('${cfg.bg}')`;
+    heroBg.style.opacity = '1';
+    if (heroStripes) heroStripes.style.display = 'none';
     if (heroOverlay) heroOverlay.style.background = cfg.heroOverlay || 'rgba(0,0,0,.48)';
   } else {
     if (heroBg) heroBg.style.backgroundImage = 'none';
