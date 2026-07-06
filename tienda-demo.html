@@ -2199,6 +2199,8 @@ function applyStoredConfig() {
   if (logoEl) {
     if (logoImg) {
       logoEl.innerHTML = `<img src="${logoImg}" alt="${cfg.name||'Logo'}" style="height:32px;width:32px;object-fit:contain;border-radius:6px;"/> ${cfg.name||'Mi Tienda'}`;
+    } else if (cfg.logo) {
+      logoEl.innerHTML = `<img src="${cfg.logo}" alt="${cfg.name||'Logo'}" style="height:32px;width:32px;object-fit:contain;border-radius:6px;"/> ${cfg.name||'Mi Tienda'}`;
     } else if (cfg.name) {
       logoEl.innerHTML = `<span class="logo-icon">${cfg.emoji||'🏪'}</span>${cfg.name}`;
     }
