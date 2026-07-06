@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alta de Comercio — DaleTepido</title>
+  <!-- SEO & indexing directives to keep the page private -->
+  <meta name="robots" content="noindex, nofollow" />
+  
+  <!-- Premium Fonts and Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --panel: rgba(17, 24, 39, 0.7);
+      --border: rgba(255, 255, 255, 0.08);
+      --primary: #d72638;
+      --primary-hover: #b81d2c;
+      --primary-glow: rgba(215, 38, 56, 0.35);
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --success: #10b981;
+      --error: #ef4444;
+      --font: 'Outfit', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(215, 38, 56, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(30, 64, 175, 0.08) 0px, transparent 50%);
+      font-family: var(--font);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    /* Glassmorphism Panel */
+    .card {
+      background: var(--panel);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      position: relative;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), #1e40af);
+      border-radius: 24px 24px 0 0;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      background: rgba(215, 38, 56, 0.1);
+      border: 1px solid rgba(215, 38, 56, 0.2);
+      border-radius: 16px;
+      color: var(--primary);
+      font-size: 28px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 16px rgba(215, 38, 56, 0.15);
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff 30%, var(--text-muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Steps Layout */
+    .form-step {
+      display: none;
+      animation: slideIn 0.4s ease both;
+    }
+
+    .form-step.active {
+      display: block;
+    }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+
+    .step-title span {
+      background: var(--primary);
+      color: #fff;
+      font-size: 12px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 540px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .card {
+        padding: 24px 16px;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper i {
+      position: absolute;
+      left: 16px;
+      color: var(--text-muted);
+      font-size: 16px;
+      pointer-events: none;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: rgba(31, 41, 55, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: #fff;
+      font-family: var(--font);
+      font-size: 15px;
+      padding: 12px 16px 12px 44px;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+      background: rgba(31, 41, 55, 0.7);
+    }
+
+    /* Sanitizer / Suggester info */
+    .input-hint {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    .input-hint span {
+      font-family: monospace;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Emoji Selector */
+    .emoji-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .emoji-btn {
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .emoji-btn:hover, .emoji-btn.active {
+      background: rgba(215, 38, 56, 0.15);
+      border-color: var(--primary);
+      transform: scale(1.08);
+    }
+
+    /* Footer Buttons */
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 32px;
+      gap: 16px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: var(--font);
+      border: none;
+      outline: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      flex: 1;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Success state */
+    .success-panel {
+      text-align: center;
+      padding: 20px 0;
+      display: none;
+      animation: scaleUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    .success-panel i {
+      font-size: 64px;
+      color: var(--success);
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .success-panel h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .success-link-box {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 16px;
+      padding: 16px;
+      margin: 24px 0;
+      font-family: monospace;
+      font-size: 14px;
+      word-break: break-all;
+    }
+
+    .success-link-box a {
+      color: var(--success);
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    /* Keyframes */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes scaleUp {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .loading-spinner {
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-left-color: #fff;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="card">
+    <!-- WIZARD FORM -->
+    <div id="form-container">
+      <header>
+        <div class="logo-badge"><i class="bi bi-shop"></i></div>
+        <h1>Alta de Comercio</h1>
+        <p class="subtitle">Creá y registrá un nuevo comercio para tu plataforma multi-tienda</p>
+      </header>
+
+      <!-- Step 1: Basic Info -->
+      <div class="form-step active" id="step-1">
+        <div class="step-title"><span>1</span> Información Comercial Básica</div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="store-name">Nombre del Comercio *</label>
+            <div class="input-wrapper">
+              <i class="bi bi-tag-fill"></i>
+              <input type="text" id="store-name" placeholder="Ej: Kiosco Julio" oninput="suggestSlug(this.value)" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="store-id">ID único de la Tienda *</label>
+            <div class="input-wrapper">
+              <i class="bi bi-hash"></i>
+              <input type="text" id="store-id" placeholder="Ej: kioscojulio" oninput="sanitizeSlug(this)" />
+            </div>
+            <div class="input-hint">ID de subdominio: <span id="slug-preview">...</span>.daletepido.com.ar</div>
+          </div>
+          <div class="form-group">
+            <label for="store-rubro">Rubro *</label>
+            <div class="input-wrapper">
+              <i class="bi bi-briefcase-fill"></i>
+              <select id="store-rubro">
+                <option value="Kiosco" selected>Kiosco</option>
+                <option value="Gastronomía">Gastronomía / Restaurante</option>
+                <option value="Ferretería">Ferretería</option>
+                <option value="Electrónica">Electrónica / Tecnología</option>
+                <option value="Indumentaria">Indumentaria / Ropa</option>
+                <option value="Bazar">Bazar / Hogar</option>
+                <option value="Otro">Otro Rubro</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="store-password">Contraseña de Administración *</label>
+            <div class="input-wrapper">
+              <i class="bi bi-key-fill"></i>
+              <input type="password" id="store-password" placeholder="Mínimo 6 caracteres" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Contact & Location -->
+      <div class="form-step" id="step-2">
+        <div class="step-title"><span>2</span> Contacto y Ubicación</div>
+        <div class="grid-2">
+          <div class="form-group full-width">
+            <label for="store-wapp">WhatsApp de Contacto (con código de país) *</label>
+            <div class="input-wrapper">
+              <i class="bi bi-whatsapp"></i>
+              <input type="text" id="store-wapp" placeholder="Ej: 5491141819344" />
+            </div>
+            <div class="input-hint">Ingresá los números juntos, sin espacios, guiones ni símbolo + (ej: 549...).</div>
+          </div>
+          <div class="form-group">
+            <label for="store-direccion">Dirección Física (Opcional)</label>
+            <div class="input-wrapper">
+              <i class="bi bi-geo-alt-fill"></i>
+              <input type="text" id="store-direccion" placeholder="Ej: Av. Rivadavia 1234" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="store-horario">Horarios de Atención (Opcional)</label>
+            <div class="input-wrapper">
+              <i class="bi bi-clock-fill"></i>
+              <input type="text" id="store-horario" placeholder="Ej: Lun a Vier de 9 a 20 hs" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Visual personalization -->
+      <div class="form-step" id="step-3">
+        <div class="step-title"><span>3</span> Personalización del Hero / Portada</div>
+        <div class="form-group">
+          <label for="store-tagline">Eslogan / Bajada Corta</label>
+          <div class="input-wrapper">
+            <i class="bi bi-lightning-charge-fill"></i>
+            <input type="text" id="store-tagline" placeholder="Ej: Lo que necesites, lo pedís" />
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="store-h1">Título Hero principal (H1)</label>
+            <div class="input-wrapper">
+              <i class="bi bi-type-h1"></i>
+              <input type="text" id="store-h1" placeholder="Ej: Pedí en el kiosco" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="store-h2">Título Hero secundario (H2)</label>
+            <div class="input-wrapper">
+              <i class="bi bi-type-h2"></i>
+              <input type="text" id="store-h2" placeholder="Ej: sin ninguna demora." />
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="store-desc">Descripción detallada</label>
+          <div class="input-wrapper">
+            <i class="bi bi-text-left" style="top:16px;"></i>
+            <textarea id="store-desc" placeholder="Ej: Elegí tus productos, armá tu pedido y coordiná por WhatsApp. Fácil y rápido." rows="3" style="padding-left:44px;resize:vertical;"></textarea>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Emoji Representativo de la Tienda</label>
+          <input type="hidden" id="store-emoji" value="🏪" />
+          <div class="emoji-row" id="emoji-grid">
+            <button class="emoji-btn active" onclick="selectEmoji(this, '🏪')">🏪</button>
+            <button class="emoji-btn" onclick="selectEmoji(this, '🛍️')">🛍️</button>
+            <button class="emoji-btn" onclick="selectEmoji(this, '🍬')">🍬</button>
+            <button class="emoji-btn" onclick="selectEmoji(this, '🍔')">🍔</button>
+            <button class="emoji-btn" onclick="selectEmoji(this, '🔧')">🔧</button>
+            <button class="emoji-btn" onclick="selectEmoji(this, '💻')">💻</button>
+            <button class="emoji-btn" onclick="selectEmoji(this, '👕')">👕</button>
+            <button class="emoji-btn" onclick="selectEmoji(this, '⚡')">⚡</button>
+            <button class="emoji-btn" onclick="selectEmoji(this, '🔥')">🔥</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Verification code & creation -->
+      <div class="form-step" id="step-4">
+        <div class="step-title"><span>4</span> Autorización de Seguridad</div>
+        <div class="form-group">
+          <label for="verification-code">Código de Verificación de Seguridad *</label>
+          <div class="input-wrapper">
+            <i class="bi bi-shield-lock-fill"></i>
+            <input type="text" id="verification-code" placeholder="Ingrese el código de seguridad" />
+          </div>
+          <div class="input-hint" style="color:var(--text-muted);">Para autorizar la creación del nuevo comercio en el servidor.</div>
+        </div>
+      </div>
+
+      <!-- Footer Buttons -->
+      <div class="actions">
+        <button class="btn btn-secondary" id="btn-back" onclick="changeStep(-1)" style="visibility:hidden;">
+          <i class="bi bi-arrow-left"></i> Atrás
+        </button>
+        <button class="btn btn-primary" id="btn-next" onclick="changeStep(1)">
+          Siguiente <i class="bi bi-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- SUCCESS STATE -->
+    <div class="success-panel" id="success-panel">
+      <i class="bi bi-check-circle-fill"></i>
+      <h2>¡Comercio creado con éxito!</h2>
+      <p class="subtitle" style="margin-bottom: 16px;">El comercio se ha registrado correctamente en la base de datos de DaleTepido.</p>
+      
+      <div class="success-link-box">
+        <strong>URL del Dashboard del Comercio:</strong><br/>
+        <a id="success-dash-link" href="#" target="_blank">dashboard.html?store=...</a>
+      </div>
+
+      <div class="success-link-box" style="margin-top: 10px;">
+        <strong>URL de la Tienda de tu Cliente:</strong><br/>
+        <a id="success-store-link" href="#" target="_blank">index.html?store=...</a>
+      </div>
+
+      <button class="btn btn-secondary" onclick="window.location.reload()" style="margin-top:20px;padding:12px 20px;">
+        <i class="bi bi-plus-lg"></i> Dar de Alta otro Comercio
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+
+  let currentStep = 1;
+  const totalSteps = 4;
+
+  // Auto-suggestion of slug as the user types store name
+  function suggestSlug(val) {
+    if (!val) {
+      document.getElementById('store-id').value = '';
+      document.getElementById('slug-preview').textContent = '...';
+      return;
+    }
+    const slug = val
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // Remove accents
+      .replace(/[^a-z0-9-]/g, '-') // Replace non-alphanumeric with hyphens
+      .replace(/-+/g, '-') // collapse consecutive hyphens
+      .replace(/^-+|-+$/g, ''); // Trim hyphens
+    
+    document.getElementById('store-id').value = slug;
+    document.getElementById('slug-preview').textContent = slug;
+  }
+
+  // Sanitize the ID uniquely (only lowercase letters, numbers, and hyphens)
+  function sanitizeSlug(input) {
+    const origVal = input.value;
+    const cleanVal = origVal
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, '');
+    
+    if (origVal !== cleanVal) {
+      input.value = cleanVal;
+    }
+    document.getElementById('slug-preview').textContent = cleanVal || '...';
+  }
+
+  // Selector de Emojis
+  function selectEmoji(btn, emoji) {
+    document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('store-emoji').value = emoji;
+  }
+
+  // Navigation controller between steps
+  function changeStep(dir) {
+    // Validation before moving next
+    if (dir === 1) {
+      if (currentStep === 1) {
+        const name = document.getElementById('store-name').value.trim();
+        const id = document.getElementById('store-id').value.trim();
+        const password = document.getElementById('store-password').value.trim();
+        
+        if (!name || !id || !password) {
+          alert('Por favor complete todos los campos obligatorios (*).');
+          return;
+        }
+        if (password.length < 6) {
+          alert('La contraseña debe tener al menos 6 caracteres.');
+          return;
+        }
+      }
+      if (currentStep === 2) {
+        const wapp = document.getElementById('store-wapp').value.trim();
+        if (!wapp) {
+          alert('Por favor ingrese el número de WhatsApp de contacto.');
+          return;
+        }
+        if (!/^\d+$/.test(wapp)) {
+          alert('El número de WhatsApp debe contener únicamente dígitos (números).');
+          return;
+        }
+      }
+      if (currentStep === 3) {
+        // No strict validation on customization step
+      }
+    }
+
+    currentStep += dir;
+
+    // Boundary limits
+    if (currentStep < 1) currentStep = 1;
+    if (currentStep > totalSteps) {
+      // Execute creation at step 4 submission
+      submitAltaComercio();
+      return;
+    }
+
+    // Update active view
+    document.querySelectorAll('.form-step').forEach(step => step.classList.remove('active'));
+    document.getElementById(`step-${currentStep}`).classList.add('active');
+
+    // Update buttons state
+    const btnBack = document.getElementById('btn-back');
+    const btnNext = document.getElementById('btn-next');
+
+    btnBack.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+    
+    if (currentStep === totalSteps) {
+      btnNext.innerHTML = '<i class="bi bi-check-circle-fill"></i> Crear Comercio';
+      btnNext.style.background = 'var(--success)';
+      btnNext.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.35)';
+    } else {
+      btnNext.innerHTML = 'Siguiente <i class="bi bi-arrow-right"></i>';
+      btnNext.style.background = 'var(--primary)';
+      btnNext.style.boxShadow = '0 4px 12px var(--primary-glow)';
+    }
+  }
+
+  // Create Store / POST to Supabase
+  async function submitAltaComercio() {
+    const code = document.getElementById('verification-code').value.trim();
+    if (code !== '1234abc') {
+      alert('Código de verificación incorrecto. No se autorizó la creación.');
+      currentStep = totalSteps; // reset step
+      return;
+    }
+
+    const btnNext = document.getElementById('btn-next');
+    btnNext.disabled = true;
+    btnNext.innerHTML = '<span class="loading-spinner"></span> Creando...';
+
+    const storeId = document.getElementById('store-id').value.trim();
+    const name = document.getElementById('store-name').value.trim();
+    const rubro = document.getElementById('store-rubro').value;
+    const password = document.getElementById('store-password').value.trim();
+    const wapp = document.getElementById('store-wapp').value.trim();
+    const direccion = document.getElementById('store-direccion').value.trim();
+    const horario = document.getElementById('store-horario').value.trim();
+    
+    const tagline = document.getElementById('store-tagline').value.trim() || 'Tu catálogo digital';
+    const h1 = document.getElementById('store-h1').value.trim() || 'Pedí online';
+    const h2 = document.getElementById('store-h2').value.trim() || 'sin vueltas ni esperas.';
+    const desc = document.getElementById('store-desc').value.trim() || 'Elegí tus productos, armá tu pedido y coordiná por WhatsApp.';
+    const emoji = document.getElementById('store-emoji').value;
+
+    try {
+      // 1. Check if store_id already exists in Supabase
+      const checkRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}`, {
+        headers: { 'apikey': SUPABASE_KEY }
+      });
+      if (checkRes.ok) {
+        const checkData = await checkRes.json();
+        if (checkData && checkData.length > 0) {
+          alert(`El ID de tienda "${storeId}" ya está registrado por otro comercio. Elija otro diferente.`);
+          resetBtnNext();
+          return;
+        }
+      }
+
+      // 2. Prepare payload
+      const emailJson = JSON.stringify({
+        h1: h1,
+        h2: h2,
+        desc: desc,
+        emoji: emoji,
+        theme: 'light',
+        font: 'Outfit',
+        fontBody: 'Outfit',
+        password: password,
+        bg: ''
+      });
+
+      const payload = {
+        store_id: storeId,
+        business_name: name,
+        rubro: rubro,
+        wapp: wapp,
+        direccion: direccion,
+        horario: horario,
+        tagline: tagline,
+        primary_color: '#d72638',
+        secondary_color: '#1e40af',
+        logo_url: '',
+        email: emailJson,
+        banner1_label: 'NUEVAS',
+        banner1_title: 'Productos destacados',
+        banner1_img: '',
+        banner1_cat: '',
+        banner2_label: 'PROMOCIÓN',
+        banner2_title: 'Especiales de la semana',
+        banner2_img: '',
+        banner2_cat: ''
+      };
+
+      // 3. Post to Supabase
+      const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!insertRes.ok) {
+        throw new Error(`HTTP Error ${insertRes.status}: ${await insertRes.text()}`);
+      }
+
+      // 4. Success State!
+      document.getElementById('form-container').style.display = 'none';
+      document.getElementById('success-panel').style.display = 'block';
+      
+      const dashUrl = `dashboard.html?store=${storeId}`;
+      const storeUrl = `index.html?store=${storeId}`;
+      
+      const dashLink = document.getElementById('success-dash-link');
+      dashLink.href = dashUrl;
+      dashLink.textContent = window.location.origin + '/' + dashUrl;
+
+      const storeLink = document.getElementById('success-store-link');
+      storeLink.href = storeUrl;
+      storeLink.textContent = window.location.origin + '/' + storeUrl;
+
+    } catch (e) {
+      alert('Error al registrar comercio en la base de datos: ' + e.message);
+      resetBtnNext();
+    }
+  }
+
+  function resetBtnNext() {
+    const btnNext = document.getElementById('btn-next');
+    btnNext.disabled = false;
+    btnNext.innerHTML = '<i class="bi bi-check-circle-fill"></i> Crear Comercio';
+    currentStep = totalSteps;
+  }
+</script>
+</body>
+</html>
