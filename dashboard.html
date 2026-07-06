@@ -3305,8 +3305,21 @@
               <div class="ctrl-group" style="grid-column:1/-1;">
                 <label class="ctrl-label">Horario de atención</label>
                 <input class="ctrl-input" id="cfg-store-horario" placeholder="Lun a Vie 9:00–18:00 · Sáb 9:00–13:00" />
-                <div style="font-size:10px;color:var(--silver);margin-top:3px;">Se incluye en mensajes de retiro por
-                  local</div>
+                <div style="font-size:10px;color:var(--silver);margin-top:3px;">Se incluye en mensajes de retiro por local</div>
+              </div>
+              <div class="ctrl-group" style="grid-column:1/-1;">
+                <label class="ctrl-label">Métodos de pago aceptados</label>
+                <div style="display: flex; gap: 24px; align-items: center; margin-top: 8px; flex-wrap: wrap;">
+                  <label style="display: flex; align-items: center; gap: 8px; color: var(--white); font-size: 13px; cursor: pointer; user-select: none;">
+                    <input type="checkbox" id="cfg-pay-efectivo" checked style="width: 16px; height: 16px; accent-color: var(--red);" /> Efectivo
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 8px; color: var(--white); font-size: 13px; cursor: pointer; user-select: none;">
+                    <input type="checkbox" id="cfg-pay-transferencia" checked style="width: 16px; height: 16px; accent-color: var(--red);" /> Transferencia
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 8px; color: var(--white); font-size: 13px; cursor: pointer; user-select: none;">
+                    <input type="checkbox" id="cfg-pay-convenir" checked style="width: 16px; height: 16px; accent-color: var(--red);" /> A convenir
+                  </label>
+                </div>
               </div>
             </div>
           </div>
@@ -5151,6 +5164,7 @@
           parsedEmail.fontBody = cfgObj.fontBody !== undefined ? cfgObj.fontBody : parsedEmail.fontBody || '';
           parsedEmail.password = cfgObj.password !== undefined ? cfgObj.password : parsedEmail.password || '';
           parsedEmail.bg = cfgObj.bg !== undefined ? cfgObj.bg : parsedEmail.bg || '';
+          parsedEmail.payment_methods = cfgObj.payment_methods !== undefined ? cfgObj.payment_methods : parsedEmail.payment_methods || { efectivo: true, transferencia: true, convenir: true };
 
           dataToSave.email = JSON.stringify(parsedEmail);
 
@@ -7019,6 +7033,11 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (sc.direccion) document.getElementById('cfg-store-direccion').value = sc.direccion;
       if (sc.horario) document.getElementById('cfg-store-horario').value = sc.horario;
 
+      const pay = sc.payment_methods || { efectivo: true, transferencia: true, convenir: true };
+      const cbEfectivo = document.getElementById('cfg-pay-efectivo'); if (cbEfectivo) cbEfectivo.checked = pay.efectivo !== false;
+      const cbTransferencia = document.getElementById('cfg-pay-transferencia'); if (cbTransferencia) cbTransferencia.checked = pay.transferencia !== false;
+      const cbConvenir = document.getElementById('cfg-pay-convenir'); if (cbConvenir) cbConvenir.checked = pay.convenir !== false;
+
       if (sc.domain) document.getElementById('cfg-store-domain').value = sc.domain;
 
       const soc = sc.socials || {};
@@ -7424,6 +7443,11 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (direccion) sc.direccion = direccion;
       if (horario) sc.horario = horario;
       
+      const payEfectivo = document.getElementById('cfg-pay-efectivo')?.checked !== false;
+      const payTransferencia = document.getElementById('cfg-pay-transferencia')?.checked !== false;
+      const payConvenir = document.getElementById('cfg-pay-convenir')?.checked !== false;
+      sc.payment_methods = { efectivo: payEfectivo, transferencia: payTransferencia, convenir: payConvenir };
+
       const password = document.getElementById('cfg-store-password').value.trim();
       sc.password = password;
 

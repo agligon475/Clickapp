@@ -181,7 +181,15 @@ a.logo{
   color:#fff;
   text-shadow:0 2px 12px rgba(0,0,0,.3);
 }
-.hero-title span{color:var(--red);}
+.hero-title span{
+  background:#ffffff !important;
+  color:#000000 !important;
+  padding:2px 10px;
+  border-radius:4px;
+  display:inline-block;
+  margin-top:6px;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+}
 .hero-sub{
   font-size:14px;color:rgba(255,255,255,.85);
   margin-top:10px;max-width:360px;
@@ -192,15 +200,15 @@ a.logo{
   display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;
 }
 .hero-pill{
-  background:var(--red);
+  background:#ffffff !important;
   border:none;
   border-radius:20px;padding:6px 14px;
   font-size:11px;font-weight:600;
-  color:#fff;
+  color:#000000 !important;
   display:flex;align-items:center;gap:6px;
   box-shadow:0 2px 8px rgba(0,0,0,.25);
 }
-.hero-pill i{color:#fff;}
+.hero-pill i{color:#000000 !important;}
 
 .hero-badge{
   font-family:var(--font-head);
@@ -907,7 +915,7 @@ a.logo{
       <div class="hero-sub" id="hero-sub">Elegí tus productos, armá tu pedido y coordiná por WhatsApp.</div>
       <div class="hero-pills">
         <span class="hero-pill"><i class="bi bi-whatsapp"></i> Pedido por WhatsApp</span>
-        <span class="hero-pill"><i class="bi bi-cash-coin"></i> Efectivo · Transferencia · Cheque</span>
+        <span class="hero-pill" id="hero-pay-pill"><i class="bi bi-cash-coin"></i> Efectivo · Transferencia · Cheque</span>
         <span class="hero-pill"><i class="bi bi-truck"></i> Retiro o envío</span>
       </div>
     </div>
@@ -2272,12 +2280,22 @@ function applyStoredConfig() {
     if (heroOverlay) heroOverlay.style.background = 'transparent';
   }
 
-  // Update hero title span color (always accent)
-  const span = document.getElementById('hero-title-span');
-  if (span) span.style.color = accent;
-
-  // Update pills background to accent color
-  document.querySelectorAll('.hero-pill').forEach(p => { p.style.background = accent; });
+  // Update Payment Methods Pill dynamically based on configuration
+  const pay = cfg.payment_methods || { efectivo: true, transferencia: true, convenir: true };
+  const methods = [];
+  if (pay.efectivo !== false) methods.push('Efectivo');
+  if (pay.transferencia !== false) methods.push('Transferencia');
+  if (pay.convenir !== false) methods.push('A convenir');
+  
+  const payPill = document.getElementById('hero-pay-pill');
+  if (payPill) {
+    if (methods.length > 0) {
+      payPill.innerHTML = `<i class="bi bi-cash-coin"></i> ${methods.join(' · ')}`;
+      payPill.style.display = 'inline-flex';
+    } else {
+      payPill.style.display = 'none';
+    }
+  }
 
   // Update Footer Details
   const fnContainer = document.getElementById('footer-store-name-container');
