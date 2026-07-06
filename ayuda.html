@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Base de Conocimientos — DaleTepido</title>
+  
+  <!-- Premium Fonts and Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --panel: rgba(17, 24, 39, 0.7);
+      --border: rgba(255, 255, 255, 0.08);
+      --primary: #d72638;
+      --primary-hover: #b81d2c;
+      --primary-glow: rgba(215, 38, 56, 0.35);
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --info: #3b82f6;
+      --font: 'Outfit', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(215, 38, 56, 0.05) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(30, 64, 175, 0.05) 0px, transparent 50%);
+      font-family: var(--font);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header Nav */
+    header {
+      background: rgba(11, 15, 25, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 16px 24px;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: -0.01em;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+    }
+
+    /* Main Container layout */
+    .wrapper {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 32px;
+      flex: 1;
+    }
+
+    @media (max-width: 900px) {
+      .wrapper {
+        grid-template-columns: 1fr;
+        padding-top: 24px;
+      }
+      aside {
+        position: static !important;
+        max-height: none !important;
+      }
+    }
+
+    /* Sidebar Navigation */
+    aside {
+      position: sticky;
+      top: 100px;
+      max-height: calc(100vh - 140px);
+      overflow-y: auto;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .sidebar-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .menu-list {
+      list-style: none;
+    }
+
+    .menu-item {
+      margin-bottom: 6px;
+    }
+
+    .menu-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .menu-link:hover, .menu-link.active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .menu-link.active {
+      border-left: 3px solid var(--primary);
+      border-radius: 0 8px 8px 0;
+      padding-left: 9px;
+      background: rgba(215, 38, 56, 0.08);
+      color: var(--text);
+    }
+
+    /* Search Area */
+    .search-section {
+      background: linear-gradient(135deg, rgba(215, 38, 56, 0.1) 0%, rgba(30, 64, 175, 0.1) 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .search-section h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .search-box-wrapper {
+      position: relative;
+      max-width: 500px;
+      margin: 16px auto 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-box-wrapper i {
+      position: absolute;
+      left: 16px;
+      color: var(--text-muted);
+      font-size: 18px;
+    }
+
+    .search-input {
+      width: 100%;
+      background: rgba(11, 15, 25, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px 12px 48px;
+      font-family: var(--font);
+      font-size: 15px;
+      color: #fff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    /* Content Area */
+    .content-section {
+      animation: fadeIn 0.4s ease both;
+    }
+
+    .guide-card {
+      background: var(--panel);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 24px;
+      scroll-margin-top: 100px;
+    }
+
+    .guide-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+
+    .guide-icon-badge {
+      width: 38px;
+      height: 38px;
+      background: rgba(215, 38, 56, 0.1);
+      border: 1px solid rgba(215, 38, 56, 0.2);
+      border-radius: 10px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .guide-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .guide-text {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    /* Steps list */
+    .step-list {
+      margin-left: 20px;
+      margin-bottom: 16px;
+    }
+
+    .step-list li {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .step-list li strong {
+      color: #fff;
+    }
+
+    /* Callouts */
+    .callout {
+      border-radius: 12px;
+      padding: 16px;
+      margin: 16px 0;
+      display: flex;
+      gap: 12px;
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+
+    .callout i {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .callout-info {
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+    }
+
+    .callout-warning {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      color: #fde68a;
+    }
+
+    .callout-important {
+      background: rgba(215, 38, 56, 0.08);
+      border: 1px solid rgba(215, 38, 56, 0.2);
+      color: #fca5a5;
+    }
+
+    /* Code Snippets */
+    code {
+      font-family: monospace;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 13px;
+      color: #e5e7eb;
+    }
+
+    /* Accordion */
+    .accordion-item {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    .accordion-header {
+      background: rgba(255, 255, 255, 0.02);
+      padding: 14px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+
+    .accordion-header:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .accordion-content {
+      padding: 0 18px;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .accordion-item.open .accordion-content {
+      padding: 14px 18px;
+      max-height: 500px;
+      border-top: 1px solid var(--border);
+    }
+
+    .accordion-header i {
+      transition: transform 0.2s;
+    }
+
+    .accordion-item.open .accordion-header i {
+      transform: rotate(180deg);
+    }
+
+    /* Keyframes */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Footer styling */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: auto;
+    }
+
+    footer a {
+      color: var(--text);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER -->
+  <header>
+    <div class="header-container">
+      <a href="landing.html" class="brand">
+        <i class="bi bi-rocket-takeoff-fill" style="color:var(--primary);"></i> Dale<span>Tepido</span>
+      </a>
+      <nav class="nav-links">
+        <a href="dashboard.html"><i class="bi bi-speedometer2"></i> Volver al Panel</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- WRAPPER LAYOUT -->
+  <div class="wrapper">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside>
+      <div class="sidebar-title">Temas de Carga</div>
+      <ul class="menu-list">
+        <li class="menu-item"><a href="#introduccion" class="menu-link active"><i class="bi bi-bookmark-fill"></i> Introducción</a></li>
+        <li class="menu-item"><a href="#crear-tienda" class="menu-link"><i class="bi bi-plus-circle-fill"></i> Crear Nueva Tienda</a></li>
+        <li class="menu-item"><a href="#config-basica" class="menu-link"><i class="bi bi-gear-fill"></i> Datos Básicos</a></li>
+        <li class="menu-item"><a href="#diseno-estetica" class="menu-link"><i class="bi bi-palette-fill"></i> Diseño y Estética</a></li>
+        <li class="menu-item"><a href="#categorias" class="menu-link"><i class="bi bi-tags-fill"></i> Categorías (Emojis)</a></li>
+        <li class="menu-item"><a href="#productos" class="menu-link"><i class="bi bi-egg-fill"></i> Cargar Catálogo</a></li>
+        <li class="menu-item"><a href="#repartidores" class="menu-link"><i class="bi bi-truck"></i> Repartidores (PickUp)</a></li>
+        <li class="menu-item"><a href="#faq" class="menu-link"><i class="bi bi-question-circle-fill"></i> Preguntas Frecuentes</a></li>
+      </ul>
+    </aside>
+
+    <!-- RIGHT CONTENT AREA -->
+    <main class="content-section">
+      
+      <!-- Search Header -->
+      <div class="search-section">
+        <h2>¿Qué necesitás saber hoy?</h2>
+        <p class="subtitle" style="font-size:14px;color:var(--text-muted);">Buscá guías, procedimientos y mejores prácticas para configurar tiendas.</p>
+        <div class="search-box-wrapper">
+          <i class="bi bi-search"></i>
+          <input type="text" class="search-input" id="search-input" placeholder="Buscar palabras clave (ej: logo, WhatsApp, precio...)" oninput="filterGuides(this.value)" />
+        </div>
+      </div>
+
+      <div id="guides-container">
+
+        <!-- INTRODUCCIÓN -->
+        <section class="guide-card" id="introduccion">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge"><i class="bi bi-bookmark"></i></div>
+            <h3>Introducción al Sistema</h3>
+          </div>
+          <div class="guide-text">
+            Bienvenido a la Base de Conocimientos de <strong>DaleTepido</strong>. Esta plataforma está diseñada bajo un modelo <em>multi-tenant</em> que permite crear, hospedar y gestionar catálogos digitales de forma totalmente independiente bajo un único servidor.
+          </div>
+          <div class="guide-text">
+            Cada comercio posee su propio espacio aislado en la base de datos (Supabase) vinculado mediante su <strong>ID de tienda</strong> (<code>store_id</code>). Este manual detalla los pasos requeridos para dejar una tienda lista para operar.
+          </div>
+        </section>
+
+        <!-- CREAR NUEVA TIENDA -->
+        <section class="guide-card" id="crear-tienda">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge"><i class="bi bi-plus-circle"></i></div>
+            <h3>1. Crear Nueva Tienda</h3>
+          </div>
+          <div class="guide-text">
+            El alta de una nueva tienda se realiza desde la herramienta interna de administración.
+          </div>
+          <ol class="step-list">
+            <li>Ingresá a la dirección privada de alta: <code>/alta-usuario.html</code>.</li>
+            <li>Colocá el <strong>Nombre del Comercio</strong> (ej: <code>Noutacc Gastronomía</code>).</li>
+            <li>El sistema sugerirá automáticamente un <strong>ID único de tienda</strong> (slug) sanitizado (ej: <code>noutacc</code>). Modificalo si es necesario (solo minúsculas, números y guiones).</li>
+            <li>Establecé una <strong>Contraseña de Administración</strong> para que el comercio acceda a su panel.</li>
+            <li>Ingresá el número de <strong>WhatsApp comercial</strong> con el código de país (ej: <code>54911...</code> para Argentina).</li>
+            <li>Colocá el <strong>Código de Verificación</strong> de seguridad obligatorio: <code>1234abc</code> y hacé clic en "Crear Comercio".</li>
+          </ol>
+          <div class="callout callout-important">
+            <i class="bi bi-exclamation-triangle"></i>
+            <div>
+              <strong>¡Importante!</strong> El ID de tienda elegido debe ser único. Si el identificador ya existe en la base de datos, el sistema alertará que no puede usarse para evitar la sobrescritura de datos.
+            </div>
+          </div>
+        </section>
+
+        <!-- CONFIGURACIÓN BÁSICA -->
+        <section class="guide-card" id="config-basica">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge"><i class="bi bi-gear"></i></div>
+            <h3>2. Datos Básicos y Contacto</h3>
+          </div>
+          <div class="guide-text">
+            Una vez creada la tienda, podés acceder al panel desde <code>/dashboard.html?store=ID_TIENDA</code> para ajustar los parámetros iniciales.
+          </div>
+          <ul class="step-list">
+            <li><strong>Dirección Física y Horario:</strong> Indicalos en la sección de Ajustes -> Configuración. Estos datos se mostrarán en la parte inferior de la tienda y se autointegrarán en las plantillas de mensaje de pedidos para retiro en local.</li>
+            <li><strong>WhatsApp Comercial:</strong> Modificá el número ante cualquier cambio. Recordá ingresar los números de corrido sin espacios, paréntesis ni símbolos <code>+</code>.</li>
+            <li><strong>Contraseña del Panel:</strong> Podés actualizar la clave de acceso de este comercio directamente desde aquí.</li>
+          </ul>
+        </section>
+
+        <!-- DISEÑO Y ESTÉTICA -->
+        <section class="guide-card" id="diseno-estetica">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge"><i class="bi bi-palette"></i></div>
+            <h3>3. Diseño y Estética del Sitio</h3>
+          </div>
+          <div class="guide-text">
+            La estética de la tienda se configura en la sección <strong>Personalización -> Diseño</strong>. Desde aquí podés elegir colores, tipografías y logos.
+          </div>
+          <ul class="step-list">
+            <li><strong>Colores del Sitio:</strong> Podés definir el color primario (botones principales y acentos) y secundario.</li>
+            <li><strong>Tipografía:</strong> Seleccioná combinaciones modernas precargadas (como Outfit, Barlow, Inter, Oswald) para títulos y textos.</li>
+            <li><strong>Tema Visual:</strong> Elegí entre el modo Oscuro (Dark Mode) y Claro (Light Mode) para la interfaz de cara al cliente.</li>
+            <li><strong>Logo e Imagen de Portada (Hero):</strong> Subí el logo en formato PNG/JPG o colocá una URL directa. Podés subir también una imagen de fondo para el banner de bienvenida.</li>
+          </ul>
+          <div class="callout callout-info">
+            <i class="bi bi-info-circle"></i>
+            <div>
+              <strong>Consejo:</strong> Si tenés configurado Cloudinary, la carga y optimización de imágenes (incluyendo marcas de agua) se ejecutará automáticamente de forma remota.
+            </div>
+          </div>
+        </section>
+
+        <!-- GESTIÓN DE CATEGORÍAS -->
+        <section class="guide-card" id="categorias">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge"><i class="bi bi-tags"></i></div>
+            <h3>4. Gestión de Categorías</h3>
+          </div>
+          <div class="guide-text">
+            Las categorías dividen los productos en el catálogo público facilitando la navegación de los clientes.
+          </div>
+          <ol class="step-list">
+            <li>Hacé clic en <strong>Nueva Categoría</strong> o elegí una existente para editar.</li>
+            <li>Ingresá el nombre (ej: <code>Minutas</code>).</li>
+            <li>Seleccioná un <strong>Emoji representativo</strong> haciendo clic en el selector interactivo 😀.</li>
+            <li>Definí si la categoría está activa (visible) u oculta.</li>
+          </ol>
+          <div class="callout callout-warning">
+            <i class="bi bi-exclamation-triangle"></i>
+            <div>
+              <strong>Atención:</strong> Las categorías eliminadas no borrarán los productos asociados a ella, pero dichos productos quedarán temporalmente sin categoría (mostrándose en el grupo "Otros/General").
+            </div>
+          </div>
+        </section>
+
+        <!-- CARGA DE PRODUCTOS -->
+        <section class="guide-card" id="productos">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge"><i class="bi bi-egg"></i></div>
+            <h3>5. Cargar Productos (Catálogo)</h3>
+          </div>
+          <div class="guide-text">
+            Desde el módulo <strong>Catálogo -> ABM</strong> se realiza la gestión de inventario y publicación de productos.
+          </div>
+          <ul class="step-list">
+            <li><strong>Campos Obligatorios:</strong> Nombre del producto, Categoría y Precio.</li>
+            <li><strong>Gestión de stock:</strong> Podés ingresar el número de unidades en stock. Si queda en 0, el catálogo de cara al cliente deshabilitará automáticamente el botón "Agregar" para ese producto.</li>
+            <li><strong>Imágenes:</strong> Podés cargar hasta 3 imágenes por producto. Si usás Cloudinary, se redimensionan automáticamente para mejorar la velocidad de carga de la web.</li>
+            <li><strong>Código de Barras:</strong> Escaneá o ingresá el código EAN del producto para habilitar búsquedas rápidas o control rápido de stock.</li>
+          </ul>
+        </section>
+
+        <!-- REPARTIDORES -->
+        <section class="guide-card" id="repartidores">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge"><i class="bi bi-truck"></i></div>
+            <h3>6. Repartidores (PickUp)</h3>
+          </div>
+          <div class="guide-text">
+            Configurar repartidores permite asignar pedidos de WhatsApp de forma rápida.
+          </div>
+          <ol class="step-list">
+            <li>Ingresá a la sección <strong>Gestión -> PickUp</strong>.</li>
+            <li>Hacé clic en <strong>Nuevo Repartidor</strong>.</li>
+            <li>Cargá el nombre completo, DNI y su número de WhatsApp de contacto.</li>
+            <li>Al guardar, el repartidor quedará registrado y disponible en el panel. Podés ver un botón de envío rápido para remitirle detalles del despacho de los pedidos.</li>
+          </ol>
+        </section>
+
+        <!-- FAQ -->
+        <section class="guide-card" id="faq">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge"><i class="bi bi-question-circle"></i></div>
+            <h3>Preguntas Frecuentes</h3>
+          </div>
+          
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              ¿Dónde se guarda físicamente el código QR de cada comercio?
+              <i class="bi bi-chevron-down"></i>
+            </div>
+            <div class="accordion-content">
+              El QR de la tienda se genera mediante el endpoint del backend <code>/api/qr?store=ID_TIENDA</code> y se almacena en el campo de configuración general del cliente en la base de datos Supabase, listo para ser consumido por las plantillas del kit imprimible.
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              ¿Qué pasa si un comercio olvida su contraseña del Dashboard?
+              <i class="bi bi-chevron-down"></i>
+            </div>
+            <div class="accordion-content">
+              Como administrador global, podés ingresar a la base de datos de Supabase, buscar el <code>store_id</code> del comercio en la tabla <code>company_settings</code>, y visualizar o actualizar su clave en el campo <code>email</code> JSON.
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              ¿Cómo direcciono un dominio propio de un cliente a su tienda?
+              <i class="bi bi-chevron-down"></i>
+            </div>
+            <div class="accordion-content">
+              El cliente debe apuntar un registro CNAME a tu alias de Vercel. Una vez apuntado, debés configurar dicho dominio en su sección de Configuración -> Dominio Personalizado dentro del Dashboard para que el ruteo interno se resuelva automáticamente.
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div style="margin-bottom:8px;">Base de Conocimientos de DaleTepido</div>
+    <div style="opacity: 0.5;">Creado por <a href="https://daletepido.com.ar" target="_blank">DaleTepido</a> · Todos los derechos reservados</div>
+  </footer>
+
+  <script>
+    // Accordion Toggle
+    function toggleAccordion(header) {
+      const item = header.parentElement;
+      const isOpen = item.classList.contains('open');
+      
+      // Close all other items
+      document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('open'));
+      
+      if (!isOpen) {
+        item.classList.add('open');
+      }
+    }
+
+    // Dynamic Live Filtering (Search Bar)
+    function filterGuides(query) {
+      const q = query.toLowerCase().trim();
+      const sections = document.querySelectorAll('.guide-card');
+      
+      sections.forEach(sec => {
+        const text = sec.textContent.toLowerCase();
+        if (text.includes(q)) {
+          sec.style.display = 'block';
+        } else {
+          sec.style.display = 'none';
+        }
+      });
+    }
+
+    // Active Sidebar Link Highlighter on Scroll
+    window.addEventListener('scroll', () => {
+      const scrollPos = window.scrollY + 120;
+      const sections = document.querySelectorAll('.guide-card');
+      const menuLinks = document.querySelectorAll('.menu-link');
+
+      sections.forEach(sec => {
+        if (sec.style.display !== 'none' && scrollPos >= sec.offsetTop && scrollPos < (sec.offsetTop + sec.offsetHeight)) {
+          const id = sec.getAttribute('id');
+          menuLinks.forEach(link => {
+            if (link.getAttribute('href') === '#' + id) {
+              link.classList.add('active');
+            } else {
+              link.classList.remove('active');
+            }
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
