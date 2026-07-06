@@ -1423,14 +1423,10 @@
 
     /* CONFIG VIEW */
     .masonry-grid {
-      column-count: 2;
-      column-gap: 14px;
-    }
-
-    @media(max-width: 900px) {
-      .masonry-grid {
-        column-count: 1;
-      }
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 14px;
+      align-items: start;
     }
 
     .config-section,
@@ -1441,7 +1437,24 @@
       padding: 0;
       margin-bottom: 14px;
       overflow: hidden;
-      break-inside: avoid;
+    }
+
+    /* Tabular numbers for prices, metrics, and amounts */
+    .stat-number, .stat-value, .order-total, .price-badge, td.price, .price-cell, .metric-value {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Tactile button active animations */
+    .sb-btn, .abm-btn-new, .abm-btn-save, .auth-btn, .action-btn {
+      transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s ease, box-shadow 0.15s ease !important;
+    }
+    .sb-btn:active, .abm-btn-new:active, .abm-btn-save:active, .auth-btn:active, .action-btn:active {
+      transform: scale(0.97) !important;
+    }
+
+    /* Concentric radios for inputs */
+    .ctrl-input {
+      border-radius: 8px !important;
     }
 
     .config-status {
