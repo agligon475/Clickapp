@@ -6871,7 +6871,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (viewListEl) viewListEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--silver);font-size:13px;grid-column:1/-1;">Cargando categorías...</div>';
 
       try {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/categories?order=display_order.asc`, {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/categories?store_id=eq.${encodeURIComponent(STORE_ID)}&order=display_order.asc`, {
           headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
         if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -6975,6 +6975,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
             order = Math.max(...window.currentCategories.map(c => c.display_order || 0)) + 10;
           }
           payload.display_order = order;
+          payload.store_id = STORE_ID;
           await postToSupabase('categories', payload);
         }
         closeCategoryModal();
@@ -8287,7 +8288,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     // ── EMOJI PICKER ──────────────────────────
     let activeEmojiTarget = null;
     const emojiContainer = document.createElement('div');
-    emojiContainer.style.cssText = 'display:none;position:absolute;z-index:99999;margin-top:4px;box-shadow:0 10px 25px rgba(0,0,0,.5);border-radius:8px;overflow:hidden;';
+    emojiContainer.style.cssText = 'display:none;position:absolute;z-index:9999999;margin-top:4px;box-shadow:0 10px 25px rgba(0,0,0,.5);border-radius:8px;overflow:hidden;';
     const picker = document.createElement('emoji-picker');
     picker.classList.add('dark');
     emojiContainer.appendChild(picker);
