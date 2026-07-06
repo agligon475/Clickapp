@@ -3309,10 +3309,13 @@
             <div style="background:#fff; padding:16px; border-radius:16px; display:inline-block; box-shadow:0 10px 25px rgba(0,0,0,.15); margin-bottom:16px; border:1px solid rgba(255,255,255,0.1);">
               <img id="cfg-qr-img" style="width:200px; height:200px; display:block;" src="" alt="Código QR de la Tienda" />
             </div>
-            <div>
-              <a id="cfg-qr-download-btn" href="#" download="qr-tienda.png" class="sb-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:8px; width:auto; justify-content:center; background:var(--red); color:#fff; border:none; padding:10px 20px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+            <div style="display:flex; flex-direction:column; gap:10px; align-items:center;">
+              <a id="cfg-qr-download-btn" href="#" download="qr-tienda.png" class="sb-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:8px; width:100%; justify-content:center; background:var(--iron); color:#fff; border:1px solid var(--zinc); padding:10px 20px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
                 <i class="bi bi-download"></i> Descargar QR (.PNG)
               </a>
+              <button onclick="openPrintKit()" class="sb-btn" style="width:100%; justify-content:center; background:var(--red); color:#fff; border:none; padding:10px 20px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:8px;">
+                <i class="bi bi-printer-fill"></i> Imprimir Kit Comercial
+              </button>
             </div>
           </div>
         </div>
@@ -3941,6 +3944,12 @@
     }
     document.submitTicket = submitTicket;
     window.submitTicket = submitTicket;
+
+    function openPrintKit() {
+      window.open('kit-imprimible.html?store=' + encodeURIComponent(STORE_ID), '_blank');
+    }
+    document.openPrintKit = openPrintKit;
+    window.openPrintKit = openPrintKit;
 
     function initDashboardAuth() {
       const isDemoStore = ['ferre-now', 'ferreteria', 'kiosco', 'gastronomia', 'electronica'].includes(STORE_ID.toLowerCase());
