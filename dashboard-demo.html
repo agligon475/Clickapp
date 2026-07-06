@@ -1732,7 +1732,7 @@
     <div class="sb-section">
       <div class="sb-section-label">Ajustes</div>
       <div class="sb-item" onclick="showView('config',this)"><i class="bi bi-gear"></i> <span>Configuración</span></div>
-      <div class="sb-item" onclick="showView('advanced',this)"><i class="bi bi-shield-lock"></i> <span>Avanzado</span>
+      <div class="sb-item" onclick="showView('advanced',this)"><i class="bi bi-shield-lock"></i> <span>Controles avanzados</span>
       </div>
     </div>
 
@@ -3348,7 +3348,44 @@
 
     <!-- ══════════════════════════════ VISTA: CONFIGURACIÓN AVANZADA -->
     <div class="view" id="view-advanced">
+      
+      <!-- Banner de Advertencia -->
+      <div style="background: rgba(215, 38, 56, 0.08); border: 1px solid rgba(215, 38, 56, 0.25); border-radius: 12px; padding: 20px; margin-bottom: 20px; display: flex; gap: 16px; align-items: flex-start; animation: fadeUp .35s ease both;">
+        <i class="bi bi-exclamation-triangle" style="font-size: 24px; color: var(--red); flex-shrink: 0; margin-top: 2px;"></i>
+        <div>
+          <h4 style="font-family: var(--font-h); font-size: 15px; font-weight: 700; color: var(--white); margin: 0 0 4px 0;">¡ATENCIÓN! Ajustes Críticos del Sistema</h4>
+          <p style="font-size: 13px; color: var(--silver); margin: 0; line-height: 1.5;">
+            Los ajustes que se guarden en esta sección pueden implicar el mal funcionamiento total o parcial de la plataforma. Ante cualquier duda, por favor no modifique estos valores y comuníquese de inmediato abriendo un ticket de soporte.
+          </p>
+        </div>
+      </div>
+
       <div class="masonry-grid">
+
+        <!-- Formulario de Ticket de Soporte -->
+        <div class="config-section">
+          <div class="config-section-title"><i class="bi bi-envelope-exclamation"></i> Elevar Ticket de Soporte</div>
+          <div class="config-section-content" style="padding: 20px;">
+            <div style="font-size: 12px; color: var(--silver); margin-bottom: 16px; line-height: 1.6;">
+              ¿Tenés alguna duda o experimentás problemas con la plataforma? Completá los detalles a continuación para enviar un ticket directo a nuestro equipo técnico (<strong>licari.multimedios@gmail.com</strong>).
+            </div>
+            <div style="display:flex; flex-direction:column; gap:14px;">
+              <div class="ctrl-group">
+                <label class="ctrl-label">Asunto del Ticket</label>
+                <input class="ctrl-input" id="ticket-subject" placeholder="Ej: Error al subir imágenes / Consulta sobre base de datos" style="width:100%;" />
+              </div>
+              <div class="ctrl-group">
+                <label class="ctrl-label">Descripción del Problema</label>
+                <textarea class="ctrl-input" id="ticket-body" rows="4" placeholder="Detallá el inconveniente que estás experimentando lo más preciso posible..." style="height: auto; font-family: var(--font-body); padding: 12px; resize: vertical; width:100%;"></textarea>
+              </div>
+              <div style="display: flex; justify-content: flex-end; margin-top: 6px;">
+                <button onclick="submitTicket()" class="abm-btn-new" style="padding: 10px 20px; font-size: 13px; display: inline-flex; align-items: center; gap: 8px;">
+                  <i class="bi bi-send-fill"></i> Enviar Ticket por Email
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- Supabase -->
         <div class="config-section">
@@ -3943,6 +3980,26 @@
     }
     document.handleLogout = handleLogout;
     window.handleLogout = handleLogout;
+
+    function submitTicket() {
+      const subjectInput = document.getElementById('ticket-subject');
+      const bodyInput = document.getElementById('ticket-body');
+      
+      const subject = subjectInput ? subjectInput.value.trim() : '';
+      const body = bodyInput ? bodyInput.value.trim() : '';
+      
+      if (!subject || !body) {
+        alert('Por favor completa el asunto y descripción del ticket.');
+        return;
+      }
+      
+      const email = 'licari.multimedios@gmail.com';
+      const mailtoUrl = `mailto:${email}?subject=${encodeURIComponent('DaleTepido Ticket - ' + subject)}&body=${encodeURIComponent(body + '\n\n---\nTienda: ' + STORE_ID + '\nURL: ' + window.location.href)}`;
+      
+      window.location.href = mailtoUrl;
+    }
+    document.submitTicket = submitTicket;
+    window.submitTicket = submitTicket;
 
     function initDashboardAuth() {
       const isDemoStore = ['ferre-now', 'ferreteria', 'kiosco', 'gastronomia', 'electronica'].includes(STORE_ID.toLowerCase());
