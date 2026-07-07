@@ -1575,15 +1575,21 @@ function renderBanners(bannerData) {
     
     el.style.display = 'flex';
     el.style.cursor = 'pointer';
-    const cat = data.cat || 'all';
+    const cat     = data.cat || 'all';
+    const hasBg   = data.bg && !data.img;
+    const bgColor = data.bg || '#1C1C1E';
+    const textCol = hasBg && typeof getContrastColor === 'function' ? getContrastColor(bgColor) : '#ffffff';
+    const ctaCol  = hasBg ? textCol : '';
+
+    el.style.background = data.img ? '' : bgColor;
     
     el.innerHTML = `
       ${data.img ? `<img class="promo-banner-img" src="${optimizeImg(data.img)}" alt="${data.title}" loading="lazy"/>` : ''}
-      <div class="promo-banner-overlay"></div>
-      <div class="promo-banner-content">
-        ${data.label ? `<div class="promo-banner-label">${data.label}</div>` : ''}
-        <div class="promo-banner-title">${data.title}</div>
-        <div class="promo-banner-cta">Ver productos <i class="bi bi-arrow-right"></i></div>
+      ${data.img ? `<div class="promo-banner-overlay"></div>` : ''}
+      <div class="promo-banner-content" style="${hasBg ? `color:${textCol};` : ''}">
+        ${data.label ? `<div class="promo-banner-label" style="${hasBg ? `color:${textCol};opacity:.8;` : ''}">${data.label}</div>` : ''}
+        <div class="promo-banner-title" style="${hasBg ? `color:${textCol};` : ''}">${data.title}</div>
+        <div class="promo-banner-cta" style="${hasBg && ctaCol ? `color:${ctaCol};` : ''}">Ver productos <i class="bi bi-arrow-right"></i></div>
       </div>
     `;
     

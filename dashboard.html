@@ -2806,6 +2806,15 @@
                       </label>
                     </div>
                   </div>
+                  <div class="ctrl-group" style="grid-column:1/-1;">
+                    <label class="ctrl-label">Color de fondo <span style="font-weight:400;color:var(--silver);">(cuando no hay imagen)</span></label>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                      <input type="color" id="banner1-bg" value="#1C1C1E"
+                        oninput="previewBanner('banner1')"
+                        style="width:44px;height:36px;border-radius:8px;border:1px solid var(--zinc);cursor:pointer;background:none;padding:2px;" />
+                      <span style="font-size:11px;color:var(--silver);">Si cargás una imagen, este color se ignora</span>
+                    </div>
+                  </div>
                   <div id="banner1-preview"
                     style="grid-column:1/-1;display:none;height:160px;border-radius:10px;overflow:hidden;background:var(--zinc);margin-top:8px;">
                     <img src="" alt="Preview" style="width:100%;height:100%;object-fit:cover;" />
@@ -2846,6 +2855,15 @@
                         <input type="file" accept="image/*" style="display:none;"
                           onchange="handleBannerUpload(this,'banner2')" />
                       </label>
+                    </div>
+                  </div>
+                  <div class="ctrl-group" style="grid-column:1/-1;">
+                    <label class="ctrl-label">Color de fondo <span style="font-weight:400;color:var(--silver);">(cuando no hay imagen)</span></label>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                      <input type="color" id="banner2-bg" value="#1C1C1E"
+                        oninput="previewBanner('banner2')"
+                        style="width:44px;height:36px;border-radius:8px;border:1px solid var(--zinc);cursor:pointer;background:none;padding:2px;" />
+                      <span style="font-size:11px;color:var(--silver);">Si cargás una imagen, este color se ignora</span>
                     </div>
                   </div>
                   <div id="banner2-preview"
@@ -4533,6 +4551,7 @@
                 title: dbCfg.banner1_title || 'Productos', 
                 img: dbCfg.banner1_img || '', 
                 cat: dbCfg.banner1_cat || '',
+                bg: parsedDesign.banner1_bg || '#1C1C1E',
                 active: parsedDesign.banner1_active !== false
               },
               banner2: { 
@@ -4540,6 +4559,7 @@
                 title: dbCfg.banner2_title || 'Especiales', 
                 img: dbCfg.banner2_img || '', 
                 cat: dbCfg.banner2_cat || '',
+                bg: parsedDesign.banner2_bg || '#1C1C1E',
                 active: parsedDesign.banner2_active !== false
               }
             };
@@ -8050,11 +8070,13 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const b1Label = document.getElementById('banner1-label'); if (b1Label) b1Label.value = b1.label || '';
       const b1Title = document.getElementById('banner1-title'); if (b1Title) b1Title.value = b1.title || '';
       const b1Img = document.getElementById('banner1-img'); if (b1Img) b1Img.value = b1.img || '';
+      const b1BgEl = document.getElementById('banner1-bg'); if (b1BgEl && b1.bg) b1BgEl.value = b1.bg;
       const b1Cat = document.getElementById('banner1-cat');
 
       const b2Label = document.getElementById('banner2-label'); if (b2Label) b2Label.value = b2.label || '';
       const b2Title = document.getElementById('banner2-title'); if (b2Title) b2Title.value = b2.title || '';
       const b2Img = document.getElementById('banner2-img'); if (b2Img) b2Img.value = b2.img || '';
+      const b2BgEl = document.getElementById('banner2-bg'); if (b2BgEl && b2.bg) b2BgEl.value = b2.bg;
       const b2Cat = document.getElementById('banner2-cat');
 
       try {
@@ -8087,19 +8109,29 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     }
 
     function previewBanner(bannerId) {
-      const urlEl = document.getElementById(bannerId + '-img');
+      const urlEl    = document.getElementById(bannerId + '-img');
+      const bgEl     = document.getElementById(bannerId + '-bg');
       const previewEl = document.getElementById(bannerId + '-preview');
-      const imgEl = previewEl?.querySelector('img');
+      const imgEl    = previewEl?.querySelector('img');
 
       if (!urlEl || !previewEl || !imgEl) return;
 
       const url = urlEl.value.trim();
+      const bg  = bgEl ? bgEl.value : '#1C1C1E';
+
       if (url && url.startsWith('http')) {
+        // Image mode
+        previewEl.style.background = '';
         imgEl.src = url;
+        imgEl.style.display = 'block';
         previewEl.style.display = 'block';
         imgEl.onerror = () => { previewEl.style.display = 'none'; };
       } else {
-        previewEl.style.display = 'none';
+        // Color mode – show a solid bg swatch preview
+        previewEl.style.background = bg;
+        previewEl.style.display    = 'block';
+        imgEl.style.display = 'none';
+        imgEl.src = '';
       }
     }
 
@@ -8124,21 +8156,23 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     }
 
     async function saveBannersConfig() {
-      const b1Label = document.getElementById('banner1-label').value.trim();
-      const b1Title = document.getElementById('banner1-title').value.trim();
-      const b1Img = document.getElementById('banner1-img').value.trim();
-      const b1Cat = document.getElementById('banner1-cat').value.trim();
+      const b1Label  = document.getElementById('banner1-label').value.trim();
+      const b1Title  = document.getElementById('banner1-title').value.trim();
+      const b1Img    = document.getElementById('banner1-img').value.trim();
+      const b1Cat    = document.getElementById('banner1-cat').value.trim();
+      const b1Bg     = document.getElementById('banner1-bg')?.value || '#1C1C1E';
       const b1Active = document.getElementById('banner1-active') ? document.getElementById('banner1-active').checked : true;
 
-      const b2Label = document.getElementById('banner2-label').value.trim();
-      const b2Title = document.getElementById('banner2-title').value.trim();
-      const b2Img = document.getElementById('banner2-img').value.trim();
-      const b2Cat = document.getElementById('banner2-cat').value.trim();
+      const b2Label  = document.getElementById('banner2-label').value.trim();
+      const b2Title  = document.getElementById('banner2-title').value.trim();
+      const b2Img    = document.getElementById('banner2-img').value.trim();
+      const b2Cat    = document.getElementById('banner2-cat').value.trim();
+      const b2Bg     = document.getElementById('banner2-bg')?.value || '#1C1C1E';
       const b2Active = document.getElementById('banner2-active') ? document.getElementById('banner2-active').checked : true;
 
       const bannerData = {
-        banner1: { label: b1Label, title: b1Title, img: b1Img, cat: b1Cat, active: b1Active },
-        banner2: { label: b2Label, title: b2Title, img: b2Img, cat: b2Cat, active: b2Active }
+        banner1: { label: b1Label, title: b1Title, img: b1Img, cat: b1Cat, bg: b1Bg, active: b1Active },
+        banner2: { label: b2Label, title: b2Title, img: b2Img, cat: b2Cat, bg: b2Bg, active: b2Active }
       };
       localStorage.setItem(`storeapp_banners_${STORE_ID}`, JSON.stringify(bannerData));
       localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
@@ -8172,13 +8206,17 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
           parsedEmail.banner1_active = b1Active;
           parsedEmail.banner2_active = b2Active;
+          parsedEmail.banner1_bg = b1Bg;
+          parsedEmail.banner2_bg = b2Bg;
           dataToSave.email = JSON.stringify(parsedEmail);
 
           await updateInSupabase('company_settings', id, dataToSave);
         } else {
           const parsedEmail = {
             banner1_active: b1Active,
-            banner2_active: b2Active
+            banner2_active: b2Active,
+            banner1_bg: b1Bg,
+            banner2_bg: b2Bg
           };
           dataToSave.email = JSON.stringify(parsedEmail);
           await postToSupabase('company_settings', dataToSave);
