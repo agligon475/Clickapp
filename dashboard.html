@@ -1755,9 +1755,58 @@
       <i class="bi bi-shop"></i> <span>Ver tienda</span> <i class="bi bi-box-arrow-up-right"
         style="font-size:10px;margin-left:auto;opacity:.5;"></i>
     </div>
+    <div class="sb-item" style="margin:0 12px 8px; border:1px solid rgba(255,165,0,0.2); color:#f59e0b;"
+      onclick="openTicketModal()">
+      <i class="bi bi-headset"></i> <span>Soporte</span>
+    </div>
     <div class="sb-item logout-btn" style="margin:0 12px 12px; border:1px solid rgba(215,38,56,0.2); color:var(--red);"
       onclick="handleLogout()">
       <i class="bi bi-box-arrow-right"></i> <span>Cerrar sesión</span>
+    </div>
+  </div>
+
+  <!-- MODAL: TICKET DE SOPORTE -->
+  <div id="ticket-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+    <div style="background:var(--iron);border:1px solid var(--zinc);border-radius:16px;width:min(520px,94vw);max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.5);">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--zinc);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <i class="bi bi-headset" style="color:#f59e0b;font-size:20px;"></i>
+          <div>
+            <div style="font-weight:700;font-size:15px;color:var(--white);">Ticket de Soporte</div>
+            <div style="font-size:11px;color:var(--silver);">Te responderemos en menos de 24 horas</div>
+          </div>
+        </div>
+        <button onclick="closeTicketModal()" style="background:none;border:none;cursor:pointer;color:var(--silver);font-size:20px;line-height:1;padding:4px;">&times;</button>
+      </div>
+      <div style="padding:24px;display:flex;flex-direction:column;gap:16px;">
+        <div style="font-size:12px;color:var(--silver);line-height:1.6;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:12px 14px;">
+          <i class="bi bi-info-circle" style="color:#f59e0b;"></i>
+          &nbsp;¿Tenés alguna duda o experimentás problemas? Completá los detalles y te contactaremos a <strong>soporte@daletepido.com.ar</strong>.
+        </div>
+        <div>
+          <label class="ctrl-label">Asunto del Ticket</label>
+          <input class="ctrl-input" id="ticket-subject" placeholder="Ej: Error al subir imágenes / Consulta sobre pagos" style="width:100%;margin-top:4px;" />
+        </div>
+        <div>
+          <label class="ctrl-label">Descripción del Problema</label>
+          <textarea class="ctrl-input" id="ticket-body" rows="5" placeholder="Detailá el inconveniente lo más preciso posible..."
+            style="height:auto;font-family:var(--font-body);padding:12px;resize:vertical;width:100%;margin-top:4px;"></textarea>
+        </div>
+        <div>
+          <label class="ctrl-label">Prioridad</label>
+          <select class="ctrl-input" id="ticket-priority" style="width:100%;margin-top:4px;">
+            <option value="baja">Baja — Consulta general</option>
+            <option value="media" selected>Media — Problema que no impide operar</option>
+            <option value="alta">⚠️ Alta — Problema crítico que impide operar</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px;">
+          <button onclick="closeTicketModal()" style="padding:10px 18px;background:var(--zinc);border:1px solid var(--silver);border-radius:8px;color:var(--fog);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-body);">Cancelar</button>
+          <button onclick="submitTicket()" class="abm-btn-new" style="padding:10px 20px;font-size:13px;display:inline-flex;align-items:center;gap:8px;">
+            <i class="bi bi-send-fill"></i> Enviar Ticket
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -3388,37 +3437,12 @@
         <div>
           <h4 style="font-family: var(--font-h); font-size: 15px; font-weight: 700; color: var(--white); margin: 0 0 4px 0;">¡ATENCIÓN! Ajustes Críticos del Sistema</h4>
           <p style="font-size: 13px; color: var(--silver); margin: 0; line-height: 1.5;">
-            Los ajustes que se guarden en esta sección pueden implicar el mal funcionamiento total o parcial de la plataforma. Ante cualquier duda, por favor no modifique estos valores y comuníquese de inmediato abriendo un ticket de soporte.
+            Los ajustes que se guarden en esta sección pueden implicar el mal funcionamiento total o parcial de la plataforma. Ante cualquier duda, por favor no modifique estos valores y comuníquese abriendo un <strong style="color:var(--white);cursor:pointer;" onclick="openTicketModal()">ticket de soporte</strong>.
           </p>
         </div>
       </div>
 
       <div class="masonry-grid">
-
-        <!-- Formulario de Ticket de Soporte -->
-        <div class="config-section">
-          <div class="config-section-title"><i class="bi bi-envelope-exclamation"></i> Elevar Ticket de Soporte</div>
-          <div class="config-section-content" style="padding: 20px;">
-            <div style="font-size: 12px; color: var(--silver); margin-bottom: 16px; line-height: 1.6;">
-              ¿Tenés alguna duda o experimentás problemas con la plataforma? Completá los detalles a continuación para enviar un ticket directo a nuestro equipo técnico (<strong>soporte@daletepido.com.ar</strong>).
-            </div>
-            <div style="display:flex; flex-direction:column; gap:14px;">
-              <div class="ctrl-group">
-                <label class="ctrl-label">Asunto del Ticket</label>
-                <input class="ctrl-input" id="ticket-subject" placeholder="Ej: Error al subir imágenes / Consulta sobre base de datos" style="width:100%;" />
-              </div>
-              <div class="ctrl-group">
-                <label class="ctrl-label">Descripción del Problema</label>
-                <textarea class="ctrl-input" id="ticket-body" rows="4" placeholder="Detallá el inconveniente que estás experimentando lo más preciso posible..." style="height: auto; font-family: var(--font-body); padding: 12px; resize: vertical; width:100%;"></textarea>
-              </div>
-              <div style="display: flex; justify-content: flex-end; margin-top: 6px;">
-                <button onclick="submitTicket()" class="abm-btn-new" style="padding: 10px 20px; font-size: 13px; display: inline-flex; align-items: center; gap: 8px;">
-                  <i class="bi bi-send-fill"></i> Enviar Ticket por Email
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <!-- Supabase -->
         <div class="config-section">
@@ -3582,7 +3606,7 @@
         </div><!-- /Cloudinary section -->
 
         <!-- Dirección Web / Subdominio -->
-        <div class="config-section">
+        <div class="config-section collapsed">
           <div class="config-section-title"><i class="bi bi-globe2"></i> Dirección Web y Subdominio</div>
           <div class="config-section-content" style="padding: 20px;">
             <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
@@ -3610,7 +3634,7 @@
 
 
         <!-- Gerente -->
-        <div class="config-section">
+        <div class="config-section collapsed">
           <div class="config-section-title"><i class="bi bi-person-badge"></i> Gerente de tienda <div
               class="config-status" id="adv-status-gerente"></div>
           </div>
@@ -3982,25 +4006,49 @@
     document.handleLogout = handleLogout;
     window.handleLogout = handleLogout;
 
+    function openTicketModal() {
+      const m = document.getElementById('ticket-modal');
+      if (m) { m.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+    }
+    function closeTicketModal() {
+      const m = document.getElementById('ticket-modal');
+      if (m) { m.style.display = 'none'; document.body.style.overflow = ''; }
+    }
+    // Close on backdrop click
+    document.addEventListener('click', function(e) {
+      const m = document.getElementById('ticket-modal');
+      if (m && e.target === m) closeTicketModal();
+    });
+
     function submitTicket() {
       const subjectInput = document.getElementById('ticket-subject');
       const bodyInput = document.getElementById('ticket-body');
+      const priorityInput = document.getElementById('ticket-priority');
       
       const subject = subjectInput ? subjectInput.value.trim() : '';
       const body = bodyInput ? bodyInput.value.trim() : '';
+      const priority = priorityInput ? priorityInput.value : 'media';
       
       if (!subject || !body) {
-        alert('Por favor completa el asunto y descripción del ticket.');
+        alert('Por favor completá el asunto y descripción del ticket.');
         return;
       }
       
       const email = 'soporte@daletepido.com.ar';
-      const mailtoUrl = `mailto:${email}?subject=${encodeURIComponent('DaleTepido Ticket - ' + subject)}&body=${encodeURIComponent(body + '\n\n---\nTienda: ' + STORE_ID + '\nURL: ' + window.location.href)}`;
+      const priorityLabel = { baja: '[BAJA]', media: '[MEDIA]', alta: '[ALTA - URGENTE]' }[priority] || '';
+      const fullSubject = `DaleTepido ${priorityLabel} Ticket - ${subject}`;
+      const fullBody = `${body}\n\n---\nPrioridad: ${priority.toUpperCase()}\nTienda: ${typeof STORE_ID !== 'undefined' ? STORE_ID : ''}\nURL: ${window.location.href}`;
+      const mailtoUrl = `mailto:${email}?subject=${encodeURIComponent(fullSubject)}&body=${encodeURIComponent(fullBody)}`;
       
       window.location.href = mailtoUrl;
+      closeTicketModal();
     }
     document.submitTicket = submitTicket;
     window.submitTicket = submitTicket;
+    document.openTicketModal = openTicketModal;
+    window.openTicketModal = openTicketModal;
+    document.closeTicketModal = closeTicketModal;
+    window.closeTicketModal = closeTicketModal;
 
     function openPrintKit() {
       window.open('kit-imprimible.html?store=' + encodeURIComponent(STORE_ID), '_blank');
