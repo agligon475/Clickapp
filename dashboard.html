@@ -3569,8 +3569,19 @@
             </div>
             <div style="margin-top:12px;">
               <label class="ctrl-label">Probar subida de imagen</label>
-              <div class="photo-upload-zone" id="test-upload-zone">
-                 <!-- Dirección Web / Subdominio -->
+              <div class="photo-upload-zone" id="test-upload-zone"
+                style="cursor:pointer;border:2px dashed var(--zinc);border-radius:10px;padding:16px;text-align:center;color:var(--silver);font-size:12px;"
+                onclick="this.querySelector('input').click()">
+                <i class="bi bi-cloud-arrow-up" style="font-size:24px;display:block;margin-bottom:6px;opacity:.5;"></i>
+                Hacé clic para seleccionar una imagen de prueba
+                <input type="file" accept="image/*" style="display:none;" onchange="testCloudinaryUpload(this)" />
+              </div>
+              <span id="cfg-upload-result" style="font-size:11px;display:block;margin-top:6px;"></span>
+            </div>
+          </div>
+        </div><!-- /Cloudinary section -->
+
+        <!-- Dirección Web / Subdominio -->
         <div class="config-section">
           <div class="config-section-title"><i class="bi bi-globe2"></i> Dirección Web y Subdominio</div>
           <div class="config-section-content" style="padding: 20px;">
