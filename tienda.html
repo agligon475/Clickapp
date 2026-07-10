@@ -1024,7 +1024,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 // Obtener store_id del parámetro de URL '?store=...' o localStorage o 'ferre-now' por defecto
 const urlParams = new URLSearchParams(window.location.search);
-const STORE_ID = urlParams.get('store') || localStorage.getItem('storeapp_store_id') || 'ferre-now';
+const STORE_ID = (urlParams.get('store') || localStorage.getItem('storeapp_store_id') || 'ferre-now').toLowerCase();
 localStorage.setItem('storeapp_store_id', STORE_ID);
 
 // Load config saved by dashboard

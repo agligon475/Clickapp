@@ -3918,7 +3918,7 @@
 
     // Obtener store_id del parámetro de URL '?store=...' o localStorage o 'ferre-now' por defecto
     const urlParams = new URLSearchParams(window.location.search);
-    const STORE_ID = urlParams.get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now';
+    const STORE_ID = (urlParams.get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now').toLowerCase();
     window.localStorage.setItem('storeapp_store_id', STORE_ID);
 
     function getStoreUrl() {
@@ -5209,7 +5209,7 @@
           facebook: cfgObj.socials?.fb || ''
         };
 
-        const activeStore = new URLSearchParams(window.location.search).get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now';
+        const activeStore = (new URLSearchParams(window.location.search).get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now').toLowerCase();
         const sbUrl = localStorage.getItem('storeapp_supabase_url') || (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : '');
         const sbKey = localStorage.getItem('storeapp_supabase_key') || (typeof SUPABASE_KEY !== 'undefined' ? SUPABASE_KEY : '');
 
@@ -8739,7 +8739,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       // alert("1. Botón presionado. Cargando configuración paso a paso...");
       try {
         let sc = {};
-        const activeStore = new URLSearchParams(window.location.search).get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now';
+        const activeStore = (new URLSearchParams(window.location.search).get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now').toLowerCase();
         const sbUrl = localStorage.getItem('storeapp_supabase_url') || (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : '');
         const sbKey = localStorage.getItem('storeapp_supabase_key') || (typeof SUPABASE_KEY !== 'undefined' ? SUPABASE_KEY : '');
         
@@ -9006,7 +9006,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
 
       // 3. Save to localStorage
       // Store settings config
-      const activeStore = new URLSearchParams(window.location.search).get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now';
+      const activeStore = (new URLSearchParams(window.location.search).get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now').toLowerCase();
       const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + activeStore) || localStorage.getItem('storeapp_cfg') || '{}');
       sc.name = name;
       sc.tagline = tagline;

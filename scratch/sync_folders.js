@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 
 const filesToSync = [
   'dashboard.html',
@@ -7,16 +8,24 @@ const filesToSync = [
   'alta-usuario.html'
 ];
 
-console.log('Sincronizando archivos del root a Clickapp-main/...');
+const destinations = [
+  './Clickapp-main',
+  './Clickapp'
+];
+
+console.log('Sincronizando archivos del root a los destinos...');
 filesToSync.forEach(file => {
   const src = `./${file}`;
-  const dest = `./Clickapp-main/${file}`;
-  if (fs.existsSync(src)) {
+  if (!fs.existsSync(src)) {
+    console.warn(`Archivo origen no encontrado: ${src}`);
+    return;
+  }
+
+  destinations.forEach(destDir => {
+    const dest = path.join(destDir, file);
     fs.copyFileSync(src, dest);
     console.log(`Copiado: ${src} -> ${dest}`);
-  } else {
-    console.warn(`Archivo no encontrado: ${src}`);
-  }
+  });
 });
 
 console.log('¡Sincronización completada!');
