@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "scripts": {
+    "start": "node scratch/server.js",
+    "dev": "node scratch/server.js"
+  },
   "dependencies": {
     "qrcode": "^1.5.4"
   }
