@@ -5848,6 +5848,119 @@
       reader.readAsText(file);
     }
 
+    /* ═══════════════════════════════════════════ EDITOR DE VARIACIONES (GASTRONOMÍA) */
+    function toggleVariationsEditor() {
+      const chk = document.getElementById('m-has-variations');
+      const editor = document.getElementById('m-variations-editor');
+      if (chk && editor) {
+        editor.style.display = chk.checked ? 'flex' : 'none';
+      }
+    }
+    window.toggleVariationsEditor = toggleVariationsEditor;
+
+    function addVariantGroup(name = '', options = []) {
+      const container = document.getElementById('m-variants-groups');
+      if (!container) return;
+
+      const card = document.createElement('div');
+      card.className = 'variant-group-card';
+      card.style.cssText = 'background:var(--iron); border:1px solid var(--zinc); border-radius:6px; padding:12px; position:relative; display:flex; flex-direction:column; gap:8px; margin-top:8px;';
+      
+      card.innerHTML = `
+        <button type="button" onclick="this.closest('.variant-group-card').remove()" style="position:absolute; top:8px; right:8px; background:transparent; border:none; color:var(--red); cursor:pointer; font-size:14px;"><i class="bi bi-trash"></i></button>
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <label style="font-size:10px; color:var(--silver); font-weight:600;">Nombre del Grupo (ej: Elegí tu Guarnición, Punto de Cocción)</label>
+          <input class="ctrl-input m-group-name" value="${name}" placeholder="Ej: Guarnición" style="height:32px; font-size:12px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
+        </div>
+        <div style="font-size:11px; color:var(--silver); font-weight:600; margin-top:4px;">Opciones de Selección Única:</div>
+        <div class="m-group-options-container" style="display:flex; flex-direction:column; gap:6px;"></div>
+        <button type="button" onclick="addOptionRow(this.previousElementSibling, 'variant')" class="abm-btn-new" style="padding:3px 6px; font-size:9px; margin-top:4px; background:var(--zinc); border-color:var(--zinc); align-self:flex-start;"><i class="bi bi-plus"></i> Agregar Opción</button>
+      `;
+
+      container.appendChild(card);
+      
+      const optionsContainer = card.querySelector('.m-group-options-container');
+      if (options && options.length > 0) {
+        options.forEach(opt => addOptionRow(optionsContainer, 'variant', opt));
+      } else {
+        addOptionRow(optionsContainer, 'variant');
+      }
+    }
+    window.addVariantGroup = addVariantGroup;
+
+    function addModifierGroup(name = '', minChoices = 0, maxChoices = 0, options = []) {
+      const container = document.getElementById('m-modifiers-groups');
+      if (!container) return;
+
+      const card = document.createElement('div');
+      card.className = 'modifier-group-card';
+      card.style.cssText = 'background:var(--iron); border:1px solid var(--zinc); border-radius:6px; padding:12px; position:relative; display:flex; flex-direction:column; gap:8px; margin-top:8px;';
+      
+      card.innerHTML = `
+        <button type="button" onclick="this.closest('.modifier-group-card').remove()" style="position:absolute; top:8px; right:8px; background:transparent; border:none; color:var(--red); cursor:pointer; font-size:14px;"><i class="bi bi-trash"></i></button>
+        <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:8px;">
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <label style="font-size:10px; color:var(--silver); font-weight:600;">Nombre del Grupo (ej: Adicionales, Elegí 4 Ingredientes)</label>
+            <input class="ctrl-input m-group-name" value="${name}" placeholder="Ej: Adicionales" style="height:32px; font-size:12px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
+          </div>
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <label style="font-size:10px; color:var(--silver); font-weight:600;">Mín. Elegir</label>
+            <input type="number" class="ctrl-input m-group-min" min="0" value="${minChoices}" style="height:32px; font-size:12px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
+          </div>
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <label style="font-size:10px; color:var(--silver); font-weight:600;">Máx. Elegir</label>
+            <input type="number" class="ctrl-input m-group-max" min="0" value="${maxChoices}" style="height:32px; font-size:12px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
+          </div>
+        </div>
+        <div style="font-size:11px; color:var(--silver); font-weight:600; margin-top:4px;">Ingredientes / Opciones de Selección Múltiple:</div>
+        <div class="m-group-options-container" style="display:flex; flex-direction:column; gap:6px;"></div>
+        <button type="button" onclick="addOptionRow(this.previousElementSibling, 'modifier')" class="abm-btn-new" style="padding:3px 6px; font-size:9px; margin-top:4px; background:var(--zinc); border-color:var(--zinc); align-self:flex-start; color:#fff;"><i class="bi bi-plus"></i> Agregar Opción / Ingrediente</button>
+      `;
+
+      container.appendChild(card);
+      
+      const optionsContainer = card.querySelector('.m-group-options-container');
+      if (options && options.length > 0) {
+        options.forEach(opt => addOptionRow(optionsContainer, 'modifier', opt));
+      } else {
+        addOptionRow(optionsContainer, 'modifier');
+      }
+    }
+    window.addModifierGroup = addModifierGroup;
+
+    function addOptionRow(container, type, opt = {}) {
+      if (!container) return;
+
+      const row = document.createElement('div');
+      row.className = 'option-row';
+      
+      const nameVal = opt.name || '';
+      const priceVal = opt.priceDelta !== undefined ? opt.priceDelta : '';
+      
+      if (type === 'variant') {
+        row.style.cssText = 'display:grid; grid-template-columns: 2fr 1fr auto; gap:6px; align-items:center;';
+        row.innerHTML = `
+          <input type="text" class="ctrl-input opt-name" value="${nameVal}" placeholder="Ej: Papas Fritas" style="height:30px; font-size:11px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
+          <input type="number" class="ctrl-input opt-price" value="${priceVal}" placeholder="Precio extra (ej: 300)" style="height:30px; font-size:11px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
+          <button type="button" onclick="this.parentElement.remove()" style="background:transparent; border:none; color:var(--red); cursor:pointer; font-size:16px; padding:0;"><i class="bi bi-x-circle-fill"></i></button>
+        `;
+      } else {
+        const detailVal = opt.detail || '';
+        const maxVal = opt.maxQty !== undefined ? opt.maxQty : 1;
+        row.style.cssText = 'display:grid; grid-template-columns: 2fr 2fr 1fr 1fr auto; gap:6px; align-items:center;';
+        row.innerHTML = `
+          <input type="text" class="ctrl-input opt-name" value="${nameVal}" placeholder="Ej: Cheddar" style="height:30px; font-size:11px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
+          <input type="text" class="ctrl-input opt-detail" value="${detailVal}" placeholder="Detalle (ej: Fundido)" style="height:30px; font-size:11px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
+          <input type="number" class="ctrl-input opt-price" value="${priceVal}" placeholder="Precio (ej: 500)" style="height:30px; font-size:11px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
+          <input type="number" class="ctrl-input opt-max" value="${maxVal}" placeholder="Tope (ej: 3)" min="1" style="height:30px; font-size:11px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
+          <button type="button" onclick="this.parentElement.remove()" style="background:transparent; border:none; color:var(--red); cursor:pointer; font-size:16px; padding:0;"><i class="bi bi-x-circle-fill"></i></button>
+        `;
+      }
+      
+      container.appendChild(row);
+    }
+    window.addOptionRow = addOptionRow;
+
     /* ═══════════════════════════════════════════ MODAL */
     function openModal(id = null) {
       editingId = id;
@@ -5877,16 +5990,32 @@
       // Detalle y rubro gastronomia
       let rawDetalle = p?.detalle || '';
       let textDetalle = rawDetalle;
-      let variantsJsonStr = '';
-      let modifiersJsonStr = '';
+      
+      // Limpiar contenedores dinámicos del editor interactivo
+      const variantsContainer = document.getElementById('m-variants-groups');
+      const modifiersContainer = document.getElementById('m-modifiers-groups');
+      if (variantsContainer) variantsContainer.innerHTML = '';
+      if (modifiersContainer) modifiersContainer.innerHTML = '';
+      
+      let hasOpts = false;
       
       if (rawDetalle.includes('|||')) {
         const parts = rawDetalle.split('|||');
         textDetalle = parts[0].trim();
         try {
           const jsonOpts = JSON.parse(parts[1].trim());
-          if (jsonOpts.variants) variantsJsonStr = JSON.stringify(jsonOpts.variants, null, 2);
-          if (jsonOpts.modifiers) modifiersJsonStr = JSON.stringify(jsonOpts.modifiers, null, 2);
+          if (jsonOpts.variants && jsonOpts.variants.length > 0) {
+            hasOpts = true;
+            jsonOpts.variants.forEach(v => {
+              addVariantGroup(v.name, v.options);
+            });
+          }
+          if (jsonOpts.modifiers && jsonOpts.modifiers.length > 0) {
+            hasOpts = true;
+            jsonOpts.modifiers.forEach(m => {
+              addModifierGroup(m.name, m.minChoices, m.maxChoices, m.options);
+            });
+          }
         } catch (e) {
           console.error("Error parsing JSON options from details:", e);
         }
@@ -5906,8 +6035,11 @@
         if (barcodeGroup) barcodeGroup.style.display = 'none';
         if (gastronomySection) {
           gastronomySection.style.display = 'block';
-          document.getElementById('m-variants-text').value = variantsJsonStr;
-          document.getElementById('m-modifiers-text').value = modifiersJsonStr;
+          const chk = document.getElementById('m-has-variations');
+          if (chk) {
+            chk.checked = hasOpts;
+            toggleVariationsEditor();
+          }
         }
       } else {
         if (brandGroup) brandGroup.style.display = 'block';
@@ -6007,26 +6139,71 @@
 
       // Serialización de variantes/modificadores para Gastronomía
       if (rubro === 'gastronomia' || rubro === 'Rotisería' || rubro === 'Gastronomía') {
-        const variantsVal = document.getElementById('m-variants-text').value.trim();
-        const modifiersVal = document.getElementById('m-modifiers-text').value.trim();
-        
+        const hasVariations = document.getElementById('m-has-variations')?.checked;
         let customOpts = {};
-        if (variantsVal) {
-          try {
-            customOpts.variants = JSON.parse(variantsVal);
-          } catch(e) {
-            alert('Error en formato JSON de Variantes. Revisalo.');
-            return;
-          }
+        
+        if (hasVariations) {
+          const variants = [];
+          const modifiers = [];
+          
+          // Recolectar variantes (Selección Única)
+          const varCards = document.querySelectorAll('#m-variants-groups .variant-group-card');
+          varCards.forEach(card => {
+            const gName = card.querySelector('.m-group-name').value.trim();
+            if (!gName) return;
+            
+            const options = [];
+            const optRows = card.querySelectorAll('.m-group-options-container .option-row');
+            optRows.forEach(row => {
+              const oName = row.querySelector('.opt-name').value.trim();
+              const oPrice = parseFloat(row.querySelector('.opt-price').value) || 0;
+              if (oName) {
+                options.push({ name: oName, priceDelta: oPrice });
+              }
+            });
+            
+            if (options.length > 0) {
+              variants.push({ name: gName, options });
+            }
+          });
+
+          // Recolectar modificadores (Selección Múltiple)
+          const modCards = document.querySelectorAll('#m-modifiers-groups .modifier-group-card');
+          modCards.forEach(card => {
+            const gName = card.querySelector('.m-group-name').value.trim();
+            const minC = parseInt(card.querySelector('.m-group-min').value) || 0;
+            const maxC = parseInt(card.querySelector('.m-group-max').value) || 0;
+            if (!gName) return;
+            
+            const options = [];
+            const optRows = card.querySelectorAll('.m-group-options-container .option-row');
+            optRows.forEach(row => {
+              const oName = row.querySelector('.opt-name').value.trim();
+              const oDetail = row.querySelector('.opt-detail').value.trim();
+              const oPrice = parseFloat(row.querySelector('.opt-price').value) || 0;
+              const oMax = parseInt(row.querySelector('.opt-max').value) || 1;
+              if (oName) {
+                options.push({ 
+                  name: oName, 
+                  detail: oDetail || undefined, 
+                  priceDelta: oPrice, 
+                  maxQty: oMax > 1 ? oMax : undefined 
+                });
+              }
+            });
+            
+            if (options.length > 0) {
+              const groupData = { name: gName, options };
+              if (minC > 0) groupData.minChoices = minC;
+              if (maxC > 0) groupData.maxChoices = maxC;
+              modifiers.push(groupData);
+            }
+          });
+
+          if (variants.length > 0) customOpts.variants = variants;
+          if (modifiers.length > 0) customOpts.modifiers = modifiers;
         }
-        if (modifiersVal) {
-          try {
-            customOpts.modifiers = JSON.parse(modifiersVal);
-          } catch(e) {
-            alert('Error en formato JSON de Adicionales/Extras. Revisalo.');
-            return;
-          }
-        }
+
         if (Object.keys(customOpts).length > 0) {
           textDetalle = textDetalle + ' ||| ' + JSON.stringify(customOpts);
         }
@@ -9221,20 +9398,37 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           </div>
 
           <!-- Gastronomía: Opciones y Variantes -->
-          <div id="m-gastronomy-section" class="ctrl-group" style="grid-column:1/-1; display:none;">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-              <div>
-                <label class="ctrl-label">Variantes (JSON)</label>
-                <textarea class="ctrl-input" id="m-variants-text" rows="4" style="font-family:monospace; font-size:11px;"
-                  placeholder='Ej: [{"name":"Punto","options":[{"name":"Jugoso","priceDelta":0},{"name":"Cocido","priceDelta":0}]}]'></textarea>
-                <div style="font-size:9px; color:var(--silver); margin-top:2px;">Define selecciones obligatorias de radio button.</div>
+          <div id="m-gastronomy-section" class="ctrl-group" style="grid-column:1/-1; display:none; border-top:1px solid var(--zinc); padding-top:16px;">
+            <label style="display:flex; align-items:center; gap:8px; font-weight:600; font-size:13px; color:var(--white); margin-bottom:12px; cursor:pointer;">
+              <input type="checkbox" id="m-has-variations" onchange="toggleVariationsEditor()" style="width:16px; height:16px; accent-color:var(--red); margin:0;">
+              ¿Agregar variaciones o adicionales de producto? (Gastronomía)
+            </label>
+
+            <!-- Panel de Editor Interactivo -->
+            <div id="m-variations-editor" style="display:none; flex-direction:column; gap:18px; background:var(--steel); border:1px solid var(--zinc); border-radius:8px; padding:16px;">
+              
+              <!-- Sección 1: Variantes / Guarnición (Selección Única) -->
+              <div style="border-bottom:1px solid var(--zinc); padding-bottom:16px; display:flex; flex-direction:column; gap:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <h4 style="margin:0; font-size:13px; font-weight:700; color:var(--white);"><i class="bi bi-ui-checks-grid" style="color:var(--red); margin-right:4px;"></i> Variantes / Guarniciones (Selección Única)</h4>
+                  <button type="button" onclick="addVariantGroup()" class="abm-btn-new" style="padding:4px 8px; font-size:10px;"><i class="bi bi-plus-lg"></i> Nuevo Grupo</button>
+                </div>
+                <div id="m-variants-groups" style="display:flex; flex-direction:column; gap:12px;">
+                  <!-- Los grupos dinámicos se cargarán aquí -->
+                </div>
               </div>
-              <div>
-                <label class="ctrl-label">Adicionales / Extras (JSON)</label>
-                <textarea class="ctrl-input" id="m-modifiers-text" rows="4" style="font-family:monospace; font-size:11px;"
-                  placeholder='Ej: [{"name":"Agregados","options":[{"name":"Cheddar","priceDelta":500},{"name":"Bacon","priceDelta":700}]}]'></textarea>
-                <div style="font-size:9px; color:var(--silver); margin-top:2px;">Define opciones opcionales con checkbox.</div>
+
+              <!-- Sección 2: Adicionales / Ingredientes / Extras (Selección Múltiple) -->
+              <div style="display:flex; flex-direction:column; gap:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <h4 style="margin:0; font-size:13px; font-weight:700; color:var(--white);"><i class="bi bi-plus-circle" style="color:var(--green); margin-right:4px;"></i> Adicionales / Ingredientes / Extras (Selección Múltiple)</h4>
+                  <button type="button" onclick="addModifierGroup()" class="abm-btn-new" style="padding:4px 8px; font-size:10px; background:var(--green); border-color:var(--green);"><i class="bi bi-plus-lg"></i> Nuevo Grupo</button>
+                </div>
+                <div id="m-modifiers-groups" style="display:flex; flex-direction:column; gap:12px;">
+                  <!-- Los grupos dinámicos se cargarán aquí -->
+                </div>
               </div>
+
             </div>
           </div>
 
