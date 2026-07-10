@@ -7,35 +7,51 @@ const headers = {
   'Authorization': `Bearer ${SUPABASE_KEY}`
 };
 
-async function loadSecondProduct() {
+async function syncNoutaccDatabase() {
   const storeId = 'noutacc';
 
-  console.log(`Insertando el segundo producto para ${storeId}...`);
-  const prod = {
-    nombre: 'Hamburguesa Doble Cheddar (Sin TACC)',
-    precio: 7900,
-    stock: 50,
-    categoria: 'Hamburguesas',
-    emoji: '🍔',
-    detalles: 'Doble medallón de carne casero, doble queso cheddar, aderezos sin TACC y pan artesanal libre de gluten.',
-    img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600',
-    marca: 'Casero',
-    origen: 'AR',
-    oculto: false,
-    store_id: storeId
-  };
+  console.log(`Paso 1: Insertando categoría Panificados para ${storeId}...`);
+  const cat = { name: 'Panificados', emoji: '🍞', display_order: 1, active: true, store_id: storeId };
 
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
+  const catRes = await fetch(`${SUPABASE_URL}/rest/v1/categories`, {
     method: 'POST',
     headers,
-    body: JSON.stringify(prod)
+    body: JSON.stringify(cat)
   });
-  
-  if (!res.ok) {
-    console.error(`Error al insertar producto ${prod.nombre}: ${res.status} - ${await res.text()}`);
+  if (!catRes.ok) {
+    console.error(`Error al insertar categoría ${cat.name}: ${catRes.status} - ${await catRes.text()}`);
   } else {
-    console.log(`Producto ${prod.nombre} insertado correctamente.`);
+    console.log(`Categoría ${cat.name} insertada correctamente.`);
   }
+
+  console.log(`Paso 2: Actualizando productos para asociarlos a Panificados y Rotisería...`);
+  const rProds = await fetch(`${SUPABASE_URL}/rest/v1/products?store_id=eq.${storeId}`, { headers });
+  const prods = await rProds.json();
+
+  for (const p of prods) {
+    let updatedCat = p.categoria;
+    if (p.nombre.includes('Pan')) {
+      updatedCat = 'Panificados';
+    } else if (p.nombre.includes('Hamburguesa')) {
+      updatedCat = 'Rotisería';
+    }
+
+    if (updatedCat !== p.categoria) {
+      console.log(`Actualizando producto "${p.nombre}" a la categoría "${updatedCat}"...`);
+      const updateRes = await fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${p.id}`, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ categoria: updatedCat })
+      });
+      if (!updateRes.ok) {
+        console.error(`Error al actualizar producto ${p.nombre}: ${updateRes.status} - ${await updateRes.text()}`);
+      } else {
+        console.log(`Producto "${p.nombre}" actualizado con éxito.`);
+      }
+    }
+  }
+
+  console.log('¡Sincronización de base de datos finalizada!');
 }
 
-loadSecondProduct().catch(console.error);
+syncNoutaccDatabase().catch(console.error);
