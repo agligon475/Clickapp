@@ -299,4 +299,31 @@ A: F5 o Ctrl+Shift+R en tienda. Los cambios se sincronizan vía loadSheet()
 
 ---
 
+## 🔒 Configuración de Seguridad en Supabase (RLS)
+
+Si al intentar crear categorías o productos en el panel/dashboard obtienes un error de tipo **401 Unauthorized / violates row-level security policy**, es debido a que las políticas de seguridad (RLS) de tu proyecto de Supabase están bloqueando las operaciones de inserción para la clave pública (anon/public).
+
+### Solución Rápida (Ejecutar en Supabase SQL Editor):
+
+Para permitir que el panel y la web puedan insertar y actualizar categorías y productos usando la clave anónima, ejecuta las siguientes sentencias SQL en el panel de control de Supabase:
+
+```sql
+-- 1. Desactivar RLS en las tablas principales (Opción recomendada si es una app privada/demo)
+ALTER TABLE categories DISABLE ROW LEVEL SECURITY;
+ALTER TABLE products DISABLE ROW LEVEL SECURITY;
+ALTER TABLE company_settings DISABLE ROW LEVEL SECURITY;
+
+-- 2. O alternativamente, si deseas mantener RLS activo, crea políticas permisivas para el rol anon:
+-- Políticas para categories
+CREATE POLICY "Permitir todo a anon en categories" ON categories 
+    FOR ALL TO anon USING (true) WITH CHECK (true);
+
+-- Políticas para products
+CREATE POLICY "Permitir todo a anon en products" ON products 
+    FOR ALL TO anon USING (true) WITH CHECK (true);
+```
+
+---
+
 **¿Listo? Reemplaza los archivos y cuéntame cómo va.** 🚀
+
