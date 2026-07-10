@@ -20,9 +20,19 @@ const server = http.createServer((req, res) => {
   let filePath = '.' + urlPath;
   if (filePath === './' || filePath === './index') filePath = './index.html';
 
-  // Support clean URLs or default extension
-  if (!path.extname(filePath) && fs.existsSync(filePath + '.html')) {
-    filePath += '.html';
+  // Support clean URLs, static routes, and dynamic store rewrites
+  if (!path.extname(filePath)) {
+    if (fs.existsSync(filePath + '.html')) {
+      filePath += '.html';
+    } else {
+      const storeId = urlPath.substring(1); // remove leading slash
+      // Only rewrite if it's a potential store slug (no dots, not empty)
+      if (storeId && !storeId.includes('/')) {
+        filePath = './tienda.html';
+        // We override req.url so that downstream page scripts parsing query params see the store
+        req.url = `/tienda.html?store=${storeId}`;
+      }
+    }
   }
 
   const extname = path.extname(filePath);

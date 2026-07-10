@@ -5,7 +5,8 @@ const filesToSync = [
   'dashboard.html',
   'tienda.html',
   'index.html',
-  'alta-usuario.html'
+  'alta-usuario.html',
+  'vercel.json'
 ];
 
 const destinations = [
