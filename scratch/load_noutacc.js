@@ -7,19 +7,54 @@ const headers = {
   'Authorization': `Bearer ${SUPABASE_KEY}`
 };
 
-async function loadTwoMoreProducts() {
+async function reloadAllNoutaccProducts() {
   const storeId = 'noutacc';
 
-  console.log(`Cargando dos artículos adicionales para ${storeId}...`);
+  console.log('Paso 1: Limpiando productos existentes para ' + storeId + '...');
+  const deleteRes = await fetch(`${SUPABASE_URL}/rest/v1/products?store_id=eq.${storeId}`, {
+    method: 'DELETE',
+    headers
+  });
+  if (deleteRes.ok) {
+    console.log('Productos antiguos eliminados.');
+  }
+
+  console.log('Paso 2: Insertando los 4 productos oficiales...');
   const products = [
+    {
+      nombre: 'Pan de Molde Lactal (Sin TACC)',
+      precio: 3200,
+      stock: 15,
+      categoria: 'Panadería',
+      emoji: '🍞',
+      detalles: 'Pan de molde blanco, súper esponjoso y 100% libre de gluten. Ideal para sandwiches y tostadas.',
+      img: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600',
+      marca: 'Casero',
+      origen: 'AR',
+      oculto: false,
+      store_id: storeId
+    },
     {
       nombre: 'Medialunas de Manteca (Sin TACC)',
       precio: 1200,
       stock: 24,
-      categoria: 'Panificados',
+      categoria: 'Panadería',
       emoji: '🥐',
       detalles: 'Medialunas de manteca esponjosas, dulces y almibaradas, elaboradas con harina sin gluten. Venta por unidad.',
       img: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600',
+      marca: 'Casero',
+      origen: 'AR',
+      oculto: false,
+      store_id: storeId
+    },
+    {
+      nombre: 'Hamburguesa Doble Cheddar (Sin TACC)',
+      precio: 7900,
+      stock: 50,
+      categoria: 'Rotisería',
+      emoji: '🍔',
+      detalles: 'Doble medallón de carne casero, doble queso cheddar, aderezos sin TACC y pan artesanal libre de gluten.',
+      img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600',
       marca: 'Casero',
       origen: 'AR',
       oculto: false,
@@ -53,7 +88,7 @@ async function loadTwoMoreProducts() {
     }
   }
 
-  console.log('¡Artículos adicionales cargados con éxito!');
+  console.log('¡Todos los productos han sido cargados y asociados correctamente en la base de datos!');
 }
 
-loadTwoMoreProducts().catch(console.error);
+reloadAllNoutaccProducts().catch(console.error);

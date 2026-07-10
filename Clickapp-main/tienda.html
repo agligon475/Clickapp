@@ -1329,31 +1329,8 @@ async function loadSheet() {
 
     // Guardar banners en localStorage (para dashboard)
     localStorage.setItem(`storeapp_banners_${STORE_ID}`, JSON.stringify(bannerData));
-
-    // ── Override with ABM edits from dashboard if present ──
-    const abrActive = localStorage.getItem(`storeapp_abm_active_${STORE_ID}`);
-    const localOverride = localStorage.getItem(`storeapp_local_products_${STORE_ID}`);
-    const serverUsesUuidIds = products.some(p => String(p.id).length > 20 && String(p.id).includes('-'));
-    if (abrActive && localOverride) {
-      try {
-        const lp = JSON.parse(localOverride);
-        const localUsesLegacyIds = lp.some(p => !String(p.id || '').includes('-'));
-        if (lp.length >= products.length) {
-          if (serverUsesUuidIds && localUsesLegacyIds) {
-            console.warn('Clickapp: caché ABM con IDs numéricos ignorada (catálogo Supabase usa UUID).');
-          } else {
-            products = lp.filter(p => !p.hidden);
-          }
-        } else {
-          localStorage.removeItem(`storeapp_local_products_${STORE_ID}`);
-          localStorage.removeItem(`storeapp_abm_active_${STORE_ID}`);
-        }
-      } catch (e) {
-        localStorage.removeItem(`storeapp_local_products_${STORE_ID}`);
-      }
-    } else if (localOverride && !abrActive) {
-      localStorage.removeItem(`storeapp_local_products_${STORE_ID}`);
-    }
+    
+    // Eliminado override de localStorage para que traccione siempre directo desde la nube (Supabase)
 
     // Build category rail
     const cats = [...new Set(products.map(p => p.cat).filter(Boolean))];
