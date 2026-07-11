@@ -5278,6 +5278,7 @@
           btn.style.background = 'var(--green)';
           setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; }, 2000);
         }
+        showToastDash('✓ Diseño guardado con éxito');
       } catch (e) { alert('Error al guardar: ' + e.message); }
     }
 
@@ -6242,6 +6243,7 @@
       localStorage.setItem('storeapp_local_products', JSON.stringify(localProducts));
       localStorage.setItem('storeapp_abm_active', '1');
       checkOnboardingStatus();
+      showToastDash('✓ Producto guardado con éxito');
 
       let saved = null;
       if (prevEditingId != null && prevEditingId !== '') {
@@ -7531,6 +7533,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         closeCategoryModal();
         loadCategoriesList();
         checkOnboardingStatus();
+        showToastDash('✓ Categoría guardada con éxito');
       } catch (e) {
         alert('Error al guardar categoría: ' + e.message);
       }
@@ -7802,6 +7805,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       el.style.color = 'var(--green)';
       el.textContent = '✓ Configuración guardada correctamente';
       setTimeout(() => { el.textContent = ''; }, 3000);
+      showToastDash('✓ Configuración guardada con éxito');
       checkOnboardingStatus();
     }
     async function changeSubdomain() {
@@ -8228,6 +8232,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         }
         showView('pickups');
         loadPickupsList();
+        showToastDash('✓ Repartidor guardado con éxito');
       } catch (e) {
         alert('Error al guardar repartidor: ' + e.message);
       }
@@ -8461,6 +8466,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
         statusEl.style.color = 'var(--green)';
         statusEl.textContent = '✓ Banners guardados en Supabase correctamente';
+        showToastDash('✓ Banners guardados con éxito');
       } catch (e) {
         statusEl.style.color = 'var(--orange)';
         statusEl.textContent = '⚠ Error al guardar en Supabase: ' + e.message;
@@ -8831,6 +8837,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
 
         statusEl.style.color = 'var(--green)';
         statusEl.textContent = '✓ Páginas guardadas correctamente';
+        showToastDash('✓ Páginas guardadas con éxito');
       } catch (e) {
         statusEl.style.color = 'var(--orange)';
         statusEl.textContent = '⚠ Error al guardar en Supabase: ' + e.message;
@@ -9245,7 +9252,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       closeStepByStepModal();
 
       // Alert success
-      alert('¡Configuración guardada con éxito!');
+      showToastDash('✓ Configuración guardada con éxito');
       
       // Reload lists if database changed
       if (typeof initAdvancedView === 'function') initAdvancedView();
