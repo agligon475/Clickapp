@@ -5870,8 +5870,8 @@
       card.innerHTML = `
         <button type="button" onclick="this.closest('.variant-group-card').remove()" style="position:absolute; top:8px; right:8px; background:transparent; border:none; color:var(--red); cursor:pointer; font-size:14px;"><i class="bi bi-trash"></i></button>
         <div style="display:flex; flex-direction:column; gap:4px;">
-          <label style="font-size:10px; color:var(--silver); font-weight:600;">Nombre del Grupo (ej: Elegí tu Guarnición, Punto de Cocción)</label>
-          <input class="ctrl-input m-group-name" value="${name}" placeholder="Ej: Guarnición" style="height:32px; font-size:12px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
+          <label style="font-size:10px; color:var(--silver); font-weight:600;">Nombre del Grupo (ej: Color, Memoria RAM, Almacenamiento, Guarnición)</label>
+          <input class="ctrl-input m-group-name" value="${name}" placeholder="Ej: Memoria RAM" style="height:32px; font-size:12px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
         </div>
         <div style="font-size:11px; color:var(--silver); font-weight:600; margin-top:4px;">Opciones de Selección Única:</div>
         <div class="m-group-options-container" style="display:flex; flex-direction:column; gap:6px;"></div>
@@ -5901,8 +5901,8 @@
         <button type="button" onclick="this.closest('.modifier-group-card').remove()" style="position:absolute; top:8px; right:8px; background:transparent; border:none; color:var(--red); cursor:pointer; font-size:14px;"><i class="bi bi-trash"></i></button>
         <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:8px;">
           <div style="display:flex; flex-direction:column; gap:4px;">
-            <label style="font-size:10px; color:var(--silver); font-weight:600;">Nombre del Grupo (ej: Adicionales, Elegí 4 Ingredientes)</label>
-            <input class="ctrl-input m-group-name" value="${name}" placeholder="Ej: Adicionales" style="height:32px; font-size:12px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
+            <label style="font-size:10px; color:var(--silver); font-weight:600;">Nombre del Grupo (ej: Accesorios, Servicios, Adicionales)</label>
+            <input class="ctrl-input m-group-name" value="${name}" placeholder="Ej: Accesorios adicionales" style="height:32px; font-size:12px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
           </div>
           <div style="display:flex; flex-direction:column; gap:4px;">
             <label style="font-size:10px; color:var(--silver); font-weight:600;">Mín. Elegir</label>
@@ -5913,9 +5913,9 @@
             <input type="number" class="ctrl-input m-group-max" min="0" value="${maxChoices}" style="height:32px; font-size:12px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
           </div>
         </div>
-        <div style="font-size:11px; color:var(--silver); font-weight:600; margin-top:4px;">Ingredientes / Opciones de Selección Múltiple:</div>
+        <div style="font-size:11px; color:var(--silver); font-weight:600; margin-top:4px;">Opciones de Selección Múltiple:</div>
         <div class="m-group-options-container" style="display:flex; flex-direction:column; gap:6px;"></div>
-        <button type="button" onclick="addOptionRow(this.previousElementSibling, 'modifier')" class="abm-btn-new" style="padding:3px 6px; font-size:9px; margin-top:4px; background:var(--zinc); border-color:var(--zinc); align-self:flex-start; color:#fff;"><i class="bi bi-plus"></i> Agregar Opción / Ingrediente</button>
+        <button type="button" onclick="addOptionRow(this.previousElementSibling, 'modifier')" class="abm-btn-new" style="padding:3px 6px; font-size:9px; margin-top:4px; background:var(--zinc); border-color:var(--zinc); align-self:flex-start; color:#fff;"><i class="bi bi-plus"></i> Agregar Opción</button>
       `;
 
       container.appendChild(card);
@@ -5941,8 +5941,8 @@
       if (type === 'variant') {
         row.style.cssText = 'display:grid; grid-template-columns: 2fr 1fr auto; gap:6px; align-items:center;';
         row.innerHTML = `
-          <input type="text" class="ctrl-input opt-name" value="${nameVal}" placeholder="Ej: Papas Fritas" style="height:30px; font-size:11px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
-          <input type="number" class="ctrl-input opt-price" value="${priceVal}" placeholder="Precio extra (ej: 300)" style="height:30px; font-size:11px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
+          <input type="text" class="ctrl-input opt-name" value="${nameVal}" placeholder="Ej: 8GB RAM / Negro" style="height:30px; font-size:11px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
+          <input type="number" class="ctrl-input opt-price" value="${priceVal}" placeholder="Precio extra (ej: 5000)" style="height:30px; font-size:11px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
           <button type="button" onclick="this.parentElement.remove()" style="background:transparent; border:none; color:var(--red); cursor:pointer; font-size:16px; padding:0;"><i class="bi bi-x-circle-fill"></i></button>
         `;
       } else {
@@ -5950,10 +5950,10 @@
         const maxVal = opt.maxQty !== undefined ? opt.maxQty : 1;
         row.style.cssText = 'display:grid; grid-template-columns: 2fr 2fr 1fr 1fr auto; gap:6px; align-items:center;';
         row.innerHTML = `
-          <input type="text" class="ctrl-input opt-name" value="${nameVal}" placeholder="Ej: Cheddar" style="height:30px; font-size:11px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
-          <input type="text" class="ctrl-input opt-detail" value="${detailVal}" placeholder="Detalle (ej: Fundido)" style="height:30px; font-size:11px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
-          <input type="number" class="ctrl-input opt-price" value="${priceVal}" placeholder="Precio (ej: 500)" style="height:30px; font-size:11px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
-          <input type="number" class="ctrl-input opt-max" value="${maxVal}" placeholder="Tope (ej: 3)" min="1" style="height:30px; font-size:11px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
+          <input type="text" class="ctrl-input opt-name" value="${nameVal}" placeholder="Ej: Funda de Silicona / Cable HDMI" style="height:30px; font-size:11px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
+          <input type="text" class="ctrl-input opt-detail" value="${detailVal}" placeholder="Detalle (ej: Reforzada / 2 metros)" style="height:30px; font-size:11px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
+          <input type="number" class="ctrl-input opt-price" value="${priceVal}" placeholder="Precio (ej: 1500)" style="height:30px; font-size:11px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
+          <input type="number" class="ctrl-input opt-max" value="${maxVal}" placeholder="Tope (ej: 2)" min="1" style="height:30px; font-size:11px; background:var(--steel); color:var(--white); border:1px solid var(--zinc); border-radius:6px; padding:0 8px;" />
           <button type="button" onclick="this.parentElement.remove()" style="background:transparent; border:none; color:var(--red); cursor:pointer; font-size:16px; padding:0;"><i class="bi bi-x-circle-fill"></i></button>
         `;
       }
@@ -6030,10 +6030,20 @@
       const barcodeGroup = document.getElementById('m-codigo')?.closest('.ctrl-group');
       const gastronomySection = document.getElementById('m-gastronomy-section');
       
-      if (rubro === 'gastronomia' || rubro === 'Rotisería' || rubro === 'Gastronomía') {
-        if (brandGroup) brandGroup.style.display = 'none';
-        if (originGroup) originGroup.style.display = 'none';
-        if (barcodeGroup) barcodeGroup.style.display = 'none';
+      const normalizedRubro = (rubro || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const isGastro = ['gastronomia', 'rotiseria'].includes(normalizedRubro);
+      const isTech = ['tecnologia', 'electronica'].includes(normalizedRubro);
+
+      if (isGastro || isTech) {
+        if (isGastro) {
+          if (brandGroup) brandGroup.style.display = 'none';
+          if (originGroup) originGroup.style.display = 'none';
+          if (barcodeGroup) barcodeGroup.style.display = 'none';
+        } else {
+          if (brandGroup) brandGroup.style.display = 'block';
+          if (originGroup) originGroup.style.display = 'block';
+          if (barcodeGroup) barcodeGroup.style.display = 'block';
+        }
         if (gastronomySection) {
           gastronomySection.style.display = 'block';
           const chk = document.getElementById('m-has-variations');
@@ -6138,8 +6148,9 @@
       if (!name) { alert('El nombre del producto es obligatorio.'); return; }
       if (!cat) { alert('La categoría es obligatoria. Por favor seleccioná una categoría válida.'); return; }
 
-      // Serialización de variantes/modificadores para Gastronomía
-      if (rubro === 'gastronomia' || rubro === 'Rotisería' || rubro === 'Gastronomía') {
+      // Serialización de variantes/modificadores para Gastronomía y Tecnología
+      const normalizedRubroSave = (rubro || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      if (['gastronomia', 'rotiseria', 'tecnologia', 'electronica'].includes(normalizedRubroSave)) {
         const hasVariations = document.getElementById('m-has-variations')?.checked;
         let customOpts = {};
         
@@ -9408,7 +9419,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           <div id="m-gastronomy-section" class="ctrl-group" style="grid-column:1/-1; display:none; border-top:1px solid var(--zinc); padding-top:16px;">
             <label style="display:flex; align-items:center; gap:8px; font-weight:600; font-size:13px; color:var(--white); margin-bottom:12px; cursor:pointer;">
               <input type="checkbox" id="m-has-variations" onchange="toggleVariationsEditor()" style="width:16px; height:16px; accent-color:var(--red); margin:0;">
-              ¿Agregar variaciones o adicionales de producto? (Gastronomía)
+              ¿Agregar variaciones o adicionales de producto? (ej: sabores, memoria, color)
             </label>
 
             <!-- Panel de Editor Interactivo -->
@@ -9417,7 +9428,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
               <!-- Sección 1: Variantes / Guarnición (Selección Única) -->
               <div style="border-bottom:1px solid var(--zinc); padding-bottom:16px; display:flex; flex-direction:column; gap:10px;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <h4 style="margin:0; font-size:13px; font-weight:700; color:var(--white);"><i class="bi bi-ui-checks-grid" style="color:var(--red); margin-right:4px;"></i> Variantes / Guarniciones (Selección Única)</h4>
+                  <h4 style="margin:0; font-size:13px; font-weight:700; color:var(--white);"><i class="bi bi-ui-checks-grid" style="color:var(--red); margin-right:4px;"></i> Variantes (Selección Única - ej: color, memoria)</h4>
                   <button type="button" onclick="addVariantGroup()" class="abm-btn-new" style="padding:4px 8px; font-size:10px;"><i class="bi bi-plus-lg"></i> Nuevo Grupo</button>
                 </div>
                 <div id="m-variants-groups" style="display:flex; flex-direction:column; gap:12px;">
@@ -9428,7 +9439,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
               <!-- Sección 2: Adicionales / Ingredientes / Extras (Selección Múltiple) -->
               <div style="display:flex; flex-direction:column; gap:10px;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <h4 style="margin:0; font-size:13px; font-weight:700; color:var(--white);"><i class="bi bi-plus-circle" style="color:var(--green); margin-right:4px;"></i> Adicionales / Ingredientes / Extras (Selección Múltiple)</h4>
+                  <h4 style="margin:0; font-size:13px; font-weight:700; color:var(--white);"><i class="bi bi-plus-circle" style="color:var(--green); margin-right:4px;"></i> Adicionales / Accesorios (Selección Múltiple - ej: garantía, funda, adicionales)</h4>
                   <button type="button" onclick="addModifierGroup()" class="abm-btn-new" style="padding:4px 8px; font-size:10px; background:var(--green); border-color:var(--green);"><i class="bi bi-plus-lg"></i> Nuevo Grupo</button>
                 </div>
                 <div id="m-modifiers-groups" style="display:flex; flex-direction:column; gap:12px;">
