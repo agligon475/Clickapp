@@ -6032,31 +6032,25 @@
       
       const normalizedRubro = (rubro || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       const isGastro = ['gastronomia', 'rotiseria'].includes(normalizedRubro);
-      const isTech = ['tecnologia', 'electronica'].includes(normalizedRubro);
 
-      if (isGastro || isTech) {
-        if (isGastro) {
-          if (brandGroup) brandGroup.style.display = 'none';
-          if (originGroup) originGroup.style.display = 'none';
-          if (barcodeGroup) barcodeGroup.style.display = 'none';
-        } else {
-          if (brandGroup) brandGroup.style.display = 'block';
-          if (originGroup) originGroup.style.display = 'block';
-          if (barcodeGroup) barcodeGroup.style.display = 'block';
-        }
-        if (gastronomySection) {
-          gastronomySection.style.display = 'block';
-          const chk = document.getElementById('m-has-variations');
-          if (chk) {
-            chk.checked = hasOpts;
-            toggleVariationsEditor();
-          }
-        }
+      if (isGastro) {
+        if (brandGroup) brandGroup.style.display = 'none';
+        if (originGroup) originGroup.style.display = 'none';
+        if (barcodeGroup) barcodeGroup.style.display = 'none';
       } else {
         if (brandGroup) brandGroup.style.display = 'block';
         if (originGroup) originGroup.style.display = 'block';
         if (barcodeGroup) barcodeGroup.style.display = 'block';
-        if (gastronomySection) gastronomySection.style.display = 'none';
+      }
+
+      // Siempre mostrar el panel de variaciones/adicionales para todos los rubros
+      if (gastronomySection) {
+        gastronomySection.style.display = 'block';
+        const chk = document.getElementById('m-has-variations');
+        if (chk) {
+          chk.checked = hasOpts;
+          toggleVariationsEditor();
+        }
       }
 
       document.getElementById('m-emoji').value = p?.emoji || '📦';
@@ -6148,77 +6142,74 @@
       if (!name) { alert('El nombre del producto es obligatorio.'); return; }
       if (!cat) { alert('La categoría es obligatoria. Por favor seleccioná una categoría válida.'); return; }
 
-      // Serialización de variantes/modificadores para Gastronomía y Tecnología
-      const normalizedRubroSave = (rubro || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      if (['gastronomia', 'rotiseria', 'tecnologia', 'electronica'].includes(normalizedRubroSave)) {
-        const hasVariations = document.getElementById('m-has-variations')?.checked;
-        let customOpts = {};
+      // Serialización de variantes/modificadores (Soportado para todos los rubros)
+      const hasVariations = document.getElementById('m-has-variations')?.checked;
+      let customOpts = {};
+      
+      if (hasVariations) {
+        const variants = [];
+        const modifiers = [];
         
-        if (hasVariations) {
-          const variants = [];
-          const modifiers = [];
+        // Recolectar variantes (Selección Única)
+        const varCards = document.querySelectorAll('#m-variants-groups .variant-group-card');
+        varCards.forEach(card => {
+          const gName = card.querySelector('.m-group-name').value.trim();
+          if (!gName) return;
           
-          // Recolectar variantes (Selección Única)
-          const varCards = document.querySelectorAll('#m-variants-groups .variant-group-card');
-          varCards.forEach(card => {
-            const gName = card.querySelector('.m-group-name').value.trim();
-            if (!gName) return;
-            
-            const options = [];
-            const optRows = card.querySelectorAll('.m-group-options-container .option-row');
-            optRows.forEach(row => {
-              const oName = row.querySelector('.opt-name').value.trim();
-              const oPrice = parseFloat(row.querySelector('.opt-price').value) || 0;
-              if (oName) {
-                options.push({ name: oName, priceDelta: oPrice });
-              }
-            });
-            
-            if (options.length > 0) {
-              variants.push({ name: gName, options });
+          const options = [];
+          const optRows = card.querySelectorAll('.m-group-options-container .option-row');
+          optRows.forEach(row => {
+            const oName = row.querySelector('.opt-name').value.trim();
+            const oPrice = parseFloat(row.querySelector('.opt-price').value) || 0;
+            if (oName) {
+              options.push({ name: oName, priceDelta: oPrice });
             }
           });
+          
+          if (options.length > 0) {
+            variants.push({ name: gName, options });
+          }
+        });
 
-          // Recolectar modificadores (Selección Múltiple)
-          const modCards = document.querySelectorAll('#m-modifiers-groups .modifier-group-card');
-          modCards.forEach(card => {
-            const gName = card.querySelector('.m-group-name').value.trim();
-            const minC = parseInt(card.querySelector('.m-group-min').value) || 0;
-            const maxC = parseInt(card.querySelector('.m-group-max').value) || 0;
-            if (!gName) return;
-            
-            const options = [];
-            const optRows = card.querySelectorAll('.m-group-options-container .option-row');
-            optRows.forEach(row => {
-              const oName = row.querySelector('.opt-name').value.trim();
-              const oDetail = row.querySelector('.opt-detail').value.trim();
-              const oPrice = parseFloat(row.querySelector('.opt-price').value) || 0;
-              const oMax = parseInt(row.querySelector('.opt-max').value) || 1;
-              if (oName) {
-                options.push({ 
-                  name: oName, 
-                  detail: oDetail || undefined, 
-                  priceDelta: oPrice, 
-                  maxQty: oMax > 1 ? oMax : undefined 
-                });
-              }
-            });
-            
-            if (options.length > 0) {
-              const groupData = { name: gName, options };
-              if (minC > 0) groupData.minChoices = minC;
-              if (maxC > 0) groupData.maxChoices = maxC;
-              modifiers.push(groupData);
+        // Recolectar modificadores (Selección Múltiple)
+        const modCards = document.querySelectorAll('#m-modifiers-groups .modifier-group-card');
+        modCards.forEach(card => {
+          const gName = card.querySelector('.m-group-name').value.trim();
+          const minC = parseInt(card.querySelector('.m-group-min').value) || 0;
+          const maxC = parseInt(card.querySelector('.m-group-max').value) || 0;
+          if (!gName) return;
+          
+          const options = [];
+          const optRows = card.querySelectorAll('.m-group-options-container .option-row');
+          optRows.forEach(row => {
+            const oName = row.querySelector('.opt-name').value.trim();
+            const oDetail = row.querySelector('.opt-detail').value.trim();
+            const oPrice = parseFloat(row.querySelector('.opt-price').value) || 0;
+            const oMax = parseInt(row.querySelector('.opt-max').value) || 1;
+            if (oName) {
+              options.push({ 
+                name: oName, 
+                detail: oDetail || undefined, 
+                priceDelta: oPrice, 
+                maxQty: oMax > 1 ? oMax : undefined 
+              });
             }
           });
+          
+          if (options.length > 0) {
+            const groupData = { name: gName, options };
+            if (minC > 0) groupData.minChoices = minC;
+            if (maxC > 0) groupData.maxChoices = maxC;
+            modifiers.push(groupData);
+          }
+        });
 
-          if (variants.length > 0) customOpts.variants = variants;
-          if (modifiers.length > 0) customOpts.modifiers = modifiers;
-        }
+        if (variants.length > 0) customOpts.variants = variants;
+        if (modifiers.length > 0) customOpts.modifiers = modifiers;
+      }
 
-        if (Object.keys(customOpts).length > 0) {
-          textDetalle = textDetalle + ' ||| ' + JSON.stringify(customOpts);
-        }
+      if (Object.keys(customOpts).length > 0) {
+        textDetalle = textDetalle + ' ||| ' + JSON.stringify(customOpts);
       }
 
       const prevEditingId = editingId;
