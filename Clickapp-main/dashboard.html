@@ -47,6 +47,11 @@
       display: flex;
       min-height: 100vh;
       font-size: 14px;
+      transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .sidebar, .topbar, .card, .metric, .ctrl-input, .data-table td, .sb-item {
+      transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
     }
 
     /* SIDEBAR */
@@ -367,7 +372,83 @@
       transition: background 0.3s ease, box-shadow 0.3s ease;
     }
 
+    /* Accordion styles */
+    .sb-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      margin: 4px 0;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--silver);
+      cursor: pointer;
+      user-select: none;
+      letter-spacing: 0.5px;
+      transition: color 0.2s ease;
+    }
+    .sb-section-header:hover {
+      color: var(--white);
+    }
+    .sb-section-header .toggle-icon {
+      font-size: 10px;
+      transition: transform 0.3s ease;
+    }
+    .sb-section-content {
+      max-height: 500px;
+      overflow: hidden;
+      transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+      opacity: 1;
+    }
+    .sb-section.collapsed .sb-section-content {
+      max-height: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .sb-section.collapsed .toggle-icon {
+      transform: rotate(-90deg);
+    }
+
+    /* Light mode overrides for restructured sidebar elements */
+    body.light-mode .sb-store-name-bar {
+      background: rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      color: var(--white);
+    }
+    body.light-mode .qa-btn {
+      border-color: rgba(0, 0, 0, 0.15);
+      background: rgba(0, 0, 0, 0.02);
+      color: rgba(0, 0, 0, 0.6);
+    }
+    body.light-mode .qa-btn:hover {
+      background: #D72638;
+      border-color: #D72638;
+      color: #ffffff;
+    }
+    body.light-mode .status-circle {
+      border-color: rgba(0, 0, 0, 0.15);
+      background: rgba(0, 0, 0, 0.01);
+      color: rgba(0, 0, 0, 0.6);
+    }
+    body.light-mode .sb-status-capsule {
+      background: rgba(0, 0, 0, 0.03);
+      border-color: rgba(0, 0, 0, 0.06);
+      color: rgba(0, 0, 0, 0.7);
+    }
+    body.light-mode .status-circle-dot {
+      border-color: #ffffff;
+    }
+
     /* Collapsed overrides */
+    body.collapsed-sidebar .sb-section-header {
+      display: none !important;
+    }
+    body.collapsed-sidebar .sb-section-content {
+      max-height: none !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+    }
     body.collapsed-sidebar .sb-store-name-bar {
       display: none;
     }
@@ -1540,6 +1621,10 @@
       color: var(--red);
     }
 
+    body.light-mode .sb-item.active i {
+      color: var(--red);
+    }
+
     body.light-mode .abm-action {
       background: #F3F4F6;
       border-color: #E5E7EB;
@@ -1916,42 +2001,70 @@
     <div style="height: 1px; background: rgba(255,255,255,0.08); margin: 0 12px 14px 12px;"></div>
 
     <div class="sb-section">
-      <div class="sb-section-label">Inicio</div>
-      <div class="sb-item active" onclick="showView('dashboard',this)"><i class="bi bi-house"></i>
-        <span>Inicio</span></div>
+      <div class="sb-section-header" onclick="toggleAccordion(this)">
+        <span>Inicio</span>
+        <i class="bi bi-chevron-up toggle-icon"></i>
+      </div>
+      <div class="sb-section-content">
+        <div class="sb-item active" onclick="showView('dashboard',this)"><i class="bi bi-house"></i> <span>Inicio</span></div>
+      </div>
     </div>
 
     <div class="sb-section">
-      <div class="sb-section-label">Negocio</div>
-      <div class="sb-item" onclick="showView('reports',this)"><i class="bi bi-bar-chart-line"></i>
-        <span>Analítica</span></div>
+      <div class="sb-section-header" onclick="toggleAccordion(this)">
+        <span>Negocio</span>
+        <i class="bi bi-chevron-up toggle-icon"></i>
+      </div>
+      <div class="sb-section-content">
+        <div class="sb-item" onclick="showView('reports',this)"><i class="bi bi-bar-chart-line"></i> <span>Analítica</span></div>
+      </div>
     </div>
 
     <div class="sb-section">
-      <div class="sb-section-label">Gestión</div>
-      <div class="sb-item" onclick="showView('orders',this)"><i class="bi bi-receipt"></i> <span>Pedidos</span></div>
-      <div class="sb-item" onclick="showView('pickups',this)"><i class="bi bi-truck"></i> <span>Pickup</span></div>
+      <div class="sb-section-header" onclick="toggleAccordion(this)">
+        <span>Gestión</span>
+        <i class="bi bi-chevron-up toggle-icon"></i>
+      </div>
+      <div class="sb-section-content">
+        <div class="sb-item" onclick="showView('orders',this)"><i class="bi bi-receipt"></i> <span>Pedidos</span></div>
+        <div class="sb-item" onclick="showView('pickups',this)"><i class="bi bi-truck"></i> <span>Pickup</span></div>
+      </div>
     </div>
 
     <div class="sb-section">
-      <div class="sb-section-label">Inventario</div>
-      <div class="sb-item" onclick="showView('abm',this)"><i class="bi bi-pencil-square"></i> <span>ABM</span></div>
-      <div class="sb-item" onclick="showView('categories',this)"><i class="bi bi-tags"></i> <span>Categorías</span></div>
+      <div class="sb-section-header" onclick="toggleAccordion(this)">
+        <span>Inventario</span>
+        <i class="bi bi-chevron-up toggle-icon"></i>
+      </div>
+      <div class="sb-section-content">
+        <div class="sb-item" onclick="showView('abm',this)"><i class="bi bi-pencil-square"></i> <span>ABM</span></div>
+        <div class="sb-item" onclick="showView('categories',this)"><i class="bi bi-tags"></i> <span>Categorías</span></div>
+      </div>
     </div>
 
     <div class="sb-section">
-      <div class="sb-section-label">Personalización</div>
-      <div class="sb-item" onclick="showView('marca',this)"><i class="bi bi-palette"></i> <span>Marca</span></div>
-      <div class="sb-item" onclick="showView('rubro',this)"><i class="bi bi-shop"></i> <span>Rubro y plantilla</span></div>
-      <div class="sb-item" onclick="showView('design-catalogo',this)"><i class="bi bi-image"></i> <span>Diseño de catálogo</span></div>
-      <div class="sb-item" onclick="showView('enlaces',this)"><i class="bi bi-link-45deg"></i> <span>Enlaces</span></div>
-      <div class="sb-item" onclick="showView('pages-internas',this)"><i class="bi bi-file-text"></i> <span>Páginas internas</span></div>
+      <div class="sb-section-header" onclick="toggleAccordion(this)">
+        <span>Personalización</span>
+        <i class="bi bi-chevron-up toggle-icon"></i>
+      </div>
+      <div class="sb-section-content">
+        <div class="sb-item" onclick="showView('marca',this)"><i class="bi bi-palette"></i> <span>Marca</span></div>
+        <div class="sb-item" onclick="showView('rubro',this)"><i class="bi bi-shop"></i> <span>Rubro y plantilla</span></div>
+        <div class="sb-item" onclick="showView('design-catalogo',this)"><i class="bi bi-image"></i> <span>Diseño de catálogo</span></div>
+        <div class="sb-item" onclick="showView('enlaces',this)"><i class="bi bi-link-45deg"></i> <span>Enlaces</span></div>
+        <div class="sb-item" onclick="showView('pages-internas',this)"><i class="bi bi-file-text"></i> <span>Páginas internas</span></div>
+      </div>
     </div>
 
     <div class="sb-section">
-      <div class="sb-section-label">Ajustes</div>
-      <div class="sb-item" onclick="showView('config-basica',this)"><i class="bi bi-gear"></i> <span>Configuración básica</span></div>
-      <div class="sb-item" onclick="showView('config-avanzada',this)"><i class="bi bi-shield-lock"></i> <span>Configuración avanzada</span></div>
+      <div class="sb-section-header" onclick="toggleAccordion(this)">
+        <span>Ajustes</span>
+        <i class="bi bi-chevron-up toggle-icon"></i>
+      </div>
+      <div class="sb-section-content">
+        <div class="sb-item" onclick="showView('config-basica',this)"><i class="bi bi-gear"></i> <span>Configuración básica</span></div>
+        <div class="sb-item" onclick="showView('config-avanzada',this)"><i class="bi bi-shield-lock"></i> <span>Configuración avanzada</span></div>
+      </div>
     </div>
   </div>
 
@@ -2315,8 +2428,8 @@
           </div>
         </div>
 
-        <!-- Right side -->
-        <div style="display:flex; flex-direction:column; gap:16px;">
+        <!-- Right side (Hidden as states are fully integrated in the sidebar) -->
+        <div style="display:none; flex-direction:column; gap:16px;">
 
           <!-- Status lights -->
           <div class="card"
@@ -4615,7 +4728,13 @@
       };
       const icon = icons[name] || 'bi-speedometer';
       document.getElementById('view-title').innerHTML = `<i class="bi ${icon}" style="margin-right:6px;"></i> ${TITLES[name]}`;
-      if (el) el.classList.add('active');
+      if (el) {
+        el.classList.add('active');
+        const section = el.closest('.sb-section');
+        if (section) {
+          section.classList.remove('collapsed');
+        }
+      }
       if (name === 'products') renderProducts();
       if (name === 'orders') renderAllOrders();
       if (name === 'reports') {
@@ -4736,21 +4855,30 @@
       const btn = document.getElementById('status-btn-' + id);
       if (!bulb || !desc) return;
 
-      if (type === 'ok') {
-        bulb.style.background = '#2ecc71';
-        bulb.style.boxShadow = '0 0 10px #2ecc71';
-        desc.textContent = msg || 'Conexión establecida';
-        desc.style.color = '#2ecc71';
-      } else if (type === 'warn') {
-        bulb.style.background = '#f1c40f';
-        bulb.style.boxShadow = '0 0 10px #f1c40f';
-        desc.textContent = msg || 'Falta configuración';
-        desc.style.color = '#f1c40f';
-      } else {
-        bulb.style.background = '#e74c3c';
-        bulb.style.boxShadow = '0 0 10px #e74c3c';
-        desc.textContent = msg || 'Desconectado. Error';
-        desc.style.color = '#e74c3c';
+      const color = type === 'ok' ? '#2ecc71' : type === 'warn' ? '#f1c40f' : '#e74c3c';
+      const label = type === 'ok' ? (msg || 'Conexión establecida') : type === 'warn' ? (msg || 'Falta configuración') : (msg || 'Desconectado. Error');
+
+      bulb.style.background = color;
+      bulb.style.boxShadow = `0 0 10px ${color}`;
+      desc.textContent = label;
+      desc.style.color = color;
+
+      // Update sidebar circle dot
+      const sidebarDot = document.getElementById('status-dot-' + id);
+      if (sidebarDot) {
+        sidebarDot.style.background = color;
+        sidebarDot.style.boxShadow = `0 0 6px ${color}`;
+      }
+
+      // Update sidebar circle border or tooltip
+      const sidebarCircle = document.getElementById('status-circle-' + id);
+      if (sidebarCircle) {
+        sidebarCircle.style.borderColor = color;
+        const wrap = sidebarCircle.closest('.status-circle-wrap');
+        if (wrap) {
+          const baseTitle = id === 'db' ? 'Base de Datos' : id === 'ai' ? 'Inteligencia Artificial' : id === 'cloudinary' ? 'Optimización de Imágenes' : 'Integración y Dominio';
+          wrap.setAttribute('title', `${baseTitle}: ${label}`);
+        }
       }
     }
 
@@ -4818,8 +4946,30 @@
 
     /* STATUS */
     function setDot(type, msg) {
-      document.getElementById('dot').className = 'dot ' + (type === 'ok' ? 'ok' : 'err');
-      document.getElementById('status-txt').textContent = msg;
+      const dotEl = document.getElementById('dot');
+      if (dotEl) dotEl.className = 'dot ' + (type === 'ok' ? 'ok' : 'err');
+      const statusTxt = document.getElementById('status-txt');
+      if (statusTxt) statusTxt.textContent = msg;
+
+      // Sidebar capsule updates
+      const capDot = document.querySelector('.sb-capsule-dot');
+      const capText = document.getElementById('sb-capsule-text');
+      if (capDot && capText) {
+        const color = type === 'ok' ? '#2ecc71' : type === 'err' ? '#e74c3c' : '#f1c40f';
+        capDot.style.background = color;
+        capDot.style.boxShadow = `0 0 6px ${color}`;
+        
+        // Use active / hidden counts if products exist
+        const list = window.products || [];
+        if (list.length > 0 && type === 'ok') {
+          const active = list.filter(p => !p.hidden).length;
+          const inactive = list.length - active;
+          const time = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          capText.textContent = `${active} activos · ${inactive} ocultos · ${time}`;
+        } else {
+          capText.textContent = msg;
+        }
+      }
     }
 
     /* CSV */
@@ -7773,6 +7923,14 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         cPago.data.datasets[0].data = entries.map(e => e[1]);
         cPago.data.datasets[0].backgroundColor = reds.slice(0, entries.length);
         cPago.update();
+      }
+    }
+
+    /* ACCORDION */
+    function toggleAccordion(header) {
+      const section = header.closest('.sb-section');
+      if (section) {
+        section.classList.toggle('collapsed');
       }
     }
 
