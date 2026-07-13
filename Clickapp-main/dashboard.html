@@ -245,6 +245,165 @@
       display: none;
     }
 
+    /* Sidebar Restructuring Styles */
+    .sb-store-name-bar {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--white);
+      padding: 10px 12px;
+      font-weight: 700;
+      font-size: 14px;
+      text-align: center;
+      border-radius: 6px;
+      margin: 10px 12px 14px 12px;
+      font-family: var(--font-h);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .quick-actions-row {
+      display: flex;
+      gap: 8px;
+      padding: 0 12px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+    .qa-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      flex: 1;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.02);
+      color: rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 0;
+    }
+    .qa-btn i {
+      font-size: 16px;
+    }
+    .qa-btn span {
+      max-width: 0;
+      opacity: 0;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-left: 0;
+    }
+    .qa-btn:hover {
+      flex: 3;
+      background: #D72638;
+      border-color: #D72638;
+      color: #ffffff;
+      padding: 0 12px;
+    }
+    .qa-btn:hover span {
+      max-width: 120px;
+      opacity: 1;
+      margin-left: 8px;
+    }
+    .quick-actions-row:hover .qa-btn:not(:hover) {
+      flex: 0.7;
+      opacity: 0.6;
+    }
+    .status-indicators-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 12px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+      gap: 8px;
+    }
+    .status-circle-wrap {
+      position: relative;
+      display: inline-block;
+    }
+    .status-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.01);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    .status-circle-dot {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #e74c3c;
+      border: 1.5px solid var(--steel);
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+    .sb-status-capsule {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.7);
+    }
+    .sb-capsule-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #f1c40f;
+      box-shadow: 0 0 6px #f1c40f;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Collapsed overrides */
+    body.collapsed-sidebar .sb-store-name-bar {
+      display: none;
+    }
+    body.collapsed-sidebar .quick-actions-row {
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 0;
+    }
+    body.collapsed-sidebar .qa-btn {
+      width: 38px;
+      height: 38px;
+      flex: none !important;
+    }
+    body.collapsed-sidebar .qa-btn span {
+      display: none !important;
+    }
+    body.collapsed-sidebar .qa-btn:hover {
+      padding: 0 !important;
+      background: #D72638;
+      color: #fff;
+    }
+    body.collapsed-sidebar .status-indicators-row {
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 0;
+    }
+    body.collapsed-sidebar .status-circle {
+      width: 38px;
+      height: 38px;
+    }
+    body.collapsed-sidebar .sb-status-capsule {
+      display: none;
+    }
+
     /* MAIN */
     .main {
       margin-left: var(--sidebar);
@@ -1707,21 +1866,54 @@
       </button>
     </div>
 
-    <!-- Quick Actions Header (Ver Tienda, Modo Visual, Soporte, Cerrar Sesión) -->
-    <div class="sb-section" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px; margin-bottom: 8px;">
-      <div class="sb-item" onclick="openStore()">
-        <i class="bi bi-shop"></i> <span>Ver tienda</span>
+    <!-- Store Name Bar -->
+    <div class="sb-store-name-bar" id="sb-store-name">Cargando Tienda...</div>
+
+    <!-- Quick Action Buttons Row -->
+    <div class="quick-actions-row">
+      <button class="qa-btn" onclick="openStore()" title="Ver tienda">
+        <i class="bi bi-shop"></i><span>Ver tienda</span>
+      </button>
+      <button class="qa-btn" onclick="toggleTheme()" title="Cambiar modo visual">
+        <i class="bi bi-sun" id="theme-icon-sidebar"></i><span>Modo Claro</span>
+      </button>
+      <button class="qa-btn" onclick="openTicketModal()" title="Soporte (Abrir ticket)">
+        <i class="bi bi-headset"></i><span>Abrir ticket</span>
+      </button>
+      <button class="qa-btn" onclick="handleLogout()" title="Cerrar Panel">
+        <i class="bi bi-box-arrow-right"></i><span>Cerrar Panel</span>
+      </button>
+    </div>
+
+    <!-- Circular Indicators Row -->
+    <div class="status-indicators-row">
+      <div class="status-circle-wrap" title="Base de Datos">
+        <div class="status-circle" id="status-circle-db"><i class="bi bi-database"></i></div>
+        <span class="status-circle-dot" id="status-dot-db"></span>
       </div>
-      <div class="sb-item" onclick="toggleTheme()">
-        <i class="bi bi-sun" id="theme-icon-sidebar"></i> <span>Modo visual</span>
+      <div class="status-circle-wrap" title="Inteligencia Artificial">
+        <div class="status-circle" id="status-circle-ai"><i class="bi bi-robot"></i></div>
+        <span class="status-circle-dot" id="status-dot-ai"></span>
       </div>
-      <div class="sb-item" onclick="openTicketModal()" style="color:#f59e0b;">
-        <i class="bi bi-headset"></i> <span>Soporte</span>
+      <div class="status-circle-wrap" title="Optimización de Imágenes">
+        <div class="status-circle" id="status-circle-cloudinary"><i class="bi bi-image"></i></div>
+        <span class="status-circle-dot" id="status-dot-cloudinary"></span>
       </div>
-      <div class="sb-item logout-btn" onclick="handleLogout()" style="color:var(--red);">
-        <i class="bi bi-box-arrow-right"></i> <span>Cerrar sesión</span>
+      <div class="status-circle-wrap" title="Integración y Dominio">
+        <div class="status-circle" id="status-circle-domain"><i class="bi bi-plug"></i></div>
+        <span class="status-circle-dot" id="status-dot-domain"></span>
       </div>
     </div>
+
+    <!-- Products & Sync Capsule -->
+    <div style="display: flex; justify-content: center; margin-bottom: 16px; padding: 0 12px; box-sizing: border-box;">
+      <div class="sb-status-capsule">
+        <span class="sb-capsule-dot"></span>
+        <span id="sb-capsule-text">Cargando productos...</span>
+      </div>
+    </div>
+
+    <div style="height: 1px; background: rgba(255,255,255,0.08); margin: 0 12px 14px 12px;"></div>
 
     <div class="sb-section">
       <div class="sb-section-label">Inicio</div>
@@ -7586,19 +7778,30 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
     /* ═══════════════════════════════════════════ THEME */
     function toggleTheme() {
-      const isLight = document.body.classList.toggle('light-mode');
-      localStorage.setItem('storeapp_dash_theme', isLight ? 'light' : 'dark');
-      document.getElementById('theme-icon').className = isLight ? 'bi bi-moon' : 'bi bi-sun';
+      const current = localStorage.getItem('storeapp_dash_theme') || 'dark';
+      const next = current === 'light' ? 'dark' : 'light';
+      setDashTheme(next);
     }
 
     function setDashTheme(theme) {
       const isLight = theme === 'light';
       document.body.classList.toggle('light-mode', isLight);
       localStorage.setItem('storeapp_dash_theme', theme);
+      
       const themeIcon = document.getElementById('theme-icon');
       if (themeIcon) {
         themeIcon.className = isLight ? 'bi bi-moon' : 'bi bi-sun';
       }
+      
+      const themeIconSidebar = document.getElementById('theme-icon-sidebar');
+      if (themeIconSidebar) {
+        themeIconSidebar.className = isLight ? 'bi bi-moon' : 'bi bi-sun';
+        const span = themeIconSidebar.nextElementSibling;
+        if (span && span.tagName === 'SPAN') {
+          span.textContent = isLight ? 'Modo Oscuro' : 'Modo Claro';
+        }
+      }
+      
       const darkEl = document.getElementById('dash-theme-dark');
       const lightEl = document.getElementById('dash-theme-light');
       if (darkEl) darkEl.style.borderColor = isLight ? 'var(--zinc)' : 'var(--red)';
@@ -7708,6 +7911,11 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     function initConfigView() {
       // Load all saved values into form fields
       const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+
+      const storeBar = document.getElementById('sb-store-name');
+      if (storeBar) {
+        storeBar.textContent = sc.name || STORE_ID;
+      }
 
       const subdomainEl = document.getElementById('cfg-store-subdomain');
       const urlBtnEl = document.getElementById('cfg-store-url-btn');
@@ -8222,6 +8430,10 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
       localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(sc));
       localStorage.setItem('storeapp_onboard_step_1_' + STORE_ID, 'true');
+      const storeBar = document.getElementById('sb-store-name');
+      if (storeBar) {
+        storeBar.textContent = sc.name || STORE_ID;
+      }
       
       // also merge into global cfg object
       cfg = { ...cfg, ...sc };
@@ -8686,6 +8898,15 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     applyDashTheme();
     initDashboardAuth();
     initCharts();
+
+    try {
+      const activeStore = STORE_ID;
+      const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + activeStore) || localStorage.getItem('storeapp_cfg') || '{}');
+      const storeBar = document.getElementById('sb-store-name');
+      if (storeBar) {
+        storeBar.textContent = sc.name || activeStore;
+      }
+    } catch (e) {}
 
     // (purgeLegacyCache ha sido removido para permitir el uso de plantillas con IDs personalizados)
 
