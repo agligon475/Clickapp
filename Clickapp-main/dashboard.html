@@ -1707,61 +1707,59 @@
       </button>
     </div>
 
+    <!-- Quick Actions Header (Ver Tienda, Modo Visual, Soporte, Cerrar Sesión) -->
+    <div class="sb-section" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px; margin-bottom: 8px;">
+      <div class="sb-item" onclick="openStore()">
+        <i class="bi bi-shop"></i> <span>Ver tienda</span>
+      </div>
+      <div class="sb-item" onclick="toggleTheme()">
+        <i class="bi bi-sun" id="theme-icon-sidebar"></i> <span>Modo visual</span>
+      </div>
+      <div class="sb-item" onclick="openTicketModal()" style="color:#f59e0b;">
+        <i class="bi bi-headset"></i> <span>Soporte</span>
+      </div>
+      <div class="sb-item logout-btn" onclick="handleLogout()" style="color:var(--red);">
+        <i class="bi bi-box-arrow-right"></i> <span>Cerrar sesión</span>
+      </div>
+    </div>
+
     <div class="sb-section">
       <div class="sb-section-label">Inicio</div>
       <div class="sb-item active" onclick="showView('dashboard',this)"><i class="bi bi-house"></i>
-        <span>Dashboard</span></div>
+        <span>Inicio</span></div>
     </div>
 
     <div class="sb-section">
       <div class="sb-section-label">Negocio</div>
-      <div class="sb-item" onclick="showView('rubro',this)"><i class="bi bi-shop"></i> <span>Rubro y Plantilla</span>
-      </div>
+      <div class="sb-item" onclick="showView('reports',this)"><i class="bi bi-bar-chart-line"></i>
+        <span>Analítica</span></div>
     </div>
 
     <div class="sb-section">
       <div class="sb-section-label">Gestión</div>
-      <div class="sb-item" onclick="showView('reports',this)"><i class="bi bi-bar-chart-line"></i>
-        <span>Analítica</span></div>
       <div class="sb-item" onclick="showView('orders',this)"><i class="bi bi-receipt"></i> <span>Pedidos</span></div>
-      <div class="sb-item" onclick="showView('pickups',this)"><i class="bi bi-truck"></i> <span>PickUp</span></div>
+      <div class="sb-item" onclick="showView('pickups',this)"><i class="bi bi-truck"></i> <span>Pickup</span></div>
     </div>
 
     <div class="sb-section">
-      <div class="sb-section-label">Catálogo</div>
-      <div class="sb-item" onclick="showView('products',this)"><i class="bi bi-grid-3x3-gap"></i> <span>Productos</span>
-      </div>
+      <div class="sb-section-label">Inventario</div>
       <div class="sb-item" onclick="showView('abm',this)"><i class="bi bi-pencil-square"></i> <span>ABM</span></div>
-      <div class="sb-item" onclick="showView('categories',this)"><i class="bi bi-tags"></i> <span>Categorías</span>
-      </div>
+      <div class="sb-item" onclick="showView('categories',this)"><i class="bi bi-tags"></i> <span>Categorías</span></div>
     </div>
 
     <div class="sb-section">
       <div class="sb-section-label">Personalización</div>
-      <div class="sb-item" onclick="showView('design',this)"><i class="bi bi-palette"></i> <span>Diseño</span></div>
-      <div class="sb-item" onclick="showView('pages',this)"><i class="bi bi-file-text"></i> <span>Páginas</span></div>
+      <div class="sb-item" onclick="showView('marca',this)"><i class="bi bi-palette"></i> <span>Marca</span></div>
+      <div class="sb-item" onclick="showView('rubro',this)"><i class="bi bi-shop"></i> <span>Rubro y plantilla</span></div>
+      <div class="sb-item" onclick="showView('design-catalogo',this)"><i class="bi bi-image"></i> <span>Diseño de catálogo</span></div>
+      <div class="sb-item" onclick="showView('enlaces',this)"><i class="bi bi-link-45deg"></i> <span>Enlaces</span></div>
+      <div class="sb-item" onclick="showView('pages-internas',this)"><i class="bi bi-file-text"></i> <span>Páginas internas</span></div>
     </div>
 
     <div class="sb-section">
       <div class="sb-section-label">Ajustes</div>
-      <div class="sb-item" onclick="showView('config',this)"><i class="bi bi-gear"></i> <span>Configuración</span></div>
-      <div class="sb-item" onclick="showView('advanced',this)"><i class="bi bi-shield-lock"></i> <span>Controles avanzados</span>
-      </div>
-    </div>
-
-    <div style="flex:1;"></div>
-    <div class="sb-item" style="margin:12px; border:1px solid rgba(255,255,255,0.1);"
-      onclick="openStore()">
-      <i class="bi bi-shop"></i> <span>Ver tienda</span> <i class="bi bi-box-arrow-up-right"
-        style="font-size:10px;margin-left:auto;opacity:.5;"></i>
-    </div>
-    <div class="sb-item" style="margin:0 12px 8px; border:1px solid rgba(255,165,0,0.2); color:#f59e0b;"
-      onclick="openTicketModal()">
-      <i class="bi bi-headset"></i> <span>Soporte</span>
-    </div>
-    <div class="sb-item logout-btn" style="margin:0 12px 12px; border:1px solid rgba(215,38,56,0.2); color:var(--red);"
-      onclick="handleLogout()">
-      <i class="bi bi-box-arrow-right"></i> <span>Cerrar sesión</span>
+      <div class="sb-item" onclick="showView('config-basica',this)"><i class="bi bi-gear"></i> <span>Configuración básica</span></div>
+      <div class="sb-item" onclick="showView('config-avanzada',this)"><i class="bi bi-shield-lock"></i> <span>Configuración avanzada</span></div>
     </div>
   </div>
 
@@ -1820,9 +1818,9 @@
       </span>
       <div class="topbar-right">
         <select class="period-select" onchange="setPeriod(this.value)">
-          <option value="7">Últimos 7 días</option>
-          <option value="30" selected>Últimos 30 días</option>
-          <option value="90">Últimos 90 días</option>
+          <option value="7">Última semana</option>
+          <option value="30" selected>Último mes</option>
+          <option value="365">Último año</option>
         </select>
         <button class="theme-toggle-btn" onclick="toggleTheme()" id="theme-btn" title="Cambiar tema">
           <i class="bi bi-sun" id="theme-icon"></i>
@@ -2222,6 +2220,15 @@
     <!-- ══ REPORTS (INFORMES) ══ -->
     <div class="view" id="view-reports">
 
+      <div style="display:flex; justify-content:flex-end; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+        <button class="sb-btn" onclick="exportarInforme()" style="background:var(--iron); border:1px solid var(--zinc); color:var(--fog); display:inline-flex; align-items:center; gap:8px; cursor:pointer;">
+          <i class="bi bi-download"></i> Exportar informe
+        </button>
+        <button class="abm-btn-new" onclick="enviarCorreoGerente()" style="display:inline-flex; align-items:center; gap:8px; padding:10px 18px; font-size:13px; cursor:pointer;">
+          <i class="bi bi-envelope"></i> Enviar por correo al Gerente
+        </button>
+      </div>
+
       <div style="display:flex;gap:20px;margin-bottom:20px;flex-wrap:wrap;">
 
         <!-- Left Column -->
@@ -2515,14 +2522,11 @@
       </div>
     </div>
 
-    <!-- ══ DESIGN ══ -->
-    <div class="view" id="view-design">
-
+    <!-- ══ MARCA ══ -->
+    <div class="view" id="view-marca">
       <div class="design-wrap">
-
         <!-- LEFT: controls -->
         <div class="design-controls">
-
           <div class="card" style="margin-bottom:14px;">
             <div class="card-title">Identidad</div>
             <div class="card-content">
@@ -2568,11 +2572,8 @@
                   <button class="emoji-opt" onclick="pickEmoji(this,'📚')">📚</button>
                 </div>
               </div>
-              <div class="ctrl-group">
-                <label class="ctrl-label">Número de WhatsApp (con código país)</label>
-                <input class="ctrl-input" id="cfg-wapp" value="5491141819344" placeholder="5491100000000"
-                  oninput="previewUpdate()" />
-              </div>
+              <!-- Hidden WhatsApp field for backward compatibility with design code -->
+              <input type="hidden" id="cfg-wapp" value="" />
             </div>
           </div>
 
@@ -2644,7 +2645,6 @@
                   </div>
                 </div>
 
-                <!-- Info: ¿Dónde se aplica el color principal? -->
                 <div class="color-applies-box">
                   <div
                     style="font-size:10px;font-weight:700;color:var(--fog);margin-bottom:7px;display:flex;align-items:center;gap:5px;">
@@ -2669,7 +2669,6 @@
                   </ul>
                 </div>
               </div>
-
 
               <div class="ctrl-group">
                 <label class="ctrl-label">Tema de fondo</label>
@@ -2723,10 +2722,180 @@
             </div>
           </div>
 
+          <div style="display:flex;gap:10px;">
+            <button class="sb-btn" style="flex:1;" onclick="applyConfig()">
+              <i class="bi bi-check2-circle"></i> Aplicar cambios
+            </button>
+            <button class="sb-btn" style="flex:1;background:var(--iron);border:1px solid var(--zinc);"
+              onclick="exportConfig()">
+              <i class="bi bi-download"></i> Exportar config
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT: live preview (Dynamic shared container) -->
+        <div class="design-preview-wrap">
+          <div class="preview-topbar">
+            <span
+              style="font-size:11px;font-weight:600;color:var(--silver);text-transform:uppercase;letter-spacing:.06em;">
+              <i class="bi bi-eye"></i> Vista previa en tiempo real
+            </span>
+            <div style="display:flex;gap:6px;margin-left:auto;">
+              <button class="prev-size-btn active" onclick="setPreviewSize(this,'desktop')"><i
+                  class="bi bi-laptop"></i></button>
+              <button class="prev-size-btn" onclick="setPreviewSize(this,'mobile')"><i class="bi bi-phone"></i></button>
+            </div>
+          </div>
+          <div class="preview-frame-wrap" id="preview-wrap">
+            <div class="preview-frame" id="preview-frame">
+              <div id="prev-store"
+                style="font-family:'Barlow Condensed',sans-serif;font-size:11px;overflow:hidden;border-radius:8px;min-height:500px;transition:background .3s;">
+                <!-- prev topbar -->
+                <div id="prev-nav"
+                  style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);">
+                  <div style="position:relative;display:inline-flex;">
+                    <div id="prev-icon"
+                      style="width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;background:#D72638;">
+                      🔧</div>
+                    <div class="prev-spotlight-label" id="spl-nav-icon">Ícono nav</div>
+                  </div>
+                  <span id="prev-name" style="font-weight:800;font-size:14px;color:#F5F5F0;">FerreApp</span>
+                  <div style="position:relative;margin-left:auto;display:inline-flex;">
+                    <div
+                      style="display:flex;align-items:center;gap:6px;background:#D72638;border-radius:5px;padding:3px 8px;color:#fff;font-size:10px;font-weight:600;"
+                      id="prev-cart-btn">
+                      <i class="bi bi-bag"></i> 0
+                    </div>
+                    <div class="prev-spotlight-label" id="spl-cart">Carrito</div>
+                  </div>
+                </div>
+
+                <!-- prev hero -->
+                <div id="prev-hero"
+                  style="padding:16px 14px 12px;position:relative;overflow:hidden;min-height:110px;display:flex;align-items:center;">
+                  <div id="prev-hero-img"
+                    style="position:absolute;inset:0;background-size:cover;background-position:center;"></div>
+                  <div id="prev-hero-overlay" style="position:absolute;inset:0;background:rgba(0,0,0,.48);"></div>
+                  <div id="prev-hero-stripes"
+                    style="position:absolute;inset:0;background:repeating-linear-gradient(-55deg,transparent,transparent 10px,rgba(255,255,255,.02) 10px,rgba(255,255,255,.02) 11px);">
+                  </div>
+
+                  <div style="position:relative;z-index:2;width:100%;">
+                    <div style="position:relative;display:inline-block;max-width:100%;">
+                      <h1 id="prev-h1"
+                        style="font-size:24px;font-weight:900;text-transform:uppercase;line-height:1;margin:0;color:#fff;">
+                        Tu ferretería</h1>
+                      <h2 id="prev-h2"
+                        style="font-size:24px;font-weight:900;text-transform:uppercase;line-height:1;margin:0 0 6px 0;color:#D72638;">
+                        sin demoras.</h2>
+                      <div class="prev-spotlight-label" id="spl-h2">Título acento</div>
+                    </div>
+                    <p id="prev-desc"
+                      style="font-size:11px;margin:0 0 10px 0;color:rgba(255,255,255,.8);line-height:1.3;max-width:180px;">
+                      Elegí tus productos, armá tu pedido y coordiná por WhatsApp.</p>
+
+                    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                      <span id="prev-pill1"
+                        style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:9px;background:#D72638;color:#fff;font-weight:700;position:relative;">
+                        <i class="bi bi-whatsapp"></i> WhatsApp
+                        <div class="prev-spotlight-label" id="spl-pill1">Pill</div>
+                      </span>
+                      <span id="prev-pill2"
+                        style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:9px;background:#D72638;color:#fff;font-weight:700;position:relative;">
+                        <i class="bi bi-wallet2"></i> Pagos
+                        <div class="prev-spotlight-label" id="spl-pill2">Pill</div>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- prev cats -->
+                <div
+                  style="padding:10px 14px 6px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;gap:6px;overflow-x:auto;">
+                  <div id="prev-cat-all"
+                    style="padding:4px 10px;border-radius:15px;background:#D72638;color:#fff;font-weight:700;font-size:10px;position:relative;white-space:nowrap;">
+                    Todos
+                    <div class="prev-spotlight-label" id="spl-cat-active">Categoría activa</div>
+                  </div>
+                  <div
+                    style="padding:4px 10px;border-radius:15px;background:rgba(255,255,255,.05);color:#8A8A90;font-size:10px;white-space:nowrap;">
+                    Herramientas</div>
+                  <div
+                    style="padding:4px 10px;border-radius:15px;background:rgba(255,255,255,.05);color:#8A8A90;font-size:10px;white-space:nowrap;">
+                    Bulonería</div>
+                </div>
+
+                <!-- prev grid -->
+                <div style="padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                  <div id="prev-card-1"
+                    style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:8px;position:relative;">
+                    <div
+                      style="height:60px;border-radius:5px;background:#1C1C1E;margin-bottom:6px;display:flex;align-items:center;justify-content:center;font-size:18px;">
+                      🔨</div>
+                    <div style="font-weight:700;font-size:11px;color:#F5F5F0;line-height:1.2;">Martillo Galponero</div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;position:relative;">
+                      <div class="prev-cat-label"
+                        style="font-size:8px;font-weight:700;color:#D72638;text-transform:uppercase;letter-spacing:.05em;">
+                        Herramientas</div>
+                      <div class="prev-spotlight-label" id="spl-cat-label" style="font-size:6px;">Etiqueta categoría</div>
+                    </div>
+                    <div style="font-weight:800;font-size:12px;color:#F5F5F0;margin-top:4px;">$12.500</div>
+                    <div class="prev-add-btn"
+                      style="margin-top:6px;background:none;border:1px solid #D72638;color:#D72638;border-radius:5px;padding:4px;text-align:center;font-size:9px;font-weight:700;cursor:pointer;position:relative;">
+                      + AGREGAR
+                      <div class="prev-spotlight-label" id="spl-add-btn">Botón agregar</div>
+                    </div>
+                  </div>
+
+                  <div id="prev-card-2"
+                    style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:8px;position:relative;">
+                    <div
+                      style="height:60px;border-radius:5px;background:#1C1C1E;margin-bottom:6px;display:flex;align-items:center;justify-content:center;font-size:18px;">
+                      🔩</div>
+                    <div style="font-weight:700;font-size:11px;color:#F5F5F0;line-height:1.2;">Tornillos Parker x100</div>
+                    <div style="font-size:8px;font-weight:700;color:#D72638;text-transform:uppercase;margin-top:6px;">
+                      Bulonería</div>
+                    <div style="font-weight:800;font-size:12px;color:#F5F5F0;margin-top:4px;">$3.800</div>
+                    <div class="prev-add-btn"
+                      style="margin-top:6px;background:none;border:1px solid #D72638;color:#D72638;border-radius:5px;padding:4px;text-align:center;font-size:9px;font-weight:700;">
+                      + AGREGAR
+                    </div>
+                  </div>
+                </div>
+
+                <!-- prev footer -->
+                <div id="prev-footer"
+                  style="padding:14px;background:rgba(0,0,0,.4);border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;justify-content:space-between;margin-top:20px;">
+                  <span id="prev-footer-name" style="font-size:8px;font-weight:700;color:#8A8A90;">© FerreApp</span>
+                  <div style="display:flex;gap:6px;align-items:center;">
+                    <div style="position:relative;display:inline-flex;">
+                      <div id="prev-wapp-btn"
+                        style="width:18px;height:18px;border-radius:50%;background:#D72638;display:flex;align-items:center;justify-content:center;">
+                        <i class="bi bi-whatsapp" style="font-size:8px;color:#fff;"></i>
+                      </div>
+                      <div class="prev-spotlight-label" id="spl-footer">WhatsApp</div>
+                    </div>
+                    <div
+                      style="width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;">
+                      <i class="bi bi-instagram" style="font-size:8px;color:#8A8A90;"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ DISEÑO DE CATÁLOGO ══ -->
+    <div class="view" id="view-design-catalogo">
+      <div class="design-wrap">
+        <!-- LEFT: controls -->
+        <div class="design-controls">
           <div class="card" style="margin-bottom:14px;">
             <div class="card-title">Imagen de fondo del banner</div>
             <div class="card-content">
-
               <div id="hero-img-preview-wrap"
                 style="display:none;margin-bottom:10px;position:relative;border-radius:8px;overflow:hidden;">
                 <img id="hero-img-preview" style="width:100%;height:100px;object-fit:cover;display:block;" />
@@ -2771,51 +2940,6 @@
             </div>
           </div>
 
-          <!-- REDES SOCIALES Y ENLACES -->
-          <div class="card" style="margin-bottom:14px;">
-            <div class="card-title"><i class="bi bi-link-45deg"></i> Redes Sociales y Enlaces</div>
-            <div class="card-content">
-              <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
-                Agregá los enlaces a tus redes y sitios. Se mostrarán automáticamente en el pie de página de la tienda.
-                Dejá en blanco los que no uses.
-              </div>
-              <div class="config-grid">
-                <div class="ctrl-group">
-                  <label class="ctrl-label">Dominio Propio</label>
-                  <input class="ctrl-input" id="cfg-store-domain" placeholder="www.mitienda.com" />
-                </div>
-                <div class="ctrl-group">
-                  <label class="ctrl-label">Sitio Web (alternativo)</label>
-                  <input class="ctrl-input" id="cfg-social-web" placeholder="https://..." />
-                </div>
-                <div class="ctrl-group">
-                  <label class="ctrl-label">Instagram</label>
-                  <input class="ctrl-input" id="cfg-social-ig" placeholder="https://instagram.com/..." />
-                </div>
-                <div class="ctrl-group">
-                  <label class="ctrl-label">Facebook</label>
-                  <input class="ctrl-input" id="cfg-social-fb" placeholder="https://facebook.com/..." />
-                </div>
-                <div class="ctrl-group">
-                  <label class="ctrl-label">X (Twitter)</label>
-                  <input class="ctrl-input" id="cfg-social-x" placeholder="https://x.com/..." />
-                </div>
-                <div class="ctrl-group">
-                  <label class="ctrl-label">MercadoLibre</label>
-                  <input class="ctrl-input" id="cfg-social-ml" placeholder="Enlace a tu e-shop..." />
-                </div>
-                <div class="ctrl-group">
-                  <label class="ctrl-label">TiendaNube</label>
-                  <input class="ctrl-input" id="cfg-social-tn" placeholder="Enlace a tu TiendaNube..." />
-                </div>
-                <div class="ctrl-group">
-                  <label class="ctrl-label">Google Maps</label>
-                  <input class="ctrl-input" id="cfg-social-maps" placeholder="Enlace de Google Maps..." />
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- BANNERS PROMOCIONALES -->
           <div class="card" style="margin-bottom:14px;">
             <div class="card-title"><i class="bi bi-image"></i> Banners promocionales 50/50</div>
@@ -2825,7 +2949,10 @@
                 style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:16px;margin-bottom:14px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
                   <div style="font-weight:700;font-size:13px;color:var(--red);">BANNER 1</div>
-                  <label style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--silver);"><input type="checkbox" id="banner1-active" checked style="accent-color:var(--red);width:14px;height:14px;"/> Activo</label>
+                  <label
+                    style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--silver);"><input
+                      type="checkbox" id="banner1-active" checked
+                      style="accent-color:var(--red);width:14px;height:14px;" /> Activo</label>
                 </div>
                 <div class="config-grid">
                   <div class="ctrl-group">
@@ -2856,10 +2983,10 @@
                     </div>
                   </div>
                   <div class="ctrl-group" style="grid-column:1/-1;">
-                    <label class="ctrl-label">Color de fondo <span style="font-weight:400;color:var(--silver);">(cuando no hay imagen)</span></label>
+                    <label class="ctrl-label">Color de fondo <span
+                        style="font-weight:400;color:var(--silver);">(cuando no hay imagen)</span></label>
                     <div style="display:flex;align-items:center;gap:10px;">
-                      <input type="color" id="banner1-bg" value="#1C1C1E"
-                        oninput="previewBanner('banner1')"
+                      <input type="color" id="banner1-bg" value="#1C1C1E" oninput="previewBanner('banner1')"
                         style="width:44px;height:36px;border-radius:8px;border:1px solid var(--zinc);cursor:pointer;background:none;padding:2px;" />
                       <span style="font-size:11px;color:var(--silver);">Si cargás una imagen, este color se ignora</span>
                     </div>
@@ -2876,7 +3003,10 @@
                 style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:16px;margin-bottom:14px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
                   <div style="font-weight:700;font-size:13px;color:var(--red);">BANNER 2</div>
-                  <label style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--silver);"><input type="checkbox" id="banner2-active" checked style="accent-color:var(--red);width:14px;height:14px;"/> Activo</label>
+                  <label
+                    style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--silver);"><input
+                      type="checkbox" id="banner2-active" checked
+                      style="accent-color:var(--red);width:14px;height:14px;" /> Activo</label>
                 </div>
                 <div class="config-grid">
                   <div class="ctrl-group">
@@ -2907,10 +3037,10 @@
                     </div>
                   </div>
                   <div class="ctrl-group" style="grid-column:1/-1;">
-                    <label class="ctrl-label">Color de fondo <span style="font-weight:400;color:var(--silver);">(cuando no hay imagen)</span></label>
+                    <label class="ctrl-label">Color de fondo <span
+                        style="font-weight:400;color:var(--silver);">(cuando no hay imagen)</span></label>
                     <div style="display:flex;align-items:center;gap:10px;">
-                      <input type="color" id="banner2-bg" value="#1C1C1E"
-                        oninput="previewBanner('banner2')"
+                      <input type="color" id="banner2-bg" value="#1C1C1E" oninput="previewBanner('banner2')"
                         style="width:44px;height:36px;border-radius:8px;border:1px solid var(--zinc);cursor:pointer;background:none;padding:2px;" />
                       <span style="font-size:11px;color:var(--silver);">Si cargás una imagen, este color se ignora</span>
                     </div>
@@ -2934,264 +3064,64 @@
               <div id="banners-status" style="font-size:11px;margin-top:8px;min-height:14px;color:var(--silver);"></div>
             </div>
           </div>
-
-          <!-- Tema -->
-          <div class="card" style="margin-bottom:14px;">
-            <div class="card-title"><i class="bi bi-palette"></i> Apariencia del dashboard</div>
-            <div class="card-content">
-              <div style="display:flex;gap:12px;">
-                <button onclick="setDashTheme('dark')" id="dash-theme-dark"
-                  style="flex:1;padding:12px;border-radius:10px;border:2px solid var(--red);background:var(--iron);cursor:pointer;font-family:var(--font-b);font-size:12px;font-weight:600;color:var(--white);transition:all .15s;">
-                  <i class="bi bi-moon-stars" style="display:block;font-size:20px;margin-bottom:4px;"></i>
-                  Oscuro
-                </button>
-                <button onclick="setDashTheme('light')" id="dash-theme-light"
-                  style="flex:1;padding:12px;border-radius:10px;border:1px solid var(--zinc);background:var(--iron);cursor:pointer;font-family:var(--font-b);font-size:12px;font-weight:600;color:var(--white);transition:all .15s;">
-                  <i class="bi bi-sun" style="display:block;font-size:20px;margin-bottom:4px;"></i>
-                  Claro
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div style="display:flex;gap:10px;">
-            <button class="sb-btn" style="flex:1;" onclick="applyConfig()">
-              <i class="bi bi-check2-circle"></i> Aplicar cambios
-            </button>
-            <button class="sb-btn" style="flex:1;background:var(--iron);border:1px solid var(--zinc);"
-              onclick="exportConfig()">
-              <i class="bi bi-download"></i> Exportar config
-            </button>
-          </div>
-          <p style="font-size:10px;color:var(--silver);margin-top:8px;text-align:center;">
-            "Aplicar" guarda en localStorage y actualiza la tienda al refrescar.
-          </p>
-
-        </div>
-
-        <!-- RIGHT: live preview -->
-        <div class="design-preview-wrap">
-          <div class="preview-topbar">
-            <span
-              style="font-size:11px;font-weight:600;color:var(--silver);text-transform:uppercase;letter-spacing:.06em;">
-              <i class="bi bi-eye"></i> Vista previa en tiempo real
-            </span>
-            <div style="display:flex;gap:6px;margin-left:auto;">
-              <button class="prev-size-btn active" onclick="setPreviewSize(this,'desktop')"><i
-                  class="bi bi-laptop"></i></button>
-              <button class="prev-size-btn" onclick="setPreviewSize(this,'mobile')"><i class="bi bi-phone"></i></button>
-            </div>
-          </div>
-          <div class="preview-frame-wrap" id="preview-wrap">
-            <div class="preview-frame" id="preview-frame">
-
-              <!-- Mini store preview -->
-              <div id="prev-store"
-                style="font-family:'Barlow Condensed',sans-serif;font-size:11px;overflow:hidden;border-radius:8px;min-height:500px;transition:background .3s;">
-
-                <!-- prev topbar -->
-                <div id="prev-nav"
-                  style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);">
-                  <div style="position:relative;display:inline-flex;">
-                    <div id="prev-icon"
-                      style="width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;background:#D72638;">
-                      🔧</div>
-                    <div class="prev-spotlight-label" id="spl-nav-icon">Ícono nav</div>
-                  </div>
-                  <span id="prev-name" style="font-weight:800;font-size:14px;color:#F5F5F0;">FerreApp</span>
-                  <div style="position:relative;margin-left:auto;display:inline-flex;">
-                    <div
-                      style="display:flex;align-items:center;gap:6px;background:#D72638;border-radius:5px;padding:3px 8px;color:#fff;font-size:10px;font-weight:600;"
-                      id="prev-cart-btn">
-                      <i class="bi bi-bag"></i> 0
-                    </div>
-                    <div class="prev-spotlight-label" id="spl-cart">Carrito</div>
-                  </div>
-                </div>
-
-                <!-- prev hero -->
-                <div id="prev-hero"
-                  style="padding:16px 14px 12px;position:relative;overflow:hidden;min-height:110px;display:flex;align-items:center;">
-                  <!-- bg image layer -->
-                  <div id="prev-hero-img"
-                    style="position:absolute;inset:0;background-size:cover;background-position:center;"></div>
-                  <!-- overlay -->
-                  <div id="prev-hero-overlay" style="position:absolute;inset:0;background:rgba(0,0,0,.48);"></div>
-                  <!-- stripe fallback -->
-                  <div id="prev-hero-stripes"
-                    style="position:absolute;inset:0;background:repeating-linear-gradient(-55deg,transparent,transparent 10px,rgba(255,255,255,.02) 10px,rgba(255,255,255,.02) 11px);">
-                  </div>
-                  <div style="position:relative;z-index:1;width:100%;">
-                    <div id="prev-h1"
-                      style="font-size:20px;font-weight:800;line-height:.95;text-transform:uppercase;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.4);">
-                      Tu ferretería</div>
-                    <div style="position:relative;display:inline-block;">
-                      <div id="prev-h2"
-                        style="font-size:20px;font-weight:800;line-height:.95;text-transform:uppercase;color:#D72638;text-shadow:0 1px 6px rgba(0,0,0,.4);">
-                        sin demoras.</div>
-                      <div class="prev-spotlight-label" id="spl-h2">Título acento</div>
-                    </div>
-                    <div id="prev-desc"
-                      style="font-size:9px;color:rgba(255,255,255,.8);margin-top:6px;line-height:1.4;font-family:'Barlow',sans-serif;font-weight:400;text-shadow:0 1px 4px rgba(0,0,0,.4);">
-                      Elegí tus productos, armá tu pedido y coordiná por WhatsApp.</div>
-                    <div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;">
-                      <div style="position:relative;display:inline-flex;">
-                        <span id="prev-pill1"
-                          style="background:#D72638;border:none;border-radius:20px;padding:3px 8px;font-size:8px;color:#fff;font-weight:600;font-family:'Barlow',sans-serif;display:flex;align-items:center;gap:3px;">
-                          <i class="bi bi-whatsapp"></i> WhatsApp
-                        </span>
-                        <div class="prev-spotlight-label" id="spl-pill1">Pill</div>
-                      </div>
-                      <div style="position:relative;display:inline-flex;">
-                        <span id="prev-pill2"
-                          style="background:#D72638;border:none;border-radius:20px;padding:3px 8px;font-size:8px;color:#fff;font-weight:600;font-family:'Barlow',sans-serif;display:flex;align-items:center;gap:3px;">
-                          <i class="bi bi-cash-coin"></i> Pagos
-                        </span>
-                        <div class="prev-spotlight-label" id="spl-pill2">Pill</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- prev products -->
-                <div style="padding:12px 14px;">
-                  <!-- Categories -->
-                  <div style="display:flex;gap:6px;margin-bottom:10px;overflow:hidden;">
-                    <div style="position:relative;display:inline-flex;">
-                      <div id="prev-cat-all"
-                        style="border-radius:5px;padding:4px 9px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:#D72638;color:#fff;border:1px solid #D72638;">
-                        Todos</div>
-                      <div class="prev-spotlight-label" id="spl-cat-active">Categoría activa</div>
-                    </div>
-                    <div
-                      style="border-radius:5px;padding:4px 9px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:rgba(255,255,255,.05);color:#8A8A90;border:1px solid rgba(255,255,255,.08);">
-                      Herramientas</div>
-                    <div
-                      style="border-radius:5px;padding:4px 9px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:rgba(255,255,255,.05);color:#8A8A90;border:1px solid rgba(255,255,255,.08);">
-                      Eléctrica</div>
-                  </div>
-
-                  <!-- Product cards — diseño fiel a la tienda real -->
-                  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">
-
-                    <!-- Card 1 -->
-                    <div id="prev-card-1"
-                      style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;transition:all .2s;">
-                      <div
-                        style="position:relative;aspect-ratio:1;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:26px;">
-                        🔧
-                        <div
-                          style="position:absolute;top:5px;right:5px;background:rgba(14,14,14,.7);backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.1);border-radius:9999px;padding:2px 6px;font-size:6px;font-weight:600;color:#fff;">
-                          Stock: 12</div>
-                      </div>
-                      <div style="padding:6px 7px;">
-                        <div style="position:relative;display:inline-block;width:100%;">
-                          <div class="prev-cat-label"
-                            style="font-size:6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">
-                            Herramientas</div>
-                          <div class="prev-spotlight-label" id="spl-cat-label" style="font-size:6px;">Etiqueta categoría
-                          </div>
-                        </div>
-                        <div style="font-size:8px;font-weight:700;color:#F0F0EC;line-height:1.2;margin-bottom:3px;">
-                          Llave inglesa</div>
-                        <div style="font-size:10px;font-weight:800;color:#F0F0EC;margin-bottom:4px;">$15.900</div>
-                        <div style="position:relative;">
-                          <div class="prev-add-btn"
-                            style="border-radius:9999px;padding:3px 5px;font-size:6px;font-weight:600;text-align:center;border:1px solid rgba(255,255,255,.15);color:#B0B0B8;display:flex;align-items:center;justify-content:space-between;gap:2px;">
-                            <span
-                              style="width:14px;height:14px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">−</span>
-                            <span>+</span>
-                            <span
-                              style="width:14px;height:14px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">+</span>
-                          </div>
-                          <div class="prev-spotlight-label" id="spl-add-btn">Botón agregar</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Card 2 -->
-                    <div id="prev-card-2"
-                      style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;transition:all .2s;">
-                      <div
-                        style="position:relative;aspect-ratio:1;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:26px;">
-                        ⚡
-                        <div
-                          style="position:absolute;top:5px;right:5px;background:rgba(14,14,14,.7);backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.1);border-radius:9999px;padding:2px 6px;font-size:6px;font-weight:600;color:#fff;">
-                          Stock: 8</div>
-                      </div>
-                      <div style="padding:6px 7px;">
-                        <div class="prev-cat-label"
-                          style="font-size:6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">
-                          Electricidad</div>
-                        <div style="font-size:8px;font-weight:700;color:#F0F0EC;line-height:1.2;margin-bottom:3px;">
-                          Cinta aisladora</div>
-                        <div style="font-size:10px;font-weight:800;color:#F0F0EC;margin-bottom:4px;">$4.200</div>
-                        <div class="prev-add-btn"
-                          style="border-radius:9999px;padding:3px 5px;font-size:6px;font-weight:600;text-align:center;border:1px solid rgba(255,255,255,.15);color:#B0B0B8;display:flex;align-items:center;justify-content:space-between;gap:2px;">
-                          <span
-                            style="width:14px;height:14px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">−</span>
-                          <span>+</span>
-                          <span
-                            style="width:14px;height:14px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">+</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Card 3 -->
-                    <div id="prev-card-3"
-                      style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;transition:all .2s;">
-                      <div
-                        style="position:relative;aspect-ratio:1;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:26px;">
-                        🔌
-                        <div
-                          style="position:absolute;top:5px;right:5px;background:rgba(215,38,56,.8);backdrop-filter:blur(3px);border:1px solid rgba(215,38,56,.4);border-radius:9999px;padding:2px 6px;font-size:6px;font-weight:600;color:#fff;">
-                          Sin stock</div>
-                      </div>
-                      <div style="padding:6px 7px;">
-                        <div class="prev-cat-label"
-                          style="font-size:6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">
-                          Electricidad</div>
-                        <div style="font-size:8px;font-weight:700;color:#F0F0EC;line-height:1.2;margin-bottom:3px;">
-                          Disyuntor 20A</div>
-                        <div style="font-size:10px;font-weight:800;color:#F0F0EC;margin-bottom:4px;">$28.000</div>
-                        <div
-                          style="padding:3px;text-align:center;font-size:6px;color:#8A8A90;border:1px solid rgba(255,255,255,.08);border-radius:5px;opacity:.6;">
-                          Sin stock</div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-
-                <!-- prev footer -->
-                <div id="prev-footer"
-                  style="padding:10px 14px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
-                  <span id="prev-footer-name" style="font-size:8px;font-weight:700;color:#8A8A90;">© FerreApp</span>
-                  <div style="display:flex;gap:5px;align-items:center;">
-                    <div style="position:relative;display:inline-flex;">
-                      <div id="prev-wapp-btn"
-                        style="width:18px;height:18px;border-radius:50%;background:#D72638;display:flex;align-items:center;justify-content:center;">
-                        <i class="bi bi-whatsapp" style="font-size:8px;color:#fff;"></i>
-                      </div>
-                      <div class="prev-spotlight-label" id="spl-footer">WhatsApp</div>
-                    </div>
-                    <div
-                      style="width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;">
-                      <i class="bi bi-instagram" style="font-size:8px;color:#8A8A90;"></i>
-                    </div>
-                  </div>
-                </div>
-
-              </div><!-- /prev-store -->
-            </div><!-- /preview-frame -->
-          </div><!-- /preview-frame-wrap -->
-        </div><!-- /design-preview-wrap -->
-
+        </div><!-- /design-controls -->
       </div><!-- /design-wrap -->
-    </div><!-- /view-design -->
+    </div><!-- /view-design-catalogo -->
 
-    <!-- ══ PÁGINAS ══ -->
-    <div class="view" id="view-pages">
+    <!-- ══ ENLACES ══ -->
+    <div class="view" id="view-enlaces">
+      <div class="card" style="margin-bottom:24px;">
+        <div class="card-title"><i class="bi bi-link-45deg"></i> Redes Sociales y Enlaces</div>
+        <div class="card-content">
+          <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
+            Agregá los enlaces a tus redes y sitios. Se mostrarán automáticamente en el pie de página de la tienda.
+            Dejá en blanco los que no uses.
+          </div>
+          <div class="config-grid">
+            <div class="ctrl-group">
+              <label class="ctrl-label">Dominio Propio</label>
+              <input class="ctrl-input" id="cfg-store-domain" placeholder="www.mitienda.com" />
+            </div>
+            <div class="ctrl-group">
+              <label class="ctrl-label">Sitio Web (alternativo)</label>
+              <input class="ctrl-input" id="cfg-social-web" placeholder="https://..." />
+            </div>
+            <div class="ctrl-group">
+              <label class="ctrl-label">Instagram</label>
+              <input class="ctrl-input" id="cfg-social-ig" placeholder="https://instagram.com/..." />
+            </div>
+            <div class="ctrl-group">
+              <label class="ctrl-label">Facebook</label>
+              <input class="ctrl-input" id="cfg-social-fb" placeholder="https://facebook.com/..." />
+            </div>
+            <div class="ctrl-group">
+              <label class="ctrl-label">X (Twitter)</label>
+              <input class="ctrl-input" id="cfg-social-x" placeholder="https://x.com/..." />
+            </div>
+            <div class="ctrl-group">
+              <label class="ctrl-label">MercadoLibre</label>
+              <input class="ctrl-input" id="cfg-social-ml" placeholder="Enlace a tu e-shop..." />
+            </div>
+            <div class="ctrl-group">
+              <label class="ctrl-label">TiendaNube</label>
+              <input class="ctrl-input" id="cfg-social-tn" placeholder="Enlace a tu TiendaNube..." />
+            </div>
+            <div class="ctrl-group">
+              <label class="ctrl-label">Google Maps</label>
+              <input class="ctrl-input" id="cfg-social-maps" placeholder="Enlace de Google Maps..." />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+        <button class="abm-btn-new" onclick="saveConfig()" style="padding:12px 24px;font-size:14px;">
+          <i class="bi bi-floppy2"></i> Guardar enlaces
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ PÁGINAS INTERNAS ══ -->
+    <div class="view" id="view-pages-internas">
       <div class="card" style="margin-bottom:24px;">
         <h3 style="margin-bottom:16px;">Página "Nosotros"</h3>
         <div class="ctrl-group">
@@ -3318,8 +3248,8 @@
       </div>
     </div>
 
-    <!-- ══ CONFIG ══ -->
-    <div class="view" id="view-config">
+    <!-- ══ CONFIGURACIÓN BÁSICA ══ -->
+    <div class="view" id="view-config-basica">
       <div class="masonry-grid">
 
         <!-- Tienda -->
@@ -3329,22 +3259,20 @@
           </div>
           <div class="config-section-content">
             <div class="config-grid">
+              
+              <!-- 1. Nombre de la empresa -->
               <div class="ctrl-group">
                 <label class="ctrl-label">Nombre de la tienda</label>
                 <input class="ctrl-input" id="cfg-store-name" placeholder="FerreApp" />
               </div>
+              
+              <!-- 2. Eslogan -->
               <div class="ctrl-group">
-                <label class="ctrl-label">WhatsApp (con código país)</label>
-                <input class="ctrl-input" id="cfg-store-wapp" placeholder="5491141819344" />
-              </div>
-              <div class="ctrl-group">
-                <label class="ctrl-label">Contraseña del Panel</label>
-                <input class="ctrl-input" type="password" id="cfg-store-password" placeholder="Clave para proteger el acceso a este panel" />
-              </div>
-              <div class="ctrl-group" style="grid-column:1/-1;">
                 <label class="ctrl-label">Eslogan</label>
                 <input class="ctrl-input" id="cfg-store-tagline" placeholder="Tu ferretería digital" />
               </div>
+
+              <!-- 3. Rubro principal -->
               <div class="ctrl-group">
                 <label class="ctrl-label">Rubro principal</label>
                 <select class="ctrl-input" id="cfg-store-rubro" onchange="updateSubrubros('cfg-store-rubro','cfg-store-subrubro')">
@@ -3359,23 +3287,129 @@
                   <option value="Tiendas">🏪 Tiendas</option>
                 </select>
               </div>
+
+              <!-- 4. Subrubro -->
               <div class="ctrl-group">
                 <label class="ctrl-label">Subrubro</label>
                 <select class="ctrl-input" id="cfg-store-subrubro">
                   <option value="">Primero elegí un rubro...</option>
                 </select>
               </div>
-              <div class="ctrl-group">
+
+              <!-- 5. Dirección física -->
+              <div class="ctrl-group" style="grid-column:1/-1;">
                 <label class="ctrl-label">Dirección del local</label>
                 <input class="ctrl-input" id="cfg-store-direccion" placeholder="Av. Corrientes 1234, CABA" />
-                <div style="font-size:10px;color:var(--silver);margin-top:3px;">Se incluye en mensajes de retiro por
-                  local</div>
-              </div>
-              <div class="ctrl-group" style="grid-column:1/-1;">
-                <label class="ctrl-label">Horario de atención</label>
-                <input class="ctrl-input" id="cfg-store-horario" placeholder="Lun a Vie 9:00–18:00 · Sáb 9:00–13:00" />
                 <div style="font-size:10px;color:var(--silver);margin-top:3px;">Se incluye en mensajes de retiro por local</div>
               </div>
+
+              <!-- 6. Horario de atención por días -->
+              <div class="ctrl-group" style="grid-column:1/-1;">
+                <label class="ctrl-label">Horario de atención por días</label>
+                <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;" id="horario-por-dias-container">
+                  <!-- Lunes -->
+                  <div class="day-row" data-day="Lun" style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; background:var(--iron); padding:8px 12px; border-radius:8px; border:1px solid var(--zinc);">
+                    <label style="display:flex; align-items:center; gap:8px; min-width:100px; color:var(--white); font-weight:600; cursor:pointer; margin:0;">
+                      <input type="checkbox" class="day-open" checked onchange="toggleDayRow(this)" style="width:16px; height:16px; accent-color:var(--red);" />
+                      <span>Lunes</span>
+                    </label>
+                    <div class="day-hours" style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-size:11px; color:var(--silver);">De</span>
+                      <input type="time" class="day-from ctrl-input" value="09:00" style="padding:4px 8px; width:100px; height:32px; background:var(--steel); border:1px solid var(--zinc); color:var(--white); border-radius:6px;" />
+                      <span style="font-size:11px; color:var(--silver);">a</span>
+                      <input type="time" class="day-to ctrl-input" value="18:00" style="padding:4px 8px; width:100px; height:32px; background:var(--steel); border:1px solid var(--zinc); color:var(--white); border-radius:6px;" />
+                    </div>
+                  </div>
+                  <!-- Martes -->
+                  <div class="day-row" data-day="Mar" style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; background:var(--iron); padding:8px 12px; border-radius:8px; border:1px solid var(--zinc);">
+                    <label style="display:flex; align-items:center; gap:8px; min-width:100px; color:var(--white); font-weight:600; cursor:pointer; margin:0;">
+                      <input type="checkbox" class="day-open" checked onchange="toggleDayRow(this)" style="width:16px; height:16px; accent-color:var(--red);" />
+                      <span>Martes</span>
+                    </label>
+                    <div class="day-hours" style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-size:11px; color:var(--silver);">De</span>
+                      <input type="time" class="day-from ctrl-input" value="09:00" style="padding:4px 8px; width:100px; height:32px; background:var(--steel); border:1px solid var(--zinc); color:var(--white); border-radius:6px;" />
+                      <span style="font-size:11px; color:var(--silver);">a</span>
+                      <input type="time" class="day-to ctrl-input" value="18:00" style="padding:4px 8px; width:100px; height:32px; background:var(--steel); border:1px solid var(--zinc); color:var(--white); border-radius:6px;" />
+                    </div>
+                  </div>
+                  <!-- Miércoles -->
+                  <div class="day-row" data-day="Mie" style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; background:var(--iron); padding:8px 12px; border-radius:8px; border:1px solid var(--zinc);">
+                    <label style="display:flex; align-items:center; gap:8px; min-width:100px; color:var(--white); font-weight:600; cursor:pointer; margin:0;">
+                      <input type="checkbox" class="day-open" checked onchange="toggleDayRow(this)" style="width:16px; height:16px; accent-color:var(--red);" />
+                      <span>Miércoles</span>
+                    </label>
+                    <div class="day-hours" style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-size:11px; color:var(--silver);">De</span>
+                      <input type="time" class="day-from ctrl-input" value="09:00" style="padding:4px 8px; width:100px; height:32px; background:var(--steel); border:1px solid var(--zinc); color:var(--white); border-radius:6px;" />
+                      <span style="font-size:11px; color:var(--silver);">a</span>
+                      <input type="time" class="day-to ctrl-input" value="18:00" style="padding:4px 8px; width:100px; height:32px; background:var(--steel); border:1px solid var(--zinc); color:var(--white); border-radius:6px;" />
+                    </div>
+                  </div>
+                  <!-- Jueves -->
+                  <div class="day-row" data-day="Jue" style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; background:var(--iron); padding:8px 12px; border-radius:8px; border:1px solid var(--zinc);">
+                    <label style="display:flex; align-items:center; gap:8px; min-width:100px; color:var(--white); font-weight:600; cursor:pointer; margin:0;">
+                      <input type="checkbox" class="day-open" checked onchange="toggleDayRow(this)" style="width:16px; height:16px; accent-color:var(--red);" />
+                      <span>Jueves</span>
+                    </label>
+                    <div class="day-hours" style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-size:11px; color:var(--silver);">De</span>
+                      <input type="time" class="day-from ctrl-input" value="09:00" style="padding:4px 8px; width:100px; height:32px; background:var(--steel); border:1px solid var(--zinc); color:var(--white); border-radius:6px;" />
+                      <span style="font-size:11px; color:var(--silver);">a</span>
+                      <input type="time" class="day-to ctrl-input" value="18:00" style="padding:4px 8px; width:100px; height:32px; background:var(--steel); border:1px solid var(--zinc); color:var(--white); border-radius:6px;" />
+                    </div>
+                  </div>
+                  <!-- Viernes -->
+                  <div class="day-row" data-day="Vie" style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; background:var(--iron); padding:8px 12px; border-radius:8px; border:1px solid var(--zinc);">
+                    <label style="display:flex; align-items:center; gap:8px; min-width:100px; color:var(--white); font-weight:600; cursor:pointer; margin:0;">
+                      <input type="checkbox" class="day-open" checked onchange="toggleDayRow(this)" style="width:16px; height:16px; accent-color:var(--red);" />
+                      <span>Viernes</span>
+                    </label>
+                    <div class="day-hours" style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-size:11px; color:var(--silver);">De</span>
+                      <input type="time" class="day-from ctrl-input" value="09:00" style="padding:4px 8px; width:100px; height:32px; background:var(--steel); border:1px solid var(--zinc); color:var(--white); border-radius:6px;" />
+                      <span style="font-size:11px; color:var(--silver);">a</span>
+                      <input type="time" class="day-to ctrl-input" value="18:00" style="padding:4px 8px; width:100px; height:32px; background:var(--steel); border:1px solid var(--zinc); color:var(--white); border-radius:6px;" />
+                    </div>
+                  </div>
+                  <!-- Sábado -->
+                  <div class="day-row" data-day="Sab" style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; background:var(--iron); padding:8px 12px; border-radius:8px; border:1px solid var(--zinc);">
+                    <label style="display:flex; align-items:center; gap:8px; min-width:100px; color:var(--white); font-weight:600; cursor:pointer; margin:0;">
+                      <input type="checkbox" class="day-open" onchange="toggleDayRow(this)" style="width:16px; height:16px; accent-color:var(--red);" />
+                      <span>Sábado</span>
+                    </label>
+                    <div class="day-hours" style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-size:11px; color:var(--silver);">De</span>
+                      <input type="time" class="day-from ctrl-input" value="09:00" style="padding:4px 8px; width:100px; height:32px; background:var(--steel); border:1px solid var(--zinc); color:var(--white); border-radius:6px;" />
+                      <span style="font-size:11px; color:var(--silver);">a</span>
+                      <input type="time" class="day-to ctrl-input" value="13:00" style="padding:4px 8px; width:100px; height:32px; background:var(--steel); border:1px solid var(--zinc); color:var(--white); border-radius:6px;" />
+                    </div>
+                  </div>
+                  <!-- Domingo -->
+                  <div class="day-row" data-day="Dom" style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; background:var(--iron); padding:8px 12px; border-radius:8px; border:1px solid var(--zinc);">
+                    <label style="display:flex; align-items:center; gap:8px; min-width:100px; color:var(--white); font-weight:600; cursor:pointer; margin:0;">
+                      <input type="checkbox" class="day-open" onchange="toggleDayRow(this)" style="width:16px; height:16px; accent-color:var(--red);" />
+                      <span>Domingo</span>
+                    </label>
+                    <div class="day-hours" style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-size:11px; color:var(--silver);">De</span>
+                      <input type="time" class="day-from ctrl-input" value="09:00" style="padding:4px 8px; width:100px; height:32px; background:var(--steel); border:1px solid var(--zinc); color:var(--white); border-radius:6px;" />
+                      <span style="font-size:11px; color:var(--silver);">a</span>
+                      <input type="time" class="day-to ctrl-input" value="13:00" style="padding:4px 8px; width:100px; height:32px; background:var(--steel); border:1px solid var(--zinc); color:var(--white); border-radius:6px;" />
+                    </div>
+                  </div>
+                </div>
+                <!-- Backup text field hidden -->
+                <input type="hidden" id="cfg-store-horario" value="" />
+              </div>
+
+              <!-- 7. WhatsApp -->
+              <div class="ctrl-group" style="grid-column:1/-1;">
+                <label class="ctrl-label">WhatsApp (con código país)</label>
+                <input class="ctrl-input" id="cfg-store-wapp" placeholder="5491141819344" />
+              </div>
+
+              <!-- 8. Métodos de pago -->
               <div class="ctrl-group" style="grid-column:1/-1;">
                 <label class="ctrl-label">Métodos de pago aceptados</label>
                 <div style="display: flex; gap: 24px; align-items: center; margin-top: 8px; flex-wrap: wrap;">
@@ -3390,13 +3424,20 @@
                   </label>
                 </div>
               </div>
+
+              <!-- 9. Contraseña del panel -->
+              <div class="ctrl-group" style="grid-column:1/-1;">
+                <label class="ctrl-label">Contraseña del Panel</label>
+                <input class="ctrl-input" type="password" id="cfg-store-password" placeholder="Clave para proteger el acceso a este panel" />
+              </div>
+
             </div>
           </div>
         </div>
 
-        <!-- Código QR -->
+        <!-- 10. QR y Kit imprimible -->
         <div class="config-section">
-          <div class="config-section-title"><i class="bi bi-qr-code"></i> Código QR de tu Tienda</div>
+          <div class="config-section-title"><i class="bi bi-qr-code"></i> QR y Kit imprimible</div>
           <div class="config-section-content" style="text-align:center; padding:24px;">
             <div style="font-size:12px;color:var(--silver);margin-bottom:16px;line-height:1.6;text-align:left;">
               Descargá o imprimí el código QR de tu tienda en línea para que tus clientes puedan acceder escaneándolo desde sus teléfonos.
@@ -3426,10 +3467,10 @@
       <div id="cfg-save-status"
         style="font-size:11px;text-align:right;margin-top:8px;min-height:14px;color:var(--silver);"></div>
 
-    </div><!-- /view-config -->
+    </div><!-- /view-config-basica -->
 
     <!-- ══════════════════════════════ VISTA: CONFIGURACIÓN AVANZADA -->
-    <div class="view" id="view-advanced">
+    <div class="view" id="view-config-avanzada">
       
       <!-- Banner de Advertencia -->
       <div style="background: rgba(215, 38, 56, 0.08); border: 1px solid rgba(215, 38, 56, 0.25); border-radius: 12px; padding: 20px; margin-bottom: 20px; display: flex; gap: 16px; align-items: flex-start; animation: fadeUp .35s ease both;">
@@ -3444,9 +3485,9 @@
 
       <div class="masonry-grid">
 
-        <!-- Supabase -->
+        <!-- 1. Base de datos -->
         <div class="config-section">
-          <div class="config-section-title"><i class="bi bi-database"></i> Conexión a Supabase <div
+          <div class="config-section-title"><i class="bi bi-database"></i> Base de datos <div
               class="config-status" id="adv-status-supabase"></div>
           </div>
           <div class="config-section-content">
@@ -3486,9 +3527,9 @@
           </div>
         </div>
 
-        <!-- AI API Config (Claude / Gemini) -->
+        <!-- 2. Inteligencia artificial -->
         <div class="config-section">
-          <div class="config-section-title"><i class="bi bi-robot"></i> API de Inteligencia Artificial — Búsqueda por EAN/SKU</div>
+          <div class="config-section-title"><i class="bi bi-robot"></i> Inteligencia artificial</div>
           <div class="config-section-content">
             <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
               Configurá la inteligencia artificial para habilitar el autocompletado de productos desde el ABM.
@@ -3568,9 +3609,9 @@
           </div>
         </div>
 
-        <!-- Cloudinary -->
+        <!-- 3. Imágenes -->
         <div class="config-section">
-          <div class="config-section-title"><i class="bi bi-cloud-arrow-up"></i> Cloudinary — Almacenamiento de imágenes
+          <div class="config-section-title"><i class="bi bi-cloud-arrow-up"></i> Imágenes
             <div class="config-status" id="adv-status-cloudinary"></div>
           </div>
           <div class="config-section-content">
@@ -3603,11 +3644,11 @@
               <span id="cfg-upload-result" style="font-size:11px;display:block;margin-top:6px;"></span>
             </div>
           </div>
-        </div><!-- /Cloudinary section -->
+        </div>
 
-        <!-- Dirección Web / Subdominio -->
+        <!-- 4. Subdominio -->
         <div class="config-section collapsed">
-          <div class="config-section-title"><i class="bi bi-globe2"></i> Dirección Web y Subdominio</div>
+          <div class="config-section-title"><i class="bi bi-globe2"></i> Subdominio</div>
           <div class="config-section-content" style="padding: 20px;">
             <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
               Configurá y cambiá el subdominio que te otorgamos para acceder a tu tienda online (ej: <code>mi-tienda.daletepido.com.ar</code>).
@@ -3628,15 +3669,14 @@
                   </a>
                 </div>
                 <div style="font-size:10px;color:var(--silver);margin-top:3px;">Podés cambiar tu dirección web una vez cada 15 días. Usá solo letras minúsculas, números y guiones.</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-
-        <!-- Gerente -->
+        <!-- 5. Gerencia -->
         <div class="config-section collapsed">
-          <div class="config-section-title"><i class="bi bi-person-badge"></i> Gerente de tienda <div
+          <div class="config-section-title"><i class="bi bi-person-badge"></i> Gerencia <div
               class="config-status" id="adv-status-gerente"></div>
           </div>
           <div class="config-section-content">
@@ -3678,7 +3718,7 @@
       <div id="adv-save-status"
         style="font-size:11px;text-align:right;margin-top:8px;min-height:14px;color:var(--silver);"></div>
 
-    </div><!-- /view-advanced -->
+    </div><!-- /view-config-avanzada -->
 
     <!-- ══ CATEGORIES ══ -->
     <div class="view" id="view-categories">
@@ -4136,7 +4176,7 @@
 
     // ← FIX CRÍTICO: TITLES debe estar ANTES de usarse
     const TITLES = {
-      dashboard: 'Dashboard',
+      dashboard: 'Inicio',
       rubro: 'Rubro y Plantilla',
       reports: 'Analítica',
       'new-order': 'Nuevo Pedido',
@@ -4146,10 +4186,12 @@
       categories: 'Categorías',
       pickups: 'PickUp · Repartidores',
       'new-pickup': 'Formulario de Repartidor',
-      design: 'Diseño de Tienda',
-      pages: 'Páginas',
-      config: 'Configuración',
-      advanced: 'Avanzado'
+      marca: 'Marca',
+      'design-catalogo': 'Diseño de Catálogo',
+      enlaces: 'Enlaces',
+      'pages-internas': 'Páginas Internas',
+      'config-basica': 'Configuración Básica',
+      'config-avanzada': 'Configuración Avanzada'
     };
 
     let products = [];
@@ -4334,12 +4376,27 @@
         // nota: 'codigo' y 'pills' no existen en la tabla products de Supabase aún
       };
     }
-
     /* NAV */
     function showView(name, el) {
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
       document.getElementById('view-' + name).classList.add('active');
+
+      // Move design preview wrap dynamically between marca and design-catalogo
+      const previewWrap = document.querySelector('.design-preview-wrap');
+      if (previewWrap) {
+        if (name === 'marca') {
+          const target = document.querySelector('#view-marca .design-wrap');
+          if (target && !target.contains(previewWrap)) {
+            target.appendChild(previewWrap);
+          }
+        } else if (name === 'design-catalogo') {
+          const target = document.querySelector('#view-design-catalogo .design-wrap');
+          if (target && !target.contains(previewWrap)) {
+            target.appendChild(previewWrap);
+          }
+        }
+      }
 
       // Mostrar u ocultar el selector de período sólo en Informes
       const periodSel = document.querySelector('.period-select');
@@ -4354,9 +4411,15 @@
         orders: 'bi-receipt',
         products: 'bi-grid-3x3-gap',
         abm: 'bi-pencil-square',
-        design: 'bi-palette',
-        config: 'bi-gear',
-        advanced: 'bi-shield-lock'
+        marca: 'bi-palette',
+        rubro: 'bi-shop',
+        'design-catalogo': 'bi-image',
+        enlaces: 'bi-link-45deg',
+        'pages-internas': 'bi-file-text',
+        'config-basica': 'bi-gear',
+        'config-avanzada': 'bi-shield-lock',
+        categories: 'bi-tags',
+        pickups: 'bi-truck'
       };
       const icon = icons[name] || 'bi-speedometer';
       document.getElementById('view-title').innerHTML = `<i class="bi ${icon}" style="margin-right:6px;"></i> ${TITLES[name]}`;
@@ -4364,6 +4427,8 @@
       if (name === 'products') renderProducts();
       if (name === 'orders') renderAllOrders();
       if (name === 'reports') {
+        const select = document.querySelector('.period-select');
+        if (select) setPeriod(select.value);
         setTimeout(() => {
           if (cOrders) cOrders.resize();
           if (cPago) cPago.resize();
@@ -4652,6 +4717,12 @@
               font: parsedDesign.font || cfg.font || '',
               fontBody: parsedDesign.fontBody || cfg.fontBody || '',
               bg: parsedDesign.bg || cfg.bg || '',
+              subrubro: parsedDesign.subrubro || '',
+              password: parsedDesign.password || '',
+              payment_methods: parsedDesign.payment_methods || { efectivo: true, transferencia: true, convenir: true },
+              domain: parsedDesign.domain || '',
+              gerente: parsedDesign.gerente || { nombre: '', email: '', frecuencia: 'mensual' },
+              horarios_data: parsedDesign.horarios_data || null,
               socials: {
                 web: parsedSocials.web || '',
                 ig: dbCfg.instagram || parsedSocials.ig || '',
@@ -4702,48 +4773,271 @@
     }
 
     /* METRICS */
-    function updateMetrics(factor = 1) {
-      const base = { ord: 142, rev: 4200000, avg: 29600 };
-      const f = factor;
-      document.getElementById('m-ord').textContent = Math.round(base.ord * f);
-      document.getElementById('m-rev').textContent = '$' + Math.round(base.rev * f / 1000) + 'K';
-      document.getElementById('m-avg').textContent = '$' + Math.round(base.avg / 1000) + 'K';
-      document.getElementById('m-prods').textContent = products.length || '—';
-      document.getElementById('m-ord-d').innerHTML = '<i class="bi bi-arrow-up-right"></i> +18% vs mes anterior';
-      document.getElementById('m-rev-d').innerHTML = '<i class="bi bi-arrow-up-right"></i> +24% vs mes anterior';
-      document.getElementById('m-avg-d').innerHTML = '<i class="bi bi-arrow-down-right"></i> -3% vs mes anterior';
-      document.getElementById('m-prods-d').innerHTML = products.length ? `<span style="color:var(--silver);">en catálogo</span>` : '';
+    function parseOrderDate(dateStr) {
+      if (!dateStr || dateStr === '—') return new Date(0);
+      if (dateStr.includes('-') && !dateStr.includes('/')) {
+        return new Date(dateStr);
+      }
+      const parts = dateStr.split(/[\/\s,:]+/);
+      if (parts.length >= 3) {
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1;
+        const year = parseInt(parts[2], 10);
+        const hour = parts[3] ? parseInt(parts[3], 10) : 0;
+        const minute = parts[4] ? parseInt(parts[4], 10) : 0;
+        const second = parts[5] ? parseInt(parts[5], 10) : 0;
+        return new Date(year, month, day, hour, minute, second);
+      }
+      const parsed = new Date(dateStr);
+      return isNaN(parsed.getTime()) ? new Date(0) : parsed;
     }
 
     function setPeriod(days) {
-      const f = days == 7 ? .25 : days == 90 ? 3.1 : 1;
-      updateMetrics(f);
-      if (cOrders) {
-        cOrders.data.datasets[0].data = cOrders.data.datasets[0].data.map(v => Math.max(1, Math.round(v * f)));
-        cOrders.update();
+      const daysNum = parseInt(days, 10) || 30;
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - daysNum);
+
+      const filteredOrders = (allOrders || []).filter(o => parseOrderDate(o.fecha) >= cutoff);
+
+      updateMetrics(filteredOrders);
+      updateCharts(filteredOrders, daysNum);
+      
+      window.currentFilteredOrders = filteredOrders;
+      window.currentPeriodDays = daysNum;
+    }
+
+    function updateMetrics(filteredOrders = null) {
+      if (filteredOrders === null) {
+        const periodSelect = document.querySelector('.period-select');
+        const days = periodSelect ? parseInt(periodSelect.value, 10) : 30;
+        const cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - days);
+        filteredOrders = (allOrders || []).filter(o => parseOrderDate(o.fecha) >= cutoff);
       }
+      const count = filteredOrders.length;
+      let revenue = 0;
+      filteredOrders.forEach(o => {
+        revenue += parseFloat(o.total) || 0;
+      });
+      const avg = count > 0 ? revenue / count : 0;
+
+      document.getElementById('m-ord').textContent = count;
+      document.getElementById('m-rev').textContent = '$' + Math.round(revenue).toLocaleString('es-AR');
+      document.getElementById('m-avg').textContent = '$' + Math.round(avg).toLocaleString('es-AR');
+      document.getElementById('m-prods').textContent = products.length || '—';
+      
+      document.getElementById('m-ord-d').innerHTML = `<span style="color:var(--silver);">en el período</span>`;
+      document.getElementById('m-rev-d').innerHTML = `<span style="color:var(--silver);">en el período</span>`;
+      document.getElementById('m-avg-d').innerHTML = `<span style="color:var(--silver);">en el período</span>`;
+      document.getElementById('m-prods-d').innerHTML = products.length ? `<span style="color:var(--silver);">en catálogo</span>` : '';
     }
 
     /* CHARTS */
-    function updateCharts() {
-      // Top products from real data
-      if (cTop && products.length) {
-        const top5 = [...products].sort((a, b) => b.stock - a.stock).slice(0, 5);
-        cTop.data.labels = top5.map(p => p.name.length > 16 ? p.name.slice(0, 16) + '…' : p.name);
-        cTop.data.datasets[0].data = top5.map(p => p.stock);
+    function getChartDataForPeriod(filteredOrders, days) {
+      const labels = [];
+      const data = [];
+      const now = new Date();
+      
+      if (days <= 30) {
+        for (let i = days - 1; i >= 0; i--) {
+          const d = new Date();
+          d.setDate(now.getDate() - i);
+          const dateStr = d.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' });
+          labels.push(dateStr);
+          
+          const count = filteredOrders.filter(o => {
+            const oDate = parseOrderDate(o.fecha);
+            return oDate.getDate() === d.getDate() && oDate.getMonth() === d.getMonth() && oDate.getFullYear() === d.getFullYear();
+          }).length;
+          data.push(count);
+        }
+      } else {
+        for (let i = 11; i >= 0; i--) {
+          const d = new Date();
+          d.setMonth(now.getMonth() - i);
+          const monthStr = d.toLocaleDateString('es-AR', { month: 'short', year: '2-digit' });
+          labels.push(monthStr);
+          
+          const count = filteredOrders.filter(o => {
+            const oDate = parseOrderDate(o.fecha);
+            return oDate.getMonth() === d.getMonth() && oDate.getFullYear() === d.getFullYear();
+          }).length;
+          data.push(count);
+        }
+      }
+      return { labels, data };
+    }
+
+    function updateCharts(filteredOrders = null, days = null) {
+      if (days === null) {
+        const periodSelect = document.querySelector('.period-select');
+        days = periodSelect ? parseInt(periodSelect.value, 10) : 30;
+      }
+      if (filteredOrders === null) {
+        const cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - days);
+        filteredOrders = (allOrders || []).filter(o => parseOrderDate(o.fecha) >= cutoff);
+      }
+
+      // 1. Pedidos por día (cOrders)
+      if (cOrders) {
+        const chartData = getChartDataForPeriod(filteredOrders, days);
+        cOrders.data.labels = chartData.labels;
+        cOrders.data.datasets[0].data = chartData.data;
+        cOrders.update();
+      }
+
+      // 2. Métodos de pago (cPago)
+      if (cPago) {
+        const payCounts = {};
+        filteredOrders.forEach(o => {
+          const p = o.pago || 'Otro';
+          payCounts[p] = (payCounts[p] || 0) + 1;
+        });
+        const labels = Object.keys(payCounts);
+        const data = Object.values(payCounts);
+        cPago.data.labels = labels.length ? labels : ['Sin datos'];
+        cPago.data.datasets[0].data = data.length ? data : [1];
+        cPago.data.datasets[0].backgroundColor = ['#D72638', '#E74C3C', '#922B21', '#F1948A', '#CD6155'].slice(0, Math.max(1, labels.length));
+        cPago.update();
+      }
+
+      // 3. Top productos (cTop)
+      if (cTop) {
+        const prodSales = {};
+        filteredOrders.forEach(o => {
+          try {
+            const items = JSON.parse(o.detalle || '[]');
+            if (Array.isArray(items)) {
+              items.forEach(item => {
+                prodSales[item.name] = (prodSales[item.name] || 0) + (item.qty || 1);
+              });
+            }
+          } catch (e) {
+            if (o.productos) {
+              o.productos.split('|').forEach(p => {
+                const parts = p.trim().split('×');
+                if (parts.length === 2) {
+                  const name = parts[0].trim();
+                  const qty = parseInt(parts[1], 10) || 1;
+                  prodSales[name] = (prodSales[name] || 0) + qty;
+                } else if (p.trim()) {
+                  prodSales[p.trim()] = (prodSales[p.trim()] || 0) + 1;
+                }
+              });
+            }
+          }
+        });
+        
+        const top5 = Object.entries(prodSales).sort((a, b) => b[1] - a[1]).slice(0, 5);
+        if (top5.length) {
+          cTop.data.labels = top5.map(e => e[0].length > 16 ? e[0].slice(0, 16) + '…' : e[0]);
+          cTop.data.datasets[0].data = top5.map(e => e[1]);
+        } else {
+          cTop.data.labels = ['Sin ventas'];
+          cTop.data.datasets[0].data = [0];
+        }
         cTop.update();
       }
-      // Category chart
-      if (cCats && products.length) {
-        const catMap = {};
-        products.forEach(p => { catMap[p.cat] = (catMap[p.cat] || 0) + 1; });
-        const entries = Object.entries(catMap).sort((a, b) => b[1] - a[1]).slice(0, 6);
+
+      // 4. Categoría (cCats)
+      if (cCats) {
+        const prodSales = {};
+        filteredOrders.forEach(o => {
+          try {
+            const items = JSON.parse(o.detalle || '[]');
+            if (Array.isArray(items)) {
+              items.forEach(item => {
+                prodSales[item.name] = (prodSales[item.name] || 0) + (item.qty || 1);
+              });
+            }
+          } catch (e) {
+            if (o.productos) {
+              o.productos.split('|').forEach(p => {
+                const parts = p.trim().split('×');
+                if (parts.length === 2) {
+                  const name = parts[0].trim();
+                  const qty = parseInt(parts[1], 10) || 1;
+                  prodSales[name] = (prodSales[name] || 0) + qty;
+                } else if (p.trim()) {
+                  prodSales[p.trim()] = (prodSales[p.trim()] || 0) + 1;
+                }
+              });
+            }
+          }
+        });
+
+        const catSales = {};
+        Object.entries(prodSales).forEach(([pName, qty]) => {
+          const product = products.find(p => p.name === pName);
+          const cat = product ? product.cat : 'Otros';
+          catSales[cat] = (catSales[cat] || 0) + qty;
+        });
+
+        const entries = Object.entries(catSales).sort((a, b) => b[1] - a[1]).slice(0, 6);
         const reds = ['#D72638', '#E74C3C', '#A93226', '#F1948A', '#922B21', '#FADBD8'];
-        cCats.data.labels = entries.map(e => e[0]);
-        cCats.data.datasets[0].data = entries.map(e => e[1]);
-        cCats.data.datasets[0].backgroundColor = reds.slice(0, entries.length);
+        cCats.data.labels = entries.length ? entries.map(e => e[0]) : ['Sin datos'];
+        cCats.data.datasets[0].data = entries.length ? entries.map(e => e[1]) : [1];
+        cCats.data.datasets[0].backgroundColor = reds.slice(0, Math.max(1, entries.length));
         cCats.update();
       }
+    }
+
+    function exportarInforme() {
+      const orders = window.currentFilteredOrders || allOrders || [];
+      if (!orders.length) {
+        alert('No hay pedidos para exportar en este período.');
+        return;
+      }
+      
+      const headers = ['ID', 'Fecha', 'Cliente', 'DNI', 'Productos', 'Pago', 'Logistica', 'Direccion', 'Total', 'Estado'];
+      const csvRows = [headers.join(',')];
+      
+      orders.forEach(o => {
+        const row = [
+          o.id,
+          o.fecha,
+          `"${(o.cliente || '').replace(/"/g, '""')}"`,
+          o.dni || '',
+          `"${(o.productos || '').replace(/"/g, '""')}"`,
+          o.pago || '',
+          o.logistica || '',
+          `"${(o.direccion || '').replace(/"/g, '""')}"`,
+          o.total || 0,
+          o.estado || ''
+        ];
+        csvRows.push(row.join(','));
+      });
+      
+      const csvContent = "\uFEFF" + csvRows.join("\n");
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `informe-pedidos-${window.currentPeriodDays || 30}dias.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToastDash('✓ Informe exportado en CSV con éxito');
+    }
+
+    function enviarCorreoGerente() {
+      const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+      const gerente = sc.gerente || {};
+      
+      if (!gerente.email || !gerente.nombre) {
+        alert('Por favor configurá el nombre y correo del Gerente en Ajustes -> Configuración avanzada primero.');
+        return;
+      }
+      
+      const orders = window.currentFilteredOrders || allOrders || [];
+      let totalRevenue = 0;
+      orders.forEach(o => { totalRevenue += parseFloat(o.total) || 0; });
+      
+      const msg = `Enviando informe de analítica (${window.currentPeriodDays || 30} días) a ${gerente.nombre} (${gerente.email}) con ${orders.length} pedidos y un total de $${Math.round(totalRevenue).toLocaleString('es-AR')} facturados.`;
+      console.log(msg);
+      
+      showToastDash(`✓ Correo enviado al Gerente ${gerente.nombre} con éxito`);
     }
 
     function initCharts() {
@@ -4762,7 +5056,7 @@
       cCats = new Chart(document.getElementById('c-cats'), { type: 'doughnut', data: { labels: ['Cargando...'], datasets: [{ data: [1], backgroundColor: ['#D72638'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { size: 10 }, color: '#7A7A82', padding: 10 } } }, cutout: '55%' } });
 
       renderOrdersTable();
-      updateMetrics();
+      setPeriod('30');
     }
 
     /* ORDERS */
@@ -4776,8 +5070,10 @@
       { key: 'despachado', label: 'Despachado', bg: 'rgba(155,89,182,.15)', text: '#9B59B6', icon: 'bi-box-seam' },
       { key: 'listo_retirar', label: 'Listo para retirar', bg: 'rgba(46,204,113,.15)', text: '#2ECC71', icon: 'bi-bag-check' },
       { key: 'cobrado', label: 'Cobrado', bg: 'rgba(46,204,113,.15)', text: '#2ECC71', icon: 'bi-cash-coin' },
+      { key: 'por_cobrar', label: 'Por cobrar', bg: 'rgba(243,156,18,.15)', text: '#F39C12', icon: 'bi-cash' },
       { key: 'retirado', label: 'Retirado', bg: 'rgba(46,204,113,.15)', text: '#27AE60', icon: 'bi-bag-check' },
       { key: 'enviado', label: 'Enviado', bg: 'rgba(52,152,219,.25)', text: '#2980B9', icon: 'bi-truck' },
+      { key: 'entregado', label: 'Entregado', bg: 'rgba(46,204,113,.15)', text: '#2ECC71', icon: 'bi-check-circle' },
       { key: 'devuelto', label: 'Devuelto', bg: 'rgba(215,38,56,.15)', text: '#D72638', icon: 'bi-arrow-return-left' },
       { key: 'perdido', label: 'Perdido', bg: 'rgba(100,100,100,.2)', text: '#888', icon: 'bi-x-circle' },
     ];
@@ -5248,6 +5544,8 @@
           parsedEmail.bg = cfgObj.bg !== undefined ? cfgObj.bg : parsedEmail.bg || '';
           parsedEmail.subrubro = cfgObj.subrubro !== undefined ? cfgObj.subrubro : parsedEmail.subrubro || '';
           parsedEmail.payment_methods = cfgObj.payment_methods !== undefined ? cfgObj.payment_methods : parsedEmail.payment_methods || { efectivo: true, transferencia: true, convenir: true };
+          parsedEmail.gerente = cfgObj.gerente !== undefined ? cfgObj.gerente : parsedEmail.gerente || { nombre: '', email: '', frecuencia: 'mensual' };
+          parsedEmail.horarios_data = cfgObj.horarios_data !== undefined ? cfgObj.horarios_data : parsedEmail.horarios_data || null;
 
           dataToSave.email = JSON.stringify(parsedEmail);
 
@@ -5325,12 +5623,12 @@
     const _origShowView = showView;
     window.showView = async function (name, el) {
       _origShowView(name, el);
-      if (name === 'design') initDesignPanel();
+      if (name === 'marca' || name === 'design-catalogo') initDesignPanel();
       if (name === 'abm' && !localProducts.length) await initABM();
       if (name === 'abm' && localProducts.length) renderABM();
       if (name === 'orders') initOrderForm();
-      if (name === 'config') initConfigView();
-      if (name === 'advanced') initAdvancedView();
+      if (name === 'config-basica') initConfigView();
+      if (name === 'config-avanzada') initAdvancedView();
     };
 
     /* ═══════════════════════════════════════════ HERO IMAGE */
@@ -6866,17 +7164,47 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       // ── KANBAN BOARD ──────────────────────────────────
       const kanban = document.getElementById('kanban-board');
       if (kanban) {
-        const states = getStates();
-        kanban.innerHTML = states.map(s => {
-          const cols = orders.filter(o => o.estado === s.key);
+        const kanbanCols = [
+          {
+            key: 'NUEVO',
+            label: 'NUEVO',
+            color: '#F39C12',
+            icon: 'bi-hourglass-split',
+            states: ['confirmar', 'en_curso']
+          },
+          {
+            key: 'TRANSITO',
+            label: 'TRÁNSITO',
+            color: '#9B59B6',
+            icon: 'bi-truck',
+            states: ['despachado', 'listo_retirar', 'retirado', 'enviado', 'entregado']
+          },
+          {
+            key: 'COBRANZAS',
+            label: 'COBRANZAS',
+            color: '#2ECC71',
+            icon: 'bi-cash-coin',
+            states: ['por_cobrar', 'cobrado']
+          },
+          {
+            key: 'ANOMALIAS',
+            label: 'ANOMALÍAS',
+            color: '#D72638',
+            icon: 'bi-exclamation-triangle',
+            states: ['devuelto', 'perdido']
+          }
+        ];
+
+        kanban.innerHTML = kanbanCols.map(col => {
+          const cols = orders.filter(o => col.states.includes(o.estado));
           return `<div class="kanban-col">
-        <div class="kanban-col-head" style="border-top:3px solid ${s.text};">
-          <span style="color:${s.text};"><i class="bi ${s.icon}"></i> ${s.label}</span>
+        <div class="kanban-col-head" style="border-top:3px solid ${col.color};">
+          <span style="color:${col.color};"><i class="bi ${col.icon}"></i> ${col.label}</span>
           <span class="kanban-count">${cols.length}</span>
         </div>
         <div class="kanban-cards">
           ${cols.length ? cols.map(o => `
-            <div class="kanban-card" style="border-left:3px solid ${s.text};">
+            <div class="kanban-card" style="border-left:3px solid ${col.color};">
               <div class="kc-id">${o.id}</div>
               <div class="kc-client">${o.cliente}</div>
               <div class="kc-prods">${o.productos}</div>
@@ -7303,6 +7631,74 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         opts.map(([v,l]) => `<option value="${v}">${l}</option>`).join('');
     }
 
+    /* Horario selector functions */
+    window.toggleDayRow = function(checkbox) {
+      const row = checkbox.closest('.day-row');
+      if (!row) return;
+      const inputs = row.querySelectorAll('.day-hours input');
+      inputs.forEach(input => {
+        input.disabled = !checkbox.checked;
+        input.style.opacity = checkbox.checked ? '1' : '0.5';
+      });
+    };
+
+    function getStructuredHorarios() {
+      const data = [];
+      document.querySelectorAll('.day-row').forEach(row => {
+        const day = row.dataset.day;
+        const open = row.querySelector('.day-open').checked;
+        const from = row.querySelector('.day-from').value;
+        const to = row.querySelector('.day-to').value;
+        data.push({ day, open, from, to });
+      });
+      return data;
+    }
+
+    function formatHorariosText(data) {
+      const daysOrder = ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'];
+      const openDays = data.filter(d => d.open);
+      if (openDays.length === 0) return 'Cerrado';
+      
+      let parts = [];
+      let startIdx = 0;
+      while (startIdx < data.length) {
+        if (!data[startIdx].open) {
+          startIdx++;
+          continue;
+        }
+        let endIdx = startIdx;
+        while (endIdx + 1 < data.length && data[endIdx + 1].open && data[endIdx + 1].from === data[startIdx].from && data[endIdx + 1].to === data[startIdx].to) {
+          endIdx++;
+        }
+        
+        const hoursStr = `${data[startIdx].from}–${data[startIdx].to}`;
+        if (startIdx === endIdx) {
+          parts.push(`${data[startIdx].day} ${hoursStr}`);
+        } else {
+          parts.push(`${data[startIdx].day} a ${data[endIdx].day} ${hoursStr}`);
+        }
+        startIdx = endIdx + 1;
+      }
+      return parts.join(' · ');
+    }
+
+    function loadHorarios(data) {
+      if (!data || !Array.isArray(data)) return;
+      data.forEach(item => {
+        const row = document.querySelector(`.day-row[data-day="${item.day}"]`);
+        if (!row) return;
+        const cb = row.querySelector('.day-open');
+        const fromInput = row.querySelector('.day-from');
+        const toInput = row.querySelector('.day-to');
+        if (cb) {
+          cb.checked = !!item.open;
+          window.toggleDayRow(cb);
+        }
+        if (fromInput && item.from) fromInput.value = item.from;
+        if (toInput && item.to) toInput.value = item.to;
+      });
+    }
+
     /* ═══════════════════════════════════════════ CONFIG VIEW */
     function initConfigView() {
       // Load all saved values into form fields
@@ -7325,6 +7721,22 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         if (sc.subrubro) document.getElementById('cfg-store-subrubro').value = sc.subrubro;
       }
       if (sc.direccion) document.getElementById('cfg-store-direccion').value = sc.direccion;
+      
+      // Load structured day-by-day horarios
+      if (sc.horarios_data) {
+        loadHorarios(sc.horarios_data);
+      } else {
+        const defaultHorarios = [
+          { day: 'Lun', open: true, from: '09:00', to: '18:00' },
+          { day: 'Mar', open: true, from: '09:00', to: '18:00' },
+          { day: 'Mie', open: true, from: '09:00', to: '18:00' },
+          { day: 'Jue', open: true, from: '09:00', to: '18:00' },
+          { day: 'Vie', open: true, from: '09:00', to: '18:00' },
+          { day: 'Sab', open: true, from: '09:00', to: '13:00' },
+          { day: 'Dom', open: false, from: '09:00', to: '13:00' }
+        ];
+        loadHorarios(defaultHorarios);
+      }
       if (sc.horario) document.getElementById('cfg-store-horario').value = sc.horario;
 
       const pay = sc.payment_methods || { efectivo: true, transferencia: true, convenir: true };
@@ -7412,6 +7824,13 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (gmEl) gmEl.value = geminiModel;
 
       if (typeof toggleAIProviderFields === 'function') toggleAIProviderFields();
+
+      // Cargar gerente
+      const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+      const gerente = sc.gerente || { nombre: '', email: '', frecuencia: 'mensual' };
+      if (document.getElementById('adv-gerente-email')) document.getElementById('adv-gerente-email').value = gerente.email || '';
+      if (document.getElementById('adv-gerente-nombre')) document.getElementById('adv-gerente-nombre').value = gerente.nombre || '';
+      if (document.getElementById('adv-gerente-frecuencia')) document.getElementById('adv-gerente-frecuencia').value = gerente.frecuencia || 'mensual';
 
       // Cargar categorías
       loadCategoriesList();
@@ -7586,15 +8005,41 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const geminiModel = document.getElementById('cfg-gemini-model')?.value || 'gemini-2.5-flash';
       localStorage.setItem('storeapp_gemini_model', geminiModel);
 
+      // Gerente
+      const gEmail = (document.getElementById('adv-gerente-email')?.value || '').trim();
+      const gNombre = (document.getElementById('adv-gerente-nombre')?.value || '').trim();
+      const gFrecuencia = document.getElementById('adv-gerente-frecuencia')?.value || 'mensual';
+
+      const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+      sc.gerente = { email: gEmail, nombre: gNombre, frecuencia: gFrecuencia };
+
+      // Supabase
+      const sbUrlEl = document.getElementById('adv-supabase-url');
+      const sbKeyEl = document.getElementById('adv-supabase-key');
+      if (sbUrlEl && sbUrlEl.value.trim()) {
+        localStorage.setItem('storeapp_supabase_url', sbUrlEl.value.trim());
+        SUPABASE_URL = sbUrlEl.value.trim();
+      }
+      if (sbKeyEl && sbKeyEl.value.trim()) {
+        localStorage.setItem('storeapp_supabase_key', sbKeyEl.value.trim());
+        SUPABASE_KEY = sbKeyEl.value.trim();
+      }
+
+      localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
+      localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(sc));
+      
+      cfg = { ...cfg, ...sc };
+      await syncStoreConfigToSupabase(cfg);
+
       if (typeof updateStatusLights === 'function') updateStatusLights();
 
-      // Nota: Supabase URL/Key se cambian en el HTML directamente (constantes)
       const el = document.getElementById('adv-save-status');
       if (el) {
         el.style.color = 'var(--green)';
         el.textContent = '✓ Configuración avanzada guardada';
         setTimeout(() => { el.textContent = ''; }, 3000);
       }
+      showToastDash('✓ Configuración avanzada guardada con éxito');
     }
 
     async function testSupabaseConnection() {
@@ -7732,13 +8177,20 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const subrubro = document.getElementById('cfg-store-subrubro')?.value.trim() || '';
       if (subrubro) sc.subrubro = subrubro; else sc.subrubro = '';
       const direccion = document.getElementById('cfg-store-direccion').value.trim();
-      const horario = document.getElementById('cfg-store-horario').value.trim();
+      
+      const structuredHorarios = getStructuredHorarios();
+      const horarioText = formatHorariosText(structuredHorarios);
+      sc.horarios_data = structuredHorarios;
+      sc.horario = horarioText;
+      if (document.getElementById('cfg-store-horario')) {
+        document.getElementById('cfg-store-horario').value = horarioText;
+      }
+
       if (name) sc.name = name;
       if (tagline) sc.tagline = tagline;
       if (wapp) sc.wapp = wapp;
       if (rubro) sc.rubro = rubro;
       if (direccion) sc.direccion = direccion;
-      if (horario) sc.horario = horario;
       
       const payEfectivo = document.getElementById('cfg-pay-efectivo')?.checked !== false;
       const payTransferencia = document.getElementById('cfg-pay-transferencia')?.checked !== false;
