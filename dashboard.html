@@ -7595,9 +7595,14 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const isLight = theme === 'light';
       document.body.classList.toggle('light-mode', isLight);
       localStorage.setItem('storeapp_dash_theme', theme);
-      document.getElementById('theme-icon').className = isLight ? 'bi bi-moon' : 'bi bi-sun';
-      document.getElementById('dash-theme-dark').style.borderColor = isLight ? 'var(--zinc)' : 'var(--red)';
-      document.getElementById('dash-theme-light').style.borderColor = isLight ? 'var(--red)' : 'var(--zinc)';
+      const themeIcon = document.getElementById('theme-icon');
+      if (themeIcon) {
+        themeIcon.className = isLight ? 'bi bi-moon' : 'bi bi-sun';
+      }
+      const darkEl = document.getElementById('dash-theme-dark');
+      const lightEl = document.getElementById('dash-theme-light');
+      if (darkEl) darkEl.style.borderColor = isLight ? 'var(--zinc)' : 'var(--red)';
+      if (lightEl) lightEl.style.borderColor = isLight ? 'var(--red)' : 'var(--zinc)';
     }
 
     function applyDashTheme() {
@@ -7776,8 +7781,10 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (typeof toggleAIProviderFields === 'function') toggleAIProviderFields();
 
       const theme = localStorage.getItem('storeapp_dash_theme') || 'dark';
-      document.getElementById('dash-theme-dark').style.borderColor = theme === 'dark' ? 'var(--red)' : 'var(--zinc)';
-      document.getElementById('dash-theme-light').style.borderColor = theme === 'light' ? 'var(--red)' : 'var(--zinc)';
+      const darkEl = document.getElementById('dash-theme-dark');
+      const lightEl = document.getElementById('dash-theme-light');
+      if (darkEl) darkEl.style.borderColor = theme === 'dark' ? 'var(--red)' : 'var(--zinc)';
+      if (lightEl) lightEl.style.borderColor = theme === 'light' ? 'var(--red)' : 'var(--zinc)';
 
       // Cargar QR de la tienda de forma dinámica
       const qrImg = document.getElementById('cfg-qr-img');
