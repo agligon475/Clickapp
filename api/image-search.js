@@ -25,40 +25,70 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Obtener token VQD dinámico de DuckDuckGo
-    const initUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
-    const initRes = await fetch(initUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
-      }
-    });
-    const html = await initRes.text();
+    let results = [];
     
-    const vqdRegex = /vqd=['"]?([^&"']+)['"]?/;
-    const match = html.match(vqdRegex);
-    if (!match) {
-      return res.status(500).json({ error: 'Could not fetch search token' });
+    // 1. Intentar buscar en DuckDuckGo
+    try {
+      const initUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+      const initRes = await fetch(initUrl, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
+        }
+      });
+      if (initRes.ok) {
+        const html = await initRes.text();
+        const vqdRegex = /vqd=['"]?([^&"']+)['"]?/;
+        const match = html.match(vqdRegex);
+        if (match) {
+          const vqd = match[1];
+          const searchUrl = `https://duckduckgo.com/i.js?l=us-en&o=json&q=${encodeURIComponent(query)}&vqd=${vqd}&f=,,,`;
+          const searchRes = await fetch(searchUrl, {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
+              'Referer': 'https://duckduckgo.com/'
+            }
+          });
+          
+          if (searchRes.ok) {
+            const data = await searchRes.json();
+            results = data.results ? data.results.slice(0, 8).map(r => ({
+              title: r.title,
+              image: r.image,
+              thumbnail: r.thumbnail
+            })) : [];
+          }
+        }
+      }
+    } catch (ddgErr) {
+      console.warn('DuckDuckGo search failed, falling back to Openverse:', ddgErr.message);
     }
-    const vqd = match[1];
 
-    // 2. Consultar el endpoint de imágenes de DuckDuckGo
-    const searchUrl = `https://duckduckgo.com/i.js?l=us-en&o=json&q=${encodeURIComponent(query)}&vqd=${vqd}&f=,,,`;
-    const searchRes = await fetch(searchUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
-        'Referer': 'https://duckduckgo.com/'
+    // 2. Fallback a Openverse si DuckDuckGo falló o no devolvió resultados
+    if (results.length === 0) {
+      try {
+        const openverseUrl = `https://api.openverse.org/v1/images/?q=${encodeURIComponent(query)}&page_size=8`;
+        const openverseRes = await fetch(openverseUrl, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
+          }
+        });
+        if (openverseRes.ok) {
+          const oData = await openverseRes.json();
+          results = oData.results ? oData.results.map(r => ({
+            title: r.title || 'Imagen',
+            image: r.url,
+            thumbnail: r.thumbnail || r.url
+          })) : [];
+        }
+      } catch (openverseErr) {
+        console.error('Openverse fallback also failed:', openverseErr.message);
       }
-    });
-    
-    if (!searchRes.ok) throw new Error(`DDG API error: ${searchRes.status}`);
-    const data = await searchRes.json();
-    
-    const results = data.results ? data.results.slice(0, 8).map(r => ({
-      title: r.title,
-      image: r.image,
-      thumbnail: r.thumbnail
-    })) : [];
-    
+    }
+
+    if (results.length === 0) {
+      return res.status(500).json({ error: 'No se pudieron obtener imágenes de ninguna fuente disponible (DuckDuckGo/Openverse)' });
+    }
+
     // CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
