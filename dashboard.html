@@ -452,6 +452,18 @@
     body.collapsed-sidebar .sb-store-name-bar {
       display: none;
     }
+    body.collapsed-sidebar #sb-status-config-btn-wrap {
+      padding: 0;
+    }
+    body.collapsed-sidebar #sb-status-config-btn-wrap button {
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      border-radius: 50%;
+    }
+    body.collapsed-sidebar #sb-status-config-btn-wrap button span {
+      display: none;
+    }
     body.collapsed-sidebar .quick-actions-row {
       flex-direction: column;
       align-items: center;
@@ -1988,6 +2000,13 @@
         <div class="status-circle" id="status-circle-domain"><i class="bi bi-plug"></i></div>
         <span class="status-circle-dot" id="status-dot-domain"></span>
       </div>
+    </div>
+
+    <!-- Configure button (shown only if there is a warning or error) -->
+    <div id="sb-status-config-btn-wrap" style="display: none; justify-content: center; margin-bottom: 12px; padding: 0 12px; box-sizing: border-box;">
+      <button class="sb-btn" onclick="goToView('config-avanzada')" style="background: var(--red); color: white; border: none; height: 32px; font-size: 11px; font-weight: 600; border-radius: 6px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 10px rgba(215, 38, 56, 0.2); margin: 0;">
+        <i class="bi bi-gear-fill"></i> <span>Configurar</span>
+      </button>
     </div>
 
     <!-- Products & Sync Capsule -->
@@ -4849,10 +4868,32 @@
 
     let dbStatusState = 'checking'; // 'checking', 'ok', 'err'
 
+    // Track status states of connection indicators
+    const statusStates = {
+      db: 'checking',
+      ai: 'checking',
+      cloudinary: 'checking',
+      domain: 'checking'
+    };
+
+    function updateConfigButtonVisibility() {
+      const hasIssues = Object.values(statusStates).some(s => s === 'warn' || s === 'err');
+      const wrap = document.getElementById('sb-status-config-btn-wrap');
+      if (wrap) {
+        wrap.style.display = hasIssues ? 'flex' : 'none';
+      }
+    }
+
     function setStatusBulb(id, type, msg) {
+      statusStates[id] = type;
+
       const bulb = document.getElementById('status-light-' + id);
       const desc = document.getElementById('status-desc-' + id);
       const btn = document.getElementById('status-btn-' + id);
+      
+      // Even if the main card is hidden/null, update statusStates and check button visibility
+      updateConfigButtonVisibility();
+
       if (!bulb || !desc) return;
 
       const color = type === 'ok' ? '#2ecc71' : type === 'warn' ? '#f1c40f' : '#e74c3c';
@@ -8879,15 +8920,49 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       }
     }
 
+    function cleanQueryForIA(text) {
+      if (!text) return '';
+      let cleaned = text.toLowerCase();
+      // Remove accents
+      cleaned = cleaned.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      // Remove docena terms
+      cleaned = cleaned.replace(/\b(por|x|la)?\s*docenas?\b/g, '');
+      // Remove pack terms
+      cleaned = cleaned.replace(/\bpack\s*x?\s*\d+\b/g, '');
+      cleaned = cleaned.replace(/\bx\s*\d+\b/g, '');
+      // Remove weight/volume metrics (e.g. 250gr, 500g, 1kg, 750ml, 1lt, 2 litros, 20cc, etc.)
+      cleaned = cleaned.replace(/\b\d+([.,]\d+)?\s*(gr?|g|kg|kilo?s?|ml|lts?|l|litros?|cc|cm3|cm|mm|oz)\b/g, '');
+      // Remove generic promo terms
+      cleaned = cleaned.replace(/\b(promocion|promo|oferta|descuento|combo|barato|imperdible|super)\b/g, '');
+      // Remove extra spaces
+      cleaned = cleaned.replace(/\s+/g, ' ').trim();
+      return cleaned;
+    }
+
     async function buscarFotosIA() {
       const name = document.getElementById('m-name').value.trim();
+      const desc = document.getElementById('m-desc')?.value.trim() || '';
+      const origin = document.getElementById('m-origen')?.value.trim() || '';
       const marca = document.getElementById('m-marca')?.value.trim() || '';
+      
       if (!name) {
         alert('Por favor, ingresá el nombre del producto primero.');
         return;
       }
+
+      // Get descriptive keywords from description (first 4 words)
+      let descKeywords = '';
+      if (desc) {
+        const cleanedDesc = cleanQueryForIA(desc);
+        descKeywords = cleanedDesc.split(' ').slice(0, 4).join(' ');
+      }
       
-      const query = `${name} ${marca}`.trim();
+      // Combine and clean the query parameters: name, brand, origin, and description keywords
+      const rawQuery = `${name} ${marca} ${origin} ${descKeywords}`;
+      const query = cleanQueryForIA(rawQuery);
+
+      console.log('AI Image Search raw query:', rawQuery);
+      console.log('AI Image Search cleaned query:', query);
       const btn = document.getElementById('btn-buscar-fotos-ia');
       const resultsContainer = document.getElementById('ai-images-results');
       const listContainer = document.getElementById('ai-images-list');
