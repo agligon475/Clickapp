@@ -85,8 +85,40 @@ export default async function handler(req, res) {
       }
     }
 
+    // 3. Fallback a Wikimedia Commons si DuckDuckGo y Openverse fallaron
     if (results.length === 0) {
-      return res.status(500).json({ error: 'No se pudieron obtener imágenes de ninguna fuente disponible (DuckDuckGo/Openverse)' });
+      try {
+        const wikimediaUrl = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=filetype:bitmap%20${encodeURIComponent(query)}&gsrlimit=8&prop=imageinfo&iiprop=url&format=json&origin=*`;
+        const wikimediaRes = await fetch(wikimediaUrl, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
+          }
+        });
+        if (wikimediaRes.ok) {
+          const wData = await wikimediaRes.json();
+          if (wData.query && wData.query.pages) {
+            const pages = Object.values(wData.query.pages);
+            results = pages.map(p => {
+              const info = p.imageinfo ? p.imageinfo[0] : null;
+              if (info && info.url) {
+                return {
+                  title: p.title.replace('File:', ''),
+                  image: info.url,
+                  thumbnail: info.url
+                };
+              }
+              return null;
+            }).filter(Boolean);
+          }
+        }
+      } catch (wikiErr) {
+        console.error('Wikimedia fallback also failed:', wikiErr.message);
+      }
+    }
+
+    // Si aún no hay resultados, devolvemos un arreglo vacío (200 OK) para evitar errores HTTP 500 en consola
+    if (results.length === 0) {
+      return res.status(200).json({ results: [] });
     }
 
     // CORS headers
