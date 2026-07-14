@@ -26,7 +26,7 @@
     },
     {
       "source": "/:store([^./]+)",
-      "destination": "/tienda.html?store=:store"
+      "destination": "/api/store?store=:store"
     }
   ]
 }

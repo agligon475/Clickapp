@@ -228,9 +228,50 @@ const server = http.createServer(async (req, res) => {
       const storeId = urlPath.substring(1); // remove leading slash
       // Only rewrite if it's a potential store slug (no dots, not empty)
       if (storeId && !storeId.includes('/')) {
-        filePath = './tienda.html';
-        req.url = `/tienda.html?store=${storeId}`;
+        // Rewrite to api/store local handler for testing instead of serving HTML directly
+        req.url = `/api/store?store=${storeId}`;
+        urlPath = '/api/store';
+        // Let it fall through to the API handlers below
       }
+    }
+  }
+
+  if (urlPath === '/api/store') {
+    const storeId = new URLSearchParams(req.url.split('?')[1] || '').get('store') || '';
+    if (!storeId) {
+      res.writeHead(400);
+      return res.end('Store ID required');
+    }
+    try {
+      let html = fs.readFileSync(path.join(process.cwd(), 'tienda.html'), 'utf8');
+      const keyMatch = html.match(/const SUPABASE_KEY\s*=\s*['"]([^'"]+)['"]/);
+      const SUPABASE_KEY = keyMatch ? keyMatch[1] : '';
+      
+      if (SUPABASE_KEY) {
+        const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
+        const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}`, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        if (configRes.ok) {
+          const data = await configRes.json();
+          if (data && data.length > 0) {
+            const cfg = data[0];
+            const title = cfg.business_name ? `${cfg.business_name} — Tu tienda online` : 'Dale! Te Pido';
+            const desc = cfg.desc || 'Elegí tus productos, armá tu pedido y coordiná por WhatsApp.';
+            const logo = cfg.logo || 'https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png';
+            const url = `https://${storeId}.daletepido.com.ar/`;
+            html = html.replace(/<title>.*?<\/title>/, `<title>${title}</title>`);
+            const ogTags = `\n<meta property="og:title" content="${title}" />\n<meta property="og:description" content="${desc}" />\n<meta property="og:image" content="${logo}" />\n<meta property="og:url" content="${url}" />\n<meta property="og:type" content="website" />\n<link rel="icon" type="image/png" href="${logo}" />\n`;
+            html = html.replace(/<\/title>/, `</title>${ogTags}`);
+          }
+        }
+      }
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      return res.end(html);
+    } catch (e) {
+      console.error(e);
+      res.writeHead(500);
+      return res.end('Internal Server Error');
     }
   }
 

@@ -6,7 +6,9 @@ const filesToSync = [
   'tienda.html',
   'index.html',
   'alta-usuario.html',
-  'vercel.json'
+  'vercel.json',
+  'api/image-search.js',
+  'api/store.js'
 ];
 
 const destinations = [
@@ -24,6 +26,7 @@ filesToSync.forEach(file => {
 
   destinations.forEach(destDir => {
     const dest = path.join(destDir, file);
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.copyFileSync(src, dest);
     console.log(`Copiado: ${src} -> ${dest}`);
   });
