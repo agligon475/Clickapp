@@ -1912,6 +1912,14 @@
         grid-template-columns: 1fr 320px;
       }
     }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .spin-animation {
+      display: inline-block;
+      animation: spin 0.8s linear infinite;
+    }
   </style>
   <!-- Emoji Picker Element -->
   <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
@@ -3503,9 +3511,14 @@
         <span
           style="font-family:var(--font-h);font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;">ABM
           · Productos</span>
-        <button class="abm-btn-new" onclick="openModal()">
-          <i class="bi bi-plus-lg"></i> Nuevo producto
-        </button>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button class="sb-btn" onclick="refreshProducts(this)" style="background:transparent;border:1px solid var(--zinc);color:var(--white);padding:7px 14px;font-size:12px;display:flex;align-items:center;gap:6px;cursor:pointer;border-radius:6px;transition:all .2s ease;">
+            <i class="bi bi-arrow-clockwise"></i> Actualizar
+          </button>
+          <button class="abm-btn-new" onclick="openModal()">
+            <i class="bi bi-plus-lg"></i> Nuevo producto
+          </button>
+        </div>
       </div>
 
       <div class="card" style="margin-bottom:14px;">
@@ -4047,11 +4060,16 @@
     <!-- ══ CATEGORIES ══ -->
     <div class="view" id="view-categories">
       <div class="card" style="margin-bottom:16px;">
-        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
           <span><i class="bi bi-tags" style="color:var(--red);"></i> Gestión de Categorías</span>
-          <button class="abm-btn-new" onclick="openCategoryModal()" style="padding:7px 14px;font-size:12px;">
-            <i class="bi bi-plus-lg"></i> Nueva Categoría
-          </button>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <button class="sb-btn" onclick="refreshCategories(this)" style="background:transparent;border:1px solid var(--zinc);color:var(--white);padding:7px 14px;font-size:12px;display:flex;align-items:center;gap:6px;cursor:pointer;border-radius:6px;transition:all .2s ease;">
+              <i class="bi bi-arrow-clockwise"></i> Actualizar
+            </button>
+            <button class="abm-btn-new" onclick="openCategoryModal()" style="padding:7px 14px;font-size:12px;">
+              <i class="bi bi-plus-lg"></i> Nueva Categoría
+            </button>
+          </div>
         </div>
         <div id="categories-list"
           style="display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px;">
@@ -8309,6 +8327,36 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       } catch (e) {
         if (advListEl) advListEl.innerHTML = `<div style="color:var(--red);">Error: ${e.message}</div>`;
         if (viewListEl) viewListEl.innerHTML = `<div style="text-align:center;color:var(--red);grid-column:1/-1;">Error: ${e.message}</div>`;
+      }
+    }
+
+    async function refreshProducts(btn) {
+      if (btn.classList.contains('loading')) return;
+      btn.classList.add('loading');
+      btn.innerHTML = `<i class="bi bi-arrow-clockwise spin-animation"></i> Actualizando...`;
+      try {
+        await loadSheet();
+        showToastDash('✓ Productos y configuración actualizados desde Supabase');
+      } catch (err) {
+        showToastDash('❌ Error al actualizar productos: ' + err.message);
+      } finally {
+        btn.classList.remove('loading');
+        btn.innerHTML = `<i class="bi bi-arrow-clockwise"></i> Actualizar`;
+      }
+    }
+
+    async function refreshCategories(btn) {
+      if (btn.classList.contains('loading')) return;
+      btn.classList.add('loading');
+      btn.innerHTML = `<i class="bi bi-arrow-clockwise spin-animation"></i> Actualizando...`;
+      try {
+        await loadCategoriesList();
+        showToastDash('✓ Categorías actualizadas desde Supabase');
+      } catch (err) {
+        showToastDash('❌ Error al actualizar categorías: ' + err.message);
+      } finally {
+        btn.classList.remove('loading');
+        btn.innerHTML = `<i class="bi bi-arrow-clockwise"></i> Actualizar`;
       }
     }
 
