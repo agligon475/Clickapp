@@ -1402,7 +1402,7 @@ async function loadSheet() {
     products = supabaseProducts
       .filter(p => p.nombre && p.nombre.trim())
       .map((p, i) => {
-        let rawDetalles = p.detalles || '';
+        let rawDetalles = p.detalles || p.detalle || '';
         let textDetalles = rawDetalles;
         let variants = null;
         let modifiers = null;
