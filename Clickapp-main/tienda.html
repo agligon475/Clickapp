@@ -1823,7 +1823,7 @@ function openProductDrawer(id) {
         const checked = oIdx === 0 ? 'checked' : ''; 
         optionsHtml += `
           <label for="${idStr}" class="variant-label" style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;width:100%;">
-            <input type="radio" name="var-${vIdx}" id="${idStr}" value="${opt.name}" data-price="${opt.priceDelta}" ${checked} onchange="updateDrawerPrice()" style="width:16px;height:16px;margin:0;accent-color:var(--red);">
+            <input type="radio" name="var-${vIdx}" id="${idStr}" value="${opt.name}" data-price="${opt.priceDelta}" ${checked} onchange="updateDrawerPrice()" style="width:16px;height:16px;min-width:16px;flex-shrink:0;margin:0;accent-color:var(--red);">
             <span style="flex:1;">${opt.name}</span>
             ${opt.priceDelta > 0 ? `<span style="color:var(--silver);font-size:13px;">+ $${opt.priceDelta.toLocaleString('es-AR')}</span>` : (opt.priceDelta < 0 ? `<span style="color:var(--silver);font-size:13px;">- $${Math.abs(opt.priceDelta).toLocaleString('es-AR')}</span>` : '')}
           </label>
@@ -1877,7 +1877,7 @@ function openProductDrawer(id) {
           const idStr = `mod-${mIdx}-${oIdx}`;
           optionsHtml += `
             <label for="${idStr}" class="modifier-label" style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;width:100%;">
-              <input type="checkbox" class="mod-checkbox" id="${idStr}" value="${opt.name}" data-price="${opt.priceDelta}" onchange="updateDrawerPrice()" style="width:16px;height:16px;margin:0;accent-color:var(--red);">
+              <input type="checkbox" class="mod-checkbox" id="${idStr}" value="${opt.name}" data-price="${opt.priceDelta}" onchange="updateDrawerPrice()" style="width:16px;height:16px;min-width:16px;flex-shrink:0;margin:0;accent-color:var(--red);">
               <div style="flex:1;">
                 <div style="font-weight:600; color:var(--white);">${opt.name}</div>
                 ${opt.detail ? `<div style="font-size:11px; color:var(--silver);">${opt.detail}</div>` : ''}

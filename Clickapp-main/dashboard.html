@@ -2275,7 +2275,7 @@
             <div style="flex:1;">
               <h4 style="margin:0 0 4px 0; font-size:14px; font-weight:700; color:var(--white);">2. Estética y Colores</h4>
               <p style="margin:0 0 10px 0; font-size:12px; color:var(--silver);">Personalizá el tema, colores y tipografía.</p>
-              <button onclick="goToView('design')" class="sb-btn" style="width:auto; margin:0; padding:6px 12px; font-size:11px; background:var(--zinc); border:1px solid var(--silver); color:var(--white); cursor:pointer;">Personalizar</button>
+              <button onclick="goToView('marca')" class="sb-btn" style="width:auto; margin:0; padding:6px 12px; font-size:11px; background:var(--zinc); border:1px solid var(--silver); color:var(--white); cursor:pointer;">Personalizar</button>
             </div>
           </div>
 
@@ -2333,7 +2333,7 @@
           </div>
         </div>
         <div style="display:flex; gap:12px; margin-top:16px; align-items:center;">
-          <button onclick="goToView('advanced')" class="sb-btn" style="width:auto; margin:0; padding:10px 18px; font-size:12px; display:inline-flex; align-items:center; gap:8px;">
+          <button onclick="goToView('config-avanzada')" class="sb-btn" style="width:auto; margin:0; padding:10px 18px; font-size:12px; display:inline-flex; align-items:center; gap:8px;">
             <i class="bi bi-gear"></i> Configurar Conexión
           </button>
           <button onclick="loadSheet()" class="sb-btn" style="width:auto; margin:0; padding:10px 18px; font-size:12px; background:var(--zinc); border:1px solid var(--silver); color:var(--white); display:inline-flex; align-items:center; gap:8px;">
@@ -2413,7 +2413,7 @@
             </div>
 
             <!-- Diseño -->
-            <div class="shortcut-card" onclick="goToView('design')">
+            <div class="shortcut-card" onclick="goToView('marca')">
               <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">🎨</div>
               <h4
                 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">
@@ -2423,7 +2423,7 @@
             </div>
 
             <!-- Configuración -->
-            <div class="shortcut-card" onclick="goToView('config')">
+            <div class="shortcut-card" onclick="goToView('config-basica')">
               <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">⚙️</div>
               <h4
                 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">
@@ -2433,7 +2433,7 @@
             </div>
 
             <!-- Avanzado -->
-            <div class="shortcut-card" onclick="goToView('advanced')">
+            <div class="shortcut-card" onclick="goToView('config-avanzada')">
               <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">🔒</div>
               <h4
                 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">
@@ -2455,8 +2455,8 @@
           </div>
         </div>
 
-        <!-- Right side (Hidden as states are fully integrated in the sidebar) -->
-        <div style="display:none; flex-direction:column; gap:16px;">
+        <!-- Right side -->
+        <div style="display:flex; flex-direction:column; gap:16px;">
 
           <!-- Status lights -->
           <div class="card"
@@ -2473,7 +2473,6 @@
                 <div style="display:flex; flex-direction:column; align-items:flex-start;">
                   <span style="font-size:13px; font-weight:600; color:var(--white);">Base de datos</span>
                   <span id="status-desc-db" style="font-size:10px; color:var(--silver);">Verificando...</span>
-                  <a href="#" id="status-btn-db" onclick="goToView('advanced'); return false;" style="display:none; font-size:10px; color:var(--red); text-decoration:underline; margin-top:4px;">Solucionar problemas</a>
                 </div>
                 <div id="status-light-db"
                   style="width:12px; height:12px; border-radius:50%; background:var(--silver); box-shadow:0 0 8px var(--silver); transition:all 0.3s ease;">
@@ -2486,7 +2485,6 @@
                 <div style="display:flex; flex-direction:column; align-items:flex-start;">
                   <span style="font-size:13px; font-weight:600; color:var(--white);">Consultas AI</span>
                   <span id="status-desc-ai" style="font-size:10px; color:var(--silver);">Verificando...</span>
-                  <a href="#" id="status-btn-ai" onclick="goToView('advanced'); return false;" style="display:none; font-size:10px; color:var(--red); text-decoration:underline; margin-top:4px;">Solucionar problemas</a>
                 </div>
                 <div id="status-light-ai"
                   style="width:12px; height:12px; border-radius:50%; background:var(--silver); box-shadow:0 0 8px var(--silver); transition:all 0.3s ease;">
@@ -2499,7 +2497,6 @@
                 <div style="display:flex; flex-direction:column; align-items:flex-start;">
                   <span style="font-size:13px; font-weight:600; color:var(--white);">Cloudinary</span>
                   <span id="status-desc-cloudinary" style="font-size:10px; color:var(--silver);">Verificando...</span>
-                  <a href="#" id="status-btn-cloudinary" onclick="goToView('config'); return false;" style="display:none; font-size:10px; color:var(--red); text-decoration:underline; margin-top:4px;">Solucionar problemas</a>
                 </div>
                 <div id="status-light-cloudinary"
                   style="width:12px; height:12px; border-radius:50%; background:var(--silver); box-shadow:0 0 8px var(--silver); transition:all 0.3s ease;">
@@ -2511,11 +2508,16 @@
                 <div style="display:flex; flex-direction:column; align-items:flex-start;">
                   <span style="font-size:13px; font-weight:600; color:var(--white);">Dominio</span>
                   <span id="status-desc-domain" style="font-size:10px; color:var(--silver);">Verificando...</span>
-                  <a href="#" id="status-btn-domain" onclick="goToView('config'); return false;" style="display:none; font-size:10px; color:var(--red); text-decoration:underline; margin-top:4px;">Solucionar problemas</a>
                 </div>
                 <div id="status-light-domain"
                   style="width:12px; height:12px; border-radius:50%; background:var(--silver); box-shadow:0 0 8px var(--silver); transition:all 0.3s ease;">
                 </div>
+              </div>
+              
+              <div id="dashboard-status-config-btn-wrap" style="display: none; justify-content: center; margin-top: 12px; padding: 0 4px;">
+                <button class="sb-btn" onclick="goToView('config-avanzada')" style="background: var(--red); color: white; border: none; height: 32px; font-size: 11px; font-weight: 600; border-radius: 6px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 10px rgba(215, 38, 56, 0.2); margin: 0;">
+                  <i class="bi bi-gear-fill"></i> <span>Configurar</span>
+                </button>
               </div>
             </div>
           </div>
@@ -4897,9 +4899,10 @@
     function updateConfigButtonVisibility() {
       const hasIssues = Object.values(statusStates).some(s => s === 'warn' || s === 'err');
       const wrap = document.getElementById('sb-status-config-btn-wrap');
-      if (wrap) {
-        wrap.style.display = hasIssues ? 'flex' : 'none';
-      }
+      const dashWrap = document.getElementById('dashboard-status-config-btn-wrap');
+      
+      if (wrap) wrap.style.display = hasIssues ? 'flex' : 'none';
+      if (dashWrap) dashWrap.style.display = hasIssues ? 'flex' : 'none';
     }
 
     function setStatusBulb(id, type, msg) {
@@ -4907,7 +4910,6 @@
 
       const bulb = document.getElementById('status-light-' + id);
       const desc = document.getElementById('status-desc-' + id);
-      const btn = document.getElementById('status-btn-' + id);
       
       // Even if the main card is hidden/null, update statusStates and check button visibility
       updateConfigButtonVisibility();
