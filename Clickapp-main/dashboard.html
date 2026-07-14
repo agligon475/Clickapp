@@ -382,7 +382,7 @@
       font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
-      color: var(--silver);
+      color: var(--fog);
       cursor: pointer;
       user-select: none;
       letter-spacing: 0.5px;
@@ -2133,7 +2133,7 @@
   </div>
 
   <!-- MAIN -->
-  <div class="main">
+  <main class="main" role="main">
 
     <!-- TOPBAR -->
     <div class="topbar">
@@ -4205,7 +4205,7 @@
       </div>
     </div>
 
-  </div><!-- /main -->
+  </main><!-- /main -->
 
   <script>
     // Sobrescribir alert del navegador con una notificación flotante premium integrada en el sitio
@@ -10276,7 +10276,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     <div class="modal" style="width:min(600px,95vw);">
       <div class="modal-head">
         <span class="modal-title" id="modal-title-text">Nuevo producto</span>
-        <button class="modal-close" onclick="closeModal()"><i class="bi bi-x"></i></button>
+        <button class="modal-close" onclick="closeModal()" aria-label="Cerrar modal"><i class="bi bi-x"></i></button>
       </div>
       <div class="modal-body">
 
@@ -10343,7 +10343,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           <!-- Categoria + Marca -->
           <div class="ctrl-group">
             <label class="ctrl-label">Categoría</label>
-            <select class="ctrl-input" id="m-cat">
+            <select class="ctrl-input" id="m-cat" aria-label="Categoría del producto">
               <option value="">Cargando categorías...</option>
             </select>
             <div style="font-size:10px;color:var(--silver);margin-top:3px;">
@@ -10378,7 +10378,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           </div>
           <div class="ctrl-group">
             <label class="ctrl-label">País de origen</label>
-            <select class="ctrl-input" id="m-origen">
+            <select class="ctrl-input" id="m-origen" aria-label="Origen del producto">
               <option value="">Sin especificar</option>
               <option value="AR">🇦🇷 Argentina</option>
               <option value="CN">🇨🇳 China</option>
@@ -10566,7 +10566,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     <div class="modal" style="width:min(400px,95vw);">
       <div class="modal-head">
         <span class="modal-title" id="cat-modal-title">Nueva Categoría</span>
-        <button class="modal-close" onclick="closeCategoryModal()"><i class="bi bi-x"></i></button>
+        <button class="modal-close" onclick="closeCategoryModal()" aria-label="Cerrar modal de categoría"><i class="bi bi-x"></i></button>
       </div>
       <div class="modal-body">
         <div class="modal-grid">
@@ -10602,7 +10602,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     <div class="modal" style="width:min(600px, 95vw);">
       <div class="modal-head">
         <span class="modal-title"><i class="bi bi-magic" style="color:var(--red);margin-right:6px;"></i>Configuración Paso a Paso</span>
-        <button class="modal-close" onclick="closeStepByStepModal()"><i class="bi bi-x"></i></button>
+        <button class="modal-close" onclick="closeStepByStepModal()" aria-label="Cerrar asistente"><i class="bi bi-x"></i></button>
       </div>
       
       <!-- Progress Bar / Steps indicator -->
@@ -10628,7 +10628,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           </div>
           <div class="ctrl-group" style="margin-top:12px;">
             <label class="ctrl-label">Rubro principal</label>
-            <select class="ctrl-input" id="wiz-store-rubro" onchange="updateSubrubros('wiz-store-rubro','wiz-store-subrubro')">
+            <select class="ctrl-input" id="wiz-store-rubro" onchange="updateSubrubros('wiz-store-rubro','wiz-store-subrubro')" aria-label="Rubro del comercio">
               <option value="">Seleccioná...</option>
               <option value="Super">🛒 Súper</option>
               <option value="Farmacias">💊 Farmacias</option>
@@ -10642,7 +10642,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           </div>
           <div class="ctrl-group" style="margin-top:12px;">
             <label class="ctrl-label">Subrubro</label>
-            <select class="ctrl-input" id="wiz-store-subrubro">
+            <select class="ctrl-input" id="wiz-store-subrubro" aria-label="Subrubro del comercio">
               <option value="">Primero elegí un rubro...</option>
             </select>
           </div>
