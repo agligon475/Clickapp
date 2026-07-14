@@ -25,6 +25,18 @@
       "destination": "/kit-imprimible.html"
     },
     {
+      "source": "/landing",
+      "destination": "/landing.html"
+    },
+    {
+      "source": "/ayuda",
+      "destination": "/ayuda.html"
+    },
+    {
+      "source": "/",
+      "destination": "/api/store"
+    },
+    {
       "source": "/:store([^./]+)",
       "destination": "/api/store?store=:store"
     }

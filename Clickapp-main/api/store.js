@@ -2,23 +2,60 @@ import fs from 'fs';
 import path from 'path';
 
 const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
-// We don't have the anon key as a server environment variable easily accessible here unless we extract it from tienda.html or hardcode it.
-// Let's read it from tienda.html or hardcode it since it's an anon key.
-// Wait, I can extract it from the HTML directly if needed, or just hardcode it like in the frontend.
 
 export default async function handler(req, res) {
-  const storeId = req.query.store;
+  const host = req.headers.host || '';
+  const hostname = host.split(':')[0].toLowerCase();
   
-  if (!storeId) {
-    return res.status(400).send('Store ID is required');
+  // 1. Check if we need to redirect to landing.html (main domains)
+  const mainDomainsToRedirect = [
+    'daletepido.com.ar',
+    'www.daletepido.com.ar',
+    'clickapp.com',
+    'www.clickapp.com'
+  ];
+  
+  if (mainDomainsToRedirect.includes(hostname) && !req.query.store) {
+    res.writeHead(302, { Location: '/landing.html' });
+    return res.end();
   }
 
+  // 2. Determine store ID
+  let storeId = req.query.store;
+  
+  if (!storeId) {
+    // Try to extract from subdomain
+    const domains = ['daletepido.com.ar', 'clickapp.com', 'localhost'];
+    for (const domain of domains) {
+      if (hostname.endsWith(`.${domain}`)) {
+        const subdomain = hostname.substring(0, hostname.length - domain.length - 1);
+        const cleanSubdomain = subdomain.replace(/^www\./, '');
+        if (cleanSubdomain) {
+          storeId = cleanSubdomain;
+          break;
+        }
+      }
+    }
+  }
+
+  // If still no store ID (e.g. accessing raw localhost, or unrecognized domain), fallback to serving index.html directly
+  if (!storeId) {
+    try {
+      const filePath = path.join(process.cwd(), 'index.html');
+      const html = fs.readFileSync(filePath, 'utf8');
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      return res.status(200).send(html);
+    } catch (e) {
+      return res.status(500).send('Internal Server Error');
+    }
+  }
+
+  // 3. Render the store HTML with injected OG tags
   try {
-    // Read the static HTML file
     const filePath = path.join(process.cwd(), 'tienda.html');
     let html = fs.readFileSync(filePath, 'utf8');
 
-    // Extract the Supabase key from the HTML itself so we don't have to duplicate secrets
+    // Extract the Supabase key from the HTML itself
     const keyMatch = html.match(/const SUPABASE_KEY\s*=\s*['"]([^'"]+)['"]/);
     const SUPABASE_KEY = keyMatch ? keyMatch[1] : '';
 
@@ -36,9 +73,9 @@ export default async function handler(req, res) {
           const title = cfg.business_name ? `${cfg.business_name} — Tu tienda online` : 'Dale! Te Pido';
           const desc = cfg.desc || 'Elegí tus productos, armá tu pedido y coordiná por WhatsApp.';
           const logo = cfg.logo || 'https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png';
-          const url = `https://${storeId}.daletepido.com.ar/`; // Default to subdomain routing format
+          const url = `https://${storeId}.daletepido.com.ar/`;
 
-          // Replace the placeholders in the HTML
+          // Replace title
           html = html.replace(/<title>.*?<\/title>/, `<title>${title}</title>`);
           
           // Inject OG tags right after <title>
@@ -56,11 +93,10 @@ export default async function handler(req, res) {
     }
 
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300'); // Cache for 60s at CDN edge
+    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
     res.status(200).send(html);
   } catch (error) {
     console.error('Error generating store HTML:', error);
-    // If error, just serve the fallback generic HTML by reading it again
     try {
       const fallbackHtml = fs.readFileSync(path.join(process.cwd(), 'tienda.html'), 'utf8');
       res.setHeader('Content-Type', 'text/html; charset=utf-8');

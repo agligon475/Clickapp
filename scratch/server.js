@@ -25,6 +25,40 @@ function parseRequestBody(req) {
 
 const server = http.createServer(async (req, res) => {
   let urlPath = req.url.split('?')[0];
+  const host = req.headers.host || '';
+  const hostname = host.split(':')[0].toLowerCase();
+
+  // Redirect main domains to landing.html
+  const mainDomainsToRedirect = [
+    'daletepido.com.ar',
+    'www.daletepido.com.ar',
+    'clickapp.com',
+    'www.clickapp.com'
+  ];
+  if (urlPath === '/' && mainDomainsToRedirect.includes(hostname)) {
+    res.writeHead(302, { Location: '/landing.html' });
+    return res.end();
+  }
+
+  // Detect subdomain for local routing rewrite
+  const isSubdomain = (h) => {
+    const domains = ['daletepido.com.ar', 'clickapp.com', 'localhost'];
+    for (const d of domains) {
+      if (h.endsWith(`.${d}`)) {
+        const sub = h.substring(0, h.length - d.length - 1);
+        const clean = sub.replace(/^www\./, '');
+        if (clean) return clean;
+      }
+    }
+    return null;
+  };
+
+  const subdomain = isSubdomain(hostname);
+  if (urlPath === '/' && subdomain) {
+    req.url = `/api/store?store=${subdomain}`;
+    urlPath = '/api/store';
+  }
+
   let filePath = '.' + urlPath;
   if (filePath === './' || filePath === './index') filePath = './index.html';
 
