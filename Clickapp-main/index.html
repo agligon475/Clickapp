@@ -1883,11 +1883,14 @@ async function registrarPedido(pedido) {
     estado:    'confirmar',
   };
 
-  // ── 1. Guardar en localStorage (misma key que usa el dashboard) ──
+  // ── 1. Guardar en localStorage (en AMBAS keys para compatibilidad con dashboard) ──
   try {
     const existing = JSON.parse(localStorage.getItem(`storeapp_orders_${STORE_ID}`) || localStorage.getItem('storeapp_orders') || '[]');
     existing.unshift(order);
+    // Guardar con key específica de tienda
     localStorage.setItem(`storeapp_orders_${STORE_ID}`, JSON.stringify(existing));
+    // Guardar también con key genérica que usa el dashboard
+    localStorage.setItem('storeapp_orders', JSON.stringify(existing));
   } catch(e) {
     console.warn('No se pudo guardar el pedido localmente:', e.message);
   }
