@@ -1249,8 +1249,9 @@ let cartDetails = {}; // Stores { baseId, price, optionsText } for complex keys
 /** Supabase usa UUID string; el carrito guarda claves string. */
 function findProduct(id) {
   if (id == null || id === '') return undefined;
-  const s = String(id);
-  return products.find(x => String(x.id) === s);
+  // Extract baseId in case of composite key like "uuid_Color Rojo"
+  const baseId = String(id).split('_')[0];
+  return products.find(x => String(x.id) === baseId);
 }
 let activeCat = 'all';
 let searchTerm = '';
@@ -1657,14 +1658,19 @@ function addToCart(id) {
 }
 
 function removeFromCart(id) {
-  delete cart[String(id)];
+  const key = String(id);
+  delete cart[key];
+  delete cartDetails[key];
   updateCartUI();
   renderDrawer();
-  // Update card counter
-  const qc = document.getElementById('qc-'+id);
+  // Update card counter using baseId
+  const baseId = key.split('_')[0];
+  const qc = document.getElementById('qc-'+baseId);
   if (qc) {
-    qc.querySelector('.qty-num').textContent = '+';
-    qc.classList.remove('has-items');
+    const totalQtyThisProduct = Object.keys(cart).filter(k => k === baseId || k.startsWith(baseId + '_')).reduce((sum, k) => sum + cart[k], 0);
+    const num = qc.querySelector('.qty-num');
+    if (num) num.textContent = totalQtyThisProduct > 0 ? totalQtyThisProduct : 'Agregar';
+    qc.classList.toggle('has-items', totalQtyThisProduct > 0);
   }
 }
 
@@ -1682,15 +1688,19 @@ function updateCartUI() {
 }
 
 function renderDrawer() {
-  const items = Object.entries(cart).map(([id,q])=>{
-    const p = findProduct(id);
+  const items = Object.entries(cart).map(([key,q])=>{
+    // key can be a composite like "uuid_Color Rojo"
+    const baseId = cartDetails[key] ? cartDetails[key].baseId : key;
+    const p = findProduct(baseId);
     if (!p) return '';
-    const pid = JSON.stringify(p.id);
+    const pid = JSON.stringify(key); // Use full key for changeQty so it matches cart
+    const price = cartDetails[key] ? cartDetails[key].price : p.price;
+    const opts = cartDetails[key] ? `<div style="font-size:11px;color:var(--silver);margin-top:2px;">${cartDetails[key].optionsText}</div>` : '';
     return `<div class="cart-item">
       <div class="cart-item-emoji">${p.emoji}</div>
       <div class="cart-item-info">
-        <div class="cart-item-name">${p.name}</div>
-        <div class="cart-item-price">$${(p.price*q).toLocaleString('es-AR')}</div>
+        <div class="cart-item-name">${p.name}${opts}</div>
+        <div class="cart-item-price">$${(price*q).toLocaleString('es-AR')}</div>
       </div>
       <div class="cart-qty">
         <button type="button" class="qty-btn" onclick='changeQty(${pid},-1)' aria-label="Disminuir cantidad"><i class="bi bi-dash"></i></button>
@@ -2125,32 +2135,75 @@ function addFromDrawer(id) {
   const p = findProduct(id);
   if (!p) return;
 
+  // Validate modifier group limits
+  let isValid = true;
+  let errorMsg = '';
+  
+  if (p.modifiers && p.modifiers.length > 0) {
+    p.modifiers.forEach((m, mIdx) => {
+      let selectedInGroup = 0;
+      
+      const checkedBoxes = document.querySelectorAll(`#pdrawer-options input.mod-checkbox[id^="mod-${mIdx}-"]:checked`);
+      selectedInGroup += checkedBoxes.length;
+      
+      const groupQtySpans = document.querySelectorAll(`#pdrawer-options .mod-qty-num[data-group="${mIdx}"]`);
+      groupQtySpans.forEach(span => {
+        selectedInGroup += parseInt(span.textContent) || 0;
+      });
+      
+      if (m.minChoices !== undefined && selectedInGroup < m.minChoices) {
+        isValid = false;
+        errorMsg = `Elegí al menos ${m.minChoices} de "${m.name}" (llevás ${selectedInGroup})`;
+      }
+      if (m.maxChoices !== undefined && selectedInGroup > m.maxChoices) {
+        isValid = false;
+        errorMsg = `Elegí como máximo ${m.maxChoices} de "${m.name}" (llevás ${selectedInGroup})`;
+      }
+    });
+  }
+  
+  if (!isValid) {
+    showToast(`⚠ ${errorMsg}`);
+    return;
+  }
+
   let basePrice = p.price;
   let optionsTextArr = [];
   
-  // Collect Variants
+  // Collect selected variants
   const radios = document.querySelectorAll('#pdrawer-options input[type="radio"]:checked');
   radios.forEach(r => {
     basePrice += parseFloat(r.dataset.price) || 0;
     optionsTextArr.push(r.value);
   });
   
-  // Collect Modifiers
+  // Collect selected checkboxes
   const checks = document.querySelectorAll('#pdrawer-options input[type="checkbox"]:checked');
   checks.forEach(c => {
     basePrice += parseFloat(c.dataset.price) || 0;
     optionsTextArr.push(`+${c.value}`);
   });
+  
+  // Collect selected modifier quantities
+  const qtyNums = document.querySelectorAll('#pdrawer-options .mod-qty-num');
+  qtyNums.forEach(num => {
+    const qty = parseInt(num.textContent) || 0;
+    const price = parseFloat(num.dataset.price) || 0;
+    const name = num.dataset.name;
+    if (qty > 0) {
+      basePrice += qty * price;
+      optionsTextArr.push(`+${qty} ${name}`);
+    }
+  });
 
   // Generate composite key
   let key = String(id);
   if (optionsTextArr.length > 0) {
-    // encode to base64 to avoid weird characters in keys, or just use a safe join
     const hash = optionsTextArr.join('|').replace(/[^a-zA-Z0-9|+\- ]/g, '');
     key = `${id}_${hash}`;
   }
 
-  // Save to cart Details if it's complex
+  // Save complex key details
   if (optionsTextArr.length > 0) {
     cartDetails[key] = {
       baseId: String(id),
@@ -2159,24 +2212,25 @@ function addFromDrawer(id) {
     };
   }
 
-  // Increment qty
+  // Increment quantity in cart
   cart[key] = (cart[key] || 0) + 1;
 
-  // Update UI
+  // Update overall UI
   updateCartUI();
   
-  const btn = document.getElementById('pdrawer-add-btn');
-  const totalQtyThisProduct = Object.keys(cart).filter(k => k === String(id) || k.startsWith(id + '_')).reduce((sum, k) => sum + cart[k], 0);
-  btn.textContent = `Agregar al carrito (${totalQtyThisProduct})`;
-  
-  // Also update product card pill
-  const qc = document.getElementById('qc-'+id);
+  // Update card counter using base ID
+  const baseId = key.split('_')[0];
+  const totalQtyThisProduct = Object.keys(cart).filter(k => k === baseId || k.startsWith(baseId + '_')).reduce((sum, k) => sum + cart[k], 0);
+  const qc = document.getElementById('qc-'+baseId);
   if (qc) {
     const num = qc.querySelector('.qty-num');
     if (num) num.textContent = totalQtyThisProduct > 0 ? totalQtyThisProduct : '+';
     qc.classList.toggle('has-items', totalQtyThisProduct > 0);
   }
 
+  const btn = document.getElementById('pdrawer-add-btn');
+  btn.textContent = `Agregar al carrito (${totalQtyThisProduct})`;
+  
   showToast(`✓ Agregado al carrito`);
 }
 
