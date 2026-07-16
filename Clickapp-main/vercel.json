@@ -34,6 +34,46 @@
     },
     {
       "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "daletepido.com.ar"
+        }
+      ],
+      "destination": "/landing.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.daletepido.com.ar"
+        }
+      ],
+      "destination": "/landing.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "clickapp.com"
+        }
+      ],
+      "destination": "/landing.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.clickapp.com"
+        }
+      ],
+      "destination": "/landing.html"
+    },
+    {
+      "source": "/",
       "destination": "/api/store"
     },
     {

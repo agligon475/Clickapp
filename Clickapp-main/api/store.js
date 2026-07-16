@@ -22,7 +22,7 @@ export default async function handler(req, res) {
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
       return res.status(200).send(html);
     } catch (e) {
-      res.writeHead(302, { Location: '/landing.html' });
+      res.writeHead(302, { Location: '/landing' });
       return res.end();
     }
   }
