@@ -139,7 +139,7 @@
 
     <nav>
         <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" class="nav-logo">
-        <a href="/alta-usuario.html" class="nav-cta">Crear mi tienda gratis</a>
+        <a href="javascript:void(0)" onclick="openRegisterModal()" class="nav-cta">Crear mi tienda gratis</a>
     </nav>
 
     <header class="hero">
@@ -150,8 +150,7 @@
             <h1 style="font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 800; line-height: 1.2; color: var(--white); margin-bottom: 1.5rem; letter-spacing: -1.5px;">Los límites no existen</h1>
             <p style="font-size: clamp(1rem, 2.5vw, 1.25rem); color: rgba(255,255,255,0.8); max-width: 620px; margin: 0 auto 40px; opacity: 0.85;">Mostrá tu catálogo online de forma profesional y cerrá todas tus ventas directo en una charla por WhatsApp.</p>
             <div class="hero-btns">
-                <a href="/alta-usuario.html" class="btn-primary"><i class="bi bi-shop"></i> Crear mi tienda gratis</a>
-                <a href="/?store=ferre-now" class="btn-secondary" target="_blank"><i class="bi bi-eye"></i> Ver demo en vivo</a>
+                <a href="javascript:void(0)" onclick="openRegisterModal()" class="btn-primary"><i class="bi bi-shop"></i> Crear mi tienda gratis</a>
             </div>
             <div class="hero-stats">
                 <div><div class="hero-stat-val">+120</div><div class="hero-stat-label">Tiendas activas</div></div>
@@ -292,36 +291,37 @@
         <div class="container">
             <div style="text-align:center">
                 <div class="section-label">Planes</div>
-                <h2 class="section-title">Empieza gratis,<br>crece cuando quieras</h2>
-                <p class="section-sub" style="margin:0 auto">Sin tarjeta de credito. Sin permanencia minima. Cancelas cuando quieras.</p>
+                <h2 class="section-title">Empezá hoy,<br>crecé sin límites</h2>
+                <p class="section-sub" style="margin:0 auto">Sin permanencia mínima. Cancelás cuando quieras.</p>
             </div>
             <div class="pricing-grid">
                 <div class="price-card">
-                    <div class="price-name">Plan Arranca</div>
-                    <div class="price-amount"> <small>/ mes</small></div>
-                    <div class="price-period">Para siempre, sin vencimiento</div>
-                    <ul class="price-features">
-                        <li>Hasta 30 productos</li>
-                        <li>Link de tienda compartible</li>
-                        <li>Pedidos a WhatsApp</li>
-                        <li>Panel de gestion basico</li>
-                    </ul>
-                    <button class="price-cta" onclick="window.location.href='/alta-usuario.html'">Crear tienda gratis</button>
-                </div>
-                <div class="price-card featured">
-                    <div class="price-badge">Mas elegido</div>
-                    <div class="price-name">Plan Comercio</div>
-                    <div class="price-amount">.500 <small>/ mes</small></div>
-                    <div class="price-period">ARS - facturacion mensual</div>
+                    <div class="price-name">Plan Mensual</div>
+                    <div class="price-amount">$99.000 <small>/ mes</small></div>
+                    <div class="price-period">Facturación mensual · ARS</div>
                     <ul class="price-features">
                         <li>Productos ilimitados</li>
                         <li>Subdominio propio</li>
                         <li>Variantes y modificadores</li>
                         <li>Banners promocionales</li>
                         <li>Dashboard completo</li>
-                        <li>Soporte prioritario</li>
+                        <li>Pedidos directo a WhatsApp</li>
                     </ul>
-                    <button class="price-cta" onclick="window.location.href='/alta-usuario.html'">Quiero el plan Comercio</button>
+                    <button class="price-cta" onclick="openRegisterModal()">Quiero el plan Mensual</button>
+                </div>
+                <div class="price-card featured">
+                    <div class="price-badge">⚡ Ahorrá más del 15%</div>
+                    <div class="price-name">Plan Anual</div>
+                    <div class="price-amount">$990.000 <small>/ año</small></div>
+                    <div class="price-period">Facturación anual · Pago único</div>
+                    <ul class="price-features">
+                        <li>Todo lo del Plan Mensual</li>
+                        <li>2 meses bonificados gratis</li>
+                        <li>Soporte prioritario por WhatsApp</li>
+                        <li>Asistencia en la carga inicial</li>
+                        <li>Prioridad en nuevas funciones</li>
+                    </ul>
+                    <button class="price-cta" onclick="openRegisterModal()">Quiero el plan Anual</button>
                 </div>
             </div>
         </div>
@@ -330,14 +330,49 @@
     <section class="cta-section">
         <div class="cta-inner">
             <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" style="height:36px;margin-bottom:24px;opacity:.9">
-            <h2>Esperando el momento ideal?<br>Este es.</h2>
-            <p>Tu competencia ya tiene su tienda online. En 15 minutos podes tener la tuya, funcionando y compartible.</p>
+            <h2>¿Esperando el momento ideal?<br>Este es.</h2>
+            <p>Tu competencia ya tiene su tienda online. En 15 minutos podés tener la tuya, funcionando y compartible.</p>
             <div class="cta-btns">
-                <a href="/alta-usuario.html" class="cta-btn-white"><i class="bi bi-shop"></i> Crear mi tienda gratis</a>
+                <a href="javascript:void(0)" onclick="openRegisterModal()" class="cta-btn-white"><i class="bi bi-shop"></i> Crear mi tienda gratis</a>
                 <button class="cta-btn-outline" onclick="accessDashboard()"><i class="bi bi-grid-1x2"></i> Ver panel de control</button>
             </div>
         </div>
     </section>
+
+    <!-- FORMULARIO MODAL REGISTRO (CON ACCIÓN A WHATSAPP) -->
+    <div id="register-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(8px); padding:20px;">
+        <div style="background:#1a1515; border:1px solid rgba(214,0,0,0.3); border-radius:18px; padding:32px; max-width:440px; width:100%; position:relative; box-shadow:0 24px 64px rgba(214,0,0,0.3); color:#fff;">
+            <button onclick="closeRegisterModal()" style="position:absolute; top:16px; right:16px; background:transparent; border:none; color:rgba(255,255,255,0.6); font-size:24px; cursor:pointer;">&times;</button>
+            <h3 style="font-size:20px; font-weight:700; margin-bottom:8px; color:#fff; font-family:inherit;">Crear mi tienda</h3>
+            <p style="font-size:13px; color:#9a8f8f; margin-bottom:24px;">Dejanos tus datos de contacto para habilitar tu catálogo online Dale! Te Pido.</p>
+            <form onsubmit="handleRegisterSubmit(event)">
+                <div style="margin-bottom:16px;">
+                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Nombre y Apellido</label>
+                    <input type="text" id="reg-name" required placeholder="Ej: Juan Pérez" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">WhatsApp de contacto</label>
+                    <input type="tel" id="reg-wapp" required placeholder="Ej: 5491100000000" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Nombre de tu Comercio</label>
+                    <input type="text" id="reg-store" required placeholder="Ej: Ferretería Central" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
+                </div>
+                <div style="margin-bottom:24px;">
+                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Rubro principal</label>
+                    <select id="reg-rubro" required style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:#1a1515; color:#fff; font-size:14px; font-family:inherit; outline:none;">
+                        <option value="" disabled selected>Seleccioná tu rubro</option>
+                        <option value="Ferretería">Ferretería</option>
+                        <option value="Gastronomía">Gastronomía</option>
+                        <option value="Indumentaria">Indumentaria</option>
+                        <option value="Dietética">Dietética</option>
+                        <option value="Otro">Otro rubro</option>
+                    </select>
+                </div>
+                <button type="submit" style="width:100%; background:#D60000; color:#fff; border:none; padding:13px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:background .2s;">Enviar solicitud por WhatsApp</button>
+            </form>
+        </div>
+    </div>
 
     <footer>
         <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido">
@@ -345,6 +380,34 @@
     </footer>
 
     <script>
+        // --- CONSTANTE WHATSAPP ADMINISTRADOR ---
+        const ADMIN_WHATSAPP = '5491136195610';
+
+        function openRegisterModal() {
+            document.getElementById('register-modal').style.display = 'flex';
+        }
+
+        function closeRegisterModal() {
+            document.getElementById('register-modal').style.display = 'none';
+        }
+
+        function handleRegisterSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const wapp = document.getElementById('reg-wapp').value;
+            const store = document.getElementById('reg-store').value;
+            const rubro = document.getElementById('reg-rubro').value;
+
+            const text = `*SOLICITUD DE NUEVA TIENDA - Dale! Te Pido*\n\n` +
+                         `• *Nombre:* ${name}\n` +
+                         `• *WhatsApp:* ${wapp}\n` +
+                         `• *Negocio:* ${store}\n` +
+                         `• *Rubro:* ${rubro}`;
+
+            window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(text)}`, '_blank');
+            closeRegisterModal();
+        }
+
         function accessDashboard() {
             const pass = prompt("Ingresa la clave de acceso a la demo:");
             if (pass === "dtp2026") { window.location.href = "/dashboard.html"; }
