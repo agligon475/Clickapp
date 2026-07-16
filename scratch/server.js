@@ -36,8 +36,15 @@ const server = http.createServer(async (req, res) => {
     'www.clickapp.com'
   ];
   if (urlPath === '/' && mainDomainsToRedirect.includes(hostname)) {
-    res.writeHead(302, { Location: '/landing.html' });
-    return res.end();
+    try {
+      const filePath = path.join(process.cwd(), 'landing.html');
+      const html = fs.readFileSync(filePath, 'utf8');
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      return res.end(html);
+    } catch (e) {
+      res.writeHead(302, { Location: '/landing.html' });
+      return res.end();
+    }
   }
 
   // Detect subdomain for local routing rewrite
