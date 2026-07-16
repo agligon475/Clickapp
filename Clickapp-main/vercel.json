@@ -11,6 +11,52 @@
       ]
     }
   ],
+  "redirects": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "daletepido.com.ar"
+        }
+      ],
+      "destination": "/landing",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.daletepido.com.ar"
+        }
+      ],
+      "destination": "/landing",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "clickapp.com"
+        }
+      ],
+      "destination": "/landing",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.clickapp.com"
+        }
+      ],
+      "destination": "/landing",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/dashboard",
@@ -31,46 +77,6 @@
     {
       "source": "/ayuda",
       "destination": "/ayuda.html"
-    },
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "daletepido.com.ar"
-        }
-      ],
-      "destination": "/landing.html"
-    },
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.daletepido.com.ar"
-        }
-      ],
-      "destination": "/landing.html"
-    },
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "clickapp.com"
-        }
-      ],
-      "destination": "/landing.html"
-    },
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.clickapp.com"
-        }
-      ],
-      "destination": "/landing.html"
     },
     {
       "source": "/",
