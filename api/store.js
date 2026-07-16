@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   const host = req.headers.host || '';
   const hostname = host.split(':')[0].toLowerCase();
   
-  // 1. Check if we need to redirect to landing.html (main domains)
+  // 1. Serve landing.html directly for main domains (avoiding visible redirect)
   const mainDomainsToRedirect = [
     'daletepido.com.ar',
     'www.daletepido.com.ar',
@@ -16,8 +16,15 @@ export default async function handler(req, res) {
   ];
   
   if (mainDomainsToRedirect.includes(hostname) && !req.query.store) {
-    res.writeHead(302, { Location: '/landing.html' });
-    return res.end();
+    try {
+      const filePath = path.join(process.cwd(), 'landing.html');
+      const html = fs.readFileSync(filePath, 'utf8');
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      return res.status(200).send(html);
+    } catch (e) {
+      res.writeHead(302, { Location: '/landing.html' });
+      return res.end();
+    }
   }
 
   // 2. Determine store ID
