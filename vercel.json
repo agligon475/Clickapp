@@ -11,52 +11,11 @@
       ]
     }
   ],
-  "redirects": [
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "daletepido.com.ar"
-        }
-      ],
-      "destination": "/landing",
-      "permanent": false
-    },
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.daletepido.com.ar"
-        }
-      ],
-      "destination": "/landing",
-      "permanent": false
-    },
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "clickapp.com"
-        }
-      ],
-      "destination": "/landing",
-      "permanent": false
-    },
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.clickapp.com"
-        }
-      ],
-      "destination": "/landing",
-      "permanent": false
+  "functions": {
+    "api/store.js": {
+      "includeFiles": "tienda.html"
     }
-  ],
+  },
   "rewrites": [
     {
       "source": "/dashboard",
@@ -83,8 +42,8 @@
       "destination": "/api/store"
     },
     {
-      "source": "/:store([^./]+)",
-      "destination": "/api/store?store=:store"
+      "source": "/:path*",
+      "destination": "/api/store"
     }
   ]
 }
