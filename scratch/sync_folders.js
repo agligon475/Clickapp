@@ -6,6 +6,7 @@ const filesToSync = [
   'tienda.html',
   'index.html',
   'alta-usuario.html',
+  'landing.html',
   'vercel.json',
   'api/image-search.js',
   'api/store.js'
