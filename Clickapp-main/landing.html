@@ -377,7 +377,7 @@
                         <option value="Otro">Otro rubro</option>
                     </select>
                 </div>
-                <button type="submit" style="width:100%; background:#D60000; color:#fff; border:none; padding:13px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:background .2s;">Enviar solicitud por WhatsApp</button>
+                <button type="submit" style="width:100%; background:#D60000; color:#fff; border:none; padding:13px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:background .2s;">Enviar solicitud por correo</button>
             </form>
         </div>
     </div>
@@ -388,9 +388,6 @@
     </footer>
 
     <script>
-        // --- CONSTANTE WHATSAPP ADMINISTRADOR ---
-        const ADMIN_WHATSAPP = '5491136195610';
-
         function openRegisterModal() {
             document.getElementById('register-modal').style.display = 'flex';
         }
@@ -406,13 +403,18 @@
             const store = document.getElementById('reg-store').value;
             const rubro = document.getElementById('reg-rubro').value;
 
-            const text = `*SOLICITUD DE NUEVA TIENDA - Dale! Te Pido*\n\n` +
-                         `• *Nombre:* ${name}\n` +
-                         `• *WhatsApp:* ${wapp}\n` +
-                         `• *Negocio:* ${store}\n` +
-                         `• *Rubro:* ${rubro}`;
+            const email = 'soporte@daletepido.com.ar';
+            const subject = `Solicitud de nueva tienda - Dale! Te Pido: ${store}`;
+            const body = `Hola equipo de Dale! Te Pido,\n\n` +
+                         `Deseo solicitar la creación de una nueva tienda con los siguientes datos:\n\n` +
+                         `• Nombre de contacto: ${name}\n` +
+                         `• WhatsApp / Teléfono: ${wapp}\n` +
+                         `• Nombre del negocio: ${store}\n` +
+                         `• Rubro principal: ${rubro}\n\n` +
+                         `Quedo a la espera de la confirmación.\n` +
+                         `Saludos.`;
 
-            window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(text)}`, '_blank');
+            window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             closeRegisterModal();
         }
 
