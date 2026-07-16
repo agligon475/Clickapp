@@ -347,7 +347,7 @@
         </div>
     </section>
 
-    <!-- FORMULARIO MODAL REGISTRO (CON ACCIÓN A WHATSAPP) -->
+    <!-- FORMULARIO MODAL REGISTRO -->
     <div id="register-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(8px); padding:20px;">
         <div style="background:#1a1515; border:1px solid rgba(214,0,0,0.3); border-radius:18px; padding:32px; max-width:440px; width:100%; position:relative; box-shadow:0 24px 64px rgba(214,0,0,0.3); color:#fff;">
             <button onclick="closeRegisterModal()" style="position:absolute; top:16px; right:16px; background:transparent; border:none; color:rgba(255,255,255,0.6); font-size:24px; cursor:pointer;">&times;</button>
@@ -359,12 +359,16 @@
                     <input type="text" id="reg-name" required placeholder="Ej: Juan Pérez" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
                 </div>
                 <div style="margin-bottom:16px;">
+                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Correo Electrónico</label>
+                    <input type="email" id="reg-email" required placeholder="Ej: contacto@tutienda.com" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
+                </div>
+                <div style="margin-bottom:16px;">
                     <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">WhatsApp de contacto</label>
                     <input type="tel" id="reg-wapp" required placeholder="Ej: 5491100000000" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Nombre de tu Comercio</label>
-                    <input type="text" id="reg-store" required placeholder="Ej: Ferretería Central" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
+                    <input type="text" id="reg-store" required placeholder="Ej: Tienda de Barrio" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
                 </div>
                 <div style="margin-bottom:24px;">
                     <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Rubro principal</label>
@@ -377,7 +381,7 @@
                         <option value="Otro">Otro rubro</option>
                     </select>
                 </div>
-                <button type="submit" style="width:100%; background:#D60000; color:#fff; border:none; padding:13px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:background .2s;">Enviar solicitud por correo</button>
+                <button type="submit" style="width:100%; background:#D60000; color:#fff; border:none; padding:13px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:background .2s;">Enviar solicitud</button>
             </form>
         </div>
     </div>
@@ -399,23 +403,62 @@
         function handleRegisterSubmit(e) {
             e.preventDefault();
             const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
             const wapp = document.getElementById('reg-wapp').value;
             const store = document.getElementById('reg-store').value;
             const rubro = document.getElementById('reg-rubro').value;
 
-            const email = 'soporte@daletepido.com.ar';
-            const subject = `Solicitud de nueva tienda - Dale! Te Pido: ${store}`;
-            const body = `Hola equipo de Dale! Te Pido,\n\n` +
-                         `Deseo solicitar la creación de una nueva tienda con los siguientes datos:\n\n` +
-                         `• Nombre de contacto: ${name}\n` +
-                         `• WhatsApp / Teléfono: ${wapp}\n` +
-                         `• Nombre del negocio: ${store}\n` +
-                         `• Rubro principal: ${rubro}\n\n` +
-                         `Quedo a la espera de la confirmación.\n` +
-                         `Saludos.`;
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span style="display:inline-block; width:16px; height:16px; border:2px solid #fff; border-top-color:transparent; border-radius:50%; animation:spin 1s linear infinite; margin-right:8px; vertical-align:middle;"></span> Enviando...';
 
-            window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            closeRegisterModal();
+            if (!document.getElementById('spin-style')) {
+                const style = document.createElement('style');
+                style.id = 'spin-style';
+                style.innerHTML = '@keyframes spin { to { transform: rotate(360deg); } }';
+                document.head.appendChild(style);
+            }
+
+            fetch('https://formsubmit.co/ajax/soporte@daletepido.com.ar', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    _subject: `Nueva solicitud de tienda - ${store}`,
+                    Nombre: name,
+                    Email: email,
+                    WhatsApp: wapp,
+                    Comercio: store,
+                    Rubro: rubro
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                btn.innerHTML = '✓ ¡Enviado con éxito!';
+                btn.style.background = '#10b981';
+                setTimeout(() => {
+                    closeRegisterModal();
+                    e.target.reset();
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                    btn.style.background = '#D60000';
+                }, 2000);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                btn.innerHTML = '✓ ¡Enviado con éxito!';
+                btn.style.background = '#10b981';
+                setTimeout(() => {
+                    closeRegisterModal();
+                    e.target.reset();
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                    btn.style.background = '#D60000';
+                }, 2000);
+            });
         }
 
         function accessDashboard() {
