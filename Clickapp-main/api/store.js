@@ -45,10 +45,10 @@ export default async function handler(req, res) {
     }
   }
 
-  // If still no store ID (e.g. accessing raw localhost, or unrecognized domain), fallback to serving index.html directly
+  // If still no store ID (e.g. accessing raw localhost, or unrecognized domain), fallback to serving landing.html directly
   if (!storeId) {
     try {
-      const filePath = path.join(process.cwd(), 'index.html');
+      const filePath = path.join(process.cwd(), 'landing.html');
       const html = fs.readFileSync(filePath, 'utf8');
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
       return res.status(200).send(html);
