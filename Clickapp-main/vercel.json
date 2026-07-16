@@ -40,7 +40,7 @@
           "value": "daletepido.com.ar"
         }
       ],
-      "destination": "/landing.html"
+      "destination": "/landing"
     },
     {
       "source": "/",
@@ -50,7 +50,7 @@
           "value": "www.daletepido.com.ar"
         }
       ],
-      "destination": "/landing.html"
+      "destination": "/landing"
     },
     {
       "source": "/",
@@ -60,7 +60,7 @@
           "value": "clickapp.com"
         }
       ],
-      "destination": "/landing.html"
+      "destination": "/landing"
     },
     {
       "source": "/",
@@ -70,7 +70,7 @@
           "value": "www.clickapp.com"
         }
       ],
-      "destination": "/landing.html"
+      "destination": "/landing"
     },
     {
       "source": "/",
