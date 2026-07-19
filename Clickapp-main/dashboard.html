@@ -7394,6 +7394,31 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       try {
         const saved = localStorage.getItem('storeapp_orders_' + STORE_ID) || localStorage.getItem('storeapp_orders');
         if (saved) allOrders = JSON.parse(saved);
+
+        // Auto-inject simulated order for testing noutacc store if list is empty
+        if (STORE_ID === 'noutacc' && allOrders.length === 0) {
+          const testOrder = {
+            id: 'PED-SIMULADO-1A',
+            fecha: new Date().toLocaleString('es-AR', {
+              day:'2-digit', month:'2-digit', year:'numeric',
+              hour:'2-digit', minute:'2-digit'
+            }),
+            cliente: 'Simulacro Cliente Sin TACC',
+            dni: '12345678',
+            productos: 'Pan de Molde Lactal (Sin TACC) ×1 | Medialunas de Manteca (Sin TACC) ×2',
+            detalle: JSON.stringify([
+              { id: 1, nombre: 'Pan de Molde Lactal (Sin TACC)', cantidad: 1, precio: 3200, emoji: '🍞' },
+              { id: 2, nombre: 'Medialunas de Manteca (Sin TACC)', cantidad: 2, precio: 1200, emoji: '🥐' }
+            ]),
+            pago: 'Efectivo',
+            logistica: 'Retiro por la tienda',
+            direccion: '',
+            total: 5600,
+            estado: 'confirmar'
+          };
+          allOrders.unshift(testOrder);
+          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
+        }
       } catch (e) { allOrders = []; }
 
       buildStateFilter();
