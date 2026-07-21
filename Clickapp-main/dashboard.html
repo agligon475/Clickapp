@@ -4340,30 +4340,51 @@
       submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Verificando...';
       
       try {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeInput)}`, {
-          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-        });
-        
-        if (!res.ok) throw new Error('Error al conectar con el servidor.');
-        const data = await res.json();
-        
-        if (!data || data.length === 0) {
-          throw new Error('La tienda ingresada no existe.');
-        }
-        
-        const settings = data[0];
-        let parsedDesign = {};
+        let authSuccess = false;
+
+        // 1. Intentar autenticación segura via Endpoint Backend Serverless
         try {
-          if (settings.email) parsedDesign = JSON.parse(settings.email);
-        } catch(e) {}
-        
-        const dbPassword = parsedDesign.password || '';
-        
-        // Si hay una contraseña configurada, debemos validarla
-        if (dbPassword && dbPassword !== passInput) {
-          throw new Error('Contraseña incorrecta.');
+          const authRes = await fetch('/api/auth', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'login', store_id: storeInput, password: passInput })
+          });
+
+          if (authRes.ok) {
+            const authData = await authRes.json();
+            if (authData.success) {
+              authSuccess = true;
+              if (authData.token) sessionStorage.setItem('storeapp_token_' + storeInput, authData.token);
+            } else {
+              throw new Error(authData.error || 'Credenciales inválidas.');
+            }
+          } else if (authRes.status === 401 || authRes.status === 404) {
+            const authData = await authRes.json();
+            throw new Error(authData.error || 'Contraseña incorrecta.');
+          }
+        } catch(apiErr) {
+          // Si falló por credenciales incorrectas explícito, lanzar error directamente
+          if (apiErr.message === 'Contraseña incorrecta.' || apiErr.message === 'La tienda ingresada no existe.') {
+            throw apiErr;
+          }
+          // Fallback a consulta Supabase para desarrollo estático si no responde la API serverless
+          const res = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeInput)}`, {
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+          });
+          if (!res.ok) throw new Error('Error al conectar con el servidor.');
+          const data = await res.json();
+          if (!data || data.length === 0) throw new Error('La tienda ingresada no existe.');
+          
+          const settings = data[0];
+          let parsedDesign = {};
+          try { if (settings.email) parsedDesign = JSON.parse(settings.email); } catch(e) {}
+          const dbPassword = parsedDesign.password || '';
+          if (dbPassword && dbPassword !== passInput) throw new Error('Contraseña incorrecta.');
+          authSuccess = true;
         }
-        
+
+        if (!authSuccess) throw new Error('No se pudo verificar el acceso.');
+
         // Logueado exitosamente
         sessionStorage.setItem('storeapp_logged_in_' + storeInput, 'true');
         
