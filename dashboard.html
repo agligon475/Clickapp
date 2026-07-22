@@ -4398,9 +4398,23 @@
     let SUPABASE_URL = rawSupabaseUrl || 'https://iaylgsthwildjkiiwgfd.supabase.co';
     let SUPABASE_KEY = window.localStorage.getItem('storeapp_supabase_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
 
-    // Obtener store_id del parámetro de URL '?store=...' o localStorage o 'ferre-now' por defecto
+    // Obtener store_id del parámetro de URL '?store=...' o del subdominio de hostname o localStorage o 'ferre-now' por defecto
     const urlParams = new URLSearchParams(window.location.search);
-    const STORE_ID = (urlParams.get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now').toLowerCase();
+    let detectedStore = urlParams.get('store');
+    if (!detectedStore) {
+      const hostname = window.location.hostname;
+      const parts = hostname.split('.');
+      if (parts.length > 2) {
+        const subdomain = parts[0].toLowerCase();
+        if (subdomain !== 'www' && subdomain !== 'clickapp' && subdomain !== 'daletepido') {
+          detectedStore = subdomain;
+        }
+      }
+    }
+    if (!detectedStore) {
+      detectedStore = window.localStorage.getItem('storeapp_store_id') || 'ferre-now';
+    }
+    const STORE_ID = detectedStore.toLowerCase();
     window.localStorage.setItem('storeapp_store_id', STORE_ID);
 
     // Intercept fetch globally to inject x-store-token automatically for Supabase requests
