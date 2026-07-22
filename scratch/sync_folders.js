@@ -13,7 +13,8 @@ const filesToSync = [
   'vercel.json',
   'api/image-search.js',
   'api/store.js',
-  'api/debug.js'
+  'api/debug.js',
+  'api/auth.js'
 ];
 
 const destinations = [
