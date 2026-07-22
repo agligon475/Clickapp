@@ -75,6 +75,7 @@ export default async function handler(req, res) {
         success: true,
         store_id: cleanStoreId,
         token: sessionToken,
+        plan_level: settings.plan_level || 'starter',
         message: 'Autenticación exitosa'
       });
     }
