@@ -3811,7 +3811,24 @@
     <!-- ══════════════════════════════ VISTA: CONFIGURACIÓN AVANZADA -->
     <div class="view" id="view-config-avanzada">
       
-      <!-- Banner de Advertencia -->
+      <!-- Locked Container (Password Screen) -->
+      <div id="adv-locked-container" style="display:none; flex-direction:column; align-items:center; justify-content:center; padding:40px; min-height:380px; background:rgba(30, 30, 35, 0.7); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-radius:16px; border:1px solid rgba(255,255,255,0.08); text-align:center; max-width:480px; margin: 40px auto; box-shadow: 0 12px 40px rgba(0,0,0,0.5); animation: fadeUp .35s ease both;">
+        <div style="font-size: 54px; margin-bottom: 20px; filter: drop-shadow(0 2px 8px rgba(215, 38, 56, 0.3));">🔒</div>
+        <h3 style="font-family: var(--font-h); color: var(--white); font-size: 22px; font-weight: 700; margin-bottom: 12px;">Acceso Restringido</h3>
+        <p style="color: var(--silver); font-size: 13px; line-height: 1.6; margin-bottom: 24px; max-width: 380px;">Esta sección contiene datos críticos de conexión a la base de datos, APIs de IA y Cloudinary. Ingrese la clave de soporte para desbloquear.</p>
+        <div style="width: 100%; display: flex; flex-direction: column; gap: 12px; align-items: stretch;">
+          <input type="password" id="adv-unlock-password" class="ctrl-input" placeholder="Clave Super Admin" style="text-align: center; height: 44px; font-size: 14px; letter-spacing: 0.1em;" onkeydown="if(event.key === 'Enter') unlockAdvanced()" />
+          <button onclick="unlockAdvanced()" class="sb-btn" style="background: var(--red); color: white; border: none; height: 44px; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; margin: 0; width: 100%;">
+            <i class="bi bi-shield-lock-fill"></i> Desbloquear Sección
+          </button>
+          <div id="adv-unlock-error" style="color: var(--red); font-size: 12px; font-weight: 600; min-height: 16px; margin-top: 4px;"></div>
+        </div>
+      </div>
+
+      <!-- Unlocked Container -->
+      <div id="adv-unlocked-container" style="display:none;">
+        
+        <!-- Banner de Advertencia -->
       <div style="background: rgba(215, 38, 56, 0.08); border: 1px solid rgba(215, 38, 56, 0.25); border-radius: 12px; padding: 20px; margin-bottom: 20px; display: flex; gap: 16px; align-items: flex-start; animation: fadeUp .35s ease both;">
         <i class="bi bi-exclamation-triangle" style="font-size: 24px; color: var(--red); flex-shrink: 0; margin-top: 2px;"></i>
         <div>
@@ -4057,6 +4074,7 @@
       <div id="adv-save-status"
         style="font-size:11px;text-align:right;margin-top:8px;min-height:14px;color:var(--silver);"></div>
 
+      </div><!-- /adv-unlocked-container -->
     </div><!-- /view-config-avanzada -->
 
     <!-- ══ CATEGORIES ══ -->
@@ -8314,6 +8332,39 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
     /* ═══════════════════════════════════════════ VISTA AVANZADA */
     function initAdvancedView() {
+      const isUnlocked = sessionStorage.getItem('storeapp_admin_unlocked') === 'true';
+      const lockedContainer = document.getElementById('adv-locked-container');
+      const unlockedContainer = document.getElementById('adv-unlocked-container');
+      
+      if (isUnlocked) {
+        if (lockedContainer) lockedContainer.style.display = 'none';
+        if (unlockedContainer) unlockedContainer.style.display = 'block';
+        loadAdvancedValues();
+      } else {
+        if (lockedContainer) lockedContainer.style.display = 'flex';
+        if (unlockedContainer) unlockedContainer.style.display = 'none';
+        const pwdInput = document.getElementById('adv-unlock-password');
+        if (pwdInput) pwdInput.value = '';
+        const errorEl = document.getElementById('adv-unlock-error');
+        if (errorEl) errorEl.textContent = '';
+      }
+    }
+
+    function unlockAdvanced() {
+      const pwdInput = document.getElementById('adv-unlock-password');
+      const errorEl = document.getElementById('adv-unlock-error');
+      if (!pwdInput || !errorEl) return;
+
+      if (pwdInput.value.trim() === 'super-admin-alicari') {
+        sessionStorage.setItem('storeapp_admin_unlocked', 'true');
+        initAdvancedView();
+      } else {
+        errorEl.textContent = 'Clave incorrecta. Acceso denegado.';
+        pwdInput.focus();
+      }
+    }
+
+    function loadAdvancedValues() {
       // Supabase (muestra los valores actuales pero ofuscados)
       const urlEl = document.getElementById('adv-supabase-url');
       const keyEl = document.getElementById('adv-supabase-key');
@@ -8528,6 +8579,10 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     }
 
     async function saveAdvancedConfig() {
+      if (sessionStorage.getItem('storeapp_admin_unlocked') !== 'true') {
+        alert('Acceso no autorizado.');
+        return;
+      }
       // Cloudinary
       const cName = (document.getElementById('cfg-cloud-name')?.value || '').trim();
       const cPreset = (document.getElementById('cfg-cloud-preset')?.value || '').trim();
@@ -8780,33 +8835,36 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       
       updateWelcomeGreeting();
 
-      // Cloudinary
-      const cName = document.getElementById('cfg-cloud-name').value.trim();
-      const cPreset = document.getElementById('cfg-cloud-preset').value.trim();
-      if (cName || cPreset) {
-        localStorage.setItem('storeapp_cloudinary', JSON.stringify({ name: cName, preset: cPreset }));
-      }
+      // Only save advanced settings if the section is unlocked
+      if (sessionStorage.getItem('storeapp_admin_unlocked') === 'true') {
+        // Cloudinary
+        const cName = document.getElementById('cfg-cloud-name').value.trim();
+        const cPreset = document.getElementById('cfg-cloud-preset').value.trim();
+        if (cName || cPreset) {
+          localStorage.setItem('storeapp_cloudinary', JSON.stringify({ name: cName, preset: cPreset }));
+        }
 
-      // Claude API Key
-      const claudeKey = document.getElementById('cfg-claude-key').value.trim();
-      if (claudeKey) {
-        localStorage.setItem('storeapp_claude_key', claudeKey);
-      } else {
-        localStorage.removeItem('storeapp_claude_key');
-      }
-      const claudeModel = document.getElementById('cfg-claude-model').value;
-      localStorage.setItem('storeapp_claude_model', claudeModel);
+        // Claude API Key
+        const claudeKey = document.getElementById('cfg-claude-key').value.trim();
+        if (claudeKey) {
+          localStorage.setItem('storeapp_claude_key', claudeKey);
+        } else {
+          localStorage.removeItem('storeapp_claude_key');
+        }
+        const claudeModel = document.getElementById('cfg-claude-model').value;
+        localStorage.setItem('storeapp_claude_model', claudeModel);
 
-      // Supabase
-      const sbUrlEl = document.getElementById('adv-supabase-url');
-      const sbKeyEl = document.getElementById('adv-supabase-key');
-      if (sbUrlEl && sbUrlEl.value.trim()) {
-        localStorage.setItem('storeapp_supabase_url', sbUrlEl.value.trim());
-        SUPABASE_URL = sbUrlEl.value.trim();
-      }
-      if (sbKeyEl && sbKeyEl.value.trim()) {
-        localStorage.setItem('storeapp_supabase_key', sbKeyEl.value.trim());
-        SUPABASE_KEY = sbKeyEl.value.trim();
+        // Supabase
+        const sbUrlEl = document.getElementById('adv-supabase-url');
+        const sbKeyEl = document.getElementById('adv-supabase-key');
+        if (sbUrlEl && sbUrlEl.value.trim()) {
+          localStorage.setItem('storeapp_supabase_url', sbUrlEl.value.trim());
+          SUPABASE_URL = sbUrlEl.value.trim();
+        }
+        if (sbKeyEl && sbKeyEl.value.trim()) {
+          localStorage.setItem('storeapp_supabase_key', sbKeyEl.value.trim());
+          SUPABASE_KEY = sbKeyEl.value.trim();
+        }
       }
 
       if (typeof updateStatusLights === 'function') updateStatusLights();
@@ -8982,7 +9040,15 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
     /* ═══════════════════════════════════════════ CLOUDINARY */
     function getCloudinaryCfg() {
-      try { return JSON.parse(localStorage.getItem('storeapp_cloudinary') || '{}'); } catch (e) { return {}; }
+      try {
+        const cloud = JSON.parse(localStorage.getItem('storeapp_cloudinary') || '{}');
+        return {
+          name: (cloud.name || 'deuog0r34').trim(),
+          preset: (cloud.preset || 'ml_default').trim()
+        };
+      } catch (e) {
+        return { name: 'deuog0r34', preset: 'ml_default' };
+      }
     }
 
     async function uploadToCloudinary(file) {
