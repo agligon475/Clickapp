@@ -4384,8 +4384,8 @@
 
     function requestUpgrade() {
       const storeName = (typeof cfg !== 'undefined' && cfg.name) || STORE_ID;
-      const message = encodeURIComponent(\`¡Hola! Me interesa subir mi tienda "\${storeName}" (\${STORE_ID}) al Plan PRO de Dale! Te Pido.\`);
-      window.open(\`https://wa.me/5491136362036?text=\${message}\`, '_blank');
+      const message = encodeURIComponent(`¡Hola! Me interesa subir mi tienda "${storeName}" (${STORE_ID}) al Plan PRO de Dale! Te Pido.`);
+      window.open(`https://wa.me/5491136362036?text=${message}`, '_blank');
     }
     window.requestUpgrade = requestUpgrade;
 
