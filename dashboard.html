@@ -4306,6 +4306,32 @@
     const STORE_ID = (urlParams.get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now').toLowerCase();
     window.localStorage.setItem('storeapp_store_id', STORE_ID);
 
+    // Intercept fetch globally to inject x-store-token automatically for Supabase requests
+    const originalFetch = window.fetch;
+    window.fetch = function (url, options) {
+      if (typeof url === 'string' && url.startsWith(SUPABASE_URL)) {
+        options = options || {};
+        options.headers = options.headers || {};
+        const token = sessionStorage.getItem('storeapp_token_' + STORE_ID);
+        if (token) {
+          if (options.headers instanceof Headers) {
+            options.headers.set('x-store-token', token);
+          } else {
+            options.headers['x-store-token'] = token;
+          }
+        }
+      }
+      return originalFetch(url, options);
+    };
+
+    async function hashPasswordSHA256(password, salt) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(password + salt);
+      const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
     function getStoreUrl() {
       const defaultStores = ['ferre-now', 'ferreteria', 'kiosco', 'gastronomia', 'electronica'];
       const isCustomSubdomain = !defaultStores.includes(STORE_ID.toLowerCase()) || 
@@ -4343,44 +4369,23 @@
         let authSuccess = false;
 
         // 1. Intentar autenticación segura via Endpoint Backend Serverless
-        try {
-          const authRes = await fetch('/api/auth', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'login', store_id: storeInput, password: passInput })
-          });
+        const authRes = await fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'login', store_id: storeInput, password: passInput })
+        });
 
-          if (authRes.ok) {
-            const authData = await authRes.json();
-            if (authData.success) {
-              authSuccess = true;
-              if (authData.token) sessionStorage.setItem('storeapp_token_' + storeInput, authData.token);
-            } else {
-              throw new Error(authData.error || 'Credenciales inválidas.');
-            }
-          } else if (authRes.status === 401 || authRes.status === 404) {
-            const authData = await authRes.json();
-            throw new Error(authData.error || 'Contraseña incorrecta.');
+        if (authRes.ok) {
+          const authData = await authRes.json();
+          if (authData.success) {
+            authSuccess = true;
+            if (authData.token) sessionStorage.setItem('storeapp_token_' + storeInput, authData.token);
+          } else {
+            throw new Error(authData.error || 'Credenciales inválidas.');
           }
-        } catch(apiErr) {
-          // Si falló por credenciales incorrectas explícito, lanzar error directamente
-          if (apiErr.message === 'Contraseña incorrecta.' || apiErr.message === 'La tienda ingresada no existe.') {
-            throw apiErr;
-          }
-          // Fallback a consulta Supabase para desarrollo estático si no responde la API serverless
-          const res = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeInput)}`, {
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-          });
-          if (!res.ok) throw new Error('Error al conectar con el servidor.');
-          const data = await res.json();
-          if (!data || data.length === 0) throw new Error('La tienda ingresada no existe.');
-          
-          const settings = data[0];
-          let parsedDesign = {};
-          try { if (settings.email) parsedDesign = JSON.parse(settings.email); } catch(e) {}
-          const dbPassword = parsedDesign.password || '';
-          if (dbPassword && dbPassword !== passInput) throw new Error('Contraseña incorrecta.');
-          authSuccess = true;
+        } else {
+          const authData = await authRes.json().catch(() => ({}));
+          throw new Error(authData.error || 'Contraseña incorrecta.');
         }
 
         if (!authSuccess) throw new Error('No se pudo verificar el acceso.');
@@ -5971,7 +5976,23 @@
           parsedEmail.theme = cfgObj.theme !== undefined ? cfgObj.theme : parsedEmail.theme || 'dark';
           parsedEmail.font = cfgObj.font !== undefined ? cfgObj.font : parsedEmail.font || '';
           parsedEmail.fontBody = cfgObj.fontBody !== undefined ? cfgObj.fontBody : parsedEmail.fontBody || '';
-          parsedEmail.password = cfgObj.password !== undefined ? cfgObj.password : parsedEmail.password || '';
+          if (cfgObj.password !== undefined && cfgObj.password !== '') {
+            if (cfgObj.password.includes(':')) {
+              // Ya está hasheada, la guardamos tal cual
+              parsedEmail.password = cfgObj.password;
+            } else {
+              // Es una contraseña nueva en texto plano. La hasheamos.
+              const salt = Math.random().toString(36).substring(2, 10);
+              const hashed = await hashPasswordSHA256(cfgObj.password, salt);
+              parsedEmail.password = `${salt}:${hashed}`;
+              // También actualizamos el localStorage con el nuevo hash para mantener la consistencia
+              cfgObj.password = parsedEmail.password;
+              localStorage.setItem('storeapp_cfg', JSON.stringify(cfgObj));
+              localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfgObj));
+            }
+          } else {
+            parsedEmail.password = parsedEmail.password || '';
+          }
           parsedEmail.bg = cfgObj.bg !== undefined ? cfgObj.bg : parsedEmail.bg || '';
           parsedEmail.subrubro = cfgObj.subrubro !== undefined ? cfgObj.subrubro : parsedEmail.subrubro || '';
           parsedEmail.payment_methods = cfgObj.payment_methods !== undefined ? cfgObj.payment_methods : parsedEmail.payment_methods || { efectivo: true, transferencia: true, convenir: true };
@@ -8199,7 +8220,22 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (sc.name) document.getElementById('cfg-store-name').value = sc.name;
       if (sc.tagline) document.getElementById('cfg-store-tagline').value = sc.tagline;
       if (sc.wapp) document.getElementById('cfg-store-wapp').value = sc.wapp;
-      if (sc.password) document.getElementById('cfg-store-password').value = sc.password;
+      
+      const pwdInput = document.getElementById('cfg-store-password');
+      if (pwdInput) {
+        pwdInput.placeholder = 'Clave para proteger el acceso a este panel';
+        if (sc.password) {
+          if (sc.password.includes(':')) {
+            pwdInput.value = '';
+            pwdInput.placeholder = '•••••••• (Ingresá una nueva para cambiarla)';
+          } else {
+            pwdInput.value = sc.password;
+          }
+        } else {
+          pwdInput.value = '';
+        }
+      }
+
       if (sc.rubro) {
         document.getElementById('cfg-store-rubro').value = sc.rubro;
         updateSubrubros('cfg-store-rubro', 'cfg-store-subrubro');
@@ -8715,7 +8751,9 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       sc.payment_methods = { efectivo: payEfectivo, transferencia: payTransferencia, convenir: payConvenir };
 
       const password = document.getElementById('cfg-store-password').value.trim();
-      sc.password = password;
+      if (password !== '') {
+        sc.password = password;
+      }
 
       const domain = document.getElementById('cfg-store-domain').value.trim();
       sc.domain = domain;

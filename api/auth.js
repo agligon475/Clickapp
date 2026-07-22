@@ -1,5 +1,18 @@
+import crypto from 'crypto';
+
 const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+
+function verifyPassword(password, storedPassword) {
+  if (!storedPassword) return false;
+  if (!storedPassword.includes(':')) {
+    // Contraseña heredada en texto plano
+    return password === storedPassword;
+  }
+  const [salt, originalHash] = storedPassword.split(':');
+  const hash = crypto.createHash('sha256').update(password + salt).digest('hex');
+  return hash === originalHash;
+}
 
 export default async function handler(req, res) {
   // CORS Headers
@@ -51,7 +64,7 @@ export default async function handler(req, res) {
 
     // Action: Login verification
     if (action === 'login' || !action) {
-      if (dbPassword && dbPassword !== (password || '').trim()) {
+      if (dbPassword && !verifyPassword((password || '').trim(), dbPassword)) {
         return res.status(401).json({ success: false, error: 'Contraseña incorrecta' });
       }
 
