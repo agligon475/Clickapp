@@ -3456,25 +3456,42 @@
 
     <!-- ══ PÁGINAS INTERNAS ══ -->
     <div class="view" id="view-pages-internas">
-      <div class="card" style="margin-bottom:24px;">
-        <h3 style="margin-bottom:16px;">Página "Nosotros"</h3>
-        <div class="ctrl-group">
-          <label class="ctrl-label">Historia y Misión (acepta saltos de línea)</label>
-          <textarea class="ctrl-input" id="pages-nosotros-text" rows="8"
-            placeholder="Escribe aquí la historia de la ferretería..."></textarea>
+      
+      <!-- Selector de pestañas -->
+      <div style="display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid var(--zinc); padding-bottom: 2px;">
+        <button id="tab-btn-nosotros" class="tab-btn active" onclick="switchPagesInternasTab('nosotros')" style="background: transparent; border: none; color: var(--white); font-family: var(--font-h); font-size: 14px; font-weight: 600; padding: 10px 20px; cursor: pointer; border-bottom: 2px solid var(--red); margin-bottom: -2px; transition: all 0.25s; display: flex; align-items: center; gap: 6px;">
+          <i class="bi bi-file-person" style="font-size:16px;"></i> Página "Nosotros"
+        </button>
+        <button id="tab-btn-faq" class="tab-btn" onclick="switchPagesInternasTab('faq')" style="background: transparent; border: none; color: var(--silver); font-family: var(--font-h); font-size: 14px; font-weight: 500; padding: 10px 20px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.25s; display: flex; align-items: center; gap: 6px;">
+          <i class="bi bi-question-circle" style="font-size:16px;"></i> Preguntas Frecuentes (FAQ)
+        </button>
+      </div>
+
+      <!-- Tab Content: Nosotros -->
+      <div id="tab-content-nosotros" class="tab-content">
+        <div class="card" style="margin-bottom:24px;">
+          <h3 style="margin-bottom:16px;">Página "Nosotros"</h3>
+          <div class="ctrl-group">
+            <label class="ctrl-label">Historia y Misión (acepta saltos de línea)</label>
+            <textarea class="ctrl-input" id="pages-nosotros-text" rows="8"
+              placeholder="Escribe aquí la historia de la ferretería..."></textarea>
+          </div>
         </div>
       </div>
 
-      <div class="card" style="margin-bottom:24px;">
-        <h3 style="margin-bottom:16px;">Preguntas Frecuentes (FAQ)</h3>
-        <div id="faq-list">
-          <!-- Generado por JS -->
+      <!-- Tab Content: FAQ -->
+      <div id="tab-content-faq" class="tab-content" style="display: none;">
+        <div class="card" style="margin-bottom:24px;">
+          <h3 style="margin-bottom:16px;">Preguntas Frecuentes (FAQ)</h3>
+          <div id="faq-list">
+            <!-- Generado por JS -->
+          </div>
+          <button class="btn"
+            style="background:var(--iron);border:1px dashed var(--zinc);color:var(--fog);width:100%;margin-top:16px;"
+            onclick="addFaqItem()">
+            <i class="bi bi-plus"></i> Agregar Pregunta
+          </button>
         </div>
-        <button class="btn"
-          style="background:var(--iron);border:1px dashed var(--zinc);color:var(--fog);width:100%;margin-top:16px;"
-          onclick="addFaqItem()">
-          <i class="bi bi-plus"></i> Agregar Pregunta
-        </button>
       </div>
 
       <div style="display:flex;align-items:center;gap:16px;margin-top:24px;">
@@ -4819,6 +4836,7 @@
         }
       }
       if (name === 'products') renderProducts();
+      if (name === 'pages-internas') switchPagesInternasTab('nosotros');
       if (name === 'orders') renderAllOrders();
       if (name === 'reports') {
         const select = document.querySelector('.period-select');
@@ -9998,6 +10016,41 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           addFaqItem('¿Los productos tienen garantía?', 'Todos nuestros productos cuentan con garantía oficial de fábrica. El plazo depende de la marca y el tipo de herramienta, variando generalmente entre 6 y 24 meses. Conservá tu factura de compra para validarla.');
         }
       } catch (e) { console.error('Error loading pages', e); }
+    }
+
+    function switchPagesInternasTab(tab) {
+      const btnNosotros = document.getElementById('tab-btn-nosotros');
+      const btnFaq = document.getElementById('tab-btn-faq');
+      const contentNosotros = document.getElementById('tab-content-nosotros');
+      const contentFaq = document.getElementById('tab-content-faq');
+      
+      if (tab === 'nosotros') {
+        if (btnNosotros) {
+          btnNosotros.style.color = 'var(--white)';
+          btnNosotros.style.borderBottomColor = 'var(--red)';
+          btnNosotros.style.fontWeight = '600';
+        }
+        if (btnFaq) {
+          btnFaq.style.color = 'var(--silver)';
+          btnFaq.style.borderBottomColor = 'transparent';
+          btnFaq.style.fontWeight = '500';
+        }
+        if (contentNosotros) contentNosotros.style.display = 'block';
+        if (contentFaq) contentFaq.style.display = 'none';
+      } else {
+        if (btnFaq) {
+          btnFaq.style.color = 'var(--white)';
+          btnFaq.style.borderBottomColor = 'var(--red)';
+          btnFaq.style.fontWeight = '600';
+        }
+        if (btnNosotros) {
+          btnNosotros.style.color = 'var(--silver)';
+          btnNosotros.style.borderBottomColor = 'transparent';
+          btnNosotros.style.fontWeight = '500';
+        }
+        if (contentNosotros) contentNosotros.style.display = 'none';
+        if (contentFaq) contentFaq.style.display = 'block';
+      }
     }
 
     async function savePages() {
