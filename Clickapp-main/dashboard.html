@@ -4327,6 +4327,68 @@
       }, 4000);
     };
 
+    function getActivePlanLevel() {
+      return sessionStorage.getItem('storeapp_plan_level_' + STORE_ID) || 'starter';
+    }
+
+    function showUpgradeModal(title, message) {
+      const oldModal = document.getElementById('upgrade-plan-modal');
+      if (oldModal) oldModal.remove();
+
+      const modal = document.createElement('div');
+      modal.id = 'upgrade-plan-modal';
+      modal.style.position = 'fixed';
+      modal.style.top = '0';
+      modal.style.left = '0';
+      modal.style.width = '100vw';
+      modal.style.height = '100vh';
+      modal.style.background = 'rgba(15, 15, 20, 0.75)';
+      modal.style.backdropFilter = 'blur(10px)';
+      modal.style.webkitBackdropFilter = 'blur(10px)';
+      modal.style.display = 'flex';
+      modal.style.alignItems = 'center';
+      modal.style.justifyContent = 'center';
+      modal.style.zIndex = '99999';
+      modal.style.animation = 'fadeIn 0.25s ease';
+
+      const box = document.createElement('div');
+      box.style.background = 'var(--steel)';
+      box.style.border = '1px solid rgba(255,255,255,0.08)';
+      box.style.borderRadius = '16px';
+      box.style.padding = '30px';
+      box.style.maxWidth = '420px';
+      box.style.width = '90%';
+      box.style.textAlign = 'center';
+      box.style.boxShadow = '0 12px 40px rgba(0,0,0,0.5)';
+      box.style.display = 'flex';
+      box.style.flexDirection = 'column';
+      box.style.alignItems = 'center';
+
+      box.innerHTML = `
+        <div style="font-size: 48px; margin-bottom: 16px;">🚀</div>
+        <h3 style="font-family: var(--font-h); color: var(--white); font-size: 18px; font-weight: 700; margin-bottom: 10px;">${title}</h3>
+        <p style="color: var(--silver); font-size: 13px; line-height: 1.6; margin-bottom: 24px;">${message}</p>
+        <div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+          <button onclick="requestUpgrade()" class="sb-btn" style="background: var(--red); color: white; border: none; height: 40px; font-size: 13px; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin:0; width: 100%;">
+            <i class="bi bi-whatsapp"></i> Solicitar Plan PRO
+          </button>
+          <button onclick="document.getElementById('upgrade-plan-modal').remove()" class="sb-btn" style="background: var(--zinc); color: var(--white); border: 1px solid var(--iron); height: 40px; font-size: 13px; font-weight: 600; border-radius: 8px; cursor: pointer; margin:0; width: 100%;">
+            Quizás más tarde
+          </button>
+        </div>
+      `;
+
+      modal.appendChild(box);
+      document.body.appendChild(modal);
+    }
+
+    function requestUpgrade() {
+      const storeName = (typeof cfg !== 'undefined' && cfg.name) || STORE_ID;
+      const message = encodeURIComponent(\`¡Hola! Me interesa subir mi tienda "\${storeName}" (\${STORE_ID}) al Plan PRO de Dale! Te Pido.\`);
+      window.open(\`https://wa.me/5491136362036?text=\${message}\`, '_blank');
+    }
+    window.requestUpgrade = requestUpgrade;
+
     /* ════════════════════════════════════════════ SUPABASE CONFIG */
     let rawSupabaseUrl = window.localStorage.getItem('storeapp_supabase_url');
     if (rawSupabaseUrl && !rawSupabaseUrl.startsWith('http')) {
@@ -4415,6 +4477,7 @@
           if (authData.success) {
             authSuccess = true;
             if (authData.token) sessionStorage.setItem('storeapp_token_' + storeInput, authData.token);
+            if (authData.plan_level) sessionStorage.setItem('storeapp_plan_level_' + storeInput, authData.plan_level);
           } else {
             throw new Error(authData.error || 'Credenciales inválidas.');
           }
@@ -4783,6 +4846,10 @@
     }
     /* NAV */
     function showView(name, el) {
+      if (name === 'reports' && getActivePlanLevel() === 'starter') {
+        showUpgradeModal('Métricas Exclusivas del Plan PRO', 'El acceso a reportes detallados de facturación, clientes recurrentes y analíticas avanzadas es exclusivo de comercios con Plan PRO.');
+        return;
+      }
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
       document.getElementById('view-' + name).classList.add('active');
@@ -5203,6 +5270,10 @@
             cfg = { ...cfg, ...remoteStoreCfg };
             localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
             localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
+            
+            const planLevel = dbCfg.plan_level || 'starter';
+            sessionStorage.setItem('storeapp_plan_level_' + STORE_ID, planLevel);
+
             updateWelcomeGreeting();
             checkOnboardingStatus();
 
@@ -6750,6 +6821,10 @@
 
     /* ═══════════════════════════════════════════ MODAL */
     function openModal(id = null) {
+      if (id === null && getActivePlanLevel() === 'starter' && localProducts.length >= 12) {
+        showUpgradeModal('Límite de productos alcanzado', 'El Plan STARTER permite configurar hasta 12 productos. ¡Subí al Plan PRO para tener productos e imágenes ilimitadas!');
+        return;
+      }
       editingId = id;
       const p = id != null && id !== '' ? localProducts.find(x => String(x.id) === String(id)) : null;
       document.getElementById('modal-title-text').textContent = p ? 'Editar producto' : 'Nuevo producto';
@@ -8301,7 +8376,22 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const cbTransferencia = document.getElementById('cfg-pay-transferencia'); if (cbTransferencia) cbTransferencia.checked = pay.transferencia !== false;
       const cbConvenir = document.getElementById('cfg-pay-convenir'); if (cbConvenir) cbConvenir.checked = pay.convenir !== false;
 
-      if (sc.domain) document.getElementById('cfg-store-domain').value = sc.domain;
+      const domainInput = document.getElementById('cfg-store-domain');
+      if (domainInput) {
+        const plan = getActivePlanLevel();
+        if (plan !== 'enterprise' && plan !== 'exclusive') {
+          domainInput.disabled = true;
+          domainInput.value = '';
+          domainInput.placeholder = '🔒 Disponible en Plan ENTERPRISE';
+          const label = domainInput.previousElementSibling;
+          if (label) label.innerHTML = 'Dominio Propio <span style="color:var(--red); font-size:10px; font-weight:600;">(🔒 ENTERPRISE)</span>';
+        } else {
+          domainInput.disabled = false;
+          const label = domainInput.previousElementSibling;
+          if (label) label.innerHTML = 'Dominio Propio';
+          if (sc.domain) domainInput.value = sc.domain;
+        }
+      }
 
       const soc = sc.socials || {};
       if (soc.web) document.getElementById('cfg-social-web').value = soc.web;
