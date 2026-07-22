@@ -4559,8 +4559,8 @@
       const storeName = (typeof cfg !== 'undefined' && cfg.name) || STORE_ID;
       const currentPlan = getActivePlanLevel().toUpperCase();
       const targetPlan = selectedUpgradePlan.toUpperCase();
-      const message = encodeURIComponent(\`¡Hola! Solicito cambiar mi tienda "\${storeName}" (\${STORE_ID}) desde el plan actual (\${currentPlan}) hacia el nuevo \${targetPlan}.\`);
-      window.open(\`https://wa.me/5491136362036?text=\${message}\`, '_blank');
+      const message = encodeURIComponent(`¡Hola! Solicito cambiar mi tienda "${storeName}" (${STORE_ID}) desde el plan actual (${currentPlan}) hacia el nuevo ${targetPlan}.`);
+      window.open(`https://wa.me/5491136362036?text=${message}`, '_blank');
     }
     window.sendUpgradeRequest = sendUpgradeRequest;
 
