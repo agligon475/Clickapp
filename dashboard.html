@@ -3686,7 +3686,8 @@
               </div>
 
               <!-- Plan 4 -->
-              <div onclick="selectUpgradePlan('exclusive')" id="upgrade-card-exclusive" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.2s ease; position: relative;">
+              <div id="upgrade-card-exclusive" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; cursor: not-allowed; opacity: 0.75; position: relative;">
+                <div style="position: absolute; top: -10px; right: 10px; background: #6b21a8; color: white; font-size: 9px; font-weight: 700; padding: 3px 8px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.05em;">SOLO INVITACIÓN</div>
                 <div style="font-size: 11px; color: var(--silver); font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">Plan EXCLUSIVE</div>
                 <div style="font-size: 20px; font-weight: 800; color: var(--white); margin-bottom: 12px;">Costo 0 <span style="font-size: 12px; font-weight: 400; color: var(--silver);">/ Tester</span></div>
                 <ul style="padding-left: 18px; margin: 0; font-size: 12px; color: var(--silver); display: flex; flex-direction: column; gap: 6px;">
@@ -4472,8 +4473,9 @@
     let selectedUpgradePlan = 'pro';
 
     function selectUpgradePlan(plan) {
+      if (plan === 'exclusive') return; // El plan Exclusive no es elegible, es asignado por el admin
       selectedUpgradePlan = plan;
-      const plans = ['starter', 'pro', 'enterprise', 'exclusive'];
+      const plans = ['starter', 'pro', 'enterprise'];
       plans.forEach(p => {
         const card = document.getElementById('upgrade-card-' + p);
         if (card) {
@@ -4527,7 +4529,7 @@
       }
 
       if (planNameEl) {
-        planNameEl.innerHTML = `<span style="font-size: 14px; margin-right: 4px;">\${icon}</span> \${text}`;
+        planNameEl.innerHTML = `<span style="font-size: 14px; margin-right: 4px;">${icon}</span> ${text}`;
         planNameEl.style.color = color;
       }
 
@@ -4550,7 +4552,7 @@
       }
 
       // Pre-select next plan
-      const nextPlan = plan === 'starter' ? 'pro' : (plan === 'pro' ? 'enterprise' : 'exclusive');
+      const nextPlan = plan === 'starter' ? 'pro' : 'enterprise';
       selectUpgradePlan(nextPlan);
     }
     window.initAccountPlanView = initAccountPlanView;
