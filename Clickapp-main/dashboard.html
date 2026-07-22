@@ -1973,6 +1973,7 @@
 
     <!-- Store Name Bar -->
     <div class="sb-store-name-bar" id="sb-store-name">Cargando Tienda...</div>
+    <div id="sb-plan-badge" style="margin: -6px 16px 16px 16px; display: inline-flex; align-items: center; gap: 6px; font-size: 11px; padding: 4px 10px; border-radius: 99px; font-weight: 600; width: max-content;"></div>
 
     <!-- Quick Action Buttons Row -->
     <div class="quick-actions-row">
@@ -4331,6 +4332,40 @@
       return sessionStorage.getItem('storeapp_plan_level_' + STORE_ID) || 'starter';
     }
 
+    function updatePlanBadge() {
+      const badge = document.getElementById('sb-plan-badge');
+      if (!badge) return;
+
+      const plan = getActivePlanLevel();
+      let text = 'PLAN STARTER';
+      let bg = 'rgba(255, 255, 255, 0.05)';
+      let color = 'var(--silver)';
+      let icon = '⚡';
+
+      if (plan === 'pro') {
+        text = 'PLAN PRO';
+        bg = 'rgba(215, 38, 56, 0.15)';
+        color = 'var(--red)';
+        icon = '🚀';
+      } else if (plan === 'enterprise') {
+        text = 'PLAN ENTERPRISE';
+        bg = 'rgba(59, 130, 246, 0.15)';
+        color = '#3b82f6';
+        icon = '👑';
+      } else if (plan === 'exclusive') {
+        text = 'PLAN EXCLUSIVE';
+        bg = 'rgba(168, 85, 247, 0.15)';
+        color = '#a855f7';
+        icon = '⭐';
+      }
+
+      badge.innerHTML = `<span style="font-size: 12px; margin-right: 2px;">${icon}</span> ${text}`;
+      badge.style.background = bg;
+      badge.style.color = color;
+      badge.style.border = `1px solid ${color}30`;
+    }
+    window.updatePlanBadge = updatePlanBadge;
+
     function showUpgradeModal(title, message) {
       const oldModal = document.getElementById('upgrade-plan-modal');
       if (oldModal) oldModal.remove();
@@ -4584,12 +4619,14 @@
       if (isDemoStore) {
         // Para las plantillas de demo, no exigir login
         document.getElementById('dash-login-overlay').style.display = 'none';
+        updatePlanBadge();
         return;
       }
       
       const loggedIn = sessionStorage.getItem('storeapp_logged_in_' + STORE_ID);
       if (loggedIn === 'true') {
         document.getElementById('dash-login-overlay').style.display = 'none';
+        updatePlanBadge();
       } else {
         document.getElementById('dash-login-overlay').style.display = 'flex';
         document.getElementById('login-store-id').value = STORE_ID;
@@ -5289,6 +5326,7 @@
             sessionStorage.setItem('storeapp_plan_level_' + STORE_ID, planLevel);
 
             updateWelcomeGreeting();
+            updatePlanBadge();
             checkOnboardingStatus();
 
             // Update UI
