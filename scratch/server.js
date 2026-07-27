@@ -2,6 +2,27 @@ import http from 'http';
 import fs from 'fs';
 import path from 'path';
 
+// Load environment variables from .env file manually if exists
+try {
+  const envPath = path.join(process.cwd(), '.env');
+  if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf8');
+    envContent.split('\n').forEach(line => {
+      const match = line.trim().match(/^([\w.-]+)\s*=\s*(.*)?\s*$/);
+      if (match) {
+        const key = match[1];
+        let value = match[2] || '';
+        // Remove quotes if present
+        if (value.startsWith('"') && value.endsWith('"')) value = value.slice(1, -1);
+        if (value.startsWith("'") && value.endsWith("'")) value = value.slice(1, -1);
+        process.env[key] = value.trim();
+      }
+    });
+  }
+} catch (e) {
+  console.warn("Could not load .env file:", e.message);
+}
+
 const PORT = 5500;
 const MIME_TYPES = {
   '.html': 'text/html',
@@ -203,10 +224,13 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(405, { 'Content-Type': 'application/json' });
       return res.end(JSON.stringify({ error: 'Method not allowed' }));
     }
-    const claudeKey = req.headers['x-claude-key'];
+    let claudeKey = req.headers['x-claude-key'];
+    if (!claudeKey || claudeKey.trim() === '' || claudeKey === 'undefined' || claudeKey === 'null') {
+      claudeKey = process.env.CLAUDE_API_KEY;
+    }
     if (!claudeKey) {
       res.writeHead(401, { 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({ error: 'API Key inválida o faltante' }));
+      return res.end(JSON.stringify({ error: 'API Key de Claude inválida o faltante' }));
     }
     const rawBody = await parseRequestBody(req);
     try {
@@ -233,7 +257,10 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(405, { 'Content-Type': 'application/json' });
       return res.end(JSON.stringify({ error: 'Method not allowed' }));
     }
-    const geminiKey = req.headers['x-gemini-key'];
+    let geminiKey = req.headers['x-gemini-key'];
+    if (!geminiKey || geminiKey.trim() === '' || geminiKey === 'undefined' || geminiKey === 'null') {
+      geminiKey = process.env.GEMINI_API_KEY;
+    }
     if (!geminiKey) {
       res.writeHead(401, { 'Content-Type': 'application/json' });
       return res.end(JSON.stringify({ error: 'API Key de Gemini faltante' }));

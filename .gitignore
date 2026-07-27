@@ -4,4 +4,5 @@ package-lock.json
 *Clave*
 *.txt
 scratch/lighthouse*
-scratch/*.png
+.env
+.env.local
