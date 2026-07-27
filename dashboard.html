@@ -10780,8 +10780,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         document.getElementById('wiz-store-direccion').value = sc.direccion || document.getElementById('cfg-store-direccion')?.value || '';
         document.getElementById('wiz-store-horario').value = sc.horario || document.getElementById('cfg-store-horario')?.value || '';
         
-        document.getElementById('wiz-supabase-url').value = sbUrl;
-        document.getElementById('wiz-supabase-key').value = sbKey;
+
 
         // Set wizard emoji picker state
         wizSelectedEmoji = sc.emoji || '🏪';
@@ -10840,7 +10839,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
 
     function updateWizardUI() {
       // Hide all steps
-      for (let i = 1; i <= 3; i++) {
+      for (let i = 1; i <= 2; i++) {
         document.getElementById(`wizard-step-${i}`).style.display = 'none';
         document.getElementById(`step-dot-${i}`).classList.remove('active');
         document.getElementById(`step-dot-${i}`).style.background = 'var(--zinc)';
@@ -10859,11 +10858,8 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
 
       // Buttons visibility
       document.getElementById('wiz-btn-back').style.display = currentWizardStep > 1 ? 'inline-block' : 'none';
-      document.getElementById('wiz-btn-next').style.display = currentWizardStep < 3 ? 'inline-block' : 'none';
-      document.getElementById('wiz-btn-save').style.display = currentWizardStep === 3 ? 'inline-block' : 'none';
-      
-      // Clear wizard test status
-      document.getElementById('wiz-supabase-status').textContent = '';
+      document.getElementById('wiz-btn-next').style.display = currentWizardStep < 2 ? 'inline-block' : 'none';
+      document.getElementById('wiz-btn-save').style.display = currentWizardStep === 2 ? 'inline-block' : 'none';
     }
 
     function nextStep() {
@@ -10884,7 +10880,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         }
       }
       
-      if (currentWizardStep < 3) {
+      if (currentWizardStep < 2) {
         currentWizardStep++;
         updateWizardUI();
       }
@@ -10934,8 +10930,10 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       const wapp = document.getElementById('wiz-store-wapp').value.trim();
       const direccion = document.getElementById('wiz-store-direccion').value.trim();
       const horario = document.getElementById('wiz-store-horario').value.trim();
-      const sbUrl = document.getElementById('wiz-supabase-url').value.trim();
-      const sbKey = document.getElementById('wiz-supabase-key').value.trim();
+      
+      // Obtener credenciales de Supabase de las variables ya guardadas o globales
+      const sbUrl = localStorage.getItem('storeapp_supabase_url') || (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : '');
+      const sbKey = localStorage.getItem('storeapp_supabase_key') || (typeof SUPABASE_KEY !== 'undefined' ? SUPABASE_KEY : '');
 
       const h1 = document.getElementById('wiz-store-h1').value.trim();
       const h2 = document.getElementById('wiz-store-h2').value.trim();
@@ -11385,12 +11383,10 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       <div style="padding: 16px 22px 0; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
         <div id="step-dot-1" class="step-indicator active" style="flex: 1; height: 4px; background: var(--red); border-radius: 2px; transition: all 0.3s;"></div>
         <div id="step-dot-2" class="step-indicator" style="flex: 1; height: 4px; background: var(--zinc); border-radius: 2px; transition: all 0.3s;"></div>
-        <div id="step-dot-3" class="step-indicator" style="flex: 1; height: 4px; background: var(--zinc); border-radius: 2px; transition: all 0.3s;"></div>
       </div>
       <div style="padding: 6px 22px 0; display: flex; justify-content: space-between; font-size: 10px; color: var(--silver); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">
         <span id="step-lbl-1" style="color: var(--white);">1. Tienda</span>
         <span id="step-lbl-2">2. Contacto</span>
-        <span id="step-lbl-3">3. Base de Datos</span>
       </div>
 
       <div class="modal-body" style="min-height: 250px;">
@@ -11486,27 +11482,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           </div>
         </div>
 
-        <!-- STEP 3: Base de Datos Supabase -->
-        <div id="wizard-step-3" class="wizard-step" style="display:none;">
-          <h3 style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:14px; color:var(--white); text-transform:uppercase;">Conexión a Base de Datos (Supabase)</h3>
-          <div style="font-size:12px;color:var(--silver);margin-bottom:12px;line-height:1.5;">
-            Conectá tu base de datos de Supabase para poder guardar productos, categorías y pedidos de forma remota.
-          </div>
-          <div class="ctrl-group">
-            <label class="ctrl-label">Supabase URL (Project URL)</label>
-            <input class="ctrl-input" id="wiz-supabase-url" placeholder="https://xxxx.supabase.co" />
-          </div>
-          <div class="ctrl-group" style="margin-top:12px;">
-            <label class="ctrl-label">Supabase Anon Key (API Key pública)</label>
-            <input class="ctrl-input" type="password" id="wiz-supabase-key" placeholder="eyJhbGci..." />
-          </div>
-          <div style="margin-top:14px; display:flex; gap:8px; align-items:center;">
-            <button onclick="testWizardSupabaseConnection()" class="sb-btn" style="width:auto; margin:0; padding:8px 16px; background:var(--zinc); border:1px solid var(--silver); color:var(--fog); font-size:12px;">
-              <i class="bi bi-wifi"></i> Probar Conexión
-            </button>
-            <span id="wiz-supabase-status" style="font-size:11px; color:var(--silver);"></span>
-          </div>
-        </div>
+
 
       </div>
 
