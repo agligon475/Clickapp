@@ -6424,21 +6424,7 @@
           parsedEmail.horarios_data = cfgObj.horarios_data !== undefined ? cfgObj.horarios_data : parsedEmail.horarios_data || null;
           parsedEmail.admin_email = cfgObj.admin_email !== undefined ? cfgObj.admin_email : parsedEmail.admin_email || '';
 
-          // Guardar redundancia temporal por retrocompatibilidad
-          dataToSave.email = JSON.stringify(parsedEmail);
-          dataToSave.design_settings = {
-            h1: parsedEmail.h1,
-            h2: parsedEmail.h2,
-            desc: parsedEmail.desc,
-            emoji: parsedEmail.emoji,
-            theme: parsedEmail.theme,
-            font: parsedEmail.font,
-            fontBody: parsedEmail.fontBody,
-            bg: parsedEmail.bg,
-            qr_code: parsedEmail.qr_code || `https://daletepido.com.ar/api/qr?store=${activeStore}`,
-            nosotros: parsedEmail.nosotros || '',
-            faq: parsedEmail.faq || []
-          };
+
 
           // Guardar en las nuevas columnas atómicas dedicadas
           dataToSave.admin_email = parsedEmail.admin_email;
@@ -10320,7 +10306,9 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       try {
         const dataToSave = {
           banner1_label: b1Label, banner1_title: b1Title, banner1_img: b1Img, banner1_cat: b1Cat,
-          banner2_label: b2Label, banner2_title: b2Title, banner2_img: b2Img, banner2_cat: b2Cat
+          banner2_label: b2Label, banner2_title: b2Title, banner2_img: b2Img, banner2_cat: b2Cat,
+          banner1_bg: b1Bg, banner1_active: b1Active,
+          banner2_bg: b2Bg, banner2_active: b2Active
         };
 
         const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
@@ -10335,26 +10323,8 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
           const dbRow = configData[0];
           const id = dbRow.id;
 
-          let parsedEmail = {};
-          try {
-            if (dbRow.email) parsedEmail = JSON.parse(dbRow.email);
-          } catch(e) {}
-
-          parsedEmail.banner1_active = b1Active;
-          parsedEmail.banner2_active = b2Active;
-          parsedEmail.banner1_bg = b1Bg;
-          parsedEmail.banner2_bg = b2Bg;
-          dataToSave.email = JSON.stringify(parsedEmail);
-
           await updateInSupabase('company_settings', id, dataToSave);
         } else {
-          const parsedEmail = {
-            banner1_active: b1Active,
-            banner2_active: b2Active,
-            banner1_bg: b1Bg,
-            banner2_bg: b2Bg
-          };
-          dataToSave.email = JSON.stringify(parsedEmail);
           await postToSupabase('company_settings', dataToSave);
         }
 
