@@ -5460,35 +5460,54 @@
               try { parsedSocials = JSON.parse(dbCfg.phone); } catch (e) {}
             }
 
+            // Cargar FAQs desde la tabla dedicada faqs
+            let faqs = [];
+            try {
+              const activeStore = (new URLSearchParams(window.location.search).get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now').toLowerCase();
+              const faqsRes = await fetch(`${SUPABASE_URL}/rest/v1/faqs?store_id=eq.${encodeURIComponent(activeStore)}&order=display_order.asc`, {
+                headers: {
+                  'apikey': SUPABASE_KEY,
+                  'Authorization': `Bearer ${SUPABASE_KEY}`
+                }
+              });
+              if (faqsRes.ok) {
+                const faqsData = await faqsRes.json();
+                faqs = faqsData.map(f => ({ q: f.question, a: f.answer }));
+              } else {
+                faqs = parsedDesign.faq || [];
+              }
+            } catch (e) {
+              console.warn('Error loading faqs from table:', e.message);
+              faqs = parsedDesign.faq || [];
+            }
+
             const bannerData = {
               banner1: { 
                 label: dbCfg.banner1_label || 'NUEVAS', 
                 title: dbCfg.banner1_title || 'Productos', 
                 img: dbCfg.banner1_img || '', 
                 cat: dbCfg.banner1_cat || '',
-                bg: parsedDesign.banner1_bg || '#1C1C1E',
-                active: parsedDesign.banner1_active !== false
+                bg: dbCfg.banner1_bg || parsedDesign.banner1_bg || '#1C1C1E',
+                active: dbCfg.banner1_active !== null ? dbCfg.banner1_active : (parsedDesign.banner1_active !== false)
               },
               banner2: { 
                 label: dbCfg.banner2_label || 'PROMOCIÓN', 
                 title: dbCfg.banner2_title || 'Especiales', 
                 img: dbCfg.banner2_img || '', 
                 cat: dbCfg.banner2_cat || '',
-                bg: parsedDesign.banner2_bg || '#1C1C1E',
-                active: parsedDesign.banner2_active !== false
+                bg: dbCfg.banner2_bg || parsedDesign.banner2_bg || '#1C1C1E',
+                active: dbCfg.banner2_active !== null ? dbCfg.banner2_active : (parsedDesign.banner2_active !== false)
               }
             };
             localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
             localStorage.setItem('storeapp_banners_' + STORE_ID, JSON.stringify(bannerData));
 
-            if (parsedDesign.nosotros || parsedDesign.faq) {
-              const pagesData = {
-                nosotros: parsedDesign.nosotros || '',
-                faq: parsedDesign.faq || []
-              };
-              localStorage.setItem('storeapp_pages', JSON.stringify(pagesData));
-              localStorage.setItem(`storeapp_pages_${STORE_ID}`, JSON.stringify(pagesData));
-            }
+            const pagesData = {
+              nosotros: dbCfg.nosotros || parsedDesign.nosotros || '',
+              faq: faqs
+            };
+            localStorage.setItem('storeapp_pages', JSON.stringify(pagesData));
+            localStorage.setItem(`storeapp_pages_${STORE_ID}`, JSON.stringify(pagesData));
 
             const remoteStoreCfg = {
               name: dbCfg.business_name || cfg.name,
@@ -5499,29 +5518,37 @@
               horario: dbCfg.horario || '',
               rubro: dbCfg.rubro || '',
               logo: dbCfg.logo_url || cfg.logo || '',
-              h1: parsedDesign.h1 || cfg.h1 || '',
-              h2: parsedDesign.h2 || cfg.h2 || '',
-              desc: parsedDesign.desc || cfg.desc || '',
-              emoji: parsedDesign.emoji || cfg.emoji || '🏪',
-              theme: parsedDesign.theme || cfg.theme || 'dark',
-              font: parsedDesign.font || cfg.font || '',
-              fontBody: parsedDesign.fontBody || cfg.fontBody || '',
-              bg: parsedDesign.bg || cfg.bg || '',
-              subrubro: parsedDesign.subrubro || '',
+              h1: dbCfg.h1 !== null ? dbCfg.h1 : (parsedDesign.h1 || cfg.h1 || ''),
+              h2: dbCfg.h2 !== null ? dbCfg.h2 : (parsedDesign.h2 || cfg.h2 || ''),
+              desc: dbCfg.desc !== null ? dbCfg.desc : (parsedDesign.desc || cfg.desc || ''),
+              emoji: dbCfg.emoji !== null ? dbCfg.emoji : (parsedDesign.emoji || cfg.emoji || '🏪'),
+              theme: dbCfg.theme !== null ? dbCfg.theme : (parsedDesign.theme || cfg.theme || 'dark'),
+              font: dbCfg.font !== null ? dbCfg.font : (parsedDesign.font || cfg.font || ''),
+              fontBody: dbCfg.font_body !== null ? dbCfg.font_body : (parsedDesign.font_body || parsedDesign.fontBody || cfg.fontBody || ''),
+              bg: dbCfg.bg !== null ? dbCfg.bg : (parsedDesign.bg || cfg.bg || ''),
+              subrubro: dbCfg.subrubro !== null ? dbCfg.subrubro : (parsedDesign.subrubro || ''),
               password: dbCfg.password || parsedDesign.password || '',
               admin_email: dbCfg.admin_email || parsedDesign.admin_email || '',
-              payment_methods: parsedDesign.payment_methods || { efectivo: true, transferencia: true, convenir: true },
+              payment_methods: {
+                efectivo: dbCfg.pay_cash !== null ? dbCfg.pay_cash : (parsedDesign.payment_methods?.efectivo !== false),
+                transferencia: dbCfg.pay_transfer !== null ? dbCfg.pay_transfer : (parsedDesign.payment_methods?.transferencia !== false),
+                convenir: dbCfg.pay_agreement !== null ? dbCfg.pay_agreement : (parsedDesign.payment_methods?.convenir !== false)
+              },
               domain: parsedDesign.domain || '',
-              gerente: parsedDesign.gerente || { nombre: '', email: '', frecuencia: 'mensual' },
-              horarios_data: parsedDesign.horarios_data || null,
+              gerente: {
+                nombre: dbCfg.gerente_nombre !== null ? dbCfg.gerente_nombre : (parsedDesign.gerente?.nombre || ''),
+                email: dbCfg.gerente_email !== null ? dbCfg.gerente_email : (parsedDesign.gerente?.email || ''),
+                frecuencia: dbCfg.gerente_frecuencia !== null ? dbCfg.gerente_frecuencia : (parsedDesign.gerente?.frecuencia || 'mensual')
+              },
+              horarios_data: dbCfg.horarios_data !== null ? dbCfg.horarios_data : (parsedDesign.horarios_data || null),
               socials: {
-                web: parsedSocials.web || '',
-                ig: dbCfg.instagram || parsedSocials.ig || '',
-                fb: dbCfg.facebook || parsedSocials.fb || '',
-                x: parsedSocials.x || '',
-                ml: parsedSocials.ml || '',
-                tn: parsedSocials.tn || '',
-                maps: parsedSocials.maps || ''
+                web: dbCfg.social_web !== null ? dbCfg.social_web : (parsedSocials.web || ''),
+                ig: dbCfg.social_ig || dbCfg.instagram || parsedSocials.ig || '',
+                fb: dbCfg.social_fb || dbCfg.facebook || parsedSocials.fb || '',
+                x: dbCfg.social_x !== null ? dbCfg.social_x : (parsedSocials.x || ''),
+                ml: dbCfg.social_ml !== null ? dbCfg.social_ml : (parsedSocials.ml || ''),
+                tn: dbCfg.social_tn !== null ? dbCfg.social_tn : (parsedSocials.tn || ''),
+                maps: dbCfg.social_maps !== null ? dbCfg.social_maps : (parsedSocials.maps || '')
               }
             };
 
@@ -6304,10 +6331,17 @@
           horario: cfgObj.horario || '',
           rubro: cfgObj.rubro || '',
           logo_url: cfgObj.logo || '',
-          phone: JSON.stringify(cfgObj.socials || {}), // retrocompatibilidad
-          socials: cfgObj.socials || {}, // columna dedicada
+          phone: JSON.stringify(cfgObj.socials || {}),
+          socials: cfgObj.socials || {},
           instagram: cfgObj.socials?.ig || '',
-          facebook: cfgObj.socials?.fb || ''
+          facebook: cfgObj.socials?.fb || '',
+          social_web: cfgObj.socials?.web || '',
+          social_ig: cfgObj.socials?.ig || '',
+          social_fb: cfgObj.socials?.fb || '',
+          social_x: cfgObj.socials?.x || '',
+          social_ml: cfgObj.socials?.ml || '',
+          social_tn: cfgObj.socials?.tn || '',
+          social_maps: cfgObj.socials?.maps || ''
         };
 
         const activeStore = (new URLSearchParams(window.location.search).get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now').toLowerCase();
@@ -6327,9 +6361,10 @@
           const configData = await configRes.json();
           let parsedEmail = {};
           let id = null;
+          let dbRow = null;
 
           if (configData && configData.length > 0) {
-            const dbRow = configData[0];
+            dbRow = configData[0];
             id = dbRow.id;
             try {
               if (dbRow.email) parsedEmail = JSON.parse(dbRow.email);
@@ -6371,10 +6406,6 @@
 
           // Guardar redundancia temporal por retrocompatibilidad
           dataToSave.email = JSON.stringify(parsedEmail);
-
-          // Guardar en las nuevas columnas dedicadas
-          dataToSave.admin_email = parsedEmail.admin_email;
-          dataToSave.password = parsedEmail.password;
           dataToSave.design_settings = {
             h1: parsedEmail.h1,
             h2: parsedEmail.h2,
@@ -6389,11 +6420,81 @@
             faq: parsedEmail.faq || []
           };
 
+          // Guardar en las nuevas columnas atómicas dedicadas
+          dataToSave.admin_email = parsedEmail.admin_email;
+          dataToSave.password = parsedEmail.password;
+          dataToSave.h1 = parsedEmail.h1;
+          dataToSave.h2 = parsedEmail.h2;
+          dataToSave.desc = parsedEmail.desc;
+          dataToSave.emoji = parsedEmail.emoji;
+          dataToSave.theme = parsedEmail.theme;
+          dataToSave.font = parsedEmail.font;
+          dataToSave.font_body = parsedEmail.fontBody;
+          dataToSave.bg = parsedEmail.bg;
+          dataToSave.qr_code = parsedEmail.qr_code || `https://daletepido.com.ar/api/qr?store=${activeStore}`;
+          dataToSave.nosotros = parsedEmail.nosotros || '';
+          dataToSave.subrubro = parsedEmail.subrubro || '';
+          dataToSave.pay_cash = parsedEmail.payment_methods?.efectivo !== false;
+          dataToSave.pay_transfer = parsedEmail.payment_methods?.transferencia !== false;
+          dataToSave.pay_agreement = parsedEmail.payment_methods?.convenir !== false;
+          dataToSave.gerente_nombre = parsedEmail.gerente?.nombre || '';
+          dataToSave.gerente_email = parsedEmail.gerente?.email || '';
+          dataToSave.gerente_frecuencia = parsedEmail.gerente?.frecuencia || 'mensual';
+          dataToSave.horarios_data = parsedEmail.horarios_data || null;
+
+          // Guardar banners en columnas dedicadas
+          dataToSave.banner1_label = dbRow?.banner1_label || 'NUEVAS';
+          dataToSave.banner1_title = dbRow?.banner1_title || 'Productos';
+          dataToSave.banner1_img = dbRow?.banner1_img || '';
+          dataToSave.banner1_cat = dbRow?.banner1_cat || '';
+          dataToSave.banner1_bg = parsedEmail.banner1_bg || '#1C1C1E';
+          dataToSave.banner1_active = parsedEmail.banner1_active !== false;
+
+          dataToSave.banner2_label = dbRow?.banner2_label || 'PROMOCIÓN';
+          dataToSave.banner2_title = dbRow?.banner2_title || 'Especiales';
+          dataToSave.banner2_img = dbRow?.banner2_img || '';
+          dataToSave.banner2_cat = dbRow?.banner2_cat || '';
+          dataToSave.banner2_bg = parsedEmail.banner2_bg || '#1C1C1E';
+          dataToSave.banner2_active = parsedEmail.banner2_active !== false;
+
           if (id) {
             await updateInSupabase('company_settings', id, dataToSave);
           } else {
             dataToSave.store_id = activeStore;
-            await postToSupabase('company_settings', dataToSave);
+            const res = await postToSupabase('company_settings', dataToSave);
+            if (res && res.length > 0) id = res[0].id;
+          }
+
+          // Sincronizar las FAQs a la nueva tabla dedicada
+          const localPages = JSON.parse(localStorage.getItem(`storeapp_pages_${activeStore}`) || localStorage.getItem('storeapp_pages') || '{}');
+          const faqList = localPages.faq || parsedEmail.faq || [];
+          
+          // 1. Eliminar las FAQs existentes para esta tienda
+          await fetch(`${sbUrl}/rest/v1/faqs?store_id=eq.${encodeURIComponent(activeStore)}`, {
+            method: 'DELETE',
+            headers: {
+              'apikey': sbKey,
+              'Authorization': `Bearer ${sbKey}`
+            }
+          }).catch(() => {});
+
+          // 2. Insertar las nuevas FAQs en lote
+          if (faqList.length > 0) {
+            const faqsToInsert = faqList.map((f, index) => ({
+              store_id: activeStore,
+              question: f.q || f.question || '',
+              answer: f.a || f.answer || '',
+              display_order: index
+            }));
+            await fetch(`${sbUrl}/rest/v1/faqs`, {
+              method: 'POST',
+              headers: {
+                'apikey': sbKey,
+                'Authorization': `Bearer ${sbKey}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(faqsToInsert)
+            }).catch(() => {});
           }
         }
       } catch (e) {

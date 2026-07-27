@@ -727,20 +727,7 @@
       }
 
       // 2. Prepare payload
-      const emailJson = JSON.stringify({
-        h1: h1,
-        h2: h2,
-        desc: desc,
-        emoji: emoji,
-        theme: 'light',
-        font: 'Outfit',
-        fontBody: 'Outfit',
-        password: password,
-        bg: '',
-        qr_code: `https://daletepido.com.ar/api/qr?store=${storeId}`,
-        admin_email: email
-      });
-
+      // 2. Prepare payload
       const payload = {
         store_id: storeId,
         business_name: name,
@@ -753,9 +740,47 @@
         secondary_color: '#1e40af',
         logo_url: '',
         plan_level: 'starter',
-        email: emailJson, // retrocompatibilidad
         admin_email: email, // columna dedicada
         password: password, // columna dedicada
+        // Columnas atómicas de diseño
+        h1: h1,
+        h2: h2,
+        desc: desc,
+        emoji: emoji,
+        theme: 'light',
+        font: 'Outfit',
+        font_body: 'Outfit',
+        bg: '',
+        qr_code: `https://daletepido.com.ar/api/qr?store=${storeId}`,
+        subrubro: '',
+        banner1_label: 'NUEVAS',
+        banner1_title: 'Productos destacados',
+        banner1_img: '',
+        banner1_cat: '',
+        banner1_bg: '#1C1C1E',
+        banner1_active: true,
+        banner2_label: 'PROMOCIÓN',
+        banner2_title: 'Especiales de la semana',
+        banner2_img: '',
+        banner2_cat: '',
+        banner2_bg: '#1C1C1E',
+        banner2_active: true,
+        pay_cash: true,
+        pay_transfer: true,
+        pay_agreement: true,
+        gerente_nombre: '',
+        gerente_email: '',
+        gerente_frecuencia: 'mensual',
+        horarios_data: null,
+        // Columnas atómicas de redes sociales
+        social_web: '',
+        social_ig: '',
+        social_fb: '',
+        social_x: '',
+        social_ml: '',
+        social_tn: '',
+        social_maps: '',
+        // Redundancia transicional para evitar roturas temporales
         design_settings: {
           h1: h1,
           h2: h2,
@@ -767,15 +792,7 @@
           bg: '',
           qr_code: `https://daletepido.com.ar/api/qr?store=${storeId}`
         },
-        socials: {},
-        banner1_label: 'NUEVAS',
-        banner1_title: 'Productos destacados',
-        banner1_img: '',
-        banner1_cat: '',
-        banner2_label: 'PROMOCIÓN',
-        banner2_title: 'Especiales de la semana',
-        banner2_img: '',
-        banner2_cat: ''
+        socials: {}
       };
 
       // 3. Post to Supabase

@@ -390,13 +390,21 @@ async function loadNosotrosFromSupabase() {
           tagline: dbCfg.tagline || '',
           color: dbCfg.primary_color || '',
           logo: dbCfg.logo_url || '',
-          theme: parsedDesign.theme || 'dark',
-          font: parsedDesign.font || '',
-          fontBody: parsedDesign.fontBody || '',
-          emoji: parsedDesign.emoji || '🏪',
+          theme: dbCfg.theme !== null ? dbCfg.theme : (parsedDesign.theme || 'dark'),
+          font: dbCfg.font !== null ? dbCfg.font : (parsedDesign.font || ''),
+          fontBody: dbCfg.font_body !== null ? dbCfg.font_body : (parsedDesign.fontBody || ''),
+          emoji: dbCfg.emoji !== null ? dbCfg.emoji : (parsedDesign.emoji || '🏪'),
           direccion: dbCfg.direccion || '',
           horario: dbCfg.horario || '',
-          socials: parsedSocials
+          socials: {
+            web: dbCfg.social_web !== null ? dbCfg.social_web : (parsedSocials.web || ''),
+            ig: dbCfg.social_ig || dbCfg.instagram || parsedSocials.ig || '',
+            fb: dbCfg.social_fb || dbCfg.facebook || parsedSocials.fb || '',
+            x: dbCfg.social_x !== null ? dbCfg.social_x : (parsedSocials.x || ''),
+            ml: dbCfg.social_ml !== null ? dbCfg.social_ml : (parsedSocials.ml || ''),
+            tn: dbCfg.social_tn !== null ? dbCfg.social_tn : (parsedSocials.tn || ''),
+            maps: dbCfg.social_maps !== null ? dbCfg.social_maps : (parsedSocials.maps || '')
+          }
         };
         
         localStorage.setItem('storeapp_cfg', JSON.stringify(remoteStoreCfg));
@@ -404,7 +412,7 @@ async function loadNosotrosFromSupabase() {
         
         applyStoredConfig();
 
-        let content = parsedDesign.nosotros || '';
+        let content = dbCfg.nosotros || parsedDesign.nosotros || '';
         if (!content) {
           const localPages = JSON.parse(localStorage.getItem(`storeapp_pages_${STORE_ID}`) || localStorage.getItem('storeapp_pages') || '{}');
           content = localPages.nosotros || defaultNosotros;

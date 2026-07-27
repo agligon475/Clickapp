@@ -396,13 +396,21 @@ async function loadFaqFromSupabase() {
           tagline: dbCfg.tagline || '',
           color: dbCfg.primary_color || '',
           logo: dbCfg.logo_url || '',
-          theme: parsedDesign.theme || 'dark',
-          font: parsedDesign.font || '',
-          fontBody: parsedDesign.fontBody || '',
-          emoji: parsedDesign.emoji || '🏪',
+          theme: dbCfg.theme !== null ? dbCfg.theme : (parsedDesign.theme || 'dark'),
+          font: dbCfg.font !== null ? dbCfg.font : (parsedDesign.font || ''),
+          fontBody: dbCfg.font_body !== null ? dbCfg.font_body : (parsedDesign.fontBody || ''),
+          emoji: dbCfg.emoji !== null ? dbCfg.emoji : (parsedDesign.emoji || '🏪'),
           direccion: dbCfg.direccion || '',
           horario: dbCfg.horario || '',
-          socials: parsedSocials
+          socials: {
+            web: dbCfg.social_web !== null ? dbCfg.social_web : (parsedSocials.web || ''),
+            ig: dbCfg.social_ig || dbCfg.instagram || parsedSocials.ig || '',
+            fb: dbCfg.social_fb || dbCfg.facebook || parsedSocials.fb || '',
+            x: dbCfg.social_x !== null ? dbCfg.social_x : (parsedSocials.x || ''),
+            ml: dbCfg.social_ml !== null ? dbCfg.social_ml : (parsedSocials.ml || ''),
+            tn: dbCfg.social_tn !== null ? dbCfg.social_tn : (parsedSocials.tn || ''),
+            maps: dbCfg.social_maps !== null ? dbCfg.social_maps : (parsedSocials.maps || '')
+          }
         };
         
         localStorage.setItem('storeapp_cfg', JSON.stringify(remoteStoreCfg));
@@ -410,7 +418,23 @@ async function loadFaqFromSupabase() {
         
         applyStoredConfig();
 
-        let faqList = parsedDesign.faq || [];
+        let faqList = [];
+        try {
+          const faqsRes = await fetch(`${SUPABASE_URL}/rest/v1/faqs?store_id=eq.${encodeURIComponent(STORE_ID)}&order=display_order.asc`, {
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${SUPABASE_KEY}`
+            }
+          });
+          if (faqsRes.ok) {
+            const faqsData = await faqsRes.json();
+            faqList = faqsData.map(f => ({ q: f.question, a: f.answer }));
+          } else {
+            faqList = parsedDesign.faq || [];
+          }
+        } catch(e) {
+          faqList = parsedDesign.faq || [];
+        }
         if (faqList.length === 0) {
           const localPages = JSON.parse(localStorage.getItem(`storeapp_pages_${STORE_ID}`) || localStorage.getItem('storeapp_pages') || '{}');
           faqList = localPages.faq || defaultFaq;
