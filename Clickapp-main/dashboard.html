@@ -5056,6 +5056,13 @@
     }
 
     function mapSupabaseRowToLocal(p) {
+      let localDetalle = p.detalles || p.detalle || '';
+      if (p.variants) {
+        const variantsStr = typeof p.variants === 'string' ? p.variants : JSON.stringify(p.variants);
+        if (variantsStr !== '{}' && variantsStr !== '[]' && variantsStr !== 'null') {
+          localDetalle = localDetalle + ' ||| ' + variantsStr;
+        }
+      }
       return {
         id: String(p.id),
         name: p.nombre,
@@ -5068,7 +5075,7 @@
         img3: p.img3 || '',
         marca: p.marca || '',
         origen: p.origen || '',
-        detalle: (p.detalles != null && p.detalles !== '') ? p.detalles : (p.detalle || ''),
+        detalle: localDetalle,
         codigo: p.codigo || '',
         pills: p.pills || '',
         hidden: !!p.oculto
@@ -5076,6 +5083,19 @@
     }
 
     function mapLocalProductToSupabaseRow(p) {
+      let textDetalles = p.detalle || '';
+      let jsonVariants = null;
+
+      if (textDetalles.includes(' ||| ')) {
+        const parts = textDetalles.split(' ||| ');
+        textDetalles = parts[0].trim();
+        try {
+          jsonVariants = JSON.parse(parts[1].trim());
+        } catch (e) {
+          console.error('Error parsing variants on mapping to Supabase:', e);
+        }
+      }
+
       return {
         nombre: p.name,
         precio: p.price,
@@ -5086,10 +5106,10 @@
         img2: p.img2 || null,
         img3: p.img3 || null,
         marca: p.marca || null,
-        detalles: p.detalle || '',
+        detalles: textDetalles,
+        variants: jsonVariants,
         origen: p.origen || null,
         oculto: !!p.hidden
-        // nota: 'codigo' y 'pills' no existen en la tabla products de Supabase aún
       };
     }
     /* NAV */

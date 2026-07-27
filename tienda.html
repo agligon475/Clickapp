@@ -1337,7 +1337,15 @@ async function loadSheet() {
         let variants = null;
         let modifiers = null;
 
-        if (rawDetalles.includes('|||')) {
+        if (p.variants) {
+          try {
+            const parsedOpts = typeof p.variants === 'string' ? JSON.parse(p.variants) : p.variants;
+            if (parsedOpts.variants) variants = parsedOpts.variants;
+            if (parsedOpts.modifiers) modifiers = parsedOpts.modifiers;
+          } catch (e) {
+            console.error("Error parsing JSON variants in tienda load:", e);
+          }
+        } else if (rawDetalles.includes('|||')) {
           const parts = rawDetalles.split('|||');
           textDetalles = parts[0].trim();
           try {
