@@ -10619,23 +10619,46 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       setTimeout(() => window.location.reload(), 1500);
     }
 
-    function loadPages() {
+    async function loadPages() {
       try {
-        const data = JSON.parse(localStorage.getItem(`storeapp_pages_${STORE_ID}`) || localStorage.getItem('storeapp_pages') || '{"nosotros":"","faq":[]}');
+        const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+          cache: 'no-cache',
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        
+        let dbNosotros = '';
+        if (configRes.ok) {
+          const configData = await configRes.json();
+          if (configData && configData.length > 0) {
+            dbNosotros = configData[0].nosotros || '';
+          }
+        }
+        
+        let dbFaqs = [];
+        try {
+          const faqRes = await fetch(`${SUPABASE_URL}/rest/v1/faqs?store_id=eq.${encodeURIComponent(STORE_ID)}&order=display_order.asc`, {
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+          });
+          if (faqRes.ok) {
+            const faqsData = await faqRes.json();
+            dbFaqs = faqsData.map(f => ({ q: f.question, a: f.answer }));
+          }
+        } catch (faqErr) {
+          console.error('Error fetching FAQs in loadPages:', faqErr);
+        }
 
-        // Default Nosotros Text
         const defaultNosotros = `Somos una ferretería con más de 20 años de experiencia en el rubro, ofreciendo soluciones tanto para profesionales de la construcción como para proyectos del hogar.
 
 Nacimos como un pequeño emprendimiento familiar y gracias a la confianza de nuestros clientes, hoy nos expandimos al mundo digital para estar más cerca tuyo y facilitarte la compra de tus herramientas y materiales desde la comodidad de tu casa o taller.
 
 Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera calidad a precios competitivos. Queremos que cada cliente encuentre exactamente lo que necesita para llevar a cabo su proyecto con éxito.`;
 
-        document.getElementById('pages-nosotros-text').value = data.nosotros || defaultNosotros;
+        document.getElementById('pages-nosotros-text').value = dbNosotros || defaultNosotros;
 
         const list = document.getElementById('faq-list');
         list.innerHTML = '';
-        if (data.faq && data.faq.length > 0) {
-          data.faq.forEach(item => addFaqItem(item.q, item.a));
+        if (dbFaqs && dbFaqs.length > 0) {
+          dbFaqs.forEach(item => addFaqItem(item.q, item.a));
         } else {
           addFaqItem('¿Cuáles son los métodos de envío?', 'Hacemos envíos a todo el país. Trabajamos con cadetería propia para CABA y GBA entregando en el día para pedidos realizados antes de las 14hs. Para el interior del país despachamos a través de Correo Argentino o la encomienda que prefieras.');
           addFaqItem('¿Qué medios de pago aceptan?', 'Aceptamos transferencias bancarias, Mercado Pago, tarjetas de crédito (hasta 3 cuotas sin interés) y efectivo si retirás por nuestro local. Al finalizar tu pedido por WhatsApp te enviaremos los links de pago.');
@@ -10731,10 +10754,11 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
 
         // 2. Insertar las nuevas FAQs
         if (faqItems.length > 0) {
-          const inserts = faqItems.map(f => ({
+          const inserts = faqItems.map((f, idx) => ({
             store_id: STORE_ID,
-            pregunta: f.q,
-            respuesta: f.a
+            question: f.q,
+            answer: f.a,
+            display_order: (idx + 1) * 10
           }));
           await fetch(`${SUPABASE_URL}/rest/v1/faqs`, {
             method: 'POST',
