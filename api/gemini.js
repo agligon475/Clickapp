@@ -8,8 +8,11 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // La API Key viene del header x-gemini-key enviado desde el dashboard
-  const geminiKey = req.headers['x-gemini-key'];
+  // La API Key viene del header o de las variables de entorno locales/de producción
+  let geminiKey = req.headers['x-gemini-key'];
+  if (!geminiKey || geminiKey.trim() === '' || geminiKey === 'undefined' || geminiKey === 'null') {
+    geminiKey = process.env.GEMINI_API_KEY;
+  }
   if (!geminiKey) {
     return res.status(401).json({ error: 'API Key de Gemini faltante o inválida' });
   }

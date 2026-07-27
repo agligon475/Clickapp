@@ -7643,12 +7643,7 @@ Identificá el producto y devolvé SOLO un JSON válido (sin texto adicional, si
 Si no reconocés el código, usá confianza "baja" e intentá igual.`;
 
       if (provider === 'gemini') {
-        const geminiKey = localStorage.getItem('storeapp_gemini_key');
-        if (!geminiKey) {
-          setCodStatus('✕ Configura tu API Key de Gemini en Configuraciones', 'err');
-          resetBuscarBtn();
-          return;
-        }
+        const geminiKey = localStorage.getItem('storeapp_gemini_key') || '';
 
         setCodStatus('✨ Consultando a Gemini IA...', 'info');
         try {
@@ -7682,12 +7677,7 @@ Si no reconocés el código, usá confianza "baja" e intentá igual.`;
         }
       } else {
         // Claude
-        const claudeKey = localStorage.getItem('storeapp_claude_key');
-        if (!claudeKey) {
-          setCodStatus('✕ Configura tu API Key de Claude en Configuraciones', 'err');
-          resetBuscarBtn();
-          return;
-        }
+        const claudeKey = localStorage.getItem('storeapp_claude_key') || '';
 
         setCodStatus('✨ Consultando a Claude IA...', 'info');
         try {
@@ -7793,32 +7783,87 @@ Si no reconocés el código, usá confianza "baja" e intentá igual.`;
       const marca = document.getElementById('m-marca').value.trim();
       if (!name) { alert('Ingresá el nombre del producto primero.'); return; }
 
-      const wh = getWebhookCfg();
-      if (!wh.url || !wh.token) {
-        document.getElementById('m-detalle-status').style.color = 'var(--red)';
-        document.getElementById('m-detalle-status').textContent = '⚠ Configurá el webhook en Configuración para usar la IA';
-        return;
-      }
-
       const statusEl = document.getElementById('m-detalle-status');
       statusEl.style.color = 'var(--silver)';
-      statusEl.textContent = '⏳ Generando especificaciones...';
+      statusEl.textContent = '⏳ Generando especificaciones con IA...';
 
-      const prompt = `Generá una descripción técnica breve (máx 2 oraciones, 80 palabras) para un producto de ferretería/construcción:
+      const prompt = `Generá una descripción técnica breve (máx 2 oraciones, 80 palabras) para el producto:
 Nombre: ${name}
 ${cat ? 'Categoría: ' + cat : ''}
 ${marca ? 'Marca: ' + marca : ''}
 Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argentino.`;
 
-      try {
-        const data = await webhookPost({ action: 'ai_proxy', prompt });
-        if (!data.ok) throw new Error(data.error || 'Error en el proxy');
-        document.getElementById('m-detalle').value = data.text.trim();
-        statusEl.style.color = 'var(--green)';
-        statusEl.textContent = '✓ Especificaciones generadas — editá si querés ajustarlas';
-      } catch (e) {
-        statusEl.style.color = 'var(--red)';
-        statusEl.textContent = '✕ Error: ' + e.message;
+      // 1. Intentar por Webhook si está configurado
+      const wh = getWebhookCfg();
+      if (wh.url && wh.token) {
+        try {
+          const data = await webhookPost({ action: 'ai_proxy', prompt });
+          if (!data.ok) throw new Error(data.error || 'Error en el proxy del webhook');
+          document.getElementById('m-detalle').value = data.text.trim();
+          statusEl.style.color = 'var(--green)';
+          statusEl.textContent = '✓ Especificaciones generadas vía Webhook — editá si querés ajustarlas';
+          return;
+        } catch (e) {
+          console.warn("Fallback: Falló el webhook, intentando conexión directa de IA...", e.message);
+        }
+      }
+
+      // 2. Fallback: Usar Gemini o Claude directamente
+      const provider = localStorage.getItem('storeapp_ai_provider') || 'gemini';
+      if (provider === 'gemini') {
+        const geminiKey = localStorage.getItem('storeapp_gemini_key') || '';
+        try {
+          const modelName = localStorage.getItem('storeapp_gemini_model') || 'gemini-2.5-flash';
+          const res = await fetch('/api/gemini', {
+            method: 'POST',
+            headers: {
+              'x-gemini-key': geminiKey,
+              'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+              model: modelName,
+              contents: [{ parts: [{ text: prompt }] }]
+            })
+          });
+
+          if (!res.ok) throw new Error(`Error API Gemini: ${res.status}`);
+          const data = await res.json();
+          let textRes = data.candidates[0].content.parts[0].text;
+          document.getElementById('m-detalle').value = textRes.trim();
+          statusEl.style.color = 'var(--green)';
+          statusEl.textContent = '✓ Especificaciones generadas con Gemini IA — editá si querés ajustarlas';
+        } catch (e) {
+          statusEl.style.color = 'var(--red)';
+          statusEl.textContent = '✕ Error: ' + e.message;
+        }
+      } else {
+        // Claude
+        const claudeKey = localStorage.getItem('storeapp_claude_key') || '';
+        try {
+          const modelName = localStorage.getItem('storeapp_claude_model') || 'claude-haiku-4-5-20251001';
+          const res = await fetch('/api/helper', {
+            method: 'POST',
+            headers: {
+              'x-claude-key': claudeKey,
+              'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+              model: modelName,
+              max_tokens: 150,
+              messages: [{ role: 'user', content: prompt }]
+            })
+          });
+
+          if (!res.ok) throw new Error(`Error API Claude: ${res.status}`);
+          const data = await res.json();
+          let textRes = data.content[0].text;
+          document.getElementById('m-detalle').value = textRes.trim();
+          statusEl.style.color = 'var(--green)';
+          statusEl.textContent = '✓ Especificaciones generadas con Claude IA — editá si querés ajustarlas';
+        } catch (e) {
+          statusEl.style.color = 'var(--red)';
+          statusEl.textContent = '✕ Error: ' + e.message;
+        }
       }
     }
 

@@ -8,8 +8,11 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // La API Key viene del header x-claude-key enviado desde el dashboard
-  const claudeKey = req.headers['x-claude-key'];
+  // La API Key viene del header o de las variables de entorno locales/de producción
+  let claudeKey = req.headers['x-claude-key'];
+  if (!claudeKey || claudeKey.trim() === '' || claudeKey === 'undefined' || claudeKey === 'null') {
+    claudeKey = process.env.CLAUDE_API_KEY;
+  }
   if (!claudeKey || !claudeKey.startsWith('sk-ant-')) {
     return res.status(401).json({ error: 'API Key inválida o faltante' });
   }
