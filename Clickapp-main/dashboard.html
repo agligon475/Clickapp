@@ -3496,10 +3496,11 @@
         </div>
       </div>
 
-      <div style="display:flex;align-items:center;gap:16px;margin-top:24px;">
-        <button class="btn" style="background:var(--red);color:var(--white);" onclick="savePages()"><i
-            class="bi bi-save"></i> Guardar Páginas</button>
+      <div style="display:flex; justify-content:flex-end; align-items:center; gap:16px; margin-top:24px;">
         <span id="pages-status" style="font-size:13px;color:var(--silver);"></span>
+        <button class="abm-btn-new" style="padding:12px 24px; font-size:14px;" onclick="savePages()">
+          <i class="bi bi-floppy2"></i> Guardar Páginas
+        </button>
       </div>
     </div>
 
@@ -6932,10 +6933,10 @@
           syncBtn.innerHTML = '<i class="bi bi-exclamation-triangle"></i> Algunos fallaron';
           syncBtn.style.background = 'var(--orange)';
         } else {
-          syncBtn.innerHTML = '<i class="bi bi-check2-circle"></i> Guardado!';
+          syncBtn.innerHTML = '<i class="bi bi-check2-circle"></i> Guardado! Recargando...';
           syncBtn.style.background = 'var(--green)';
+          setTimeout(() => { window.location.reload(); }, 1200);
         }
-        setTimeout(() => { syncBtn.innerHTML = orig; syncBtn.style.background = ''; }, 2200);
       }
       // Volver a renderizar e inicializar para usar los nuevos UUIDs de Supabase
       renderABM();
@@ -9288,10 +9289,10 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const el = document.getElementById('adv-save-status');
       if (el) {
         el.style.color = 'var(--green)';
-        el.textContent = '✓ Configuración avanzada guardada';
-        setTimeout(() => { el.textContent = ''; }, 3000);
+        el.textContent = '✓ Configuración avanzada guardada. Recargando...';
       }
-      showToastDash('✓ Configuración avanzada guardada con éxito');
+      showToastDash('✓ Configuración avanzada guardada. Recargando...');
+      setTimeout(() => { window.location.reload(); }, 1200);
     }
 
     async function testSupabaseConnection() {
@@ -9533,10 +9534,10 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
       const el = document.getElementById('cfg-save-status');
       el.style.color = 'var(--green)';
-      el.textContent = '✓ Configuración guardada correctamente';
-      setTimeout(() => { el.textContent = ''; }, 3000);
-      showToastDash('✓ Configuración guardada con éxito');
+      el.textContent = '✓ Configuración guardada correctamente. Recargando...';
+      showToastDash('✓ Configuración guardada con éxito. Recargando...');
       checkOnboardingStatus();
+      setTimeout(() => { window.location.reload(); }, 1200);
     }
     async function changeSubdomain() {
       const inputVal = document.getElementById('cfg-store-subdomain').value.trim().toLowerCase();
@@ -10327,8 +10328,9 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         }
 
         statusEl.style.color = 'var(--green)';
-        statusEl.textContent = '✓ Banners guardados en Supabase correctamente';
-        showToastDash('✓ Banners guardados con éxito');
+        statusEl.textContent = '✓ Banners guardados en Supabase correctamente. Recargando...';
+        showToastDash('✓ Banners guardados con éxito. Recargando...');
+        setTimeout(() => { window.location.reload(); }, 1200);
       } catch (e) {
         statusEl.style.color = 'var(--orange)';
         statusEl.textContent = '⚠ Error al guardar en Supabase: ' + e.message;
@@ -10704,42 +10706,56 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         if (!configRes.ok) throw new Error('No se pudo verificar la configuración en Supabase');
         const configData = await configRes.json();
 
+        const dataToSave = {
+          nosotros: nosotrosText
+        };
+
         if (configData && configData.length > 0) {
           const dbRow = configData[0];
           const id = dbRow.id;
-
-          let parsedEmail = {};
-          try {
-            if (dbRow.email) parsedEmail = JSON.parse(dbRow.email);
-          } catch(e) {}
-
-          parsedEmail.nosotros = nosotrosText;
-          parsedEmail.faq = faqItems;
-
-          const dataToSave = {
-            email: JSON.stringify(parsedEmail)
-          };
-
           await updateInSupabase('company_settings', id, dataToSave);
         } else {
-          const parsedEmail = {
-            nosotros: nosotrosText,
-            faq: faqItems
-          };
-          const dataToSave = {
-            email: JSON.stringify(parsedEmail)
-          };
+          dataToSave.store_id = STORE_ID;
           await postToSupabase('company_settings', dataToSave);
+        }
+
+        // Sincronizar las FAQs a la nueva tabla dedicada
+        // 1. Eliminar las FAQs existentes para esta tienda
+        await fetch(`${SUPABASE_URL}/rest/v1/faqs?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+          method: 'DELETE',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`
+          }
+        }).catch(() => {});
+
+        // 2. Insertar las nuevas FAQs
+        if (faqItems.length > 0) {
+          const inserts = faqItems.map(f => ({
+            store_id: STORE_ID,
+            pregunta: f.q,
+            respuesta: f.a
+          }));
+          await fetch(`${SUPABASE_URL}/rest/v1/faqs`, {
+            method: 'POST',
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${SUPABASE_KEY}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=representation'
+            },
+            body: JSON.stringify(inserts)
+          });
         }
 
         statusEl.style.color = 'var(--green)';
         statusEl.textContent = '✓ Páginas guardadas correctamente';
-        showToastDash('✓ Páginas guardadas con éxito');
+        showToastDash('✓ Páginas guardadas con éxito. Recargando...');
+        setTimeout(() => { window.location.reload(); }, 1200);
       } catch (e) {
         statusEl.style.color = 'var(--orange)';
         statusEl.textContent = '⚠ Error al guardar en Supabase: ' + e.message;
       }
-      setTimeout(() => statusEl.textContent = '', 3000);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -11147,12 +11163,8 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       closeStepByStepModal();
 
       // Alert success
-      showToastDash('✓ Configuración guardada con éxito');
-      
-      // Reload lists if database changed
-      if (typeof initAdvancedView === 'function') initAdvancedView();
-      if (typeof loadProducts === 'function') loadProducts();
-      if (typeof loadSheet === 'function') loadSheet();
+      showToastDash('✓ Configuración guardada con éxito. Recargando...');
+      setTimeout(() => { window.location.reload(); }, 1200);
     }
 
   </script>
