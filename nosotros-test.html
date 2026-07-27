@@ -372,9 +372,18 @@ async function loadNosotrosFromSupabase() {
         const dbCfg = data[0];
         
         let parsedDesign = {};
-        try {
-          if (dbCfg.email) parsedDesign = JSON.parse(dbCfg.email);
-        } catch(e) {}
+        if (dbCfg.design_settings) {
+          parsedDesign = typeof dbCfg.design_settings === 'string' ? JSON.parse(dbCfg.design_settings) : dbCfg.design_settings;
+        } else if (dbCfg.email) {
+          try { parsedDesign = JSON.parse(dbCfg.email); } catch(e) {}
+        }
+
+        let parsedSocials = {};
+        if (dbCfg.socials) {
+          parsedSocials = typeof dbCfg.socials === 'string' ? JSON.parse(dbCfg.socials) : dbCfg.socials;
+        } else if (dbCfg.phone) {
+          try { parsedSocials = JSON.parse(dbCfg.phone); } catch(e) {}
+        }
 
         const remoteStoreCfg = {
           name: dbCfg.business_name || '',
@@ -387,7 +396,7 @@ async function loadNosotrosFromSupabase() {
           emoji: parsedDesign.emoji || '🏪',
           direccion: dbCfg.direccion || '',
           horario: dbCfg.horario || '',
-          socials: dbCfg.phone ? JSON.parse(dbCfg.phone) : {}
+          socials: parsedSocials
         };
         
         localStorage.setItem('storeapp_cfg', JSON.stringify(remoteStoreCfg));

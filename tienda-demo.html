@@ -1327,9 +1327,11 @@ async function loadSheet() {
         if (cfg.logo_url) CFG.logo = cfg.logo_url;
         
         let parsedSocials = {};
-        try {
-          if (cfg.phone) parsedSocials = JSON.parse(cfg.phone);
-        } catch (e) {}
+        if (cfg.socials) {
+          parsedSocials = typeof cfg.socials === 'string' ? JSON.parse(cfg.socials) : cfg.socials;
+        } else if (cfg.phone) {
+          try { parsedSocials = JSON.parse(cfg.phone); } catch (e) {}
+        }
         
         CFG.socials = {
           web: parsedSocials.web || '',
@@ -1342,9 +1344,11 @@ async function loadSheet() {
         };
 
         let parsedDesign = {};
-        try {
-          if (cfg.email) parsedDesign = JSON.parse(cfg.email);
-        } catch (e) {}
+        if (cfg.design_settings) {
+          parsedDesign = typeof cfg.design_settings === 'string' ? JSON.parse(cfg.design_settings) : cfg.design_settings;
+        } else if (cfg.email) {
+          try { parsedDesign = JSON.parse(cfg.email); } catch (e) {}
+        }
 
         if (parsedDesign.h1) CFG.h1 = parsedDesign.h1;
         if (parsedDesign.h2) CFG.h2 = parsedDesign.h2;
