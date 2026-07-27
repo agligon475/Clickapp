@@ -9031,7 +9031,12 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
       if (!name) return alert('El nombre es obligatorio');
 
-      const payload = { name, emoji, active };
+      const payload = { 
+        name, 
+        emoji, 
+        active,
+        rubro: cfg.rubro || '' // Enlazar al rubro al que pertenece
+      };
 
       try {
         if (id) {
