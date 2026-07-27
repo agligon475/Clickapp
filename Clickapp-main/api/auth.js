@@ -38,24 +38,20 @@ export default async function handler(req, res) {
     const cleanStoreId = store_id.trim().toLowerCase();
     const isEmail = cleanStoreId.includes('@');
 
-    let configRes;
+    let queryParam = '';
     if (isEmail) {
-      // Buscar en Supabase usando ilike en la columna text que tiene el JSON serializado
-      configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?email=ilike.*"admin_email":"${encodeURIComponent(cleanStoreId)}".*`, {
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`
-        }
-      });
+      queryParam = `admin_email=eq.${encodeURIComponent(cleanStoreId)}`;
     } else {
-      // Buscar por store_id normal
-      configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(cleanStoreId)}`, {
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`
-        }
-      });
+      queryParam = `store_id=eq.${encodeURIComponent(cleanStoreId)}`;
     }
+
+    // Consulta directa a la base de datos mediante el parámetro correspondiente
+    const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?${queryParam}`, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
+    });
 
     if (!configRes.ok) {
       return res.status(500).json({ success: false, error: 'Error al conectar con la base de datos' });
@@ -66,37 +62,20 @@ export default async function handler(req, res) {
       return res.status(404).json({ success: false, error: 'La tienda o correo electrónico ingresado no existe' });
     }
 
-    let settings = null;
-    let parsedDesign = {};
-
-    if (isEmail) {
-      // Buscar coincidencia exacta en memoria para evitar falsos positivos de subcadenas
-      settings = data.find(row => {
-        try {
-          if (row.email) {
-            const parsed = JSON.parse(row.email);
-            if (parsed.admin_email && parsed.admin_email.trim().toLowerCase() === cleanStoreId) {
-              parsedDesign = parsed;
-              return true;
-            }
-          }
-        } catch (e) {}
-        return false;
-      });
-    } else {
-      settings = data[0];
+    const settings = data[0];
+    
+    // Obtener la contraseña desde la columna dedicada 'password'
+    // Fallback al JSON de 'email' en caso de que sea un comercio antiguo no migrado
+    let dbPassword = settings.password || '';
+    if (!dbPassword && settings.email) {
       try {
-        if (settings.email) parsedDesign = JSON.parse(settings.email);
-      } catch (e) {}
-    }
-
-    if (!settings) {
-      return res.status(404).json({ success: false, error: 'La tienda o correo electrónico ingresado no existe' });
+        const parsed = JSON.parse(settings.email);
+        dbPassword = parsed.password || '';
+      } catch(e) {}
     }
 
     // Usar el store_id real de la base de datos para la sesión
     const actualStoreId = (settings.store_id || cleanStoreId).toLowerCase();
-    const dbPassword = parsedDesign.password || '';
 
     // Action: Login verification
     if (action === 'login' || !action) {

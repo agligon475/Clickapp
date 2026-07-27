@@ -5443,14 +5443,22 @@
             const dbCfg = configData[0];
             
             let parsedDesign = {};
-            try {
-              if (dbCfg.email) parsedDesign = JSON.parse(dbCfg.email);
-            } catch (e) {}
+            // Intentar leer de design_settings primero (objeto jsonb)
+            if (dbCfg.design_settings) {
+              parsedDesign = typeof dbCfg.design_settings === 'string' ? JSON.parse(dbCfg.design_settings) : dbCfg.design_settings;
+            } else if (dbCfg.email) {
+              // Fallback a la columna email vieja (string JSON)
+              try { parsedDesign = JSON.parse(dbCfg.email); } catch (e) {}
+            }
 
             let parsedSocials = {};
-            try {
-              if (dbCfg.phone) parsedSocials = JSON.parse(dbCfg.phone);
-            } catch (e) {}
+            // Intentar leer de socials primero
+            if (dbCfg.socials) {
+              parsedSocials = typeof dbCfg.socials === 'string' ? JSON.parse(dbCfg.socials) : dbCfg.socials;
+            } else if (dbCfg.phone) {
+              // Fallback a la columna phone vieja
+              try { parsedSocials = JSON.parse(dbCfg.phone); } catch (e) {}
+            }
 
             const bannerData = {
               banner1: { 
@@ -5500,8 +5508,8 @@
               fontBody: parsedDesign.fontBody || cfg.fontBody || '',
               bg: parsedDesign.bg || cfg.bg || '',
               subrubro: parsedDesign.subrubro || '',
-              password: parsedDesign.password || '',
-              admin_email: parsedDesign.admin_email || '',
+              password: dbCfg.password || parsedDesign.password || '',
+              admin_email: dbCfg.admin_email || parsedDesign.admin_email || '',
               payment_methods: parsedDesign.payment_methods || { efectivo: true, transferencia: true, convenir: true },
               domain: parsedDesign.domain || '',
               gerente: parsedDesign.gerente || { nombre: '', email: '', frecuencia: 'mensual' },
@@ -6296,7 +6304,8 @@
           horario: cfgObj.horario || '',
           rubro: cfgObj.rubro || '',
           logo_url: cfgObj.logo || '',
-          phone: JSON.stringify(cfgObj.socials || {}),
+          phone: JSON.stringify(cfgObj.socials || {}), // retrocompatibilidad
+          socials: cfgObj.socials || {}, // columna dedicada
           instagram: cfgObj.socials?.ig || '',
           facebook: cfgObj.socials?.fb || ''
         };
@@ -6335,23 +6344,24 @@
           parsedEmail.theme = cfgObj.theme !== undefined ? cfgObj.theme : parsedEmail.theme || 'dark';
           parsedEmail.font = cfgObj.font !== undefined ? cfgObj.font : parsedEmail.font || '';
           parsedEmail.fontBody = cfgObj.fontBody !== undefined ? cfgObj.fontBody : parsedEmail.fontBody || '';
+          
+          let finalPassword = '';
           if (cfgObj.password !== undefined && cfgObj.password !== '') {
             if (cfgObj.password.includes(':')) {
-              // Ya está hasheada, la guardamos tal cual
-              parsedEmail.password = cfgObj.password;
+              finalPassword = cfgObj.password;
             } else {
-              // Es una contraseña nueva en texto plano. La hasheamos.
               const salt = Math.random().toString(36).substring(2, 10);
               const hashed = await hashPasswordSHA256(cfgObj.password, salt);
-              parsedEmail.password = `${salt}:${hashed}`;
-              // También actualizamos el localStorage con el nuevo hash para mantener la consistencia
-              cfgObj.password = parsedEmail.password;
+              finalPassword = `${salt}:${hashed}`;
+              cfgObj.password = finalPassword;
               localStorage.setItem('storeapp_cfg', JSON.stringify(cfgObj));
               localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfgObj));
             }
           } else {
-            parsedEmail.password = parsedEmail.password || '';
+            finalPassword = parsedEmail.password || '';
           }
+          parsedEmail.password = finalPassword;
+
           parsedEmail.bg = cfgObj.bg !== undefined ? cfgObj.bg : parsedEmail.bg || '';
           parsedEmail.subrubro = cfgObj.subrubro !== undefined ? cfgObj.subrubro : parsedEmail.subrubro || '';
           parsedEmail.payment_methods = cfgObj.payment_methods !== undefined ? cfgObj.payment_methods : parsedEmail.payment_methods || { efectivo: true, transferencia: true, convenir: true };
@@ -6359,7 +6369,25 @@
           parsedEmail.horarios_data = cfgObj.horarios_data !== undefined ? cfgObj.horarios_data : parsedEmail.horarios_data || null;
           parsedEmail.admin_email = cfgObj.admin_email !== undefined ? cfgObj.admin_email : parsedEmail.admin_email || '';
 
+          // Guardar redundancia temporal por retrocompatibilidad
           dataToSave.email = JSON.stringify(parsedEmail);
+
+          // Guardar en las nuevas columnas dedicadas
+          dataToSave.admin_email = parsedEmail.admin_email;
+          dataToSave.password = parsedEmail.password;
+          dataToSave.design_settings = {
+            h1: parsedEmail.h1,
+            h2: parsedEmail.h2,
+            desc: parsedEmail.desc,
+            emoji: parsedEmail.emoji,
+            theme: parsedEmail.theme,
+            font: parsedEmail.font,
+            fontBody: parsedEmail.fontBody,
+            bg: parsedEmail.bg,
+            qr_code: parsedEmail.qr_code || `https://daletepido.com.ar/api/qr?store=${activeStore}`,
+            nosotros: parsedEmail.nosotros || '',
+            faq: parsedEmail.faq || []
+          };
 
           if (id) {
             await updateInSupabase('company_settings', id, dataToSave);
