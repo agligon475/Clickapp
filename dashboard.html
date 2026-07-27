@@ -7341,7 +7341,106 @@
       previewImgUrl(p?.img2 || '', 1);
       previewImgUrl(p?.img3 || '', 2);
 
+      // Inicializar el checkbox de IA desactivado y el panel oculto al abrir
+      const useAiChk = document.getElementById('m-use-ai-helper');
+      if (useAiChk) useAiChk.checked = false;
+      const aiPanel = document.getElementById('m-ai-helper-panel');
+      if (aiPanel) aiPanel.style.display = 'none';
+
+      validateAiFeatures();
       document.getElementById('modal-overlay').classList.add('open');
+    }
+
+    function toggleAiHelper() {
+      const useAiChk = document.getElementById('m-use-ai-helper');
+      const aiPanel = document.getElementById('m-ai-helper-panel');
+      if (!useAiChk || !aiPanel) return;
+      
+      if (useAiChk.checked) {
+        aiPanel.style.display = 'flex';
+        // Foco al código si se abre
+        setTimeout(() => { document.getElementById('m-codigo')?.focus(); }, 150);
+      } else {
+        aiPanel.style.display = 'none';
+      }
+    }
+
+    function validateAiFeatures() {
+      const name = document.getElementById('m-name')?.value.trim() || '';
+      const rubro = document.getElementById('cfg-store-rubro')?.value || 
+                    JSON.parse(localStorage.getItem(`storeapp_cfg_${STORE_ID}`) || localStorage.getItem('storeapp_cfg') || '{}').rubro || '';
+      const normalizedRubro = (rubro || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const isGastro = ['gastronomia', 'rotiseria'].includes(normalizedRubro);
+
+      let isVal = false;
+      if (isGastro) {
+        isVal = name.length > 0;
+      } else {
+        const marca = document.getElementById('m-marca')?.value.trim() || '';
+        isVal = name.length > 0 && marca.length > 0;
+      }
+
+      // Elementos de IA
+      const useAiChk = document.getElementById('m-use-ai-helper');
+      const btnAutoDetalle = document.getElementById('btn-auto-detalle');
+      const btnBuscarFotosIa = document.getElementById('btn-buscar-fotos-ia');
+      const iaHint = document.getElementById('m-ia-hint');
+
+      if (isVal) {
+        if (useAiChk) {
+          useAiChk.disabled = false;
+          const lbl = useAiChk.closest('label');
+          if (lbl) {
+            lbl.style.opacity = '1';
+            lbl.style.cursor = 'pointer';
+          }
+        }
+        if (btnAutoDetalle) {
+          btnAutoDetalle.disabled = false;
+          btnAutoDetalle.style.opacity = '1';
+          btnAutoDetalle.style.cursor = 'pointer';
+          btnAutoDetalle.title = 'Generar detalle automáticamente con Inteligencia Artificial';
+        }
+        if (btnBuscarFotosIa) {
+          btnBuscarFotosIa.disabled = false;
+          btnBuscarFotosIa.style.opacity = '1';
+          btnBuscarFotosIa.style.cursor = 'pointer';
+          btnBuscarFotosIa.title = 'Buscar y generar imágenes del producto con IA';
+        }
+        if (iaHint) {
+          iaHint.style.display = 'none';
+        }
+      } else {
+        if (useAiChk) {
+          useAiChk.checked = false;
+          useAiChk.disabled = true;
+          const lbl = useAiChk.closest('label');
+          if (lbl) {
+            lbl.style.opacity = '0.4';
+            lbl.style.cursor = 'not-allowed';
+          }
+        }
+        if (btnAutoDetalle) {
+          btnAutoDetalle.disabled = true;
+          btnAutoDetalle.style.opacity = '0.4';
+          btnAutoDetalle.style.cursor = 'not-allowed';
+          btnAutoDetalle.title = 'Ingresá el Nombre y la Marca para usar la IA';
+        }
+        if (btnBuscarFotosIa) {
+          btnBuscarFotosIa.disabled = true;
+          btnBuscarFotosIa.style.opacity = '0.4';
+          btnBuscarFotosIa.style.cursor = 'not-allowed';
+          btnBuscarFotosIa.title = 'Ingresá el Nombre y la Marca para usar la IA';
+        }
+        if (iaHint) {
+          iaHint.style.display = 'block';
+          iaHint.innerHTML = isGastro 
+            ? '<i class="bi bi-info-circle"></i> Completá el Nombre del producto para activar la ayuda por IA.'
+            : '<i class="bi bi-info-circle"></i> Completá el Nombre y la Marca del producto para activar la ayuda por IA.';
+        }
+        const aiPanel = document.getElementById('m-ai-helper-panel');
+        if (aiPanel) aiPanel.style.display = 'none';
+      }
     }
 
     function previewImgUrl(url, index = 0) {
@@ -11071,47 +11170,10 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
 
         <div class="modal-grid">
 
-          <!-- Código de barras / SKU -->
-          <div class="ctrl-group" style="grid-column:1/-1;">
-            <label class="ctrl-label" style="display:flex;align-items:center;justify-content:space-between;">
-              Código de barras / SKU
-              <span style="font-size:10px;color:var(--silver);font-weight:400;">EAN, UPC, código de fabricante</span>
-            </label>
-            <div style="display:flex;gap:8px;">
-              <input class="ctrl-input" id="m-codigo" placeholder="Ej: 7798062591234 (EAN) o DCD777C2 (SKU Dewalt)"
-                style="flex:1;font-family:monospace;"
-                onkeydown="if(event.key==='Enter'){event.preventDefault();buscarCodigo();}" />
-              <button onclick="buscarCodigo()" id="btn-buscar-codigo" style="flex-shrink:0;padding:8px 16px;background:var(--red);border:none;
-                     border-radius:8px;color:#fff;font-size:12px;font-weight:600;
-                     cursor:pointer;font-family:var(--font-b);white-space:nowrap;
-                     display:flex;align-items:center;gap:6px;transition:background .15s;">
-                <i class="bi bi-upc-scan"></i> Buscar
-              </button>
-            </div>
-            <div id="m-codigo-status" style="font-size:11px;margin-top:5px;min-height:14px;"></div>
-            <!-- Result preview card (hidden by default) -->
-            <div id="m-codigo-result" style="display:none;margin-top:10px;background:var(--iron);
-               border:1px solid var(--zinc);border-radius:10px;padding:12px 14px;">
-              <div style="font-size:10px;font-weight:700;color:var(--silver);text-transform:uppercase;
-                        letter-spacing:.06em;margin-bottom:8px;">Datos encontrados — aplicar al producto:</div>
-              <div id="m-codigo-result-body" style="font-size:12px;color:var(--fog);line-height:1.8;"></div>
-              <div style="display:flex;gap:8px;margin-top:10px;">
-                <button onclick="aplicarResultadoCodigo()" style="flex:1;padding:7px;background:var(--red);border:none;border-radius:7px;
-                       color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-b);">
-                  <i class="bi bi-check2-circle"></i> Aplicar todos los datos
-                </button>
-                <button onclick="document.getElementById('m-codigo-result').style.display='none'" style="padding:7px 12px;background:var(--iron);border:1px solid var(--zinc);
-                       border-radius:7px;color:var(--fog);font-size:12px;cursor:pointer;font-family:var(--font-b);">
-                  Descartar
-                </button>
-              </div>
-            </div>
-          </div>
-
           <!-- Nombre -->
           <div class="ctrl-group" style="grid-column:1/-1;">
             <label class="ctrl-label">Nombre del producto *</label>
-            <input class="ctrl-input" id="m-name" placeholder="Ej: Sierra Circular 7¼&quot;" />
+            <input class="ctrl-input" id="m-name" placeholder="Ej: Sierra Circular, Coca-Cola 1.5L o Remera Algodón" oninput="validateAiFeatures()" />
           </div>
 
           <!-- Categoria + Marca -->
@@ -11127,7 +11189,57 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           </div>
           <div class="ctrl-group">
             <label class="ctrl-label">Marca</label>
-            <input class="ctrl-input" id="m-marca" placeholder="Ej: Dewalt, Bosch, Stanley" />
+            <input class="ctrl-input" id="m-marca" placeholder="Ej: DeWalt, Coca-Cola, Nike, Arcor" oninput="validateAiFeatures()" />
+          </div>
+
+          <!-- Asistente de Inteligencia Artificial (IA) -->
+          <div class="ctrl-group" style="grid-column:1/-1; background:var(--steel); border:1px solid var(--zinc); border-radius:10px; padding:12px; margin-top:4px;">
+            <label style="display:flex; align-items:center; gap:8px; font-weight:700; font-size:13px; color:var(--white); cursor:pointer; margin:0;">
+              <input type="checkbox" id="m-use-ai-helper" onchange="toggleAiHelper()" style="width:16px; height:16px; accent-color:var(--red); margin:0;">
+              <span>✨ ¿Obtener ayuda de la Inteligencia Artificial (IA)?</span>
+            </label>
+            <div id="m-ia-hint" style="font-size:11px; color:var(--orange); margin-top:6px; font-weight:500;"></div>
+            
+            <!-- Panel desplegable de IA -->
+            <div id="m-ai-helper-panel" style="display:none; flex-direction:column; gap:12px; margin-top:12px; border-top:1px solid var(--zinc); padding-top:12px;">
+              <!-- Código de barras / SKU (Reubicado aquí) -->
+              <div class="ctrl-group" style="margin:0;">
+                <label class="ctrl-label" style="display:flex;align-items:center;justify-content:space-between;">
+                  Buscar producto por Código de barras o SKU
+                  <span style="font-size:10px;color:var(--silver);font-weight:400;">EAN, UPC, código de fabricante</span>
+                </label>
+                <div style="display:flex;gap:8px;">
+                  <input class="ctrl-input" id="m-codigo" placeholder="Ej: 7798062591234 (EAN) o SKU del fabricante"
+                    style="flex:1;font-family:monospace;"
+                    onkeydown="if(event.key==='Enter'){event.preventDefault();buscarCodigo();}" />
+                  <button onclick="buscarCodigo()" id="btn-buscar-codigo" style="flex-shrink:0;padding:8px 16px;background:var(--red);border:none;
+                         border-radius:8px;color:#fff;font-size:12px;font-weight:600;
+                         cursor:pointer;font-family:var(--font-b);white-space:nowrap;
+                         display:flex;align-items:center;gap:6px;transition:background .15s;">
+                    <i class="bi bi-upc-scan"></i> Autocompletar con IA
+                  </button>
+                </div>
+                <div id="m-codigo-status" style="font-size:11px;margin-top:5px;min-height:14px;"></div>
+                
+                <!-- Result preview card -->
+                <div id="m-codigo-result" style="display:none;margin-top:10px;background:var(--iron);
+                   border:1px solid var(--zinc);border-radius:10px;padding:12px 14px;">
+                  <div style="font-size:10px;font-weight:700;color:var(--silver);text-transform:uppercase;
+                            letter-spacing:.06em;margin-bottom:8px;">Datos encontrados — aplicar al producto:</div>
+                  <div id="m-codigo-result-body" style="font-size:12px;color:var(--fog);line-height:1.8;"></div>
+                  <div style="display:flex;gap:8px;margin-top:10px;">
+                    <button onclick="aplicarResultadoCodigo()" style="flex:1;padding:7px;background:var(--red);border:none;border-radius:7px;
+                           color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-b);">
+                      <i class="bi bi-check2-circle"></i> Aplicar todos los datos
+                    </button>
+                    <button onclick="document.getElementById('m-codigo-result').style.display='none'" style="padding:7px 12px;background:var(--iron);border:1px solid var(--zinc);
+                           border-radius:7px;color:var(--fog);font-size:12px;cursor:pointer;font-family:var(--font-b);">
+                      Descartar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Precio + Stock -->
@@ -11176,13 +11288,13 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           <div class="ctrl-group" style="grid-column:1/-1;">
             <label class="ctrl-label" style="display:flex;align-items:center;justify-content:space-between;">
                Detalle / Especificaciones
-              <button onclick="autoDetalle()"
-                style="font-size:10px;padding:2px 8px;background:rgba(215,38,56,.15);border:1px solid rgba(215,38,56,.3);border-radius:5px;color:var(--red);cursor:pointer;font-family:var(--font-b);">
+              <button type="button" id="btn-auto-detalle" onclick="autoDetalle()"
+                style="font-size: 11px; padding: 4px 10px; background: linear-gradient(135deg, var(--red) 0%, #A81D2A 100%); border: none; border-radius: 6px; color: #white; cursor: pointer; font-family: var(--font-b); display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 5px rgba(215,38,56,0.2); transition: all 0.2s;">
                 <i class="bi bi-stars"></i> Generar con IA
               </button>
             </label>
             <textarea class="ctrl-input" id="m-detalle" rows="3"
-              placeholder="Ej: Disco de 184mm, 5500 RPM, motor 1400W..."
+              placeholder="Ej: Características principales, dimensiones, peso o ingredientes..."
               style="resize:vertical;"></textarea>
             <div id="m-detalle-status" style="font-size:10px;color:var(--silver);margin-top:3px;min-height:12px;"></div>
           </div>
@@ -11252,7 +11364,8 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           <div class="ctrl-group" style="grid-column:1/-1;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
               <label class="ctrl-label" style="margin:0;">Imágenes del producto (hasta 3)</label>
-              <button type="button" id="btn-buscar-fotos-ia" onclick="buscarFotosIA()" class="abm-btn-new" style="font-size:10px; padding:4px 8px; background:var(--red); border-color:var(--red); color:var(--white); display:flex; align-items:center; gap:4px; margin:0;">
+              <button type="button" id="btn-buscar-fotos-ia" onclick="buscarFotosIA()"
+                style="font-size: 11px; padding: 4px 10px; background: linear-gradient(135deg, var(--red) 0%, #A81D2A 100%); border: none; border-radius: 6px; color: #fff; cursor: pointer; font-family: var(--font-b); display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 5px rgba(215,38,56,0.2); transition: all 0.2s; margin: 0;">
                 <i class="bi bi-image"></i> Buscar con IA
               </button>
             </div>
