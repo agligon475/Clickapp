@@ -430,6 +430,14 @@
               <input type="password" id="store-password" placeholder="Mínimo 6 caracteres" />
             </div>
           </div>
+          <div class="form-group full-width" style="grid-column: 1 / -1; margin-top: 10px;">
+            <label for="store-email">Correo Electrónico de Administración *</label>
+            <div class="input-wrapper">
+              <i class="bi bi-envelope-fill"></i>
+              <input type="email" id="store-email" placeholder="Ej: admin@mitienda.com" />
+            </div>
+            <div class="input-hint">Servirá para iniciar sesión en tu panel de control y recuperar el acceso.</div>
+          </div>
         </div>
       </div>
 
@@ -613,9 +621,15 @@
         const name = document.getElementById('store-name').value.trim();
         const id = document.getElementById('store-id').value.trim();
         const password = document.getElementById('store-password').value.trim();
+        const email = document.getElementById('store-email').value.trim();
         
-        if (!name || !id || !password) {
+        if (!name || !id || !password || !email) {
           alert('Por favor complete todos los campos obligatorios (*).');
+          return;
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          alert('Por favor ingrese un correo electrónico válido.');
           return;
         }
         if (password.length < 6) {
@@ -687,6 +701,7 @@
     const name = document.getElementById('store-name').value.trim();
     const rubro = document.getElementById('store-rubro').value;
     const password = document.getElementById('store-password').value.trim();
+    const email = document.getElementById('store-email').value.trim();
     const wapp = document.getElementById('store-wapp').value.trim();
     const direccion = document.getElementById('store-direccion').value.trim();
     const horario = document.getElementById('store-horario').value.trim();
@@ -722,7 +737,8 @@
         fontBody: 'Outfit',
         password: password,
         bg: '',
-        qr_code: `https://daletepido.com.ar/api/qr?store=${storeId}`
+        qr_code: `https://daletepido.com.ar/api/qr?store=${storeId}`,
+        admin_email: email
       });
 
       const payload = {

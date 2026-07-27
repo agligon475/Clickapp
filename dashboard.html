@@ -1937,8 +1937,8 @@
       </div>
       
       <div class="ctrl-group" style="margin-bottom: 16px;">
-        <label class="ctrl-label">Nombre de tu tienda (ID)</label>
-        <input class="ctrl-input" id="login-store-id" placeholder="ej: mi-tienda" style="background: var(--black);" />
+        <label class="ctrl-label">Nombre de tu tienda (ID) o Correo Electrónico</label>
+        <input class="ctrl-input" id="login-store-id" placeholder="ej: mi-tienda o admin@tienda.com" style="background: var(--black);" />
       </div>
       
       <div class="ctrl-group" style="margin-bottom: 24px;">
@@ -3721,6 +3721,12 @@
                 <input class="ctrl-input" id="cfg-store-tagline" placeholder="Tu ferretería digital" />
               </div>
 
+              <!-- Correo electrónico del Administrador -->
+              <div class="ctrl-group">
+                <label class="ctrl-label">Correo Electrónico *</label>
+                <input class="ctrl-input" id="cfg-store-email" type="email" placeholder="Ej: admin@mitienda.com" />
+              </div>
+
               <!-- 3. Rubro principal -->
               <div class="ctrl-group">
                 <label class="ctrl-label">Rubro principal</label>
@@ -4690,7 +4696,7 @@
       const submitBtn = document.getElementById('login-submit-btn');
       
       if (!storeInput) {
-        errorEl.textContent = 'Por favor ingresá el nombre de tu tienda.';
+        errorEl.textContent = 'Por favor ingresá tu ID de tienda o correo electrónico.';
         errorEl.style.display = 'block';
         return;
       }
@@ -4701,20 +4707,22 @@
       
       try {
         let authSuccess = false;
-
+        let finalStoreId = storeInput;
+ 
         // 1. Intentar autenticación segura via Endpoint Backend Serverless
         const authRes = await fetch('/api/auth', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'login', store_id: storeInput, password: passInput })
         });
-
+ 
         if (authRes.ok) {
           const authData = await authRes.json();
           if (authData.success) {
             authSuccess = true;
-            if (authData.token) sessionStorage.setItem('storeapp_token_' + storeInput, authData.token);
-            if (authData.plan_level) sessionStorage.setItem('storeapp_plan_level_' + storeInput, authData.plan_level);
+            if (authData.store_id) finalStoreId = authData.store_id.toLowerCase();
+            if (authData.token) sessionStorage.setItem('storeapp_token_' + finalStoreId, authData.token);
+            if (authData.plan_level) sessionStorage.setItem('storeapp_plan_level_' + finalStoreId, authData.plan_level);
           } else {
             throw new Error(authData.error || 'Credenciales inválidas.');
           }
@@ -4722,16 +4730,16 @@
           const authData = await authRes.json().catch(() => ({}));
           throw new Error(authData.error || 'Contraseña incorrecta.');
         }
-
+ 
         if (!authSuccess) throw new Error('No se pudo verificar el acceso.');
-
+ 
         // Logueado exitosamente
-        sessionStorage.setItem('storeapp_logged_in_' + storeInput, 'true');
+        sessionStorage.setItem('storeapp_logged_in_' + finalStoreId, 'true');
         
         // Si cambió la tienda actual en el input, redireccionar
-        if (storeInput !== STORE_ID.toLowerCase()) {
-          window.localStorage.setItem('storeapp_store_id', storeInput);
-          window.location.search = `?store=${storeInput}`;
+        if (finalStoreId !== STORE_ID.toLowerCase()) {
+          window.localStorage.setItem('storeapp_store_id', finalStoreId);
+          window.location.search = `?store=${finalStoreId}`;
         } else {
           // Si es la misma tienda, ocultar overlay y continuar
           document.getElementById('dash-login-overlay').style.display = 'none';
@@ -5493,6 +5501,7 @@
               bg: parsedDesign.bg || cfg.bg || '',
               subrubro: parsedDesign.subrubro || '',
               password: parsedDesign.password || '',
+              admin_email: parsedDesign.admin_email || '',
               payment_methods: parsedDesign.payment_methods || { efectivo: true, transferencia: true, convenir: true },
               domain: parsedDesign.domain || '',
               gerente: parsedDesign.gerente || { nombre: '', email: '', frecuencia: 'mensual' },
@@ -6348,6 +6357,7 @@
           parsedEmail.payment_methods = cfgObj.payment_methods !== undefined ? cfgObj.payment_methods : parsedEmail.payment_methods || { efectivo: true, transferencia: true, convenir: true };
           parsedEmail.gerente = cfgObj.gerente !== undefined ? cfgObj.gerente : parsedEmail.gerente || { nombre: '', email: '', frecuencia: 'mensual' };
           parsedEmail.horarios_data = cfgObj.horarios_data !== undefined ? cfgObj.horarios_data : parsedEmail.horarios_data || null;
+          parsedEmail.admin_email = cfgObj.admin_email !== undefined ? cfgObj.admin_email : parsedEmail.admin_email || '';
 
           dataToSave.email = JSON.stringify(parsedEmail);
 
@@ -8574,6 +8584,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (sc.name) document.getElementById('cfg-store-name').value = sc.name;
       if (sc.tagline) document.getElementById('cfg-store-tagline').value = sc.tagline;
       if (sc.wapp) document.getElementById('cfg-store-wapp').value = sc.wapp;
+      if (sc.admin_email) document.getElementById('cfg-store-email').value = sc.admin_email;
       
       const pwdInput = document.getElementById('cfg-store-password');
       if (pwdInput) {
@@ -9163,6 +9174,21 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
       const domain = document.getElementById('cfg-store-domain').value.trim();
       sc.domain = domain;
+
+      const adminEmailInput = document.getElementById('cfg-store-email');
+      if (adminEmailInput) {
+        const admin_email = adminEmailInput.value.trim();
+        if (admin_email !== '') {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(admin_email)) {
+            alert('Por favor ingrese un correo electrónico de administración válido.');
+            return;
+          }
+          sc.admin_email = admin_email;
+        } else {
+          sc.admin_email = '';
+        }
+      }
 
       const web = document.getElementById('cfg-social-web').value.trim();
       const ig = document.getElementById('cfg-social-ig').value.trim();
