@@ -1,8 +1,12 @@
 {
+  "id": "/dashboard.html",
   "name": "Dale! Te Pido - Catálogo y Pedidos",
   "short_name": "DaleTePido",
   "description": "Tu plataforma de gestión de pedidos y catálogo online por WhatsApp",
   "start_url": "/dashboard.html",
+  "scope": "/",
+  "lang": "es",
+  "dir": "ltr",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
@@ -19,6 +23,22 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/dashboard-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Panel de Control DaleTePido"
+    },
+    {
+      "src": "/dashboard-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Gestión de Pedidos"
     }
   ]
 }
