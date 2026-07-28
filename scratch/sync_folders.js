@@ -18,7 +18,9 @@ const filesToSync = [
   'api/debug.js',
   'api/auth.js',
   'manifest.json',
-  'sw.js'
+  'sw.js',
+  'icon-192.png',
+  'icon-512.png'
 ];
 
 const destinations = [

@@ -8,7 +8,9 @@ const ASSETS_TO_CACHE = [
   '/ayuda.html',
   '/manifest.json',
   '/favicon.ico',
-  '/dashboard-icon.png'
+  '/dashboard-icon.png',
+  '/icon-192.png',
+  '/icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {

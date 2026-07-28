@@ -13,24 +13,30 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/dashboard-icon.png",
-      "sizes": "72x72",
-      "type": "image/jpeg",
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ],
   "screenshots": [
     {
-      "src": "/dashboard-icon.png",
-      "sizes": "72x72",
-      "type": "image/jpeg",
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "form_factor": "wide",
       "label": "Panel de Control DaleTePido"
     },
     {
-      "src": "/dashboard-icon.png",
-      "sizes": "72x72",
-      "type": "image/jpeg",
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "form_factor": "narrow",
       "label": "Gestión de Pedidos"
     }
