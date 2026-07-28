@@ -16,7 +16,9 @@ const filesToSync = [
   'api/image-search.js',
   'api/store.js',
   'api/debug.js',
-  'api/auth.js'
+  'api/auth.js',
+  'manifest.json',
+  'sw.js'
 ];
 
 const destinations = [
