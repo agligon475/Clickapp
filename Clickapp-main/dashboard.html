@@ -11699,34 +11699,6 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     }
   </style>
 
-  <!-- ================= AUTH LOGIN LOCK MODAL ================= -->
-  <div id="modal-auth-overlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; z-index:999999; background: #0A0A0C; display:flex; align-items:center; justify-content:center; padding:20px;">
-    <div style="background:#141416; border:1px solid #2E2E33; border-radius:16px; width:100%; max-width:400px; padding:28px 24px; box-shadow:0 12px 40px rgba(0,0,0,0.8); text-align:center;">
-      <div style="display:inline-flex; align-items:center; justify-content:center; width:56px; height:56px; background:rgba(215,38,56,0.12); border:1px solid rgba(215,38,56,0.3); border-radius:50%; margin-bottom:16px;">
-        <i class="bi bi-shop" style="font-size:24px; color:#D72638;"></i>
-      </div>
-      <h2 style="font-family:'Barlow Condensed',sans-serif; font-size:24px; font-weight:700; color:#F0F0EC; text-transform:uppercase; letter-spacing:0.02em; margin-bottom:6px;">Ingreso al Dashboard</h2>
-      <p style="font-size:13px; color:#7A7A82; margin-bottom:24px;">Ingresá el nombre o correo de tu comercio y tu contraseña para acceder.</p>
-      
-      <form onsubmit="handleDashboardAuthSubmit(event)">
-        <div style="text-align:left; margin-bottom:14px;">
-          <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:#7A7A82; letter-spacing:0.05em; display:block; margin-bottom:6px;">Tienda o Correo Electrónico</label>
-          <input id="auth-input-store" required placeholder="Ej: cocostore o admin@mitienda.com" style="width:100%; background:#1E1E22; border:1px solid #2E2E33; color:#F0F0EC; padding:12px 14px; border-radius:8px; font-size:14px; outline:none;" />
-        </div>
-        <div style="text-align:left; margin-bottom:20px;">
-          <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:#7A7A82; letter-spacing:0.05em; display:block; margin-bottom:6px;">Contraseña</label>
-          <input id="auth-input-password" type="password" required placeholder="••••••••" style="width:100%; background:#1E1E22; border:1px solid #2E2E33; color:#F0F0EC; padding:12px 14px; border-radius:8px; font-size:14px; outline:none;" />
-        </div>
-        
-        <div id="auth-msg-error" style="display:none; margin-bottom:16px; padding:10px 12px; background:rgba(215,38,56,0.15); border:1px solid #D72638; border-radius:6px; color:#ff8888; font-size:12px; text-align:left;"></div>
-        
-        <button type="submit" id="auth-btn-login" style="width:100%; background:#D72638; color:#ffffff; border:none; padding:12px 16px; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; text-transform:uppercase; letter-spacing:0.05em;">
-          Iniciar Sesión <i class="bi bi-box-arrow-in-right" style="margin-left:6px;"></i>
-        </button>
-      </form>
-    </div>
-  </div>
-
   <!-- ================= MOBILE BOTTOM NAVIGATION BAR ================= -->
   <div class="mobile-bottom-bar" id="mobile-bottom-bar">
     <button class="mobile-nav-item active" onclick="switchMobileNav('orders', this)">
@@ -11808,19 +11780,16 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
   </style>
 
   <script>
-    // Auth Verification & Navigation Script
+    // Auth Verification & Navigation Script (Single Login Flow)
     function checkDashboardAuth() {
       const sessionRaw = localStorage.getItem('daletepido_session');
       if (!sessionRaw) {
-        showAuthLoginModal();
+        redirectToLogin();
         return false;
       }
       try {
         const session = JSON.parse(sessionRaw);
         if (session && session.store_id && session.token) {
-          document.getElementById('modal-auth-overlay').style.display = 'none';
-          
-          // Ensure URL query param matches logged-in store_id
           const urlParams = new URLSearchParams(window.location.search);
           const currentUrlStore = urlParams.get('store');
           if (currentUrlStore !== session.store_id) {
@@ -11830,62 +11799,12 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           return true;
         }
       } catch(e) {}
-      showAuthLoginModal();
+      redirectToLogin();
       return false;
     }
 
-    function showAuthLoginModal() {
-      const overlay = document.getElementById('modal-auth-overlay');
-      if (overlay) overlay.style.display = 'flex';
-    }
-
-    async function handleDashboardAuthSubmit(e) {
-      e.preventDefault();
-      const storeInput = document.getElementById('auth-input-store').value.trim();
-      const passwordInput = document.getElementById('auth-input-password').value.trim();
-      const errorEl = document.getElementById('auth-msg-error');
-      const btnBtn = document.getElementById('auth-btn-login');
-
-      if (!storeInput || !passwordInput) return;
-
-      errorEl.style.display = 'none';
-      btnBtn.disabled = true;
-      btnBtn.innerText = 'Verificando...';
-
-      try {
-        const res = await fetch('/api/auth', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'login', store_id: storeInput, password: passwordInput })
-        });
-
-        const data = await res.json();
-
-        if (data.success && data.token && data.store_id) {
-          const sessionData = {
-            store_id: data.store_id,
-            token: data.token,
-            plan_level: data.plan_level || 'starter',
-            timestamp: Date.now()
-          };
-          localStorage.setItem('daletepido_session', JSON.stringify(sessionData));
-          localStorage.setItem('storeapp_store_id', data.store_id);
-          localStorage.setItem('daletepido_store_id', data.store_id);
-          localStorage.setItem('store_id', data.store_id);
-
-          document.getElementById('modal-auth-overlay').style.display = 'none';
-          window.location.href = '/dashboard.html?store=' + encodeURIComponent(data.store_id);
-        } else {
-          errorEl.innerText = data.error || 'Credenciales incorrectas';
-          errorEl.style.display = 'block';
-        }
-      } catch (err) {
-        errorEl.innerText = 'Error de conexión con el servidor';
-        errorEl.style.display = 'block';
-      } finally {
-        btnBtn.disabled = false;
-        btnBtn.innerHTML = 'Iniciar Sesión <i class="bi bi-box-arrow-in-right" style="margin-left:6px;"></i>';
-      }
+    function redirectToLogin() {
+      window.location.href = '/alta-usuario.html?action=login';
     }
 
     function logoutDashboard() {
@@ -11894,7 +11813,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         localStorage.removeItem('storeapp_store_id');
         localStorage.removeItem('daletepido_store_id');
         localStorage.removeItem('store_id');
-        window.location.href = '/dashboard.html';
+        redirectToLogin();
       }
     }
 
