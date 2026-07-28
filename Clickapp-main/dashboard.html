@@ -11681,5 +11681,213 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     }
   </style>
 
+  <!-- ================= AUTH LOGIN LOCK MODAL ================= -->
+  <div id="modal-auth-overlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; z-index:999999; background: #0A0A0C; display:flex; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#141416; border:1px solid #2E2E33; border-radius:16px; width:100%; max-width:400px; padding:28px 24px; box-shadow:0 12px 40px rgba(0,0,0,0.8); text-align:center;">
+      <div style="display:inline-flex; align-items:center; justify-content:center; width:56px; height:56px; background:rgba(215,38,56,0.12); border:1px solid rgba(215,38,56,0.3); border-radius:50%; margin-bottom:16px;">
+        <i class="bi bi-shop" style="font-size:24px; color:#D72638;"></i>
+      </div>
+      <h2 style="font-family:'Barlow Condensed',sans-serif; font-size:24px; font-weight:700; color:#F0F0EC; text-transform:uppercase; letter-spacing:0.02em; margin-bottom:6px;">Ingreso al Dashboard</h2>
+      <p style="font-size:13px; color:#7A7A82; margin-bottom:24px;">Ingresá el nombre o correo de tu comercio y tu contraseña para acceder.</p>
+      
+      <form onsubmit="handleDashboardAuthSubmit(event)">
+        <div style="text-align:left; margin-bottom:14px;">
+          <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:#7A7A82; letter-spacing:0.05em; display:block; margin-bottom:6px;">Tienda o Correo Electrónico</label>
+          <input id="auth-input-store" required placeholder="Ej: cocostore o admin@mitienda.com" style="width:100%; background:#1E1E22; border:1px solid #2E2E33; color:#F0F0EC; padding:12px 14px; border-radius:8px; font-size:14px; outline:none;" />
+        </div>
+        <div style="text-align:left; margin-bottom:20px;">
+          <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:#7A7A82; letter-spacing:0.05em; display:block; margin-bottom:6px;">Contraseña</label>
+          <input id="auth-input-password" type="password" required placeholder="••••••••" style="width:100%; background:#1E1E22; border:1px solid #2E2E33; color:#F0F0EC; padding:12px 14px; border-radius:8px; font-size:14px; outline:none;" />
+        </div>
+        
+        <div id="auth-msg-error" style="display:none; margin-bottom:16px; padding:10px 12px; background:rgba(215,38,56,0.15); border:1px solid #D72638; border-radius:6px; color:#ff8888; font-size:12px; text-align:left;"></div>
+        
+        <button type="submit" id="auth-btn-login" style="width:100%; background:#D72638; color:#ffffff; border:none; padding:12px 16px; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; text-transform:uppercase; letter-spacing:0.05em;">
+          Iniciar Sesión <i class="bi bi-box-arrow-in-right" style="margin-left:6px;"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MOBILE BOTTOM NAVIGATION BAR ================= -->
+  <div class="mobile-bottom-bar" id="mobile-bottom-bar">
+    <button class="mobile-nav-item active" onclick="switchMobileNav('orders', this)">
+      <i class="bi bi-box-seam"></i>
+      <span>Pedidos</span>
+    </button>
+    <button class="mobile-nav-item" onclick="switchMobileNav('products', this)">
+      <i class="bi bi-grid"></i>
+      <span>Productos</span>
+    </button>
+    <button class="mobile-nav-item" onclick="switchMobileNav('store', this)">
+      <i class="bi bi-shop"></i>
+      <span>Mi Tienda</span>
+    </button>
+    <button class="mobile-nav-item" onclick="switchMobileNav('settings', this)">
+      <i class="bi bi-gear"></i>
+      <span>Ajustes</span>
+    </button>
+  </div>
+
+  <style>
+    @media (max-width: 768px) {
+      body {
+        padding-bottom: 70px !important;
+      }
+      .sidebar {
+        display: none !important;
+      }
+      .mobile-bottom-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 62px;
+        background: rgba(10, 10, 12, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        z-index: 9999;
+        padding: 0 8px;
+      }
+      .mobile-nav-item {
+        background: none;
+        border: none;
+        color: #7A7A82;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-family: inherit;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 6px 12px;
+        gap: 3px;
+        transition: color 0.2s, transform 0.15s;
+        flex: 1;
+      }
+      .mobile-nav-item i {
+        font-size: 18px;
+      }
+      .mobile-nav-item.active {
+        color: #D72638;
+      }
+      .main-content {
+        margin-left: 0 !important;
+        padding: 16px 14px 80px 14px !important;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .mobile-bottom-bar {
+        display: none !important;
+      }
+    }
+  </style>
+
+  <script>
+    // Auth Verification & Navigation Script
+    function checkDashboardAuth() {
+      const sessionRaw = localStorage.getItem('daletepido_session');
+      if (!sessionRaw) {
+        showAuthLoginModal();
+        return false;
+      }
+      try {
+        const session = JSON.parse(sessionRaw);
+        if (session && session.store_id && session.token) {
+          document.getElementById('modal-auth-overlay').style.display = 'none';
+          return true;
+        }
+      } catch(e) {}
+      showAuthLoginModal();
+      return false;
+    }
+
+    function showAuthLoginModal() {
+      const overlay = document.getElementById('modal-auth-overlay');
+      if (overlay) overlay.style.display = 'flex';
+    }
+
+    async function handleDashboardAuthSubmit(e) {
+      e.preventDefault();
+      const storeInput = document.getElementById('auth-input-store').value.trim();
+      const passwordInput = document.getElementById('auth-input-password').value.trim();
+      const errorEl = document.getElementById('auth-msg-error');
+      const btnBtn = document.getElementById('auth-btn-login');
+
+      if (!storeInput || !passwordInput) return;
+
+      errorEl.style.display = 'none';
+      btnBtn.disabled = true;
+      btnBtn.innerText = 'Verificando...';
+
+      try {
+        const res = await fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'login', store_id: storeInput, password: passwordInput })
+        });
+
+        const data = await res.json();
+
+        if (data.success && data.token) {
+          const sessionData = {
+            store_id: data.store_id,
+            token: data.token,
+            plan_level: data.plan_level || 'starter',
+            timestamp: Date.now()
+          };
+          localStorage.setItem('daletepido_session', JSON.stringify(sessionData));
+          document.getElementById('modal-auth-overlay').style.display = 'none';
+          window.location.reload();
+        } else {
+          errorEl.innerText = data.error || 'Credenciales incorrectas';
+          errorEl.style.display = 'block';
+        }
+      } catch (err) {
+        errorEl.innerText = 'Error de conexión con el servidor';
+        errorEl.style.display = 'block';
+      } finally {
+        btnBtn.disabled = false;
+        btnBtn.innerHTML = 'Iniciar Sesión <i class="bi bi-box-arrow-in-right" style="margin-left:6px;"></i>';
+      }
+    }
+
+    function logoutDashboard() {
+      if (confirm('¿Seguro que deseas cerrar sesión?')) {
+        localStorage.removeItem('daletepido_session');
+        window.location.reload();
+      }
+    }
+
+    function switchMobileNav(tab, el) {
+      document.querySelectorAll('.mobile-nav-item').forEach(item => item.classList.remove('active'));
+      if (el) el.classList.add('active');
+
+      if (tab === 'orders') {
+        const btn = document.querySelector('[onclick*="orders"]') || document.querySelector('.sb-item');
+        if (btn) btn.click();
+      } else if (tab === 'products') {
+        const btn = document.querySelector('[onclick*="products"]');
+        if (btn) btn.click();
+      } else if (tab === 'store') {
+        const btn = document.querySelector('[onclick*="store"]');
+        if (btn) btn.click();
+      } else if (tab === 'settings') {
+        const btn = document.querySelector('[onclick*="settings"]');
+        if (btn) btn.click();
+      }
+    }
+
+    window.addEventListener('load', () => {
+      checkDashboardAuth();
+    });
+  </script>
+
 </body>
 </html>

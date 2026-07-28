@@ -287,6 +287,17 @@ const server = http.createServer(async (req, res) => {
     } catch (err) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
       return res.end(JSON.stringify({ error: 'Error contacting Gemini API', detail: err.message }));
+  if (urlPath === '/api/auth') {
+    const rawBody = await parseRequestBody(req);
+    let parsedBody = {};
+    try { parsedBody = JSON.parse(rawBody); } catch(e) {}
+    req.body = parsedBody;
+    try {
+      const authModule = await import('../api/auth.js');
+      return authModule.default(req, res);
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, error: err.message }));
     }
   }
 
