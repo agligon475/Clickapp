@@ -1270,6 +1270,28 @@ function guessEmoji(name, cat) {
   return '📦';
 }
 
+function renderSuspendedStoreScreen(storeName) {
+  document.body.innerHTML = `
+    <div style="min-height: 100vh; background: #0A0A0C; color: #F0F0EC; display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; font-family: 'Barlow', sans-serif;">
+      <div style="max-width: 480px; width: 100%; background: #141416; border: 1px solid #2E2E33; border-radius: 24px; padding: 40px 28px; box-shadow: 0 20px 50px rgba(0,0,0,0.8);">
+        <div style="width: 72px; height: 72px; background: rgba(215, 38, 56, 0.12); border: 1px solid rgba(215, 38, 56, 0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto;">
+          <i class="bi bi-shop-window" style="font-size: 32px; color: #D72638;"></i>
+        </div>
+        <h1 style="font-family: 'Barlow Condensed', sans-serif; font-size: 32px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 12px; color: #F5F5F0;">
+          ${storeName || 'Tienda Temporariamente Inactiva'}
+        </h1>
+        <div style="width: 40px; height: 3px; background: #D72638; margin: 0 auto 20px auto; border-radius: 2px;"></div>
+        <p style="font-size: 16px; line-height: 1.6; color: #C8C8CC; margin-bottom: 28px;">
+          Esta tienda no está disponible en este momento. Pronto estará nuevamente disponible.
+        </p>
+        <div style="font-size: 12px; color: #7A7A82; border-top: 1px solid #2A2A2D; padding-top: 20px;">
+          Plataforma de catálogos digitales <strong style="color: #F0F0EC;">DaleTePido</strong>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 /* ═══════════════════════════════════════════ LOAD */
 async function loadSheet() {
   try {
@@ -1316,6 +1338,13 @@ async function loadSheet() {
       const configData = await configRes.json();
       if (configData && configData.length > 0) {
         const cfg = configData[0];
+
+        // Verificar si la tienda se encuentra suspendida por el Super Admin
+        if (cfg.status === 'SUSPENDED_PAYMENT' || cfg.status === 'DISABLED') {
+          renderSuspendedStoreScreen(cfg.business_name || cfg.store_id);
+          return;
+        }
+
         if (cfg.nosotros) storeNosotros = cfg.nosotros;
         
         // --- OVERRIDE GLOBAL CFG WITH SUPABASE CONFIG ---

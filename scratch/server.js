@@ -301,6 +301,20 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
+  if (urlPath === '/api/super-admin') {
+    const rawBody = await parseRequestBody(req);
+    let parsedBody = {};
+    try { parsedBody = JSON.parse(rawBody); } catch(e) {}
+    req.body = parsedBody;
+    try {
+      const superAdminModule = await import('../api/super-admin.js');
+      return superAdminModule.default(req, res);
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, error: err.message }));
+    }
+  }
+
   // Support clean URLs, static routes, and dynamic store rewrites
   if (!path.extname(filePath)) {
     if (fs.existsSync(filePath + '.html')) {

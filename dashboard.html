@@ -8926,10 +8926,56 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       });
     }
 
+    function checkAndShowSuspensionBanner(sc) {
+      const bannerId = 'suspended-store-warning-banner';
+      let banner = document.getElementById(bannerId);
+      if (sc.status === 'SUSPENDED_PAYMENT' || sc.status === 'DISABLED') {
+        if (!banner) {
+          banner = document.createElement('div');
+          banner.id = bannerId;
+          banner.style.cssText = 'background: rgba(215,38,56,0.18); border-bottom: 2px solid #D72638; color: #FFF; padding: 14px 20px; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; gap: 12px; z-index: 9999;';
+          banner.innerHTML = `
+            <div style="display:flex; align-items:center; gap:10px;">
+              <i class="bi bi-exclamation-triangle-fill" style="color:#D72638; font-size:20px;"></i>
+              <span><strong>Aviso de Cuenta Suspendida:</strong> Tu catálogo público se encuentra inactivo. Contactá al soporte oficial de DaleTePido para regularizar el servicio.</span>
+            </div>
+            <a href="https://wa.me/5491141819344?text=Hola%2C%20necesito%20regularizar%20mi%20tienda%20${encodeURIComponent(STORE_ID)}" target="_blank" style="background:#D72638; color:#fff; padding:6px 14px; border-radius:6px; text-decoration:none; font-size:12px; font-weight:700; white-space:nowrap;">
+              Contactar Soporte
+            </a>
+          `;
+          document.body.prepend(banner);
+        }
+      } else if (banner) {
+        banner.remove();
+      }
+    }
+
+    async function requestStoreUpgrade(requestedPlan = 'PRO') {
+      try {
+        const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`
+          },
+          body: JSON.stringify({ upgrade_requested: requestedPlan })
+        });
+        if (patchRes.ok) {
+          alert(`¡Solicitud enviada con éxito! El administrador de DaleTePido revisará tu pedido para activar el Plan ${requestedPlan}.`);
+        } else {
+          alert('Error al enviar la solicitud. Intente nuevamente.');
+        }
+      } catch (e) {
+        alert('Error de conexión: ' + e.message);
+      }
+    }
+
     /* ═══════════════════════════════════════════ CONFIG VIEW */
     function initConfigView() {
       // Load all saved values into form fields
       const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+      checkAndShowSuspensionBanner(sc);
 
       const storeBar = document.getElementById('sb-store-name');
       if (storeBar) {
