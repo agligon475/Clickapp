@@ -1,4 +1,4 @@
-const CACHE_NAME = 'daletepido-v2';
+const CACHE_NAME = 'daletepido-v3';
 const ASSETS_TO_CACHE = [
   '/',
   '/landing.html',
@@ -54,6 +54,7 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
+// Push notification support
 self.addEventListener('push', (event) => {
   const title = 'Dale! Te Pido';
   const options = {
@@ -67,4 +68,22 @@ self.addEventListener('push', (event) => {
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   event.waitUntil(clients.openWindow('/dashboard.html?view=orders'));
+});
+
+// Background Sync API support for PWABuilder
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'sync-orders' || event.tag === 'sync-data') {
+    event.waitUntil(
+      fetch('/api/auth', { method: 'GET' }).catch(() => {})
+    );
+  }
+});
+
+// Periodic Background Sync API support for PWABuilder
+self.addEventListener('periodicsync', (event) => {
+  if (event.tag === 'get-latest-orders' || event.tag === 'periodic-sync') {
+    event.waitUntil(
+      fetch('/api/auth', { method: 'GET' }).catch(() => {})
+    );
+  }
 });

@@ -9,6 +9,7 @@
   "dir": "ltr",
   "display": "standalone",
   "display_override": [
+    "tabbed",
     "standalone",
     "minimal-ui",
     "window-controls-overlay"
@@ -23,7 +24,24 @@
     "utilities"
   ],
   "prefer_related_applications": false,
-  "related_applications": [],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=ar.com.daletepido.app",
+      "id": "ar.com.daletepido.app"
+    }
+  ],
+  "scope_extensions": [
+    {
+      "origin": "https://*.daletepido.com.ar"
+    },
+    {
+      "origin": "https://daletepido.com.ar"
+    }
+  ],
+  "note_taking": {
+    "new_note_url": "/dashboard.html?action=new_note"
+  },
   "iarc_rating_id": "00000000-0000-0000-0000-000000000000",
   "launch_handler": {
     "client_mode": [
@@ -32,11 +50,6 @@
     ]
   },
   "handle_links": "preferred",
-  "scope_extensions": [
-    {
-      "origin": "*.daletepido.com.ar"
-    }
-  ],
   "protocol_handlers": [
     {
       "protocol": "web+daletepido",
