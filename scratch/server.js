@@ -88,7 +88,9 @@ const server = http.createServer(async (req, res) => {
   }
 
   let filePath = '.' + urlPath;
-  if (filePath === './' || filePath === './index') filePath = './index.html';
+  if (filePath === './' || filePath === './index' || filePath === './index.html') {
+    filePath = fs.existsSync('./index.html') ? './index.html' : './landing.html';
+  }
 
   // ═══════════════════════════════════════════ API PROXY ENDPOINTS
   if (urlPath === '/api/image-search') {
