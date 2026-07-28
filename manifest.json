@@ -44,6 +44,18 @@
       "origin": "https://daletepido.com.ar"
     },
     {
+      "origin": "https://auth.daletepido.com.ar"
+    },
+    {
+      "origin": "https://app.daletepido.com.ar"
+    },
+    {
+      "origin": "https://admin.daletepido.com.ar"
+    },
+    {
+      "origin": "https://tienda.daletepido.com.ar"
+    },
+    {
       "origin": "https://*.daletepido.com.ar"
     },
     {
