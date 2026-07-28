@@ -17,6 +17,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+async def root():
+    return {
+        "status": "online",
+        "service": "DaleTePido API",
+        "documentation": "/docs"
+    }
+
 @app.post("/api/solicitud")
 async def recibir_solicitud(payload: Dict[str, Any]):
     """
