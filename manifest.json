@@ -14,6 +14,14 @@
     "minimal-ui",
     "window-controls-overlay"
   ],
+  "tab_strip": {
+    "home_tab": {
+      "url": "/dashboard.html"
+    },
+    "new_tab_button": {
+      "url": "/dashboard.html"
+    }
+  },
   "background_color": "#0A0A0C",
   "theme_color": "#0A0A0C",
   "orientation": "portrait-primary",
@@ -33,10 +41,16 @@
   ],
   "scope_extensions": [
     {
+      "origin": "https://daletepido.com.ar"
+    },
+    {
       "origin": "https://*.daletepido.com.ar"
     },
     {
-      "origin": "https://daletepido.com.ar"
+      "origin": "*.daletepido.com.ar"
+    },
+    {
+      "origin": "daletepido.com.ar"
     }
   ],
   "note_taking": {
