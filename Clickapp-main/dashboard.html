@@ -5385,27 +5385,14 @@
       }
 
       // 2. Consultas AI
-      const provider = localStorage.getItem('storeapp_ai_provider') || 'claude';
-      if (provider === 'gemini') {
-        const geminiKey = localStorage.getItem('storeapp_gemini_key');
-        const geminiStatus = localStorage.getItem('storeapp_gemini_status');
-        if (!geminiKey) {
-          setStatusBulb('ai', 'warn', 'Posible falta de configuración (Gemini)');
-        } else if (geminiStatus === 'err') {
-          setStatusBulb('ai', 'err', 'Desconectado. Error (Gemini)');
-        } else {
-          setStatusBulb('ai', 'ok', 'Conexión establecida (Gemini)');
-        }
+      const provider = localStorage.getItem('storeapp_ai_provider') || window.STORE_CREDENTIALS?.ai_provider || 'gemini';
+      const aiStatus = localStorage.getItem('storeapp_ai_status') || localStorage.getItem('storeapp_gemini_status') || localStorage.getItem('storeapp_claude_status');
+      
+      if (aiStatus === 'err') {
+        setStatusBulb('ai', 'err', 'Desconectado. Error en API de IA');
       } else {
-        const claudeKey = localStorage.getItem('storeapp_claude_key');
-        const claudeStatus = localStorage.getItem('storeapp_claude_status');
-        if (!claudeKey) {
-          setStatusBulb('ai', 'warn', 'Posible falta de configuración (Claude)');
-        } else if (claudeStatus === 'err') {
-          setStatusBulb('ai', 'err', 'Desconectado. Error (Claude)');
-        } else {
-          setStatusBulb('ai', 'ok', 'Conexión establecida (Claude)');
-        }
+        const keyName = provider === 'gemini' ? 'Gemini' : 'Claude';
+        setStatusBulb('ai', 'ok', `Conexión de IA activa (${keyName})`);
       }
 
       // 3. Cloudinary
@@ -5609,25 +5596,39 @@
             localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
             localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
 
+            // Intentar cargar credenciales desde la tabla dedicada store_credentials
+            let storeCreds = null;
+            try {
+              const credsRes = await fetch(`${SUPABASE_URL}/rest/v1/store_credentials?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+              });
+              if (credsRes.ok) {
+                const credsData = await credsRes.json();
+                if (credsData && credsData.length > 0) storeCreds = credsData[0];
+              }
+            } catch (e) {}
+
             // Sincronizar y proteger credenciales críticas contra sobreescrituras accidentales
-            const cloudName = dbCfg.cloudinary_name || dbCfg.cloudinary_cloud || 'deuog0r34';
-            const cloudPreset = dbCfg.cloudinary_preset || 'daletepido_preset';
+            const cloudName = storeCreds?.cloudinary_name || dbCfg.cloudinary_name || dbCfg.cloudinary_cloud || 'deuog0r34';
+            const cloudPreset = storeCreds?.cloudinary_preset || dbCfg.cloudinary_preset || 'daletepido_preset';
             localStorage.setItem('storeapp_cloudinary', JSON.stringify({ name: cloudName, preset: cloudPreset }));
 
-            const aiProvider = dbCfg.ai_provider || 'gemini';
+            const aiProvider = storeCreds?.ai_provider || dbCfg.ai_provider || 'gemini';
             localStorage.setItem('storeapp_ai_provider', aiProvider);
 
-            if (dbCfg.claude_key) localStorage.setItem('storeapp_claude_key', dbCfg.claude_key);
-            if (dbCfg.gemini_key) localStorage.setItem('storeapp_gemini_key', dbCfg.gemini_key);
+            const claudeKey = storeCreds?.claude_key || dbCfg.claude_key || '';
+            const geminiKey = storeCreds?.gemini_key || dbCfg.gemini_key || '';
+            if (claudeKey) localStorage.setItem('storeapp_claude_key', claudeKey);
+            if (geminiKey) localStorage.setItem('storeapp_gemini_key', geminiKey);
 
             window.STORE_CREDENTIALS = {
               cloudinary_name: cloudName,
               cloudinary_preset: cloudPreset,
               ai_provider: aiProvider,
-              claude_key: dbCfg.claude_key || localStorage.getItem('storeapp_claude_key') || '',
-              gemini_key: dbCfg.gemini_key || localStorage.getItem('storeapp_gemini_key') || '',
-              supabase_url: dbCfg.supabase_url || SUPABASE_URL,
-              supabase_key: dbCfg.supabase_key || SUPABASE_KEY
+              claude_key: claudeKey || localStorage.getItem('storeapp_claude_key') || '',
+              gemini_key: geminiKey || localStorage.getItem('storeapp_gemini_key') || '',
+              supabase_url: storeCreds?.supabase_url || dbCfg.supabase_url || SUPABASE_URL,
+              supabase_key: storeCreds?.supabase_key || dbCfg.supabase_key || SUPABASE_KEY
             };
             
             const planLevel = dbCfg.plan_level || 'starter';
@@ -6530,6 +6531,28 @@
             const res = await postToSupabase('company_settings', dataToSave);
             if (res && res.length > 0) id = res[0].id;
           }
+
+          // Sincronizar también a la tabla dedicada store_credentials si está disponible
+          const credsPayload = {
+            store_id: activeStore,
+            cloudinary_name: dataToSave.cloudinary_name,
+            cloudinary_preset: dataToSave.cloudinary_preset,
+            ai_provider: dataToSave.ai_provider,
+            claude_key: dataToSave.claude_key,
+            gemini_key: dataToSave.gemini_key,
+            supabase_url: dataToSave.supabase_url,
+            supabase_key: dataToSave.supabase_key
+          };
+          fetch(`${sbUrl}/rest/v1/store_credentials`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': sbKey,
+              'Authorization': `Bearer ${sbKey}`,
+              'Prefer': 'resolution=merge-duplicates'
+            },
+            body: JSON.stringify(credsPayload)
+          }).catch(() => {});
 
           // Sincronizar las FAQs a la nueva tabla dedicada
           const localPages = JSON.parse(localStorage.getItem(`storeapp_pages_${activeStore}`) || localStorage.getItem('storeapp_pages') || '{}');
