@@ -8,9 +8,23 @@
   "lang": "es",
   "dir": "ltr",
   "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui",
+    "window-controls-overlay"
+  ],
   "background_color": "#0A0A0C",
   "theme_color": "#0A0A0C",
   "orientation": "portrait-primary",
+  "categories": [
+    "business",
+    "shopping",
+    "productivity",
+    "utilities"
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "iarc_rating_id": "",
   "icons": [
     {
       "src": "/icon-192.png",
