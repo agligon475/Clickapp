@@ -11801,6 +11801,14 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         const session = JSON.parse(sessionRaw);
         if (session && session.store_id && session.token) {
           document.getElementById('modal-auth-overlay').style.display = 'none';
+          
+          // Ensure URL query param matches logged-in store_id
+          const urlParams = new URLSearchParams(window.location.search);
+          const currentUrlStore = urlParams.get('store');
+          if (currentUrlStore !== session.store_id) {
+            window.location.href = '/dashboard.html?store=' + encodeURIComponent(session.store_id);
+            return false;
+          }
           return true;
         }
       } catch(e) {}
@@ -11835,7 +11843,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
 
         const data = await res.json();
 
-        if (data.success && data.token) {
+        if (data.success && data.token && data.store_id) {
           const sessionData = {
             store_id: data.store_id,
             token: data.token,
@@ -11843,8 +11851,12 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
             timestamp: Date.now()
           };
           localStorage.setItem('daletepido_session', JSON.stringify(sessionData));
+          localStorage.setItem('storeapp_store_id', data.store_id);
+          localStorage.setItem('daletepido_store_id', data.store_id);
+          localStorage.setItem('store_id', data.store_id);
+
           document.getElementById('modal-auth-overlay').style.display = 'none';
-          window.location.reload();
+          window.location.href = '/dashboard.html?store=' + encodeURIComponent(data.store_id);
         } else {
           errorEl.innerText = data.error || 'Credenciales incorrectas';
           errorEl.style.display = 'block';
@@ -11861,7 +11873,10 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     function logoutDashboard() {
       if (confirm('¿Seguro que deseas cerrar sesión?')) {
         localStorage.removeItem('daletepido_session');
-        window.location.reload();
+        localStorage.removeItem('storeapp_store_id');
+        localStorage.removeItem('daletepido_store_id');
+        localStorage.removeItem('store_id');
+        window.location.href = '/dashboard.html';
       }
     }
 
