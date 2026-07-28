@@ -381,11 +381,56 @@
 
 <main class="container" role="main">
   <div class="card">
-    <!-- WIZARD FORM -->
-    <div id="form-container">
-      <header style="margin-bottom: 32px;">
-        <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" style="max-height: 44px; width: auto; margin-bottom: 16px; display: inline-block;" />
-        <h1 style="font-size: 24px; font-weight: 700; color: #fff;">Alta de Comercio</h1>
+    <div style="text-align: center; margin-bottom: 24px;">
+      <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" style="max-height: 44px; width: auto; margin-bottom: 12px; display: inline-block;" />
+    </div>
+
+    <!-- MODE TOGGLE TABS: LOGIN vs REGISTRO -->
+    <div style="display:flex; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:14px; padding:4px; margin-bottom:28px;">
+      <button id="tab-login-btn" type="button" onclick="switchAuthTab('login')" style="flex:1; padding:10px 16px; background:var(--primary); color:#fff; border:none; border-radius:10px; font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s;">
+        <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+      </button>
+      <button id="tab-register-btn" type="button" onclick="switchAuthTab('register')" style="flex:1; padding:10px 16px; background:transparent; color:var(--text-muted); border:none; border-radius:10px; font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s;">
+        <i class="bi bi-plus-circle"></i> Registrar Comercio
+      </button>
+    </div>
+
+    <!-- PANEL 1: LOGIN MODE -->
+    <div id="panel-login-mode" style="display: block;">
+      <header style="margin-bottom: 24px; text-align:center;">
+        <h1 style="font-size: 22px; font-weight: 700; color: #fff;">Acceso a tu Panel de Control</h1>
+        <p class="subtitle">Ingresá tus credenciales de comercio para acceder al Dashboard</p>
+      </header>
+
+      <form onsubmit="handleAuthLoginSubmit(event)" style="display:flex; flex-direction:column; gap:16px;">
+        <div class="form-group">
+          <label for="login-store-id">ID de Tienda o Correo Electrónico *</label>
+          <div class="input-wrapper">
+            <i class="bi bi-shop"></i>
+            <input type="text" id="login-store-id" required placeholder="Ej: cocostore o admin@mitienda.com" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="login-password">Contraseña *</label>
+          <div class="input-wrapper">
+            <i class="bi bi-key-fill"></i>
+            <input type="password" id="login-password" required placeholder="••••••••" />
+          </div>
+        </div>
+
+        <div id="login-error-msg" style="display:none; padding:12px; background:rgba(239, 68, 68, 0.15); border:1px solid var(--error); border-radius:10px; color:#ff9999; font-size:13px;"></div>
+
+        <button type="submit" id="login-submit-btn" class="btn btn-primary" style="width:100%; margin-top:8px; padding:14px; font-size:15px;">
+          <i class="bi bi-box-arrow-in-right"></i> Ingresar al Dashboard
+        </button>
+      </form>
+    </div>
+
+    <!-- PANEL 2: WIZARD REGISTRATION FORM -->
+    <div id="form-container" style="display: none;">
+      <header style="margin-bottom: 24px;">
+        <h1 style="font-size: 22px; font-weight: 700; color: #fff;">Alta de Comercio</h1>
         <p class="subtitle">Creá y registrá un nuevo comercio para tu plataforma multi-tienda</p>
       </header>
 
@@ -837,6 +882,86 @@
     btnNext.innerHTML = '<i class="bi bi-check-circle-fill"></i> Crear Comercio';
     currentStep = totalSteps;
   }
+
+  function switchAuthTab(mode) {
+    const loginPanel = document.getElementById('panel-login-mode');
+    const regPanel = document.getElementById('form-container');
+    const loginBtn = document.getElementById('tab-login-btn');
+    const regBtn = document.getElementById('tab-register-btn');
+
+    if (mode === 'login') {
+      loginPanel.style.display = 'block';
+      regPanel.style.display = 'none';
+      loginBtn.style.background = 'var(--primary)';
+      loginBtn.style.color = '#fff';
+      regBtn.style.background = 'transparent';
+      regBtn.style.color = 'var(--text-muted)';
+    } else {
+      loginPanel.style.display = 'none';
+      regPanel.style.display = 'block';
+      regBtn.style.background = 'var(--primary)';
+      regBtn.style.color = '#fff';
+      loginBtn.style.background = 'transparent';
+      loginBtn.style.color = 'var(--text-muted)';
+    }
+  }
+
+  async function handleAuthLoginSubmit(e) {
+    e.preventDefault();
+    const storeIdInput = document.getElementById('login-store-id').value.trim();
+    const passwordInput = document.getElementById('login-password').value.trim();
+    const errorMsg = document.getElementById('login-error-msg');
+    const submitBtn = document.getElementById('login-submit-btn');
+
+    if (!storeIdInput || !passwordInput) return;
+
+    errorMsg.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="loading-spinner"></span> Verificando...';
+
+    try {
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'login', store_id: storeIdInput, password: passwordInput })
+      });
+
+      const data = await res.json();
+
+      if (data.success && data.token && data.store_id) {
+        const sessionData = {
+          store_id: data.store_id,
+          token: data.token,
+          plan_level: data.plan_level || 'starter',
+          timestamp: Date.now()
+        };
+        localStorage.setItem('daletepido_session', JSON.stringify(sessionData));
+        localStorage.setItem('storeapp_store_id', data.store_id);
+        localStorage.setItem('daletepido_store_id', data.store_id);
+        localStorage.setItem('store_id', data.store_id);
+
+        window.location.href = '/dashboard.html?store=' + encodeURIComponent(data.store_id);
+      } else {
+        errorMsg.innerText = data.error || 'Credenciales de acceso incorrectas';
+        errorMsg.style.display = 'block';
+      }
+    } catch (err) {
+      errorMsg.innerText = 'Error al conectar con el servidor de autenticación';
+      errorMsg.style.display = 'block';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Ingresar al Dashboard';
+    }
+  }
+
+  window.addEventListener('load', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('action') === 'register') {
+      switchAuthTab('register');
+    } else {
+      switchAuthTab('login');
+    }
+  });
 </script>
 </body>
 </html>

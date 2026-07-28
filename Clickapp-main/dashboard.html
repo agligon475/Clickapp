@@ -2,6 +2,24 @@
 <html lang="es">
 
 <head>
+  <script>
+    (function() {
+      const sessionRaw = localStorage.getItem('daletepido_session');
+      let valid = false;
+      if (sessionRaw) {
+        try {
+          const session = JSON.parse(sessionRaw);
+          if (session && session.store_id && session.token) {
+            valid = true;
+          }
+        } catch(e) {}
+      }
+      if (!valid) {
+        document.documentElement.innerHTML = '<head><meta charset="UTF-8"><title>Redirigiendo a Login...</title></head><body style="background:#0A0A0C;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;">Redirigiendo al inicio de sesión...</body>';
+        window.location.replace('/alta-usuario.html?action=login');
+      }
+    })();
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Panel de Control</title>
