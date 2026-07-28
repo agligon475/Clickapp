@@ -1,8 +1,8 @@
 {
   "name": "Dale! Te Pido - Catálogo y Pedidos",
   "short_name": "DaleTePido",
-  "description": "Tu plataforma de pedidos y catálogo online por WhatsApp",
-  "start_url": "/",
+  "description": "Tu plataforma de gestión de pedidos y catálogo online por WhatsApp",
+  "start_url": "/dashboard.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
