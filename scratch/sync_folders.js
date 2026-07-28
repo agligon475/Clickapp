@@ -11,6 +11,8 @@ const filesToSync = [
   'landing.html',
   'ayuda.html',
   'vercel.json',
+  'main.py',
+  'requirements.txt',
   'api/image-search.js',
   'api/store.js',
   'api/debug.js',
