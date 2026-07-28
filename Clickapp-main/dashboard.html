@@ -5608,6 +5608,27 @@
             cfg = { ...cfg, ...remoteStoreCfg };
             localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
             localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
+
+            // Sincronizar y proteger credenciales críticas contra sobreescrituras accidentales
+            const cloudName = dbCfg.cloudinary_name || dbCfg.cloudinary_cloud || 'deuog0r34';
+            const cloudPreset = dbCfg.cloudinary_preset || 'daletepido_preset';
+            localStorage.setItem('storeapp_cloudinary', JSON.stringify({ name: cloudName, preset: cloudPreset }));
+
+            const aiProvider = dbCfg.ai_provider || 'gemini';
+            localStorage.setItem('storeapp_ai_provider', aiProvider);
+
+            if (dbCfg.claude_key) localStorage.setItem('storeapp_claude_key', dbCfg.claude_key);
+            if (dbCfg.gemini_key) localStorage.setItem('storeapp_gemini_key', dbCfg.gemini_key);
+
+            window.STORE_CREDENTIALS = {
+              cloudinary_name: cloudName,
+              cloudinary_preset: cloudPreset,
+              ai_provider: aiProvider,
+              claude_key: dbCfg.claude_key || localStorage.getItem('storeapp_claude_key') || '',
+              gemini_key: dbCfg.gemini_key || localStorage.getItem('storeapp_gemini_key') || '',
+              supabase_url: dbCfg.supabase_url || SUPABASE_URL,
+              supabase_key: dbCfg.supabase_key || SUPABASE_KEY
+            };
             
             const planLevel = dbCfg.plan_level || 'starter';
             sessionStorage.setItem('storeapp_plan_level_' + STORE_ID, planLevel);
@@ -6492,6 +6513,15 @@
           dataToSave.banner2_cat = dbRow?.banner2_cat || '';
           dataToSave.banner2_bg = parsedEmail.banner2_bg || '#1C1C1E';
           dataToSave.banner2_active = parsedEmail.banner2_active !== false;
+
+          // Preservar y asegurar credenciales críticas de Cloudinary, IA y DB
+          dataToSave.cloudinary_name = dbRow?.cloudinary_name || window.STORE_CREDENTIALS?.cloudinary_name || 'deuog0r34';
+          dataToSave.cloudinary_preset = dbRow?.cloudinary_preset || window.STORE_CREDENTIALS?.cloudinary_preset || 'daletepido_preset';
+          dataToSave.ai_provider = dbRow?.ai_provider || window.STORE_CREDENTIALS?.ai_provider || 'gemini';
+          dataToSave.claude_key = dbRow?.claude_key || window.STORE_CREDENTIALS?.claude_key || '';
+          dataToSave.gemini_key = dbRow?.gemini_key || window.STORE_CREDENTIALS?.gemini_key || '';
+          dataToSave.supabase_url = dbRow?.supabase_url || window.STORE_CREDENTIALS?.supabase_url || sbUrl;
+          dataToSave.supabase_key = dbRow?.supabase_key || window.STORE_CREDENTIALS?.supabase_key || sbKey;
 
           if (id) {
             await updateInSupabase('company_settings', id, dataToSave);
@@ -9733,12 +9763,14 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     function getCloudinaryCfg() {
       try {
         const cloud = JSON.parse(localStorage.getItem('storeapp_cloudinary') || '{}');
+        const name = (cloud.name || window.STORE_CREDENTIALS?.cloudinary_name || 'deuog0r34').trim();
+        const preset = (cloud.preset || window.STORE_CREDENTIALS?.cloudinary_preset || 'daletepido_preset').trim();
         return {
-          name: (cloud.name || 'deuog0r34').trim(),
-          preset: (cloud.preset || 'ml_default').trim()
+          name: name || 'deuog0r34',
+          preset: preset || 'daletepido_preset'
         };
       } catch (e) {
-        return { name: 'deuog0r34', preset: 'ml_default' };
+        return { name: 'deuog0r34', preset: 'daletepido_preset' };
       }
     }
 
