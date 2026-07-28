@@ -24,7 +24,96 @@
   ],
   "prefer_related_applications": false,
   "related_applications": [],
-  "iarc_rating_id": "",
+  "iarc_rating_id": "00000000-0000-0000-0000-000000000000",
+  "launch_handler": {
+    "client_mode": [
+      "navigate-existing",
+      "auto"
+    ]
+  },
+  "handle_links": "preferred",
+  "scope_extensions": [
+    {
+      "origin": "*.daletepido.com.ar"
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+daletepido",
+      "url": "/dashboard.html?store=%s"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Pedidos",
+      "short_name": "Pedidos",
+      "description": "Ver pedidos recibidos",
+      "url": "/dashboard.html?view=orders",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Productos",
+      "short_name": "Productos",
+      "description": "Gestionar productos y precios",
+      "url": "/dashboard.html?view=products",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "/dashboard.html",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "file_handlers": [
+    {
+      "action": "/dashboard.html",
+      "accept": {
+        "text/csv": [
+          ".csv"
+        ],
+        "application/json": [
+          ".json"
+        ]
+      }
+    }
+  ],
+  "widgets": [
+    {
+      "name": "DaleTePido Resumen",
+      "short_name": "Resumen",
+      "description": "Resumen de ventas y pedidos activos",
+      "tag": "daletepido-widget",
+      "template": "widget-template",
+      "ms_ac_template": "widget.json",
+      "data": "widget-data.json",
+      "type": "text/html",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
   "icons": [
     {
       "src": "/icon-192.png",
