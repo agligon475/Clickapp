@@ -186,6 +186,100 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true, store_id, message: approve ? 'Upgrade aprobado' : 'Solicitud archivada' });
     }
 
+    // 5. Get Global Advanced Credentials (DB, AI, Cloudinary)
+    if (action === 'get_global_credentials') {
+      let creds = {
+        supabase_url: SUPABASE_URL,
+        supabase_key: SUPABASE_KEY,
+        cloudinary_name: 'deuog0r34',
+        cloudinary_preset: 'daletepido_preset',
+        ai_provider: 'gemini',
+        claude_key: '',
+        gemini_key: '',
+        claude_model: 'claude-haiku-4-5-20251001',
+        gemini_model: 'gemini-2.5-flash'
+      };
+
+      try {
+        const fetchRes = await fetch(`${SUPABASE_URL}/rest/v1/store_credentials?store_id=eq.global`, {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`
+          }
+        });
+        if (fetchRes.ok) {
+          const data = await fetchRes.json();
+          if (data && data.length > 0) {
+            creds = { ...creds, ...data[0] };
+          }
+        }
+      } catch (e) {
+        console.warn('Could not read global store_credentials:', e.message);
+      }
+
+      return res.status(200).json({ success: true, credentials: creds });
+    }
+
+    // 6. Save Global Advanced Credentials (DB, AI, Cloudinary)
+    if (action === 'save_global_credentials') {
+      const {
+        supabase_url,
+        supabase_key,
+        cloudinary_name,
+        cloudinary_preset,
+        ai_provider,
+        claude_key,
+        gemini_key,
+        claude_model,
+        gemini_model
+      } = req.body;
+
+      const payload = {
+        store_id: 'global',
+        supabase_url: supabase_url || SUPABASE_URL,
+        supabase_key: supabase_key || SUPABASE_KEY,
+        cloudinary_name: cloudinary_name || 'deuog0r34',
+        cloudinary_preset: cloudinary_preset || 'daletepido_preset',
+        ai_provider: ai_provider || 'gemini',
+        claude_key: claude_key || '',
+        gemini_key: gemini_key || '',
+        updated_at: new Date().toISOString()
+      };
+
+      try {
+        const upsertRes = await fetch(`${SUPABASE_URL}/rest/v1/store_credentials`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Prefer': 'resolution=merge-duplicates'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!upsertRes.ok) {
+          await fetch(`${SUPABASE_URL}/rest/v1/store_credentials?store_id=eq.global`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${SUPABASE_KEY}`
+            },
+            body: JSON.stringify(payload)
+          });
+        }
+      } catch (e) {
+        console.warn('Global credentials saving warning:', e.message);
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: 'Configuración avanzada global guardada y aplicada exitosamente',
+        credentials: payload
+      });
+    }
+
     return res.status(400).json({ success: false, error: 'Acción no válida' });
 
   } catch (e) {
