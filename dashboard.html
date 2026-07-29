@@ -12435,118 +12435,91 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       }
     }
 
-    let currentOpenMobileSubmenu = null;
+    let isMobileMenuOpen = false;
 
-    const MOBILE_SUBMENUS = {
-      gestion: {
-        title: 'Gestión',
-        items: [
-          { icon: 'bi-receipt', label: 'Pedidos', view: 'orders' },
-          { icon: 'bi-truck', label: 'Pickup / Repartidores', view: 'pickups' }
-        ]
-      },
-      inventario: {
-        title: 'Inventario',
-        items: [
-          { icon: 'bi-pencil-square', label: 'ABM / Productos', view: 'abm' },
-          { icon: 'bi-tags', label: 'Categorías', view: 'categories' }
-        ]
-      },
-      personalizacion: {
-        title: 'Personalización',
-        items: [
-          { icon: 'bi-droplet', label: 'Marca', view: 'marca' },
-          { icon: 'bi-shop', label: 'Rubro y plantilla', view: 'rubro' },
-          { icon: 'bi-image', label: 'Diseño de tienda', view: 'design-catalogo' },
-          { icon: 'bi-link-45deg', label: 'Enlaces', view: 'enlaces' },
-          { icon: 'bi-file-text', label: 'Páginas internas', view: 'pages-internas' }
-        ]
-      },
-      ajustes: {
-        title: 'Ajustes',
-        items: [
-          { icon: 'bi-wallet2', label: 'Mi cuenta y plan', view: 'account-plan' },
-          { icon: 'bi-sliders', label: 'Configuración Básica', view: 'config-basica' },
-          { icon: 'bi-shield-lock', label: 'Configuración Avanzada', view: 'config-avanzada' }
-        ]
-      },
-      tienda: {
-        title: 'Opciones de Tienda',
-        items: [
-          { icon: 'bi-box-arrow-up-right', label: 'Ver tienda', action: 'openStore()' },
-          { icon: 'bi-sun', label: 'Modo Light / Dark', action: 'toggleTheme()' },
-          { icon: 'bi-headset', label: 'Soporte', action: 'openTicketModal()' },
-          { icon: 'bi-box-arrow-right', label: 'Cerrar Sesión', action: 'handleLogout()' }
-        ]
-      }
-    };
-
-    function toggleMobileSubmenu(key, btnEl) {
+    function toggleMobileMenuSheet(btnEl) {
       const popup = document.getElementById('mobile-submenu-popup');
       const overlay = document.getElementById('mobile-bottom-nav-overlay');
       const content = document.getElementById('mobile-submenu-content');
 
-      if (currentOpenMobileSubmenu === key) {
-        closeMobileSubmenu();
+      if (isMobileMenuOpen) {
+        closeMobileMenuSheet();
         return;
       }
 
-      const menuData = MOBILE_SUBMENUS[key];
-      if (!menuData) return;
+      let html = `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding: 8px 12px 12px; border-bottom: 1px solid var(--zinc); margin-bottom: 10px;">
+          <span style="font-weight:700; font-size:14px; color:var(--white);">Panel de Control</span>
+          <button onclick="closeMobileMenuSheet()" style="background:transparent; border:none; color:var(--silver); font-size:18px; cursor:pointer;"><i class="bi bi-x-lg"></i></button>
+        </div>
 
-      let html = `<div class="mobile-submenu-title">${menuData.title}</div>`;
-      html += menuData.items.map(item => {
-        if (item.view) {
-          return `<button class="mobile-submenu-item" onclick="goToMobileView('${item.view}')">
-            <i class="bi ${item.icon}"></i> <span>${item.label}</span>
-          </button>`;
-        } else if (item.action) {
-          return `<button class="mobile-submenu-item" onclick="closeMobileSubmenu(); ${item.action}">
-            <i class="bi ${item.icon}"></i> <span>${item.label}</span>
-          </button>`;
-        }
-        return '';
-      }).join('');
+        <div style="font-size:10px; font-weight:700; color:var(--silver); text-transform:uppercase; letter-spacing:0.08em; padding:4px 12px; margin-top:4px;">NEGOCIO</div>
+        <button class="mobile-submenu-item" onclick="goToMobileView('reports')"><i class="bi bi-bar-chart-line"></i><span>Analítica y Reportes</span></button>
+
+        <div style="font-size:10px; font-weight:700; color:var(--silver); text-transform:uppercase; letter-spacing:0.08em; padding:10px 12px 4px; border-top:1px solid var(--zinc); margin-top:6px;">GESTIÓN</div>
+        <button class="mobile-submenu-item" onclick="goToMobileView('orders')"><i class="bi bi-receipt"></i><span>Pedidos</span></button>
+        <button class="mobile-submenu-item" onclick="goToMobileView('pickups')"><i class="bi bi-truck"></i><span>Pickup / Repartidores</span></button>
+
+        <div style="font-size:10px; font-weight:700; color:var(--silver); text-transform:uppercase; letter-spacing:0.08em; padding:10px 12px 4px; border-top:1px solid var(--zinc); margin-top:6px;">INVENTARIO</div>
+        <button class="mobile-submenu-item" onclick="goToMobileView('abm')"><i class="bi bi-pencil-square"></i><span>ABM / Productos</span></button>
+        <button class="mobile-submenu-item" onclick="goToMobileView('categories')"><i class="bi bi-tags"></i><span>Categorías</span></button>
+
+        <div style="font-size:10px; font-weight:700; color:var(--silver); text-transform:uppercase; letter-spacing:0.08em; padding:10px 12px 4px; border-top:1px solid var(--zinc); margin-top:6px;">PERSONALIZACIÓN</div>
+        <button class="mobile-submenu-item" onclick="goToMobileView('marca')"><i class="bi bi-droplet"></i><span>Marca</span></button>
+        <button class="mobile-submenu-item" onclick="goToMobileView('rubro')"><i class="bi bi-shop"></i><span>Rubro y Plantilla</span></button>
+        <button class="mobile-submenu-item" onclick="goToMobileView('design-catalogo')"><i class="bi bi-image"></i><span>Diseño de Tienda</span></button>
+        <button class="mobile-submenu-item" onclick="goToMobileView('enlaces')"><i class="bi bi-link-45deg"></i><span>Enlaces</span></button>
+        <button class="mobile-submenu-item" onclick="goToMobileView('pages-internas')"><i class="bi bi-file-text"></i><span>Páginas Internas</span></button>
+
+        <div style="font-size:10px; font-weight:700; color:var(--silver); text-transform:uppercase; letter-spacing:0.08em; padding:10px 12px 4px; border-top:1px solid var(--zinc); margin-top:6px;">AJUSTES</div>
+        <button class="mobile-submenu-item" onclick="goToMobileView('account-plan')"><i class="bi bi-wallet2"></i><span>Mi Cuenta y Plan</span></button>
+        <button class="mobile-submenu-item" onclick="goToMobileView('config-basica')"><i class="bi bi-sliders"></i><span>Configuración Básica</span></button>
+        <button class="mobile-submenu-item" onclick="goToMobileView('config-avanzada')"><i class="bi bi-shield-lock"></i><span>Configuración Avanzada</span></button>
+
+        <div style="font-size:10px; font-weight:700; color:var(--silver); text-transform:uppercase; letter-spacing:0.08em; padding:10px 12px 4px; border-top:1px solid var(--zinc); margin-top:6px;">OPCIONES DE TIENDA</div>
+        <button class="mobile-submenu-item" onclick="closeMobileMenuSheet(); openStore();"><i class="bi bi-box-arrow-up-right"></i><span>Ver tienda</span></button>
+        <button class="mobile-submenu-item" onclick="closeMobileMenuSheet(); toggleTheme();"><i class="bi bi-sun"></i><span>Modo Light / Dark</span></button>
+        <button class="mobile-submenu-item" onclick="closeMobileMenuSheet(); openTicketModal();"><i class="bi bi-headset"></i><span>Soporte</span></button>
+        <button class="mobile-submenu-item" onclick="closeMobileMenuSheet(); handleLogout();" style="color:var(--red);"><i class="bi bi-box-arrow-right" style="color:var(--red);"></i><span>Cerrar Sesión</span></button>
+      `;
 
       content.innerHTML = html;
       popup.style.display = 'block';
       overlay.style.display = 'block';
-      currentOpenMobileSubmenu = key;
+      isMobileMenuOpen = true;
 
       document.querySelectorAll('.mobile-nav-item').forEach(b => b.classList.remove('active'));
-      if (btnEl) btnEl.classList.add('active');
+      const menuBtn = document.getElementById('mnav-menu');
+      if (menuBtn) menuBtn.classList.add('active');
     }
 
-    function closeMobileSubmenu() {
+    function closeMobileMenuSheet() {
       const popup = document.getElementById('mobile-submenu-popup');
       const overlay = document.getElementById('mobile-bottom-nav-overlay');
       if (popup) popup.style.display = 'none';
       if (overlay) overlay.style.display = 'none';
-      currentOpenMobileSubmenu = null;
+      isMobileMenuOpen = false;
     }
 
     function goToMobileView(viewName) {
-      closeMobileSubmenu();
+      closeMobileMenuSheet();
       goToView(viewName);
       
       document.querySelectorAll('.mobile-nav-item').forEach(b => b.classList.remove('active'));
       
       if (viewName === 'dashboard') {
         document.getElementById('mnav-dashboard')?.classList.add('active');
-      } else if (viewName === 'reports') {
-        document.getElementById('mnav-reports')?.classList.add('active');
-      } else if (['orders', 'pickups'].includes(viewName)) {
-        document.getElementById('mnav-gestion')?.classList.add('active');
-      } else if (['abm', 'categories'].includes(viewName)) {
-        document.getElementById('mnav-inventario')?.classList.add('active');
-      } else if (['marca', 'rubro', 'design-catalogo', 'enlaces', 'pages-internas'].includes(viewName)) {
-        document.getElementById('mnav-personalizacion')?.classList.add('active');
-      } else if (['account-plan', 'config-basica', 'config-avanzada'].includes(viewName)) {
-        document.getElementById('mnav-ajustes')?.classList.add('active');
+      } else if (viewName === 'orders') {
+        document.getElementById('mnav-orders')?.classList.add('active');
+      } else if (viewName === 'abm' || viewName === 'products') {
+        document.getElementById('mnav-abm')?.classList.add('active');
+      } else if (viewName === 'design-catalogo') {
+        document.getElementById('mnav-design')?.classList.add('active');
       }
     }
-    window.toggleMobileSubmenu = toggleMobileSubmenu;
-    window.closeMobileSubmenu = closeMobileSubmenu;
+
+    window.toggleMobileMenuSheet = toggleMobileMenuSheet;
+    window.closeMobileMenuSheet = closeMobileMenuSheet;
     window.goToMobileView = goToMobileView;
 
     window.addEventListener('load', () => {
@@ -12555,9 +12528,9 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
   </script>
 
   <!-- ══ MOBILE BOTTOM NAVIGATION BAR ══ -->
-  <div id="mobile-bottom-nav-overlay" class="mobile-nav-overlay" onclick="closeMobileSubmenu()"></div>
+  <div id="mobile-bottom-nav-overlay" class="mobile-nav-overlay" onclick="closeMobileMenuSheet()"></div>
 
-  <div id="mobile-submenu-popup" class="mobile-submenu-popup">
+  <div id="mobile-submenu-popup" class="mobile-submenu-popup" style="max-height: 75vh; overflow-y: auto;">
     <div id="mobile-submenu-content" class="mobile-submenu-content"></div>
   </div>
 
@@ -12567,34 +12540,24 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       <span>Inicio</span>
     </button>
 
-    <button class="mobile-nav-item" id="mnav-reports" onclick="goToMobileView('reports')">
-      <i class="bi bi-bar-chart-line"></i>
-      <span>Negocio</span>
+    <button class="mobile-nav-item" id="mnav-orders" onclick="goToMobileView('orders')">
+      <i class="bi bi-receipt"></i>
+      <span>Pedidos</span>
     </button>
 
-    <button class="mobile-nav-item" id="mnav-gestion" onclick="toggleMobileSubmenu('gestion', this)">
-      <i class="bi bi-clipboard-data"></i>
-      <span>Gestión</span>
-    </button>
-
-    <button class="mobile-nav-item" id="mnav-inventario" onclick="toggleMobileSubmenu('inventario', this)">
+    <button class="mobile-nav-item" id="mnav-abm" onclick="goToMobileView('abm')">
       <i class="bi bi-box-seam"></i>
-      <span>Inventario</span>
+      <span>Productos</span>
     </button>
 
-    <button class="mobile-nav-item" id="mnav-personalizacion" onclick="toggleMobileSubmenu('personalizacion', this)">
+    <button class="mobile-nav-item" id="mnav-design" onclick="goToMobileView('design-catalogo')">
       <i class="bi bi-palette"></i>
-      <span>Personaliz.</span>
+      <span>Diseño</span>
     </button>
 
-    <button class="mobile-nav-item" id="mnav-ajustes" onclick="toggleMobileSubmenu('ajustes', this)">
-      <i class="bi bi-gear"></i>
-      <span>Ajustes</span>
-    </button>
-
-    <button class="mobile-nav-item" id="mnav-tienda" onclick="toggleMobileSubmenu('tienda', this)">
-      <i class="bi bi-shop-window"></i>
-      <span>Tienda</span>
+    <button class="mobile-nav-item" id="mnav-menu" onclick="toggleMobileMenuSheet(this)">
+      <i class="bi bi-list"></i>
+      <span>Menú</span>
     </button>
   </nav>
 
