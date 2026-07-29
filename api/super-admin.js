@@ -77,40 +77,17 @@ export default async function handler(req, res) {
       });
     }
 
-    // 2. Toggle Store Status (ACTIVE vs SUSPENDED_PAYMENT / DISABLED)
-    if (action === 'update_status') {
-      const { store_id, status } = req.body;
-      if (!store_id || !status) {
-        return res.status(400).json({ success: false, error: 'Falta store_id o status' });
-      }
-
-      const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(store_id)}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`
-        },
-        body: JSON.stringify({ status })
-      });
-
-      if (!patchRes.ok) {
-        throw new Error(`HTTP Error ${patchRes.status}: ${await patchRes.text()}`);
-      }
-
-      return res.status(200).json({ success: true, store_id, status, message: 'Estado de la tienda actualizado' });
-    }
-
-    // 3. Update Membership Plan & Payment Status
-    if (action === 'update_membership') {
-      const { store_id, plan_level, payment_status, upgrade_requested } = req.body;
+    // 2. Update Store Status, Membership, and Payment Details
+    if (action === 'update_status' || action === 'update_membership' || action === 'update_store') {
+      const { store_id, status, plan_level, payment_status, upgrade_requested } = req.body;
       if (!store_id) {
         return res.status(400).json({ success: false, error: 'Falta store_id' });
       }
 
       const payload = {};
-      if (plan_level) payload.plan_level = plan_level;
-      if (payment_status) payload.payment_status = payment_status;
+      if (status !== undefined) payload.status = status;
+      if (plan_level !== undefined) payload.plan_level = plan_level;
+      if (payment_status !== undefined) payload.payment_status = payment_status;
       if (upgrade_requested !== undefined) payload.upgrade_requested = upgrade_requested;
 
       const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(store_id)}`, {
@@ -127,7 +104,7 @@ export default async function handler(req, res) {
         throw new Error(`HTTP Error ${patchRes.status}: ${await patchRes.text()}`);
       }
 
-      return res.status(200).json({ success: true, store_id, payload, message: 'Membresía actualizada' });
+      return res.status(200).json({ success: true, store_id, payload, message: 'Datos de la tienda actualizados exitosamente' });
     }
 
     // 4. Resolve Upgrade Request (Approve or Dismiss)

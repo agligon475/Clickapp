@@ -1295,7 +1295,40 @@ function renderSuspendedStoreScreen(storeName) {
 /* ═══════════════════════════════════════════ LOAD */
 async function loadSheet() {
   try {
-    // Cargar productos desde Supabase
+    // 1. Cargar configuración primero para verificar estado de suspensión
+    const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
+    });
+
+    if (configRes.ok) {
+      const configData = await configRes.json();
+      if (configData && configData.length > 0) {
+        const cfg = configData[0];
+
+        // Verificar si la tienda se encuentra suspendida por el Super Admin
+        if (cfg.status === 'SUSPENDED_PAYMENT' || cfg.status === 'DISABLED') {
+          renderSuspendedStoreScreen(cfg.business_name || cfg.store_id);
+          return;
+        }
+
+        if (cfg.nosotros) storeNosotros = cfg.nosotros;
+
+        // --- OVERRIDE GLOBAL CFG WITH SUPABASE CONFIG ---
+        if (cfg.business_name) CFG.name = cfg.business_name;
+        if (cfg.tagline) CFG.tagline = cfg.tagline;
+        if (cfg.wapp) CFG.wapp = cfg.wapp;
+        if (cfg.rubro) CFG.rubro = cfg.rubro;
+        if (cfg.direccion) CFG.direccion = cfg.direccion;
+        if (cfg.horario) CFG.horario = cfg.horario;
+        if (cfg.primary_color) CFG.color = cfg.primary_color;
+        if (cfg.logo_url) CFG.logo = cfg.logo_url;
+      }
+    }
+
+    // 2. Cargar productos desde Supabase
     const res = await fetch(`${SUPABASE_URL}/rest/v1/products?oculto=eq.false&store_id=eq.${encodeURIComponent(STORE_ID)}`, {
       headers: {
         'apikey': SUPABASE_KEY,
@@ -1305,14 +1338,6 @@ async function loadSheet() {
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const supabaseProducts = await res.json();
     if (!Array.isArray(supabaseProducts)) throw new Error('Respuesta catálogo no es lista');
-
-    // Cargar configuración (banners, nosotros) desde Supabase
-    const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`
-      }
-    });
 
     // Cargar FAQs desde Supabase
     try {
