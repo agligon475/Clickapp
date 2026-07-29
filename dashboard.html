@@ -915,10 +915,8 @@
 
     /* DESIGN PANEL */
     .design-wrap {
-      display: grid;
-      grid-template-columns: 1fr 30%;
-      gap: 16px;
-      align-items: start;
+      display: block;
+      width: 100%;
     }
 
     @media(max-width:900px) {
@@ -1781,7 +1779,9 @@
     }
 
     .config-section-title,
-    .view#view-design .card-title {
+    .card-title,
+    .view#view-design .card-title,
+    .view#view-design-catalogo .card-title {
       font-size: 12px;
       font-weight: 700;
       color: var(--silver);
@@ -1798,12 +1798,16 @@
     }
 
     .config-section-title:hover,
-    .view#view-design .card-title:hover {
+    .card-title:hover,
+    .view#view-design .card-title:hover,
+    .view#view-design-catalogo .card-title:hover {
       background: rgba(255, 255, 255, 0.03);
     }
 
     .config-section-title::after,
-    .view#view-design .card-title::after {
+    .card-title::after,
+    .view#view-design .card-title::after,
+    .view#view-design-catalogo .card-title::after {
       content: '\F282';
       font-family: 'bootstrap-icons';
       margin-left: auto;
@@ -1812,7 +1816,10 @@
     }
 
     .config-section.collapsed .config-section-title::after,
-    .view#view-design .card.collapsed .card-title::after {
+    .card.collapsed .card-title::after,
+    .config-section.collapsed .card-title::after,
+    .view#view-design .card.collapsed .card-title::after,
+    .view#view-design-catalogo .card.collapsed .card-title::after {
       transform: rotate(-90deg);
     }
 
@@ -1823,8 +1830,11 @@
     }
 
     .config-section.collapsed .config-section-content,
-    .view#view-design .card.collapsed .card-content {
-      display: none;
+    .card.collapsed .card-content,
+    .config-section.collapsed .card-content,
+    .view#view-design .card.collapsed .card-content,
+    .view#view-design-catalogo .card.collapsed .card-content {
+      display: none !important;
     }
 
     .config-section-title i {
@@ -3442,162 +3452,9 @@
               <i class="bi bi-download"></i> Exportar config
             </button>
           </div>
-        </div>
-
-        <!-- RIGHT: live preview (Dynamic shared container) -->
-        <div class="design-preview-wrap">
-          <div class="preview-topbar">
-            <span
-              style="font-size:11px;font-weight:600;color:var(--silver);text-transform:uppercase;letter-spacing:.06em;">
-              <i class="bi bi-eye"></i> Vista previa en tiempo real
-            </span>
-            <div style="display:flex;gap:6px;margin-left:auto;">
-              <button class="prev-size-btn active" onclick="setPreviewSize(this,'desktop')"><i
-                  class="bi bi-laptop"></i></button>
-              <button class="prev-size-btn" onclick="setPreviewSize(this,'mobile')"><i class="bi bi-phone"></i></button>
-            </div>
-          </div>
-          <div class="preview-frame-wrap" id="preview-wrap">
-            <div class="preview-frame" id="preview-frame">
-              <div id="prev-store"
-                style="font-family:'Barlow Condensed',sans-serif;font-size:11px;overflow:hidden;border-radius:8px;min-height:500px;transition:background .3s;">
-                <!-- prev topbar -->
-                <div id="prev-nav"
-                  style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);">
-                  <div style="position:relative;display:inline-flex;">
-                    <div id="prev-icon"
-                      style="width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;background:#D72638;">
-                      🔧</div>
-                    <div class="prev-spotlight-label" id="spl-nav-icon">Ícono nav</div>
-                  </div>
-                  <span id="prev-name" style="font-weight:800;font-size:14px;color:#F5F5F0;">FerreApp</span>
-                  <div style="position:relative;margin-left:auto;display:inline-flex;">
-                    <div
-                      style="display:flex;align-items:center;gap:6px;background:#D72638;border-radius:5px;padding:3px 8px;color:#fff;font-size:10px;font-weight:600;"
-                      id="prev-cart-btn">
-                      <i class="bi bi-bag"></i> 0
-                    </div>
-                    <div class="prev-spotlight-label" id="spl-cart">Carrito</div>
-                  </div>
-                </div>
-
-                <!-- prev hero -->
-                <div id="prev-hero"
-                  style="padding:16px 14px 12px;position:relative;overflow:hidden;min-height:110px;display:flex;align-items:center;">
-                  <div id="prev-hero-img"
-                    style="position:absolute;inset:0;background-size:cover;background-position:center;"></div>
-                  <div id="prev-hero-overlay" style="position:absolute;inset:0;background:rgba(0,0,0,.48);"></div>
-                  <div id="prev-hero-stripes"
-                    style="position:absolute;inset:0;background:repeating-linear-gradient(-55deg,transparent,transparent 10px,rgba(255,255,255,.02) 10px,rgba(255,255,255,.02) 11px);">
-                  </div>
-
-                  <div style="position:relative;z-index:2;width:100%;">
-                    <div style="position:relative;display:inline-block;max-width:100%;">
-                      <h1 id="prev-h1"
-                        style="font-size:24px;font-weight:900;text-transform:uppercase;line-height:1;margin:0;color:#fff;">
-                        Tu ferretería</h1>
-                      <h2 id="prev-h2"
-                        style="font-size:24px;font-weight:900;text-transform:uppercase;line-height:1;margin:0 0 6px 0;color:#D72638;">
-                        sin demoras.</h2>
-                      <div class="prev-spotlight-label" id="spl-h2">Título acento</div>
-                    </div>
-                    <p id="prev-desc"
-                      style="font-size:11px;margin:0 0 10px 0;color:rgba(255,255,255,.8);line-height:1.3;max-width:180px;">
-                      Elegí tus productos, armá tu pedido y coordiná por WhatsApp.</p>
-
-                    <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                      <span id="prev-pill1"
-                        style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:9px;background:#D72638;color:#fff;font-weight:700;position:relative;">
-                        <i class="bi bi-whatsapp"></i> WhatsApp
-                        <div class="prev-spotlight-label" id="spl-pill1">Pill</div>
-                      </span>
-                      <span id="prev-pill2"
-                        style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:9px;background:#D72638;color:#fff;font-weight:700;position:relative;">
-                        <i class="bi bi-wallet2"></i> Pagos
-                        <div class="prev-spotlight-label" id="spl-pill2">Pill</div>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- prev cats -->
-                <div
-                  style="padding:10px 14px 6px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;gap:6px;overflow-x:auto;">
-                  <div id="prev-cat-all"
-                    style="padding:4px 10px;border-radius:15px;background:#D72638;color:#fff;font-weight:700;font-size:10px;position:relative;white-space:nowrap;">
-                    Todos
-                    <div class="prev-spotlight-label" id="spl-cat-active">Categoría activa</div>
-                  </div>
-                  <div
-                    style="padding:4px 10px;border-radius:15px;background:rgba(255,255,255,.05);color:#8A8A90;font-size:10px;white-space:nowrap;">
-                    Herramientas</div>
-                  <div
-                    style="padding:4px 10px;border-radius:15px;background:rgba(255,255,255,.05);color:#8A8A90;font-size:10px;white-space:nowrap;">
-                    Bulonería</div>
-                </div>
-
-                <!-- prev grid -->
-                <div style="padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                  <div id="prev-card-1"
-                    style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:8px;position:relative;">
-                    <div
-                      style="height:60px;border-radius:5px;background:#1C1C1E;margin-bottom:6px;display:flex;align-items:center;justify-content:center;font-size:18px;">
-                      🔨</div>
-                    <div style="font-weight:700;font-size:11px;color:#F5F5F0;line-height:1.2;">Martillo Galponero</div>
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;position:relative;">
-                      <div class="prev-cat-label"
-                        style="font-size:8px;font-weight:700;color:#D72638;text-transform:uppercase;letter-spacing:.05em;">
-                        Herramientas</div>
-                      <div class="prev-spotlight-label" id="spl-cat-label" style="font-size:6px;">Etiqueta categoría</div>
-                    </div>
-                    <div style="font-weight:800;font-size:12px;color:#F5F5F0;margin-top:4px;">$12.500</div>
-                    <div class="prev-add-btn"
-                      style="margin-top:6px;background:none;border:1px solid #D72638;color:#D72638;border-radius:5px;padding:4px;text-align:center;font-size:9px;font-weight:700;cursor:pointer;position:relative;">
-                      + AGREGAR
-                      <div class="prev-spotlight-label" id="spl-add-btn">Botón agregar</div>
-                    </div>
-                  </div>
-
-                  <div id="prev-card-2"
-                    style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:8px;position:relative;">
-                    <div
-                      style="height:60px;border-radius:5px;background:#1C1C1E;margin-bottom:6px;display:flex;align-items:center;justify-content:center;font-size:18px;">
-                      🔩</div>
-                    <div style="font-weight:700;font-size:11px;color:#F5F5F0;line-height:1.2;">Tornillos Parker x100</div>
-                    <div style="font-size:8px;font-weight:700;color:#D72638;text-transform:uppercase;margin-top:6px;">
-                      Bulonería</div>
-                    <div style="font-weight:800;font-size:12px;color:#F5F5F0;margin-top:4px;">$3.800</div>
-                    <div class="prev-add-btn"
-                      style="margin-top:6px;background:none;border:1px solid #D72638;color:#D72638;border-radius:5px;padding:4px;text-align:center;font-size:9px;font-weight:700;">
-                      + AGREGAR
-                    </div>
-                  </div>
-                </div>
-
-                <!-- prev footer -->
-                <div id="prev-footer"
-                  style="padding:14px;background:rgba(0,0,0,.4);border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;justify-content:space-between;margin-top:20px;">
-                  <span id="prev-footer-name" style="font-size:8px;font-weight:700;color:#8A8A90;">© FerreApp</span>
-                  <div style="display:flex;gap:6px;align-items:center;">
-                    <div style="position:relative;display:inline-flex;">
-                      <div id="prev-wapp-btn"
-                        style="width:18px;height:18px;border-radius:50%;background:#D72638;display:flex;align-items:center;justify-content:center;">
-                        <i class="bi bi-whatsapp" style="font-size:8px;color:#fff;"></i>
-                      </div>
-                      <div class="prev-spotlight-label" id="spl-footer">WhatsApp</div>
-                    </div>
-                    <div
-                      style="width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;">
-                      <i class="bi bi-instagram" style="font-size:8px;color:#8A8A90;"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        </div><!-- /design-controls -->
+      </div><!-- /design-wrap -->
+    </div><!-- /view-marca -->
 
     <!-- ══ DISEÑO DE CATÁLOGO ══ -->
     <div class="view" id="view-design-catalogo">
@@ -3606,7 +3463,7 @@
         <div class="design-controls">
           <!-- ACCORDION 1: Imagen de fondo del banner -->
           <div class="card config-section collapsed" style="margin-bottom:14px;">
-            <div class="card-title config-section-title" onclick="toggleAccordionCard(this)">
+            <div class="card-title config-section-title" onclick="toggleAccordionCard(this, event)">
               <span>IMAGEN DE FONDO DEL BANNER</span>
             </div>
             <div class="card-content config-section-content">
@@ -3637,7 +3494,7 @@
 
           <!-- ACCORDION 2: Texto del banner -->
           <div class="card config-section collapsed" style="margin-bottom:14px;">
-            <div class="card-title config-section-title" onclick="toggleAccordionCard(this)">
+            <div class="card-title config-section-title" onclick="toggleAccordionCard(this, event)">
               <span>TEXTO DEL BANNER</span>
             </div>
             <div class="card-content config-section-content">
@@ -3657,10 +3514,10 @@
             </div>
           </div>
 
-          <!-- ACCORDION 3: BANNERS PROMOCIONALES 50/50 -->
-          <div class="card config-section" style="margin-bottom:14px;">
-            <div class="card-title config-section-title" onclick="toggleAccordionCard(this)">
-              <span>BANNERS PROMOCIONALES 50/50</span>
+          <!-- ACCORDION 3: BANNERS PROMOCIONALES -->
+          <div class="card config-section collapsed" style="margin-bottom:14px;">
+            <div class="card-title config-section-title" onclick="toggleAccordionCard(this, event)">
+              <span>BANNERS PROMOCIONALES</span>
             </div>
             <div class="card-content config-section-content">
               
@@ -5594,22 +5451,6 @@
       document.getElementById('view-' + name).classList.add('active');
       if (typeof updateMobileNavActiveState === 'function') updateMobileNavActiveState(name);
 
-      // Move design preview wrap dynamically between marca and design-catalogo
-      const previewWrap = document.querySelector('.design-preview-wrap');
-      if (previewWrap) {
-        if (name === 'marca') {
-          const target = document.querySelector('#view-marca .design-wrap');
-          if (target && !target.contains(previewWrap)) {
-            target.appendChild(previewWrap);
-          }
-        } else if (name === 'design-catalogo') {
-          const target = document.querySelector('#view-design-catalogo .design-wrap');
-          if (target && !target.contains(previewWrap)) {
-            target.appendChild(previewWrap);
-          }
-        }
-      }
-
       // Mostrar u ocultar el selector de período sólo en Informes
       const periodSel = document.querySelector('.period-select');
       if (periodSel) {
@@ -7180,7 +7021,8 @@
       }
     }
 
-    function toggleAccordionCard(headerEl) {
+    function toggleAccordionCard(headerEl, e) {
+      if (e && e.stopPropagation) e.stopPropagation();
       const card = headerEl.closest('.card, .config-section');
       if (card) {
         card.classList.toggle('collapsed');
@@ -11697,8 +11539,8 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       }, 500);
 
       document.addEventListener('click', (e) => {
-        const title = e.target.closest('.config-section-title, .view#view-design .card-title');
-        if (title) {
+        const title = e.target.closest('.config-section-title, .card-title');
+        if (title && !title.hasAttribute('onclick')) {
           const section = title.closest('.config-section, .card');
           if (section) section.classList.toggle('collapsed');
         }
