@@ -539,6 +539,20 @@
       transition: margin-left 0.3s ease;
     }
 
+    @media (max-width: 768px) {
+      .main {
+        margin-left: 0 !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+      }
+      .view {
+        padding: 12px !important;
+      }
+      .design-wrap {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
     /* TOPBAR */
     .topbar {
       height: 54px;
@@ -3261,9 +3275,12 @@
       <div class="design-wrap">
         <!-- LEFT: controls -->
         <div class="design-controls">
-          <div class="card" style="margin-bottom:14px;">
-            <div class="card-title">Imagen de fondo del banner</div>
-            <div class="card-content">
+          <!-- ACCORDION 1: Imagen de fondo del banner -->
+          <div class="card config-section collapsed" style="margin-bottom:14px;">
+            <div class="card-title config-section-title" onclick="toggleAccordionCard(this)">
+              <span>IMAGEN DE FONDO DEL BANNER</span>
+            </div>
+            <div class="card-content config-section-content">
               <div id="hero-img-preview-wrap"
                 style="display:none;margin-bottom:10px;position:relative;border-radius:8px;overflow:hidden;">
                 <img id="hero-img-preview" style="width:100%;height:100px;object-fit:cover;display:block;" />
@@ -3273,7 +3290,7 @@
                   Quitar</button>
               </div>
 
-              <label class="logo-upload-btn" for="hero-img-input" style="margin-bottom:8px;">
+              <label class="logo-upload-btn" for="hero-img-input" style="margin-bottom:8px; display:flex; align-items:center; justify-content:center; gap:8px;">
                 <i class="bi bi-image"></i> Subir imagen de fondo (JPG, PNG, WEBP)
                 <input type="file" id="hero-img-input" accept="image/*" style="display:none;"
                   onchange="uploadHeroImg(this)" />
@@ -3289,31 +3306,52 @@
             </div>
           </div>
 
-          <div class="card" style="margin-bottom:14px;">
-            <div class="card-title">Texto del banner</div>
-            <div class="card-content">
+          <!-- ACCORDION 2: Texto del banner -->
+          <div class="card config-section collapsed" style="margin-bottom:14px;">
+            <div class="card-title config-section-title" onclick="toggleAccordionCard(this)">
+              <span>TEXTO DEL BANNER</span>
+            </div>
+            <div class="card-content config-section-content">
               <div class="ctrl-group">
-                <label class="ctrl-label">Título (línea 1)</label>
+                <label class="ctrl-label">TÍTULO (LÍNEA 1)</label>
                 <input class="ctrl-input" id="cfg-h1" value="Tu ferretería" oninput="previewUpdate()" />
               </div>
               <div class="ctrl-group">
-                <label class="ctrl-label">Título (línea 2 — color acento)</label>
+                <label class="ctrl-label">TÍTULO (LÍNEA 2 — COLOR ACENTO)</label>
                 <input class="ctrl-input" id="cfg-h2" value="sin demoras." oninput="previewUpdate()" />
               </div>
               <div class="ctrl-group">
-                <label class="ctrl-label">Descripción</label>
+                <label class="ctrl-label">DESCRIPCIÓN</label>
                 <textarea class="ctrl-input" id="cfg-desc" rows="2" oninput="previewUpdate()"
                   style="resize:vertical;">Elegí tus productos, armá tu pedido y coordiná por WhatsApp.</textarea>
               </div>
             </div>
           </div>
 
-          <!-- BANNERS PROMOCIONALES -->
-          <div class="card" style="margin-bottom:14px;">
-            <div class="card-title"><i class="bi bi-image"></i> Banners promocionales 50/50</div>
-            <div class="card-content">
+          <!-- ACCORDION 3: BANNERS PROMOCIONALES 50/50 -->
+          <div class="card config-section" style="margin-bottom:14px;">
+            <div class="card-title config-section-title" onclick="toggleAccordionCard(this)">
+              <span>BANNERS PROMOCIONALES 50/50</span>
+            </div>
+            <div class="card-content config-section-content">
+              
+              <!-- SELECTOR DE MODO DE BANNERS -->
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:16px;">
+                <div id="btn-banner-mode-single" class="banner-mode-card" onclick="setBannerLayoutMode('single')" style="background:var(--iron); border:2px solid var(--zinc); border-radius:10px; padding:14px; text-align:center; cursor:pointer; transition:all 0.2s;">
+                  <div style="font-weight:700; font-size:11px; color:var(--white); margin-bottom:8px; text-transform:uppercase;">1 BANNER 100%</div>
+                  <div style="background:rgba(255,255,255,0.05); border:1px dashed var(--zinc); height:28px; border-radius:6px;"></div>
+                </div>
+                <div id="btn-banner-mode-double" class="banner-mode-card active" onclick="setBannerLayoutMode('double')" style="background:rgba(215,38,56,0.15); border:2px solid var(--red); border-radius:10px; padding:14px; text-align:center; cursor:pointer; transition:all 0.2s;">
+                  <div style="font-weight:700; font-size:11px; color:var(--white); margin-bottom:8px; text-transform:uppercase;">2 BANNERS 50% / 50%</div>
+                  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+                    <div style="background:rgba(255,255,255,0.05); border:1px dashed var(--zinc); height:28px; border-radius:6px;"></div>
+                    <div style="background:rgba(255,255,255,0.05); border:1px dashed var(--zinc); height:28px; border-radius:6px;"></div>
+                  </div>
+                </div>
+              </div>
+
               <!-- BANNER 1 -->
-              <div
+              <div id="card-banner-1-wrap"
                 style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:16px;margin-bottom:14px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
                   <div style="font-weight:700;font-size:13px;color:var(--red);">BANNER 1</div>
@@ -3367,7 +3405,7 @@
               </div>
 
               <!-- BANNER 2 -->
-              <div
+              <div id="card-banner-2-wrap"
                 style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:16px;margin-bottom:14px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
                   <div style="font-weight:700;font-size:13px;color:var(--red);">BANNER 2</div>
@@ -3421,11 +3459,11 @@
               </div>
 
               <div style="display:flex;gap:8px;margin-top:14px;">
-                <button class="abm-btn-new" onclick="saveBannersConfig()" style="flex:1; justify-content: center;">
-                  <i class="bi bi-cloud-upload"></i> Guardar banners
+                <button class="abm-btn-new" onclick="saveBannersConfig()" style="flex:1; justify-content: center; padding: 12px;">
+                  <i class="bi bi-floppy2"></i> Guardar catálogo y banners
                 </button>
                 <button onclick="loadBannersConfig()"
-                  style="flex:1;padding:10px;background:var(--zinc);border:1px solid var(--silver);border-radius:8px;color:var(--fog);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;justify-content:center;gap:6px;">
+                  style="padding:12px;background:var(--zinc);border:1px solid var(--silver);border-radius:8px;color:var(--fog);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;justify-content:center;gap:6px;">
                   <i class="bi bi-arrow-clockwise"></i> Recargar
                 </button>
               </div>
@@ -5277,6 +5315,7 @@
       }
       if (name === 'products') renderProducts();
       if (name === 'account-plan') initAccountPlanView();
+      if (name === 'design-catalogo') loadBannersConfig();
       if (name === 'pages-internas') switchPagesInternasTab('nosotros');
       if (name === 'orders') renderAllOrders();
       if (name === 'reports') {
@@ -6801,6 +6840,253 @@
         document.getElementById('hero-img-preview-wrap').style.display = 'block';
       }
     }
+
+    function toggleAccordionCard(headerEl) {
+      const card = headerEl.closest('.card, .config-section');
+      if (card) {
+        card.classList.toggle('collapsed');
+      }
+    }
+    window.toggleAccordionCard = toggleAccordionCard;
+
+    window.BANNER_LAYOUT_MODE = 'double';
+
+    function setBannerLayoutMode(mode) {
+      window.BANNER_LAYOUT_MODE = mode;
+      const btnSingle = document.getElementById('btn-banner-mode-single');
+      const btnDouble = document.getElementById('btn-banner-mode-double');
+      const cardB2 = document.getElementById('card-banner-2-wrap');
+
+      if (mode === 'single') {
+        if (btnSingle) {
+          btnSingle.style.borderColor = 'var(--red)';
+          btnSingle.style.background = 'rgba(215,38,56,0.15)';
+        }
+        if (btnDouble) {
+          btnDouble.style.borderColor = 'var(--zinc)';
+          btnDouble.style.background = 'var(--iron)';
+        }
+        if (cardB2) cardB2.style.display = 'none';
+      } else {
+        if (btnSingle) {
+          btnSingle.style.borderColor = 'var(--zinc)';
+          btnSingle.style.background = 'var(--iron)';
+        }
+        if (btnDouble) {
+          btnDouble.style.borderColor = 'var(--red)';
+          btnDouble.style.background = 'rgba(215,38,56,0.15)';
+        }
+        if (cardB2) cardB2.style.display = 'block';
+      }
+    }
+    window.setBannerLayoutMode = setBannerLayoutMode;
+
+    function previewBanner(bannerId) {
+      const imgInput = document.getElementById(`${bannerId}-img`);
+      const bgInput = document.getElementById(`${bannerId}-bg`);
+      const previewContainer = document.getElementById(`${bannerId}-preview`);
+      
+      if (!imgInput || !previewContainer) return;
+      const url = imgInput.value.trim();
+      const bg = bgInput ? bgInput.value : '#1C1C1E';
+      
+      if (url) {
+        previewContainer.style.display = 'block';
+        previewContainer.style.background = 'var(--zinc)';
+        previewContainer.innerHTML = `<img src="${url}" alt="Preview" style="width:100%;height:100%;object-fit:cover;display:block;" />`;
+      } else if (bg) {
+        previewContainer.style.display = 'block';
+        previewContainer.style.background = bg;
+        previewContainer.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#fff;font-size:12px;font-weight:600;">Fondo sólido: ${bg}</div>`;
+      } else {
+        previewContainer.style.display = 'none';
+      }
+    }
+    window.previewBanner = previewBanner;
+
+    async function handleBannerUpload(input, bannerId) {
+      const file = input.files[0];
+      if (!file) return;
+      const statusEl = document.getElementById('banners-status');
+      if (statusEl) {
+        statusEl.style.color = 'var(--silver)';
+        statusEl.textContent = 'Subiendo imagen a Cloudinary...';
+      }
+      try {
+        const url = await uploadToCloudinary(file);
+        const imgInput = document.getElementById(`${bannerId}-img`);
+        if (imgInput) imgInput.value = url;
+        previewBanner(bannerId);
+        if (statusEl) {
+          statusEl.style.color = 'var(--green)';
+          statusEl.textContent = '✓ Imagen cargada con éxito';
+        }
+      } catch (e) {
+        if (statusEl) {
+          statusEl.style.color = 'var(--red)';
+          statusEl.textContent = '✕ Error subiendo imagen: ' + e.message;
+        }
+      }
+    }
+    window.handleBannerUpload = handleBannerUpload;
+
+    async function loadBannersConfig() {
+      const statusEl = document.getElementById('banners-status');
+      if (statusEl) {
+        statusEl.style.color = 'var(--silver)';
+        statusEl.textContent = 'Cargando configuración de banners...';
+      }
+
+      // Populate category select options first
+      const cats = (window.currentCategories && window.currentCategories.length) 
+        ? window.currentCategories.map(c => c.name) 
+        : [...new Set((localProducts || []).map(p => p.cat).filter(Boolean))];
+
+      ['banner1-cat', 'banner2-cat'].forEach(id => {
+        const sel = document.getElementById(id);
+        if (sel) {
+          const current = sel.value;
+          sel.innerHTML = '<option value="">(Ninguna)</option>' +
+            cats.map(c => `<option value="${c}">${c}</option>`).join('');
+          if (current) sel.value = current;
+        }
+      });
+
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        if (res.ok) {
+          const rows = await res.json();
+          if (rows && rows.length > 0) {
+            const r = rows[0];
+            let parsedEmail = {};
+            try { if (r.email) parsedEmail = JSON.parse(r.email); } catch(e) {}
+
+            const mode = r.banner_mode || parsedEmail.banner_mode || 'double';
+            setBannerLayoutMode(mode);
+
+            if (document.getElementById('banner1-label')) document.getElementById('banner1-label').value = r.banner1_label || 'NUEVAS';
+            if (document.getElementById('banner1-title')) document.getElementById('banner1-title').value = r.banner1_title || '';
+            if (document.getElementById('banner1-img')) document.getElementById('banner1-img').value = r.banner1_img || '';
+            if (document.getElementById('banner1-cat')) document.getElementById('banner1-cat').value = r.banner1_cat || '';
+            if (document.getElementById('banner1-bg')) document.getElementById('banner1-bg').value = parsedEmail.banner1_bg || r.banner1_bg || '#1C1C1E';
+            if (document.getElementById('banner1-active')) document.getElementById('banner1-active').checked = parsedEmail.banner1_active !== false;
+
+            if (document.getElementById('banner2-label')) document.getElementById('banner2-label').value = r.banner2_label || 'PROMOCIÓN';
+            if (document.getElementById('banner2-title')) document.getElementById('banner2-title').value = r.banner2_title || '';
+            if (document.getElementById('banner2-img')) document.getElementById('banner2-img').value = r.banner2_img || '';
+            if (document.getElementById('banner2-cat')) document.getElementById('banner2-cat').value = r.banner2_cat || '';
+            if (document.getElementById('banner2-bg')) document.getElementById('banner2-bg').value = parsedEmail.banner2_bg || r.banner2_bg || '#1C1C1E';
+            if (document.getElementById('banner2-active')) document.getElementById('banner2-active').checked = parsedEmail.banner2_active !== false;
+
+            previewBanner('banner1');
+            previewBanner('banner2');
+          }
+        }
+        if (statusEl) {
+          statusEl.style.color = 'var(--green)';
+          statusEl.textContent = '✓ Banners sincronizados con Supabase';
+        }
+      } catch (e) {
+        if (statusEl) {
+          statusEl.style.color = 'var(--silver)';
+          statusEl.textContent = 'Banners listos';
+        }
+      }
+    }
+    window.loadBannersConfig = loadBannersConfig;
+
+    async function saveBannersConfig() {
+      const statusEl = document.getElementById('banners-status');
+      if (statusEl) {
+        statusEl.style.color = 'var(--silver)';
+        statusEl.textContent = 'Guardando catálogo y banners...';
+      }
+
+      // Save main catalog config fields first if modified
+      const h1Val = document.getElementById('cfg-h1')?.value || cfg.h1;
+      const h2Val = document.getElementById('cfg-h2')?.value || cfg.h2;
+      const descVal = document.getElementById('cfg-desc')?.value || cfg.desc;
+      cfg.h1 = h1Val;
+      cfg.h2 = h2Val;
+      cfg.desc = descVal;
+
+      const bannerData = {
+        mode: window.BANNER_LAYOUT_MODE || 'double',
+        banner1: {
+          label: document.getElementById('banner1-label')?.value || '',
+          title: document.getElementById('banner1-title')?.value || '',
+          img: document.getElementById('banner1-img')?.value || '',
+          cat: document.getElementById('banner1-cat')?.value || '',
+          bg: document.getElementById('banner1-bg')?.value || '#1C1C1E',
+          active: document.getElementById('banner1-active')?.checked !== false
+        },
+        banner2: {
+          label: document.getElementById('banner2-label')?.value || '',
+          title: document.getElementById('banner2-title')?.value || '',
+          img: document.getElementById('banner2-img')?.value || '',
+          cat: document.getElementById('banner2-cat')?.value || '',
+          bg: document.getElementById('banner2-bg')?.value || '#1C1C1E',
+          active: document.getElementById('banner2-active')?.checked !== false
+        }
+      };
+
+      localStorage.setItem(`storeapp_banners_${STORE_ID}`, JSON.stringify(bannerData));
+
+      // Patch company_settings in Supabase
+      try {
+        const resSettings = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        if (resSettings.ok) {
+          const rows = await resSettings.json();
+          if (rows && rows.length > 0) {
+            const dbRow = rows[0];
+            let parsedEmail = {};
+            try { if (dbRow.email) parsedEmail = JSON.parse(dbRow.email); } catch(e) {}
+
+            parsedEmail.h1 = h1Val;
+            parsedEmail.h2 = h2Val;
+            parsedEmail.desc = descVal;
+            parsedEmail.bg = cfg.bg || localStorage.getItem('storeapp_hero_img') || '';
+            parsedEmail.heroOverlay = cfg.heroOverlay || 'rgba(0,0,0,0.48)';
+            parsedEmail.banner_mode = bannerData.mode;
+            parsedEmail.banner1_bg = bannerData.banner1.bg;
+            parsedEmail.banner1_active = bannerData.banner1.active;
+            parsedEmail.banner2_bg = bannerData.banner2.bg;
+            parsedEmail.banner2_active = bannerData.banner2.active;
+
+            const patchPayload = {
+              email: JSON.stringify(parsedEmail),
+              banner_mode: bannerData.mode,
+              banner1_label: bannerData.banner1.label,
+              banner1_title: bannerData.banner1.title,
+              banner1_img: bannerData.banner1.img,
+              banner1_cat: bannerData.banner1.cat,
+              banner2_label: bannerData.banner2.label,
+              banner2_title: bannerData.banner2.title,
+              banner2_img: bannerData.banner2.img,
+              banner2_cat: bannerData.banner2.cat
+            };
+
+            await updateInSupabase('company_settings', dbRow.id, patchPayload);
+          }
+        }
+
+        if (statusEl) {
+          statusEl.style.color = 'var(--green)';
+          statusEl.textContent = '✓ Catálogo y banners guardados con éxito en la nube';
+        }
+        showToastDash('✓ Catálogo y banners guardados con éxito');
+      } catch (e) {
+        if (statusEl) {
+          statusEl.style.color = 'var(--red)';
+          statusEl.textContent = '✕ Error guardando: ' + e.message;
+        }
+      }
+    }
+    window.saveBannersConfig = saveBannersConfig;
 
     /* ═══════════════════════════════════════════ LOGO UPLOAD */
     function uploadLogo(input) {

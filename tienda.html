@@ -1575,12 +1575,18 @@ function onSearch(val) { searchTerm = val; render(); }
 
 /* ═══════════════════════════════════════════ BANNERS PROMOCIONALES */
 function renderBanners(bannerData) {
+  const container = document.getElementById('banners-container');
   const banner1El = document.getElementById('banner-1');
   const banner2El = document.getElementById('banner-2');
   
   if (!banner1El || !banner2El) return;
   
-  const renderBanner = (el, data) => {
+  if (!bannerData) {
+    if (container) container.style.display = 'none';
+    return;
+  }
+
+  const renderBannerContent = (el, data) => {
     if (!data || !data.title) {
       el.style.display = 'none';
       return;
@@ -1616,9 +1622,37 @@ function renderBanners(bannerData) {
       window.scrollTo({ top: document.getElementById('banners-container').offsetTop + 300, behavior: 'smooth' });
     };
   };
-  
-  renderBanner(banner1El, bannerData.banner1);
-  renderBanner(banner2El, bannerData.banner2);
+
+  const b1Active = bannerData.banner1 && bannerData.banner1.active !== false && bannerData.banner1.title;
+  const b2Active = bannerData.banner2 && bannerData.banner2.active !== false && bannerData.banner2.title;
+  const mode = bannerData.mode || bannerData.banner_mode || 'double';
+
+  if (mode === 'single' || !b2Active) {
+    if (b1Active) {
+      banner1El.style.gridColumn = '1 / -1';
+      renderBannerContent(banner1El, bannerData.banner1);
+    } else {
+      banner1El.style.display = 'none';
+    }
+    banner2El.style.display = 'none';
+  } else {
+    banner1El.style.gridColumn = '';
+    banner2El.style.gridColumn = '';
+    if (b1Active) {
+      renderBannerContent(banner1El, bannerData.banner1);
+    } else {
+      banner1El.style.display = 'none';
+    }
+    if (b2Active) {
+      renderBannerContent(banner2El, bannerData.banner2);
+    } else {
+      banner2El.style.display = 'none';
+    }
+  }
+
+  if (container) {
+    container.style.display = (b1Active || b2Active) ? 'grid' : 'none';
+  }
 }
 
 
