@@ -2046,8 +2046,13 @@
     }
 
     @media (max-width: 768px) {
-      .sidebar {
+      .sidebar,
+      body.collapsed-sidebar .sidebar {
         display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        opacity: 0 !important;
+        width: 0 !important;
       }
       .main {
         margin-left: 0 !important;
@@ -12390,85 +12395,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     }
   </style>
 
-  <!-- ================= MOBILE BOTTOM NAVIGATION BAR ================= -->
-  <div class="mobile-bottom-bar" id="mobile-bottom-bar">
-    <button class="mobile-nav-item active" onclick="switchMobileNav('orders', this)">
-      <i class="bi bi-box-seam"></i>
-      <span>Pedidos</span>
-    </button>
-    <button class="mobile-nav-item" onclick="switchMobileNav('products', this)">
-      <i class="bi bi-grid"></i>
-      <span>Productos</span>
-    </button>
-    <button class="mobile-nav-item" onclick="switchMobileNav('store', this)">
-      <i class="bi bi-shop"></i>
-      <span>Mi Tienda</span>
-    </button>
-    <button class="mobile-nav-item" onclick="switchMobileNav('settings', this)">
-      <i class="bi bi-gear"></i>
-      <span>Ajustes</span>
-    </button>
-  </div>
 
-  <style>
-    @media (max-width: 768px) {
-      body {
-        padding-bottom: 70px !important;
-      }
-      .sidebar {
-        display: none !important;
-      }
-      .mobile-bottom-bar {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 62px;
-        background: rgba(10, 10, 12, 0.95);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-        z-index: 9999;
-        padding: 0 8px;
-      }
-      .mobile-nav-item {
-        background: none;
-        border: none;
-        color: #7A7A82;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 10px;
-        font-family: inherit;
-        font-weight: 600;
-        cursor: pointer;
-        padding: 6px 12px;
-        gap: 3px;
-        transition: color 0.2s, transform 0.15s;
-        flex: 1;
-      }
-      .mobile-nav-item i {
-        font-size: 18px;
-      }
-      .mobile-nav-item.active {
-        color: #D72638;
-      }
-      .main-content {
-        margin-left: 0 !important;
-        padding: 16px 14px 80px 14px !important;
-      }
-    }
-
-    @media (min-width: 769px) {
-      .mobile-bottom-bar {
-        display: none !important;
-      }
-    }
-  </style>
 
   <script>
     // Auth Verification & Navigation Script (Single Login Flow)
