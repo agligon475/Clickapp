@@ -4983,6 +4983,9 @@
     }
 
     function getStoreUrl() {
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return `/tienda.html?store=${STORE_ID}`;
+      }
       const defaultStores = ['ferre-now', 'ferreteria', 'kiosco', 'gastronomia', 'electronica'];
       const isCustomSubdomain = !defaultStores.includes(STORE_ID.toLowerCase()) || 
                                 window.localStorage.getItem('storeapp_subdomain_assigned') === 'true' ||
@@ -4991,7 +4994,7 @@
       if (isCustomSubdomain) {
         return `https://${STORE_ID}.daletepido.com.ar`;
       } else {
-        return `index.html?store=${STORE_ID}`;
+        return `/tienda.html?store=${STORE_ID}`;
       }
     }
 
