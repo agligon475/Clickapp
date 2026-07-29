@@ -1304,29 +1304,31 @@ async function loadSheet() {
       }
     });
 
+    let configData = null;
     if (configRes.ok) {
-      const configData = await configRes.json();
-      if (configData && configData.length > 0) {
-        const cfg = configData[0];
+      configData = await configRes.json().catch(() => null);
+    }
 
-        // Verificar si la tienda se encuentra suspendida por el Super Admin
-        if (cfg.status === 'SUSPENDED_PAYMENT' || cfg.status === 'DISABLED') {
-          renderSuspendedStoreScreen(cfg.business_name || cfg.store_id);
-          return;
-        }
+    if (configData && configData.length > 0) {
+      const cfg = configData[0];
 
-        if (cfg.nosotros) storeNosotros = cfg.nosotros;
-
-        // --- OVERRIDE GLOBAL CFG WITH SUPABASE CONFIG ---
-        if (cfg.business_name) CFG.name = cfg.business_name;
-        if (cfg.tagline) CFG.tagline = cfg.tagline;
-        if (cfg.wapp) CFG.wapp = cfg.wapp;
-        if (cfg.rubro) CFG.rubro = cfg.rubro;
-        if (cfg.direccion) CFG.direccion = cfg.direccion;
-        if (cfg.horario) CFG.horario = cfg.horario;
-        if (cfg.primary_color) CFG.color = cfg.primary_color;
-        if (cfg.logo_url) CFG.logo = cfg.logo_url;
+      // Verificar si la tienda se encuentra suspendida por el Super Admin
+      if (cfg.status === 'SUSPENDED_PAYMENT' || cfg.status === 'DISABLED') {
+        renderSuspendedStoreScreen(cfg.business_name || cfg.store_id);
+        return;
       }
+
+      if (cfg.nosotros) storeNosotros = cfg.nosotros;
+
+      // --- OVERRIDE GLOBAL CFG WITH SUPABASE CONFIG ---
+      if (cfg.business_name) CFG.name = cfg.business_name;
+      if (cfg.tagline) CFG.tagline = cfg.tagline;
+      if (cfg.wapp) CFG.wapp = cfg.wapp;
+      if (cfg.rubro) CFG.rubro = cfg.rubro;
+      if (cfg.direccion) CFG.direccion = cfg.direccion;
+      if (cfg.horario) CFG.horario = cfg.horario;
+      if (cfg.primary_color) CFG.color = cfg.primary_color;
+      if (cfg.logo_url) CFG.logo = cfg.logo_url;
     }
 
     // 2. Cargar productos desde Supabase
@@ -1360,79 +1362,58 @@ async function loadSheet() {
       banner2: { label: 'PROMOCIÓN', title: 'Especiales', img: '', cat: '' }
     };
 
-    if (configRes.ok) {
-      const configData = await configRes.json();
-      if (configData && configData.length > 0) {
-        const cfg = configData[0];
-
-        // Verificar si la tienda se encuentra suspendida por el Super Admin
-        if (cfg.status === 'SUSPENDED_PAYMENT' || cfg.status === 'DISABLED') {
-          renderSuspendedStoreScreen(cfg.business_name || cfg.store_id);
-          return;
-        }
-
-        if (cfg.nosotros) storeNosotros = cfg.nosotros;
-        
-        // --- OVERRIDE GLOBAL CFG WITH SUPABASE CONFIG ---
-        if (cfg.business_name) CFG.name = cfg.business_name;
-        if (cfg.tagline) CFG.tagline = cfg.tagline;
-        if (cfg.wapp) CFG.wapp = cfg.wapp;
-        if (cfg.rubro) CFG.rubro = cfg.rubro;
-        if (cfg.direccion) CFG.direccion = cfg.direccion;
-        if (cfg.horario) CFG.horario = cfg.horario;
-        if (cfg.primary_color) CFG.color = cfg.primary_color;
-        if (cfg.logo_url) CFG.logo = cfg.logo_url;
-        
-        let parsedSocials = {};
-        if (cfg.socials) {
-          parsedSocials = typeof cfg.socials === 'string' ? JSON.parse(cfg.socials) : cfg.socials;
-        } else if (cfg.phone) {
-          try { parsedSocials = JSON.parse(cfg.phone); } catch (e) {}
-        }
-        
-        CFG.socials = {
-          web: cfg.social_web !== null ? cfg.social_web : (parsedSocials.web || ''),
-          ig: cfg.social_ig || cfg.instagram || parsedSocials.ig || '',
-          fb: cfg.social_fb || cfg.facebook || parsedSocials.fb || '',
-          x: cfg.social_x !== null ? cfg.social_x : (parsedSocials.x || ''),
-          ml: cfg.social_ml !== null ? cfg.social_ml : (parsedSocials.ml || ''),
-          tn: cfg.social_tn !== null ? cfg.social_tn : (parsedSocials.tn || ''),
-          maps: cfg.social_maps !== null ? cfg.social_maps : (parsedSocials.maps || '')
-        };
-
-        let parsedDesign = {};
-        if (cfg.design_settings) {
-          parsedDesign = typeof cfg.design_settings === 'string' ? JSON.parse(cfg.design_settings) : cfg.design_settings;
-        } else if (cfg.email) {
-          try { parsedDesign = JSON.parse(cfg.email); } catch (e) {}
-        }
-
-        CFG.h1 = cfg.h1 !== null ? cfg.h1 : (parsedDesign.h1 || CFG.h1 || '');
-        CFG.h2 = cfg.h2 !== null ? cfg.h2 : (parsedDesign.h2 || CFG.h2 || '');
-        CFG.desc = cfg.desc !== null ? cfg.desc : (parsedDesign.desc || CFG.desc || '');
-        CFG.emoji = cfg.emoji !== null ? cfg.emoji : (parsedDesign.emoji || CFG.emoji || '🏪');
-        CFG.theme = cfg.theme !== null ? cfg.theme : (parsedDesign.theme || CFG.theme || 'dark');
-        CFG.font = cfg.font !== null ? cfg.font : (parsedDesign.font || CFG.font || '');
-        CFG.fontBody = cfg.font_body !== null ? cfg.font_body : (parsedDesign.font_body || parsedDesign.fontBody || CFG.fontBody || '');
-        CFG.bg = cfg.bg !== null ? cfg.bg : (parsedDesign.bg || CFG.bg || '');
-        
-        bannerData = {
-          banner1: {
-            label: cfg.banner1_label || 'NUEVAS',
-            title: cfg.banner1_title || 'Productos',
-            img: cfg.banner1_img || '',
-            cat: cfg.banner1_cat || '',
-            active: cfg.banner1_active !== null ? cfg.banner1_active : (parsedDesign.banner1_active !== false)
-          },
-          banner2: {
-            label: cfg.banner2_label || 'PROMOCIÓN',
-            title: cfg.banner2_title || 'Especiales',
-            img: cfg.banner2_img || '',
-            cat: cfg.banner2_cat || '',
-            active: cfg.banner2_active !== null ? cfg.banner2_active : (parsedDesign.banner2_active !== false)
-          }
-        };
+    if (configData && configData.length > 0) {
+      const cfg = configData[0];
+      
+      let parsedSocials = {};
+      if (cfg.socials) {
+        parsedSocials = typeof cfg.socials === 'string' ? JSON.parse(cfg.socials) : cfg.socials;
+      } else if (cfg.phone) {
+        try { parsedSocials = JSON.parse(cfg.phone); } catch (e) {}
       }
+      
+      CFG.socials = {
+        web: cfg.social_web !== null ? cfg.social_web : (parsedSocials.web || ''),
+        ig: cfg.social_ig || cfg.instagram || parsedSocials.ig || '',
+        fb: cfg.social_fb || cfg.facebook || parsedSocials.fb || '',
+        x: cfg.social_x !== null ? cfg.social_x : (parsedSocials.x || ''),
+        ml: cfg.social_ml !== null ? cfg.social_ml : (parsedSocials.ml || ''),
+        tn: cfg.social_tn !== null ? cfg.social_tn : (parsedSocials.tn || ''),
+        maps: cfg.social_maps !== null ? cfg.social_maps : (parsedSocials.maps || '')
+      };
+
+      let parsedDesign = {};
+      if (cfg.design_settings) {
+        parsedDesign = typeof cfg.design_settings === 'string' ? JSON.parse(cfg.design_settings) : cfg.design_settings;
+      } else if (cfg.email) {
+        try { parsedDesign = JSON.parse(cfg.email); } catch (e) {}
+      }
+
+      CFG.h1 = cfg.h1 !== null ? cfg.h1 : (parsedDesign.h1 || CFG.h1 || '');
+      CFG.h2 = cfg.h2 !== null ? cfg.h2 : (parsedDesign.h2 || CFG.h2 || '');
+      CFG.desc = cfg.desc !== null ? cfg.desc : (parsedDesign.desc || CFG.desc || '');
+      CFG.emoji = cfg.emoji !== null ? cfg.emoji : (parsedDesign.emoji || CFG.emoji || '🏪');
+      CFG.theme = cfg.theme !== null ? cfg.theme : (parsedDesign.theme || CFG.theme || 'dark');
+      CFG.font = cfg.font !== null ? cfg.font : (parsedDesign.font || CFG.font || '');
+      CFG.fontBody = cfg.font_body !== null ? cfg.font_body : (parsedDesign.font_body || parsedDesign.fontBody || CFG.fontBody || '');
+      CFG.bg = cfg.bg !== null ? cfg.bg : (parsedDesign.bg || CFG.bg || '');
+      
+      bannerData = {
+        banner1: {
+          label: cfg.banner1_label || 'NUEVAS',
+          title: cfg.banner1_title || 'Productos',
+          img: cfg.banner1_img || '',
+          cat: cfg.banner1_cat || '',
+          active: cfg.banner1_active !== null ? cfg.banner1_active : (parsedDesign.banner1_active !== false)
+        },
+        banner2: {
+          label: cfg.banner2_label || 'PROMOCIÓN',
+          title: cfg.banner2_title || 'Especiales',
+          img: cfg.banner2_img || '',
+          cat: cfg.banner2_cat || '',
+          active: cfg.banner2_active !== null ? cfg.banner2_active : (parsedDesign.banner2_active !== false)
+        }
+      };
     }
     
     // Aplicar diseño visual tras cargar config en la nube
