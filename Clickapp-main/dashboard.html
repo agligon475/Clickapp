@@ -3943,6 +3943,59 @@
           </div>
         </div>
 
+        <!-- 11. Datos de Facturación -->
+        <div class="config-section" style="grid-column:1/-1;">
+          <div class="config-section-title"><i class="bi bi-receipt-cutoff"></i> Datos de Facturación para Comprobantes</div>
+          <div class="config-section-content" style="padding:20px;">
+            <p style="font-size:12px; color:var(--silver); margin-bottom:16px; line-height:1.5;">
+              Ingresá tus datos fiscales para que el equipo de DaleTePido pueda confeccionar y enviarte tus comprobantes y facturas de servicio.
+            </p>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px;">
+              <div class="ctrl-group">
+                <label class="ctrl-label">Razón Social / Nombre Completo *</label>
+                <input class="ctrl-input" id="cfg-billing-razon" placeholder="Ej: Comercio Juan Perez S.R.L." />
+              </div>
+              <div class="ctrl-group">
+                <label class="ctrl-label">CUIT / CUIL / DNI *</label>
+                <input class="ctrl-input" id="cfg-billing-cuit" placeholder="Ej: 20-33444555-9" />
+              </div>
+              <div class="ctrl-group">
+                <label class="ctrl-label">Condición frente al IVA</label>
+                <select class="ctrl-input" id="cfg-billing-iva">
+                  <option value="Monotributo">Monotributo</option>
+                  <option value="Responsable Inscripto">Responsable Inscripto</option>
+                  <option value="Exento">Exento</option>
+                  <option value="Consumidor Final">Consumidor Final</option>
+                </select>
+              </div>
+              <div class="ctrl-group">
+                <label class="ctrl-label">Dirección Fiscal</label>
+                <input class="ctrl-input" id="cfg-billing-direccion" placeholder="Ej: Av. Corrientes 1234, CABA" />
+              </div>
+              <div class="ctrl-group" style="grid-column:1/-1;">
+                <label class="ctrl-label">Email para envío de Facturas</label>
+                <input class="ctrl-input" id="cfg-billing-email" placeholder="facturacion@mitienda.com" />
+              </div>
+            </div>
+
+            <!-- Contenedor del último comprobante recibido -->
+            <div id="cfg-billing-latest-invoice" style="margin-top:20px; padding:14px; background:rgba(6,182,212,0.08); border:1px solid rgba(6,182,212,0.25); border-radius:10px; display:none;">
+              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <i class="bi bi-file-earmark-pdf-fill" style="color:#22D3EE; font-size:24px;"></i>
+                  <div>
+                    <div style="font-weight:700; color:var(--white); font-size:13px;" id="latest-invoice-title">Último comprobante de servicio recibido</div>
+                    <div style="font-size:11px; color:var(--silver);" id="latest-invoice-date">Fecha de envío: —</div>
+                  </div>
+                </div>
+                <a id="latest-invoice-link" href="#" target="_blank" class="sb-btn" style="background:#22D3EE; color:#000; font-weight:700; font-size:12px; border:none; padding:8px 16px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                  <i class="bi bi-download"></i> Ver / Descargar Comprobante
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div><!-- /masonry-grid -->
 
       <!-- Save button -->
@@ -5574,6 +5627,9 @@
                 convenir: dbCfg.pay_agreement !== null ? dbCfg.pay_agreement : (parsedDesign.payment_methods?.convenir !== false)
               },
               domain: parsedDesign.domain || '',
+              billing_info: dbCfg.billing_info || parsedDesign.billing_info || {},
+              latest_invoice_url: dbCfg.latest_invoice_url || null,
+              latest_invoice_date: dbCfg.latest_invoice_date || null,
               gerente: {
                 nombre: dbCfg.gerente_nombre !== null ? dbCfg.gerente_nombre : (parsedDesign.gerente?.nombre || ''),
                 email: dbCfg.gerente_email !== null ? dbCfg.gerente_email : (parsedDesign.gerente?.email || ''),
@@ -9098,6 +9154,28 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         qrImg.src = qrUrl;
         qrDownloadBtn.href = qrUrl;
       }
+
+      // Cargar datos de facturación
+      const bi = sc.billing_info || {};
+      if (bi.razon_social && document.getElementById('cfg-billing-razon')) document.getElementById('cfg-billing-razon').value = bi.razon_social;
+      if (bi.cuit_cuil && document.getElementById('cfg-billing-cuit')) document.getElementById('cfg-billing-cuit').value = bi.cuit_cuil;
+      if (bi.condicion_iva && document.getElementById('cfg-billing-iva')) document.getElementById('cfg-billing-iva').value = bi.condicion_iva;
+      if (bi.direccion_fiscal && document.getElementById('cfg-billing-direccion')) document.getElementById('cfg-billing-direccion').value = bi.direccion_fiscal;
+      if (bi.email_facturacion && document.getElementById('cfg-billing-email')) document.getElementById('cfg-billing-email').value = bi.email_facturacion;
+
+      // Cargar último comprobante recibido
+      if (sc.latest_invoice_url) {
+        const invBox = document.getElementById('cfg-billing-latest-invoice');
+        const invDate = document.getElementById('latest-invoice-date');
+        const invLink = document.getElementById('latest-invoice-link');
+        if (invBox && invLink) {
+          invBox.style.display = 'block';
+          invLink.href = sc.latest_invoice_url;
+          if (invDate && sc.latest_invoice_date) {
+            invDate.textContent = 'Fecha de envío: ' + new Date(sc.latest_invoice_date).toLocaleString('es-AR');
+          }
+        }
+      }
     }
 
     /* ═══════════════════════════════════════════ VISTA AVANZADA */
@@ -9550,6 +9628,40 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       }
     }
 
+    async function syncStoreConfigToSupabase(storeCfg) {
+      try {
+        const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+          cache: 'no-cache',
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        if (!configRes.ok) return;
+        const configData = await configRes.json();
+        if (!configData || configData.length === 0) return;
+
+        const row = configData[0];
+        const updatePayload = {
+          business_name: storeCfg.name || storeCfg.business_name || row.business_name,
+          tagline: storeCfg.tagline !== undefined ? storeCfg.tagline : row.tagline,
+          wapp: storeCfg.wapp !== undefined ? storeCfg.wapp : row.wapp,
+          rubro: storeCfg.rubro !== undefined ? storeCfg.rubro : row.rubro,
+          subrubro: storeCfg.subrubro !== undefined ? storeCfg.subrubro : row.subrubro,
+          direccion: storeCfg.direccion !== undefined ? storeCfg.direccion : row.direccion,
+          horario: storeCfg.horario !== undefined ? storeCfg.horario : row.horario,
+          billing_info: storeCfg.billing_info !== undefined ? storeCfg.billing_info : row.billing_info,
+          socials: storeCfg.socials !== undefined ? storeCfg.socials : row.socials,
+          password: storeCfg.password !== undefined ? storeCfg.password : row.password,
+          admin_email: storeCfg.admin_email !== undefined ? storeCfg.admin_email : row.admin_email,
+          pay_cash: storeCfg.payment_methods?.efectivo !== undefined ? storeCfg.payment_methods.efectivo : row.pay_cash,
+          pay_transfer: storeCfg.payment_methods?.transferencia !== undefined ? storeCfg.payment_methods.transferencia : row.pay_transfer,
+          pay_agreement: storeCfg.payment_methods?.convenir !== undefined ? storeCfg.payment_methods.convenir : row.pay_agreement
+        };
+
+        await updateInSupabase('company_settings', row.id, updatePayload);
+      } catch (e) {
+        console.error('Error in syncStoreConfigToSupabase:', e);
+      }
+    }
+
     async function saveConfig() {
       // Store info → merge into storeapp_cfg
       const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
@@ -9612,6 +9724,22 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const maps = document.getElementById('cfg-social-maps').value.trim();
 
       sc.socials = { web, ig, fb, x, ml, tn, maps };
+
+      // Billing info
+      const bRazon = document.getElementById('cfg-billing-razon')?.value.trim() || '';
+      const bCuit = document.getElementById('cfg-billing-cuit')?.value.trim() || '';
+      const bIva = document.getElementById('cfg-billing-iva')?.value || 'Monotributo';
+      const bDireccion = document.getElementById('cfg-billing-direccion')?.value.trim() || '';
+      const bEmail = document.getElementById('cfg-billing-email')?.value.trim() || '';
+
+      sc.billing_info = {
+        razon_social: bRazon,
+        cuit_cuil: bCuit,
+        condicion_iva: bIva,
+        direccion_fiscal: bDireccion,
+        email_facturacion: bEmail
+      };
+
       localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
       localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(sc));
       localStorage.setItem('storeapp_onboard_step_1_' + STORE_ID, 'true');

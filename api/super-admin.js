@@ -55,21 +55,31 @@ export default async function handler(req, res) {
       const stores = await response.json();
 
       // Normalize store properties for Super Admin Dashboard
-      const normalizedStores = stores.map(s => ({
-        store_id: s.store_id || '',
-        business_name: s.business_name || s.name || s.store_id,
-        rubro: s.rubro || 'General',
-        subrubro: s.subrubro || '',
-        plan_level: s.plan_level || 'starter',
-        payment_status: s.payment_status || 'UP_TO_DATE',
-        status: s.status || 'ACTIVE',
-        upgrade_requested: s.upgrade_requested || null,
-        admin_email: s.admin_email || '',
-        wapp: s.wapp || '',
-        created_at: s.created_at || null,
-        logo_url: s.logo_url || s.logo || '',
-        id: s.id
-      }));
+      const normalizedStores = stores.map(s => {
+        let bInfo = s.billing_info || {};
+        if (typeof bInfo === 'string') {
+          try { bInfo = JSON.parse(bInfo); } catch(e) { bInfo = {}; }
+        }
+        return {
+          store_id: s.store_id || '',
+          business_name: s.business_name || s.name || s.store_id,
+          rubro: s.rubro || 'General',
+          subrubro: s.subrubro || '',
+          plan_level: s.plan_level || 'starter',
+          payment_status: s.payment_status || 'UP_TO_DATE',
+          status: s.status || 'ACTIVE',
+          upgrade_requested: s.upgrade_requested || null,
+          billing_cycle: s.billing_cycle || 'mensual',
+          billing_info: bInfo,
+          latest_invoice_url: s.latest_invoice_url || null,
+          latest_invoice_date: s.latest_invoice_date || null,
+          admin_email: s.admin_email || '',
+          wapp: s.wapp || '',
+          created_at: s.created_at || null,
+          logo_url: s.logo_url || s.logo || '',
+          id: s.id
+        };
+      });
 
       return res.status(200).json({
         success: true,
@@ -77,9 +87,9 @@ export default async function handler(req, res) {
       });
     }
 
-    // 2. Update Store Status, Membership, and Payment Details
+    // 2. Update Store Status, Membership, Billing Cycle and Details
     if (action === 'update_status' || action === 'update_membership' || action === 'update_store') {
-      const { store_id, status, plan_level, payment_status, upgrade_requested } = req.body;
+      const { store_id, status, plan_level, payment_status, upgrade_requested, billing_cycle, billing_info } = req.body;
       if (!store_id) {
         return res.status(400).json({ success: false, error: 'Falta store_id' });
       }
@@ -89,6 +99,8 @@ export default async function handler(req, res) {
       if (plan_level !== undefined) payload.plan_level = plan_level;
       if (payment_status !== undefined) payload.payment_status = payment_status;
       if (upgrade_requested !== undefined) payload.upgrade_requested = upgrade_requested;
+      if (billing_cycle !== undefined) payload.billing_cycle = billing_cycle;
+      if (billing_info !== undefined) payload.billing_info = billing_info;
 
       const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(store_id)}`, {
         method: 'PATCH',
@@ -105,6 +117,43 @@ export default async function handler(req, res) {
       }
 
       return res.status(200).json({ success: true, store_id, payload, message: 'Datos de la tienda actualizados exitosamente' });
+    }
+
+    // 3. Send Invoice / Comprobante
+    if (action === 'send_invoice') {
+      const { store_id, invoice_url, recipient_email } = req.body;
+      if (!store_id || !invoice_url) {
+        return res.status(400).json({ success: false, error: 'Falta store_id o invoice_url' });
+      }
+
+      const now = new Date().toISOString();
+      const payload = {
+        latest_invoice_url: invoice_url,
+        latest_invoice_date: now
+      };
+
+      const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(store_id)}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!patchRes.ok) {
+        throw new Error(`HTTP Error ${patchRes.status}: ${await patchRes.text()}`);
+      }
+
+      return res.status(200).json({
+        success: true,
+        store_id,
+        invoice_url,
+        sent_at: now,
+        recipient_email: recipient_email || '',
+        message: 'Comprobante registrado y enviado exitosamente al comercio'
+      });
     }
 
     // 4. Resolve Upgrade Request (Approve or Dismiss)
