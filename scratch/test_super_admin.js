@@ -1,42 +1,35 @@
 // scratch/test_super_admin.js
 import handler from '../api/super-admin.js';
 
-async function testFullSuspensionFlow() {
-  console.log('--- TEST SUSPENSION FLOW ---');
+async function testTesterPlanUpdate() {
+  console.log('--- TEST SUPER ADMIN TESTER PLAN UPDATE ---');
 
-  // 1. Suspend store elquesabepoco
-  const mockReqSuspend = {
+  const mockReqUpdate = {
     method: 'POST',
     headers: { 'x-super-admin-key': 'super-admin-alicari' },
     body: {
       action: 'update_store',
       store_id: 'elquesabepoco',
-      status: 'SUSPENDED_PAYMENT',
-      payment_status: 'OVERDUE'
+      plan_level: 'tester',
+      payment_status: 'UP_TO_DATE'
     }
   };
-  let suspendRes = {};
-  const mockResSuspend = { setHeader: () => {}, status: (code) => ({ json: (data) => { suspendRes = { code, data }; } }) };
-  await handler(mockReqSuspend, mockResSuspend);
-  console.log('1. Suspend Result:', suspendRes);
+  let result = {};
+  const mockRes = { setHeader: () => {}, status: (code) => ({ json: (data) => { result = { code, data }; } }) };
+  await handler(mockReqUpdate, mockRes);
+  console.log('Update Result:', result);
 
-  // 2. Read stores list and check status of elquesabepoco
+  // List stores and verify elquesabepoco plan
   const mockReqList = {
     method: 'POST',
     headers: { 'x-super-admin-key': 'super-admin-alicari' },
     body: { action: 'list' }
   };
-  let listRes = {};
-  const mockResList = { setHeader: () => {}, status: (code) => ({ json: (data) => { listRes = { code, data }; } }) };
+  let listResult = {};
+  const mockResList = { setHeader: () => {}, status: (code) => ({ json: (data) => { listResult = { code, data }; } }) };
   await handler(mockReqList, mockResList);
-  const elque = listRes.data?.stores?.find(s => s.store_id === 'elquesabepoco');
-  console.log('2. Listed Store status:', elque?.status, 'payment_status:', elque?.payment_status);
-
-  // 3. Reactivate store
-  mockReqSuspend.body.status = 'ACTIVE';
-  mockReqSuspend.body.payment_status = 'UP_TO_DATE';
-  await handler(mockReqSuspend, mockResSuspend);
-  console.log('3. Reactivated Store.');
+  const store = listResult.data?.stores?.find(s => s.store_id === 'elquesabepoco');
+  console.log('Elquesabepoco plan level in list:', store?.plan_level);
 }
 
-testFullSuspensionFlow();
+testTesterPlanUpdate();
