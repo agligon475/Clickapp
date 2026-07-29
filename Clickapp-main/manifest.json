@@ -41,28 +41,20 @@
   ],
   "scope_extensions": [
     {
+      "type": "origin",
       "origin": "https://daletepido.com.ar"
     },
     {
-      "origin": "https://auth.daletepido.com.ar"
-    },
-    {
+      "type": "origin",
       "origin": "https://app.daletepido.com.ar"
     },
     {
+      "type": "origin",
       "origin": "https://admin.daletepido.com.ar"
     },
     {
+      "type": "origin",
       "origin": "https://tienda.daletepido.com.ar"
-    },
-    {
-      "origin": "https://*.daletepido.com.ar"
-    },
-    {
-      "origin": "*.daletepido.com.ar"
-    },
-    {
-      "origin": "daletepido.com.ar"
     }
   ],
   "note_taking": {
@@ -113,6 +105,7 @@
   "share_target": {
     "action": "/dashboard.html",
     "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
     "params": {
       "title": "title",
       "text": "text",
