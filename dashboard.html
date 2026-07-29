@@ -4820,6 +4820,11 @@
  
         // Logueado exitosamente
         sessionStorage.setItem('storeapp_logged_in_' + finalStoreId, 'true');
+        originalLocalStorage.setItem('storeapp_logged_in_' + finalStoreId, 'true');
+        originalLocalStorage.setItem('daletepido_session', JSON.stringify({
+          store_id: finalStoreId,
+          timestamp: Date.now()
+        }));
         
         // Si cambió la tienda actual en el input, redireccionar
         if (finalStoreId !== STORE_ID.toLowerCase()) {
@@ -4840,6 +4845,8 @@
 
     function handleLogout() {
       sessionStorage.removeItem('storeapp_logged_in_' + STORE_ID);
+      originalLocalStorage.removeItem('storeapp_logged_in_' + STORE_ID);
+      originalLocalStorage.removeItem('daletepido_session');
       window.location.reload();
     }
     document.handleLogout = handleLogout;
@@ -4904,8 +4911,19 @@
         return;
       }
       
-      const loggedIn = sessionStorage.getItem('storeapp_logged_in_' + STORE_ID);
-      if (loggedIn === 'true') {
+      let sessionData = null;
+      try {
+        const raw = originalLocalStorage.getItem('daletepido_session');
+        if (raw) sessionData = JSON.parse(raw);
+      } catch (e) {}
+
+      const loggedSession = sessionStorage.getItem('storeapp_logged_in_' + STORE_ID) === 'true';
+      const loggedLocal = originalLocalStorage.getItem('storeapp_logged_in_' + STORE_ID) === 'true';
+      const loggedSessionStore = sessionData && (sessionData.store_id === STORE_ID || sessionData.store_id?.toLowerCase() === STORE_ID.toLowerCase());
+
+      if (loggedSession || loggedLocal || loggedSessionStore) {
+        sessionStorage.setItem('storeapp_logged_in_' + STORE_ID, 'true');
+        originalLocalStorage.setItem('storeapp_logged_in_' + STORE_ID, 'true');
         document.getElementById('dash-login-overlay').style.display = 'none';
         updatePlanBadge();
       } else {
@@ -5652,15 +5670,19 @@
             localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
             localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
 
-            // Intentar cargar credenciales desde la tabla dedicada store_credentials
+            // Intentar cargar credenciales desde la tabla dedicada store_credentials (específica o global)
             let storeCreds = null;
             try {
-              const credsRes = await fetch(`${SUPABASE_URL}/rest/v1/store_credentials?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+              const credsRes = await fetch(`${SUPABASE_URL}/rest/v1/store_credentials?store_id=in.(${encodeURIComponent(STORE_ID)},global)`, {
                 headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
               });
               if (credsRes.ok) {
                 const credsData = await credsRes.json();
-                if (credsData && credsData.length > 0) storeCreds = credsData[0];
+                if (credsData && credsData.length > 0) {
+                  const specific = credsData.find(c => c.store_id === STORE_ID) || {};
+                  const globalCreds = credsData.find(c => c.store_id === 'global') || {};
+                  storeCreds = { ...globalCreds, ...specific };
+                }
               }
             } catch (e) {}
 

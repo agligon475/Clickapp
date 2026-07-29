@@ -979,7 +979,17 @@
       // 3.1 Crear automáticamente las 5 categorías por defecto para el subrubro elegido
       await seedCategoriesForNewStore(storeId, subrubro, rubro);
 
-      // 4. Success State!
+      // 4. Success State! Auto-login session for the new store
+      sessionStorage.setItem('storeapp_logged_in_' + storeId, 'true');
+      localStorage.setItem('storeapp_logged_in_' + storeId, 'true');
+      localStorage.setItem('storeapp_store_id', storeId);
+      localStorage.setItem('daletepido_store_id', storeId);
+      localStorage.setItem('daletepido_session', JSON.stringify({
+        store_id: storeId,
+        token: 'auto-registered-' + Date.now(),
+        timestamp: Date.now()
+      }));
+
       document.getElementById('form-container').style.display = 'none';
       document.getElementById('success-panel').style.display = 'block';
       
@@ -1059,6 +1069,8 @@
           plan_level: data.plan_level || 'starter',
           timestamp: Date.now()
         };
+        sessionStorage.setItem('storeapp_logged_in_' + data.store_id, 'true');
+        localStorage.setItem('storeapp_logged_in_' + data.store_id, 'true');
         localStorage.setItem('daletepido_session', JSON.stringify(sessionData));
         localStorage.setItem('storeapp_store_id', data.store_id);
         localStorage.setItem('daletepido_store_id', data.store_id);
