@@ -1965,12 +1965,16 @@
     .spin-animation {
       display: inline-block;
       animation: spin 0.8s linear infinite;
-    /* ══ MOBILE BOTTOM NAV & BOTTOM SHEET ══ */
-    .mobile-bottom-nav {
-      display: none;
     }
+
+    /* ══ MOBILE BOTTOM NAV & BOTTOM SHEET (DESKTOP HIDDEN BY DEFAULT) ══ */
+    .mobile-bottom-nav,
+    .mobile-nav-overlay,
+    .mobile-sheet-popup {
+      display: none !important;
+    }
+
     .mobile-nav-overlay {
-      display: none;
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.65);
@@ -1979,10 +1983,6 @@
       z-index: 99990;
       opacity: 0;
       transition: opacity 0.25s ease;
-    }
-    .mobile-nav-overlay.show {
-      display: block;
-      opacity: 1;
     }
 
     .mobile-sheet-popup {
@@ -1999,13 +1999,9 @@
       transform: translateY(100%);
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       max-height: 85vh;
-      display: flex;
       flex-direction: column;
       box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
       padding-bottom: env(safe-area-inset-bottom, 12px);
-    }
-    .mobile-sheet-popup.show {
-      transform: translateY(0);
     }
     body.light-mode .mobile-sheet-popup {
       background: #ffffff;
@@ -2209,7 +2205,7 @@
         padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
       }
       .mobile-bottom-nav {
-        display: flex;
+        display: flex !important;
         position: fixed;
         bottom: 0;
         left: 0;
@@ -2229,6 +2225,14 @@
         background: rgba(255, 255, 255, 0.94);
         border-top-color: rgba(0, 0, 0, 0.08);
         box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.08);
+      }
+      .mobile-nav-overlay.show {
+        display: block !important;
+        opacity: 1;
+      }
+      .mobile-sheet-popup.show {
+        display: flex !important;
+        transform: translateY(0);
       }
       .mobile-nav-item {
         display: flex;
