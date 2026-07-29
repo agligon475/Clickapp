@@ -1965,7 +1965,7 @@
     .spin-animation {
       display: inline-block;
       animation: spin 0.8s linear infinite;
-    /* ══ MOBILE BOTTOM NAV ══ */
+    /* ══ MOBILE BOTTOM NAV & BOTTOM SHEET ══ */
     .mobile-bottom-nav {
       display: none;
     }
@@ -1973,76 +1973,224 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       z-index: 99990;
+      opacity: 0;
+      transition: opacity 0.25s ease;
     }
-    .mobile-submenu-popup {
-      display: none;
+    .mobile-nav-overlay.show {
+      display: block;
+      opacity: 1;
+    }
+
+    .mobile-sheet-popup {
       position: fixed;
-      bottom: 70px;
-      left: 12px;
-      right: 12px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 640px;
+      margin: 0 auto;
       background: var(--steel);
-      border: 1px solid var(--zinc);
-      border-radius: 16px;
-      padding: 10px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border-top: 1px solid var(--zinc);
+      border-radius: 24px 24px 0 0;
       z-index: 99995;
-      animation: mobileSlideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+      padding-bottom: env(safe-area-inset-bottom, 12px);
     }
-    body.light-mode .mobile-submenu-popup {
+    .mobile-sheet-popup.show {
+      transform: translateY(0);
+    }
+    body.light-mode .mobile-sheet-popup {
       background: #ffffff;
-      border-color: rgba(0,0,0,0.1);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      border-top-color: rgba(0, 0, 0, 0.1);
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15);
     }
-    @keyframes mobileSlideUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+
+    .mobile-sheet-handle {
+      width: 38px;
+      height: 4px;
+      background: var(--silver);
+      opacity: 0.4;
+      border-radius: 2px;
+      margin: 10px auto 4px;
+      flex-shrink: 0;
     }
-    .mobile-submenu-item {
+
+    .mobile-sheet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px 14px;
+      border-bottom: 1px solid var(--zinc);
+      flex-shrink: 0;
+    }
+    body.light-mode .mobile-sheet-header {
+      border-bottom-color: rgba(0, 0, 0, 0.08);
+    }
+    .mobile-sheet-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    body.light-mode .mobile-sheet-title {
+      color: #111827;
+    }
+    .mobile-sheet-close {
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: var(--silver);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    body.light-mode .mobile-sheet-close {
+      background: rgba(0, 0, 0, 0.05);
+      color: #4b5563;
+    }
+    .mobile-sheet-close:active {
+      transform: scale(0.9);
+    }
+
+    .mobile-sheet-body {
+      padding: 16px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      flex: 1;
+    }
+
+    .mobile-sheet-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .mobile-grid-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--zinc);
+      border-radius: 14px;
+      padding: 12px 14px;
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 12px 14px;
-      border-radius: 10px;
-      color: var(--white);
-      font-size: 13px;
-      font-weight: 600;
       cursor: pointer;
-      transition: background 0.15s;
-      border: none;
-      background: transparent;
-      width: 100%;
-      text-align: left;
+      transition: all 0.2s ease;
+      text-decoration: none;
     }
-    body.light-mode .mobile-submenu-item {
-      color: #1a1a1a;
+    body.light-mode .mobile-grid-card {
+      background: #f8fafc;
+      border-color: rgba(0, 0, 0, 0.08);
     }
-    .mobile-submenu-item:hover, .mobile-submenu-item:active {
-      background: var(--iron);
+    .mobile-grid-card:active {
+      transform: scale(0.97);
+      background: rgba(239, 68, 68, 0.08);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+    .mobile-grid-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: rgba(239, 68, 68, 0.15);
       color: var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
     }
-    body.light-mode .mobile-submenu-item:hover, body.light-mode .mobile-submenu-item:active {
-      background: rgba(0,0,0,0.05);
-      color: var(--red);
+    .mobile-grid-info {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
-    .mobile-submenu-item i {
-      font-size: 16px;
-      color: var(--silver);
-      width: 20px;
-      text-align: center;
+    .mobile-grid-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--white);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .mobile-submenu-title {
+    body.light-mode .mobile-grid-label {
+      color: #1f2937;
+    }
+    .mobile-grid-sub {
       font-size: 10px;
+      color: var(--silver);
+    }
+
+    .mobile-sheet-section-title {
+      font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--silver);
-      padding: 6px 12px 10px;
-      border-bottom: 1px solid var(--zinc);
-      margin-bottom: 6px;
+      margin: 16px 4px 8px;
+    }
+    .mobile-sheet-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--zinc);
+      border-radius: 14px;
+      padding: 6px;
+    }
+    body.light-mode .mobile-sheet-list {
+      background: #f8fafc;
+      border-color: rgba(0, 0, 0, 0.06);
+    }
+    .mobile-sheet-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 10px;
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 600;
+      background: transparent;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    body.light-mode .mobile-sheet-item {
+      color: #374151;
+    }
+    .mobile-sheet-item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .mobile-sheet-item i.item-icon {
+      font-size: 16px;
+      color: var(--silver);
+      width: 22px;
+      text-align: center;
+    }
+    .mobile-sheet-item:active {
+      background: rgba(239, 68, 68, 0.12);
+      color: var(--red);
+    }
+    .mobile-sheet-item:active i.item-icon {
+      color: var(--red);
     }
 
     @media (max-width: 768px) {
@@ -2058,7 +2206,7 @@
         margin-left: 0 !important;
         width: 100% !important;
         max-width: 100vw !important;
-        padding-bottom: 75px !important;
+        padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
       }
       .mobile-bottom-nav {
         display: flex;
@@ -2066,19 +2214,21 @@
         bottom: 0;
         left: 0;
         right: 0;
-        height: 62px;
-        background: var(--steel);
-        border-top: 1px solid var(--zinc);
+        height: calc(60px + env(safe-area-inset-bottom, 0px));
+        background: rgba(24, 24, 27, 0.92);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
         z-index: 99989;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-around;
-        padding: 0 2px;
-        box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+        padding: 6px 4px env(safe-area-inset-bottom, 0px);
+        box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.4);
       }
       body.light-mode .mobile-bottom-nav {
-        background: #ffffff;
-        border-top-color: rgba(0,0,0,0.1);
-        box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+        background: rgba(255, 255, 255, 0.94);
+        border-top-color: rgba(0, 0, 0, 0.08);
+        box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.08);
       }
       .mobile-nav-item {
         display: flex;
@@ -2086,33 +2236,59 @@
         align-items: center;
         justify-content: center;
         flex: 1;
-        height: 100%;
+        height: 48px;
         background: transparent;
         border: none;
         color: var(--silver);
         cursor: pointer;
-        padding: 4px 1px;
-        gap: 3px;
-        transition: color 0.15s, transform 0.15s;
+        padding: 2px 0;
+        gap: 2px;
+        transition: color 0.2s ease, transform 0.15s ease;
         text-decoration: none;
+        position: relative;
       }
       body.light-mode .mobile-nav-item {
-        color: #71717a;
+        color: #6b7280;
+      }
+      .mobile-nav-item .nav-icon-box {
+        width: 44px;
+        height: 26px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       }
       .mobile-nav-item i {
-        font-size: 17px;
+        font-size: 18px;
+        transition: transform 0.2s ease;
       }
       .mobile-nav-item span {
-        font-size: 9px;
+        font-size: 10px;
         font-weight: 600;
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 48px;
-        line-height: 1;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
       }
-      .mobile-nav-item.active, .mobile-nav-item:active {
+      .mobile-nav-item:active {
+        transform: scale(0.92);
+      }
+      .mobile-nav-item.active {
         color: var(--red);
+      }
+      body.light-mode .mobile-nav-item.active {
+        color: var(--red);
+      }
+      .mobile-nav-item.active .nav-icon-box {
+        background: rgba(239, 68, 68, 0.15);
+        color: var(--red);
+      }
+      body.light-mode .mobile-nav-item.active .nav-icon-box {
+        background: rgba(239, 68, 68, 0.12);
+        color: var(--red);
+      }
+      .mobile-nav-item.active i {
+        transform: translateY(-1px);
       }
     }
   </style>
@@ -5412,6 +5588,7 @@
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
       document.getElementById('view-' + name).classList.add('active');
+      if (typeof updateMobileNavActiveState === 'function') updateMobileNavActiveState(name);
 
       // Move design preview wrap dynamically between marca and design-catalogo
       const previewWrap = document.querySelector('.design-preview-wrap');
@@ -12437,126 +12614,219 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
 
     let isMobileMenuOpen = false;
 
-    function toggleMobileMenuSheet(btnEl) {
-      const popup = document.getElementById('mobile-submenu-popup');
+    function toggleMobileMenuSheet() {
+      const sheet = document.getElementById('mobile-sheet-popup');
       const overlay = document.getElementById('mobile-bottom-nav-overlay');
-      const content = document.getElementById('mobile-submenu-content');
 
       if (isMobileMenuOpen) {
         closeMobileMenuSheet();
         return;
       }
 
-      let html = `
-        <div style="display:flex; justify-content:space-between; align-items:center; padding: 8px 12px 12px; border-bottom: 1px solid var(--zinc); margin-bottom: 10px;">
-          <span style="font-weight:700; font-size:14px; color:var(--white);">Panel de Control</span>
-          <button onclick="closeMobileMenuSheet()" style="background:transparent; border:none; color:var(--silver); font-size:18px; cursor:pointer;"><i class="bi bi-x-lg"></i></button>
-        </div>
-
-        <div style="font-size:10px; font-weight:700; color:var(--silver); text-transform:uppercase; letter-spacing:0.08em; padding:4px 12px; margin-top:4px;">NEGOCIO</div>
-        <button class="mobile-submenu-item" onclick="goToMobileView('reports')"><i class="bi bi-bar-chart-line"></i><span>Analítica y Reportes</span></button>
-
-        <div style="font-size:10px; font-weight:700; color:var(--silver); text-transform:uppercase; letter-spacing:0.08em; padding:10px 12px 4px; border-top:1px solid var(--zinc); margin-top:6px;">GESTIÓN</div>
-        <button class="mobile-submenu-item" onclick="goToMobileView('orders')"><i class="bi bi-receipt"></i><span>Pedidos</span></button>
-        <button class="mobile-submenu-item" onclick="goToMobileView('pickups')"><i class="bi bi-truck"></i><span>Pickup / Repartidores</span></button>
-
-        <div style="font-size:10px; font-weight:700; color:var(--silver); text-transform:uppercase; letter-spacing:0.08em; padding:10px 12px 4px; border-top:1px solid var(--zinc); margin-top:6px;">INVENTARIO</div>
-        <button class="mobile-submenu-item" onclick="goToMobileView('abm')"><i class="bi bi-pencil-square"></i><span>ABM / Productos</span></button>
-        <button class="mobile-submenu-item" onclick="goToMobileView('categories')"><i class="bi bi-tags"></i><span>Categorías</span></button>
-
-        <div style="font-size:10px; font-weight:700; color:var(--silver); text-transform:uppercase; letter-spacing:0.08em; padding:10px 12px 4px; border-top:1px solid var(--zinc); margin-top:6px;">PERSONALIZACIÓN</div>
-        <button class="mobile-submenu-item" onclick="goToMobileView('marca')"><i class="bi bi-droplet"></i><span>Marca</span></button>
-        <button class="mobile-submenu-item" onclick="goToMobileView('rubro')"><i class="bi bi-shop"></i><span>Rubro y Plantilla</span></button>
-        <button class="mobile-submenu-item" onclick="goToMobileView('design-catalogo')"><i class="bi bi-image"></i><span>Diseño de Tienda</span></button>
-        <button class="mobile-submenu-item" onclick="goToMobileView('enlaces')"><i class="bi bi-link-45deg"></i><span>Enlaces</span></button>
-        <button class="mobile-submenu-item" onclick="goToMobileView('pages-internas')"><i class="bi bi-file-text"></i><span>Páginas Internas</span></button>
-
-        <div style="font-size:10px; font-weight:700; color:var(--silver); text-transform:uppercase; letter-spacing:0.08em; padding:10px 12px 4px; border-top:1px solid var(--zinc); margin-top:6px;">AJUSTES</div>
-        <button class="mobile-submenu-item" onclick="goToMobileView('account-plan')"><i class="bi bi-wallet2"></i><span>Mi Cuenta y Plan</span></button>
-        <button class="mobile-submenu-item" onclick="goToMobileView('config-basica')"><i class="bi bi-sliders"></i><span>Configuración Básica</span></button>
-        <button class="mobile-submenu-item" onclick="goToMobileView('config-avanzada')"><i class="bi bi-shield-lock"></i><span>Configuración Avanzada</span></button>
-
-        <div style="font-size:10px; font-weight:700; color:var(--silver); text-transform:uppercase; letter-spacing:0.08em; padding:10px 12px 4px; border-top:1px solid var(--zinc); margin-top:6px;">OPCIONES DE TIENDA</div>
-        <button class="mobile-submenu-item" onclick="closeMobileMenuSheet(); openStore();"><i class="bi bi-box-arrow-up-right"></i><span>Ver tienda</span></button>
-        <button class="mobile-submenu-item" onclick="closeMobileMenuSheet(); toggleTheme();"><i class="bi bi-sun"></i><span>Modo Light / Dark</span></button>
-        <button class="mobile-submenu-item" onclick="closeMobileMenuSheet(); openTicketModal();"><i class="bi bi-headset"></i><span>Soporte</span></button>
-        <button class="mobile-submenu-item" onclick="closeMobileMenuSheet(); handleLogout();" style="color:var(--red);"><i class="bi bi-box-arrow-right" style="color:var(--red);"></i><span>Cerrar Sesión</span></button>
-      `;
-
-      content.innerHTML = html;
-      popup.style.display = 'block';
-      overlay.style.display = 'block';
+      if (sheet) sheet.classList.add('show');
+      if (overlay) overlay.classList.add('show');
       isMobileMenuOpen = true;
 
-      document.querySelectorAll('.mobile-nav-item').forEach(b => b.classList.remove('active'));
-      const menuBtn = document.getElementById('mnav-menu');
-      if (menuBtn) menuBtn.classList.add('active');
+      updateMobileNavActiveState('menu');
     }
 
     function closeMobileMenuSheet() {
-      const popup = document.getElementById('mobile-submenu-popup');
+      const sheet = document.getElementById('mobile-sheet-popup');
       const overlay = document.getElementById('mobile-bottom-nav-overlay');
-      if (popup) popup.style.display = 'none';
-      if (overlay) overlay.style.display = 'none';
+      if (sheet) sheet.classList.remove('show');
+      if (overlay) overlay.classList.remove('show');
       isMobileMenuOpen = false;
     }
 
     function goToMobileView(viewName) {
       closeMobileMenuSheet();
       goToView(viewName);
-      
+    }
+
+    function updateMobileNavActiveState(viewName) {
       document.querySelectorAll('.mobile-nav-item').forEach(b => b.classList.remove('active'));
       
+      if (viewName === 'menu') {
+        document.getElementById('mnav-menu')?.classList.add('active');
+        return;
+      }
+
       if (viewName === 'dashboard') {
         document.getElementById('mnav-dashboard')?.classList.add('active');
-      } else if (viewName === 'orders') {
+      } else if (['orders', 'pickups'].includes(viewName)) {
         document.getElementById('mnav-orders')?.classList.add('active');
-      } else if (viewName === 'abm' || viewName === 'products') {
+      } else if (['abm', 'products', 'categories'].includes(viewName)) {
         document.getElementById('mnav-abm')?.classList.add('active');
-      } else if (viewName === 'design-catalogo') {
+      } else if (['design-catalogo', 'marca', 'rubro', 'enlaces', 'pages-internas'].includes(viewName)) {
         document.getElementById('mnav-design')?.classList.add('active');
+      } else {
+        document.getElementById('mnav-menu')?.classList.add('active');
       }
     }
 
     window.toggleMobileMenuSheet = toggleMobileMenuSheet;
     window.closeMobileMenuSheet = closeMobileMenuSheet;
     window.goToMobileView = goToMobileView;
+    window.updateMobileNavActiveState = updateMobileNavActiveState;
 
     window.addEventListener('load', () => {
       checkDashboardAuth();
     });
   </script>
 
-  <!-- ══ MOBILE BOTTOM NAVIGATION BAR ══ -->
+  <!-- ══ MOBILE BOTTOM NAVIGATION BAR & SHEET ══ -->
   <div id="mobile-bottom-nav-overlay" class="mobile-nav-overlay" onclick="closeMobileMenuSheet()"></div>
 
-  <div id="mobile-submenu-popup" class="mobile-submenu-popup" style="max-height: 75vh; overflow-y: auto;">
-    <div id="mobile-submenu-content" class="mobile-submenu-content"></div>
+  <div id="mobile-sheet-popup" class="mobile-sheet-popup">
+    <div class="mobile-sheet-handle"></div>
+    <div class="mobile-sheet-header">
+      <div class="mobile-sheet-title">
+        <i class="bi bi-grid-fill" style="color:var(--red);"></i>
+        <span>Menú del Panel</span>
+      </div>
+      <button class="mobile-sheet-close" onclick="closeMobileMenuSheet()" aria-label="Cerrar menú">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    
+    <div id="mobile-sheet-content" class="mobile-sheet-body">
+      <!-- Grid Acceso Rápido -->
+      <div class="mobile-sheet-grid">
+        <div class="mobile-grid-card" onclick="goToMobileView('orders')">
+          <div class="mobile-grid-icon"><i class="bi bi-receipt"></i></div>
+          <div class="mobile-grid-info">
+            <span class="mobile-grid-label">Pedidos</span>
+            <span class="mobile-grid-sub">Gestión de ventas</span>
+          </div>
+        </div>
+        <div class="mobile-grid-card" onclick="goToMobileView('abm')">
+          <div class="mobile-grid-icon"><i class="bi bi-box-seam"></i></div>
+          <div class="mobile-grid-info">
+            <span class="mobile-grid-label">Productos</span>
+            <span class="mobile-grid-sub">Cargar y editar</span>
+          </div>
+        </div>
+        <div class="mobile-grid-card" onclick="goToMobileView('design-catalogo')">
+          <div class="mobile-grid-icon"><i class="bi bi-palette"></i></div>
+          <div class="mobile-grid-info">
+            <span class="mobile-grid-label">Diseño</span>
+            <span class="mobile-grid-sub">Apariencia tienda</span>
+          </div>
+        </div>
+        <div class="mobile-grid-card" onclick="goToMobileView('reports')">
+          <div class="mobile-grid-icon"><i class="bi bi-bar-chart-line"></i></div>
+          <div class="mobile-grid-info">
+            <span class="mobile-grid-label">Reportes</span>
+            <span class="mobile-grid-sub">Analítica general</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Secciones agrupadas -->
+      <div class="mobile-sheet-section-title">GESTIÓN E INVENTARIO</div>
+      <div class="mobile-sheet-list">
+        <button class="mobile-sheet-item" onclick="goToMobileView('orders')">
+          <div class="mobile-sheet-item-left"><i class="bi bi-receipt item-icon"></i><span>Pedidos</span></div>
+          <i class="bi bi-chevron-right" style="font-size:12px; color:var(--silver);"></i>
+        </button>
+        <button class="mobile-sheet-item" onclick="goToMobileView('pickups')">
+          <div class="mobile-sheet-item-left"><i class="bi bi-truck item-icon"></i><span>Pickup / Repartidores</span></div>
+          <i class="bi bi-chevron-right" style="font-size:12px; color:var(--silver);"></i>
+        </button>
+        <button class="mobile-sheet-item" onclick="goToMobileView('abm')">
+          <div class="mobile-sheet-item-left"><i class="bi bi-pencil-square item-icon"></i><span>ABM / Productos</span></div>
+          <i class="bi bi-chevron-right" style="font-size:12px; color:var(--silver);"></i>
+        </button>
+        <button class="mobile-sheet-item" onclick="goToMobileView('categories')">
+          <div class="mobile-sheet-item-left"><i class="bi bi-tags item-icon"></i><span>Categorías</span></div>
+          <i class="bi bi-chevron-right" style="font-size:12px; color:var(--silver);"></i>
+        </button>
+      </div>
+
+      <div class="mobile-sheet-section-title">PERSONALIZACIÓN</div>
+      <div class="mobile-sheet-list">
+        <button class="mobile-sheet-item" onclick="goToMobileView('marca')">
+          <div class="mobile-sheet-item-left"><i class="bi bi-droplet item-icon"></i><span>Marca y Colores</span></div>
+          <i class="bi bi-chevron-right" style="font-size:12px; color:var(--silver);"></i>
+        </button>
+        <button class="mobile-sheet-item" onclick="goToMobileView('rubro')">
+          <div class="mobile-sheet-item-left"><i class="bi bi-shop item-icon"></i><span>Rubro y Plantilla</span></div>
+          <i class="bi bi-chevron-right" style="font-size:12px; color:var(--silver);"></i>
+        </button>
+        <button class="mobile-sheet-item" onclick="goToMobileView('design-catalogo')">
+          <div class="mobile-sheet-item-left"><i class="bi bi-image item-icon"></i><span>Diseño de Tienda</span></div>
+          <i class="bi bi-chevron-right" style="font-size:12px; color:var(--silver);"></i>
+        </button>
+        <button class="mobile-sheet-item" onclick="goToMobileView('enlaces')">
+          <div class="mobile-sheet-item-left"><i class="bi bi-link-45deg item-icon"></i><span>Enlaces</span></div>
+          <i class="bi bi-chevron-right" style="font-size:12px; color:var(--silver);"></i>
+        </button>
+        <button class="mobile-sheet-item" onclick="goToMobileView('pages-internas')">
+          <div class="mobile-sheet-item-left"><i class="bi bi-file-text item-icon"></i><span>Páginas Internas</span></div>
+          <i class="bi bi-chevron-right" style="font-size:12px; color:var(--silver);"></i>
+        </button>
+      </div>
+
+      <div class="mobile-sheet-section-title">CONFIGURACIÓN</div>
+      <div class="mobile-sheet-list">
+        <button class="mobile-sheet-item" onclick="goToMobileView('account-plan')">
+          <div class="mobile-sheet-item-left"><i class="bi bi-wallet2 item-icon"></i><span>Mi Cuenta y Plan</span></div>
+          <i class="bi bi-chevron-right" style="font-size:12px; color:var(--silver);"></i>
+        </button>
+        <button class="mobile-sheet-item" onclick="goToMobileView('config-basica')">
+          <div class="mobile-sheet-item-left"><i class="bi bi-sliders item-icon"></i><span>Configuración Básica</span></div>
+          <i class="bi bi-chevron-right" style="font-size:12px; color:var(--silver);"></i>
+        </button>
+        <button class="mobile-sheet-item" onclick="goToMobileView('config-avanzada')">
+          <div class="mobile-sheet-item-left"><i class="bi bi-shield-lock item-icon"></i><span>Configuración Avanzada</span></div>
+          <i class="bi bi-chevron-right" style="font-size:12px; color:var(--silver);"></i>
+        </button>
+      </div>
+
+      <div class="mobile-sheet-section-title">ACCIONES DE TIENDA</div>
+      <div class="mobile-sheet-list">
+        <button class="mobile-sheet-item" onclick="closeMobileMenuSheet(); openStore();">
+          <div class="mobile-sheet-item-left"><i class="bi bi-box-arrow-up-right item-icon"></i><span>Ver Mi Tienda</span></div>
+          <i class="bi bi-box-arrow-up-right" style="font-size:12px; color:var(--silver);"></i>
+        </button>
+        <button class="mobile-sheet-item" onclick="closeMobileMenuSheet(); toggleTheme();">
+          <div class="mobile-sheet-item-left"><i class="bi bi-sun item-icon"></i><span>Modo Claro / Oscuro</span></div>
+          <i class="bi bi-moon-stars" style="font-size:12px; color:var(--silver);"></i>
+        </button>
+        <button class="mobile-sheet-item" onclick="closeMobileMenuSheet(); openTicketModal();">
+          <div class="mobile-sheet-item-left"><i class="bi bi-headset item-icon"></i><span>Soporte Técnico</span></div>
+          <i class="bi bi-chevron-right" style="font-size:12px; color:var(--silver);"></i>
+        </button>
+        <button class="mobile-sheet-item" onclick="closeMobileMenuSheet(); logoutDashboard();" style="color:var(--red);">
+          <div class="mobile-sheet-item-left"><i class="bi bi-box-arrow-right item-icon" style="color:var(--red);"></i><span>Cerrar Sesión</span></div>
+        </button>
+      </div>
+    </div>
   </div>
 
   <nav class="mobile-bottom-nav">
     <button class="mobile-nav-item active" id="mnav-dashboard" onclick="goToMobileView('dashboard')">
-      <i class="bi bi-house-door"></i>
+      <div class="nav-icon-box"><i class="bi bi-house-door"></i></div>
       <span>Inicio</span>
     </button>
 
     <button class="mobile-nav-item" id="mnav-orders" onclick="goToMobileView('orders')">
-      <i class="bi bi-receipt"></i>
+      <div class="nav-icon-box"><i class="bi bi-receipt"></i></div>
       <span>Pedidos</span>
     </button>
 
     <button class="mobile-nav-item" id="mnav-abm" onclick="goToMobileView('abm')">
-      <i class="bi bi-box-seam"></i>
+      <div class="nav-icon-box"><i class="bi bi-box-seam"></i></div>
       <span>Productos</span>
     </button>
 
     <button class="mobile-nav-item" id="mnav-design" onclick="goToMobileView('design-catalogo')">
-      <i class="bi bi-palette"></i>
+      <div class="nav-icon-box"><i class="bi bi-palette"></i></div>
       <span>Diseño</span>
     </button>
 
     <button class="mobile-nav-item" id="mnav-menu" onclick="toggleMobileMenuSheet(this)">
-      <i class="bi bi-list"></i>
+      <div class="nav-icon-box"><i class="bi bi-grid"></i></div>
       <span>Menú</span>
     </button>
   </nav>
