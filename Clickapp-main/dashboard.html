@@ -1965,6 +1965,150 @@
     .spin-animation {
       display: inline-block;
       animation: spin 0.8s linear infinite;
+    /* ══ MOBILE BOTTOM NAV ══ */
+    .mobile-bottom-nav {
+      display: none;
+    }
+    .mobile-nav-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 99990;
+    }
+    .mobile-submenu-popup {
+      display: none;
+      position: fixed;
+      bottom: 70px;
+      left: 12px;
+      right: 12px;
+      background: var(--steel);
+      border: 1px solid var(--zinc);
+      border-radius: 16px;
+      padding: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      z-index: 99995;
+      animation: mobileSlideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    body.light-mode .mobile-submenu-popup {
+      background: #ffffff;
+      border-color: rgba(0,0,0,0.1);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    @keyframes mobileSlideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .mobile-submenu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+    }
+    body.light-mode .mobile-submenu-item {
+      color: #1a1a1a;
+    }
+    .mobile-submenu-item:hover, .mobile-submenu-item:active {
+      background: var(--iron);
+      color: var(--red);
+    }
+    body.light-mode .mobile-submenu-item:hover, body.light-mode .mobile-submenu-item:active {
+      background: rgba(0,0,0,0.05);
+      color: var(--red);
+    }
+    .mobile-submenu-item i {
+      font-size: 16px;
+      color: var(--silver);
+      width: 20px;
+      text-align: center;
+    }
+    .mobile-submenu-title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--silver);
+      padding: 6px 12px 10px;
+      border-bottom: 1px solid var(--zinc);
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none !important;
+      }
+      .main {
+        margin-left: 0 !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        padding-bottom: 75px !important;
+      }
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 62px;
+        background: var(--steel);
+        border-top: 1px solid var(--zinc);
+        z-index: 99989;
+        align-items: center;
+        justify-content: space-around;
+        padding: 0 2px;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+      }
+      body.light-mode .mobile-bottom-nav {
+        background: #ffffff;
+        border-top-color: rgba(0,0,0,0.1);
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+      }
+      .mobile-nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        height: 100%;
+        background: transparent;
+        border: none;
+        color: var(--silver);
+        cursor: pointer;
+        padding: 4px 1px;
+        gap: 3px;
+        transition: color 0.15s, transform 0.15s;
+        text-decoration: none;
+      }
+      body.light-mode .mobile-nav-item {
+        color: #71717a;
+      }
+      .mobile-nav-item i {
+        font-size: 17px;
+      }
+      .mobile-nav-item span {
+        font-size: 9px;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 48px;
+        line-height: 1;
+      }
+      .mobile-nav-item.active, .mobile-nav-item:active {
+        color: var(--red);
+      }
     }
   </style>
   <!-- Emoji Picker Element -->
@@ -12364,29 +12508,168 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       }
     }
 
-    function switchMobileNav(tab, el) {
-      document.querySelectorAll('.mobile-nav-item').forEach(item => item.classList.remove('active'));
-      if (el) el.classList.add('active');
+    let currentOpenMobileSubmenu = null;
 
-      if (tab === 'orders') {
-        const btn = document.querySelector('[onclick*="orders"]') || document.querySelector('.sb-item');
-        if (btn) btn.click();
-      } else if (tab === 'products') {
-        const btn = document.querySelector('[onclick*="products"]');
-        if (btn) btn.click();
-      } else if (tab === 'store') {
-        const btn = document.querySelector('[onclick*="store"]');
-        if (btn) btn.click();
-      } else if (tab === 'settings') {
-        const btn = document.querySelector('[onclick*="settings"]');
-        if (btn) btn.click();
+    const MOBILE_SUBMENUS = {
+      gestion: {
+        title: 'Gestión',
+        items: [
+          { icon: 'bi-receipt', label: 'Pedidos', view: 'orders' },
+          { icon: 'bi-truck', label: 'Pickup / Repartidores', view: 'pickups' }
+        ]
+      },
+      inventario: {
+        title: 'Inventario',
+        items: [
+          { icon: 'bi-pencil-square', label: 'ABM / Productos', view: 'abm' },
+          { icon: 'bi-tags', label: 'Categorías', view: 'categories' }
+        ]
+      },
+      personalizacion: {
+        title: 'Personalización',
+        items: [
+          { icon: 'bi-droplet', label: 'Marca', view: 'marca' },
+          { icon: 'bi-shop', label: 'Rubro y plantilla', view: 'rubro' },
+          { icon: 'bi-image', label: 'Diseño de tienda', view: 'design-catalogo' },
+          { icon: 'bi-link-45deg', label: 'Enlaces', view: 'enlaces' },
+          { icon: 'bi-file-text', label: 'Páginas internas', view: 'pages-internas' }
+        ]
+      },
+      ajustes: {
+        title: 'Ajustes',
+        items: [
+          { icon: 'bi-wallet2', label: 'Mi cuenta y plan', view: 'account-plan' },
+          { icon: 'bi-sliders', label: 'Configuración Básica', view: 'config-basica' },
+          { icon: 'bi-shield-lock', label: 'Configuración Avanzada', view: 'config-avanzada' }
+        ]
+      },
+      tienda: {
+        title: 'Opciones de Tienda',
+        items: [
+          { icon: 'bi-box-arrow-up-right', label: 'Ver tienda', action: 'openStore()' },
+          { icon: 'bi-sun', label: 'Modo Light / Dark', action: 'toggleTheme()' },
+          { icon: 'bi-headset', label: 'Soporte', action: 'openTicketModal()' },
+          { icon: 'bi-box-arrow-right', label: 'Cerrar Sesión', action: 'handleLogout()' }
+        ]
+      }
+    };
+
+    function toggleMobileSubmenu(key, btnEl) {
+      const popup = document.getElementById('mobile-submenu-popup');
+      const overlay = document.getElementById('mobile-bottom-nav-overlay');
+      const content = document.getElementById('mobile-submenu-content');
+
+      if (currentOpenMobileSubmenu === key) {
+        closeMobileSubmenu();
+        return;
+      }
+
+      const menuData = MOBILE_SUBMENUS[key];
+      if (!menuData) return;
+
+      let html = `<div class="mobile-submenu-title">${menuData.title}</div>`;
+      html += menuData.items.map(item => {
+        if (item.view) {
+          return `<button class="mobile-submenu-item" onclick="goToMobileView('${item.view}')">
+            <i class="bi ${item.icon}"></i> <span>${item.label}</span>
+          </button>`;
+        } else if (item.action) {
+          return `<button class="mobile-submenu-item" onclick="closeMobileSubmenu(); ${item.action}">
+            <i class="bi ${item.icon}"></i> <span>${item.label}</span>
+          </button>`;
+        }
+        return '';
+      }).join('');
+
+      content.innerHTML = html;
+      popup.style.display = 'block';
+      overlay.style.display = 'block';
+      currentOpenMobileSubmenu = key;
+
+      document.querySelectorAll('.mobile-nav-item').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+    }
+
+    function closeMobileSubmenu() {
+      const popup = document.getElementById('mobile-submenu-popup');
+      const overlay = document.getElementById('mobile-bottom-nav-overlay');
+      if (popup) popup.style.display = 'none';
+      if (overlay) overlay.style.display = 'none';
+      currentOpenMobileSubmenu = null;
+    }
+
+    function goToMobileView(viewName) {
+      closeMobileSubmenu();
+      goToView(viewName);
+      
+      document.querySelectorAll('.mobile-nav-item').forEach(b => b.classList.remove('active'));
+      
+      if (viewName === 'dashboard') {
+        document.getElementById('mnav-dashboard')?.classList.add('active');
+      } else if (viewName === 'reports') {
+        document.getElementById('mnav-reports')?.classList.add('active');
+      } else if (['orders', 'pickups'].includes(viewName)) {
+        document.getElementById('mnav-gestion')?.classList.add('active');
+      } else if (['abm', 'categories'].includes(viewName)) {
+        document.getElementById('mnav-inventario')?.classList.add('active');
+      } else if (['marca', 'rubro', 'design-catalogo', 'enlaces', 'pages-internas'].includes(viewName)) {
+        document.getElementById('mnav-personalizacion')?.classList.add('active');
+      } else if (['account-plan', 'config-basica', 'config-avanzada'].includes(viewName)) {
+        document.getElementById('mnav-ajustes')?.classList.add('active');
       }
     }
+    window.toggleMobileSubmenu = toggleMobileSubmenu;
+    window.closeMobileSubmenu = closeMobileSubmenu;
+    window.goToMobileView = goToMobileView;
 
     window.addEventListener('load', () => {
       checkDashboardAuth();
     });
   </script>
+
+  <!-- ══ MOBILE BOTTOM NAVIGATION BAR ══ -->
+  <div id="mobile-bottom-nav-overlay" class="mobile-nav-overlay" onclick="closeMobileSubmenu()"></div>
+
+  <div id="mobile-submenu-popup" class="mobile-submenu-popup">
+    <div id="mobile-submenu-content" class="mobile-submenu-content"></div>
+  </div>
+
+  <nav class="mobile-bottom-nav">
+    <button class="mobile-nav-item active" id="mnav-dashboard" onclick="goToMobileView('dashboard')">
+      <i class="bi bi-house-door"></i>
+      <span>Inicio</span>
+    </button>
+
+    <button class="mobile-nav-item" id="mnav-reports" onclick="goToMobileView('reports')">
+      <i class="bi bi-bar-chart-line"></i>
+      <span>Negocio</span>
+    </button>
+
+    <button class="mobile-nav-item" id="mnav-gestion" onclick="toggleMobileSubmenu('gestion', this)">
+      <i class="bi bi-clipboard-data"></i>
+      <span>Gestión</span>
+    </button>
+
+    <button class="mobile-nav-item" id="mnav-inventario" onclick="toggleMobileSubmenu('inventario', this)">
+      <i class="bi bi-box-seam"></i>
+      <span>Inventario</span>
+    </button>
+
+    <button class="mobile-nav-item" id="mnav-personalizacion" onclick="toggleMobileSubmenu('personalizacion', this)">
+      <i class="bi bi-palette"></i>
+      <span>Personaliz.</span>
+    </button>
+
+    <button class="mobile-nav-item" id="mnav-ajustes" onclick="toggleMobileSubmenu('ajustes', this)">
+      <i class="bi bi-gear"></i>
+      <span>Ajustes</span>
+    </button>
+
+    <button class="mobile-nav-item" id="mnav-tienda" onclick="toggleMobileSubmenu('tienda', this)">
+      <i class="bi bi-shop-window"></i>
+      <span>Tienda</span>
+    </button>
+  </nav>
 
 </body>
 </html>
