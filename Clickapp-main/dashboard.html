@@ -6501,12 +6501,18 @@
     }
 
     function previewUpdate() {
-      cfg.name = document.getElementById('cfg-name').value || 'Mi Tienda';
-      cfg.tagline = document.getElementById('cfg-tagline').value;
-      cfg.h1 = document.getElementById('cfg-h1').value;
-      cfg.h2 = document.getElementById('cfg-h2').value;
-      cfg.desc = document.getElementById('cfg-desc').value;
-      cfg.wapp = document.getElementById('cfg-wapp').value;
+      const elCfgName = document.getElementById('cfg-name');
+      if (elCfgName) cfg.name = elCfgName.value || 'Mi Tienda';
+      const elTagline = document.getElementById('cfg-tagline');
+      if (elTagline) cfg.tagline = elTagline.value;
+      const elH1 = document.getElementById('cfg-h1');
+      if (elH1) cfg.h1 = elH1.value;
+      const elH2 = document.getElementById('cfg-h2');
+      if (elH2) cfg.h2 = elH2.value;
+      const elDesc = document.getElementById('cfg-desc');
+      if (elDesc) cfg.desc = elDesc.value;
+      const elWapp = document.getElementById('cfg-wapp');
+      if (elWapp) cfg.wapp = elWapp.value;
 
       const c = cfg.color || '#D72638';
       const themes = {
@@ -6518,35 +6524,55 @@
 
       // Store background
       const s = document.getElementById('prev-store');
-      s.style.background = cfg.bg || t.bg;
-      s.style.fontFamily = `'${cfg.font || 'Barlow Condensed'}', sans-serif`;
+      if (s) {
+        s.style.background = cfg.bg || t.bg;
+        s.style.fontFamily = `'${cfg.font || 'Barlow Condensed'}', sans-serif`;
+      }
 
       // Nav
       const nav = document.getElementById('prev-nav');
-      nav.style.background = t.navBg;
+      if (nav) nav.style.background = t.navBg;
 
-      document.getElementById('prev-icon').textContent = cfg.emoji;
-      document.getElementById('prev-icon').style.background = c;
-      document.getElementById('prev-name').textContent = cfg.name;
-      document.getElementById('prev-name').style.color = t.text;
+      const prevIcon = document.getElementById('prev-icon');
+      if (prevIcon) {
+        prevIcon.textContent = cfg.emoji || '🏬';
+        prevIcon.style.background = c;
+      }
+
+      const prevName = document.getElementById('prev-name');
+      if (prevName) {
+        prevName.textContent = cfg.name || 'Mi Tienda';
+        prevName.style.color = t.text;
+      }
 
       const cartBtn = document.getElementById('prev-cart-btn');
-      cartBtn.style.background = c;
+      if (cartBtn) cartBtn.style.background = c;
 
       // Hero
-      document.getElementById('prev-h1').textContent = cfg.h1 || 'Tu ferretería';
-      document.getElementById('prev-h1').style.color = '#fff';
-      document.getElementById('prev-h2').textContent = cfg.h2 || 'sin demoras.';
-      document.getElementById('prev-h2').style.color = c;
-      document.getElementById('prev-desc').textContent = cfg.desc || '';
-      document.getElementById('prev-desc').style.color = 'rgba(255,255,255,.8)';
+      const prevH1 = document.getElementById('prev-h1');
+      if (prevH1) {
+        prevH1.textContent = cfg.h1 || 'Tu ferretería';
+        prevH1.style.color = '#fff';
+      }
+      const prevH2 = document.getElementById('prev-h2');
+      if (prevH2) {
+        prevH2.textContent = cfg.h2 || 'sin demoras.';
+        prevH2.style.color = c;
+      }
+      const prevDesc = document.getElementById('prev-desc');
+      if (prevDesc) {
+        prevDesc.textContent = cfg.desc || '';
+        prevDesc.style.color = 'rgba(255,255,255,.8)';
+      }
 
       // Pills — always accent color, white text
       document.querySelectorAll('#prev-pill1, #prev-pill2').forEach(p => {
-        p.style.background = c;
-        p.style.border = 'none';
-        p.style.color = '#fff';
-        p.querySelectorAll('i').forEach(i => { i.style.color = '#fff'; });
+        if (p) {
+          p.style.background = c;
+          p.style.border = 'none';
+          p.style.color = '#fff';
+          p.querySelectorAll('i').forEach(i => { i.style.color = '#fff'; });
+        }
       });
 
       // Hero image preview
@@ -6567,24 +6593,31 @@
 
       // Category active
       const catAll = document.getElementById('prev-cat-all');
-      catAll.style.background = c;
-      catAll.style.borderColor = c;
+      if (catAll) {
+        catAll.style.background = c;
+        catAll.style.borderColor = c;
+      }
 
       // Cards
       document.querySelectorAll('[id^="prev-card-"]').forEach(card => {
-        card.style.background = t.cardBg;
-        card.style.borderColor = t.border;
+        if (card) {
+          card.style.background = t.cardBg;
+          card.style.borderColor = t.border;
+        }
       });
-      document.querySelectorAll('.prev-cat-label').forEach(el => { el.style.color = c; });
+      document.querySelectorAll('.prev-cat-label').forEach(el => { if (el) el.style.color = c; });
       document.querySelectorAll('.prev-add-btn').forEach(btn => {
-        btn.style.borderColor = hexToRgba(c, .4);
-        btn.style.color = cfg.theme === 'dark' ? '#B0B0B8' : t.muted;
-        btn.onmouseenter = () => { btn.style.background = c; btn.style.color = '#fff'; };
-        btn.onmouseleave = () => { btn.style.background = ''; btn.style.color = cfg.theme === 'dark' ? '#B0B0B8' : t.muted; };
+        if (btn) {
+          btn.style.borderColor = hexToRgba(c, .4);
+          btn.style.color = cfg.theme === 'dark' ? '#B0B0B8' : t.muted;
+          btn.onmouseenter = () => { btn.style.background = c; btn.style.color = '#fff'; };
+          btn.onmouseleave = () => { btn.style.background = ''; btn.style.color = cfg.theme === 'dark' ? '#B0B0B8' : t.muted; };
+        }
       });
 
       // Brand swatch on theme button
-      document.getElementById('theme-brand-swatch').style.background = c;
+      const brandSwatch = document.getElementById('theme-brand-swatch');
+      if (brandSwatch) brandSwatch.style.background = c;
 
       // Footer
       const footerWapp = document.getElementById('prev-wapp-btn');
@@ -6922,18 +6955,21 @@
 
     // Init design panel with saved config
     function initDesignPanel() {
-      document.getElementById('cfg-name').value = cfg.name;
-      document.getElementById('cfg-tagline').value = cfg.tagline;
-      document.getElementById('cfg-h1').value = cfg.h1;
-      document.getElementById('cfg-h2').value = cfg.h2;
-      document.getElementById('cfg-desc').value = cfg.desc;
-      document.getElementById('cfg-wapp').value = cfg.wapp;
-      document.getElementById('cfg-color').value = cfg.color;
-      document.getElementById('color-hex').textContent = cfg.color;
-      document.getElementById('cfg-color2').value = cfg.color2 || '#1A73E8';
-      document.getElementById('color2-hex').textContent = cfg.color2 || '#1A73E8';
-      document.getElementById('cfg-color3').value = cfg.color3 || '#F4B400';
-      document.getElementById('color3-hex').textContent = cfg.color3 || '#F4B400';
+      const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+      const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt || ''; };
+
+      setVal('cfg-name', cfg.name);
+      setVal('cfg-tagline', cfg.tagline);
+      setVal('cfg-h1', cfg.h1);
+      setVal('cfg-h2', cfg.h2);
+      setVal('cfg-desc', cfg.desc);
+      setVal('cfg-wapp', cfg.wapp);
+      setVal('cfg-color', cfg.color);
+      setTxt('color-hex', cfg.color);
+      setVal('cfg-color2', cfg.color2 || '#1A73E8');
+      setTxt('color2-hex', cfg.color2 || '#1A73E8');
+      setVal('cfg-color3', cfg.color3 || '#F4B400');
+      setTxt('color3-hex', cfg.color3 || '#F4B400');
 
       // Mark active color swatch
       document.querySelectorAll('.color-swatch').forEach(b => {
@@ -6947,7 +6983,7 @@
       if (themeBtn) themeBtn.classList.add('active');
 
       previewUpdate();
-      initHeroImgPreview();
+      if (typeof initHeroImgPreview === 'function') initHeroImgPreview();
     }
 
     // Run design init when view opens
@@ -9538,10 +9574,11 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         urlBtnEl.href = getStoreUrl();
       }
 
-      if (sc.name) document.getElementById('cfg-store-name').value = sc.name;
-      if (sc.tagline) document.getElementById('cfg-store-tagline').value = sc.tagline;
-      if (sc.wapp) document.getElementById('cfg-store-wapp').value = sc.wapp;
-      if (sc.admin_email) document.getElementById('cfg-store-email').value = sc.admin_email;
+      const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+      if (sc.name) setVal('cfg-store-name', sc.name);
+      if (sc.tagline) setVal('cfg-store-tagline', sc.tagline);
+      if (sc.wapp) setVal('cfg-store-wapp', sc.wapp);
+      if (sc.admin_email) setVal('cfg-store-email', sc.admin_email);
       
       const pwdInput = document.getElementById('cfg-store-password');
       if (pwdInput) {
@@ -9559,11 +9596,11 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       }
 
       if (sc.rubro) {
-        document.getElementById('cfg-store-rubro').value = sc.rubro;
+        setVal('cfg-store-rubro', sc.rubro);
         updateSubrubros('cfg-store-rubro', 'cfg-store-subrubro');
-        if (sc.subrubro) document.getElementById('cfg-store-subrubro').value = sc.subrubro;
+        if (sc.subrubro) setVal('cfg-store-subrubro', sc.subrubro);
       }
-      if (sc.direccion) document.getElementById('cfg-store-direccion').value = sc.direccion;
+      if (sc.direccion) setVal('cfg-store-direccion', sc.direccion);
       
       // Load structured day-by-day horarios
       if (sc.horarios_data) {
@@ -9580,7 +9617,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         ];
         loadHorarios(defaultHorarios);
       }
-      if (sc.horario) document.getElementById('cfg-store-horario').value = sc.horario;
+      if (sc.horario) setVal('cfg-store-horario', sc.horario);
 
       const pay = sc.payment_methods || { efectivo: true, transferencia: true, convenir: true };
       const cbEfectivo = document.getElementById('cfg-pay-efectivo'); if (cbEfectivo) cbEfectivo.checked = pay.efectivo !== false;
