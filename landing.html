@@ -107,7 +107,7 @@
         .testimonial-name { font-size:13px; font-weight:700; }
         .testimonial-role { font-size:11px; color:var(--silver); }
         .pricing-section { background:var(--white); }
-        .pricing-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; margin-top:52px; max-width:720px; margin-left:auto; margin-right:auto; }
+        .pricing-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; margin-top:52px; max-width:1080px; margin-left:auto; margin-right:auto; }
         .price-card { border:2px solid #e8e3e3; border-radius:20px; padding:32px; text-align:center; position:relative; transition:transform .2s,box-shadow .2s; }
         .price-card:hover { transform:translateY(-4px); box-shadow:0 16px 48px rgba(0,0,0,0.1); }
         .price-card.featured { border-color:var(--red); box-shadow:0 8px 40px rgba(214,0,0,0.15); }
@@ -303,39 +303,69 @@
                 <p class="section-sub" style="margin:0 auto">Sin permanencia mínima. Cancelás cuando quieras.</p>
             </div>
             <div class="pricing-grid">
+                <!-- PLAN STARTER -->
                 <div class="price-card">
-                    <div class="price-name">Plan Mensual</div>
-                    <div class="price-amount">$99.000 <small>/ mes</small></div>
-                    <div class="price-period">Facturación mensual · ARS</div>
+                    <div class="price-name">Plan Starter</div>
+                    <div class="price-amount">$19.900 <small>/ mes</small></div>
+                    <div class="price-period">o $199.000 / año · ARS</div>
                     <ul class="price-features" style="list-style:none; padding:0; display:flex; flex-direction:column; gap:10px;">
-                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Productos ilimitados</li>
-                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Subdominio propio</li>
-                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Variantes y modificadores</li>
-                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Banners promocionales</li>
+                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Hasta 12 productos</li>
+                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Subdominio personalizado</li>
+                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Pedidos ilimitados a WhatsApp</li>
+                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Código QR y Kit Imprimible</li>
                         <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Dashboard completo</li>
-                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Presupuestos directo a WhatsApp</li>
-                        <li style="display:flex; align-items:center; gap:8px; opacity:0.4; text-decoration:line-through;"><span style="font-weight:bold;">✗</span> Soporte prioritario por WhatsApp</li>
-                        <li style="display:flex; align-items:center; gap:8px; opacity:0.4; text-decoration:line-through;"><span style="font-weight:bold;">✗</span> Asistencia en la carga inicial</li>
+                        <li style="display:flex; align-items:center; gap:8px; opacity:0.4; text-decoration:line-through;"><span style="font-weight:bold;">✗</span> Motor SEO / GEO Local</li>
+                        <li style="display:flex; align-items:center; gap:8px; opacity:0.4; text-decoration:line-through;"><span style="font-weight:bold;">✗</span> Métricas exportables</li>
                     </ul>
-                    <button class="price-cta" onclick="openRegisterModal()" style="margin-top:24px;">Quiero el plan Mensual</button>
+                    <button class="price-cta" onclick="openRegisterModal()" style="margin-top:24px;">Crear mi tienda Starter</button>
                 </div>
+
+                <!-- PLAN PRO -->
                 <div class="price-card featured">
-                    <div class="price-badge">⚡ Ahorrá más del 15%</div>
-                    <div class="price-name">Plan Anual</div>
-                    <div class="price-amount">$990.000 <small>/ año</small></div>
-                    <div class="price-period">Facturación anual · Pago único</div>
+                    <div class="price-badge">⚡ MÁS VENDIDO</div>
+                    <div class="price-name">Plan PRO</div>
+                    <div class="price-amount">$29.900 <small>/ mes</small></div>
+                    <div class="price-period">o $299.000 / año · 2 meses gratis</div>
                     <ul class="price-features" style="list-style:none; padding:0; display:flex; flex-direction:column; gap:10px;">
-                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Productos ilimitados</li>
-                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Subdominio propio</li>
-                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Variantes y modificadores</li>
-                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Banners promocionales</li>
-                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Dashboard completo</li>
-                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Presupuestos directo a WhatsApp</li>
+                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Productos e imágenes ilimitadas</li>
+                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Subdominio personalizado</li>
+                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Pedidos ilimitados a WhatsApp</li>
+                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Motor SEO / GEO Local</li>
+                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Métricas y clientes exportables</li>
+                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Informe gerencial calendarizado</li>
                         <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Soporte prioritario por WhatsApp</li>
+                    </ul>
+                    <button class="price-cta" onclick="openRegisterModal()" style="margin-top:24px;">Quiero el Plan PRO</button>
+                </div>
+
+                <!-- PLAN ENTERPRISE -->
+                <div class="price-card">
+                    <div class="price-name">Plan Enterprise</div>
+                    <div class="price-amount">$59.900 <small>/ mes</small></div>
+                    <div class="price-period">o $599.000 / año · 2 meses gratis</div>
+                    <ul class="price-features" style="list-style:none; padding:0; display:flex; flex-direction:column; gap:10px;">
+                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Todo lo del Plan PRO</li>
+                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> App Móvil propia (Próximamente)</li>
+                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Notificaciones Push (Próximamente)</li>
+                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Dominio personalizado (Próximamente)</li>
+                        <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Soporte prioritario 24/7</li>
                         <li style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:bold;">✓</span> Asistencia en la carga inicial</li>
                     </ul>
-                    <button class="price-cta" onclick="openRegisterModal()" style="margin-top:24px;">Quiero el plan Anual</button>
+                    <button class="price-cta" onclick="openRegisterModal()" style="margin-top:24px;">Contactar por Enterprise</button>
                 </div>
+            </div>
+
+            <!-- BANNER SETUP INICIAL ASISTIDO -->
+            <div style="max-width:1080px; margin:36px auto 0; background:var(--fog); border:2px dashed var(--red); border-radius:18px; padding:24px 32px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+                <div>
+                    <div style="font-size:16px; font-weight:800; color:var(--dark); display:flex; align-items:center; gap:8px;">
+                        🛠️ Setup Inicial Asistido — $35.000 <span style="font-size:11px; font-weight:700; color:var(--red); background:rgba(214,0,0,0.1); padding:3px 10px; border-radius:99px; text-transform:uppercase;">Pago único</span>
+                    </div>
+                    <div style="font-size:13.5px; color:#555; margin-top:4px; max-width:720px; line-height:1.5;">
+                        ¿No tenés tiempo para configurar tu tienda? Un especialista de nuestro equipo te acompaña en una sesión de 2 horas (remoto o presencial) para dejar tu catálogo cargado y 100% funcionando.
+                    </div>
+                </div>
+                <button class="price-cta" onclick="openRegisterModal()" style="width:auto; padding:12px 24px; font-size:13.5px;">Quiero mi Setup</button>
             </div>
         </div>
     </section>
