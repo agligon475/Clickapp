@@ -444,13 +444,61 @@
         </div>
     </section>
 
-    <section class="cta-section">
-        <div class="cta-inner">
-            <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" style="height:36px;margin-bottom:24px;opacity:.9">
-            <h2>¿Esperando el momento ideal?<br>Este es.</h2>
-            <p>Tu competencia ya ofrece catálogos online. En 15 minutos podés tener el tuyo, funcionando y compartible.</p>
-            <div class="cta-btns">
-                <a href="javascript:void(0)" onclick="openRegisterModal()" class="cta-btn-white"><i class="bi bi-shop"></i> Quiero crear mi tienda</a>
+    <!-- SECCIÓN CTA DE ALTO IMPACTO E GENERADOR INTERACTIVO DE LINKS -->
+    <section class="cta-section-pro" style="background: linear-gradient(180deg, #0f0d0d 0%, #0A0A0C 100%); padding: 100px 24px; position: relative; overflow: hidden; border-top: 1px solid rgba(255,255,255,0.08);">
+        <!-- Glows & background graphics -->
+        <div style="position: absolute; width: 650px; height: 650px; border-radius: 50%; background: radial-gradient(circle, rgba(214,0,0,0.32) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; filter: blur(60px);"></div>
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 80% 20%, rgba(214,0,0,0.15), transparent 40%); pointer-events: none;"></div>
+
+        <div style="position: relative; z-index: 2; max-width: 920px; margin: 0 auto; text-align: center;">
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(214,0,0,0.18); border: 1px solid rgba(214,0,0,0.4); color: #ff7777; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 7px 18px; border-radius: 999px; margin-bottom: 24px;">
+                <span style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; box-shadow: 0 0 10px #10b981;"></span> SIMULADOR DE ENLACE DE TU MARCA
+            </div>
+
+            <h2 style="font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 800; color: #fff; letter-spacing: -1.5px; line-height: 1.15; margin-bottom: 18px;">
+                ¿Esperando el momento ideal?<br><span style="background: linear-gradient(135deg, #fff 30%, #ff6b6b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Generá el link de tu comercio ahora.</span>
+            </h2>
+            <p style="font-size: clamp(1rem, 2.2vw, 1.2rem); color: rgba(255,255,255,0.75); max-width: 650px; margin: 0 auto 36px; line-height: 1.6;">
+                Escribí el nombre de tu negocio a continuación para ver cómo lucirá el enlace único e imborrable de tu tienda digital listo para compartir en Instagram y WhatsApp.
+            </p>
+
+            <!-- SIMULADOR INTERACTIVO DE ENLACE DE TIENDA -->
+            <div style="background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.12); border-radius: 24px; padding: 32px 24px; box-shadow: 0 24px 64px rgba(0,0,0,0.5); max-width: 740px; margin: 0 auto 40px; text-align: left;">
+                <label style="display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.7); margin-bottom: 10px;">
+                    💡 Escribí el nombre de tu marca o comercio:
+                </label>
+                <div style="margin-bottom: 18px;">
+                    <input type="text" id="cta-input-store-name" placeholder="Ej: Mi Ferretería / Coco Store / Panadería San José" oninput="updateCtaGeneratedLink(this.value)" style="width: 100%; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 16px 18px; color: #fff; font-size: 16px; font-family: inherit; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--red)'" onblur="this.style.borderColor='rgba(255,255,255,0.2)'">
+                </div>
+
+                <!-- LINK RESULTANTE GENERADO CON BOTÓN DE COPIA -->
+                <div style="background: rgba(0,0,0,0.7); border: 1px solid rgba(214,0,0,0.4); border-radius: 14px; padding: 18px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+                    <div style="display: flex; align-items: center; gap: 12px; min-width: 220px; flex: 1;">
+                        <span style="font-size: 22px;">🔗</span>
+                        <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">
+                            <div style="font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;">Tu Enlace Directo Generado:</div>
+                            <span id="cta-generated-link-display" style="font-size: 16px; font-weight: 700; color: #10b981; font-family: monospace; letter-spacing: -0.3px;">https://mi-negocio.daletepido.com.ar/</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button onclick="copyGeneratedCtaLink()" style="background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 10px 16px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 0.2s;" onmouseenter="this.style.background='rgba(255,255,255,0.2)'" onmouseleave="this.style.background='rgba(255,255,255,0.1)'">
+                            <i class="bi bi-clipboard"></i> Copiar Link
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTONES DE ACCIÓN DIRECTOS Y SECUNDARIOS -->
+            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                <a href="javascript:void(0)" onclick="registerWithGeneratedLink()" class="btn-primary" style="padding: 18px 40px; font-size: 16px; border-radius: 14px; box-shadow: 0 12px 40px rgba(214,0,0,0.6);">
+                    <i class="bi bi-rocket-takeoff-fill"></i> Registrar mi tienda con este link
+                </a>
+                <a href="https://cocostore.daletepido.com.ar/" target="_blank" class="btn-secondary" style="padding: 18px 28px; font-size: 15px; border-radius: 14px;">
+                    <i class="bi bi-box-arrow-up-right"></i> Probar Ejemplo Demo Live
+                </a>
+                <a href="https://wa.me/5491136362036?text=Hola%21%20Quiero%20consultar%20por%20crear%20mi%20tienda%20en%20Dale%21%20Te%20Pido." target="_blank" class="btn-secondary" style="padding: 18px 24px; font-size: 15px; border-radius: 14px; background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.35); color: #10b981;">
+                    <i class="bi bi-whatsapp"></i> Hablar por WhatsApp
+                </a>
             </div>
         </div>
     </section>
@@ -595,6 +643,39 @@
         animate();
         const obs = new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});},{threshold:0.15});
         document.querySelectorAll('.step-card,.diff-card,.testimonial-card,.price-card,.feature-item').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition='opacity .5s ease,transform .5s ease';obs.observe(el);});
+
+        /* FUNCIONES SIMULADOR GENERADOR DE LINKS */
+        function updateCtaGeneratedLink(val) {
+            const cleanVal = val.trim().toLowerCase()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            const sub = cleanVal || 'mi-negocio';
+            const displayEl = document.getElementById('cta-generated-link-display');
+            if (displayEl) {
+                displayEl.textContent = `https://${sub}.daletepido.com.ar/`;
+            }
+        }
+
+        function copyGeneratedCtaLink() {
+            const displayEl = document.getElementById('cta-generated-link-display');
+            if (displayEl) {
+                navigator.clipboard.writeText(displayEl.textContent).then(() => {
+                    alert('✓ Enlace copiado al portapapeles:\n' + displayEl.textContent);
+                });
+            }
+        }
+
+        function registerWithGeneratedLink() {
+            const inputVal = document.getElementById('cta-input-store-name')?.value || '';
+            openRegisterModal();
+            setTimeout(() => {
+                const regStoreInput = document.getElementById('reg-store');
+                if (regStoreInput && inputVal) {
+                    regStoreInput.value = inputVal;
+                }
+            }, 100);
+        }
     </script>
 </body>
 </html>
