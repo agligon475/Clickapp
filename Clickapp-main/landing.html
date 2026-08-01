@@ -472,15 +472,15 @@
                 </div>
 
                 <!-- LINK RESULTANTE Y ESTADO DE DISPONIBILIDAD -->
-                <div style="background: rgba(0,0,0,0.7); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 14px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                <div id="cta-status-box" style="background: rgba(0,0,0,0.7); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 14px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; transition: border-color 0.3s;">
                     <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 220px;">
                         <span style="font-size: 22px;">🔗</span>
                         <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">
                             <div style="font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;">Enlace de tu tienda:</div>
-                            <span id="cta-generated-link-display" style="font-size: 16px; font-weight: 700; color: #10b981; font-family: monospace; letter-spacing: -0.3px;">https://mi-negocio.daletepido.com.ar/</span>
+                            <span id="cta-generated-link-display" style="font-size: 16px; font-weight: 700; color: #10b981; font-family: monospace; letter-spacing: -0.3px; transition: color 0.3s;">https://mi-negocio.daletepido.com.ar/</span>
                         </div>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 99px;">
+                    <div id="cta-status-badge" style="display: flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 99px; transition: all 0.3s;">
                         <span>🟢</span> Disponible para registrar
                     </div>
                 </div>
@@ -488,7 +488,7 @@
 
             <!-- BOTÓN PRINCIPAL ÚNICO DE ALTO IMPACTO -->
             <div style="display: flex; justify-content: center;">
-                <a href="javascript:void(0)" onclick="registerWithGeneratedLink()" class="btn-primary" style="padding: 18px 44px; font-size: 17px; border-radius: 14px; box-shadow: 0 12px 40px rgba(214,0,0,0.6); display: inline-flex; align-items: center; gap: 10px;">
+                <a href="javascript:void(0)" id="cta-register-btn" onclick="registerWithGeneratedLink()" class="btn-primary" style="padding: 18px 44px; font-size: 17px; border-radius: 14px; box-shadow: 0 12px 40px rgba(214,0,0,0.6); display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s;">
                     <i class="bi bi-shop"></i> Registrar mi tienda con este enlace
                 </a>
             </div>
@@ -636,7 +636,10 @@
         const obs = new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});},{threshold:0.15});
         document.querySelectorAll('.step-card,.diff-card,.testimonial-card,.price-card,.feature-item').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition='opacity .5s ease,transform .5s ease';obs.observe(el);});
 
-        /* FUNCIONES COMPROBADOR DE DISPONIBILIDAD Y REGISTRO */
+        /* FUNCIONES COMPROBADOR DE DISPONIBILIDAD EN TIEMPO REAL CON SUPABASE */
+        let availabilityTimer = null;
+        let isCurrentSubdomainAvailable = true;
+
         function updateCtaGeneratedLink(val) {
             const cleanVal = val.trim().toLowerCase()
                 .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -644,8 +647,103 @@
                 .replace(/^-+|-+$/g, '');
             const sub = cleanVal || 'mi-negocio';
             const displayEl = document.getElementById('cta-generated-link-display');
+            const badgeEl = document.getElementById('cta-status-badge');
+
             if (displayEl) {
                 displayEl.textContent = `https://${sub}.daletepido.com.ar/`;
+            }
+
+            if (badgeEl) {
+                badgeEl.style.background = 'rgba(234, 179, 8, 0.15)';
+                badgeEl.style.borderColor = 'rgba(234, 179, 8, 0.35)';
+                badgeEl.style.color = '#eab308';
+                badgeEl.innerHTML = '<span>⏳</span> Verificando...';
+            }
+
+            clearTimeout(availabilityTimer);
+            availabilityTimer = setTimeout(() => {
+                checkSubdomainInSupabase(sub);
+            }, 350);
+        }
+
+        async function checkSubdomainInSupabase(subdomain) {
+            const badgeEl = document.getElementById('cta-status-badge');
+            const displayEl = document.getElementById('cta-generated-link-display');
+            const btnEl = document.getElementById('cta-register-btn');
+            const boxEl = document.getElementById('cta-status-box');
+
+            if (!subdomain || subdomain === 'mi-negocio') {
+                if (badgeEl) {
+                    badgeEl.style.background = 'rgba(16, 185, 129, 0.15)';
+                    badgeEl.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                    badgeEl.style.color = '#10b981';
+                    badgeEl.innerHTML = '<span>🟢</span> Disponible para registrar';
+                }
+                if (boxEl) boxEl.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+                if (displayEl) displayEl.style.color = '#10b981';
+                isCurrentSubdomainAvailable = true;
+                if (btnEl) {
+                    btnEl.style.opacity = '1';
+                    btnEl.style.pointerEvents = 'auto';
+                    btnEl.innerHTML = '<i class="bi bi-shop"></i> Registrar mi tienda con este enlace';
+                }
+                return;
+            }
+
+            try {
+                const supabaseUrl = 'https://iaylgsthwildjkiiwgfd.supabase.co/rest/v1/company_settings?store_id=eq.' + encodeURIComponent(subdomain) + '&select=store_id';
+                const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+
+                const res = await fetch(supabaseUrl, {
+                    headers: {
+                        'apikey': anonKey,
+                        'Authorization': 'Bearer ' + anonKey
+                    }
+                });
+
+                const data = await res.json();
+
+                if (Array.isArray(data) && data.length > 0) {
+                    // YA EXISTE - NO DISPONIBLE
+                    isCurrentSubdomainAvailable = false;
+                    if (badgeEl) {
+                        badgeEl.style.background = 'rgba(239, 68, 68, 0.2)';
+                        badgeEl.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+                        badgeEl.style.color = '#f87171';
+                        badgeEl.innerHTML = '<span>🔴</span> No disponible (Ya registrado)';
+                    }
+                    if (boxEl) boxEl.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+                    if (displayEl) displayEl.style.color = '#f87171';
+                    if (btnEl) {
+                        btnEl.style.opacity = '0.85';
+                        btnEl.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> Nombre ocupado — Probar con otro';
+                    }
+                } else {
+                    // LIBRE - DISPONIBLE
+                    isCurrentSubdomainAvailable = true;
+                    if (badgeEl) {
+                        badgeEl.style.background = 'rgba(16, 185, 129, 0.15)';
+                        badgeEl.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                        badgeEl.style.color = '#10b981';
+                        badgeEl.innerHTML = '<span>🟢</span> Disponible para registrar';
+                    }
+                    if (boxEl) boxEl.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+                    if (displayEl) displayEl.style.color = '#10b981';
+                    if (btnEl) {
+                        btnEl.style.opacity = '1';
+                        btnEl.style.pointerEvents = 'auto';
+                        btnEl.innerHTML = '<i class="bi bi-shop"></i> Registrar mi tienda con este enlace';
+                    }
+                }
+            } catch (err) {
+                console.error('Error checking availability:', err);
+                isCurrentSubdomainAvailable = true;
+                if (badgeEl) {
+                    badgeEl.style.background = 'rgba(16, 185, 129, 0.15)';
+                    badgeEl.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                    badgeEl.style.color = '#10b981';
+                    badgeEl.innerHTML = '<span>🟢</span> Disponible para registrar';
+                }
             }
         }
 
