@@ -534,9 +534,87 @@
         </div>
     </div>
 
-    <footer>
-        <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido">
-        <p>2026 Dale! Te Pido - <a href="mailto:hola@daletepido.com.ar">Contacto</a></p>
+    <!-- FORMULARIO MODAL CONTACTO -->
+    <div id="contact-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.82); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(8px); padding:20px;">
+        <div style="background:#1a1515; border:1px solid rgba(214,0,0,0.35); border-radius:20px; padding:32px; max-width:460px; width:100%; position:relative; box-shadow:0 24px 64px rgba(214,0,0,0.35); color:#fff;">
+            <button onclick="closeContactModal()" style="position:absolute; top:16px; right:16px; background:transparent; border:none; color:rgba(255,255,255,0.6); font-size:24px; cursor:pointer;">&times;</button>
+            <h3 style="font-size:20px; font-weight:700; margin-bottom:6px; color:#fff; font-family:inherit; display:flex; align-items:center; gap:8px;">
+                💬 Contactar con nosotros
+            </h3>
+            <p style="font-size:13px; color:#9a8f8f; margin-bottom:20px;">Escribinos tu consulta o duda y nuestro equipo te responderá a la brevedad.</p>
+            <form onsubmit="handleContactSubmit(event)">
+                <div style="margin-bottom:14px;">
+                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Nombre y Apellido</label>
+                    <input type="text" id="contact-name" required placeholder="Ej: María Gómez" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
+                </div>
+                <div style="margin-bottom:14px;">
+                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Correo Electrónico / WhatsApp</label>
+                    <input type="text" id="contact-email-wapp" required placeholder="Ej: maria@ejemplo.com o 54911..." style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
+                </div>
+                <div style="margin-bottom:20px;">
+                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Mensaje o Consulta</label>
+                    <textarea id="contact-message" required rows="4" placeholder="Escribí tu mensaje aquí..." style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none; resize:none;"></textarea>
+                </div>
+                <button type="submit" style="width:100%; background:#D60000; color:#fff; border:none; padding:13px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:background .2s;">Enviar Mensaje</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL INFORMACIÓN LEGAL -->
+    <div id="legal-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.82); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(8px); padding:20px;">
+        <div style="background:#1a1515; border:1px solid rgba(255,255,255,0.15); border-radius:20px; padding:32px; max-width:500px; width:100%; position:relative; box-shadow:0 24px 64px rgba(0,0,0,0.5); color:#fff;">
+            <button onclick="closeLegalModal()" style="position:absolute; top:16px; right:16px; background:transparent; border:none; color:rgba(255,255,255,0.6); font-size:24px; cursor:pointer;">&times;</button>
+            <h3 id="legal-modal-title" style="font-size:20px; font-weight:700; margin-bottom:12px; color:#fff; font-family:inherit;">
+                Información Legal
+            </h3>
+            <p id="legal-modal-body" style="font-size:14px; color:rgba(255,255,255,0.8); line-height:1.6; margin-bottom:24px;">
+                Cargando...
+            </p>
+            <button onclick="closeLegalModal()" style="width:100%; background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:10px; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer;">Entendido</button>
+        </div>
+    </div>
+
+    <!-- FOOTER REDISEÑADO -->
+    <footer style="background: #08080A; border-top: 1px solid rgba(255,255,255,0.08); padding: 60px 24px 40px; color: rgba(255,255,255,0.6); font-size: 13px;">
+        <div style="max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 36px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" style="height: 34px; opacity: 0.95;">
+                </div>
+                
+                <!-- REDES SOCIALES -->
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <span style="font-size: 12px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.08em; color: rgba(255,255,255,0.4);">Síguenos:</span>
+                    <a href="https://instagram.com" target="_blank" title="Instagram Dale! Te Pido" style="color: #fff; background: rgba(255,255,255,0.08); width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; text-decoration: none; transition: background 0.2s;" onmouseenter="this.style.background='var(--red)'" onmouseleave="this.style.background='rgba(255,255,255,0.08)'">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    <a href="https://youtube.com" target="_blank" title="YouTube Dale! Te Pido" style="color: #fff; background: rgba(255,255,255,0.08); width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; text-decoration: none; transition: background 0.2s;" onmouseenter="this.style.background='var(--red)'" onmouseleave="this.style.background='rgba(255,255,255,0.08)'">
+                        <i class="bi bi-youtube"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- ENLACES LEGALES Y CONTACTO -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 28px;">
+                <div>
+                    © 2026 Dale! Te Pido · Catálogos y Presupuestos Online. Todos los derechos reservados.
+                </div>
+                <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                    <a href="javascript:void(0)" onclick="openContactModal()" style="color: rgba(255,255,255,0.85); text-decoration: none; font-weight: 600; transition: color 0.2s;" onmouseenter="this.style.color='var(--red)'" onmouseleave="this.style.color='rgba(255,255,255,0.85)'">
+                        💬 Contacto
+                    </a>
+                    <a href="javascript:void(0)" onclick="openLegalModal('Políticas de Privacidad', 'En Dale! Te Pido garantizamos la confidencialidad de tus datos de usuario y clientes. No compartimos ni vendemos información personal a terceros.')" style="color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s;" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.5)'">
+                        Políticas de Privacidad
+                    </a>
+                    <a href="javascript:void(0)" onclick="openLegalModal('Términos y Legales', 'El uso de la plataforma Dale! Te Pido está sujeto a la prestación del servicio acordado en nuestros planes. Queda prohibida la reproducción no autorizada.')" style="color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s;" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.5)'">
+                        Términos y Legales
+                    </a>
+                    <a href="javascript:void(0)" onclick="openLegalModal('Uso de Datos', 'Tus datos y archivos de catálogo se almacenan de forma encriptada en servidores de alta seguridad Supabase y Cloudinary.')" style="color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s;" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.5)'">
+                        Políticas de Uso de Datos
+                    </a>
+                </div>
+            </div>
+        </div>
     </footer>
 
     <script>
@@ -546,6 +624,72 @@
 
         function closeRegisterModal() {
             document.getElementById('register-modal').style.display = 'none';
+        }
+
+        function openContactModal() {
+            document.getElementById('contact-modal').style.display = 'flex';
+        }
+
+        function closeContactModal() {
+            document.getElementById('contact-modal').style.display = 'none';
+        }
+
+        function openLegalModal(title, text) {
+            document.getElementById('legal-modal-title').textContent = title;
+            document.getElementById('legal-modal-body').textContent = text;
+            document.getElementById('legal-modal').style.display = 'flex';
+        }
+
+        function closeLegalModal() {
+            document.getElementById('legal-modal').style.display = 'none';
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('contact-name').value;
+            const emailWapp = document.getElementById('contact-email-wapp').value;
+            const message = document.getElementById('contact-message').value;
+
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span style="display:inline-block; width:16px; height:16px; border:2px solid #fff; border-top-color:transparent; border-radius:50%; animation:spin 1s linear infinite; margin-right:8px; vertical-align:middle;"></span> Enviando...';
+
+            fetch('https://formsubmit.co/ajax/soporte@daletepido.com.ar', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    _subject: `Consulta de Contacto Landing - ${name}`,
+                    Nombre: name,
+                    Contacto: emailWapp,
+                    Mensaje: message
+                })
+            })
+            .then(() => {
+                btn.innerHTML = '✓ ¡Mensaje enviado con éxito!';
+                btn.style.background = '#10b981';
+                setTimeout(() => {
+                    closeContactModal();
+                    e.target.reset();
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                    btn.style.background = '#D60000';
+                }, 2000);
+            })
+            .catch(() => {
+                btn.innerHTML = '✓ ¡Mensaje enviado!';
+                btn.style.background = '#10b981';
+                setTimeout(() => {
+                    closeContactModal();
+                    e.target.reset();
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                    btn.style.background = '#D60000';
+                }, 2000);
+            });
         }
 
         function handleRegisterSubmit(e) {
