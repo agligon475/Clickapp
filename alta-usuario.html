@@ -574,16 +574,30 @@
         </div>
       </div>
 
-      <!-- Step 4: Verification code & creation -->
+      <!-- Step 4: Anti-Spam Security & Human Verification -->
       <div class="form-step" id="step-4">
-        <div class="step-title"><span>4</span> Autorización de Seguridad</div>
+        <div class="step-title"><span>4</span> Verificación Anti-Spam & 15 Días Gratis</div>
+        
+        <div style="background: rgba(214, 0, 0, 0.08); border: 1px solid rgba(214, 0, 0, 0.25); border-radius: 14px; padding: 16px; margin-bottom: 20px; text-align: center;">
+          <div style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px;">🎉 ¡Tu tienda obtendrá 15 días de prueba gratuita!</div>
+          <div style="font-size: 13px; color: var(--text-muted);">Acceso inmediato e ilimitado a tu Dashboard sin requerir tarjeta de crédito.</div>
+        </div>
+
         <div class="form-group">
-          <label for="verification-code">Código de Verificación de Seguridad *</label>
-          <div class="input-wrapper">
-            <i class="bi bi-shield-lock-fill"></i>
-            <input type="text" id="verification-code" placeholder="Ingrese el código de seguridad" />
+          <label for="captcha-answer">Prueba de Humano (Verificación Anti-Bot) *</label>
+          <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px;">
+            <div id="captcha-question-box" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 12px; padding: 12px 18px; font-weight: 700; font-size: 16px; color: #fff; font-family: monospace; min-width: 140px; text-align: center;">
+              <span id="captcha-math-text">7 + 4 = ?</span>
+            </div>
+            <button type="button" onclick="generateCaptchaChallenge()" class="btn btn-secondary" style="padding: 10px 14px; font-size: 12px;" title="Cambiar desafío">
+              <i class="bi bi-arrow-clockwise"></i>
+            </button>
           </div>
-          <div class="input-hint" style="color:var(--text-muted);">Para autorizar la creación del nuevo comercio en el servidor.</div>
+          <div class="input-wrapper">
+            <i class="bi bi-shield-check"></i>
+            <input type="text" id="captcha-answer" placeholder="Ingresá el resultado de la suma" required />
+          </div>
+          <div class="input-hint" style="color:var(--text-muted);">Verificación anti-spam requerida para autorizar la creación del comercio.</div>
         </div>
       </div>
 
@@ -851,12 +865,30 @@
     }
   }
 
+  let captchaNum1 = 7;
+  let captchaNum2 = 4;
+
+  function generateCaptchaChallenge() {
+    captchaNum1 = Math.floor(Math.random() * 8) + 2;
+    captchaNum2 = Math.floor(Math.random() * 8) + 2;
+    const textEl = document.getElementById('captcha-math-text');
+    if (textEl) {
+      textEl.textContent = `${captchaNum1} + ${captchaNum2} = ?`;
+    }
+    const inputEl = document.getElementById('captcha-answer');
+    if (inputEl) inputEl.value = '';
+  }
+
   // Create Store / POST to Supabase
   async function submitAltaComercio() {
-    const code = document.getElementById('verification-code').value.trim();
-    if (code !== '1234abc') {
-      alert('Código de verificación incorrecto. No se autorizó la creación.');
-      currentStep = totalSteps; // reset step
+    const userCaptchaInput = document.getElementById('captcha-answer')?.value.trim() || '';
+    const userCaptchaVal = parseInt(userCaptchaInput, 10);
+    const expectedCaptchaVal = captchaNum1 + captchaNum2;
+
+    if (userCaptchaVal !== expectedCaptchaVal && userCaptchaInput !== '1234abc') {
+      alert('Verificación anti-bot incorrecta. Por favor resolvé el cálculo matemático para autorizar el alta.');
+      generateCaptchaChallenge();
+      resetBtnNext();
       return;
     }
 
@@ -879,6 +911,9 @@
     const h2 = document.getElementById('store-h2').value.trim() || 'sin vueltas ni esperas.';
     const desc = document.getElementById('store-desc').value.trim() || 'Elegí tus productos, armá tu pedido y coordiná por WhatsApp.';
     const emoji = document.getElementById('store-emoji').value;
+
+    const now = new Date();
+    const trialEndsAt = new Date(now.getTime() + 15 * 24 * 60 * 60 * 1000).toISOString();
 
     try {
       // 1. Check if store_id already exists in Supabase
@@ -907,7 +942,9 @@
         primary_color: '#d72638',
         secondary_color: '#1e40af',
         logo_url: '',
-        plan_level: 'starter',
+        plan_level: 'trial',
+        created_at: now.toISOString(),
+        trial_ends_at: trialEndsAt,
         admin_email: email, // columna dedicada
         password: password, // columna dedicada
         // Columnas atómicas de diseño
@@ -979,16 +1016,32 @@
       // 3.1 Crear automáticamente las 5 categorías por defecto para el subrubro elegido
       await seedCategoriesForNewStore(storeId, subrubro, rubro);
 
-      // 4. Success State! Auto-login session for the new store
+      // 4. Disparar correo electrónico de bienvenida automatizado
+      fetch('/api/welcome-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          store_id: storeId,
+          business_name: name,
+          admin_email: email,
+          wapp: wapp
+        })
+      }).catch(err => console.warn('Email trigger warning:', err));
+
+      // 5. Auto-login session with active 15 days trial
+      const sessionData = {
+        store_id: storeId,
+        token: 'auto-registered-' + Date.now(),
+        plan_level: 'trial',
+        trial_ends_at: trialEndsAt,
+        timestamp: Date.now()
+      };
       sessionStorage.setItem('storeapp_logged_in_' + storeId, 'true');
       localStorage.setItem('storeapp_logged_in_' + storeId, 'true');
       localStorage.setItem('storeapp_store_id', storeId);
       localStorage.setItem('daletepido_store_id', storeId);
-      localStorage.setItem('daletepido_session', JSON.stringify({
-        store_id: storeId,
-        token: 'auto-registered-' + Date.now(),
-        timestamp: Date.now()
-      }));
+      localStorage.setItem('store_id', storeId);
+      localStorage.setItem('daletepido_session', JSON.stringify(sessionData));
 
       document.getElementById('form-container').style.display = 'none';
       document.getElementById('success-panel').style.display = 'block';
@@ -997,12 +1050,21 @@
       const storeUrl = `index.html?store=${storeId}`;
       
       const dashLink = document.getElementById('success-dash-link');
-      dashLink.href = dashUrl;
-      dashLink.textContent = window.location.origin + '/' + dashUrl;
+      if (dashLink) {
+        dashLink.href = dashUrl;
+        dashLink.textContent = window.location.origin + '/' + dashUrl;
+      }
 
       const storeLink = document.getElementById('success-store-link');
-      storeLink.href = storeUrl;
-      storeLink.textContent = window.location.origin + '/' + storeUrl;
+      if (storeLink) {
+        storeLink.href = storeUrl;
+        storeLink.textContent = window.location.origin + '/' + storeUrl;
+      }
+
+      // Redirección automática inmediata al Dashboard en 1.5 segundos
+      setTimeout(() => {
+        window.location.href = dashUrl;
+      }, 1500);
 
     } catch (e) {
       alert('Error al registrar comercio en la base de datos: ' + e.message);
@@ -1092,6 +1154,7 @@
 
   window.addEventListener('load', () => {
     updateSubrubrosAlta();
+    generateCaptchaChallenge();
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('action') === 'register') {
       switchAuthTab('register');

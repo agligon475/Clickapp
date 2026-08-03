@@ -17,6 +17,7 @@ const filesToSync = [
   'api/store.js',
   'api/debug.js',
   'api/auth.js',
+  'api/welcome-email.js',
   'manifest.json',
   'sw.js',
   'icon-192.png',

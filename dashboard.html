@@ -2527,8 +2527,73 @@
     </div>
   </div>
 
+  <!-- MODAL: ACTUALIZAR PLAN / ELEGIR PLAN -->
+  <div id="plan-upgrade-modal" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.75); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:20px;">
+    <div style="background:var(--steel); border:1px solid var(--zinc); border-radius:20px; max-width:620px; width:100%; max-height:90vh; overflow-y:auto; padding:28px; position:relative; box-shadow:0 24px 64px rgba(0,0,0,0.6); color:var(--white);">
+      <button onclick="closePlanUpgradeModal()" style="position:absolute; top:18px; right:18px; background:var(--iron); border:1px solid var(--zinc); color:var(--silver); width:32px; height:32px; border-radius:50%; font-size:18px; cursor:pointer;">&times;</button>
+      <div style="text-align:center; margin-bottom:24px;">
+        <div style="display:inline-flex; align-items:center; justify-content:center; width:54px; height:54px; background:rgba(215,38,56,0.15); border-radius:16px; color:var(--red); font-size:28px; margin-bottom:12px;">
+          <i class="bi bi-rocket-takeoff-fill"></i>
+        </div>
+        <h2 style="font-size:22px; font-weight:800; margin-bottom:6px;">Actualizar Plan de tu Comercio</h2>
+        <p style="font-size:13px; color:var(--silver);">Elegí el plan que mejor se adapte al crecimiento de tu negocio.</p>
+      </div>
+
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:16px; margin-bottom:24px;">
+        <!-- Plan Starter -->
+        <div style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:20px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="font-size:12px; font-weight:700; color:var(--silver); text-transform:uppercase; margin-bottom:6px;">Plan Inicial</div>
+            <div style="font-size:24px; font-weight:800; color:var(--white); margin-bottom:8px;">Starter</div>
+            <ul style="list-style:none; padding:0; margin:0 0 16px 0; font-size:12px; color:var(--fog); line-height:1.8;">
+              <li>✓ Catálogo digital completo</li>
+              <li>✓ Pedidos directos por WhatsApp</li>
+              <li>✓ Soporte técnico estándar</li>
+            </ul>
+          </div>
+          <button onclick="contactPlanSales('Starter')" style="width:100%; background:var(--red); color:#fff; border:none; padding:10px; border-radius:8px; font-weight:700; font-size:13px; cursor:pointer;">Elegir Starter</button>
+        </div>
+
+        <!-- Plan Pro -->
+        <div style="background:rgba(215,38,56,0.08); border:2px solid var(--red); border-radius:14px; padding:20px; display:flex; flex-direction:column; justify-content:space-between; position:relative;">
+          <span style="position:absolute; top:-10px; right:16px; background:var(--red); color:#fff; font-size:10px; font-weight:800; padding:2px 8px; border-radius:12px; text-transform:uppercase;">Recomendado</span>
+          <div>
+            <div style="font-size:12px; font-weight:700; color:var(--red); text-transform:uppercase; margin-bottom:6px;">Plan Avanzado</div>
+            <div style="font-size:24px; font-weight:800; color:var(--white); margin-bottom:8px;">Pro / Ilimitado</div>
+            <ul style="list-style:none; padding:0; margin:0 0 16px 0; font-size:12px; color:var(--fog); line-height:1.8;">
+              <li>✓ Todo lo del plan Starter</li>
+              <li>✓ Dominio propio personalizado</li>
+              <li>✓ Productos e imágenes ilimitadas</li>
+              <li>✓ Soporte prioritario 24/7</li>
+            </ul>
+          </div>
+          <button onclick="contactPlanSales('Pro')" style="width:100%; background:var(--red); color:#fff; border:none; padding:10px; border-radius:8px; font-weight:700; font-size:13px; cursor:pointer;">Elegir Pro</button>
+        </div>
+      </div>
+
+      <div style="text-align:center;">
+        <button onclick="closePlanUpgradeModal()" style="background:transparent; border:none; color:var(--silver); font-size:13px; cursor:pointer; text-decoration:underline;">Continuar con mi prueba gratuita por ahora</button>
+      </div>
+    </div>
+  </div>
+
   <!-- MAIN -->
   <main class="main" role="main">
+
+    <!-- BANNER PERIODO DE PRUEBA 15 DÍAS -->
+    <div id="dtp-trial-banner" style="display:none; background: linear-gradient(90deg, #D72638 0%, #800000 100%); color: #fff; padding: 10px 24px; font-size: 13px; font-weight: 600; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 12px rgba(215, 38, 56, 0.25); position: relative; z-index: 45;">
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <span style="background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">
+          <i class="bi bi-clock-history"></i> PRUEBA GRATUITA
+        </span>
+        <span id="dtp-trial-banner-text">Te quedan 15 días de prueba gratuita.</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button onclick="openPlanUpgradeModal()" style="background: #ffffff; color: #D72638; border: none; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: transform 0.15s;">
+          <i class="bi bi-rocket-takeoff-fill"></i> Actualizar Plan / Elegir Plan
+        </button>
+      </div>
+    </div>
 
     <!-- TOPBAR -->
     <div class="topbar">
@@ -10802,10 +10867,99 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     }
 
 
+    /* ═══════════════════════════════════════════ LÓGICA DE PRUEBA 15 DÍAS */
+    function openPlanUpgradeModal() {
+      const modal = document.getElementById('plan-upgrade-modal');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closePlanUpgradeModal() {
+      const modal = document.getElementById('plan-upgrade-modal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function contactPlanSales(planName) {
+      const storeId = window.STORE_ID || 'mi-tienda';
+      const message = encodeURIComponent(`¡Hola Dale! Te Pido! Quisiera información y asistencia para contratar/actualizar mi tienda al Plan ${planName} (ID Comercio: ${storeId}).`);
+      window.open(`https://wa.me/5491141819344?text=${message}`, '_blank');
+    }
+
+    async function initTrialBanner() {
+      const bannerEl = document.getElementById('dtp-trial-banner');
+      const bannerTextEl = document.getElementById('dtp-trial-banner-text');
+      const badgeEl = document.getElementById('sb-plan-badge');
+
+      if (!bannerEl || !bannerTextEl) return;
+
+      let trialEndsAt = null;
+      let createdAt = null;
+      let planLevel = 'trial';
+
+      try {
+        const sessionRaw = localStorage.getItem('daletepido_session');
+        if (sessionRaw) {
+          const session = JSON.parse(sessionRaw);
+          if (session.trial_ends_at) trialEndsAt = session.trial_ends_at;
+          if (session.plan_level) planLevel = session.plan_level;
+        }
+      } catch(e) {}
+
+      try {
+        const storeId = window.STORE_ID || 'coquito';
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}&select=created_at,trial_ends_at,plan_level`, {
+          headers: { 'apikey': SUPABASE_KEY }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.length > 0) {
+            if (data[0].trial_ends_at) trialEndsAt = data[0].trial_ends_at;
+            if (data[0].created_at) createdAt = data[0].created_at;
+            if (data[0].plan_level) planLevel = data[0].plan_level;
+          }
+        }
+      } catch(e) {}
+
+      let endDate = null;
+      if (trialEndsAt) {
+        endDate = new Date(trialEndsAt);
+      } else if (createdAt) {
+        endDate = new Date(new Date(createdAt).getTime() + 15 * 24 * 60 * 60 * 1000);
+      } else {
+        endDate = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000);
+      }
+
+      const now = new Date();
+      const diffMs = endDate.getTime() - now.getTime();
+      const remainingDays = Math.max(0, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+
+      bannerEl.style.display = 'flex';
+
+      if (remainingDays > 0) {
+        bannerTextEl.innerHTML = `Te queda${remainingDays !== 1 ? 'n' : ''} <strong style="color:#fff; text-decoration:underline;">${remainingDays} día${remainingDays !== 1 ? 's' : ''} de prueba gratuita</strong>. ¡Aprovechá al máximo todas las funciones de tu tienda!`;
+        bannerEl.style.background = 'linear-gradient(90deg, #D72638 0%, #800000 100%)';
+        if (badgeEl) {
+          badgeEl.style.background = 'rgba(215,38,56,0.15)';
+          badgeEl.style.color = 'var(--red)';
+          badgeEl.style.border = '1px solid rgba(215,38,56,0.3)';
+          badgeEl.innerHTML = `<i class="bi bi-clock-history"></i> Prueba: ${remainingDays}d restantes`;
+        }
+      } else {
+        bannerTextEl.innerHTML = `⚠️ <strong style="color:#fff;">Tu período de prueba gratuita de 15 días ha finalizado.</strong> Actualizá tu plan para mantener las funciones activas.`;
+        bannerEl.style.background = 'linear-gradient(90deg, #b91c1c 0%, #7f1d1d 100%)';
+        if (badgeEl) {
+          badgeEl.style.background = 'rgba(239, 68, 68, 0.2)';
+          badgeEl.style.color = '#ef4444';
+          badgeEl.style.border = '1px solid #ef4444';
+          badgeEl.innerHTML = `<i class="bi bi-exclamation-triangle-fill"></i> Prueba Vencida`;
+        }
+      }
+    }
+
     /* ═══════════════════════════════════════════ INIT */
     applyDashTheme();
     initDashboardAuth();
     initCharts();
+    initTrialBanner();
 
     try {
       const activeStore = STORE_ID;
