@@ -419,6 +419,12 @@
           </div>
         </div>
 
+        <div style="text-align: right; margin-top: -8px;">
+          <a href="#" onclick="openForgotPasswordModal(event)" style="color: var(--text-muted); font-size: 13px; text-decoration: underline;">
+            ¿Olvidaste tu usuario o contraseña?
+          </a>
+        </div>
+
         <div id="login-error-msg" style="display:none; padding:12px; background:rgba(239, 68, 68, 0.15); border:1px solid var(--error); border-radius:10px; color:#ff9999; font-size:13px;"></div>
 
         <button type="submit" id="login-submit-btn" class="btn btn-primary" style="width:100%; margin-top:8px; padding:14px; font-size:15px;">
@@ -426,6 +432,47 @@
         </button>
       </form>
     </div>
+
+  <!-- MODAL RECUPERAR CONTRASEÑA -->
+  <div id="modal-forgot-password" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); z-index:99999; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:var(--panel); border:1px solid var(--border); border-radius:20px; width:100%; max-width:440px; padding:32px; backdrop-filter:blur(16px); position:relative;">
+      <h3 style="font-size:20px; font-weight:700; color:#fff; margin-bottom:8px;">Recuperar Contraseña</h3>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Ingresá el ID de tu tienda o tu correo registrado. Te enviaremos las instrucciones de recuperación.</p>
+      
+      <form onsubmit="handleForgotPasswordSubmit(event)">
+        <div class="form-group" style="margin-bottom:16px;">
+          <label for="forgot-input">ID de Tienda o Email *</label>
+          <div class="input-wrapper">
+            <i class="bi bi-envelope-at-fill"></i>
+            <input type="text" id="forgot-input" required placeholder="Ej: mi-tienda o usuario@email.com" />
+          </div>
+        </div>
+
+        <div id="forgot-msg" style="display:none; padding:10px 14px; border-radius:10px; font-size:13px; margin-bottom:16px;"></div>
+
+        <div style="display:flex; gap:10px; justify-content:flex-end;">
+          <button type="button" class="btn btn-secondary" onclick="closeForgotPasswordModal()">Cancelar</button>
+          <button type="submit" id="forgot-submit-btn" class="btn btn-primary"><i class="bi bi-send"></i> Buscar Cuenta</button>
+        </div>
+      </form>
+
+      <div id="reset-password-section" style="display:none; margin-top:20px; border-top:1px solid var(--border); padding-top:20px;">
+        <h4 style="font-size:15px; color:#fff; margin-bottom:8px;">Establecer Nueva Contraseña</h4>
+        <form onsubmit="handleResetPasswordSubmit(event)">
+          <div class="form-group" style="margin-bottom:16px;">
+            <label for="reset-new-pass">Nueva Contraseña *</label>
+            <div class="input-wrapper">
+              <i class="bi bi-shield-lock-fill"></i>
+              <input type="password" id="reset-new-pass" required placeholder="Mínimo 4 caracteres" minlength="4" />
+            </div>
+          </div>
+          <button type="submit" id="reset-submit-btn" class="btn btn-primary" style="width:100%;">
+            <i class="bi bi-check2-circle"></i> Guardar Nueva Contraseña
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 
     <!-- PANEL 2: WIZARD REGISTRATION FORM -->
     <div id="form-container" style="display: none;">
@@ -1152,6 +1199,105 @@
     }
   }
 
+  function openForgotPasswordModal(e) {
+    if (e) e.preventDefault();
+    document.getElementById('modal-forgot-password').style.display = 'flex';
+    document.getElementById('forgot-msg').style.display = 'none';
+  }
+
+  function closeForgotPasswordModal() {
+    document.getElementById('modal-forgot-password').style.display = 'none';
+  }
+
+  async function handleForgotPasswordSubmit(e) {
+    e.preventDefault();
+    const val = document.getElementById('forgot-input').value.trim();
+    const msgEl = document.getElementById('forgot-msg');
+    const btn = document.getElementById('forgot-submit-btn');
+
+    if (!val) return;
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loading-spinner"></span> Buscando...';
+    msgEl.style.display = 'none';
+
+    try {
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'forgot_password', store_id: val })
+      });
+      const data = await res.json();
+      if (data.success) {
+        msgEl.style.background = 'rgba(16, 185, 129, 0.15)';
+        msgEl.style.border = '1px solid var(--success)';
+        msgEl.style.color = '#6ee7b7';
+        msgEl.textContent = data.message;
+        msgEl.style.display = 'block';
+
+        document.getElementById('reset-password-section').style.display = 'block';
+        window.tempResetStoreId = data.store_id;
+      } else {
+        msgEl.style.background = 'rgba(239, 68, 68, 0.15)';
+        msgEl.style.border = '1px solid var(--error)';
+        msgEl.style.color = '#ff9999';
+        msgEl.textContent = data.error || 'No se encontró la cuenta';
+        msgEl.style.display = 'block';
+      }
+    } catch(err) {
+      msgEl.style.background = 'rgba(239, 68, 68, 0.15)';
+      msgEl.style.border = '1px solid var(--error)';
+      msgEl.style.color = '#ff9999';
+      msgEl.textContent = 'Error al conectar con el servidor';
+      msgEl.style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-send"></i> Buscar Cuenta';
+    }
+  }
+
+  async function handleResetPasswordSubmit(e) {
+    e.preventDefault();
+    const storeId = window.tempResetStoreId || document.getElementById('forgot-input').value.trim();
+    const newPass = document.getElementById('reset-new-pass').value.trim();
+    const msgEl = document.getElementById('forgot-msg');
+    const btn = document.getElementById('reset-submit-btn');
+
+    if (!storeId || !newPass) return;
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loading-spinner"></span> Actualizando...';
+
+    try {
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'reset_password', store_id: storeId, new_password: newPass })
+      });
+      const data = await res.json();
+      if (data.success) {
+        msgEl.style.background = 'rgba(16, 185, 129, 0.15)';
+        msgEl.style.border = '1px solid var(--success)';
+        msgEl.style.color = '#6ee7b7';
+        msgEl.textContent = data.message;
+        msgEl.style.display = 'block';
+
+        setTimeout(() => {
+          closeForgotPasswordModal();
+          document.getElementById('login-store-id').value = storeId;
+          document.getElementById('login-password').value = newPass;
+        }, 1800);
+      } else {
+        alert('Error: ' + (data.error || 'No se pudo actualizar la contraseña'));
+      }
+    } catch(err) {
+      alert('Error de conexión');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-check2-circle"></i> Guardar Nueva Contraseña';
+    }
+  }
+
   window.addEventListener('load', () => {
     updateSubrubrosAlta();
     generateCaptchaChallenge();
@@ -1160,6 +1306,14 @@
       switchAuthTab('register');
     } else {
       switchAuthTab('login');
+    }
+
+    const resetStore = urlParams.get('reset_store');
+    if (resetStore) {
+      openForgotPasswordModal();
+      document.getElementById('forgot-input').value = resetStore;
+      document.getElementById('reset-password-section').style.display = 'block';
+      window.tempResetStoreId = resetStore;
     }
   });
 </script>

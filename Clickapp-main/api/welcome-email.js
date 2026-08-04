@@ -63,10 +63,12 @@ export default async function handler(req, res) {
             <div class="badge-trial">✨ 15 Días de Prueba Gratuita Activa</div>
             <div class="text">
               Te damos la bienvenida a <strong>Dale! Te Pido</strong>. Tu cuenta ha sido creada con éxito y ya tenés acceso completo e inmediato a tu Dashboard sin ningún tipo de compromiso.
+              <br/><br/>
+              Hacé clic en el siguiente botón para activar y verificar tu cuenta de correo electrónicoy acceder directo al panel de control:
             </div>
 
             <div class="btn-container">
-              <a href="${dashboardUrl}" target="_blank" class="btn-primary">🚀 Acceder a mi Dashboard</a>
+              <a href="${dashboardUrl}&verify=true" target="_blank" class="btn-primary">🚀 Activar Cuenta y Acceder al Dashboard</a>
             </div>
 
             <div class="steps-box">

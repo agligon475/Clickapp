@@ -2580,6 +2580,22 @@
   <!-- MAIN -->
   <main class="main" role="main">
 
+    <!-- BANNER VERIFICACIÓN DE CUENTA POR EMAIL -->
+    <div id="dtp-email-verification-banner" style="display:none; background: linear-gradient(90deg, #1E3A8A 0%, #0F172A 100%); color: #fff; padding: 10px 24px; font-size: 13px; font-weight: 600; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid rgba(59, 130, 246, 0.3); position: relative; z-index: 44;">
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <span style="background: rgba(59, 130, 246, 0.3); color: #93C5FD; border: 1px solid rgba(147, 197, 253, 0.4); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">
+          <i class="bi bi-envelope-exclamation-fill"></i> VERIFICACIÓN PENDIENTE
+        </span>
+        <span id="dtp-email-verify-text">Verificá tu cuenta desde tu correo electrónico para asegurar tus accesos y recibir notificaciones.</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button id="btn-resend-verify-email" onclick="resendVerificationEmail()" style="background: #2563EB; color: #ffffff; border: 1px solid rgba(255,255,255,0.2); padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+          <i class="bi bi-send-check-fill"></i> Reenviar Correo de Verificación
+        </button>
+        <button onclick="dismissVerificationBanner()" style="background: transparent; color: #94A3B8; border: none; font-size: 16px; cursor: pointer; padding: 0 4px;" title="Cerrar aviso">✕</button>
+      </div>
+    </div>
+
     <!-- BANNER PERIODO DE PRUEBA 15 DÍAS -->
     <div id="dtp-trial-banner" style="display:none; background: linear-gradient(90deg, #D72638 0%, #800000 100%); color: #fff; padding: 10px 24px; font-size: 13px; font-weight: 600; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 12px rgba(215, 38, 56, 0.25); position: relative; z-index: 45;">
       <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
@@ -10955,11 +10971,64 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       }
     }
 
+    function initVerificationBanner() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const storeId = window.STORE_ID || 'coquito';
+      let verified = false;
+      if (urlParams.get('verify') === 'true') {
+        verified = true;
+        localStorage.setItem('dtp_account_verified_' + storeId, 'true');
+      } else {
+        verified = localStorage.getItem('dtp_account_verified_' + storeId) === 'true';
+      }
+
+      const banner = document.getElementById('dtp-email-verification-banner');
+      if (banner && !verified) {
+        banner.style.display = 'flex';
+      }
+    }
+
+    async function resendVerificationEmail() {
+      const btn = document.getElementById('btn-resend-verify-email');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Enviando...';
+      }
+      try {
+        const storeId = window.STORE_ID || 'coquito';
+        const sessionRaw = localStorage.getItem('daletepido_session');
+        let adminEmail = '';
+        if (sessionRaw) {
+          try { adminEmail = JSON.parse(sessionRaw).admin_email || ''; } catch(e){}
+        }
+
+        await fetch('/api/welcome-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ store_id: storeId, admin_email: adminEmail })
+        });
+        alert('✓ Te hemos reenviado el correo de verificación. Por favor revisá tu casilla (y la carpeta de Spam).');
+      } catch(e) {
+        alert('Error al reenviar correo de verificación.');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="bi bi-send-check-fill"></i> Reenviar Correo de Verificación';
+        }
+      }
+    }
+
+    function dismissVerificationBanner() {
+      const banner = document.getElementById('dtp-email-verification-banner');
+      if (banner) banner.style.display = 'none';
+    }
+
     /* ═══════════════════════════════════════════ INIT */
     applyDashTheme();
     initDashboardAuth();
     initCharts();
     initTrialBanner();
+    initVerificationBanner();
 
     try {
       const activeStore = STORE_ID;
