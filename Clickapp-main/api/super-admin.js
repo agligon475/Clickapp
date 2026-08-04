@@ -9,6 +9,12 @@ function verifyMasterKey(key) {
   return key === SUPER_ADMIN_PASSWORD || key === 'super-admin-token-valid-key';
 }
 
+function safeGetTime(dateVal) {
+  if (!dateVal) return null;
+  const t = new Date(dateVal).getTime();
+  return isNaN(t) ? null : t;
+}
+
 export default async function handler(req, res) {
   // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -20,10 +26,16 @@ export default async function handler(req, res) {
   }
 
   try {
-    const adminKey = req.headers['x-super-admin-key'] || req.body?.adminKey || req.query?.adminKey;
+    let reqBody = req.body;
+    if (typeof reqBody === 'string') {
+      try { reqBody = JSON.parse(reqBody); } catch(e) { reqBody = {}; }
+    }
+    reqBody = reqBody || {};
 
-    if (req.body?.action === 'auth') {
-      if (verifyMasterKey(req.body.password)) {
+    const adminKey = req.headers['x-super-admin-key'] || reqBody?.adminKey || req.query?.adminKey;
+
+    if (reqBody?.action === 'auth') {
+      if (verifyMasterKey(reqBody.password)) {
         return res.status(200).json({
           success: true,
           token: 'super-admin-token-valid-key',
@@ -37,7 +49,7 @@ export default async function handler(req, res) {
       return res.status(403).json({ success: false, error: 'Acceso no autorizado. Se requieren permisos de Super Admin.' });
     }
 
-    const action = req.body?.action || req.query?.action || 'list';
+    const action = reqBody?.action || req.query?.action || 'list';
 
     // 1. List all stores with their full settings, status, and payment details
     if (action === 'list') {
@@ -49,7 +61,7 @@ export default async function handler(req, res) {
       });
 
       if (!response.ok) {
-        throw new Error(`Error Supabase ${response.status}`);
+        return res.status(500).json({ success: false, error: `Error Supabase ${response.status}` });
       }
 
       const stores = await response.json();
@@ -60,15 +72,18 @@ export default async function handler(req, res) {
         if (typeof bInfo === 'string') {
           try { bInfo = JSON.parse(bInfo); } catch(e) { bInfo = {}; }
         }
-        const createdAt = s.created_at ? new Date(s.created_at) : null;
-        let trialEndsAt = s.trial_ends_at;
-        if (!trialEndsAt && createdAt) {
-          trialEndsAt = new Date(createdAt.getTime() + 15 * 24 * 60 * 60 * 1000).toISOString();
+        const createdTime = safeGetTime(s.created_at);
+        let trialEndsTime = safeGetTime(s.trial_ends_at);
+        if (!trialEndsTime && createdTime) {
+          trialEndsTime = createdTime + 15 * 24 * 60 * 60 * 1000;
         }
-        let daysRemaining = null;
-        if (trialEndsAt) {
-          const diffMs = new Date(trialEndsAt).getTime() - Date.now();
-          daysRemaining = Math.max(0, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+        let daysRemaining = 15;
+        let trialEndsIso = null;
+        if (trialEndsTime) {
+          daysRemaining = Math.max(0, Math.ceil((trialEndsTime - Date.now()) / (1000 * 60 * 60 * 24)));
+          try {
+            trialEndsIso = new Date(trialEndsTime).toISOString();
+          } catch(e) {}
         }
 
         return {
@@ -87,8 +102,8 @@ export default async function handler(req, res) {
           admin_email: s.admin_email || '',
           wapp: s.wapp || '',
           created_at: s.created_at || null,
-          trial_ends_at: trialEndsAt || null,
-          trial_days_remaining: daysRemaining !== null ? daysRemaining : 15,
+          trial_ends_at: trialEndsIso,
+          trial_days_remaining: daysRemaining,
           logo_url: s.logo_url || s.logo || '',
           id: s.id
         };
