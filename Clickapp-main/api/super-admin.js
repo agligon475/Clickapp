@@ -293,6 +293,83 @@ export default async function handler(req, res) {
       });
     }
 
+    // 7. Renew Trial (Extender 15 días adicionales de prueba)
+    if (action === 'renew_trial') {
+      const { store_id, days } = req.body;
+      if (!store_id) {
+        return res.status(400).json({ success: false, error: 'Falta store_id' });
+      }
+
+      const daysToAdd = days || 15;
+      const newTrialEndsAt = new Date(Date.now() + daysToAdd * 24 * 60 * 60 * 1000).toISOString();
+
+      const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(store_id)}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`
+        },
+        body: JSON.stringify({
+          trial_ends_at: newTrialEndsAt,
+          payment_status: 'UP_TO_DATE',
+          status: 'ACTIVE'
+        })
+      });
+
+      if (!patchRes.ok) {
+        throw new Error(`HTTP Error ${patchRes.status}`);
+      }
+
+      return res.status(200).json({
+        success: true,
+        store_id,
+        new_trial_ends_at: newTrialEndsAt,
+        days_added: daysToAdd,
+        message: `Trial renovado exitosamente por ${daysToAdd} días adicionales.`
+      });
+    }
+
+    // 8. Reenviar enlace de Reset de Contraseña a la cuenta
+    if (action === 'resend_reset') {
+      const { store_id, recipient_email } = req.body;
+      if (!store_id) {
+        return res.status(400).json({ success: false, error: 'Falta store_id' });
+      }
+
+      const resetLink = `https://daletepido.com.ar/alta-usuario.html?action=login&reset_store=${encodeURIComponent(store_id)}`;
+      const emailTarget = recipient_email || '';
+
+      if (emailTarget) {
+        try {
+          await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(emailTarget)}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              _subject: `Recuperación de Contraseña - DaleTePido (${store_id})`,
+              _template: 'table',
+              Mensaje: `Solicitud de restablecimiento de contraseña enviada por el equipo de Soporte.`,
+              Tienda: store_id,
+              Enlace_Restablecer: resetLink
+            })
+          });
+        } catch (e) {
+          console.warn('Advertencia al reenviar reset email:', e.message);
+        }
+      }
+
+      return res.status(200).json({
+        success: true,
+        store_id,
+        recipient_email: emailTarget,
+        reset_link: resetLink,
+        message: `Correo de restablecimiento de contraseña enviado a ${emailTarget || 'la cuenta'}.`
+      });
+    }
+
     return res.status(400).json({ success: false, error: 'Acción no válida' });
 
   } catch (e) {
