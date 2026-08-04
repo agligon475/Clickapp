@@ -5485,6 +5485,20 @@
       return UUID_ROW_RE.test(String(id || ''));
     }
 
+    const CURRENCY_SYMBOLS = {
+      ARS: '$',
+      USD: 'US$',
+      EUR: '€',
+      BRL: 'R$',
+      CLP: '$',
+      UYU: '$'
+    };
+    function getCurrencySymbol(code) {
+      if (!code) return '$';
+      return CURRENCY_SYMBOLS[String(code).toUpperCase()] || String(code).toUpperCase();
+    }
+    window.getCurrencySymbol = getCurrencySymbol;
+
     function mapSupabaseRowToLocal(p) {
       let localDetalle = p.detalles || p.detalle || '';
       if (p.variants) {
@@ -5497,6 +5511,8 @@
         id: String(p.id),
         name: p.nombre,
         price: parseFloat(p.precio) || 0,
+        currency: p.currency || p.divisa || 'ARS',
+        divisa: p.currency || p.divisa || 'ARS',
         stock: parseInt(p.stock, 10) || 0,
         cat: p.categoria || 'General',
         emoji: p.emoji || '📦',
@@ -5529,6 +5545,8 @@
       return {
         nombre: p.name,
         precio: p.price,
+        divisa: p.currency || p.divisa || 'ARS',
+        currency: p.currency || p.divisa || 'ARS',
         stock: Math.round(parseFloat(p.stock) || 0),
         categoria: p.cat || null,
         emoji: p.emoji || '📦',
@@ -7546,7 +7564,7 @@
     <tr style="${p.hidden ? 'opacity:.4;' : ''}">
       <td style="font-size:20px;text-align:center;">${p.emoji || '📦'}</td>
       <td>
-        <div style="font-weight:600;color:var(--white);">${p.name}</div>
+        <div style="font-weight:600;color:var(--white);">${p.name} <span style="font-size:11px;color:var(--silver);font-weight:400;">(${getCurrencySymbol(p.currency||p.divisa)} ${p.price.toLocaleString('es-AR')})</span></div>
       </td>
       <td><span class="badge badge-blue">${p.cat || '—'}</span></td>
       <td>
@@ -7990,6 +8008,9 @@
       populateCatSelect(p?.cat || null);   // select con valor actual preseleccionado
       document.getElementById('m-marca').value = p?.marca || '';
       document.getElementById('m-price').value = p?.price || '';
+      if (document.getElementById('m-currency')) {
+        document.getElementById('m-currency').value = p?.currency || p?.divisa || 'ARS';
+      }
 
       // Configuración de stock y rubros
       const rubro = document.getElementById('cfg-store-rubro')?.value || 
@@ -8240,6 +8261,8 @@
       const cat = document.getElementById('m-cat').value.trim();
       const marca = document.getElementById('m-marca').value.trim();
       const price = parseFloat(document.getElementById('m-price').value) || 0;
+      const currency = document.getElementById('m-currency')?.value || 'ARS';
+      const divisa = currency;
       
       const rubro = document.getElementById('cfg-store-rubro')?.value || 
                     JSON.parse(localStorage.getItem(`storeapp_cfg_${STORE_ID}`) || localStorage.getItem('storeapp_cfg') || '{}').rubro || '';
@@ -8332,7 +8355,7 @@
       if (editingId != null && editingId !== '') {
         const p = localProducts.find(x => String(x.id) === String(editingId));
         if (p) {
-          Object.assign(p, { name, codigo, cat, marca, price, stock, emoji, origen, detalle: textDetalle, img, img2, img3, pills });
+          Object.assign(p, { name, codigo, cat, marca, price, currency, divisa, stock, emoji, origen, detalle: textDetalle, img, img2, img3, pills });
           try {
             await updateInSupabase('products', editingId, mapLocalProductToSupabaseRow(p));
           } catch (e) {
@@ -8341,7 +8364,7 @@
           }
         }
       } else {
-        const draft = { name, codigo, cat, marca, price, stock, emoji, origen, detalle: textDetalle, img, img2, img3, pills, hidden: false };
+        const draft = { name, codigo, cat, marca, price, currency, divisa, stock, emoji, origen, detalle: textDetalle, img, img2, img3, pills, hidden: false };
         try {
           const inserted = await postToSupabase('products', mapLocalProductToSupabaseRow(draft));
           const row0 = Array.isArray(inserted) ? inserted[0] : inserted;
@@ -12325,12 +12348,23 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
             </div>
           </div>
 
-          <!-- Precio + Stock -->
+          <!-- Precio + Divisa + Stock -->
           <div class="ctrl-group">
-            <label class="ctrl-label">Precio ($)</label>
-            <input class="ctrl-input" id="m-price" type="number" min="0" placeholder="150000" />
+            <label class="ctrl-label">Precio</label>
+            <input class="ctrl-input" id="m-price" type="number" step="any" min="0" placeholder="150000" />
           </div>
           <div class="ctrl-group">
+            <label class="ctrl-label">Divisa / Moneda</label>
+            <select class="ctrl-input" id="m-currency" aria-label="Divisa o moneda del producto">
+              <option value="ARS">ARS ($ - Peso Argentino)</option>
+              <option value="USD">USD (US$ - Dólar)</option>
+              <option value="EUR">EUR (€ - Euro)</option>
+              <option value="BRL">BRL (R$ - Real)</option>
+              <option value="CLP">CLP ($ - Peso Chileno)</option>
+              <option value="UYU">UYU ($ - Peso Uruguayo)</option>
+            </select>
+          </div>
+          <div class="ctrl-group" style="grid-column:1/-1;">
             <label class="ctrl-label">Stock (unidades)</label>
             <input class="ctrl-input" id="m-stock" type="number" min="0" placeholder="24" />
           </div>

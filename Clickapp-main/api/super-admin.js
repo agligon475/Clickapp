@@ -437,56 +437,15 @@ export default async function handler(req, res) {
         }
       } catch(e) {}
 
-      // If no custom audit logs table yet, generate structured operational audit trail
-      if (!auditLogs || auditLogs.length === 0) {
-        const now = Date.now();
-        auditLogs = [
-          {
-            id: 'log-1',
-            timestamp: new Date(now - 15 * 60 * 1000).toISOString(),
-            event_type: 'Inicio de Sesión (Login)',
-            details: 'Autenticación en panel de control',
-            ip: '181.44.210.xx',
-            device: 'Chrome / Windows 11',
-            status: 'Normal'
-          },
-          {
-            id: 'log-2',
-            timestamp: new Date(now - 45 * 60 * 1000).toISOString(),
-            event_type: 'Modificación de Catálogo',
-            details: `Edición de precios / stock (${productsUpdatedCount || 3} productos)`,
-            ip: '181.44.210.xx',
-            device: 'Chrome / Windows 11',
-            status: 'Normal'
-          },
-          {
-            id: 'log-3',
-            timestamp: new Date(now - 3 * 3600 * 1000).toISOString(),
-            event_type: 'Alta de Productos',
-            details: `Creación de ${productsCreatedCount || 5} ítems en catálogo`,
-            ip: '181.44.210.xx',
-            device: 'Chrome / Windows 11',
-            status: 'Normal'
-          },
-          {
-            id: 'log-4',
-            timestamp: new Date(now - 24 * 3600 * 1000).toISOString(),
-            event_type: 'Inicio de Sesión (Login)',
-            details: 'Autenticación previa',
-            ip: '181.44.210.xx',
-            device: 'Chrome / Windows 11',
-            status: 'Normal'
-          }
-        ];
-      }
+      if (!auditLogs) auditLogs = [];
 
       return res.status(200).json({
         success: true,
         store_id,
         summary: {
-          total_logins: auditLogs.filter(l => (l.event_type || '').includes('Login')).length || 12,
-          products_created: productsCreatedCount || 5,
-          products_updated: productsUpdatedCount || 3,
+          total_logins: auditLogs.filter(l => (l.event_type || '').includes('Login')).length,
+          products_created: productsCreatedCount,
+          products_updated: productsUpdatedCount,
           products_deleted: 0,
           risk_level: 'Bajo',
           risk_status: '🟢 Actividad Normal'
