@@ -73,7 +73,7 @@ export default async function handler(req, res) {
           try { bInfo = JSON.parse(bInfo); } catch(e) { bInfo = {}; }
         }
         const createdTime = safeGetTime(s.created_at);
-        let trialEndsTime = safeGetTime(s.trial_ends_at);
+        let trialEndsTime = safeGetTime(s.trial_ends_at || bInfo.trial_ends_at);
         if (!trialEndsTime && createdTime) {
           trialEndsTime = createdTime + 15 * 24 * 60 * 60 * 1000;
         }
@@ -117,7 +117,7 @@ export default async function handler(req, res) {
 
     // 2. Update Store Status, Membership, Billing Cycle and Details
     if (action === 'update_status' || action === 'update_membership' || action === 'update_store') {
-      const { store_id, status, plan_level, payment_status, upgrade_requested, billing_cycle, billing_info } = req.body;
+      const { store_id, status, plan_level, payment_status, upgrade_requested, billing_cycle, billing_info } = reqBody;
       if (!store_id) {
         return res.status(400).json({ success: false, error: 'Falta store_id' });
       }
@@ -141,7 +141,7 @@ export default async function handler(req, res) {
       });
 
       if (!patchRes.ok) {
-        throw new Error(`HTTP Error ${patchRes.status}: ${await patchRes.text()}`);
+        return res.status(500).json({ success: false, error: `HTTP Error ${patchRes.status}` });
       }
 
       return res.status(200).json({ success: true, store_id, payload, message: 'Datos de la tienda actualizados exitosamente' });
@@ -149,7 +149,7 @@ export default async function handler(req, res) {
 
     // 3. Send Invoice / Comprobante
     if (action === 'send_invoice') {
-      const { store_id, invoice_url, recipient_email } = req.body;
+      const { store_id, invoice_url, recipient_email } = reqBody;
       if (!store_id || !invoice_url) {
         return res.status(400).json({ success: false, error: 'Falta store_id o invoice_url' });
       }
@@ -171,7 +171,7 @@ export default async function handler(req, res) {
       });
 
       if (!patchRes.ok) {
-        throw new Error(`HTTP Error ${patchRes.status}: ${await patchRes.text()}`);
+        return res.status(500).json({ success: false, error: `HTTP Error ${patchRes.status}` });
       }
 
       return res.status(200).json({
@@ -186,7 +186,7 @@ export default async function handler(req, res) {
 
     // 4. Resolve Upgrade Request (Approve or Dismiss)
     if (action === 'resolve_upgrade') {
-      const { store_id, approve, new_plan } = req.body;
+      const { store_id, approve, new_plan } = reqBody;
       if (!store_id) {
         return res.status(400).json({ success: false, error: 'Falta store_id' });
       }
@@ -208,7 +208,7 @@ export default async function handler(req, res) {
       });
 
       if (!patchRes.ok) {
-        throw new Error(`HTTP Error ${patchRes.status}: ${await patchRes.text()}`);
+        return res.status(500).json({ success: false, error: `HTTP Error ${patchRes.status}` });
       }
 
       return res.status(200).json({ success: true, store_id, message: approve ? 'Upgrade aprobado' : 'Solicitud archivada' });
@@ -260,7 +260,7 @@ export default async function handler(req, res) {
         gemini_key,
         claude_model,
         gemini_model
-      } = req.body;
+      } = reqBody;
 
       const payload = {
         store_id: 'global',
@@ -310,13 +310,29 @@ export default async function handler(req, res) {
 
     // 7. Renew Trial (Extender 15 días adicionales de prueba)
     if (action === 'renew_trial') {
-      const { store_id, days } = req.body;
+      const { store_id, days } = reqBody;
       if (!store_id) {
         return res.status(400).json({ success: false, error: 'Falta store_id' });
       }
 
       const daysToAdd = days || 15;
       const newTrialEndsAt = new Date(Date.now() + daysToAdd * 24 * 60 * 60 * 1000).toISOString();
+
+      let bInfo = {};
+      try {
+        const getRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(store_id)}&select=billing_info`, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        if (getRes.ok) {
+          const fetched = await getRes.json();
+          if (fetched && fetched[0]) {
+            bInfo = fetched[0].billing_info || {};
+            if (typeof bInfo === 'string') try { bInfo = JSON.parse(bInfo); } catch(e){ bInfo = {}; }
+          }
+        }
+      } catch(e){}
+
+      bInfo.trial_ends_at = newTrialEndsAt;
 
       const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(store_id)}`, {
         method: 'PATCH',
@@ -326,14 +342,14 @@ export default async function handler(req, res) {
           'Authorization': `Bearer ${SUPABASE_KEY}`
         },
         body: JSON.stringify({
-          trial_ends_at: newTrialEndsAt,
+          billing_info: bInfo,
           payment_status: 'UP_TO_DATE',
           status: 'ACTIVE'
         })
       });
 
       if (!patchRes.ok) {
-        throw new Error(`HTTP Error ${patchRes.status}`);
+        return res.status(500).json({ success: false, error: `HTTP Error ${patchRes.status}` });
       }
 
       return res.status(200).json({
@@ -347,7 +363,10 @@ export default async function handler(req, res) {
 
     // 8. Reenviar enlace de Reset de Contraseña a la cuenta
     if (action === 'resend_reset') {
-      const { store_id, recipient_email } = req.body;
+      const { store_id, recipient_email } = reqBody;
+      if (!store_id) {
+        return res.status(400).json({ success: false, error: 'Falta store_id' });
+      }
       if (!store_id) {
         return res.status(400).json({ success: false, error: 'Falta store_id' });
       }

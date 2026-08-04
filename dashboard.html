@@ -10922,13 +10922,16 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
       try {
         const storeId = window.STORE_ID || 'coquito';
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}&select=created_at,trial_ends_at,plan_level`, {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}&select=created_at,plan_level,billing_info`, {
           headers: { 'apikey': SUPABASE_KEY }
         });
         if (res.ok) {
           const data = await res.json();
           if (data && data.length > 0) {
+            let bInfo = data[0].billing_info || {};
+            if (typeof bInfo === 'string') try { bInfo = JSON.parse(bInfo); } catch(e){}
             if (data[0].trial_ends_at) trialEndsAt = data[0].trial_ends_at;
+            else if (bInfo.trial_ends_at) trialEndsAt = bInfo.trial_ends_at;
             if (data[0].created_at) createdAt = data[0].created_at;
             if (data[0].plan_level) planLevel = data[0].plan_level;
           }
