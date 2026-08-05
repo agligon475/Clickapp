@@ -247,7 +247,7 @@ export function getTrialEndedEmail({ storeName, storeId }) {
  * 6. NUEVO: Correo de Confirmación / Activación de Cuenta (Con enlace a Base de Conocimiento)
  */
 export function getAccountActivatedEmail({ storeName, storeId }) {
-  const ayudaUrl = `${BASE_URL}/ayuda.html`;
+  const ayudaUrl = `${BASE_URL}/ayuda`;
   const dashboardUrl = `${BASE_URL}/dashboard.html?store=${encodeURIComponent(storeId)}`;
   const title = `✅ ¡Tu cuenta en Dale! Te Pido está activa y lista para vender!`;
 
