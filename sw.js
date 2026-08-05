@@ -1,4 +1,4 @@
-const CACHE_NAME = 'daletepido-v4';
+const CACHE_NAME = 'daletepido-v5';
 const ASSETS_TO_CACHE = [
   '/',
   '/landing',
@@ -40,15 +40,15 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
-  // Ignore non-http requests or API requests
-  if (!event.request.url.startsWith('http')) return;
-  if (event.request.url.includes('/api/')) return;
+  const requestUrl = event.request.url;
+  if (!requestUrl.startsWith('http')) return;
+  if (requestUrl.includes('/api/')) return;
 
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
-        // Background revalidate
-        fetch(event.request, { redirect: 'follow' }).then((networkResponse) => {
+        // Revalidación en segundo plano usando la URL directa
+        fetch(requestUrl).then((networkResponse) => {
           if (networkResponse && networkResponse.status === 200 && !networkResponse.redirected) {
             caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
           }
@@ -56,7 +56,8 @@ self.addEventListener('fetch', (event) => {
         return cachedResponse;
       }
 
-      return fetch(event.request, { redirect: 'follow' }).catch(() => caches.match('/dashboard') || caches.match('/'));
+      // Petición a red pasando la string URL para permitir seguimiento automático de redirecciones (301/308)
+      return fetch(requestUrl).catch(() => caches.match('/dashboard') || caches.match('/'));
     })
   );
 });
