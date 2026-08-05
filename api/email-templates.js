@@ -4,7 +4,7 @@
 
 const BASE_URL = 'https://daletepido.com.ar';
 
-function getEmailLayout({ title, bodyContent }) {
+export function getEmailLayout({ title, bodyContent }) {
   return `
 <!DOCTYPE html>
 <html lang="es">
