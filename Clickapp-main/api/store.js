@@ -20,6 +20,8 @@ export default async function handler(req, res) {
     '/dashboard.html': 'dashboard.html',
     '/super-admin-secret-dashboard': 'super-admin-secret-dashboard.html',
     '/super-admin-secret-dashboard.html': 'super-admin-secret-dashboard.html',
+    '/enviar-comprobante': 'enviar-comprobante.html',
+    '/enviar-comprobante.html': 'enviar-comprobante.html',
     '/kit-imprimible': 'kit-imprimible.html',
     '/kit-imprimible.html': 'kit-imprimible.html',
     '/landing': 'landing.html',
