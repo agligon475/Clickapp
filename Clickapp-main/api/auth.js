@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { getEmailLayout } from './email-templates.js';
 
 const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
@@ -206,6 +207,44 @@ export default async function handler(req, res) {
               html: htmlBody
             })
           });
+
+          // AUTORRESPUESTA AUTOMÁTICA AL USUARIO
+          if (contactEmail) {
+            try {
+              const autoReplyHtml = getEmailLayout({
+                title: 'Recibimos tu solicitud — Dale! Te Pido',
+                bodyContent: `
+                  <div class="greeting">¡Hola, ${businessName || actualStoreId}! 👋</div>
+                  <div class="badge badge-green">🟢 Consulta Recibida en Soporte</div>
+                  <div class="text">
+                    Recibimos tu mensaje en el centro de atención de <strong>Dale! Te Pido</strong>.<br/><br/>
+                    <strong>Pronto te estaremos ayudando.</strong> Nuestro equipo de soporte procesará tu requerimiento y te responderá por este mismo medio a la brevedad.
+                  </div>
+                  <div class="box">
+                    <div class="box-title">📋 Resumen de tu solicitud:</div>
+                    <div class="step-item"><span class="step-num">•</span><div><strong>Comercio:</strong> ${businessName} (${actualStoreId})</div></div>
+                    <div class="step-item"><span class="step-num">•</span><div><strong>Solicitud:</strong> Cambio / Alta de Plan ${selectedPlan}</div></div>
+                  </div>
+                `
+              });
+
+              await fetch('https://api.resend.com/emails', {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${resendApiKey}`,
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  from: 'Dale! Te Pido <soporte@daletepido.com.ar>',
+                  to: [contactEmail],
+                  subject: 'Recibimos tu solicitud — Dale! Te Pido',
+                  html: autoReplyHtml
+                })
+              });
+            } catch (errAuto) {
+              console.warn('Error enviando autorrespuesta:', errAuto);
+            }
+          }
         } catch(e) {
           console.warn('Error enviando mail Resend de upgrade:', e);
         }

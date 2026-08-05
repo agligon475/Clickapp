@@ -55,7 +55,7 @@ function getEmailLayout({ title, bodyContent }) {
         ${bodyContent}
         <div class="support-box">
           ¿Tenés alguna consulta o necesitás ayuda con tu tienda?<br/>
-          Escribinos directamente a nuestro <a href="https://wa.me/5491122334455" target="_blank">WhatsApp de Soporte</a> o por correo a <a href="mailto:soporte@daletepido.com.ar">soporte@daletepido.com.ar</a>.
+          Escribinos por correo a <a href="mailto:soporte@daletepido.com.ar">soporte@daletepido.com.ar</a>.
         </div>
       </div>
       <div class="footer">

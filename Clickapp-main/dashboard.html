@@ -4038,14 +4038,14 @@
                   Configuración completa y asistencia en la carga inicial de tu tienda (2hs remoto o presencial).
                 </div>
               </div>
-              <a href="https://wa.me/5491136362036?text=Hola%21%20Quiero%20solicitar%20el%20Setup%20Inicial%20Asistido%20de%20%2435.000%20para%20mi%20tienda." target="_blank" style="background: rgba(255,255,255,0.1); color: var(--white); font-size: 12px; font-weight: 600; padding: 8px 14px; border-radius: 8px; text-decoration: none; border: 1px solid rgba(255,255,255,0.15); transition: background 0.2s;">
+              <a href="mailto:soporte@daletepido.com.ar?subject=Solicitud%20de%20Setup%20Inicial%20Asistido" style="background: rgba(255,255,255,0.1); color: var(--white); font-size: 12px; font-weight: 600; padding: 8px 14px; border-radius: 8px; text-decoration: none; border: 1px solid rgba(255,255,255,0.15); transition: background 0.2s;">
                 Solicitar Setup
               </a>
             </div>
 
             <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
-              <button onclick="sendUpgradeRequest()" class="sb-btn" style="background: var(--red); color: white; border: none; padding: 12px 24px; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; margin: 0;">
-                <i class="bi bi-whatsapp"></i> Solicitar cambio de plan
+              <button onclick="openUpgradePlanModal()" class="sb-btn" style="background: var(--red); color: white; border: none; padding: 12px 24px; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; margin: 0;">
+                <i class="bi bi-envelope-fill"></i> Solicitar cambio de plan
               </button>
             </div>
           </div>
@@ -4961,11 +4961,9 @@
     window.initAccountPlanView = initAccountPlanView;
 
     function sendUpgradeRequest() {
-      const storeName = (typeof cfg !== 'undefined' && cfg.name) || STORE_ID;
-      const currentPlan = getActivePlanLevel().toUpperCase();
-      const targetPlan = selectedUpgradePlan.toUpperCase();
-      const message = encodeURIComponent(`¡Hola! Solicito cambiar mi tienda "${storeName}" (${STORE_ID}) desde el plan actual (${currentPlan}) hacia el nuevo ${targetPlan}.`);
-      window.open(`https://wa.me/5491136362036?text=${message}`, '_blank');
+      if (typeof openUpgradePlanModal === 'function') {
+        openUpgradePlanModal();
+      }
     }
     window.sendUpgradeRequest = sendUpgradeRequest;
 
@@ -5008,7 +5006,7 @@
         <p style="color: var(--silver); font-size: 13px; line-height: 1.6; margin-bottom: 24px;">${message}</p>
         <div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
           <button onclick="requestUpgrade()" class="sb-btn" style="background: var(--red); color: white; border: none; height: 40px; font-size: 13px; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin:0; width: 100%;">
-            <i class="bi bi-whatsapp"></i> Solicitar Plan PRO
+            <i class="bi bi-envelope-fill"></i> Solicitar Plan PRO
           </button>
           <button onclick="document.getElementById('upgrade-plan-modal').remove()" class="sb-btn" style="background: var(--zinc); color: var(--white); border: 1px solid var(--iron); height: 40px; font-size: 13px; font-weight: 600; border-radius: 8px; cursor: pointer; margin:0; width: 100%;">
             Quizás más tarde
@@ -5021,9 +5019,11 @@
     }
 
     function requestUpgrade() {
-      const storeName = (typeof cfg !== 'undefined' && cfg.name) || STORE_ID;
-      const message = encodeURIComponent(`¡Hola! Me interesa subir mi tienda "${storeName}" (${STORE_ID}) al Plan PRO de Dale! Te Pido.`);
-      window.open(`https://wa.me/5491136362036?text=${message}`, '_blank');
+      const oldModal = document.getElementById('upgrade-plan-modal');
+      if (oldModal) oldModal.remove();
+      if (typeof openUpgradePlanModal === 'function') {
+        openUpgradePlanModal();
+      }
     }
     window.requestUpgrade = requestUpgrade;
 
@@ -9646,7 +9646,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
               <i class="bi bi-exclamation-triangle-fill" style="color:#D72638; font-size:20px;"></i>
               <span><strong>Aviso de Cuenta Suspendida:</strong> Tu catálogo público se encuentra inactivo. Contactá al soporte oficial de DaleTePido para regularizar el servicio.</span>
             </div>
-            <a href="https://wa.me/5491141819344?text=Hola%2C%20necesito%20regularizar%20mi%20tienda%20${encodeURIComponent(STORE_ID)}" target="_blank" style="background:#D72638; color:#fff; padding:6px 14px; border-radius:6px; text-decoration:none; font-size:12px; font-weight:700; white-space:nowrap;">
+            <a href="mailto:soporte@daletepido.com.ar?subject=Regularizaci%C3%B3n%20de%20Cuenta" style="background:#D72638; color:#fff; padding:6px 14px; border-radius:6px; text-decoration:none; font-size:12px; font-weight:700; white-space:nowrap;">
               Contactar Soporte
             </a>
           `;
