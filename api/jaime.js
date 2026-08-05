@@ -7,25 +7,25 @@ const KNOWLEDGE_BASE = [
     keywords: ['producto', 'productos', 'cargar', 'agregar', 'nuevo', 'foto', 'fotos', 'catalogo', 'subir'],
     pose: 'resolucion',
     reply: '¡De una! Cargar tus productos es facilísimo 📦:\n1. Ingresá a tu Dashboard en la pestaña **Catálogo**.\n2. Tocá el botón **+ Nuevo Producto**.\n3. Completá el nombre, precio, descripción y subí una foto de buena calidad.\n4. Guardá los cambios y ¡listo! Ya aparece en tu tienda en tiempo real.',
-    actions: [{ label: '📦 Ir a Catálogo', url: '/dashboard.html#catalogo' }]
+    actions: [{ label: '📦 Ir a Catálogo', url: '/dashboard?section=abm', section: 'abm' }]
   },
   {
     keywords: ['qr', 'codigo', 'imprimir', 'exhibidor', 'mostrador', 'descargar'],
     pose: 'alegria',
     reply: '¡Genial! Tu Código QR único conecta tu local físico con tu tienda digital 📲:\n1. Desde tu Dashboard, andá a la sección **Kit Imprimible / QR**.\n2. Vas a ver tu código QR generado en alta resolución.\n3. Podés descargarlo como imagen o descargar el kit completo para imprimir tu cartel de mostrador.',
-    actions: [{ label: '📱 Ver mi Código QR', url: '/dashboard.html#qr' }]
+    actions: [{ label: '📱 Ver mi Código QR', url: '/dashboard?section=qr', section: 'qr' }]
   },
   {
     keywords: ['whatsapp', 'numero', 'tel', 'telefono', 'pedidos', 'recibir'],
     pose: 'resolucion',
     reply: '¡Es clave tener bien configurado tu WhatsApp! 💬:\n1. En tu Dashboard, entrá a **Configuración de Tienda**.\n2. Buscá el campo **WhatsApp de Ventas**.\n3. Ingresá tu número completo con código de área (ej: 5491100000000) sin espacios ni guiones.\n4. Guardá y hacé un pedido de prueba desde tu tienda para verificar que te llegue la lista ordenada.',
-    actions: [{ label: '⚙️ Configurar WhatsApp', url: '/dashboard.html#configuracion' }]
+    actions: [{ label: '⚙️ Configurar WhatsApp', url: '/dashboard?section=config-basica', section: 'config-basica' }]
   },
   {
     keywords: ['plan', 'planes', 'membresia', 'precio', 'costo', 'pro', 'starter', 'cambiar', 'upgrade', 'pago'],
     pose: 'alegria',
     reply: '¡Excelente decisión querer potenciar tu negocio! 🚀:\n• **Plan Starter:** $19.900/mes para hasta 12 productos.\n• **Plan PRO:** $29.900/mes con productos ilimitados, motor SEO local y métricas exportables.\n• Podés pagar de forma anual con **2 meses gratis**.\n\nTocá el botón de abajo para solicitar el cambio de plan y coordinar la membresía.',
-    actions: [{ label: '⭐ Ver Planes y Membresías', url: '/dashboard.html#suscribirse' }]
+    actions: [{ label: '⭐ Ver Planes y Membresías', url: '/dashboard?section=account-plan', section: 'account-plan' }]
   },
   {
     keywords: ['setup', 'asistencia', 'carguen', 'ayuda inicial', 'asistido', '35000'],

@@ -12940,6 +12940,14 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
 
     window.addEventListener('load', () => {
       checkDashboardAuth();
+      const urlParams = new URLSearchParams(window.location.search);
+      const section = urlParams.get('section');
+      if (section) {
+        setTimeout(() => {
+          if (typeof goToMobileView === 'function') goToMobileView(section);
+          if (section === 'account-plan' || section === 'plan') openUpgradePlanModal();
+        }, 500);
+      }
       if (window.location.hash === '#suscribirse' || window.location.search.includes('action=upgrade')) {
         setTimeout(() => {
           openUpgradePlanModal();

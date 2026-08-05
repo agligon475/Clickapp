@@ -437,7 +437,7 @@
       if (data.actions && data.actions.length > 0) {
         htmlContent += '<div class="jaime-actions-wrap">';
         data.actions.forEach(act => {
-          htmlContent += `<a href="${act.url}" target="_blank" class="jaime-action-btn">${act.label}</a>`;
+          htmlContent += `<a href="${act.url}" target="_blank" data-section="${act.section || ''}" class="jaime-action-btn">${act.label}</a>`;
         });
         htmlContent += '</div>';
       }
@@ -476,6 +476,36 @@
       const query = chip.getAttribute('data-query');
       if (query) handleSend(query);
     });
+  });
+
+  // Manejador dinámico de acciones para navegar al Dashboard
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.jaime-action-btn');
+    if (!btn) return;
+    const href = btn.getAttribute('href') || '';
+    const section = btn.getAttribute('data-section');
+
+    if (href.startsWith('mailto:')) return;
+
+    const isInsideDashboard = window.location.pathname.includes('dashboard');
+
+    if (isInsideDashboard && section) {
+      e.preventDefault();
+      if (typeof window.goToMobileView === 'function') {
+        window.goToMobileView(section);
+      }
+      if (section === 'account-plan' || section === 'plan') {
+        if (typeof window.openUpgradePlanModal === 'function') {
+          window.openUpgradePlanModal();
+        }
+      }
+      return;
+    }
+
+    if (!isInsideDashboard && href.startsWith('/dashboard')) {
+      e.preventDefault();
+      window.location.href = href;
+    }
   });
 
 })();
