@@ -27,51 +27,66 @@
 
   const style = document.createElement('style');
   style.innerHTML = `
+    @keyframes jaimeFloatBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
     #jaime-fab {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #D60000 0%, #990000 100%);
-      box-shadow: 0 10px 30px rgba(214, 0, 0, 0.4);
-      border: 2px solid rgba(255,255,255,0.2);
+      bottom: 12px;
+      right: 18px;
+      width: 100px;
+      height: 200px;
+      max-width: 100px;
+      max-height: 200px;
+      background: transparent;
+      box-shadow: none;
+      border: none;
       cursor: pointer;
       z-index: 999990;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      justify-content: flex-end;
+      animation: jaimeFloatBounce 4s ease-in-out infinite;
+      transition: filter 0.25s ease, transform 0.25s ease;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
     }
     #jaime-fab:hover {
-      transform: scale(1.08);
-      box-shadow: 0 14px 36px rgba(214, 0, 0, 0.6);
+      filter: drop-shadow(0 14px 28px rgba(214, 0, 0, 0.7));
+      transform: scale(1.06) translateY(-4px);
     }
     #jaime-fab img {
-      width: 48px;
-      height: 48px;
+      max-height: 190px;
+      max-width: 100px;
+      width: auto;
+      height: auto;
       object-fit: contain;
     }
-    #jaime-badge-dot {
+    #jaime-bubble-callout {
       position: absolute;
-      top: 2px;
-      right: 2px;
-      width: 14px;
-      height: 14px;
-      background: #10b981;
-      border: 2px solid #0d0b0b;
-      border-radius: 50%;
+      top: 0px;
+      background: #D60000;
+      color: #fff;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 99px;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.3);
+      pointer-events: none;
     }
 
     #jaime-window {
       position: fixed;
-      bottom: 96px;
-      right: 24px;
+      bottom: 20px;
+      right: 125px;
       width: 380px;
-      max-width: calc(100vw - 32px);
+      max-width: calc(100vw - 140px);
       height: 540px;
-      max-height: calc(100vh - 120px);
+      max-height: calc(100vh - 40px);
       background: #141111;
       border: 1px solid rgba(255,255,255,0.12);
       border-radius: 20px;
@@ -91,6 +106,14 @@
       pointer-events: auto;
       transform: translateY(0) scale(1);
     }
+    @media (max-width: 600px) {
+      #jaime-window {
+        right: 12px;
+        bottom: 80px;
+        width: calc(100vw - 24px);
+        max-width: calc(100vw - 24px);
+      }
+    }
 
     .jaime-header {
       background: linear-gradient(135deg, #1f1919 0%, #151010 100%);
@@ -108,18 +131,18 @@
     .jaime-avatar-img-wrap {
       width: 44px;
       height: 44px;
-      border-radius: 50%;
-      background: rgba(214,0,0,0.15);
-      border: 1px solid rgba(214,0,0,0.4);
+      background: transparent;
+      border: none;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
     }
     .jaime-avatar-img-wrap img {
-      width: 38px;
-      height: 38px;
+      width: auto;
+      height: 44px;
+      max-width: 44px;
       object-fit: contain;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
     }
     .jaime-title-name {
       font-size: 15px;
@@ -286,9 +309,10 @@
   // Widget HTML structure
   const fab = document.createElement('div');
   fab.id = 'jaime-fab';
+  fab.title = 'Consultar a jAIme 24/7';
   fab.innerHTML = `
+    <div id="jaime-bubble-callout">💬 jAIme 24/7</div>
     <img src="${JAIME_POSES.buenaonda}" alt="jAIme Asistente">
-    <div id="jaime-badge-dot"></div>
   `;
 
   const win = document.createElement('div');
