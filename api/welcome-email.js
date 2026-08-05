@@ -1,3 +1,5 @@
+import { getWelcomeEmail } from './email-templates.js';
+
 export default async function handler(req, res) {
   // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -20,85 +22,7 @@ export default async function handler(req, res) {
     }
 
     const storeName = business_name || store_id;
-    const dashboardUrl = `https://daletepido.com.ar/dashboard.html?store=${encodeURIComponent(store_id)}`;
-    const storeUrl = `https://daletepido.com.ar/index.html?store=${encodeURIComponent(store_id)}`;
-
-    const emailSubject = `¡Bienvenido a DTP! Comienza tus 15 días de prueba gratuita`;
-
-    const htmlBody = `
-      <!DOCTYPE html>
-      <html lang="es">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Bienvenido a Dale! Te Pido</title>
-        <style>
-          body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #0f0d0d; color: #ffffff; margin: 0; padding: 0; }
-          .container { max-width: 600px; margin: 0 auto; background-color: #1a1515; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
-          .header { background: linear-gradient(135deg, #D60000 0%, #800000 100%); padding: 32px 24px; text-align: center; }
-          .header img { max-height: 48px; margin-bottom: 12px; }
-          .header h1 { color: #ffffff; font-size: 24px; margin: 0; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; }
-          .content { padding: 32px 24px; }
-          .greeting { font-size: 20px; font-weight: 700; color: #ffffff; margin-bottom: 16px; }
-          .text { font-size: 15px; color: #cccccc; line-height: 1.6; margin-bottom: 24px; }
-          .badge-trial { display: inline-block; background: rgba(214, 0, 0, 0.2); border: 1px solid #D60000; color: #ff6666; font-size: 13px; font-weight: 700; padding: 6px 16px; border-radius: 50px; margin-bottom: 24px; }
-          .btn-container { text-align: center; margin: 32px 0; }
-          .btn-primary { background-color: #D60000; color: #ffffff !important; padding: 16px 32px; border-radius: 10px; font-weight: 700; font-size: 16px; text-decoration: none; display: inline-block; box-shadow: 0 8px 24px rgba(214,0,0,0.4); }
-          .steps-box { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; margin-bottom: 24px; }
-          .steps-title { font-size: 16px; font-weight: 700; color: #ffffff; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.05em; }
-          .step-item { display: flex; align-items: flex-start; margin-bottom: 12px; font-size: 14px; color: #dddddd; }
-          .step-num { background: #D60000; color: #fff; font-size: 12px; font-weight: 800; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0; }
-          .support-box { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 13px; color: #888888; text-align: center; }
-          .support-box a { color: #ff6666; text-decoration: none; font-weight: 600; }
-          .footer { background-color: #0b0909; padding: 20px; text-align: center; font-size: 12px; color: #666666; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>Dale! Te Pido</h1>
-          </div>
-          <div class="content">
-            <div class="greeting">¡Hola, ${storeName}! 👋</div>
-            <div class="badge-trial">✨ 15 Días de Prueba Gratuita Activa</div>
-            <div class="text">
-              Te damos la bienvenida a <strong>Dale! Te Pido</strong>. Tu cuenta ha sido creada con éxito y ya tenés acceso completo e inmediato a tu Dashboard sin ningún tipo de compromiso.
-              <br/><br/>
-              Hacé clic en el siguiente botón para activar y verificar tu cuenta de correo electrónicoy acceder directo al panel de control:
-            </div>
-
-            <div class="btn-container">
-              <a href="${dashboardUrl}&verify=true" target="_blank" class="btn-primary">🚀 Activar Cuenta y Acceder al Dashboard</a>
-            </div>
-
-            <div class="steps-box">
-              <div class="steps-title">Guía Rápida para Empezar (3 Pasos):</div>
-              <div class="step-item">
-                <span class="step-num">1</span>
-                <div><strong>Cargar tus productos:</strong> Agregá tus primeros ítems con fotos, precios y descripciones en la sección Catálogo.</div>
-              </div>
-              <div class="step-item">
-                <span class="step-num">2</span>
-                <div><strong>Personalizar tu tienda:</strong> Ajustá los colores, banners y horarios de atención.</div>
-              </div>
-              <div class="step-item">
-                <span class="step-num">3</span>
-                <div><strong>Compartir tu enlace:</strong> Publicá el link de tu catálogo (<a href="${storeUrl}" style="color:#ff6666;">${storeUrl}</a>) en tu Instagram y WhatsApp.</div>
-              </div>
-            </div>
-
-            <div class="support-box">
-              ¿Tenés alguna consulta o necesitás ayuda para configurar tu catálogo?<br/>
-              Escribinos directamente a nuestro WhatsApp de soporte o por email a <a href="mailto:soporte@daletepido.com.ar">soporte@daletepido.com.ar</a>.
-            </div>
-          </div>
-          <div class="footer">
-            © 2026 Dale! Te Pido · Catálogos y Presupuestos Online sin comisiones.
-          </div>
-        </div>
-      </body>
-      </html>
-    `;
+    const { subject: emailSubject, html: htmlBody } = getWelcomeEmail({ storeName, storeId: store_id });
 
     // Send via Resend API if API Key is configured, fallback to FormSubmit
     const resendApiKey = process.env.RESEND_API_KEY;

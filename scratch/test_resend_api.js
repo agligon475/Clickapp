@@ -3,7 +3,7 @@ async function testWelcomeEmail() {
   const body = {
     store_id: 'test-resend-store',
     business_name: 'Tienda de Prueba Resend',
-    admin_email: 'daletepido@gmail.com',
+    admin_email: 'agustin@daletepido.com.ar',
     wapp: '1122334455'
   };
 

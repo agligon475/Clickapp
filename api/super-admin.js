@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { getResetPasswordEmail } from './email-templates.js';
 
 const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
@@ -380,6 +381,7 @@ export default async function handler(req, res) {
 
         if (resendApiKey) {
           try {
+            const { subject: resetSubject, html: resetHtml } = getResetPasswordEmail({ storeId: store_id, resetLink });
             await fetch('https://api.resend.com/emails', {
               method: 'POST',
               headers: {
@@ -389,13 +391,8 @@ export default async function handler(req, res) {
               body: JSON.stringify({
                 from: fromEmail,
                 to: [emailTarget],
-                subject: `Restablecimiento de Contraseña - DaleTePido (${store_id})`,
-                html: `<div style="font-family:sans-serif; background:#111; color:#fff; padding:20px; border-radius:8px;">
-                  <h2 style="color:#D60000;">Dale! Te Pido</h2>
-                  <p>Hola, recibiste una solicitud para restablecer tu contraseña para la tienda <strong>${store_id}</strong>.</p>
-                  <p><a href="${resetLink}" style="background:#D60000; color:#fff; padding:10px 20px; text-decoration:none; border-radius:5px; display:inline-block;">Restablecer Contraseña</a></p>
-                  <p style="font-size:12px; color:#888;">Si no solicitaste este cambio, puedes ignorar este correo.</p>
-                </div>`
+                subject: resetSubject,
+                html: resetHtml
               })
             });
           } catch (e) {
