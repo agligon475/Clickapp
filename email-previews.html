@@ -119,46 +119,36 @@
     </div>
   </div>
 
-  <script type="module">
-    import { 
-      getWelcomeEmail, 
-      getResetPasswordEmail, 
-      getTrialReminder7DaysEmail, 
-      getTrialReminder3DaysEmail, 
-      getTrialEndedEmail 
-    } from './api/email-templates.js';
-
-    const sampleStore = {
-      storeName: 'Pizzería Don Antonio',
-      storeId: 'pizzeria-don-antonio',
-      resetLink: 'https://daletepido.com.ar/alta-usuario.html?action=login&reset_store=pizzeria-don-antonio'
-    };
-
-    const emails = {
-      1: () => getWelcomeEmail(sampleStore),
-      2: () => getResetPasswordEmail(sampleStore),
-      3: () => getTrialReminder7DaysEmail(sampleStore),
-      4: () => getTrialReminder3DaysEmail(sampleStore),
-      5: () => getTrialEndedEmail(sampleStore)
-    };
-
-    window.loadEmail = function(num) {
+  <script>
+    async function loadEmail(num) {
       document.querySelectorAll('.nav-item').forEach((btn, idx) => {
         btn.classList.toggle('active', idx + 1 === num);
       });
 
-      const emailData = emails[num]();
-      document.getElementById('subject-display').textContent = emailData.subject;
-      
-      const frame = document.getElementById('email-frame');
-      const doc = frame.contentDocument || frame.contentWindow.document;
-      doc.open();
-      doc.write(emailData.html);
-      doc.close();
-    };
+      document.getElementById('subject-display').textContent = 'Cargando plantilla...';
+
+      try {
+        const res = await fetch(`/api/email-templates?template=${num}&format=json`);
+        const data = await res.json();
+        
+        if (data.success) {
+          document.getElementById('subject-display').textContent = data.subject;
+          const frame = document.getElementById('email-frame');
+          const doc = frame.contentDocument || frame.contentWindow.document;
+          doc.open();
+          doc.write(data.html);
+          doc.close();
+        } else {
+          document.getElementById('subject-display').textContent = 'Error al cargar la plantilla';
+        }
+      } catch (err) {
+        console.error('Error al cargar plantilla:', err);
+        document.getElementById('subject-display').textContent = 'Error de conexión';
+      }
+    }
 
     // Load initial email
-    loadEmail(1);
+    window.addEventListener('DOMContentLoaded', () => loadEmail(1));
   </script>
 </body>
 </html>
