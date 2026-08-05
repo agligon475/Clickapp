@@ -122,11 +122,23 @@ export default async function handler(req, res) {
         const resendData = await resendResp.json();
         if (!resendResp.ok) {
           console.error('Error enviando con Resend API:', resendData);
+          return res.status(resendResp.status || 400).json({
+            success: false,
+            error: resendData.message || resendData.name || 'Error enviando email con Resend',
+            details: resendData
+          });
         } else {
           console.log('Email de bienvenida enviado con Resend ID:', resendData.id);
+          return res.status(200).json({
+            success: true,
+            message: 'Correo de bienvenida enviado exitosamente vía Resend',
+            email_id: resendData.id,
+            store_id: store_id
+          });
         }
       } catch (sendErr) {
         console.warn('Advertencia al enviar email vía Resend:', sendErr);
+        return res.status(500).json({ success: false, error: sendErr.message });
       }
     } else {
       try {
