@@ -592,6 +592,69 @@
         </div>
     </section>
 
+    <!-- SECCIÓN DEDICADA A jAIme: ASISTENTE VIRTUAL DE LA PLATAFORMA -->
+    <section id="jaime-showcase-section" style="background: linear-gradient(180deg, #0A0A0C 0%, #151010 100%); padding: 90px 24px; border-top: 1px solid rgba(255,255,255,0.08); overflow: hidden; position: relative;">
+        <div style="position: absolute; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(214,0,0,0.2) 0%, transparent 70%); top: 40%; left: 20%; pointer-events: none; filter: blur(70px);"></div>
+
+        <div class="container" style="position: relative; z-index: 2;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 48px; align-items: center;">
+                
+                <!-- Columna Izquierda: Presentación de jAIme y Poses -->
+                <div>
+                    <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(214,0,0,0.18); border: 1px solid rgba(214,0,0,0.4); color: #ff7777; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 16px; border-radius: 999px; margin-bottom: 16px;">
+                        🤖 INTELIGENCIA ARTIFICIAL A TU SERVICIO
+                    </div>
+                    <h2 style="font-size: clamp(2.2rem, 4.5vw, 3.2rem); font-weight: 800; color: #fff; letter-spacing: -1px; line-height: 1.15; margin-bottom: 18px;">
+                        Conocé a <span style="background: linear-gradient(135deg, #fff 30%, #ff6b6b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">jAIme</span> 🤖<br>
+                        Tu asistente virtual 24/7
+                    </h2>
+                    <p style="font-size: 1.05rem; color: rgba(255,255,255,0.75); line-height: 1.6; margin-bottom: 28px;">
+                        ¿Tenés dudas sobre cómo cargar productos, configurar tu WhatsApp, descargar tu Código QR o cambiar tu plan? <strong>jAIme</strong> está capacitado exclusivamente para ayudarte en el uso de <strong>Dale! Te Pido</strong> al instante.
+                    </p>
+
+                    <!-- Selector interactivo de posturas -->
+                    <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px;">
+                        <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.5); margin-bottom: 12px;">
+                            🎭 Posturas y expresiones de jAIme:
+                        </div>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button onclick="changeLandingJaimePose('buenaonda', '¡Buena Onda! Listo para recibirte.')" style="background: rgba(214,0,0,0.15); border: 1px solid rgba(214,0,0,0.4); color: #ff7777; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;">😎 Buena Onda</button>
+                            <button onclick="changeLandingJaimePose('pensando', 'Pensando la mejor solución para vos...')" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;">🤔 Pensando</button>
+                            <button onclick="changeLandingJaimePose('alegria', '¡Alegría! Resolvemos tus ventas al instante.')" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;">🎉 Alegría</button>
+                            <button onclick="changeLandingJaimePose('resolucion', 'Paso a paso resolutivo para tu catálogo.')" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;">💪 Resolución</button>
+                            <button onclick="changeLandingJaimePose('empatia', 'Acá estoy para escucharte.')" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;">🤝 Empatía</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna Derecha: Tarjeta Interactiva con jAIme transparente sin fondo y Chat en Vivo -->
+                <div style="background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.12); border-radius: 24px; padding: 28px; box-shadow: 0 24px 64px rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; position: relative;">
+                    
+                    <!-- Imagen Flotante Transparente de jAIme -->
+                    <div style="height: 220px; width: 100%; display: flex; align-items: center; justify-content: center; position: relative; margin-bottom: 12px;">
+                        <img id="landing-jaime-img" src="/img/jaime/jaime-buenaonda.png" alt="jAIme Asistente" style="height: 210px; width: auto; object-fit: contain; filter: drop-shadow(0 12px 24px rgba(0,0,0,0.6)); transition: all 0.3s ease;">
+                    </div>
+                    <div id="landing-jaime-caption" style="font-size: 13px; font-weight: 700; color: #ff7777; background: rgba(214,0,0,0.12); border: 1px solid rgba(214,0,0,0.3); padding: 4px 14px; border-radius: 99px; margin-bottom: 20px;">
+                        ¡Hola! Probá preguntarme algo sobre Dale! Te Pido
+                    </div>
+
+                    <!-- Mini Demo Chat interactivo -->
+                    <div style="width: 100%; background: #0d0b0b; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+                        <div id="landing-jaime-chat-box" style="min-height: 110px; max-height: 160px; overflow-y: auto; font-size: 13px; color: #e5e7eb; line-height: 1.5; background: rgba(255,255,255,0.03); border-radius: 10px; padding: 12px;">
+                            👋 <strong>jAIme:</strong> "¡Hola! Podés hacerme preguntas sobre cómo crear productos, cambiar precios, configurar WhatsApp o descargar tu QR. Recordá que solo estoy capacitado para ayudarte con Dale! Te Pido."
+                        </div>
+
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="landing-jaime-input" placeholder="Preguntale algo a jAIme..." style="flex: 1; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 10px 14px; color: #fff; font-size: 13px; font-family: inherit; outline: none;" onkeypress="if(event.key==='Enter')askLandingJaime()">
+                            <button onclick="askLandingJaime()" style="background: var(--red); color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer;">Preguntar</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
     <!-- SECCIÓN CTA DE ALTO IMPACTO: COMPROBADOR DE DISPONIBILIDAD -->
     <section id="cta-section-pro" class="cta-section-pro" style="background: linear-gradient(180deg, #0f0d0d 0%, #0A0A0C 100%); padding: 100px 24px; position: relative; overflow: hidden; border-top: 1px solid rgba(255,255,255,0.08);">
         <!-- Glows & background graphics -->
@@ -1175,6 +1238,41 @@
         }
 
         window.addEventListener('DOMContentLoaded', loadLandingReviews);
+
+        function changeLandingJaimePose(pose, captionText) {
+            const imgEl = document.getElementById('landing-jaime-img');
+            const capEl = document.getElementById('landing-jaime-caption');
+            if (imgEl) imgEl.src = `/img/jaime/jaime-${pose}.png`;
+            if (capEl && captionText) capEl.textContent = captionText;
+        }
+
+        async function askLandingJaime() {
+            const input = document.getElementById('landing-jaime-input');
+            const chatBox = document.getElementById('landing-jaime-chat-box');
+            const q = input?.value.trim();
+            if (!q) return;
+
+            input.value = '';
+            chatBox.innerHTML = `💬 <strong>Tú:</strong> "${q}"<br/><br/>🤖 <strong>jAIme:</strong> <em>Pensando respuesta... ⏳</em>`;
+            changeLandingJaimePose('pensando', 'Pensando respuesta...');
+
+            try {
+                const res = await fetch('/api/jaime', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: q })
+                });
+                const data = await res.json();
+                const replyText = (data.reply || '').replace(/\n/g, '<br/>');
+                const pose = data.pose || 'buenaonda';
+
+                chatBox.innerHTML = `💬 <strong>Tú:</strong> "${q}"<br/><br/>🤖 <strong>jAIme:</strong> ${replyText}`;
+                changeLandingJaimePose(pose, pose === 'empatia' ? 'Solo capacitado para Dale! Te Pido' : '¡Acá tenés la respuesta!');
+            } catch(e) {
+                chatBox.innerHTML = `🤖 <strong>jAIme:</strong> Solo estoy para ayudarte con Dale! Te Pido. Podés preguntarme sobre cómo cargar productos, configurar tu WhatsApp, descargar tu Código QR o solicitar tu cambio de plan. 🚀`;
+                changeLandingJaimePose('empatia', 'Solo capacitado para Dale! Te Pido');
+            }
+        }
     </script>
     <script src="/js/jaime-widget.js"></script>
 </body>

@@ -86,11 +86,11 @@ export default async function handler(req, res) {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            model: 'gpt-os-120b', // Modelo económico solicitado por el usuario
+            model: 'gpt-os-120b',
             messages: [
               {
                 role: 'system',
-                content: 'Sos jAIme, el asistente virtual argentino de Dale! Te Pido (plataforma de catálogos digitales para tiendas). Respondé de forma amable, empática, concisa y buena onda en español de Argentina. Si te preguntan por soporte técnico, sugeriles escribir a soporte@daletepido.com.ar.'
+                content: 'Sos jAIme, el asistente virtual oficial de Dale! Te Pido. IMPORTANTE: Solo estás capacitado para responder dudas sobre la plataforma Dale! Te Pido (cargar productos, WhatsApp de ventas, Código QR, planes, dashboard, ayuda). Si te realizan cualquier pregunta ajena o externa a la plataforma, tu respuesta DEBE ser obligatoriamente: "Solo estoy para ayudarte con Dale! Te Pido. Podés preguntarme sobre cómo cargar productos, configurar tu WhatsApp, descargar tu Código QR o solicitar tu cambio de plan. 🚀"'
               },
               { role: 'user', content: message }
             ],
@@ -104,7 +104,7 @@ export default async function handler(req, res) {
           if (aiReply) {
             return res.status(200).json({
               reply: aiReply,
-              pose: 'buenaonda',
+              pose: aiReply.includes('Solo estoy para ayudarte con Dale! Te Pido') ? 'empatia' : 'buenaonda',
               actions: [{ label: '❓ Ver Centro de Ayuda', url: '/ayuda' }],
               source: 'gpt_os_120b'
             });
@@ -115,15 +115,15 @@ export default async function handler(req, res) {
       }
     }
 
-    // 3. Fallback empático por defecto si no hay coincidencia directa
+    // 3. Fallback estricto de plataforma si no se detectó una palabra clave interna
     return res.status(200).json({
-      reply: '¡Buena pregunta! Para ese tema en particular, podés consultar las guías completas en nuestro **Centro de Ayuda** o escribirnos directamente a **soporte@daletepido.com.ar** y pronto te estaremos ayudando. 🚀',
+      reply: 'Solo estoy para ayudarte con Dale! Te Pido. Podés preguntarme sobre cómo cargar productos, configurar tu WhatsApp, descargar tu Código QR o solicitar tu cambio de plan. 🚀',
       pose: 'empatia',
       actions: [
         { label: '📖 Ir al Centro de Ayuda', url: '/ayuda' },
         { label: '✉️ Contactar Soporte', url: 'mailto:soporte@daletepido.com.ar' }
       ],
-      source: 'fallback'
+      source: 'platform_scope_fallback'
     });
 
   } catch (error) {

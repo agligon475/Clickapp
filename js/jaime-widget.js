@@ -4,6 +4,15 @@
 
 (function () {
   if (window.jAImeWidgetInitialized) return;
+
+  // Do NOT render floating FAB helper on landing page (landing page has its dedicated jAIme section)
+  const isLandingPage = window.location.pathname === '/' || 
+                        window.location.pathname === '/landing' || 
+                        window.location.pathname === '/landing.html' || 
+                        document.body.hasAttribute('data-disable-jaime-fab');
+  
+  if (isLandingPage) return;
+
   window.jAImeWidgetInitialized = true;
 
   const JAIME_POSES = {
