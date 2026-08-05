@@ -4964,13 +4964,21 @@
     window.requestUpgrade = requestUpgrade;
 
     /* ════════════════════════════════════════════ SUPABASE CONFIG */
+    const VALID_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+
     let rawSupabaseUrl = window.localStorage.getItem('storeapp_supabase_url');
     if (rawSupabaseUrl && !rawSupabaseUrl.startsWith('http')) {
       window.localStorage.removeItem('storeapp_supabase_url');
       rawSupabaseUrl = null;
     }
+    let rawSupabaseKey = window.localStorage.getItem('storeapp_supabase_key');
+    if (rawSupabaseKey && (!rawSupabaseKey.startsWith('eyJ') || rawSupabaseKey.length < 50)) {
+      window.localStorage.removeItem('storeapp_supabase_key');
+      rawSupabaseKey = null;
+    }
+
     let SUPABASE_URL = rawSupabaseUrl || 'https://iaylgsthwildjkiiwgfd.supabase.co';
-    let SUPABASE_KEY = window.localStorage.getItem('storeapp_supabase_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+    let SUPABASE_KEY = rawSupabaseKey || VALID_ANON_KEY;
 
     // Obtener store_id del parámetro de URL '?store=...' o del subdominio de hostname o localStorage o 'ferre-now' por defecto
     const urlParams = new URLSearchParams(window.location.search);
@@ -5820,7 +5828,7 @@
       setDot('', 'Cargando datos...');
       try {
         const remote = await fetchFromSupabase('products');
-        products = remote.map(mapSupabaseRowToLocal);
+        products = Array.isArray(remote) ? remote.map(mapSupabaseRowToLocal) : [];
 
         // Cargar datos de banners desde Supabase (company_settings)
         const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
