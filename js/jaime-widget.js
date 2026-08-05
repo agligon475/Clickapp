@@ -324,7 +324,7 @@
           <img id="jaime-header-pose-img" src="${JAIME_POSES.buenaonda}" alt="jAIme">
         </div>
         <div>
-          <div class="jaime-title-name">jAIme <span style="font-size:10px; background:rgba(214,0,0,0.2); border:1px solid rgba(214,0,0,0.4); color:#ff6666; padding:1px 6px; border-radius:4px;">IA GPT-OS 120B</span></div>
+          <div class="jaime-title-name">jAIme <span style="font-size:10px; background:rgba(214,0,0,0.2); border:1px solid rgba(214,0,0,0.4); color:#ff6666; padding:1px 6px; border-radius:4px;">Asistente Virtual</span></div>
           <div class="jaime-status-text">🟢 En línea · Dale! Te Pido</div>
         </div>
       </div>
