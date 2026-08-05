@@ -12828,6 +12828,111 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       }
     }
 
+    let selectedUpgradePlan = 'anual';
+
+    function openUpgradePlanModal() {
+      const modal = document.getElementById('modal-upgrade-plan');
+      if (modal) {
+        modal.style.display = 'flex';
+        modal.classList.add('open');
+        selectPlanUpgradeOpt('anual');
+        try {
+          const session = JSON.parse(localStorage.getItem('daletepido_session') || '{}');
+          if (session.store_id && document.getElementById('upgrade-field-wapp')) {
+            document.getElementById('upgrade-field-wapp').value = session.wapp || '';
+          }
+        } catch(e){}
+      }
+    }
+
+    function closeUpgradePlanModal() {
+      const modal = document.getElementById('modal-upgrade-plan');
+      if (modal) {
+        modal.style.display = 'none';
+        modal.classList.remove('open');
+      }
+    }
+
+    function selectPlanUpgradeOpt(plan) {
+      selectedUpgradePlan = plan;
+      const mOpt = document.getElementById('plan-opt-mensual');
+      const aOpt = document.getElementById('plan-opt-anual');
+      if (mOpt && aOpt) {
+        if (plan === 'mensual') {
+          mOpt.style.borderColor = '#D60000';
+          mOpt.style.background = 'rgba(214,0,0,0.1)';
+          aOpt.style.borderColor = '#3E3E42';
+          aOpt.style.background = 'rgba(255,255,255,0.03)';
+        } else {
+          aOpt.style.borderColor = '#A855F7';
+          aOpt.style.background = 'rgba(168,85,247,0.12)';
+          mOpt.style.borderColor = '#3E3E42';
+          mOpt.style.background = 'rgba(255,255,255,0.03)';
+        }
+      }
+    }
+
+    async function submitPlanUpgradeRequest() {
+      const btn = document.getElementById('btn-submit-upgrade');
+      const msg = document.getElementById('upgrade-status-msg');
+      const wappInput = document.getElementById('upgrade-field-wapp');
+      const wapp = wappInput ? wappInput.value.trim() : '';
+
+      let storeId = '';
+      try {
+        const session = JSON.parse(localStorage.getItem('daletepido_session') || '{}');
+        storeId = session.store_id || '';
+      } catch(e){}
+
+      if (!storeId) {
+        storeId = new URLSearchParams(window.location.search).get('store') || '';
+      }
+
+      if (!storeId) {
+        alert('Error: No se pudo identificar la tienda');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Enviando Solicitud...';
+      msg.style.color = '#fff';
+      msg.textContent = 'Procesando solicitud...';
+
+      try {
+        const res = await fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'request_plan_upgrade',
+            store_id: storeId,
+            selected_plan: selectedUpgradePlan,
+            whatsapp: wapp
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          msg.style.color = '#34d399';
+          msg.innerHTML = `✓ ¡Solicitud registrada! Para concretar la activación del <strong>Plan ${selectedUpgradePlan.toUpperCase()}</strong>, nuestro equipo te contactará por WhatsApp para enviarte los datos de transferencia.`;
+          btn.style.display = 'none';
+        } else {
+          msg.style.color = '#ff6666';
+          msg.textContent = 'Error: ' + (data.error || 'No se pudo enviar la solicitud');
+          btn.disabled = false;
+          btn.innerHTML = '🚀 Solicitar Membresía';
+        }
+      } catch(e) {
+        msg.style.color = '#ff6666';
+        msg.textContent = 'Error de conexión: ' + e.message;
+        btn.disabled = false;
+        btn.innerHTML = '🚀 Solicitar Membresía';
+      }
+    }
+
+    window.openUpgradePlanModal = openUpgradePlanModal;
+    window.closeUpgradePlanModal = closeUpgradePlanModal;
+    window.selectPlanUpgradeOpt = selectPlanUpgradeOpt;
+    window.submitPlanUpgradeRequest = submitPlanUpgradeRequest;
     window.toggleMobileMenuSheet = toggleMobileMenuSheet;
     window.closeMobileMenuSheet = closeMobileMenuSheet;
     window.goToMobileView = goToMobileView;
@@ -12835,8 +12940,57 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
 
     window.addEventListener('load', () => {
       checkDashboardAuth();
+      if (window.location.hash === '#suscribirse' || window.location.search.includes('action=upgrade')) {
+        setTimeout(() => {
+          openUpgradePlanModal();
+        }, 800);
+      }
     });
   </script>
+
+  <!-- MODAL MEMBRESÍAS Y PLANES -->
+  <div id="modal-upgrade-plan" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); z-index:99999; align-items:center; justify-content:center; padding:20px;">
+    <div class="modal-card" style="max-width: 580px; width:100%; background:#141416; border:1px solid #2E2E33; border-radius:18px; padding:28px; color:#fff;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+        <h3 style="font-family:var(--font-h); font-size:22px; font-weight:800; text-transform:uppercase; margin:0; display:flex; align-items:center; gap:8px;">
+          <i class="bi bi-star-fill" style="color:#F59E0B;"></i> Planes y Membresías
+        </h3>
+        <button onclick="closeUpgradePlanModal()" style="background:transparent; border:none; color:#aaa; font-size:20px; cursor:pointer;"><i class="bi bi-x-lg"></i></button>
+      </div>
+
+      <p style="font-size:13px; color:#aaa; line-height:1.5; margin-bottom:20px;">
+        Seleccioná la membresía para tu tienda. Al solicitar el cambio, nuestro equipo se pondrá en contacto para enviar las instrucciones de transferencia y activar tu servicio.
+      </p>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px;">
+        <!-- PLAN MENSUAL -->
+        <div id="plan-opt-mensual" onclick="selectPlanUpgradeOpt('mensual')" style="background:rgba(255,255,255,0.03); border:2px solid #3E3E42; border-radius:14px; padding:18px; cursor:pointer; text-align:center; transition:all 0.2s;">
+          <div style="font-size:11px; font-weight:800; color:#aaa; text-transform:uppercase;">Plan Mensual</div>
+          <div style="font-size:24px; font-weight:900; color:#fff; margin:6px 0;">$12.990 <span style="font-size:12px; color:#888;">/mes</span></div>
+          <div style="font-size:11px; color:#aaa;">Sin permanencia.</div>
+        </div>
+
+        <!-- PLAN ANUAL -->
+        <div id="plan-opt-anual" onclick="selectPlanUpgradeOpt('anual')" style="background:rgba(168,85,247,0.12); border:2px solid #A855F7; border-radius:14px; padding:18px; cursor:pointer; text-align:center; transition:all 0.2s; position:relative;">
+          <div style="position:absolute; top:-10px; right:10px; background:#A855F7; color:#fff; font-size:9px; font-weight:900; padding:2px 8px; border-radius:10px; text-transform:uppercase;">¡2 Meses Gratis!</div>
+          <div style="font-size:11px; font-weight:800; color:#c084fc; text-transform:uppercase;">Plan Anual</div>
+          <div style="font-size:24px; font-weight:900; color:#fff; margin:6px 0;">$103.920 <span style="font-size:12px; color:#888;">/año</span></div>
+          <div style="font-size:11px; color:#c084fc;">Ahorrás 20%.</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:#aaa; display:block; margin-bottom:4px;">Tu WhatsApp de Contacto</label>
+        <input type="text" id="upgrade-field-wapp" class="ctrl-input" style="padding:10px 14px; background:#1c1818; border:1px solid #333; color:#fff; border-radius:8px; width:100%; font-size:13px;" placeholder="54911..." />
+      </div>
+
+      <button id="btn-submit-upgrade" onclick="submitPlanUpgradeRequest()" style="width:100%; background:linear-gradient(135deg, #D60000 0%, #a80000 100%); color:#fff; border:none; padding:14px; border-radius:10px; font-weight:800; font-size:15px; cursor:pointer; text-transform:uppercase;">
+        🚀 Solicitar Membresía
+      </button>
+
+      <div id="upgrade-status-msg" style="margin-top:12px; font-size:13px; text-align:center;"></div>
+    </div>
+  </div>
 
   <!-- ══ MOBILE BOTTOM NAVIGATION BAR & SHEET ══ -->
   <div id="mobile-bottom-nav-overlay" class="mobile-nav-overlay" onclick="closeMobileMenuSheet()"></div>

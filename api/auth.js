@@ -166,6 +166,73 @@ export default async function handler(req, res) {
       });
     }
 
+    // Action: Request Plan Upgrade (Solicitud de cambio de plan / membresía)
+    if (action === 'request_plan_upgrade') {
+      const selectedPlan = (req.body.selected_plan || 'mensual').toUpperCase();
+      const contactEmail = req.body.contact_email || adminEmail || '';
+      const whatsapp = req.body.whatsapp || settings.wapp_number || 'No especificado';
+      const businessName = settings.business_name || actualStoreId;
+
+      const resendApiKey = process.env.RESEND_API_KEY;
+      const adminNotifyEmails = ['soporte@daletepido.com.ar', 'daletepido@gmail.com'];
+
+      const subject = `🚀 Solicitud de Membresía (${selectedPlan}) — Tienda ${businessName}`;
+      const htmlBody = `
+        <h2>NUEVA SOLICITUD DE CAMBIO DE PLAN DE MEMBRESÍA</h2>
+        <p>Un comercio ha solicitado contratar/cambiar su plan desde el Dashboard:</p>
+        <ul>
+          <li><strong>Tienda (Store ID):</strong> ${actualStoreId}</li>
+          <li><strong>Nombre del Comercio:</strong> ${businessName}</li>
+          <li><strong>Plan Solicitado:</strong> ${selectedPlan}</li>
+          <li><strong>Email de Contacto:</strong> ${contactEmail}</li>
+          <li><strong>WhatsApp:</strong> ${whatsapp}</li>
+          <li><strong>Fecha/Hora:</strong> ${new Date().toLocaleString('es-AR')}</li>
+        </ul>
+        <p><em>Por favor verificar la acreditación del pago o contactar al comercio para concretar el cobro y actualizar el plan en el Super Admin.</em></p>
+      `;
+
+      if (resendApiKey) {
+        try {
+          await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${resendApiKey}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              from: 'Dale! Te Pido <soporte@daletepido.com.ar>',
+              to: adminNotifyEmails,
+              subject: subject,
+              html: htmlBody
+            })
+          });
+        } catch(e) {
+          console.warn('Error enviando mail Resend de upgrade:', e);
+        }
+      } else {
+        try {
+          await fetch('https://formsubmit.co/ajax/daletepido@gmail.com', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              _subject: subject,
+              Tienda: actualStoreId,
+              Comercio: businessName,
+              Plan: selectedPlan,
+              Email: contactEmail,
+              WhatsApp: whatsapp
+            })
+          });
+        } catch(e) {}
+      }
+
+      return res.status(200).json({
+        success: true,
+        store_id: actualStoreId,
+        message: 'Solicitud de membresía enviada exitosamente. Nos pondremos en contacto a la brevedad.'
+      });
+    }
+
     return res.status(400).json({ success: false, error: 'Acción no válida' });
 
   } catch (error) {

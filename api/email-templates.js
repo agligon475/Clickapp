@@ -26,16 +26,19 @@ function getEmailLayout({ title, bodyContent }) {
     .badge-amber { background: rgba(245, 158, 11, 0.18); border: 1px solid #F59E0B; color: #fbbf24; }
     .badge-blue { background: rgba(34, 211, 238, 0.18); border: 1px solid #22D3EE; color: #67e8f9; }
     .badge-purple { background: rgba(168, 85, 247, 0.18); border: 1px solid #A855F7; color: #c084fc; }
+    .badge-green { background: rgba(16, 185, 129, 0.18); border: 1px solid #10B981; color: #34d399; }
     .text { font-size: 15px; color: #cccccc; line-height: 1.6; margin-bottom: 24px; }
-    .btn-container { text-align: center; margin: 32px 0; }
+    .btn-container { text-align: center; margin: 28px 0; }
     .btn-primary { background: linear-gradient(135deg, #D60000 0%, #b30000 100%); color: #ffffff !important; padding: 16px 36px; border-radius: 12px; font-weight: 800; font-size: 16px; text-decoration: none; display: inline-block; box-shadow: 0 8px 24px rgba(214,0,0,0.4); text-transform: uppercase; letter-spacing: 0.5px; }
-    .btn-secondary { background: rgba(255,255,255,0.08); color: #ffffff !important; border: 1px solid rgba(255,255,255,0.15); padding: 14px 28px; border-radius: 10px; font-weight: 700; font-size: 14px; text-decoration: none; display: inline-block; }
+    .btn-secondary { background: rgba(255,255,255,0.06); color: #ffffff !important; border: 1px solid rgba(255,255,255,0.15); padding: 14px 28px; border-radius: 10px; font-weight: 700; font-size: 14px; text-decoration: none; display: inline-block; margin-top: 10px; }
     .box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px; margin-bottom: 24px; }
     .box-title { font-size: 15px; font-weight: 700; color: #ffffff; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
     .step-item { display: flex; align-items: flex-start; margin-bottom: 12px; font-size: 14px; color: #dddddd; line-height: 1.5; }
     .step-num { background: #D60000; color: #fff; font-size: 12px; font-weight: 900; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0; }
     .plan-card { background: linear-gradient(180deg, rgba(214,0,0,0.1) 0%, rgba(214,0,0,0.02) 100%); border: 1px solid rgba(214,0,0,0.3); border-radius: 14px; padding: 20px; text-align: center; margin-bottom: 20px; }
     .plan-price { font-size: 32px; font-weight: 900; color: #ffffff; margin: 8px 0; }
+    .qr-card { text-align: center; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px; margin-bottom: 24px; }
+    .qr-card img { width: 160px; height: 160px; border-radius: 10px; background: #fff; padding: 8px; margin: 12px 0; }
     .support-box { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; font-size: 13px; color: #888888; text-align: center; line-height: 1.6; }
     .support-box a { color: #ff6666; text-decoration: none; font-weight: 600; }
     .footer { background-color: #080606; padding: 20px; text-align: center; font-size: 12px; color: #555555; }
@@ -66,7 +69,7 @@ function getEmailLayout({ title, bodyContent }) {
 }
 
 /**
- * 1. Correo de Bienvenida / Activación
+ * 1. Correo de Bienvenida / Verificación de Email
  */
 export function getWelcomeEmail({ storeName, storeId }) {
   const dashboardUrl = `${BASE_URL}/dashboard.html?store=${encodeURIComponent(storeId)}&verify=true`;
@@ -136,11 +139,12 @@ export function getResetPasswordEmail({ storeId, resetLink }) {
 }
 
 /**
- * 3. Recordatorio 7 Días de Prueba (Quedan 7 Días)
+ * 3. Recordatorio 7 Días de Prueba (Quedan 7 Días) - Con QR y CTA Secundario
  */
 export function getTrialReminder7DaysEmail({ storeName, storeId }) {
   const dashboardUrl = `${BASE_URL}/dashboard.html?store=${encodeURIComponent(storeId)}`;
   const storeUrl = `${BASE_URL}/index.html?store=${encodeURIComponent(storeId)}`;
+  const qrUrl = `${BASE_URL}/api/qr?store=${encodeURIComponent(storeId)}`;
   const title = `⏳ Te quedan 7 días de prueba en Dale! Te Pido`;
 
   const bodyContent = `
@@ -150,20 +154,17 @@ export function getTrialReminder7DaysEmail({ storeName, storeId }) {
       Ya pasaron 8 días desde que abriste tu catálogo en <strong>Dale! Te Pido</strong>. Te quedan <strong>7 días restantes</strong> para seguir disfrutando sin cargo y sin comisiones por venta.
     </div>
 
-    <div class="box">
-      <div class="box-title">📋 Checklist de Éxito para tu Tienda:</div>
-      <div class="step-item">
-        <span class="step-num">✓</span>
-        <div><strong>¿Tus precios están al día?</strong> Revisá tu menú o catálogo para tener todo listo antes del fin de semana.</div>
-      </div>
-      <div class="step-item">
-        <span class="step-num">✓</span>
-        <div><strong>¿Publicaste tu link?</strong> Poné el enlace de tu catálogo (<a href="${storeUrl}" style="color:#22D3EE;" target="_blank">${storeUrl}</a>) en tu perfil de Instagram.</div>
-      </div>
+    <div class="qr-card">
+      <div style="font-size:14px; font-weight:700; color:#ffffff; text-transform:uppercase;">Tu Catálogo y Código QR Oficial</div>
+      <div style="font-size:13px; color:#22D3EE; margin-top:4px;"><a href="${storeUrl}" target="_blank" style="color:#22D3EE;">${storeUrl}</a></div>
+      <img src="${qrUrl}" alt="Código QR de la Tienda" />
+      <div style="font-size:12px; color:#aaaaaa;">Imprimí tu QR o descargalo desde tu Dashboard para tus mesas y mostrador.</div>
     </div>
 
     <div class="btn-container">
       <a href="${dashboardUrl}" target="_blank" class="btn-primary">👉 Ir al Dashboard y Revisar Pedidos</a>
+      <br/>
+      <a href="${dashboardUrl}#suscribirse" target="_blank" class="btn-secondary">¿Ya estás listo para tener tu membresía?</a>
     </div>
   `;
 
@@ -171,10 +172,12 @@ export function getTrialReminder7DaysEmail({ storeName, storeId }) {
 }
 
 /**
- * 4. Recordatorio 12 Días de Prueba (Quedan 3 Días)
+ * 4. Recordatorio 12 Días de Prueba (Quedan 3 Días) - Con QR y CTA Secundario
  */
 export function getTrialReminder3DaysEmail({ storeName, storeId }) {
   const dashboardUrl = `${BASE_URL}/dashboard.html?store=${encodeURIComponent(storeId)}`;
+  const storeUrl = `${BASE_URL}/index.html?store=${encodeURIComponent(storeId)}`;
+  const qrUrl = `${BASE_URL}/api/qr?store=${encodeURIComponent(storeId)}`;
   const title = `⚠️ Quedan solo 3 días de tu prueba gratuita en Dale! Te Pido`;
 
   const bodyContent = `
@@ -182,6 +185,12 @@ export function getTrialReminder3DaysEmail({ storeName, storeId }) {
     <div class="badge badge-amber">⚠️ Quedan 3 Días de Prueba Gratuita</div>
     <div class="text">
       Tu período de prueba gratuito finaliza en <strong>3 días</strong>. Asegurá la continuidad de tu tienda online para no interrumpir el flujo de pedidos de tus clientes por WhatsApp.
+    </div>
+
+    <div class="qr-card">
+      <div style="font-size:14px; font-weight:700; color:#ffffff; text-transform:uppercase;">Enlace y QR de tu Tienda:</div>
+      <div style="font-size:13px; color:#fbbf24; margin-top:4px;"><a href="${storeUrl}" target="_blank" style="color:#fbbf24;">${storeUrl}</a></div>
+      <img src="${qrUrl}" alt="Código QR de la Tienda" />
     </div>
 
     <div class="plan-card">
@@ -192,6 +201,8 @@ export function getTrialReminder3DaysEmail({ storeName, storeId }) {
 
     <div class="btn-container">
       <a href="${dashboardUrl}#suscribirse" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); box-shadow: 0 8px 24px rgba(245,158,11,0.4);">⭐ Elegir Plan y Asegurar mi Tienda</a>
+      <br/>
+      <a href="${dashboardUrl}#suscribirse" target="_blank" class="btn-secondary">¿Ya estás listo para tener tu membresía?</a>
     </div>
   `;
 
@@ -226,6 +237,90 @@ export function getTrialEndedEmail({ storeName, storeId }) {
 
     <div class="btn-container">
       <a href="${dashboardUrl}#suscribirse" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, #A855F7 0%, #7E22CE 100%); box-shadow: 0 8px 24px rgba(168,85,247,0.4);">💎 Activar Suscripción Ahora</a>
+    </div>
+  `;
+
+  return { subject: title, html: getEmailLayout({ title, bodyContent }) };
+}
+
+/**
+ * 6. NUEVO: Correo de Confirmación / Activación de Cuenta (Con enlace a Base de Conocimiento)
+ */
+export function getAccountActivatedEmail({ storeName, storeId }) {
+  const ayudaUrl = `${BASE_URL}/ayuda.html`;
+  const dashboardUrl = `${BASE_URL}/dashboard.html?store=${encodeURIComponent(storeId)}`;
+  const title = `✅ ¡Tu cuenta en Dale! Te Pido está activa y lista para vender!`;
+
+  const bodyContent = `
+    <div class="greeting">¡Cuenta Confirmada, ${storeName || storeId}! 🎉</div>
+    <div class="badge badge-green">✓ Verificación Completada</div>
+    <div class="text">
+      ¡Excelente! Tu correo electrónico ha sido verificado con éxito y tu catálogo digital ya se encuentra 100% activo en internet.
+      <br/><br/>
+      Para ayudarte a sacar el máximo provecho de tu tienda, ponemos a tu disposición nuestra <strong>Base de Conocimientos y Centro de Ayuda</strong> con guías paso a paso:
+    </div>
+
+    <div class="btn-container">
+      <a href="${ayudaUrl}" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); box-shadow: 0 8px 24px rgba(16,185,129,0.4);">📖 Explorar Base de Conocimientos</a>
+      <br/>
+      <a href="${dashboardUrl}" target="_blank" class="btn-secondary">Ir a mi Panel de Control</a>
+    </div>
+
+    <div class="box">
+      <div class="box-title">📚 Temas Populares en la Base de Conocimiento:</div>
+      <div class="step-item">
+        <span class="step-num">•</span>
+        <div><strong>Configurar tu WhatsApp de ventas:</strong> Asegurate de recibir los pedidos directamente.</div>
+      </div>
+      <div class="step-item">
+        <span class="step-num">•</span>
+        <div><strong>Imprimir y descargar tu Código QR:</strong> Ponelo en las mesas, bolsas o mostrador.</div>
+      </div>
+      <div class="step-item">
+        <span class="step-num">•</span>
+        <div><strong>Cargar categorías y opciones:</strong> Agregá combos, tamaños y extras a tus platos.</div>
+      </div>
+    </div>
+  `;
+
+  return { subject: title, html: getEmailLayout({ title, bodyContent }) };
+}
+
+/**
+ * 7. NUEVO: Beneficio de Pago Anual + Solicitud de Reseña (Para clientes mensuales)
+ */
+export function getAnnualBenefitAndReviewEmail({ storeName, storeId }) {
+  const dashboardUrl = `${BASE_URL}/dashboard.html?store=${encodeURIComponent(storeId)}#suscribirse`;
+  const reviewUrl = `${BASE_URL}/dejar-resena.html?store=${encodeURIComponent(storeId)}`;
+  const title = `🎁 Obtené 2 meses gratis al cambiar a tu Plan Anual en Dale! Te Pido`;
+
+  const bodyContent = `
+    <div class="greeting">¡Hola, ${storeName || storeId}! 🎁</div>
+    <div class="badge badge-purple">⭐ Beneficio Exclusivo para Clientes</div>
+    <div class="text">
+      Queremos agradecerte por formar parte de <strong>Dale! Te Pido</strong>. Como cliente de nuestro plan mensual, tenés disponible un descuento especial al cambiar a la membresía anual:
+    </div>
+
+    <div class="plan-card" style="border-color: rgba(168,85,247,0.4); background: linear-gradient(180deg, rgba(168,85,247,0.15) 0%, rgba(168,85,247,0.03) 100%);">
+      <div style="font-size:13px; font-weight:800; color:#c084fc; text-transform:uppercase;">Ahorro del 20% · 2 Meses Gratis</div>
+      <div class="plan-price" style="color:#ffffff;">Plan Anual Preferencial</div>
+      <div style="font-size:13px; color:#cccccc; margin-top:6px;">
+        Pagá 10 meses y disfrutá 12 meses de servicio ininterrumpido sin comisiones.
+      </div>
+    </div>
+
+    <div class="btn-container">
+      <a href="${dashboardUrl}" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, #A855F7 0%, #7E22CE 100%); box-shadow: 0 8px 24px rgba(168,85,247,0.4);">💎 Cambiar a Plan Anual y Ahorrar</a>
+    </div>
+
+    <div class="box" style="border-left: 4px solid #F59E0B; background: rgba(245,158,11,0.04);">
+      <div class="box-title" style="color:#F59E0B;">⭐ Tu opinión es muy importante para nosotros</div>
+      <div style="font-size:14px; color:#dddddd; line-height:1.6; margin-bottom:14px;">
+        ¿Cómo ha sido tu experiencia vendiendo con Dale! Te Pido? Nos encantaría contar con tu reseña para seguir mejorando la plataforma.
+      </div>
+      <div style="text-align:center;">
+        <a href="${reviewUrl}" target="_blank" class="btn-secondary" style="border-color:#F59E0B; color:#fbbf24 !important;">⭐ Dejar mi Opinión / Reseña</a>
+      </div>
     </div>
   `;
 

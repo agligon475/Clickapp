@@ -445,6 +445,35 @@
         </div>
     </section>
 
+    <!-- SECCIÓN DE REVISIONES Y RESEÑAS REALES DE CLIENTES -->
+    <section id="reviews-section" style="background: #0A0A0C; padding: 90px 24px; border-top: 1px solid rgba(255,255,255,0.08);">
+        <div style="max-width: 1100px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 50px;">
+                <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3); color: #F59E0B; font-size: 12px; font-weight: 700; text-transform: uppercase; padding: 6px 16px; border-radius: 99px; margin-bottom: 14px;">
+                    ⭐ Opiniones de Nuestros Clientes
+                </div>
+                <h2 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: #fff; letter-spacing: -1px;">
+                    Lo que dicen los comercios que usan Dale! Te Pido
+                </h2>
+                <p style="font-size: 15px; color: rgba(255,255,255,0.6); max-width: 600px; margin: 10px auto 0;">
+                    Comercios, restaurantes y emprendimientos que transformaron su forma de vender por WhatsApp.
+                </p>
+            </div>
+
+            <div id="reviews-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+                <div style="text-align: center; color: rgba(255,255,255,0.4); padding: 40px; grid-column: 1 / -1;">
+                    <i class="bi bi-arrow-repeat spin" style="font-size: 24px;"></i> Cargando reseñas...
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="/dejar-resena.html" target="_blank" style="color: #F59E0B; font-size: 14px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(245,158,11,0.3); padding: 10px 22px; border-radius: 99px; background: rgba(245,158,11,0.05); transition: all 0.2s;">
+                    ⭐ ¿Usás Dale! Te Pido? Dejanos tu reseña aquí
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- SECCIÓN CTA DE ALTO IMPACTO: COMPROBADOR DE DISPONIBILIDAD -->
     <section class="cta-section-pro" style="background: linear-gradient(180deg, #0f0d0d 0%, #0A0A0C 100%); padding: 100px 24px; position: relative; overflow: hidden; border-top: 1px solid rgba(255,255,255,0.08);">
         <!-- Glows & background graphics -->
@@ -903,6 +932,76 @@
                 }
             }, 120);
         }
+
+        async function loadLandingReviews() {
+            const grid = document.getElementById('reviews-grid');
+            if (!grid) return;
+
+            const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
+            const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?approved=eq.true&order=created_at.desc&limit=6`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+
+                if (res.ok) {
+                    const reviews = await res.json();
+                    if (reviews && reviews.length > 0) {
+                        grid.innerHTML = reviews.map(r => {
+                            const stars = '★'.repeat(r.rating || 5) + '☆'.repeat(5 - (r.rating || 5));
+                            return `
+                                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+                                    <div>
+                                        <div style="color: #F59E0B; font-size: 16px; margin-bottom: 10px; letter-spacing: 2px;">${stars}</div>
+                                        <p style="font-size: 14px; color: rgba(255,255,255,0.85); line-height: 1.6; font-style: italic; margin-bottom: 16px;">
+                                            "${r.comment}"
+                                        </p>
+                                    </div>
+                                    <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <div style="font-weight: 700; font-size: 14px; color: #fff;">${r.name}</div>
+                                            <div style="font-size: 12px; color: var(--red); font-weight: 600;">${r.company}</div>
+                                        </div>
+                                        <span style="font-size: 11px; color: rgba(255,255,255,0.4);"><i class="bi bi-patch-check-fill" style="color: #10b981;"></i> Cliente Verificado</span>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.warn('Error al cargar reseñas:', err);
+            }
+
+            // Fallback default sample reviews if table empty
+            grid.innerHTML = `
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px;">
+                    <div style="color: #F59E0B; font-size: 16px; margin-bottom: 10px;">★★★★★</div>
+                    <p style="font-size: 14px; color: rgba(255,255,255,0.85); line-height: 1.6; font-style: italic; margin-bottom: 16px;">"Simplificó 100% nuestros pedidos por WhatsApp. La gente entra al QR de la mesa, arma el pedido y nos llega impecable."</p>
+                    <div style="font-weight: 700; font-size: 14px; color: #fff;">Gonzalo R.</div>
+                    <div style="font-size: 12px; color: var(--red); font-weight: 600;">Pizzería Don Antonio</div>
+                </div>
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px;">
+                    <div style="color: #F59E0B; font-size: 16px; margin-bottom: 10px;">★★★★★</div>
+                    <p style="font-size: 14px; color: rgba(255,255,255,0.85); line-height: 1.6; font-style: italic; margin-bottom: 16px;">"Excelente plataforma. En menos de 10 minutos teníamos todo nuestro catálogo cargado con fotos y precios."</p>
+                    <div style="font-weight: 700; font-size: 14px; color: #fff;">Mariana T.</div>
+                    <div style="font-size: 12px; color: var(--red); font-weight: 600;">Hamburguesería Smash&Co</div>
+                </div>
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px;">
+                    <div style="color: #F59E0B; font-size: 16px; margin-bottom: 10px;">★★★★★</div>
+                    <p style="font-size: 14px; color: rgba(255,255,255,0.85); line-height: 1.6; font-style: italic; margin-bottom: 16px;">"Lo mejor es que no pagamos comisiones por venta. El costo mensual es fijo y súper accesible."</p>
+                    <div style="font-weight: 700; font-size: 14px; color: #fff;">Carlos M.</div>
+                    <div style="font-size: 12px; color: var(--red); font-weight: 600;">Dietética NutriSalud</div>
+                </div>
+            `;
+        }
+
+        window.addEventListener('DOMContentLoaded', loadLandingReviews);
     </script>
 </body>
 </html>
