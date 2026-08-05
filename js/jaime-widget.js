@@ -15,7 +15,7 @@
 
   window.jAImeWidgetInitialized = true;
 
-  const JAIME_POSES = {
+  const JAIME_DESKTOP_POSES = {
     buenaonda: '/img/jaime/jaime-buenaonda.png',
     pensando: '/img/jaime/jaime-pensando.png',
     alegria: '/img/jaime/jaime-alegria.png',
@@ -23,13 +23,64 @@
     resolucion: '/img/jaime/jaime-resolucion.png'
   };
 
+  const JAIME_MOBILE_POSES = {
+    buenaonda: '/img/jaime/jaime-mobile-buenaonda.png',
+    pensando: '/img/jaime/jaime-mobile-pensando.png',
+    alegria: '/img/jaime/jaime-mobile-alegria.png',
+    empatia: '/img/jaime/jaime-mobile-empatia.png',
+    resolucion: '/img/jaime/jaime-mobile-resolucion.png'
+  };
+
   let currentPose = 'buenaonda';
+
+  function getPoseUrl(poseName) {
+    const isMobile = window.innerWidth <= 768;
+    const map = isMobile ? JAIME_MOBILE_POSES : JAIME_DESKTOP_POSES;
+    return map[poseName] || map.buenaonda;
+  }
 
   const style = document.createElement('style');
   style.innerHTML = `
     @keyframes jaimeFloatBounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-8px); }
+    }
+
+    /* Señalador Lateral Derecho (Side Tab) */
+    #jaime-side-tab {
+      position: fixed;
+      right: 0;
+      top: 65%;
+      transform: translateY(-50%);
+      z-index: 999989;
+      background: linear-gradient(135deg, #1f1414 0%, #141111 100%);
+      border: 1px solid rgba(214, 0, 0, 0.6);
+      border-right: none;
+      border-radius: 14px 0 0 14px;
+      padding: 8px 12px;
+      color: #ffffff;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: -4px 6px 20px rgba(0,0,0,0.6);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+    }
+    #jaime-side-tab:hover {
+      background: #D60000;
+      border-color: #ff4444;
+      transform: translateY(-50%) translateX(-4px);
+      box-shadow: -6px 8px 25px rgba(214,0,0,0.5);
+    }
+    #jaime-side-tab-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid rgba(255,255,255,0.4);
     }
 
     #jaime-fab {
@@ -50,9 +101,14 @@
       align-items: center;
       justify-content: flex-end;
       animation: jaimeFloatBounce 4s ease-in-out infinite;
-      transition: filter 0.25s ease, transform 0.25s ease;
+      transition: filter 0.25s ease, transform 0.25s ease, opacity 0.3s ease;
       filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
     }
+    /* Estado inicial: Oculto */
+    #jaime-fab.jaime-hidden {
+      display: none !important;
+    }
+
     #jaime-fab:hover {
       filter: drop-shadow(0 14px 28px rgba(214, 0, 0, 0.7));
       transform: scale(1.06) translateY(-4px);
@@ -77,6 +133,55 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
       border: 1px solid rgba(255,255,255,0.3);
       pointer-events: none;
+    }
+    #jaime-hide-btn {
+      position: absolute;
+      top: -24px;
+      right: -4px;
+      background: #141111;
+      border: 1px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.8);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 999995;
+    }
+    #jaime-hide-btn:hover {
+      background: #D60000;
+      color: #fff;
+      border-color: #D60000;
+    }
+
+    /* Mobile Responsive Customization (Max 120px) */
+    @media (max-width: 768px) {
+      #jaime-fab {
+        width: 120px;
+        height: 120px;
+        max-width: 120px;
+        max-height: 120px;
+        bottom: 16px;
+        right: 12px;
+      }
+      #jaime-fab img {
+        width: 120px;
+        height: 120px;
+        max-width: 120px;
+        max-height: 120px;
+        object-fit: contain;
+      }
+      #jaime-bubble-callout {
+        font-size: 9.5px;
+        padding: 2px 7px;
+        top: -10px;
+      }
+      #jaime-side-tab {
+        top: 70%;
+        padding: 6px 10px;
+        font-size: 11.5px;
+      }
     }
 
     #jaime-window {
@@ -306,22 +411,34 @@
   `;
   document.head.appendChild(style);
 
-  // Widget HTML structure
-  const fab = document.createElement('div');
-  fab.id = 'jaime-fab';
-  fab.title = 'Consultar a jAIme 24/7';
-  fab.innerHTML = `
-    <div id="jaime-bubble-callout">💬 jAIme 24/7</div>
-    <img src="${JAIME_POSES.buenaonda}" alt="jAIme Asistente">
+  // 1. Create Side Tab Signal (Señalador Lateral Derecho)
+  const sideTab = document.createElement('div');
+  sideTab.id = 'jaime-side-tab';
+  sideTab.title = 'Consultar a jAIme 24/7';
+  sideTab.innerHTML = `
+    <img id="jaime-side-tab-avatar" src="${JAIME_MOBILE_POSES.buenaonda}" alt="jAIme">
+    <span>🤖 jAIme</span>
   `;
 
+  // 2. Create FAB Character Container (ESTADO INICIAL: OCULTO)
+  const fab = document.createElement('div');
+  fab.id = 'jaime-fab';
+  fab.className = 'jaime-hidden'; // Oculto por defecto
+  fab.title = 'Consultar a jAIme 24/7';
+  fab.innerHTML = `
+    <button id="jaime-hide-btn" title="Ocultar jAIme">&times; Ocultar</button>
+    <div id="jaime-bubble-callout">💬 jAIme 24/7</div>
+    <img src="${getPoseUrl('buenaonda')}" alt="jAIme Asistente">
+  `;
+
+  // 3. Create Chat Window
   const win = document.createElement('div');
   win.id = 'jaime-window';
   win.innerHTML = `
     <div class="jaime-header">
       <div class="jaime-avatar-box">
         <div class="jaime-avatar-img-wrap">
-          <img id="jaime-header-pose-img" src="${JAIME_POSES.buenaonda}" alt="jAIme">
+          <img id="jaime-header-pose-img" src="${getPoseUrl('buenaonda')}" alt="jAIme">
         </div>
         <div>
           <div class="jaime-title-name">jAIme <span style="font-size:10px; background:rgba(214,0,0,0.2); border:1px solid rgba(214,0,0,0.4); color:#ff6666; padding:1px 6px; border-radius:4px;">Asistente Virtual</span></div>
@@ -332,7 +449,7 @@
     </div>
 
     <div class="jaime-pose-banner">
-      <img id="jaime-banner-pose-img" src="${JAIME_POSES.buenaonda}" alt="jAIme Pose">
+      <img id="jaime-banner-pose-img" src="${getPoseUrl('buenaonda')}" alt="jAIme Pose">
       <div class="jaime-pose-banner-text" id="jaime-banner-pose-text">
         ¡Hola! Soy <strong>jAIme</strong>. ¿En qué puedo ayudarte hoy con tu tienda online?
       </div>
@@ -357,12 +474,52 @@
     </div>
   `;
 
+  document.body.appendChild(sideTab);
   document.body.appendChild(fab);
   document.body.appendChild(win);
 
-  // Event Listeners
+  // Toggle Visibility Functions
   let isOpen = false;
-  fab.addEventListener('click', () => {
+
+  function showJaimeCharacter() {
+    fab.classList.remove('jaime-hidden');
+    win.classList.add('open');
+    isOpen = true;
+    sideTab.innerHTML = `
+      <img id="jaime-side-tab-avatar" src="${JAIME_MOBILE_POSES[currentPose] || JAIME_MOBILE_POSES.buenaonda}" alt="jAIme">
+      <span>✕ Ocultar</span>
+    `;
+    document.getElementById('jaime-input-text')?.focus();
+  }
+
+  function hideJaimeCharacter() {
+    fab.classList.add('jaime-hidden');
+    win.classList.remove('open');
+    isOpen = false;
+    sideTab.innerHTML = `
+      <img id="jaime-side-tab-avatar" src="${JAIME_MOBILE_POSES[currentPose] || JAIME_MOBILE_POSES.buenaonda}" alt="jAIme">
+      <span>🤖 jAIme</span>
+    `;
+  }
+
+  // Side Tab Signal Click
+  sideTab.addEventListener('click', () => {
+    if (fab.classList.contains('jaime-hidden')) {
+      showJaimeCharacter();
+    } else {
+      hideJaimeCharacter();
+    }
+  });
+
+  // FAB Hide Button Click
+  document.getElementById('jaime-hide-btn')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    hideJaimeCharacter();
+  });
+
+  // FAB Image Click (Toggle window open/close)
+  fab.addEventListener('click', (e) => {
+    if (e.target.id === 'jaime-hide-btn') return;
     isOpen = !isOpen;
     if (isOpen) {
       win.classList.add('open');
@@ -382,18 +539,24 @@
   const chatBody = document.getElementById('jaime-chat-body');
 
   function updatePose(poseName, textNotice) {
-    const targetPose = JAIME_POSES[poseName] || JAIME_POSES.buenaonda;
     currentPose = poseName;
+    const targetPose = getPoseUrl(poseName);
     const headerImg = document.getElementById('jaime-header-pose-img');
     const bannerImg = document.getElementById('jaime-banner-pose-img');
     const bannerText = document.getElementById('jaime-banner-pose-text');
     const fabImg = fab.querySelector('img');
+    const sideAvatar = document.getElementById('jaime-side-tab-avatar');
 
     if (headerImg) headerImg.src = targetPose;
     if (bannerImg) bannerImg.src = targetPose;
     if (fabImg) fabImg.src = targetPose;
+    if (sideAvatar) sideAvatar.src = JAIME_MOBILE_POSES[poseName] || JAIME_MOBILE_POSES.buenaonda;
     if (bannerText && textNotice) bannerText.innerHTML = textNotice;
   }
+
+  window.addEventListener('resize', () => {
+    updatePose(currentPose);
+  });
 
   async function handleSend(userText) {
     const q = userText || inputEl.value.trim();
