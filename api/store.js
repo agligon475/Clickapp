@@ -6,8 +6,42 @@ const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
 export default async function handler(req, res) {
   const host = req.headers.host || '';
   const hostname = host.split(':')[0].toLowerCase();
+  const rawPath = (req.url || '/').split('?')[0].toLowerCase().replace(/\/$/, '') || '/';
   
-  // 1. Serve landing.html directly for main domains (avoiding visible redirect)
+  // Static HTML pages map
+  const routeMap = {
+    '/ayuda': 'ayuda.html',
+    '/ayuda.html': 'ayuda.html',
+    '/dejar-resena': 'dejar-resena.html',
+    '/dejar-resena.html': 'dejar-resena.html',
+    '/alta-usuario': 'alta-usuario.html',
+    '/alta-usuario.html': 'alta-usuario.html',
+    '/dashboard': 'dashboard.html',
+    '/dashboard.html': 'dashboard.html',
+    '/super-admin-secret-dashboard': 'super-admin-secret-dashboard.html',
+    '/super-admin-secret-dashboard.html': 'super-admin-secret-dashboard.html',
+    '/kit-imprimible': 'kit-imprimible.html',
+    '/kit-imprimible.html': 'kit-imprimible.html',
+    '/landing': 'landing.html',
+    '/landing.html': 'landing.html'
+  };
+
+  // 1. Serve static page if requested directly without store query
+  if (routeMap[rawPath] && !req.query.store) {
+    try {
+      const targetFile = routeMap[rawPath];
+      const filePath = path.join(process.cwd(), targetFile);
+      if (fs.existsSync(filePath)) {
+        const html = fs.readFileSync(filePath, 'utf8');
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        return res.status(200).send(html);
+      }
+    } catch (e) {
+      console.error('Error serving static route:', e);
+    }
+  }
+
+  // 2. Serve landing.html directly for main domains root '/'
   const mainDomainsToRedirect = [
     'daletepido.com.ar',
     'www.daletepido.com.ar',
@@ -15,7 +49,7 @@ export default async function handler(req, res) {
     'www.clickapp.com'
   ];
   
-  if (mainDomainsToRedirect.includes(hostname) && !req.query.store) {
+  if (mainDomainsToRedirect.includes(hostname) && !req.query.store && (rawPath === '/' || rawPath === '')) {
     try {
       const filePath = path.join(process.cwd(), 'landing.html');
       const html = fs.readFileSync(filePath, 'utf8');

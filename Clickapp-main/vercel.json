@@ -29,13 +29,21 @@
   ],
   "functions": {
     "api/store.js": {
-      "includeFiles": "tienda.html"
+      "includeFiles": "{tienda.html,landing.html,ayuda.html,dejar-resena.html,dashboard.html,alta-usuario.html,super-admin-secret-dashboard.html,kit-imprimible.html}"
     }
   },
   "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": "/api/$1"
+    },
+    {
+      "source": "/ayuda",
+      "destination": "/ayuda.html"
+    },
+    {
+      "source": "/dejar-resena",
+      "destination": "/dejar-resena.html"
     },
     {
       "source": "/dashboard",
@@ -50,12 +58,12 @@
       "destination": "/kit-imprimible.html"
     },
     {
-      "source": "/landing",
-      "destination": "/landing.html"
+      "source": "/super-admin-secret-dashboard",
+      "destination": "/super-admin-secret-dashboard.html"
     },
     {
-      "source": "/ayuda",
-      "destination": "/ayuda.html"
+      "source": "/landing",
+      "destination": "/landing.html"
     },
     {
       "source": "/",
