@@ -12828,7 +12828,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       }
     }
 
-    let selectedUpgradePlan = 'anual';
+    let selectedUpgradeModalPlan = 'anual';
 
     function openUpgradePlanModal() {
       const modal = document.getElementById('modal-upgrade-plan');
@@ -12854,7 +12854,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     }
 
     function selectPlanUpgradeOpt(plan) {
-      selectedUpgradePlan = plan;
+      selectedUpgradeModalPlan = plan;
       const mOpt = document.getElementById('plan-opt-mensual');
       const aOpt = document.getElementById('plan-opt-anual');
       if (mOpt && aOpt) {
@@ -12905,7 +12905,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           body: JSON.stringify({
             action: 'request_plan_upgrade',
             store_id: storeId,
-            selected_plan: selectedUpgradePlan,
+            selected_plan: selectedUpgradeModalPlan,
             whatsapp: wapp
           })
         });
