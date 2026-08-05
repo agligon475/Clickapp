@@ -375,23 +375,51 @@ export default async function handler(req, res) {
       const emailTarget = recipient_email || '';
 
       if (emailTarget) {
-        try {
-          await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(emailTarget)}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-              _subject: `Recuperación de Contraseña - DaleTePido (${store_id})`,
-              _template: 'table',
-              Mensaje: `Solicitud de restablecimiento de contraseña enviada por el equipo de Soporte.`,
-              Tienda: store_id,
-              Enlace_Restablecer: resetLink
-            })
-          });
-        } catch (e) {
-          console.warn('Advertencia al reenviar reset email:', e.message);
+        const resendApiKey = process.env.RESEND_API_KEY;
+        const fromEmail = process.env.RESEND_FROM_EMAIL || 'Dale! Te Pido <onboarding@resend.dev>';
+
+        if (resendApiKey) {
+          try {
+            await fetch('https://api.resend.com/emails', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${resendApiKey}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                from: fromEmail,
+                to: [emailTarget],
+                subject: `Restablecimiento de Contraseña - DaleTePido (${store_id})`,
+                html: `<div style="font-family:sans-serif; background:#111; color:#fff; padding:20px; border-radius:8px;">
+                  <h2 style="color:#D60000;">Dale! Te Pido</h2>
+                  <p>Hola, recibiste una solicitud para restablecer tu contraseña para la tienda <strong>${store_id}</strong>.</p>
+                  <p><a href="${resetLink}" style="background:#D60000; color:#fff; padding:10px 20px; text-decoration:none; border-radius:5px; display:inline-block;">Restablecer Contraseña</a></p>
+                  <p style="font-size:12px; color:#888;">Si no solicitaste este cambio, puedes ignorar este correo.</p>
+                </div>`
+              })
+            });
+          } catch (e) {
+            console.warn('Advertencia al reenviar reset email vía Resend:', e.message);
+          }
+        } else {
+          try {
+            await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(emailTarget)}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              },
+              body: JSON.stringify({
+                _subject: `Recuperación de Contraseña - DaleTePido (${store_id})`,
+                _template: 'table',
+                Mensaje: `Solicitud de restablecimiento de contraseña enviada por el equipo de Soporte.`,
+                Tienda: store_id,
+                Enlace_Restablecer: resetLink
+              })
+            });
+          } catch (e) {
+            console.warn('Advertencia al reenviar reset email:', e.message);
+          }
         }
       }
 

@@ -100,26 +100,55 @@ export default async function handler(req, res) {
       </html>
     `;
 
-    // Send via FormSubmit API to user's admin_email
-    try {
-      await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(admin_email)}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          _subject: emailSubject,
-          _template: 'table',
-          Mensaje: `¡Bienvenido a DTP! Tu tienda "${storeName}" ha sido creada exitosamente.`,
-          Dashboard: dashboardUrl,
-          Tienda: storeUrl,
-          Prueba: '15 días gratis sin compromiso',
-          WhatsApp: wapp || '-'
-        })
-      });
-    } catch (sendErr) {
-      console.warn('Advertencia al enviar email vía FormSubmit:', sendErr);
+    // Send via Resend API if API Key is configured, fallback to FormSubmit
+    const resendApiKey = process.env.RESEND_API_KEY;
+    const fromEmail = process.env.RESEND_FROM_EMAIL || 'Dale! Te Pido <onboarding@resend.dev>';
+
+    if (resendApiKey) {
+      try {
+        const resendResp = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${resendApiKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            from: fromEmail,
+            to: [admin_email],
+            subject: emailSubject,
+            html: htmlBody
+          })
+        });
+        const resendData = await resendResp.json();
+        if (!resendResp.ok) {
+          console.error('Error enviando con Resend API:', resendData);
+        } else {
+          console.log('Email de bienvenida enviado con Resend ID:', resendData.id);
+        }
+      } catch (sendErr) {
+        console.warn('Advertencia al enviar email vía Resend:', sendErr);
+      }
+    } else {
+      try {
+        await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(admin_email)}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            _subject: emailSubject,
+            _template: 'table',
+            Mensaje: `¡Bienvenido a DTP! Tu tienda "${storeName}" ha sido creada exitosamente.`,
+            Dashboard: dashboardUrl,
+            Tienda: storeUrl,
+            Prueba: '15 días gratis sin compromiso',
+            WhatsApp: wapp || '-'
+          })
+        });
+      } catch (sendErr) {
+        console.warn('Advertencia al enviar email vía FormSubmit:', sendErr);
+      }
     }
 
     return res.status(200).json({
