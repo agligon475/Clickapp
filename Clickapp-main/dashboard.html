@@ -5288,6 +5288,25 @@
     let cOrders, cPago, cTop, cCats;
 
     /* ════════════════════════════════════════════ SUPABASE FUNCTIONS */
+    async function safeFetchSupabase(url, options = {}) {
+      options.headers = options.headers || {};
+      options.headers['apikey'] = SUPABASE_KEY;
+      options.headers['Authorization'] = `Bearer ${SUPABASE_KEY}`;
+
+      let response = await fetch(url, options);
+
+      if (response.status === 401 && SUPABASE_KEY !== VALID_ANON_KEY) {
+        console.warn('Supabase HTTP 401 detectado. Auto-restaurando clave anónima oficial...');
+        window.localStorage.removeItem('storeapp_supabase_key');
+        SUPABASE_KEY = VALID_ANON_KEY;
+        options.headers['apikey'] = SUPABASE_KEY;
+        options.headers['Authorization'] = `Bearer ${SUPABASE_KEY}`;
+        response = await fetch(url, options);
+      }
+
+      return response;
+    }
+
     async function fetchFromSupabase(tabla, opciones = {}) {
       let url = `${SUPABASE_URL}/rest/v1/${tabla}`;
 
@@ -5308,12 +5327,7 @@
       }
 
       try {
-        const response = await fetch(url, {
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`
-          }
-        });
+        const response = await safeFetchSupabase(url);
 
         if (!response.ok) throw new Error(`Error ${response.status}`);
         return await response.json();
@@ -5831,13 +5845,7 @@
         products = Array.isArray(remote) ? remote.map(mapSupabaseRowToLocal) : [];
 
         // Cargar datos de banners desde Supabase (company_settings)
-        const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
-          cache: 'no-cache',
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`
-          }
-        });
+        const configRes = await safeFetchSupabase(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, { cache: 'no-cache' });
         if (configRes.ok) {
           const configData = await configRes.json();
           if (configData && configData.length > 0) {
@@ -5865,12 +5873,7 @@
             let faqs = [];
             try {
               const activeStore = (new URLSearchParams(window.location.search).get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now').toLowerCase();
-              const faqsRes = await fetch(`${SUPABASE_URL}/rest/v1/faqs?store_id=eq.${encodeURIComponent(activeStore)}&order=display_order.asc`, {
-                headers: {
-                  'apikey': SUPABASE_KEY,
-                  'Authorization': `Bearer ${SUPABASE_KEY}`
-                }
-              });
+              const faqsRes = await safeFetchSupabase(`${SUPABASE_URL}/rest/v1/faqs?store_id=eq.${encodeURIComponent(activeStore)}&order=display_order.asc`);
               if (faqsRes.ok) {
                 const faqsData = await faqsRes.json();
                 faqs = faqsData.map(f => ({ q: f.question, a: f.answer }));
@@ -5965,9 +5968,7 @@
             let storeCreds = null;
             if (sessionStorage.getItem('storeapp_has_store_credentials') !== 'false') {
               try {
-                const credsRes = await fetch(`${SUPABASE_URL}/rest/v1/store_credentials?store_id=in.(${encodeURIComponent(STORE_ID)},global)`, {
-                  headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-                });
+                const credsRes = await safeFetchSupabase(`${SUPABASE_URL}/rest/v1/store_credentials?store_id=in.(${encodeURIComponent(STORE_ID)},global)`);
                 if (credsRes.ok) {
                   sessionStorage.setItem('storeapp_has_store_credentials', 'true');
                   const credsData = await credsRes.json();
