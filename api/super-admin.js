@@ -46,6 +46,67 @@ export default async function handler(req, res) {
       return res.status(401).json({ success: false, error: 'Clave de Super Admin incorrecta' });
     }
 
+    // Public Action: Envío de comprobante de pago desde enviar-comprobante.html
+    if (reqBody?.action === 'submit_payment_receipt') {
+      const { store_id, email, plan_key, amount, receipt_url, notes } = reqBody;
+      if (!store_id || !receipt_url) {
+        return res.status(400).json({ success: false, error: 'Faltan parámetros obligatorios (store_id, receipt_url)' });
+      }
+
+      // Obtener billing_info actual
+      const getRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(store_id)}&select=billing_info,plan_level`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
+      
+      let currentBInfo = {};
+      let currentPlan = 'starter';
+      if (getRes.ok) {
+        const rows = await getRes.json();
+        if (rows && rows[0]) {
+          currentBInfo = rows[0].billing_info || {};
+          currentPlan = rows[0].plan_level || 'starter';
+        }
+      }
+
+      const targetPlanLevel = (plan_key || '').split('_')[0] || 'pro';
+
+      const updatedBInfo = {
+        ...currentBInfo,
+        pending_receipt_url: receipt_url,
+        pending_receipt_plan: plan_key,
+        pending_receipt_amount: amount,
+        pending_receipt_date: new Date().toISOString(),
+        pending_receipt_status: 'pending',
+        contact_email: email || currentBInfo.contact_email || '',
+        notes: notes || currentBInfo.notes || ''
+      };
+
+      const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(store_id)}`, {
+        method: 'PATCH',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify({
+          billing_info: updatedBInfo,
+          upgrade_requested: targetPlanLevel,
+          payment_status: 'receipt_submitted'
+        })
+      });
+
+      if (patchRes.ok) {
+        return res.status(200).json({
+          success: true,
+          message: 'Comprobante de pago registrado y adjuntado al SuperDashboard correctamente.'
+        });
+      } else {
+        const errText = await patchRes.text();
+        return res.status(500).json({ success: false, error: 'Error actualizando base de datos: ' + errText });
+      }
+    }
+
     if (!verifyMasterKey(adminKey)) {
       return res.status(403).json({ success: false, error: 'Acceso no autorizado. Se requieren permisos de Super Admin.' });
     }

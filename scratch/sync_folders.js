@@ -20,6 +20,8 @@ const filesToSync = [
   'api/welcome-email.js',
   'api/super-admin.js',
   'super-admin-secret-dashboard.html',
+  'enviar-comprobante.html',
+  'api/email-templates.js',
   'manifest.json',
   'sw.js',
   'icon-192.png',

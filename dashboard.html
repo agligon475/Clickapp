@@ -12886,11 +12886,13 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       const wappInput = document.getElementById('upgrade-field-wapp');
       const wapp = wappInput ? wappInput.value.trim() : '';
 
-      let storeId = '';
-      try {
-        const session = JSON.parse(localStorage.getItem('daletepido_session') || '{}');
-        storeId = session.store_id || '';
-      } catch(e){}
+      let storeId = STORE_ID || '';
+      if (!storeId) {
+        try {
+          const session = JSON.parse(localStorage.getItem('daletepido_session') || '{}');
+          storeId = session.store_id || '';
+        } catch(e){}
+      }
 
       if (!storeId) {
         storeId = new URLSearchParams(window.location.search).get('store') || '';
@@ -12904,7 +12906,11 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       btn.disabled = true;
       btn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Enviando Solicitud...';
       msg.style.color = '#fff';
-      msg.textContent = 'Procesando solicitud...';
+      msg.textContent = 'Procesando solicitud y generando datos de pago...';
+
+      const planLevel = selectedUpgradePlan || 'pro';
+      const cycle = selectedUpgradeModalPlan || 'anual';
+      const fullPlanKey = `${planLevel}_${cycle}`;
 
       try {
         const res = await fetch('/api/auth', {
@@ -12913,15 +12919,47 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           body: JSON.stringify({
             action: 'request_plan_upgrade',
             store_id: storeId,
-            selected_plan: selectedUpgradeModalPlan,
+            selected_plan: fullPlanKey,
             whatsapp: wapp
           })
         });
 
         const data = await res.json();
-        if (data.success) {
+
+        // Enviar email transaccional con las instrucciones de pago exactas
+        const storeCfg = JSON.parse(localStorage.getItem('storeapp_cfg_' + storeId) || localStorage.getItem('storeapp_cfg') || '{}');
+        const storeEmail = storeCfg.admin_email || document.getElementById('cfg-store-email')?.value || '';
+
+        if (storeEmail) {
+          fetch('/api/welcome-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type: 'plan_instructions',
+              store_id: storeId,
+              admin_email: storeEmail,
+              plan_key: fullPlanKey
+            })
+          }).catch(e => console.warn('Error enviando correo de instrucciones:', e));
+        }
+
+        const uploadPageUrl = `/enviar-comprobante.html?store=${encodeURIComponent(storeId)}&plan=${encodeURIComponent(fullPlanKey)}`;
+
+        if (data.success || res.ok) {
           msg.style.color = '#34d399';
-          msg.innerHTML = `✓ ¡Solicitud registrada! Para concretar la activación del <strong>Plan ${selectedUpgradePlan.toUpperCase()}</strong>, nuestro equipo te contactará por WhatsApp para enviarte los datos de transferencia.`;
+          msg.innerHTML = `
+            <div style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:10px; padding:14px; margin-bottom:14px;">
+              <strong>✓ ¡Solicitud generada con éxito!</strong><br/>
+              Te enviamos las instrucciones de pago a tu correo.
+              <br/><br/>
+              <strong>Datos Bancarios:</strong><br/>
+              • CVU/CBU: <span style="font-family:monospace; font-weight:700;">0000076500000014269976</span><br/>
+              • Titular: <strong>Agustin Licari Gonzalez</strong>
+            </div>
+            <a href="${uploadPageUrl}" target="_blank" class="sb-btn" style="background:var(--red); color:#fff; text-decoration:none; padding:12px 20px; border-radius:10px; font-weight:800; display:inline-flex; align-items:center; gap:8px; font-size:14px; box-shadow:0 6px 18px rgba(215,38,56,0.4);">
+              <i class="bi bi-cloud-arrow-up-fill"></i> Adjuntar Comprobante de Pago aquí →
+            </a>
+          `;
           btn.style.display = 'none';
         } else {
           msg.style.color = '#ff6666';

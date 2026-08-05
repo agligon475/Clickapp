@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enviar Comprobante de Pago - Dale! Te Pido</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <style>
+    :root {
+      --bg: #0b0909;
+      --card-bg: #141111;
+      --red: #D72638;
+      --red-hover: #b81d2d;
+      --zinc: #1F1C1C;
+      --silver: #a0a0a0;
+      --fog: #e0e0e0;
+      --white: #ffffff;
+      --green: #2ecc71;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--fog);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      line-height: 1.5;
+    }
+
+    .background-glow {
+      position: fixed;
+      top: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(215, 38, 56, 0.18) 0%, rgba(0,0,0,0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 540px;
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 32px 28px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      backdrop-filter: blur(10px);
+    }
+
+    .header-logo {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .header-logo img {
+      max-width: 200px;
+      height: auto;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--white);
+      text-align: center;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+    
+    .subtitle {
+      font-size: 13px;
+      color: var(--silver);
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--fog);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .input-ctrl, .select-ctrl, .textarea-ctrl {
+      width: 100%;
+      background: var(--zinc);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: var(--white);
+      font-size: 14px;
+      font-family: var(--font-body);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .input-ctrl:focus, .select-ctrl:focus, .textarea-ctrl:focus {
+      border-color: var(--red);
+      box-shadow: 0 0 12px rgba(215, 38, 56, 0.25);
+    }
+
+    .select-ctrl option {
+      background: var(--zinc);
+      color: var(--white);
+    }
+
+    .bank-info-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 24px;
+      font-size: 13px;
+    }
+
+    .bank-info-header {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .bank-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      color: var(--silver);
+    }
+    .bank-row strong {
+      color: var(--white);
+      font-family: monospace;
+      font-size: 14px;
+    }
+
+    .upload-zone {
+      border: 2px dashed rgba(255, 255, 255, 0.18);
+      border-radius: 14px;
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.01);
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .upload-zone:hover {
+      border-color: var(--red);
+      background: rgba(215, 38, 56, 0.03);
+    }
+
+    .upload-icon {
+      font-size: 32px;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+
+    .upload-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    
+    .upload-hint {
+      font-size: 11px;
+      color: var(--silver);
+    }
+
+    .file-preview {
+      display: none;
+      margin-top: 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 12px;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .file-preview img {
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    .file-preview-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--white);
+      word-break: break-all;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: linear-gradient(135deg, var(--red) 0%, var(--red-hover) 100%);
+      color: var(--white);
+      border: none;
+      border-radius: 12px;
+      padding: 14px 24px;
+      font-size: 15px;
+      font-weight: 800;
+      font-family: var(--font-body);
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(215, 38, 56, 0.35);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(215, 38, 56, 0.45);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .success-card {
+      display: none;
+      text-align: center;
+      padding: 20px 10px;
+    }
+
+    .success-icon {
+      font-size: 54px;
+      color: var(--green);
+      margin-bottom: 16px;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 11px;
+      color: var(--silver);
+      margin-top: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="background-glow"></div>
+
+  <div class="container">
+    <div class="header-logo">
+      <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido">
+    </div>
+
+    <!-- FORMULARIO -->
+    <div id="form-container">
+      <div class="title">Adjuntar Comprobante de Pago</div>
+      <div class="subtitle">Ingresá los datos de tu tienda y subí la foto/PDF del comprobante para activar tu plan.</div>
+
+      <!-- Datos de Transferencia -->
+      <div class="bank-info-box">
+        <div class="bank-info-header"><i class="bi bi-bank"></i> Datos Bancarios de Transferencia</div>
+        <div class="bank-row">
+          <span>CVU / CBU:</span>
+          <strong>0000076500000014269976</strong>
+        </div>
+        <div class="bank-row">
+          <span>Titular de la cuenta:</span>
+          <span style="color:var(--white); font-weight:600;">Agustin Licari Gonzalez</span>
+        </div>
+      </div>
+
+      <form id="receipt-form" onsubmit="handleFormSubmit(event)">
+        
+        <div class="form-group">
+          <label class="label">Identificador o Nombre de la Tienda</label>
+          <input type="text" id="store-id" class="input-ctrl" placeholder="Ej: mi-tienda" required>
+        </div>
+
+        <div class="form-group">
+          <label class="label">Correo Electrónico de Contacto</label>
+          <input type="email" id="store-email" class="input-ctrl" placeholder="ejemplo@email.com" required>
+        </div>
+
+        <div class="form-group">
+          <label class="label">Plan Contratado / Seleccionado</label>
+          <select id="plan-select" class="select-ctrl" onchange="updateAmountDisplay()" required>
+            <option value="starter_mensual">Plan STARTER — Mensual ($19.900 / mes)</option>
+            <option value="starter_anual">Plan STARTER — Anual ($199.000 / año - 2 meses gratis)</option>
+            <option value="pro_mensual">Plan PRO — Mensual ($29.900 / mes)</option>
+            <option value="pro_anual">Plan PRO — Anual ($299.000 / año - 2 meses gratis)</option>
+            <option value="enterprise_mensual">Plan ENTERPRISE — Mensual ($59.900 / mes)</option>
+            <option value="enterprise_anual">Plan ENTERPRISE — Anual ($599.000 / año - 2 meses gratis)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="label">Monto Abonado</label>
+          <input type="text" id="plan-amount" class="input-ctrl" value="$19.900" readonly style="color:var(--green); font-weight:800; font-size:16px;">
+        </div>
+
+        <div class="form-group">
+          <label class="label">Adjuntar Comprobante (JPG, PNG, PDF)</label>
+          <div class="upload-zone" onclick="document.getElementById('file-input').click()">
+            <i class="bi bi-cloud-arrow-up upload-icon"></i>
+            <div class="upload-text">Seleccionar o arrastrar comprobante</div>
+            <div class="upload-hint">Formatos soportados: JPG, PNG, WEBP o PDF (máx. 10MB)</div>
+            <input type="file" id="file-input" accept="image/*,application/pdf" style="display:none;" onchange="handleFileChange(event)">
+          </div>
+
+          <div id="file-preview" class="file-preview">
+            <img id="file-thumb" src="" alt="Comprobante">
+            <div style="flex:1;">
+              <div id="file-name" class="file-preview-name">comprobante.jpg</div>
+              <div style="font-size:10px; color:var(--green); font-weight:600;">✓ Archivo listo para enviar</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="label">Observaciones / Comentarios (Opcional)</label>
+          <input type="text" id="notes" class="input-ctrl" placeholder="Ej: Pago realizado desde cuenta de Santander">
+        </div>
+
+        <button type="submit" id="btn-submit" class="btn-submit">
+          <i class="bi bi-send-fill"></i> Enviar Comprobante para Validación
+        </button>
+
+      </form>
+    </div>
+
+    <!-- TARJETA DE ÉXITO -->
+    <div id="success-container" class="success-card">
+      <i class="bi bi-check-circle-fill success-icon"></i>
+      <div class="title" style="color:var(--green);">¡Comprobante Recibido con Éxito!</div>
+      <div class="subtitle" style="margin-top:10px; line-height:1.6;">
+        El comprobante ha sido registrado correctamente en nuestro sistema y adjuntado al panel del SuperDashboard.
+        <br/><br/>
+        El equipo de soporte validará la operación y activará tu mejora de plan a la brevedad.
+      </div>
+      
+      <a href="/dashboard.html" id="back-dash-btn" class="btn-submit" style="text-decoration:none; margin-top:24px;">
+        <i class="bi bi-speedometer2"></i> Volver a mi Dashboard
+      </a>
+    </div>
+
+    <div class="footer-note">
+      © 2026 Dale! Te Pido · Sistema de Gestión de Catálogos y Presupuestos Online
+    </div>
+
+  </div>
+
+  <script>
+    const PLAN_AMOUNTS = {
+      'starter_mensual': '$19.900',
+      'starter_anual': '$199.000',
+      'pro_mensual': '$29.900',
+      'pro_anual': '$299.000',
+      'enterprise_mensual': '$59.900',
+      'enterprise_anual': '$599.000'
+    };
+
+    let selectedFile = null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const storeParam = params.get('store') || localStorage.getItem('storeapp_store_id') || '';
+      const planParam = params.get('plan') || '';
+
+      if (storeParam) {
+        document.getElementById('store-id').value = storeParam;
+        document.getElementById('back-dash-btn').href = `/dashboard.html?store=${encodeURIComponent(storeParam)}`;
+      }
+
+      const storeCfg = JSON.parse(localStorage.getItem('storeapp_cfg_' + storeParam) || localStorage.getItem('storeapp_cfg') || '{}');
+      if (storeCfg.admin_email) {
+        document.getElementById('store-email').value = storeCfg.admin_email;
+      }
+
+      if (planParam && PLAN_AMOUNTS[planParam]) {
+        document.getElementById('plan-select').value = planParam;
+      }
+      updateAmountDisplay();
+    });
+
+    function updateAmountDisplay() {
+      const planKey = document.getElementById('plan-select').value;
+      const amount = PLAN_AMOUNTS[planKey] || '$19.900';
+      document.getElementById('plan-amount').value = amount;
+    }
+
+    function handleFileChange(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      selectedFile = file;
+      const preview = document.getElementById('file-preview');
+      const nameEl = document.getElementById('file-name');
+      const thumb = document.getElementById('file-thumb');
+
+      nameEl.textContent = file.name;
+      preview.style.display = 'flex';
+
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => { thumb.src = e.target.result; };
+        reader.readAsDataURL(file);
+      } else {
+        thumb.src = 'https://cdn-icons-png.flaticon.com/512/337/337946.png'; // Document icon
+      }
+    }
+
+    async function handleFormSubmit(event) {
+      event.preventDefault();
+
+      const storeId = document.getElementById('store-id').value.trim().toLowerCase();
+      const email = document.getElementById('store-email').value.trim();
+      const planKey = document.getElementById('plan-select').value;
+      const amount = document.getElementById('plan-amount').value;
+      const notes = document.getElementById('notes').value.trim();
+      const btn = document.getElementById('btn-submit');
+
+      if (!storeId) {
+        alert('Por favor ingresá el nombre o ID de tu tienda.');
+        return;
+      }
+
+      if (!selectedFile) {
+        alert('Por favor adjuntá una foto o PDF del comprobante de pago.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Subiendo y registrando comprobante...';
+
+      try {
+        let receiptUrl = '';
+        
+        // 1. Subir imagen a Cloudinary (Preset no firmado de la plataforma)
+        try {
+          const formData = new FormData();
+          formData.append('file', selectedFile);
+          formData.append('upload_preset', 'daletepido_preset');
+
+          const cloudRes = await fetch('https://api.cloudinary.com/v1_1/deuog0r34/image/upload', {
+            method: 'POST',
+            body: formData
+          });
+
+          if (cloudRes.ok) {
+            const cloudData = await cloudRes.json();
+            receiptUrl = cloudData.secure_url;
+          }
+        } catch (e) {
+          console.warn('Fallback a Base64 para comprobante:', e);
+        }
+
+        if (!receiptUrl && selectedFile) {
+          // Convertir a DataURL Base64 si falla Cloudinary
+          receiptUrl = await new Promise((resolve) => {
+            const r = new FileReader();
+            r.onload = (e) => resolve(e.target.result);
+            r.readAsDataURL(selectedFile);
+          });
+        }
+
+        // 2. Enviar recibo al backend / SuperDashboard
+        const res = await fetch('/api/super-admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'submit_payment_receipt',
+            store_id: storeId,
+            email: email,
+            plan_key: planKey,
+            amount: amount,
+            receipt_url: receiptUrl,
+            notes: notes
+          })
+        });
+
+        const data = await res.json();
+
+        if (data.success || res.ok) {
+          document.getElementById('form-container').style.display = 'none';
+          document.getElementById('success-container').style.display = 'block';
+        } else {
+          alert('Error al registrar comprobante: ' + (data.error || 'Intente nuevamente'));
+          btn.disabled = false;
+          btn.innerHTML = '<i class="bi bi-send-fill"></i> Enviar Comprobante para Validación';
+        }
+      } catch (e) {
+        alert('Ocurrió un error al enviar el comprobante: ' + e.message);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-send-fill"></i> Enviar Comprobante para Validación';
+      }
+    }
+  </script>
+</body>
+</html>

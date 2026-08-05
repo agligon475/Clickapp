@@ -1,4 +1,4 @@
-import { getWelcomeEmail } from './email-templates.js';
+import { getWelcomeEmail, getPlanPaymentInstructionsEmail } from './email-templates.js';
 
 export default async function handler(req, res) {
   // CORS Headers
@@ -15,14 +15,25 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { store_id, business_name, admin_email, wapp } = req.body || {};
+    const { store_id, business_name, admin_email, wapp, type, plan_key } = req.body || {};
 
     if (!admin_email || !store_id) {
       return res.status(400).json({ success: false, error: 'Store ID y Email son requeridos' });
     }
 
     const storeName = business_name || store_id;
-    const { subject: emailSubject, html: htmlBody } = getWelcomeEmail({ storeName, storeId: store_id });
+    let emailSubject = '';
+    let htmlBody = '';
+
+    if (type === 'plan_instructions' || plan_key) {
+      const emailObj = getPlanPaymentInstructionsEmail({ storeName, storeId: store_id, planKey: plan_key || 'starter_mensual' });
+      emailSubject = emailObj.subject;
+      htmlBody = emailObj.html;
+    } else {
+      const emailObj = getWelcomeEmail({ storeName, storeId: store_id });
+      emailSubject = emailObj.subject;
+      htmlBody = emailObj.html;
+    }
 
     // Send via Resend API if API Key is configured, fallback to FormSubmit
     const resendApiKey = process.env.RESEND_API_KEY;
