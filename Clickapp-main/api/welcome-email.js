@@ -102,7 +102,7 @@ export default async function handler(req, res) {
 
     // Send via Resend API if API Key is configured, fallback to FormSubmit
     const resendApiKey = process.env.RESEND_API_KEY;
-    const fromEmail = process.env.RESEND_FROM_EMAIL || 'Dale! Te Pido <onboarding@resend.dev>';
+    const fromEmail = process.env.RESEND_FROM_EMAIL || 'Dale! Te Pido <soporte@daletepido.com.ar>';
 
     if (resendApiKey) {
       try {

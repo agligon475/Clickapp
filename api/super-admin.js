@@ -376,7 +376,7 @@ export default async function handler(req, res) {
 
       if (emailTarget) {
         const resendApiKey = process.env.RESEND_API_KEY;
-        const fromEmail = process.env.RESEND_FROM_EMAIL || 'Dale! Te Pido <onboarding@resend.dev>';
+        const fromEmail = process.env.RESEND_FROM_EMAIL || 'Dale! Te Pido <soporte@daletepido.com.ar>';
 
         if (resendApiKey) {
           try {
