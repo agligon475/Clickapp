@@ -48,8 +48,8 @@ function getEmailLayout({ title, bodyContent }) {
   <div class="wrapper">
     <div class="container">
       <div class="header">
-        <div class="logo-title">Dale! Te Pido</div>
-        <div class="logo-sub">Catálogos & Presupuestos Online</div>
+        <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale Te Pido" style="max-width: 220px; width: 80%; height: auto; display: block; margin: 0 auto;">
+        <div class="logo-sub" style="margin-top: 8px;">Catálogos & Presupuestos Online</div>
       </div>
       <div class="content">
         ${bodyContent}
