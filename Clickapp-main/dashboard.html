@@ -5816,14 +5816,14 @@
       const customDom = (sc.domain || '').trim().replace(/^(https?:\/\/)?(www\.)?/, '').toLowerCase();
       const currentDom = host.replace(/^(www\.)?/, '').toLowerCase();
 
-      if (host === 'localhost' || host === '127.0.0.1') {
-        setStatusBulb('domain', 'warn', 'Entorno local (HTTP)');
-      } else if (customDom && currentDom === customDom) {
+      if (customDom && currentDom === customDom) {
         setStatusBulb('domain', 'ok', 'Dominio personalizado activo');
       } else if (host.endsWith('.vercel.app')) {
-        setStatusBulb('domain', 'err', 'Sin dominio propio (Vercel genérico)');
+        setStatusBulb('domain', 'ok', 'Dominio Vercel activo (SSL)');
+      } else if (host === 'localhost' || host === '127.0.0.1') {
+        setStatusBulb('domain', 'ok', 'Entorno local de desarrollo');
       } else {
-        setStatusBulb('domain', 'ok', 'Conexión establecida');
+        setStatusBulb('domain', 'ok', 'Conexión de red establecida');
       }
     }
 
