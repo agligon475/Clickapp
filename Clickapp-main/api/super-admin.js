@@ -4,10 +4,19 @@ import { getResetPasswordEmail } from './email-templates.js';
 const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
 
-const SUPER_ADMIN_PASSWORD = 'super-admin-alicari';
+const SUPER_ADMIN_PASSWORD = process.env.SUPER_ADMIN_PASSWORD || 'super-admin-alicari';
+
+function getSessionToken() {
+  const secret = process.env.SUPER_ADMIN_PASSWORD || SUPER_ADMIN_PASSWORD;
+  const dateBucket = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+  return crypto.createHash('sha256').update(secret + '_' + dateBucket).digest('hex');
+}
 
 function verifyMasterKey(key) {
-  return key === SUPER_ADMIN_PASSWORD || key === 'super-admin-token-valid-key';
+  if (!key) return false;
+  const expectedToken = getSessionToken();
+  const rawMaster = process.env.SUPER_ADMIN_PASSWORD || SUPER_ADMIN_PASSWORD;
+  return key === expectedToken || key === rawMaster || key === 'super-admin-token-valid-key';
 }
 
 function safeGetTime(dateVal) {
@@ -39,7 +48,7 @@ export default async function handler(req, res) {
       if (verifyMasterKey(reqBody.password)) {
         return res.status(200).json({
           success: true,
-          token: 'super-admin-token-valid-key',
+          token: getSessionToken(),
           message: 'Autenticación de Super Admin exitosa'
         });
       }
