@@ -4999,20 +4999,48 @@
     const STORE_ID = detectedStore.toLowerCase();
     window.localStorage.setItem('storeapp_store_id', STORE_ID);
 
-    // Intercept fetch globally to inject x-store-token automatically for Supabase requests
+    // Intercept fetch globally to inject apikey, Authorization and x-store-token automatically for Supabase requests
     const originalFetch = window.fetch;
-    window.fetch = function (url, options) {
-      if (typeof url === 'string' && url.startsWith(SUPABASE_URL)) {
+    window.fetch = async function (url, options) {
+      const urlStr = (typeof url === 'string') ? url : (url && url.href ? url.href : '');
+      if (urlStr && urlStr.startsWith(SUPABASE_URL)) {
         options = options || {};
-        options.headers = options.headers || {};
+
+        let headersObj = {};
+        if (options.headers instanceof Headers) {
+          options.headers.forEach((val, key) => { headersObj[key] = val; });
+        } else if (options.headers) {
+          headersObj = { ...options.headers };
+        }
+
+        if (!headersObj['apikey']) {
+          headersObj['apikey'] = SUPABASE_KEY;
+        }
+        if (!headersObj['Authorization'] && !headersObj['authorization']) {
+          headersObj['Authorization'] = `Bearer ${SUPABASE_KEY}`;
+        }
+
         const token = sessionStorage.getItem('storeapp_token_' + STORE_ID);
         if (token) {
-          if (options.headers instanceof Headers) {
-            options.headers.set('x-store-token', token);
-          } else {
-            options.headers['x-store-token'] = token;
-          }
+          headersObj['x-store-token'] = token;
         }
+
+        options.headers = headersObj;
+
+        let res = await originalFetch(url, options);
+
+        // Si devuelve 401 Unauthorized, limpiar la clave local corrupta y reintentar con la clave anónima por defecto
+        if (res.status === 401 && SUPABASE_KEY !== VALID_ANON_KEY) {
+          console.warn('Supabase 401 detectado en fetch. Auto-restaurando clave anónima por defecto...');
+          window.localStorage.removeItem('storeapp_supabase_key');
+          SUPABASE_KEY = VALID_ANON_KEY;
+          headersObj['apikey'] = SUPABASE_KEY;
+          headersObj['Authorization'] = `Bearer ${SUPABASE_KEY}`;
+          options.headers = headersObj;
+          res = await originalFetch(url, options);
+        }
+
+        return res;
       }
       return originalFetch(url, options);
     };
