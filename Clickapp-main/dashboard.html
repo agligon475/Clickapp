@@ -5566,9 +5566,22 @@
         showUpgradeModal('Métricas Exclusivas del Plan PRO', 'El acceso a reportes detallados de facturación, clientes recurrentes y analíticas avanzadas es exclusivo de comercios con Plan PRO.');
         return;
       }
+
+      if (name === 'qr' || name === 'kit') {
+        const storeId = (typeof STORE_ID !== 'undefined' && STORE_ID) ? STORE_ID : (new URLSearchParams(window.location.search).get('store') || '');
+        window.open('/kit-imprimible.html?store=' + encodeURIComponent(storeId), '_blank');
+        return;
+      }
+
+      const targetView = document.getElementById('view-' + name);
+      if (!targetView) {
+        console.warn('Vista no encontrada en Dashboard:', name);
+        return;
+      }
+
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
-      document.getElementById('view-' + name).classList.add('active');
+      targetView.classList.add('active');
       if (typeof updateMobileNavActiveState === 'function') updateMobileNavActiveState(name);
 
       // Mostrar u ocultar el selector de período sólo en Informes
@@ -5596,7 +5609,10 @@
         pickups: 'bi-truck'
       };
       const icon = icons[name] || 'bi-speedometer';
-      document.getElementById('view-title').innerHTML = `<i class="bi ${icon}" style="margin-right:6px;"></i> ${TITLES[name]}`;
+      const vt = document.getElementById('view-title');
+      if (vt && TITLES && TITLES[name]) {
+        vt.innerHTML = `<i class="bi ${icon}" style="margin-right:6px;"></i> ${TITLES[name]}`;
+      }
       if (el) {
         el.classList.add('active');
         const section = el.closest('.sb-section');
