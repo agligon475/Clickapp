@@ -379,9 +379,9 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: #e74c3c;
+      background: #2ecc71;
       border: 1.5px solid var(--steel);
-      box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 0 4px rgba(46, 204, 113, 0.6);
       transition: background 0.3s ease, box-shadow 0.3s ease;
     }
     .sb-status-capsule {
@@ -5742,22 +5742,21 @@
 
     function setStatusBulb(id, type, msg) {
       statusStates[id] = type;
-
-      const bulb = document.getElementById('status-light-' + id);
-      const desc = document.getElementById('status-desc-' + id);
-      
-      // Even if the main card is hidden/null, update statusStates and check button visibility
       updateConfigButtonVisibility();
-
-      if (!bulb || !desc) return;
 
       const color = type === 'ok' ? '#2ecc71' : type === 'warn' ? '#f1c40f' : '#e74c3c';
       const label = type === 'ok' ? (msg || 'Conexión establecida') : type === 'warn' ? (msg || 'Falta configuración') : (msg || 'Desconectado. Error');
 
-      bulb.style.background = color;
-      bulb.style.boxShadow = `0 0 10px ${color}`;
-      desc.textContent = label;
-      desc.style.color = color;
+      const bulb = document.getElementById('status-light-' + id);
+      const desc = document.getElementById('status-desc-' + id);
+      if (bulb) {
+        bulb.style.background = color;
+        bulb.style.boxShadow = `0 0 10px ${color}`;
+      }
+      if (desc) {
+        desc.textContent = label;
+        desc.style.color = color;
+      }
 
       // Update sidebar circle dot
       const sidebarDot = document.getElementById('status-dot-' + id);
