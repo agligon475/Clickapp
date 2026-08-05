@@ -255,7 +255,7 @@
         </div>
         <div class="nav-actions">
             <a href="/alta-usuario.html?action=login" class="nav-login">Iniciar Sesión</a>
-            <a href="#cta-section-pro" class="nav-cta">🚀 Crear mi Tienda</a>
+            <a href="#cta-section-pro" onclick="scrollToCtaSection(event)" class="nav-cta">🚀 Crear mi Tienda</a>
         </div>
     </nav>
 
@@ -267,7 +267,7 @@
             <h1>Tu catálogo digital online<br>conectado directo a <span class="text-glow">WhatsApp</span></h1>
             <p>Mostrá tus productos con fotos y precios en tiempo real. Recibí presupuestos y pedidos ordenados directamente en tu chat de WhatsApp sin pagar comisiones por venta.</p>
             <div class="hero-btns">
-                <a href="#cta-section-pro" class="btn-primary"><i class="bi bi-rocket-takeoff-fill"></i> Empezar 15 Días Gratis</a>
+                <a href="#cta-section-pro" onclick="scrollToCtaSection(event)" class="btn-primary"><i class="bi bi-rocket-takeoff-fill"></i> Empezar 15 Días Gratis</a>
                 <a href="/index.html?store=pizzeria-don-antonio" target="_blank" class="btn-secondary"><i class="bi bi-eye-fill"></i> Ver Demo de Tienda</a>
             </div>
             
@@ -594,7 +594,7 @@
     </section>
 
     <!-- SECCIÓN CTA DE ALTO IMPACTO: COMPROBADOR DE DISPONIBILIDAD -->
-    <section class="cta-section-pro" style="background: linear-gradient(180deg, #0f0d0d 0%, #0A0A0C 100%); padding: 100px 24px; position: relative; overflow: hidden; border-top: 1px solid rgba(255,255,255,0.08);">
+    <section id="cta-section-pro" class="cta-section-pro" style="background: linear-gradient(180deg, #0f0d0d 0%, #0A0A0C 100%); padding: 100px 24px; position: relative; overflow: hidden; border-top: 1px solid rgba(255,255,255,0.08);">
         <!-- Glows & background graphics -->
         <div style="position: absolute; width: 650px; height: 650px; border-radius: 50%; background: radial-gradient(circle, rgba(214,0,0,0.32) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; filter: blur(60px);"></div>
         <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 80% 20%, rgba(214,0,0,0.15), transparent 40%); pointer-events: none;"></div>
@@ -968,6 +968,18 @@
 
         const obs = new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});},{threshold:0.15});
         document.querySelectorAll('.step-card,.diff-card,.testimonial-card,.price-card,.feature-item').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition='opacity .5s ease,transform .5s ease';obs.observe(el);});
+
+        function scrollToCtaSection(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            const sec = document.getElementById('cta-section-pro');
+            if (sec) {
+                sec.scrollIntoView({ behavior: 'smooth' });
+                setTimeout(() => {
+                    const input = document.getElementById('cta-input-store-name');
+                    if (input) input.focus();
+                }, 400);
+            }
+        }
 
         /* FUNCIONES COMPROBADOR DE DISPONIBILIDAD EN TIEMPO REAL CON SUPABASE */
         let availabilityTimer = null;
