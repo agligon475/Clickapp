@@ -991,16 +991,7 @@
                     banner2_active: true,
                     pay_cash: true,
                     pay_transfer: true,
-                    pay_agreement: true,
-                    design_settings: {
-                        h1: 'Pedí online',
-                        h2: 'sin vueltas ni esperas.',
-                        desc: 'Elegí tus productos, armá tu pedido y coordiná por WhatsApp.',
-                        emoji: '🏪',
-                        theme: 'light',
-                        font: 'Outfit',
-                        qr_code: `https://daletepido.com.ar/api/qr?store=${storeId}`
-                    }
+                    pay_agreement: true
                 };
 
                 const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings`, {
