@@ -15,7 +15,6 @@ const filesToSync = [
   'requirements.txt',
   'api/image-search.js',
   'api/store.js',
-  'api/debug.js',
   'api/auth.js',
   'api/welcome-email.js',
   'api/super-admin.js',
