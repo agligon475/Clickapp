@@ -1766,6 +1766,29 @@
       color: var(--red);
     }
 
+    /* JAIME TOPBAR BTN */
+    .jaime-topbar-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(215, 38, 56, 0.25) 0%, rgba(20, 17, 17, 0.95) 100%);
+      border: 1px solid rgba(215, 38, 56, 0.5);
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .15s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .jaime-topbar-btn:hover {
+      border-color: var(--red);
+      background: var(--red);
+      transform: scale(1.05);
+    }
+
     /* CONFIG VIEW */
     .masonry-grid {
       display: grid;
@@ -2645,6 +2668,9 @@
           <option value="30" selected>Último mes</option>
           <option value="365">Último año</option>
         </select>
+        <button class="jaime-topbar-btn" onclick="if(typeof toggleJaime === 'function'){ toggleJaime(); } else if(typeof showJaimeCharacter === 'function'){ showJaimeCharacter(); }" id="jaime-topbar-btn" title="Consultar a jAIme 24/7">
+          <img src="/img/jaime/jaime-mobile-buenaonda.png" alt="jAIme" style="width:20px; height:20px; object-fit:contain;" />
+        </button>
         <button class="theme-toggle-btn" onclick="toggleTheme()" id="theme-btn" title="Cambiar tema">
           <i class="bi bi-sun" id="theme-icon"></i>
         </button>
