@@ -8,22 +8,8 @@
   "lang": "es",
   "dir": "ltr",
   "display": "standalone",
-  "display_override": [
-    "tabbed",
-    "standalone",
-    "minimal-ui",
-    "window-controls-overlay"
-  ],
-  "tab_strip": {
-    "home_tab": {
-      "url": "/dashboard.html"
-    },
-    "new_tab_button": {
-      "url": "/dashboard.html"
-    }
-  },
-  "background_color": "#0A0A0C",
-  "theme_color": "#0A0A0C",
+  "background_color": "#D72638",
+  "theme_color": "#D72638",
   "orientation": "portrait-primary",
   "categories": [
     "business",
@@ -39,39 +25,51 @@
       "id": "ar.com.daletepido.app"
     }
   ],
-  "scope_extensions": [
+  "icons": [
     {
-      "type": "origin",
-      "origin": "https://daletepido.com.ar"
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "type": "origin",
-      "origin": "https://app.daletepido.com.ar"
+      "src": "/icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
-      "type": "origin",
-      "origin": "https://admin.daletepido.com.ar"
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "type": "origin",
-      "origin": "https://tienda.daletepido.com.ar"
+      "src": "/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
     }
   ],
-  "note_taking": {
-    "new_note_url": "/dashboard.html?action=new_note"
-  },
-  "iarc_rating_id": "00000000-0000-0000-0000-000000000000",
-  "launch_handler": {
-    "client_mode": [
-      "navigate-existing",
-      "auto"
-    ]
-  },
-  "handle_links": "preferred",
-  "protocol_handlers": [
+  "screenshots": [
     {
-      "protocol": "web+daletepido",
-      "url": "/dashboard.html?store=%s"
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Panel de Control DaleTePido"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Gestión de Pedidos"
     }
   ],
   "shortcuts": [
@@ -100,80 +98,6 @@
           "type": "image/png"
         }
       ]
-    }
-  ],
-  "share_target": {
-    "action": "/dashboard.html",
-    "method": "GET",
-    "enctype": "application/x-www-form-urlencoded",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
-    }
-  },
-  "file_handlers": [
-    {
-      "action": "/dashboard.html",
-      "accept": {
-        "text/csv": [
-          ".csv"
-        ],
-        "application/json": [
-          ".json"
-        ]
-      }
-    }
-  ],
-  "widgets": [
-    {
-      "name": "DaleTePido Resumen",
-      "short_name": "Resumen",
-      "description": "Resumen de ventas y pedidos activos",
-      "tag": "daletepido-widget",
-      "template": "widget-template",
-      "ms_ac_template": "widget.json",
-      "data": "widget-data.json",
-      "type": "text/html",
-      "icons": [
-        {
-          "src": "/icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
-    }
-  ],
-  "edge_side_panel": {
-    "preferred_width": 400
-  },
-  "icons": [
-    {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Panel de Control DaleTePido"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Gestión de Pedidos"
     }
   ]
 }
