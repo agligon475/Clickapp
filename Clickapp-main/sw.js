@@ -1,4 +1,4 @@
-const CACHE_NAME = 'daletepido-v6';
+const CACHE_NAME = 'daletepido-v7';
 const ASSETS_TO_CACHE = [
   '/',
   '/landing',
@@ -8,9 +8,15 @@ const ASSETS_TO_CACHE = [
   '/ayuda',
   '/manifest.json',
   '/favicon.ico',
+  '/favicon.png',
+  '/apple-touch-icon.png',
   '/dashboard-icon.png',
   '/icon-192.png',
-  '/icon-512.png'
+  '/icon-192-maskable.png',
+  '/icon-512.png',
+  '/icon-512-maskable.png',
+  '/screenshot-wide.png',
+  '/screenshot-narrow.png'
 ];
 
 self.addEventListener('install', (event) => {

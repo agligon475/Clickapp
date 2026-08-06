@@ -1,13 +1,19 @@
 {
-  "id": "/dashboard.html",
+  "id": "/",
   "name": "Dale! Te Pido - Catálogo y Pedidos",
   "short_name": "DaleTePido",
-  "description": "Tu plataforma de gestión de pedidos y catálogo online por WhatsApp",
+  "description": "Plataforma de gestión de pedidos y catálogo digital por WhatsApp",
   "start_url": "/dashboard.html",
   "scope": "/",
   "lang": "es",
   "dir": "ltr",
   "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "tabbed",
+    "standalone",
+    "minimal-ui"
+  ],
   "background_color": "#D72638",
   "theme_color": "#D72638",
   "orientation": "portrait-primary",
@@ -58,18 +64,18 @@
   ],
   "screenshots": [
     {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
+      "src": "/screenshot-wide.png",
+      "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
       "label": "Panel de Control DaleTePido"
     },
     {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
+      "src": "/screenshot-narrow.png",
+      "sizes": "750x1334",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Gestión de Pedidos"
+      "label": "Gestión de Pedidos Móvil"
     }
   ],
   "shortcuts": [
@@ -98,6 +104,35 @@
           "type": "image/png"
         }
       ]
+    }
+  ],
+  "share_target": {
+    "action": "/dashboard.html",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "file_handlers": [
+    {
+      "action": "/dashboard.html",
+      "accept": {
+        "text/csv": [
+          ".csv"
+        ],
+        "application/json": [
+          ".json"
+        ]
+      }
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+daletepido",
+      "url": "/dashboard.html?store=%s"
     }
   ]
 }
