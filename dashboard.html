@@ -2580,37 +2580,6 @@
   <!-- MAIN -->
   <main class="main" role="main">
 
-    <!-- BANNER VERIFICACIÓN DE CUENTA POR EMAIL -->
-    <div id="dtp-email-verification-banner" style="display:none; background: linear-gradient(90deg, #1E3A8A 0%, #0F172A 100%); color: #fff; padding: 10px 24px; font-size: 13px; font-weight: 600; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid rgba(59, 130, 246, 0.3); position: relative; z-index: 44;">
-      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-        <span style="background: rgba(59, 130, 246, 0.3); color: #93C5FD; border: 1px solid rgba(147, 197, 253, 0.4); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">
-          <i class="bi bi-envelope-exclamation-fill"></i> VERIFICACIÓN PENDIENTE
-        </span>
-        <span id="dtp-email-verify-text">Verificá tu cuenta desde tu correo electrónico para asegurar tus accesos y recibir notificaciones.</span>
-      </div>
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <button id="btn-resend-verify-email" onclick="resendVerificationEmail()" style="background: #2563EB; color: #ffffff; border: 1px solid rgba(255,255,255,0.2); padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-          <i class="bi bi-send-check-fill"></i> Reenviar Correo de Verificación
-        </button>
-        <button onclick="dismissVerificationBanner()" style="background: transparent; color: #94A3B8; border: none; font-size: 16px; cursor: pointer; padding: 0 4px;" title="Cerrar aviso">✕</button>
-      </div>
-    </div>
-
-    <!-- BANNER PERIODO DE PRUEBA 15 DÍAS -->
-    <div id="dtp-trial-banner" style="display:none; background: linear-gradient(90deg, #D72638 0%, #800000 100%); color: #fff; padding: 10px 24px; font-size: 13px; font-weight: 600; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 12px rgba(215, 38, 56, 0.25); position: relative; z-index: 45;">
-      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-        <span style="background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">
-          <i class="bi bi-clock-history"></i> PRUEBA GRATUITA
-        </span>
-        <span id="dtp-trial-banner-text">Te quedan 15 días de prueba gratuita.</span>
-      </div>
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <button onclick="openPlanUpgradeModal()" style="background: #ffffff; color: #D72638; border: none; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: transform 0.15s;">
-          <i class="bi bi-rocket-takeoff-fill"></i> Actualizar Plan / Elegir Plan
-        </button>
-      </div>
-    </div>
-
     <!-- TOPBAR -->
     <div class="topbar">
       <span class="topbar-title" id="view-title">
@@ -2692,6 +2661,62 @@
             <i class="bi bi-magic"></i> Configuración paso a paso
           </button>
         </div>
+      </div>
+
+      <!-- ══ TARJETAS DE ESTADO 50% / 50% (FACTURACIÓN Y PERÍODO DE PRUEBA) ══ -->
+      <div id="dtp-dashboard-status-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 24px;">
+
+        <!-- TARJETA 1: NOTIFICACIÓN DE DATOS DE FACTURACIÓN Y VERIFICACIÓN DE CUENTA (50%) -->
+        <div id="dtp-email-verification-banner" style="display:none; background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); border: 1px solid rgba(59, 130, 246, 0.35); border-radius: 12px; padding: 20px; box-shadow: 0 4px 14px rgba(0,0,0,0.3); flex-direction: column; justify-content: space-between; gap: 14px;">
+          <div style="display: flex; align-items: flex-start; gap: 12px;">
+            <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); display: flex; align-items: center; justify-content: center; color: #60A5FA; font-size: 20px; flex-shrink: 0;">
+              <i class="bi bi-envelope-exclamation-fill"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                <span style="background: rgba(59, 130, 246, 0.2); color: #93C5FD; border: 1px solid rgba(147, 197, 253, 0.3); padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">
+                  VERIFICACIÓN PENDIENTE
+                </span>
+                <button onclick="dismissVerificationBanner()" style="background: transparent; color: #94A3B8; border: none; font-size: 16px; cursor: pointer; padding: 0 4px;" title="Ocultar aviso">✕</button>
+              </div>
+              <h4 style="font-size: 15px; font-weight: 700; color: #F8FAFC; margin: 4px 0 4px 0;">Datos de Cuenta y Facturación</h4>
+              <p id="dtp-email-verify-text" style="color: #94A3B8; font-size: 13px; margin: 0; line-height: 1.4;">
+                Verificá tu cuenta desde tu correo electrónico para asegurar tus accesos, datos de facturación y recibir notificaciones oficiales.
+              </p>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+            <button id="btn-resend-verify-email" onclick="resendVerificationEmail()" style="background: #2563EB; color: #ffffff; border: 1px solid rgba(255,255,255,0.15); padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s;">
+              <i class="bi bi-send-check-fill"></i> Reenviar Correo de Verificación
+            </button>
+          </div>
+        </div>
+
+        <!-- TARJETA 2: VISIBILIDAD DE PERÍODO DE PRUEBA GRATUITA (50%) -->
+        <div id="dtp-trial-banner" style="display:none; background: linear-gradient(135deg, #1C0A0E 0%, #3B0910 100%); border: 1px solid rgba(215, 38, 56, 0.4); border-radius: 12px; padding: 20px; box-shadow: 0 4px 14px rgba(215, 38, 56, 0.15); flex-direction: column; justify-content: space-between; gap: 14px;">
+          <div style="display: flex; align-items: flex-start; gap: 12px;">
+            <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(215, 38, 56, 0.2); border: 1px solid rgba(215, 38, 56, 0.4); display: flex; align-items: center; justify-content: center; color: #F87171; font-size: 20px; flex-shrink: 0;">
+              <i class="bi bi-clock-history"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                <span style="background: rgba(215, 38, 56, 0.25); color: #FCA5A5; border: 1px solid rgba(252, 165, 165, 0.3); padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">
+                  PRUEBA GRATUITA
+                </span>
+              </div>
+              <h4 style="font-size: 15px; font-weight: 700; color: #FFF; margin: 4px 0 4px 0;">Visibilidad de Período de Prueba</h4>
+              <p id="dtp-trial-banner-text" style="color: #E2E8F0; font-size: 13px; margin: 0; line-height: 1.4;">
+                Te quedan 15 días de prueba gratuita. ¡Aprovechá al máximo todas las funciones de tu tienda!
+              </p>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+            <button onclick="openPlanUpgradeModal()" style="background: linear-gradient(135deg, #D72638 0%, #B91C1C 100%); color: #ffffff; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(215,38,56,0.4); transition: transform 0.15s;">
+              <i class="bi bi-rocket-takeoff-fill"></i> Actualizar Plan / Elegir Plan
+            </button>
+          </div>
+        </div>
+
       </div>
 
       <!-- Onboarding Checklist Card -->
