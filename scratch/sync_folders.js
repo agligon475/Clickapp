@@ -29,7 +29,9 @@ const filesToSync = [
 
 const destinations = [
   './Clickapp-main',
-  './Clickapp'
+  './Clickapp',
+  './Clickapp/Clickapp-main',
+  './Clickapp/Clickapp'
 ];
 
 console.log('Sincronizando archivos del root a los destinos...');
