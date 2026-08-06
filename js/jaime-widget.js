@@ -502,6 +502,22 @@
     `;
   }
 
+  // Export global helpers
+  window.openJaime = showJaimeCharacter;
+  window.hideJaime = hideJaimeCharacter;
+  window.toggleJaime = function () {
+    if (fab.classList.contains('jaime-hidden') || !isOpen) {
+      showJaimeCharacter();
+    } else {
+      hideJaimeCharacter();
+    }
+  };
+
+  const isDashboardPage = window.location.pathname.includes('dashboard');
+  if (isDashboardPage) {
+    sideTab.style.display = 'none';
+  }
+
   // Side Tab Signal Click
   sideTab.addEventListener('click', () => {
     if (fab.classList.contains('jaime-hidden')) {

@@ -529,6 +529,51 @@
       display: none;
     }
 
+    /* BOTÓN DE JAIME EN EL SIDEBAR */
+    .sb-jaime-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: linear-gradient(135deg, rgba(215, 38, 56, 0.22) 0%, rgba(20, 17, 17, 0.95) 100%);
+      border: 1px solid rgba(215, 38, 56, 0.5);
+      border-radius: 10px;
+      color: #ffffff;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+    }
+    .sb-jaime-btn:hover {
+      background: #D72638;
+      border-color: #ff5555;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(215, 38, 56, 0.5);
+    }
+    .sb-jaime-avatar {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+      flex-shrink: 0;
+    }
+    body.collapsed-sidebar .sb-jaime-container {
+      padding: 10px 0;
+    }
+    body.collapsed-sidebar .sb-jaime-btn {
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      border-radius: 50%;
+      margin: 0 auto;
+    }
+    body.collapsed-sidebar .sb-jaime-label {
+      display: none;
+    }
+
     /* MAIN */
     .main {
       margin-left: var(--sidebar);
@@ -2479,6 +2524,15 @@
         <div class="sb-item" onclick="showView('config-basica',this)"><i class="bi bi-gear"></i> <span>Configuración básica</span></div>
         <div class="sb-item" onclick="showView('config-avanzada',this)"><i class="bi bi-shield-lock"></i> <span>Configuración avanzada</span></div>
       </div>
+    </div>
+
+    <!-- Botón de jAIme en la parte inferior del Sidebar -->
+    <div class="sb-jaime-container" style="padding: 14px 12px; margin-top: 10px;">
+      <div style="height: 1px; background: rgba(255,255,255,0.08); margin-bottom: 14px;"></div>
+      <button class="sb-jaime-btn" onclick="if(typeof toggleJaime === 'function'){ toggleJaime(); } else if(typeof showJaimeCharacter === 'function'){ showJaimeCharacter(); }" title="Consultar a jAIme 24/7">
+        <img src="/img/jaime/jaime-mobile-buenaonda.png" alt="jAIme" class="sb-jaime-avatar" />
+        <span class="sb-jaime-label">Consultar a jAIme</span>
+      </button>
     </div>
   </div>
 
