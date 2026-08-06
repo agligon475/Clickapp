@@ -707,30 +707,34 @@
     </section>
 
     <!-- FORMULARIO MODAL REGISTRO -->
-    <div id="register-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(8px); padding:20px;">
-        <div style="background:#1a1515; border:1px solid rgba(214,0,0,0.3); border-radius:18px; padding:32px; max-width:440px; width:100%; position:relative; box-shadow:0 24px 64px rgba(214,0,0,0.3); color:#fff;">
+    <div id="register-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(8px); padding:20px;">
+        <div id="register-modal-card" style="background:#1a1515; border:1px solid rgba(214,0,0,0.4); border-radius:20px; padding:32px; max-width:460px; width:100%; position:relative; box-shadow:0 24px 64px rgba(214,0,0,0.35); color:#fff;">
             <button onclick="closeRegisterModal()" style="position:absolute; top:16px; right:16px; background:transparent; border:none; color:rgba(255,255,255,0.6); font-size:24px; cursor:pointer;">&times;</button>
-            <h3 style="font-size:20px; font-weight:700; margin-bottom:8px; color:#fff; font-family:inherit;">Crear mi tienda</h3>
-            <p style="font-size:13px; color:#9a8f8f; margin-bottom:24px;">Dejanos tus datos de contacto para habilitar tu catálogo online Dale! Te Pido.</p>
-            <form onsubmit="handleRegisterSubmit(event)">
-                <div style="margin-bottom:16px;">
-                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Nombre y Apellido</label>
+            <h3 style="font-size:22px; font-weight:800; margin-bottom:6px; color:#fff; font-family:inherit;">🚀 Crear mi Tienda Online</h3>
+            <p style="font-size:13px; color:#9a8f8f; margin-bottom:20px;">15 días de prueba gratuita. Sin tarjetas ni compromisos.</p>
+            <form onsubmit="handleRegisterSubmit(event)" id="landing-register-form">
+                <div style="margin-bottom:14px;">
+                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Nombre de tu Comercio *</label>
+                    <input type="text" id="reg-store" required placeholder="Ej: Pizzería Don Antonio" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
+                </div>
+                <div style="margin-bottom:14px;">
+                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Nombre y Apellido *</label>
                     <input type="text" id="reg-name" required placeholder="Ej: Juan Pérez" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
                 </div>
-                <div style="margin-bottom:16px;">
-                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Correo Electrónico</label>
+                <div style="margin-bottom:14px;">
+                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Correo Electrónico (Para recibir la activación) *</label>
                     <input type="email" id="reg-email" required placeholder="Ej: contacto@tutienda.com" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
                 </div>
-                <div style="margin-bottom:16px;">
-                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">WhatsApp de contacto</label>
+                <div style="margin-bottom:14px;">
+                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Contraseña para acceder a tu Panel *</label>
+                    <input type="password" id="reg-password" required minlength="6" placeholder="Mínimo 6 caracteres" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
+                </div>
+                <div style="margin-bottom:14px;">
+                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">WhatsApp de contacto (donde recibirás los pedidos) *</label>
                     <input type="tel" id="reg-wapp" required placeholder="Ej: 5491100000000" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
                 </div>
-                <div style="margin-bottom:16px;">
-                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Nombre de tu Comercio</label>
-                    <input type="text" id="reg-store" required placeholder="Ej: Tienda de Barrio" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
-                </div>
-                <div style="margin-bottom:24px;">
-                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Rubro principal</label>
+                <div style="margin-bottom:20px;">
+                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Rubro principal *</label>
                     <select id="reg-rubro" required style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:#1a1515; color:#fff; font-size:14px; font-family:inherit; outline:none;">
                         <option value="" disabled selected>Seleccioná tu rubro</option>
                         <option value="Ferretería">Ferretería</option>
@@ -740,7 +744,7 @@
                         <option value="Otro">Otro rubro</option>
                     </select>
                 </div>
-                <button type="submit" style="width:100%; background:#D60000; color:#fff; border:none; padding:13px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:background .2s;">Enviar solicitud</button>
+                <button type="submit" style="width:100%; background:linear-gradient(135deg, #D60000 0%, #b30000 100%); color:#fff; border:none; padding:15px; border-radius:12px; font-size:15px; font-weight:800; cursor:pointer; font-family:inherit; transition:background .2s; box-shadow:0 8px 24px rgba(214,0,0,0.4); text-transform:uppercase; letter-spacing:0.5px;">⚡ Activar mi Tienda Gratis Ahora</button>
             </form>
         </div>
     </div>
@@ -906,18 +910,23 @@
             });
         }
 
-        function handleRegisterSubmit(e) {
+        async function handleRegisterSubmit(e) {
             e.preventDefault();
-            const name = document.getElementById('reg-name').value;
-            const email = document.getElementById('reg-email').value;
-            const wapp = document.getElementById('reg-wapp').value;
-            const store = document.getElementById('reg-store').value;
-            const rubro = document.getElementById('reg-rubro').value;
+            const name = document.getElementById('reg-name')?.value.trim() || '';
+            const email = document.getElementById('reg-email')?.value.trim() || '';
+            const password = document.getElementById('reg-password')?.value.trim() || 'dtp123456';
+            const wapp = document.getElementById('reg-wapp')?.value.trim() || '';
+            const storeName = document.getElementById('reg-store')?.value.trim() || '';
+            const rubro = document.getElementById('reg-rubro')?.value || 'Otro';
+
+            if (!name || !email || !wapp || !storeName) {
+                alert('Por favor complete todos los campos obligatorios.');
+                return;
+            }
 
             const btn = e.target.querySelector('button[type="submit"]');
-            const originalText = btn.innerHTML;
             btn.disabled = true;
-            btn.innerHTML = '<span style="display:inline-block; width:16px; height:16px; border:2px solid #fff; border-top-color:transparent; border-radius:50%; animation:spin 1s linear infinite; margin-right:8px; vertical-align:middle;"></span> Enviando...';
+            btn.innerHTML = '<span style="display:inline-block; width:16px; height:16px; border:2px solid #fff; border-top-color:transparent; border-radius:50%; animation:spin 1s linear infinite; margin-right:8px; vertical-align:middle;"></span> Creando tienda y activando cuenta...';
 
             if (!document.getElementById('spin-style')) {
                 const style = document.createElement('style');
@@ -926,45 +935,170 @@
                 document.head.appendChild(style);
             }
 
-            fetch('https://formsubmit.co/ajax/soporte@daletepido.com.ar', {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    _subject: `Nueva solicitud de tienda - ${store}`,
-                    Nombre: name,
-                    Email: email,
-                    WhatsApp: wapp,
-                    Comercio: store,
-                    Rubro: rubro
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                btn.innerHTML = '✓ ¡Enviado con éxito!';
-                btn.style.background = '#10b981';
-                setTimeout(() => {
-                    closeRegisterModal();
-                    e.target.reset();
-                    btn.disabled = false;
-                    btn.innerHTML = originalText;
-                    btn.style.background = '#D60000';
-                }, 2000);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                btn.innerHTML = '✓ ¡Enviado con éxito!';
-                btn.style.background = '#10b981';
-                setTimeout(() => {
-                    closeRegisterModal();
-                    e.target.reset();
-                    btn.disabled = false;
-                    btn.innerHTML = originalText;
-                    btn.style.background = '#D60000';
-                }, 2000);
-            });
+            // 1. Clean slug for store_id
+            let storeId = storeName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
+            if (!storeId || storeId.length < 2) storeId = 'tienda-' + Math.floor(Math.random() * 10000);
+
+            const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
+            const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+
+            try {
+                // 2. Check availability
+                const checkRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}`, {
+                    headers: { 'apikey': SUPABASE_KEY }
+                });
+                if (checkRes.ok) {
+                    const checkData = await checkRes.json();
+                    if (checkData && checkData.length > 0) {
+                        storeId = storeId + '-' + Math.floor(Math.random() * 899 + 100);
+                    }
+                }
+
+                const now = new Date();
+                const trialEndsAt = new Date(now.getTime() + 15 * 24 * 60 * 60 * 1000).toISOString();
+
+                // 3. Prepare payload for company_settings
+                const payload = {
+                    store_id: storeId,
+                    business_name: storeName,
+                    rubro: rubro,
+                    subrubro: 'otro',
+                    wapp: wapp,
+                    direccion: '',
+                    horario: 'Lunes a Sábado 9 a 20hs',
+                    tagline: 'Tu catálogo digital',
+                    primary_color: '#d72638',
+                    secondary_color: '#1e40af',
+                    logo_url: '',
+                    plan_level: 'trial',
+                    created_at: now.toISOString(),
+                    trial_ends_at: trialEndsAt,
+                    admin_email: email,
+                    password: password,
+                    h1: 'Pedí online',
+                    h2: 'sin vueltas ni esperas.',
+                    desc: 'Elegí tus productos, armá tu pedido y coordiná por WhatsApp.',
+                    emoji: '🏪',
+                    theme: 'light',
+                    font: 'Outfit',
+                    font_body: 'Outfit',
+                    qr_code: `https://daletepido.com.ar/api/qr?store=${storeId}`,
+                    banner1_label: 'NUEVAS',
+                    banner1_title: 'Productos destacados',
+                    banner1_active: true,
+                    banner2_label: 'PROMOCIÓN',
+                    banner2_title: 'Especiales de la semana',
+                    banner2_active: true,
+                    pay_cash: true,
+                    pay_transfer: true,
+                    pay_agreement: true,
+                    design_settings: {
+                        h1: 'Pedí online',
+                        h2: 'sin vueltas ni esperas.',
+                        desc: 'Elegí tus productos, armá tu pedido y coordiná por WhatsApp.',
+                        emoji: '🏪',
+                        theme: 'light',
+                        font: 'Outfit',
+                        qr_code: `https://daletepido.com.ar/api/qr?store=${storeId}`
+                    }
+                };
+
+                const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!insertRes.ok) {
+                    throw new Error(`Error en base de datos: ${await insertRes.text()}`);
+                }
+
+                // 4. Seed initial default categories
+                const defaultCats = [
+                    { store_id: storeId, name: 'Productos Destacados', emoji: '⭐', display_order: 10, active: true, rubro: rubro },
+                    { store_id: storeId, name: 'Promociones', emoji: '🔥', display_order: 20, active: true, rubro: rubro },
+                    { store_id: storeId, name: 'Novedades', emoji: '✨', display_order: 30, active: true, rubro: rubro },
+                    { store_id: storeId, name: 'Catálogo General', emoji: '📦', display_order: 40, active: true, rubro: rubro }
+                ];
+
+                fetch(`${SUPABASE_URL}/rest/v1/categories`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    },
+                    body: JSON.stringify(defaultCats)
+                }).catch(err => console.warn('Error seeding categories:', err));
+
+                // 5. Trigger Welcome & Email Activation via API
+                await fetch('/api/welcome-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        store_id: storeId,
+                        business_name: storeName,
+                        admin_email: email,
+                        wapp: wapp
+                    })
+                }).catch(err => console.warn('Welcome email warning:', err));
+
+                // 6. Save user session locally
+                const sessionData = {
+                    store_id: storeId,
+                    token: 'auto-registered-' + Date.now(),
+                    plan_level: 'trial',
+                    trial_ends_at: trialEndsAt,
+                    timestamp: Date.now()
+                };
+                sessionStorage.setItem('storeapp_logged_in_' + storeId, 'true');
+                localStorage.setItem('storeapp_logged_in_' + storeId, 'true');
+                localStorage.setItem('storeapp_store_id', storeId);
+                localStorage.setItem('daletepido_store_id', storeId);
+                localStorage.setItem('store_id', storeId);
+                localStorage.setItem('daletepido_session', JSON.stringify(sessionData));
+
+                // 7. Show Activation & Success Panel inside Modal
+                const modalCard = document.getElementById('register-modal-card');
+                if (modalCard) {
+                    modalCard.innerHTML = `
+                        <div style="text-align:center; padding:8px 0;">
+                            <div style="width:68px; height:68px; background:rgba(16,185,129,0.18); border:2px solid #10b981; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; color:#10b981; font-size:36px; margin-bottom:16px;">
+                                ✓
+                            </div>
+                            <h3 style="font-size:22px; font-weight:800; color:#fff; margin-bottom:8px;">¡Tu tienda fue creada con éxito!</h3>
+                            <p style="font-size:14px; color:#10b981; font-weight:600; margin-bottom:20px; line-height:1.5;">
+                                ✉️ Te enviamos un correo electrónico a <u style="word-break:break-all;">${email}</u> con la información y el enlace de activación de tu cuenta.
+                            </p>
+
+                            <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:18px; text-align:left; font-size:13px; color:rgba(255,255,255,0.85); margin-bottom:24px; line-height:1.7;">
+                                <div><strong>🛒 Comercio:</strong> ${storeName}</div>
+                                <div><strong>🔑 ID de Tienda:</strong> <code style="color:#ff6666; background:rgba(214,0,0,0.2); padding:2px 6px; border-radius:4px;">${storeId}</code></div>
+                                <div><strong>✉️ Usuario:</strong> ${email}</div>
+                                <div><strong>🔗 Tu Tienda Online:</strong> <a href="/?store=${storeId}" target="_blank" style="color:#38bdf8; text-decoration:underline;">https://daletepido.com.ar/?store=${storeId}</a></div>
+                                <div><strong>⚡ Estado:</strong> 15 Días de prueba gratuita activa</div>
+                            </div>
+
+                            <a href="/dashboard.html?store=${storeId}" style="display:block; width:100%; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#fff; border:none; padding:16px; border-radius:12px; font-size:15px; font-weight:800; text-decoration:none; box-shadow:0 8px 24px rgba(16,185,129,0.4); text-transform:uppercase; letter-spacing:0.5px;">
+                                🚀 IR A MI PANEL DE CONTROL (DASHBOARD)
+                            </a>
+
+                            <p style="font-size:12px; color:rgba(255,255,255,0.45); margin-top:16px; line-height:1.4;">
+                                (Recordá revisar la carpeta de Correo No Deseado / Spam si no ves el email en tu bandeja de entrada).
+                            </p>
+                        </div>
+                    `;
+                }
+            } catch(err) {
+                console.error('Error de registro:', err);
+                alert('Ocurrió un error al crear la tienda: ' + err.message);
+                btn.disabled = false;
+                btn.innerHTML = '⚡ Activar mi Tienda Gratis Ahora';
+            }
         }
 
         function accessDashboard() {
