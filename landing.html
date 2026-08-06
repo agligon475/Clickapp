@@ -955,7 +955,6 @@
                 }
 
                 const now = new Date();
-                const trialEndsAt = new Date(now.getTime() + 15 * 24 * 60 * 60 * 1000).toISOString();
 
                 // 3. Prepare payload for company_settings
                 const payload = {
@@ -1044,7 +1043,6 @@
                     store_id: storeId,
                     token: 'auto-registered-' + Date.now(),
                     plan_level: 'trial',
-                    trial_ends_at: trialEndsAt,
                     timestamp: Date.now()
                 };
                 sessionStorage.setItem('storeapp_logged_in_' + storeId, 'true');

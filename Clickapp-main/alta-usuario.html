@@ -960,7 +960,6 @@
     const emoji = document.getElementById('store-emoji').value;
 
     const now = new Date();
-    const trialEndsAt = new Date(now.getTime() + 15 * 24 * 60 * 60 * 1000).toISOString();
 
     try {
       // 1. Check if store_id already exists in Supabase
@@ -1064,12 +1063,10 @@
         })
       }).catch(err => console.warn('Email trigger warning:', err));
 
-      // 5. Auto-login session with active 15 days trial
       const sessionData = {
         store_id: storeId,
         token: 'auto-registered-' + Date.now(),
         plan_level: 'trial',
-        trial_ends_at: trialEndsAt,
         timestamp: Date.now()
       };
       sessionStorage.setItem('storeapp_logged_in_' + storeId, 'true');
