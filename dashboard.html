@@ -2413,7 +2413,7 @@
 
     <div style="height: 1px; background: rgba(255,255,255,0.08); margin: 0 12px 14px 12px;"></div>
 
-    <div class="sb-section">
+    <div class="sb-section collapsed">
       <div class="sb-section-header" onclick="toggleAccordion(this)">
         <span>Inicio</span>
         <i class="bi bi-chevron-up toggle-icon"></i>
@@ -2423,7 +2423,7 @@
       </div>
     </div>
 
-    <div class="sb-section">
+    <div class="sb-section collapsed">
       <div class="sb-section-header" onclick="toggleAccordion(this)">
         <span>Negocio</span>
         <i class="bi bi-chevron-up toggle-icon"></i>
@@ -2433,7 +2433,7 @@
       </div>
     </div>
 
-    <div class="sb-section">
+    <div class="sb-section collapsed">
       <div class="sb-section-header" onclick="toggleAccordion(this)">
         <span>Gestión</span>
         <i class="bi bi-chevron-up toggle-icon"></i>
@@ -2444,7 +2444,7 @@
       </div>
     </div>
 
-    <div class="sb-section">
+    <div class="sb-section collapsed">
       <div class="sb-section-header" onclick="toggleAccordion(this)">
         <span>Inventario</span>
         <i class="bi bi-chevron-up toggle-icon"></i>
@@ -2455,7 +2455,7 @@
       </div>
     </div>
 
-    <div class="sb-section">
+    <div class="sb-section collapsed">
       <div class="sb-section-header" onclick="toggleAccordion(this)">
         <span>Personalización</span>
         <i class="bi bi-chevron-up toggle-icon"></i>
@@ -2469,7 +2469,7 @@
       </div>
     </div>
 
-    <div class="sb-section">
+    <div class="sb-section collapsed">
       <div class="sb-section-header" onclick="toggleAccordion(this)">
         <span>Ajustes</span>
         <i class="bi bi-chevron-up toggle-icon"></i>
@@ -3895,16 +3895,6 @@
 
       <div class="card" style="background:rgba(215,38,56,.05);border-color:rgba(215,38,56,.2);">
         <div class="card-title" style="color:var(--red);">
-          <i class="bi bi-info-circle"></i> Sobre el ABM
-        </div>
-        <p style="font-size:12px;color:var(--fog);line-height:1.6;">
-          Los cambios se guardan localmente en el navegador y se aplican en la tienda de inmediato.
-          Para sincronizar con Google Sheets, exportá el CSV y reemplazá la planilla original.
-          Los productos marcados como "Oculto" no aparecen en la tienda pública.
-        </p>
-      </div>
-    </div>
-
     <!-- ══ MI CUENTA Y PLAN ══ -->
     <div class="view" id="view-account-plan">
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
@@ -3913,8 +3903,8 @@
 
       <div class="masonry-grid">
         <!-- Resumen de Cuenta -->
-        <div class="config-section" style="grid-column: span 2;">
-          <div class="config-section-title"><i class="bi bi-person-badge"></i> Estado de Cuenta y Membresía</div>
+        <div class="config-section collapsed" style="grid-column: span 2;">
+          <div class="config-section-title" onclick="toggleAccordionCard(this, event)"><i class="bi bi-person-badge"></i> Estado de Cuenta y Membresía</div>
           <div class="config-section-content" style="display: flex; flex-direction: column; gap: 16px;">
             <div style="display: flex; gap: 16px; flex-wrap: wrap;">
               <div style="flex: 1; min-width: 200px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 12px;">
@@ -3938,8 +3928,8 @@
         </div>
 
         <!-- Solicitar Cambio de Plan -->
-        <div class="config-section" style="grid-column: span 2;">
-          <div class="config-section-title"><i class="bi bi-arrow-left-right"></i> Solicitar Cambio de Plan</div>
+        <div class="config-section collapsed" style="grid-column: span 2;">
+          <div class="config-section-title" onclick="toggleAccordionCard(this, event)"><i class="bi bi-arrow-left-right"></i> Solicitar Cambio de Plan</div>
           <div class="config-section-content" style="display: flex; flex-direction: column; gap: 20px;">
             <p style="font-size: 13px; color: var(--silver); line-height: 1.6; margin: 0;">
               Seleccioná el plan al que deseás cambiarte y envíanos la solicitud de actualización de membresía. 
@@ -4019,8 +4009,8 @@
       <div class="masonry-grid">
 
         <!-- Tienda -->
-        <div class="config-section">
-          <div class="config-section-title"><i class="bi bi-shop"></i> Datos de la tienda <div class="config-status ok">
+        <div class="config-section collapsed">
+          <div class="config-section-title" onclick="toggleAccordionCard(this, event)"><i class="bi bi-shop"></i> Datos de la tienda <div class="config-status ok">
             </div>
           </div>
           <div class="config-section-content">
@@ -4208,8 +4198,8 @@
         </div>
 
         <!-- 10. QR y Kit imprimible -->
-        <div class="config-section">
-          <div class="config-section-title"><i class="bi bi-qr-code"></i> QR y Kit imprimible</div>
+        <div class="config-section collapsed">
+          <div class="config-section-title" onclick="toggleAccordionCard(this, event)"><i class="bi bi-qr-code"></i> QR y Kit imprimible</div>
           <div class="config-section-content" style="text-align:center; padding:24px;">
             <div style="font-size:12px;color:var(--silver);margin-bottom:16px;line-height:1.6;text-align:left;">
               Descargá o imprimí el código QR de tu tienda en línea para que tus clientes puedan acceder escaneándolo desde sus teléfonos.
@@ -4229,8 +4219,8 @@
         </div>
 
         <!-- 11. Datos de Facturación -->
-        <div class="config-section" style="grid-column:1/-1;">
-          <div class="config-section-title"><i class="bi bi-receipt-cutoff"></i> Datos de Facturación para Comprobantes</div>
+        <div class="config-section collapsed" style="grid-column:1/-1;">
+          <div class="config-section-title" onclick="toggleAccordionCard(this, event)"><i class="bi bi-receipt-cutoff"></i> Datos de Facturación para Comprobantes</div>
           <div class="config-section-content" style="padding:20px;">
             <p style="font-size:12px; color:var(--silver); margin-bottom:16px; line-height:1.5;">
               Ingresá tus datos fiscales para que el equipo de DaleTePido pueda confeccionar y enviarte tus comprobantes y facturas de servicio.
@@ -4328,8 +4318,8 @@
       <div class="masonry-grid">
 
         <!-- 1. Base de datos -->
-        <div class="config-section">
-          <div class="config-section-title"><i class="bi bi-database"></i> Base de datos <div
+        <div class="config-section collapsed">
+          <div class="config-section-title" onclick="toggleAccordionCard(this, event)"><i class="bi bi-database"></i> Base de datos <div
               class="config-status" id="adv-status-supabase"></div>
           </div>
           <div class="config-section-content">
@@ -4370,8 +4360,8 @@
         </div>
 
         <!-- 2. Inteligencia artificial -->
-        <div class="config-section">
-          <div class="config-section-title"><i class="bi bi-robot"></i> Inteligencia artificial</div>
+        <div class="config-section collapsed">
+          <div class="config-section-title" onclick="toggleAccordionCard(this, event)"><i class="bi bi-robot"></i> Inteligencia artificial</div>
           <div class="config-section-content">
             <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
               Configurá la inteligencia artificial para habilitar el autocompletado de productos desde el ABM.
@@ -4459,8 +4449,8 @@
         </div>
 
         <!-- 3. Imágenes -->
-        <div class="config-section">
-          <div class="config-section-title"><i class="bi bi-cloud-arrow-up"></i> Imágenes
+        <div class="config-section collapsed">
+          <div class="config-section-title" onclick="toggleAccordionCard(this, event)"><i class="bi bi-cloud-arrow-up"></i> Imágenes
             <div class="config-status" id="adv-status-cloudinary"></div>
           </div>
           <div class="config-section-content">
@@ -4497,7 +4487,7 @@
 
         <!-- 4. Subdominio -->
         <div class="config-section collapsed">
-          <div class="config-section-title"><i class="bi bi-globe2"></i> Subdominio</div>
+          <div class="config-section-title" onclick="toggleAccordionCard(this, event)"><i class="bi bi-globe2"></i> Subdominio</div>
           <div class="config-section-content" style="padding: 20px;">
             <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.6;">
               Configurá y cambiá el subdominio que te otorgamos para acceder a tu tienda online (ej: <code>mi-tienda.daletepido.com.ar</code>).
@@ -4525,7 +4515,7 @@
 
         <!-- 5. Gerencia -->
         <div class="config-section collapsed">
-          <div class="config-section-title"><i class="bi bi-person-badge"></i> Gerencia <div
+          <div class="config-section-title" onclick="toggleAccordionCard(this, event)"><i class="bi bi-person-badge"></i> Gerencia <div
               class="config-status" id="adv-status-gerente"></div>
           </div>
           <div class="config-section-content">
