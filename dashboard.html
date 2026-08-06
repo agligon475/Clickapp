@@ -3821,8 +3821,9 @@
               <input class="ctrl-input" id="cfg-social-tn" placeholder="Enlace a tu TiendaNube..." />
             </div>
             <div class="ctrl-group">
-              <label class="ctrl-label">Google Maps</label>
-              <input class="ctrl-input" id="cfg-social-maps" placeholder="Enlace de Google Maps..." />
+              <label class="ctrl-label"><i class="bi bi-geo-alt-fill" style="color:#EA4335;"></i> Google Maps (Ubicación)</label>
+              <input class="ctrl-input" id="cfg-social-maps" placeholder="https://maps.google.com/?q=..." oninput="if(document.getElementById('cfg-store-maps')) document.getElementById('cfg-store-maps').value = this.value;" />
+              <div style="font-size:10px;color:var(--silver);margin-top:3px;">Enlace a la ubicación de tu tienda física en Google Maps</div>
             </div>
           </div>
         </div>
@@ -4143,6 +4144,13 @@
                 <label class="ctrl-label">Dirección del local</label>
                 <input class="ctrl-input" id="cfg-store-direccion" placeholder="Av. Corrientes 1234, CABA" />
                 <div style="font-size:10px;color:var(--silver);margin-top:3px;">Se incluye en mensajes de retiro por local</div>
+              </div>
+
+              <!-- 5b. Ubicación Google Maps -->
+              <div class="ctrl-group" style="grid-column:1/-1;">
+                <label class="ctrl-label"><i class="bi bi-geo-alt-fill" style="color:#EA4335;"></i> Link de Google Maps (Ubicación física)</label>
+                <input class="ctrl-input" id="cfg-store-maps" placeholder="https://maps.google.com/?q=..." oninput="if(document.getElementById('cfg-social-maps')) document.getElementById('cfg-social-maps').value = this.value;" />
+                <div style="font-size:10px;color:var(--silver);margin-top:3px;">Pegá el enlace directo a tu negocio en Google Maps para que tus clientes puedan abrir la ubicación en su GPS.</div>
               </div>
 
               <!-- 6. Horario de atención por días -->
@@ -9862,7 +9870,10 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (soc.x) document.getElementById('cfg-social-x').value = soc.x;
       if (soc.ml) document.getElementById('cfg-social-ml').value = soc.ml;
       if (soc.tn) document.getElementById('cfg-social-tn').value = soc.tn;
-      if (soc.maps) document.getElementById('cfg-social-maps').value = soc.maps;
+      if (soc.maps) {
+        if (document.getElementById('cfg-social-maps')) document.getElementById('cfg-social-maps').value = soc.maps;
+        if (document.getElementById('cfg-store-maps')) document.getElementById('cfg-store-maps').value = soc.maps;
+      }
 
       const cloud = JSON.parse(localStorage.getItem('storeapp_cloudinary') || '{}');
       if (cloud.name) document.getElementById('cfg-cloud-name').value = cloud.name;
@@ -10468,7 +10479,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const x = document.getElementById('cfg-social-x').value.trim();
       const ml = document.getElementById('cfg-social-ml').value.trim();
       const tn = document.getElementById('cfg-social-tn').value.trim();
-      const maps = document.getElementById('cfg-social-maps').value.trim();
+      const maps = (document.getElementById('cfg-social-maps')?.value || document.getElementById('cfg-store-maps')?.value || '').trim();
 
       sc.socials = { web, ig, fb, x, ml, tn, maps };
 

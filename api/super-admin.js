@@ -499,6 +499,86 @@ export default async function handler(req, res) {
       });
     }
 
+    // Action: Reenviar correo de activación / bienvenida
+    if (action === 'resend_activation') {
+      const store_id = reqBody.store_id;
+      const recipient_email = reqBody.recipient_email;
+
+      if (!store_id) {
+        return res.status(400).json({ success: false, error: 'Falta store_id' });
+      }
+
+      // Fetch company settings to get business_name & email if not provided
+      const getRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(store_id)}&select=*`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
+      
+      let storeData = {};
+      if (getRes.ok) {
+        const rows = await getRes.json();
+        if (rows && rows[0]) storeData = rows[0];
+      }
+
+      const emailTarget = recipient_email || storeData.admin_email || storeData.billing_info?.contact_email;
+      const storeName = storeData.business_name || storeData.store_name || store_id;
+
+      if (!emailTarget) {
+        return res.status(400).json({ success: false, error: 'No se encontró un email de contacto asignado a esta tienda' });
+      }
+
+      const { getWelcomeEmail } = await import('./email-templates.js');
+      const { subject: welcomeSubject, html: welcomeHtml } = getWelcomeEmail({ storeName, storeId: store_id });
+
+      const resendApiKey = process.env.RESEND_API_KEY;
+      const fromEmail = process.env.RESEND_FROM_EMAIL || 'Dale! Te Pido <soporte@daletepido.com.ar>';
+
+      if (resendApiKey) {
+        try {
+          await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${resendApiKey}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              from: fromEmail,
+              to: [emailTarget],
+              subject: welcomeSubject,
+              html: welcomeHtml
+            })
+          });
+        } catch (e) {
+          console.warn('Advertencia al reenviar activación vía Resend:', e.message);
+        }
+      } else {
+        try {
+          await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(emailTarget)}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              _subject: welcomeSubject,
+              _template: 'table',
+              Mensaje: `Reenvío de correo de activación de cuenta para la tienda "${storeName}".`,
+              Tienda: store_id,
+              Email: emailTarget
+            })
+          });
+        } catch (e) {
+          console.warn('Advertencia al reenviar activación vía FormSubmit:', e.message);
+        }
+      }
+
+      return res.status(200).json({
+        success: true,
+        store_id,
+        recipient_email: emailTarget,
+        message: `Correo de activación enviado exitosamente a ${emailTarget}.`
+      });
+    }
+
     // 9. Get Audit Logs and Security Activity Summary (Detalles Avanzados Anti-Intrusión)
     if (action === 'get_audit_logs') {
       const store_id = reqBody.store_id || req.query.store_id;
