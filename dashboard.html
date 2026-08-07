@@ -5123,26 +5123,23 @@
           headersObj = { ...options.headers };
         }
 
-        const activeKey = SUPABASE_KEY || VALID_ANON_KEY;
+        const activeKey = (SUPABASE_KEY && SUPABASE_KEY.length > 50) ? SUPABASE_KEY : VALID_ANON_KEY;
         headersObj['apikey'] = activeKey;
         headersObj['Authorization'] = `Bearer ${activeKey}`;
-
-        const token = sessionStorage.getItem('storeapp_token_' + STORE_ID);
-        if (token) {
-          headersObj['x-store-token'] = token;
-        }
+        delete headersObj['x-store-token'];
 
         options.headers = headersObj;
 
         let res = await originalFetch(url, options);
 
         // Si devuelve 401 Unauthorized, limpiar la clave local corrupta y reintentar con la clave anónima por defecto
-        if (res.status === 401 && SUPABASE_KEY !== VALID_ANON_KEY) {
+        if (res.status === 401) {
           console.warn('Supabase 401 detectado en fetch. Auto-restaurando clave anónima por defecto...');
           window.localStorage.removeItem('storeapp_supabase_key');
           SUPABASE_KEY = VALID_ANON_KEY;
           headersObj['apikey'] = VALID_ANON_KEY;
           headersObj['Authorization'] = `Bearer ${VALID_ANON_KEY}`;
+          delete headersObj['x-store-token'];
           options.headers = headersObj;
           res = await originalFetch(url, options);
         }
@@ -5424,18 +5421,35 @@
 
     /* ════════════════════════════════════════════ SUPABASE FUNCTIONS */
     async function safeFetchSupabase(url, options = {}) {
+      options = options || {};
       options.headers = options.headers || {};
-      options.headers['apikey'] = SUPABASE_KEY;
-      options.headers['Authorization'] = `Bearer ${SUPABASE_KEY}`;
+      const key = (SUPABASE_KEY && SUPABASE_KEY.length > 50) ? SUPABASE_KEY : VALID_ANON_KEY;
+
+      if (options.headers instanceof Headers) {
+        options.headers.set('apikey', key);
+        options.headers.set('Authorization', `Bearer ${key}`);
+        options.headers.delete('x-store-token');
+      } else {
+        options.headers['apikey'] = key;
+        options.headers['Authorization'] = `Bearer ${key}`;
+        delete options.headers['x-store-token'];
+      }
 
       let response = await fetch(url, options);
 
-      if (response.status === 401 && SUPABASE_KEY !== VALID_ANON_KEY) {
+      if (response.status === 401) {
         console.warn('Supabase HTTP 401 detectado. Auto-restaurando clave anónima oficial...');
         window.localStorage.removeItem('storeapp_supabase_key');
         SUPABASE_KEY = VALID_ANON_KEY;
-        options.headers['apikey'] = SUPABASE_KEY;
-        options.headers['Authorization'] = `Bearer ${SUPABASE_KEY}`;
+        if (options.headers instanceof Headers) {
+          options.headers.set('apikey', VALID_ANON_KEY);
+          options.headers.set('Authorization', `Bearer ${VALID_ANON_KEY}`);
+          options.headers.delete('x-store-token');
+        } else {
+          options.headers['apikey'] = VALID_ANON_KEY;
+          options.headers['Authorization'] = `Bearer ${VALID_ANON_KEY}`;
+          delete options.headers['x-store-token'];
+        }
         response = await fetch(url, options);
       }
 
