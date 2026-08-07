@@ -29,7 +29,7 @@
   ],
   "functions": {
     "api/store.js": {
-      "includeFiles": ["tienda.html", "landing.html", "ayuda.html", "dejar-resena.html", "dashboard.html", "alta-usuario.html", "super-admin-secret-dashboard.html", "kit-imprimible.html", "enviar-comprobante.html"]
+      "includeFiles": "*.html"
     },
     "api/auth.js": {
       "includeFiles": "api/email-templates.js"
