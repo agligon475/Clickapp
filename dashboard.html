@@ -5718,6 +5718,7 @@
       if (name === 'design-catalogo') loadBannersConfig();
       if (name === 'pages-internas') switchPagesInternasTab('nosotros');
       if (name === 'orders') renderAllOrders();
+      if (name === 'pickups') loadPickupsList();
       if (name === 'reports') {
         const select = document.querySelector('.period-select');
         if (select) setPeriod(select.value);
@@ -11288,11 +11289,11 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     async function deletePickup(id) {
       if (!confirm('¿Seguro que querés eliminar este repartidor?')) return;
       try {
-        await fetch(`${SUPABASE_URL}/rest/v1/pickups?id=eq.${id}&store_id=eq.${encodeURIComponent(STORE_ID)}`, {
-          method: 'DELETE',
-          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        await safeFetchSupabase(`${SUPABASE_URL}/rest/v1/pickups?id=eq.${id}&store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+          method: 'DELETE'
         });
-        loadPickupsList();
+        await loadPickupsList();
+        showToastDash('✓ Repartidor eliminado');
       } catch (e) {
         alert('Error al eliminar repartidor: ' + e.message);
       }
@@ -11302,34 +11303,30 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const tbody = document.getElementById('pickups-tbody');
       if (!tbody) return;
 
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--silver);">Cargando repartidores...</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--silver);"><span style="display:inline-block;width:16px;height:16px;border:2px solid var(--red);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin-right:8px;vertical-align:middle;"></span> Cargando repartidores...</td></tr>';
 
       try {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/pickups?store_id=eq.${encodeURIComponent(STORE_ID)}&order=id.asc`, {
-          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-        });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const pickups = await res.json();
+        const pickups = await fetchFromSupabase('pickups', { filter: 'order=id.asc' });
+        window.currentPickups = Array.isArray(pickups) ? pickups : [];
 
-        window.currentPickups = pickups;
-
-        if (!Array.isArray(pickups) || pickups.length === 0) {
+        if (!window.currentPickups.length) {
           tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--silver);padding:40px;">
         <i class="bi bi-truck" style="font-size:32px;display:block;margin-bottom:10px;opacity:.3;"></i>
         No hay repartidores cargados. Creá uno con el botón "Nuevo Repartidor".
       </td></tr>`;
+          renderPendingPickups();
           return;
         }
 
-        tbody.innerHTML = pickups.map(p => `
+        tbody.innerHTML = window.currentPickups.map(p => `
       <tr>
-        <td style="color:var(--fog);">${p.name}</td>
+        <td style="color:var(--fog);font-weight:600;">${p.name || ''}</td>
         <td style="color:var(--silver);">${p.zona || '-'}</td>
-        <td><a href="https://wa.me/${p.wapp}" target="_blank" style="color:var(--red);text-decoration:none;"><i class="bi bi-whatsapp"></i> ${p.wapp}</a></td>
+        <td><a href="https://wa.me/${p.wapp}" target="_blank" style="color:var(--red);text-decoration:none;"><i class="bi bi-whatsapp"></i> ${p.wapp || ''}</a></td>
         <td style="color:var(--silver);">${p.dni || '-'}</td>
         <td>
-          <span style="display:inline-block;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:.05em;background:${p.active ? 'rgba(46,204,113,.15)' : 'rgba(138,138,144,.15)'};color:${p.active ? '#2ECC71' : 'var(--silver)'};">
-            ${p.active ? 'ACTIVO' : 'INACTIVO'}
+          <span style="display:inline-block;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:.05em;background:${p.active !== false ? 'rgba(46,204,113,.15)' : 'rgba(138,138,144,.15)'};color:${p.active !== false ? '#2ECC71' : 'var(--silver)'};">
+            ${p.active !== false ? 'ACTIVO' : 'INACTIVO'}
           </span>
         </td>
         <td>
@@ -11344,7 +11341,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         renderPendingPickups();
 
       } catch (e) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--red);padding:20px;">Error: ${e.message}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--red);padding:20px;">Error al cargar repartidores: ${e.message}</td></tr>`;
       }
     }
 
