@@ -28,8 +28,8 @@ export default async function handler(req, res) {
     '/landing.html': 'landing.html'
   };
 
-  // 1. Serve static page if requested directly without store query
-  if (routeMap[rawPath] && !req.query.store) {
+  // 1. Serve static page if requested directly (e.g. /dashboard, /ayuda, /alta-usuario)
+  if (routeMap[rawPath]) {
     try {
       const targetFile = routeMap[rawPath];
       const filePath = path.join(process.cwd(), targetFile);
