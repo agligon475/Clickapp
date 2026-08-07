@@ -5719,6 +5719,7 @@
       if (name === 'pages-internas') switchPagesInternasTab('nosotros');
       if (name === 'orders') renderAllOrders();
       if (name === 'pickups') loadPickupsList();
+      if (name === 'categories') loadCategoriesList();
       if (name === 'reports') {
         const select = document.querySelector('.period-select');
         if (select) setPeriod(select.value);
@@ -10016,19 +10017,13 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const viewListEl = document.getElementById('categories-list');
 
       if (advListEl) advListEl.innerHTML = '<div style="color:var(--silver);">Cargando categorías...</div>';
-      if (viewListEl) viewListEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--silver);font-size:13px;grid-column:1/-1;">Cargando categorías...</div>';
+      if (viewListEl) viewListEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--silver);font-size:13px;grid-column:1/-1;"><span style="display:inline-block;width:16px;height:16px;border:2px solid var(--red);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin-right:8px;vertical-align:middle;"></span> Cargando categorías...</div>';
 
       try {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/categories?store_id=eq.${encodeURIComponent(STORE_ID)}&order=display_order.asc`, {
-          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-        });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const categories = await res.json();
+        const categories = await fetchFromSupabase('categories', { filter: 'order=display_order.asc' });
+        window.currentCategories = Array.isArray(categories) ? categories : [];
 
-        // Almacenamos temporalmente en window para poder editar
-        window.currentCategories = categories;
-
-        if (!Array.isArray(categories) || categories.length === 0) {
+        if (!window.currentCategories.length) {
           const emptyMsg = '<div style="color:var(--silver);">No hay categorías aún.</div>';
           if (advListEl) advListEl.innerHTML = emptyMsg;
           if (viewListEl) viewListEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--silver);font-size:13px;grid-column:1/-1;"><i class="bi bi-tags" style="font-size:32px;display:block;margin-bottom:10px;opacity:.3;"></i>No hay categorías cargadas.</div>';
@@ -10037,7 +10032,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
         // Render in Advanced View
         if (advListEl) {
-          advListEl.innerHTML = categories.map(c => `
+          advListEl.innerHTML = window.currentCategories.map(c => `
         <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--zinc);">
           <span style="font-size:16px;min-width:20px;">${c.emoji || '📦'}</span>
           <span style="flex:1;color:var(--fog);">${c.name}</span>
@@ -10048,7 +10043,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
         // Render in Categories View
         if (viewListEl) {
-          viewListEl.innerHTML = categories.map(c => `
+          viewListEl.innerHTML = window.currentCategories.map(c => `
         <div style="background:var(--steel);border:1px solid var(--zinc);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden;">
           <div style="position:absolute;top:0;left:0;width:4px;height:100%;background:${c.active ? 'var(--green)' : 'var(--silver)'};"></div>
           <div style="display:flex;align-items:center;gap:12px;">
@@ -10069,7 +10064,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         }
       } catch (e) {
         if (advListEl) advListEl.innerHTML = `<div style="color:var(--red);">Error: ${e.message}</div>`;
-        if (viewListEl) viewListEl.innerHTML = `<div style="text-align:center;color:var(--red);grid-column:1/-1;">Error: ${e.message}</div>`;
+        if (viewListEl) viewListEl.innerHTML = `<div style="text-align:center;color:var(--red);grid-column:1/-1;">Error al cargar categorías: ${e.message}</div>`;
       }
     }
 
@@ -10125,12 +10120,16 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         document.getElementById('c-active').checked = true;
       }
 
+      modal.style.display = 'flex';
       modal.classList.add('open');
     }
 
     function closeCategoryModal() {
       const modal = document.getElementById('modal-category');
-      if (modal) modal.classList.remove('open');
+      if (modal) {
+        modal.style.display = 'none';
+        modal.classList.remove('open');
+      }
     }
 
     async function saveCategory() {
@@ -10145,7 +10144,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         name, 
         emoji, 
         active,
-        rubro: cfg.rubro || '' // Enlazar al rubro al que pertenece
+        rubro: (typeof cfg !== 'undefined' && cfg && cfg.rubro) ? cfg.rubro : '' // Enlazar al rubro al que pertenece
       };
 
       try {
@@ -10162,7 +10161,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
           await postToSupabase('categories', payload);
         }
         closeCategoryModal();
-        loadCategoriesList();
+        await loadCategoriesList();
         checkOnboardingStatus();
         showToastDash('✓ Categoría guardada con éxito');
       } catch (e) {
@@ -10173,12 +10172,12 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     async function deleteCategory(id) {
       if (!confirm('¿Seguro que querés eliminar esta categoría? Si tiene productos asociados, no se eliminarán, pero perderán la categoría.')) return;
       try {
-        await fetch(`${SUPABASE_URL}/rest/v1/categories?id=eq.${id}`, {
-          method: 'DELETE',
-          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        await safeFetchSupabase(`${SUPABASE_URL}/rest/v1/categories?id=eq.${id}&store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+          method: 'DELETE'
         });
-        loadCategoriesList();
+        await loadCategoriesList();
         checkOnboardingStatus();
+        showToastDash('✓ Categoría eliminada');
       } catch (e) {
         alert('Error al eliminar categoría: ' + e.message);
       }
@@ -11951,6 +11950,8 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       setTimeout(() => {
         if (typeof loadBannersConfig === 'function') loadBannersConfig();
         if (typeof loadPages === 'function') loadPages();
+        if (typeof loadCategoriesList === 'function') loadCategoriesList();
+        if (typeof loadPickupsList === 'function') loadPickupsList();
       }, 500);
 
       document.addEventListener('click', (e) => {
@@ -11970,6 +11971,12 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     document.openPickupForm = openPickupForm;
     document.savePickup = savePickup;
     document.deletePickup = deletePickup;
+    document.loadPickupsList = loadPickupsList;
+    document.openCategoryModal = openCategoryModal;
+    document.closeCategoryModal = closeCategoryModal;
+    document.saveCategory = saveCategory;
+    document.deleteCategory = deleteCategory;
+    document.loadCategoriesList = loadCategoriesList;
     document.loadBannersConfig = loadBannersConfig;
     document.previewBanner = previewBanner;
     document.handleBannerUpload = handleBannerUpload;
