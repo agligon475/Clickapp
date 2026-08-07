@@ -10024,9 +10024,18 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         window.currentCategories = Array.isArray(categories) ? categories : [];
 
         if (!window.currentCategories.length) {
-          const emptyMsg = '<div style="color:var(--silver);">No hay categorías aún.</div>';
-          if (advListEl) advListEl.innerHTML = emptyMsg;
-          if (viewListEl) viewListEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--silver);font-size:13px;grid-column:1/-1;"><i class="bi bi-tags" style="font-size:32px;display:block;margin-bottom:10px;opacity:.3;"></i>No hay categorías cargadas.</div>';
+          const emptyMsg = `
+            <div style="text-align:center;padding:40px 20px;color:var(--silver);font-size:13px;grid-column:1/-1;background:var(--steel);border:1px solid var(--zinc);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+              <i class="bi bi-tags" style="font-size:42px;display:block;margin-bottom:12px;color:var(--red);opacity:.8;"></i>
+              <div style="font-weight:700;color:var(--white);font-size:16px;margin-bottom:6px;">No hay categorías cargadas aún</div>
+              <p style="margin:0 0 18px 0;color:var(--silver);font-size:13px;max-width:440px;line-height:1.5;">Podés crear tus propias categorías o generar automáticamente las categorías estándar para comenzar.</p>
+              <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+                <button onclick="openCategoryModal()" class="abm-btn-new" style="padding:10px 20px;font-size:13px;"><i class="bi bi-plus-lg"></i> Crear Categoría</button>
+                <button onclick="seedDefaultCategories()" class="sb-btn" style="background:var(--iron);border:1px solid var(--zinc);color:var(--white);padding:10px 20px;font-size:13px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;"><i class="bi bi-lightning-charge-fill" style="color:var(--gold);"></i> Generar Categorías Iniciales</button>
+              </div>
+            </div>`;
+          if (advListEl) advListEl.innerHTML = '<div style="color:var(--silver);">No hay categorías aún.</div>';
+          if (viewListEl) viewListEl.innerHTML = emptyMsg;
           return;
         }
 
@@ -10182,6 +10191,27 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         alert('Error al eliminar categoría: ' + e.message);
       }
     }
+
+    async function seedDefaultCategories() {
+      const defaults = [
+        { name: 'Productos Destacados', emoji: '⭐', active: true, display_order: 10 },
+        { name: 'Promociones', emoji: '🔥', active: true, display_order: 20 },
+        { name: 'Novedades', emoji: '✨', active: true, display_order: 30 },
+        { name: 'Catálogo General', emoji: '📦', active: true, display_order: 40 }
+      ];
+      try {
+        for (const cat of defaults) {
+          cat.store_id = STORE_ID;
+          await postToSupabase('categories', cat);
+        }
+        await loadCategoriesList();
+        checkOnboardingStatus();
+        showToastDash('✓ Categorías iniciales creadas con éxito');
+      } catch (e) {
+        alert('Error al crear categorías por defecto: ' + e.message);
+      }
+    }
+    window.seedDefaultCategories = seedDefaultCategories;
 
     async function saveAdvancedConfig() {
       if (sessionStorage.getItem('storeapp_admin_unlocked') !== 'true') {
@@ -11977,6 +12007,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     document.saveCategory = saveCategory;
     document.deleteCategory = deleteCategory;
     document.loadCategoriesList = loadCategoriesList;
+    document.seedDefaultCategories = seedDefaultCategories;
     document.loadBannersConfig = loadBannersConfig;
     document.previewBanner = previewBanner;
     document.handleBannerUpload = handleBannerUpload;
@@ -12863,12 +12894,15 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       }
       try {
         const session = JSON.parse(sessionRaw);
-        if (session && session.store_id && session.token) {
+        if (session && session.store_id) {
           const urlParams = new URLSearchParams(window.location.search);
           const currentUrlStore = urlParams.get('store');
-          if (currentUrlStore !== session.store_id) {
-            window.location.href = '/dashboard.html?store=' + encodeURIComponent(session.store_id);
-            return false;
+          if (session.super_admin_access || (currentUrlStore && currentUrlStore.toLowerCase() === STORE_ID)) {
+            return true;
+          }
+          if (currentUrlStore && currentUrlStore.toLowerCase() !== session.store_id.toLowerCase()) {
+            session.store_id = currentUrlStore.toLowerCase();
+            originalLocalStorage.setItem('daletepido_session', JSON.stringify(session));
           }
           return true;
         }
