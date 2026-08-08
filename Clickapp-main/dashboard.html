@@ -5757,6 +5757,13 @@
           section.classList.remove('collapsed');
         }
       }
+      // Actualizar hash de la URL dinámicamente sin recargar la página
+      try {
+        if (window.location.hash !== '#' + name) {
+          history.replaceState(null, '', window.location.pathname + window.location.search + '#' + name);
+        }
+      } catch(e) {}
+
       if (name === 'products') renderProducts();
       if (name === 'account-plan') initAccountPlanView();
       if (name === 'design-catalogo') loadBannersConfig();
@@ -11260,6 +11267,15 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     initTrialBanner();
     initVerificationBanner();
 
+    function handleUrlHashNavigation() {
+      const hash = window.location.hash.replace('#', '').trim();
+      if (hash && document.getElementById('view-' + hash)) {
+        goToView(hash);
+      }
+    }
+    window.addEventListener('hashchange', handleUrlHashNavigation);
+    handleUrlHashNavigation();
+
     try {
       const activeStore = STORE_ID;
       const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + activeStore) || localStorage.getItem('storeapp_cfg') || '{}');
@@ -11298,11 +11314,11 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       }
     } catch (e) { renderOrdersTable([]); }
 
-    // Initialize welcome message and default view state
-    updateWelcomeGreeting();
-    updateStatusLights();
-    checkOnboardingStatus();
-    showView('dashboard', document.querySelector('.sb-item.active'));
+    if (window.location.hash && window.location.hash.length > 1) {
+      handleUrlHashNavigation();
+    } else {
+      showView('dashboard', document.querySelector('.sb-item.active'));
+    }
 
     // ── ABM PICKUPS ─────────────────────────────────
     // ── ABM PICKUPS ─────────────────────────────────
