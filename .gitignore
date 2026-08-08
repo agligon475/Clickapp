@@ -6,3 +6,5 @@ package-lock.json
 scratch/lighthouse*
 .env
 .env.local
+Clickapp/
+Clickapp-main/
