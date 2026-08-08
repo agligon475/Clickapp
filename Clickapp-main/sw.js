@@ -1,4 +1,4 @@
-const CACHE_NAME = 'daletepido-v7';
+const CACHE_NAME = 'daletepido-v8';
 const ASSETS_TO_CACHE = [
   '/',
   '/landing',
@@ -60,10 +60,16 @@ self.addEventListener('fetch', (event) => {
       return;
     }
 
-    // Intentar responder desde cache o red para navegación limpia
+    // Network first for navigation (always fetch fresh HTML, fallback to cache if offline)
     event.respondWith(
-      caches.match(event.request).then((cached) => {
-        return cached || fetch(event.request).catch(() => caches.match('/dashboard') || caches.match('/'));
+      fetch(event.request).then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200 && !networkResponse.redirected) {
+          const cacheCopy = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, cacheCopy));
+        }
+        return networkResponse;
+      }).catch(() => {
+        return caches.match(event.request).then((cached) => cached || caches.match('/dashboard') || caches.match('/'));
       })
     );
     return;
