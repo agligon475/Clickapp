@@ -5112,7 +5112,7 @@
     // Intercept fetch globally to inject apikey, Authorization and x-store-token automatically for Supabase requests
     const originalFetch = window.fetch;
     window.fetch = async function (url, options) {
-      const urlStr = (typeof url === 'string') ? url : (url && url.href ? url.href : '');
+      let urlStr = (typeof url === 'string') ? url : (url && url.href ? url.href : '');
       if (urlStr && urlStr.startsWith(SUPABASE_URL)) {
         options = options || {};
 
@@ -5130,6 +5130,17 @@
 
         options.headers = headersObj;
 
+        // Ensure apikey parameter is present in URL query string to prevent header stripping/CORS errors
+        if (!urlStr.includes('apikey=')) {
+          const sep = urlStr.includes('?') ? '&' : '?';
+          urlStr = urlStr + sep + 'apikey=' + encodeURIComponent(activeKey);
+          if (typeof url === 'string') {
+            url = urlStr;
+          } else if (url && url.href) {
+            url = urlStr;
+          }
+        }
+
         let res = await originalFetch(url, options);
 
         // Si devuelve 401 Unauthorized, limpiar la clave local corrupta y reintentar con la clave anónima por defecto
@@ -5141,7 +5152,15 @@
           headersObj['Authorization'] = `Bearer ${VALID_ANON_KEY}`;
           delete headersObj['x-store-token'];
           options.headers = headersObj;
-          res = await originalFetch(url, options);
+
+          let retryUrl = urlStr;
+          if (retryUrl.includes('apikey=')) {
+            retryUrl = retryUrl.replace(/apikey=[^&]+/, 'apikey=' + encodeURIComponent(VALID_ANON_KEY));
+          } else {
+            const sep = retryUrl.includes('?') ? '&' : '?';
+            retryUrl = retryUrl + sep + 'apikey=' + encodeURIComponent(VALID_ANON_KEY);
+          }
+          res = await originalFetch(retryUrl, options);
         }
 
         return res;
@@ -5424,6 +5443,11 @@
       options = options || {};
       options.headers = options.headers || {};
       const key = (SUPABASE_KEY && SUPABASE_KEY.length > 50) ? SUPABASE_KEY : VALID_ANON_KEY;
+
+      if (!url.includes('apikey=')) {
+        const sep = url.includes('?') ? '&' : '?';
+        url = url + sep + 'apikey=' + encodeURIComponent(key);
+      }
 
       if (options.headers instanceof Headers) {
         options.headers.set('apikey', key);
@@ -7226,6 +7250,8 @@
       if (name === 'orders') initOrderForm();
       if (name === 'config-basica') initConfigView();
       if (name === 'config-avanzada') initAdvancedView();
+      if (name === 'categories') loadCategoriesList();
+      if (name === 'pickups') loadPickupsList();
     };
 
     /* ═══════════════════════════════════════════ HERO IMAGE */
