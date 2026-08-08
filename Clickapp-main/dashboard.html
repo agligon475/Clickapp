@@ -2508,7 +2508,16 @@
       </div>
       <div class="sb-section-content">
         <div class="sb-item" onclick="showView('orders',this)"><i class="bi bi-receipt"></i> <span>Pedidos</span></div>
-        <div class="sb-item" onclick="showView('pickups',this)"><i class="bi bi-truck"></i> <span>Pickup</span></div>
+      </div>
+    </div>
+
+    <div class="sb-section collapsed">
+      <div class="sb-section-header" onclick="toggleAccordion(this)">
+        <span>Repartidores</span>
+        <i class="bi bi-chevron-up toggle-icon"></i>
+      </div>
+      <div class="sb-section-content">
+        <div class="sb-item" onclick="showView('pickups',this)"><i class="bi bi-sliders"></i> <span>Controlar</span></div>
       </div>
     </div>
 
@@ -5420,7 +5429,7 @@
       products: 'Productos',
       abm: 'ABM · Productos',
       categories: 'Categorías',
-      pickups: 'PickUp · Repartidores',
+      pickups: 'Repartidores · Control Delivery',
       'new-pickup': 'Formulario de Repartidor',
       marca: 'Marca',
       'design-catalogo': 'Diseño de Catálogo',
@@ -10056,7 +10065,24 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (viewListEl) viewListEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--silver);font-size:13px;grid-column:1/-1;"><span style="display:inline-block;width:16px;height:16px;border:2px solid var(--red);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin-right:8px;vertical-align:middle;"></span> Cargando categorías...</div>';
 
       try {
-        const categories = await fetchFromSupabase('categories', { filter: 'order=display_order.asc' });
+        let categories = await fetchFromSupabase('categories', { filter: 'order=display_order.asc' });
+        
+        // Fallback: si no hay categorías creadas en Supabase pero existen productos cargados, extraerlas de localProducts
+        if (!Array.isArray(categories) || categories.length === 0) {
+          if (typeof localProducts !== 'undefined' && Array.isArray(localProducts) && localProducts.length > 0) {
+            const productCats = [...new Set(localProducts.map(p => p.cat || p.categoria).filter(Boolean))];
+            if (productCats.length > 0) {
+              categories = productCats.map((catName, idx) => ({
+                id: 'local_cat_' + idx,
+                name: catName,
+                emoji: '📦',
+                active: true,
+                display_order: (idx + 1) * 10
+              }));
+            }
+          }
+        }
+
         window.currentCategories = Array.isArray(categories) ? categories : [];
 
         if (!window.currentCategories.length) {
