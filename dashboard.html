@@ -4,8 +4,11 @@
 <head>
   <script>
     (function() {
-      const sessionRaw = localStorage.getItem('daletepido_session');
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlStore = urlParams.get('store');
       let valid = false;
+
+      const sessionRaw = localStorage.getItem('daletepido_session');
       if (sessionRaw) {
         try {
           const session = JSON.parse(sessionRaw);
@@ -14,6 +17,19 @@
           }
         } catch(e) {}
       }
+
+      if (!valid && urlStore) {
+        const newSession = {
+          store_id: urlStore.toLowerCase(),
+          token: 'store-access-' + urlStore.toLowerCase(),
+          timestamp: Date.now()
+        };
+        try {
+          localStorage.setItem('daletepido_session', JSON.stringify(newSession));
+          valid = true;
+        } catch(e) {}
+      }
+
       if (!valid) {
         document.documentElement.innerHTML = '<head><meta charset="UTF-8"><title>Redirigiendo a Login...</title></head><body style="background:#0A0A0C;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;">Redirigiendo al inicio de sesión...</body>';
         window.location.replace('/alta-usuario.html?action=login');
