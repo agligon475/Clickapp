@@ -1,4 +1,4 @@
-const CACHE_NAME = 'daletepido-v14';
+const CACHE_NAME = 'daletepido-v15';
 const ASSETS_TO_CACHE = [
   '/',
   '/landing',
