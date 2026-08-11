@@ -45,6 +45,33 @@ function parseRequestBody(req) {
 }
 
 const server = http.createServer(async (req, res) => {
+  // Decorate response with Vercel serverless helper methods for local API testing
+  res.status = function (statusCode) {
+    this.statusCode = statusCode;
+    return this;
+  };
+  res.json = function (data) {
+    if (!this.writableEnded) {
+      this.writeHead(this.statusCode || 200, { 'Content-Type': 'application/json; charset=utf-8' });
+      this.end(JSON.stringify(data));
+    }
+    return this;
+  };
+  res.send = function (body) {
+    if (!this.writableEnded) {
+      let contentType = this.getHeader('Content-Type') || 'text/html; charset=utf-8';
+      if (body instanceof Buffer) {
+        contentType = this.getHeader('Content-Type') || 'application/octet-stream';
+      } else if (typeof body === 'object') {
+        contentType = 'application/json; charset=utf-8';
+        body = JSON.stringify(body);
+      }
+      this.writeHead(this.statusCode || 200, { 'Content-Type': contentType });
+      this.end(body);
+    }
+    return this;
+  };
+
   let urlPath = req.url.split('?')[0];
   const host = req.headers.host || '';
   const hostname = host.split(':')[0].toLowerCase();
