@@ -1,0 +1,109 @@
+{
+  "name": "Dale Te Pido - Notificación de Nuevo Pedido",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nuevo-pedido",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        250,
+        300
+      ],
+      "id": "webhook-node-001",
+      "name": "Webhook Nuevo Pedido"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "mensaje_whatsapp",
+              "value": "=*🛍️ ¡Nuevo Pedido Recibido en Dale! Te Pido!*\n\n*Cliente:* {{$json.body.customer_name}}\n*Teléfono:* {{$json.body.customer_phone}}\n*Dirección:* {{$json.body.customer_address || 'Retira en local'}}\n*Tipo de Entrega:* {{$json.body.delivery_type}}\n\n*🛒 Detalle del Pedido:*\n{{JSON.stringify($json.body.items, null, 2)}}\n\n*💰 Total:* ${{$json.body.total_amount}}\n\n_Estado: Pendiente de confirmación_"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [
+        470,
+        300
+      ],
+      "id": "set-node-002",
+      "name": "Formatear Mensaje WhatsApp"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://iaylgsthwildjkiiwgfd.supabase.co/rest/v1/orders",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=representation"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"store_id\": \"{{$node['Webhook Nuevo Pedido'].json.body.store_id}}\",\n  \"customer_name\": \"{{$node['Webhook Nuevo Pedido'].json.body.customer_name}}\",\n  \"customer_phone\": \"{{$node['Webhook Nuevo Pedido'].json.body.customer_phone}}\",\n  \"customer_address\": \"{{$node['Webhook Nuevo Pedido'].json.body.customer_address}}\",\n  \"delivery_type\": \"{{$node['Webhook Nuevo Pedido'].json.body.delivery_type}}\",\n  \"items\": {{$node['Webhook Nuevo Pedido'].json.body.items}},\n  \"total_amount\": {{$node['Webhook Nuevo Pedido'].json.body.total_amount}},\n  \"notes\": \"{{$node['Webhook Nuevo Pedido'].json.body.notes}}\",\n  \"status\": \"pendiente\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        690,
+        300
+      ],
+      "id": "http-supabase-003",
+      "name": "Guardar en Supabase Orders"
+    }
+  ],
+  "connections": {
+    "Webhook Nuevo Pedido": {
+      "main": [
+        [
+          {
+            "node": "Formatear Mensaje WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear Mensaje WhatsApp": {
+      "main": [
+        [
+          {
+            "node": "Guardar en Supabase Orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
