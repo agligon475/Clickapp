@@ -1652,13 +1652,23 @@ function renderBanners(bannerData) {
     `;
     
     el.onclick = () => {
-      if (cat !== 'all') {
-        const btn = document.querySelector(`[data-cat="${cat}"]`);
-        if (btn) filterCat(btn, cat);
+      const targetCat = data.cat || '';
+      if (targetCat && targetCat !== 'all') {
+        let btn = document.querySelector(`[data-cat="${targetCat}"]`);
+        if (!btn) {
+          const allBtns = Array.from(document.querySelectorAll('.cat-btn'));
+          btn = allBtns.find(b => b.dataset.cat.toLowerCase().includes(targetCat.toLowerCase()) || targetCat.toLowerCase().includes(b.dataset.cat.toLowerCase()));
+        }
+        if (btn) {
+          filterCat(btn, btn.dataset.cat);
+        } else {
+          onSearch(targetCat);
+        }
       } else {
         filterCat(document.querySelector('[data-cat="all"]'), 'all');
       }
-      window.scrollTo({ top: document.getElementById('banners-container').offsetTop + 300, behavior: 'smooth' });
+      const gridEl = document.getElementById('grid');
+      if (gridEl) gridEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
   };
 
