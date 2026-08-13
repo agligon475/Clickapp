@@ -15,13 +15,14 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { store_id, business_name, admin_email, wapp, type, plan_key } = req.body || {};
+    const { store_id, business_name, admin_email, wapp, type, plan_key, plan_level } = req.body || {};
 
     if (!admin_email || !store_id) {
       return res.status(400).json({ success: false, error: 'Store ID y Email son requeridos' });
     }
 
     const storeName = business_name || store_id;
+    const effectivePlanLevel = (plan_level || (plan_key && plan_key.startsWith('enterprise') ? 'enterprise' : 'starter')).toLowerCase();
     let emailSubject = '';
     let htmlBody = '';
 
@@ -30,7 +31,7 @@ export default async function handler(req, res) {
       emailSubject = emailObj.subject;
       htmlBody = emailObj.html;
     } else {
-      const emailObj = getWelcomeEmail({ storeName, storeId: store_id });
+      const emailObj = getWelcomeEmail({ storeName, storeId: store_id, planLevel: effectivePlanLevel });
       emailSubject = emailObj.subject;
       htmlBody = emailObj.html;
     }

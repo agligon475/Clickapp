@@ -69,12 +69,39 @@ export function getEmailLayout({ title, bodyContent }) {
 }
 
 /**
+ * Helper para generar el recuadro sobre el Servicio de Setup (Bonificado para Enterprise, $35.000 ARS para Starter/Pro)
+ */
+export function getSetupNoticeBox(planLevel = 'starter') {
+  const isEnterprise = String(planLevel || '').toLowerCase().includes('enterprise');
+
+  if (isEnterprise) {
+    return `
+    <div class="box" style="border-left: 4px solid #10B981; background: rgba(16, 185, 129, 0.05); margin-top: 20px;">
+      <div class="box-title" style="color: #34d399;">🎁 Servicio de Setup & Carga Asistida Incluido</div>
+      <div style="font-size: 13.5px; color: #dddddd; line-height: 1.6;">
+        ¡Felicitaciones! Por contar con tu <strong>Membresía Enterprise</strong>, el servicio completo de setup y carga inicial de tu catálogo está <strong>100% Bonificado</strong> (incluido sin cargo adicional). Nuestro equipo de soporte especializado se pondrá en contacto con vos para asistirte en la configuración.
+      </div>
+    </div>`;
+  }
+
+  return `
+  <div class="box" style="border-left: 4px solid #22D3EE; background: rgba(34, 211, 238, 0.05); margin-top: 20px;">
+    <div class="box-title" style="color: #67e8f9;">🛠️ Servicio Opcional de Setup & Carga de Tienda</div>
+    <div style="font-size: 13.5px; color: #dddddd; line-height: 1.6;">
+      Si deseás que nuestro equipo profesional se encargue de la configuración inicial y la carga de tus productos por vos, podés contratar nuestro servicio asistido de setup por un costo de <strong>$35.000 ARS</strong>. Si te interesa sumarlo a tu cuenta, respondé a este correo o escribinos por WhatsApp.
+    </div>
+  </div>`;
+}
+
+/**
  * 1. Correo de Bienvenida / Verificación de Email
  */
-export function getWelcomeEmail({ storeName, storeId }) {
+export function getWelcomeEmail({ storeName, storeId, planLevel = 'starter' }) {
   const dashboardUrl = `${BASE_URL}/dashboard.html?store=${encodeURIComponent(storeId)}&verify=true`;
   const storeUrl = `${BASE_URL}/index.html?store=${encodeURIComponent(storeId)}`;
   const title = `¡Bienvenido a Dale! Te Pido! Comienza tus 15 días gratis`;
+
+  const setupBoxHtml = getSetupNoticeBox(planLevel);
 
   const bodyContent = `
     <div class="greeting">¡Hola, ${storeName || storeId}! 👋</div>
@@ -102,6 +129,8 @@ export function getWelcomeEmail({ storeName, storeId }) {
         <div><strong>Compartir tu link:</strong> Publicá tu catálogo digital (<a href="${storeUrl}" style="color:#ff6666;" target="_blank">${storeUrl}</a>) en tu bio de Instagram y estados de WhatsApp.</div>
       </div>
     </div>
+
+    ${setupBoxHtml}
   `;
 
   return { subject: title, html: getEmailLayout({ title, bodyContent }) };
@@ -246,10 +275,11 @@ export function getTrialEndedEmail({ storeName, storeId }) {
 /**
  * 6. NUEVO: Correo de Confirmación / Activación de Cuenta (Con enlace a Base de Conocimiento)
  */
-export function getAccountActivatedEmail({ storeName, storeId }) {
+export function getAccountActivatedEmail({ storeName, storeId, planLevel = 'starter' }) {
   const ayudaUrl = `${BASE_URL}/ayuda`;
   const dashboardUrl = `${BASE_URL}/dashboard.html?store=${encodeURIComponent(storeId)}`;
   const title = `✅ ¡Tu cuenta en Dale! Te Pido está activa y lista para vender!`;
+  const setupBoxHtml = getSetupNoticeBox(planLevel);
 
   const bodyContent = `
     <div class="greeting">¡Cuenta Confirmada, ${storeName || storeId}! 🎉</div>
@@ -281,6 +311,8 @@ export function getAccountActivatedEmail({ storeName, storeId }) {
         <div><strong>Cargar categorías y opciones:</strong> Agregá combos, tamaños y extras a tus platos.</div>
       </div>
     </div>
+
+    ${setupBoxHtml}
   `;
 
   return { subject: title, html: getEmailLayout({ title, bodyContent }) };
@@ -373,6 +405,7 @@ export function getPlanPaymentInstructionsEmail({ storeName, storeId, planKey = 
   const planInfo = PLAN_DETAILS[planKey] || PLAN_DETAILS.starter_mensual;
   const receiptPageUrl = `${BASE_URL}/enviar-comprobante.html?store=${encodeURIComponent(storeId)}&plan=${encodeURIComponent(planKey)}`;
   const title = `Instrucciones de Pago: ${planInfo.name} (${planInfo.period})`;
+  const setupBoxHtml = getSetupNoticeBox(planInfo.planLevel);
 
   const bodyContent = `
     <div class="greeting">¡Hola, ${storeName || storeId}! 👋</div>
@@ -405,7 +438,9 @@ export function getPlanPaymentInstructionsEmail({ storeName, storeId, planKey = 
       <a href="${receiptPageUrl}" target="_blank" class="btn-primary">📤 Adjuntar Comprobante de Pago aquí →</a>
     </div>
 
-    <div class="box" style="border-left: 4px solid #F59E0B; background: rgba(245,158,11,0.04);">
+    ${setupBoxHtml}
+
+    <div class="box" style="border-left: 4px solid #F59E0B; background: rgba(245,158,11,0.04); margin-top:16px;">
       <div style="font-size:13px; color:#dddddd; line-height:1.6;">
         💡 <strong>Recomendación:</strong> Te recomendamos tener los datos de facturación cargados correctamente en tu Dashboard para poder enviarte el comprobante de pago oficial.
       </div>
