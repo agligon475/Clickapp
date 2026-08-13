@@ -1425,10 +1425,20 @@ async function loadSheet() {
     try {
       const faqRes = await fetchSupabase(`/rest/v1/faqs?store_id=eq.${encodeURIComponent(STORE_ID)}`);
       if (faqRes.ok) {
-        storeFaqs = await faqRes.json();
+        const fetchedFaqs = await faqRes.json();
+        if (Array.isArray(fetchedFaqs) && fetchedFaqs.length > 0) storeFaqs = fetchedFaqs;
       }
     } catch (e) {
       console.error("Error loading FAQs in tienda:", e);
+    }
+
+    if ((!storeFaqs || storeFaqs.length === 0) && configData && configData.length > 0 && configData[0].horarios_data) {
+      try {
+        const parsedFaqs = typeof configData[0].horarios_data === 'string' ? JSON.parse(configData[0].horarios_data) : configData[0].horarios_data;
+        if (Array.isArray(parsedFaqs) && parsedFaqs.length > 0) {
+          storeFaqs = parsedFaqs;
+        }
+      } catch (e) {}
     }
 
     let bannerData = {

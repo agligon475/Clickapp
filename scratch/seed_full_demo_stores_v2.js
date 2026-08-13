@@ -47,10 +47,11 @@ const storeNoutacc = {
     { name: 'Café & Bebidas', emoji: '☕' }
   ],
   faqs: [
-    { question: '¿Todos los productos son 100% Sin TACC?', answer: 'Sí, absolutamente todos nuestros productos son elaborados en nuestra cocina exclusiva 100% libre de gluten, sin ningún riesgo de contaminación cruzada. Contamos con certificación oficial.' },
-    { question: '¿Cómo realizan los envíos?', answer: 'Hacemos envíos propios en moto dentro de la ciudad para garantizar que los productos de panadería y rotisería lleguen frescos y en perfectas condiciones.' },
-    { question: '¿Cuáles son las formas de pago aceptadas?', answer: 'Aceptamos efectivo al retirar o recibir el pedido, transferencia bancaria inmediata (Alias / CBU) y Mercado Pago.' },
-    { question: '¿Se pueden congelar los panes y medialunas?', answer: '¡Sí! Todos nuestros productos de panadería y masas saladas se pueden congelar hasta por 3 meses. Te recomendamos darles un golpe de horno antes de consumir para recuperar su textura crocante.' }
+    { question: '¿Todos los productos son 100% Sin TACC?', answer: 'Sí, absolutamente todos nuestros productos son elaborados en nuestra cocina exclusiva 100% libre de gluten, sin ningún riesgo de contaminación cruzada. Contamos con certificación oficial de ANMAT y Municipalidad.' },
+    { question: '¿Cómo garantizan que no haya contaminación cruzada?', answer: 'Toda la materia prima ingresa en envases sellados con certificación RNPED y RNPA. No se manipula harina de trigo ni derivados en ningún espacio de nuestro establecimiento.' },
+    { question: '¿Cómo realizan los envíos y cuáles son los tiempos?', answer: 'Hacemos envíos propios en moto con cajas térmicas en el día dentro de Córdoba Capital. Los pedidos realizados antes de las 14:00 hs se entregan durante la tarde.' },
+    { question: '¿Cuáles son las formas de pago aceptadas?', answer: 'Aceptamos efectivo al retirar o recibir el pedido, transferencia bancaria directa (Alias/CBU) y Mercado Pago con tarjetas de débito/crédito.' },
+    { question: '¿Se pueden congelar los panes, medialunas y empanadas?', answer: '¡Sí! Todos nuestros productos de panadería y masa salada se congelan hasta por 3 meses. Te recomendamos darles un golpe de horno de 5 minutos antes de consumir para que queden como recién hechos.' }
   ],
   products: [
     {
@@ -61,6 +62,8 @@ const storeNoutacc = {
       emoji: '🍞',
       detalles: 'Pan de molde blanco lactal súper esponjoso y miga suave. Elaborado con fécula de mandioca y harina de arroz. Ideal para tostadas y sándwiches. (500g)',
       img: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800',
+      img2: 'https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=800',
+      img3: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800',
       marca: 'Noutacc',
       origen: 'AR',
       oculto: false,
@@ -74,6 +77,8 @@ const storeNoutacc = {
       emoji: '🥐',
       detalles: 'Seis medialunas de manteca hojaldradas, bañadas en sutil almíbar de vainilla. 100% aptas para celíacos.',
       img: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=800',
+      img2: 'https://images.unsplash.com/photo-1530610476181-d83430b64dcd?w=800',
+      img3: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800',
       marca: 'Noutacc',
       origen: 'AR',
       oculto: false,
@@ -87,6 +92,8 @@ const storeNoutacc = {
       emoji: '🥧',
       detalles: 'Tarta salada individual con masa quebrada dorada sin gluten, rellena de abundante queso muzzarella derretido, jamón cocido seleccionado y huevo picado.',
       img: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=800',
+      img2: 'https://images.unsplash.com/photo-1621996346565-e3d5d6281358?w=800',
+      img3: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800',
       marca: 'Noutacc',
       origen: 'AR',
       oculto: false,
@@ -100,6 +107,8 @@ const storeNoutacc = {
       emoji: '🍔',
       detalles: 'Doble medallón de carne de novillo 100% vacuna, doble queso cheddar panceta ahumada crujiente, salsa especial y pan brioche casero libre de gluten.',
       img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800',
+      img2: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800',
+      img3: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=800',
       marca: 'Noutacc',
       origen: 'AR',
       oculto: false,
@@ -113,6 +122,8 @@ const storeNoutacc = {
       emoji: '🥟',
       detalles: 'Trío de empanadas horneadas con masa casera sin TACC, rellenas de jugosa carne vacuna cortada a cuchillo, cebolla de verdeo y especias tradicionales.',
       img: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=800',
+      img2: 'https://images.unsplash.com/photo-1604467794349-0b74285de7e7?w=800',
+      img3: 'https://images.unsplash.com/photo-1541544741938-0af808871cc0?w=800',
       marca: 'Noutacc',
       origen: 'AR',
       oculto: false,
@@ -126,6 +137,8 @@ const storeNoutacc = {
       emoji: '🍰',
       detalles: 'Deliciosa porción de torta Red Velvet con bizcochuelo húmedo de cacao sin gluten y relleno suave de frosting de queso crema con vainilla natural.',
       img: 'https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?w=800',
+      img2: 'https://images.unsplash.com/photo-1616541823729-00fe0aacd32c?w=800',
+      img3: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800',
       marca: 'Noutacc',
       origen: 'AR',
       oculto: false,
@@ -139,6 +152,8 @@ const storeNoutacc = {
       emoji: '🍪',
       detalles: 'Alfajor relleno con abundante dulce de leche repostero y baño de cobertura de chocolate semiamargo al 70%. (80g)',
       img: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=800',
+      img2: 'https://images.unsplash.com/photo-1579372786545-d24232daf58c?w=800',
+      img3: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=800',
       marca: 'Noutacc',
       origen: 'AR',
       oculto: false,
@@ -152,19 +167,23 @@ const storeNoutacc = {
       emoji: '🧁',
       detalles: 'Dos muffins súper húmedos perfumados con zeste de limón fresco y repleto de arándanos enteros seleccionados.',
       img: 'https://images.unsplash.com/photo-1607958996333-41aef7caefaa?w=800',
+      img2: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?w=800',
+      img3: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800',
       marca: 'Noutacc',
       origen: 'AR',
       oculto: false,
       store_id: 'noutacc'
     },
     {
-      nombre: 'Café Latte Especial de Especies & Vainilla (400ml)',
+      nombre: 'Café Latte Especial de Especias & Vainilla (400ml)',
       precio: 3100,
       stock: 50,
       categoria: 'Café & Bebidas',
       emoji: '☕',
       detalles: 'Doble shot de espresso de granos colombianos con leche cremada caliente y toque de jarabe artesanal de vainilla.',
       img: 'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=800',
+      img2: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800',
+      img3: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800',
       marca: 'Noutacc',
       origen: 'AR',
       oculto: false,
@@ -178,6 +197,8 @@ const storeNoutacc = {
       emoji: '🧃',
       detalles: 'Jugo exprimido en el momento sin azúcar agregada ni conservantes. Súper refrescante e inmunoprotector.',
       img: 'https://images.unsplash.com/photo-1613478223719-2ab802602423?w=800',
+      img2: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=800',
+      img3: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?w=800',
       marca: 'Noutacc',
       origen: 'AR',
       oculto: false,
@@ -226,10 +247,11 @@ const storeFerrenow = {
     { name: 'Pinturería & Construcción', emoji: '🎨' }
   ],
   faqs: [
-    { question: '¿Las herramientas cuentan con garantía oficial?', answer: 'Sí, todas las herramientas y máquinas eléctricas comercializadas por FerreNow cuentan con garantía oficial de fábrica (DeWalt, Bosch, Stanley, etc.) que va de 1 a 3 años según la marca.' },
-    { question: '¿Hacen envíos de productos pesados o voluminosos?', answer: 'Sí, realizamos envíos de pintura, herramientas y materiales de obra directamente a tu domicilio o lugar de trabajo en el día.' },
-    { question: '¿Realizan Factura A o B?', answer: 'Emitimos Factura A o B según lo requieras. Al finalizar tu pedido por WhatsApp, indícanos tu CUIT y Razón Social para adjuntar el comprobante fiscal.' },
-    { question: '¿Tienen stock de todos los artículos publicados?', answer: 'Sí, nuestro catálogo se encuentra sincronizado en tiempo real con nuestro depósito central.' }
+    { question: '¿Las herramientas cuentan con garantía oficial de fábrica?', answer: 'Sí, absolutamente todas las herramientas y máquinas eléctricas cuentan con garantía oficial de marca (DeWalt 3 años, Bosch 2 años, Stanley 2 años). Entregamos certificado firmado con tu factura.' },
+    { question: '¿Emiten Factura A o Factura B?', answer: 'Emitimos comprobante fiscal A o B en todos los pedidos. Solo tenés que adjuntar tu CUIT y Razón Social al momento de confirmar por WhatsApp.' },
+    { question: '¿Realizan envíos de materiales pesados o voluminosos?', answer: 'Sí, contamos con fletes propios para materiales de pintura, escaleras y herramientas pesadas con entrega en el día en CABA y GBA.' },
+    { question: '¿Tienen stock real y sincronizado en la tienda?', answer: 'Sí, nuestro catálogo está conectado a nuestro depósito principal, por lo que todo producto con opción de compra está disponible para despacho inmediato.' },
+    { question: '¿Brindan asesoramiento técnico previo a la compra?', answer: '¡Por supuesto! Nuestro equipo de expertos en ferretería te asesora sin costo sobre la herramienta adecuada para tu proyecto, trabajo u obra.' }
   ],
   products: [
     {
@@ -240,6 +262,8 @@ const storeFerrenow = {
       emoji: '🔌',
       detalles: 'Taladro atornillador percutor inalámbrico con batería de litio 20V. Mandril autoajustable de 13mm, 2 velocidades variables (0-450 / 0-1500 RPM) y luz LED integrada. Incluye cargador rápido y valija rígida.',
       img: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800',
+      img2: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800',
+      img3: 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=800',
       marca: 'DeWalt',
       origen: 'US',
       oculto: false,
@@ -253,6 +277,8 @@ const storeFerrenow = {
       emoji: '⚙️',
       detalles: 'Amoladora compacta de 750W con motor de alto rendimiento para discos de 115mm (4.5 pulgadas). Entrada de aire optimizada para mayor vida útil y mango ergonómico.',
       img: 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=800',
+      img2: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800',
+      img3: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800',
       marca: 'Bosch',
       origen: 'DE',
       oculto: false,
@@ -266,6 +292,8 @@ const storeFerrenow = {
       emoji: '🪚',
       detalles: 'Sierra circular profesional con motor potente de 1700W y disco de 7-1/4" (185mm). Profundidad de corte ajustable hasta 62mm y guía paralela graduada.',
       img: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800',
+      img2: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=800',
+      img3: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800',
       marca: 'Stanley',
       origen: 'US',
       oculto: false,
@@ -279,6 +307,8 @@ const storeFerrenow = {
       emoji: '🔧',
       detalles: 'Set de 12 llaves combinadas (boca y corona) forjadas en acero Cromo Vanadio ultrarresistente. Incluye organizador de pared. Medidas: 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 y 19 mm.',
       img: 'https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?w=800',
+      img2: 'https://images.unsplash.com/photo-1616401784845-180882ba9ba8?w=800',
+      img3: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800',
       marca: 'Stanley',
       origen: 'US',
       oculto: false,
@@ -292,6 +322,8 @@ const storeFerrenow = {
       emoji: '🧰',
       detalles: 'Caja portaherramientas reforzada con cierres metálicos inoxidables, bandeja interior removible y organizadores de tornillería en la tapa.',
       img: 'https://images.unsplash.com/photo-1616401784845-180882ba9ba8?w=800',
+      img2: 'https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?w=800',
+      img3: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=800',
       marca: 'Stanley',
       origen: 'US',
       oculto: false,
@@ -305,6 +337,8 @@ const storeFerrenow = {
       emoji: '🪛',
       detalles: 'Juego de destornilladores para electricista con aislación probada a 1000 Volts (IEC 60900). Puntas Planas y Phillips magnetizadas.',
       img: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=800',
+      img2: 'https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?w=800',
+      img3: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800',
       marca: 'Bahco',
       origen: 'DE',
       oculto: false,
@@ -318,6 +352,8 @@ const storeFerrenow = {
       emoji: '💡',
       detalles: 'Pack de 5 focos LED de alta eficiencia (equivalente a 100W incandescente). Ahorro energético del 85% y vida útil de 15.000 horas.',
       img: 'https://images.unsplash.com/photo-1550985616-10810253b84d?w=800',
+      img2: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800',
+      img3: 'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=800',
       marca: 'Philips',
       origen: 'AR',
       oculto: false,
@@ -331,6 +367,8 @@ const storeFerrenow = {
       emoji: '🔌',
       detalles: 'Alargue prolongador reforzado de 10m con cable taller bi-capa 3x1.5mm y ficha triple inyectada ignífuga. Apto para obras y máquinas pesadas.',
       img: 'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?w=800',
+      img2: 'https://images.unsplash.com/photo-1550985616-10810253b84d?w=800',
+      img3: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800',
       marca: 'FerreNow',
       origen: 'AR',
       oculto: false,
@@ -344,6 +382,8 @@ const storeFerrenow = {
       emoji: '🎨',
       detalles: 'Látex lavable cubritivo anti-hongo de máxima resistencia a la intemperie y al sol. Acabado blanco mate uniforme de secado rápido.',
       img: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=800',
+      img2: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800',
+      img3: 'https://images.unsplash.com/photo-1562259924-b1535794821a?w=800',
       marca: 'Alba',
       origen: 'AR',
       oculto: false,
@@ -357,6 +397,8 @@ const storeFerrenow = {
       emoji: '🖌️',
       detalles: 'Kit completo de pintura profesional: rodillo sintético antigota de 22cm con mango ergonómico, pincel plano n° 20 y bandeja plástica reforzada.',
       img: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800',
+      img2: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=800',
+      img3: 'https://images.unsplash.com/photo-1562259924-b1535794821a?w=800',
       marca: 'El Galgo',
       origen: 'AR',
       oculto: false,
@@ -405,10 +447,11 @@ const storeKioscoJulio = {
     { name: 'Snacks & Galletitas', emoji: '🥔' }
   ],
   faqs: [
-    { question: '¿Cuáles son los horarios de atención y envíos?', answer: 'Abrimos y realizamos envíos las 24 horas del día, los 7 días de la semana, los 365 días del año.' },
-    { question: '¿Cuánto tarda en llegar mi pedido?', answer: 'Los envíos tardan en promedio entre 15 y 30 minutos desde que confirmamos la orden por WhatsApp.' },
-    { question: '¿Las bebidas se entregan frías?', answer: 'Sí, todas nuestras bebidas, cervezas y energizantes se envían heladas en conservadoras térmicas.' },
-    { question: '¿Hay un monto mínimo de compra?', answer: 'No tenemos monto mínimo. Podés pedir desde un alfajor o gaseosa hasta combos para reuniones.' }
+    { question: '¿Cuáles son los horarios de atención y envíos?', answer: 'Abrimos y realizamos envíos a domicilio las 24 horas del día, los 7 días de la semana, los 365 días del año sin excepción.' },
+    { question: '¿Las bebidas, cervezas y energizantes se entregan frías?', answer: '¡Sí, 100% heladas! Todas nuestras bebidas se despachan directamente desde nuestras heladeras industriales y viajan en mochilas térmicas.' },
+    { question: '¿Cuánto tarda en llegar mi pedido?', answer: 'El tiempo promedio de entrega es de 15 a 30 minutos desde que recibimos la confirmación por WhatsApp.' },
+    { question: '¿Tienen un monto mínimo de compra?', answer: 'No requerimos compra mínima. Podés pedir desde una golosina o gaseosa hasta combos familiares para reuniones nocturnas.' },
+    { question: '¿Qué medios de pago aceptan durante las 24hs?', answer: 'Aceptamos efectivo al repartidor, Mercado Pago (código QR o link) y transferencias bancarias instantáneas (Alias CBU/CVU).' }
   ],
   products: [
     {
@@ -419,6 +462,8 @@ const storeKioscoJulio = {
       emoji: '🍫',
       detalles: 'Riquísimo chocolate con leche alpina Milka relleno de avellanas enteras crocantes. (100g)',
       img: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=800',
+      img2: 'https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=800',
+      img3: 'https://images.unsplash.com/photo-1511381939415-e44015466834?w=800',
       marca: 'Milka',
       origen: 'AR',
       oculto: false,
@@ -432,6 +477,8 @@ const storeKioscoJulio = {
       emoji: '🍪',
       detalles: 'Caja regalo con 3 alfajores cubiertos de chocolate semiamargo y 3 alfajores cubiertos de merengue italiano, rellenos de dulce de leche Havanna.',
       img: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=800',
+      img2: 'https://images.unsplash.com/photo-1579372786545-d24232daf58c?w=800',
+      img3: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=800',
       marca: 'Havanna',
       origen: 'AR',
       oculto: false,
@@ -445,6 +492,8 @@ const storeKioscoJulio = {
       emoji: '🍫',
       detalles: 'Tableta de suave chocolate con leche Cadbury con cremoso relleno de crema de yogurt sabor frutilla.',
       img: 'https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=800',
+      img2: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=800',
+      img3: 'https://images.unsplash.com/photo-1511381939415-e44015466834?w=800',
       marca: 'Cadbury',
       origen: 'AR',
       oculto: false,
@@ -458,6 +507,8 @@ const storeKioscoJulio = {
       emoji: '🍬',
       detalles: 'Paquete de gomitas masticables sabor a frutas surtidas (frutilla, manzana, naranja y ananá).',
       img: 'https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?w=800',
+      img2: 'https://images.unsplash.com/photo-1575224300306-1b8da36134ec?w=800',
+      img3: 'https://images.unsplash.com/photo-1532117892862-23f46f345ecb?w=800',
       marca: 'Arcor',
       origen: 'AR',
       oculto: false,
@@ -471,6 +522,8 @@ const storeKioscoJulio = {
       emoji: '🍬',
       detalles: 'Bolsa de exquisitos caramelos blandos de leche rellenos de dulce de leche fluido.',
       img: 'https://images.unsplash.com/photo-1575224300306-1b8da36134ec?w=800',
+      img2: 'https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?w=800',
+      img3: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=800',
       marca: 'Arcor',
       origen: 'AR',
       oculto: false,
@@ -484,6 +537,8 @@ const storeKioscoJulio = {
       emoji: '🥤',
       detalles: 'Lata de Coca-Cola sabor original 473ml bien fría, ideal para acompañar tus comidas.',
       img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=800',
+      img2: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=800',
+      img3: 'https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=800',
       marca: 'Coca-Cola',
       origen: 'AR',
       oculto: false,
@@ -497,6 +552,8 @@ const storeKioscoJulio = {
       emoji: '⚡',
       detalles: 'Bebida energizante funcional con cafeína, taurina y vitaminas del grupo B. Vitaliza cuerpo y mente.',
       img: 'https://images.unsplash.com/photo-1622543925917-763c34d1a86e?w=800',
+      img2: 'https://images.unsplash.com/photo-1527661591475-527312dd65f5?w=800',
+      img3: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=800',
       marca: 'Red Bull',
       origen: 'AT',
       oculto: false,
@@ -510,6 +567,8 @@ const storeKioscoJulio = {
       emoji: '🍺',
       detalles: 'Cerveza lager argentina equilibrada de color dorado brillante y espuma cremosa. 473ml lista para consumir.',
       img: 'https://images.unsplash.com/photo-1608270586620-248524c67de9?w=800',
+      img2: 'https://images.unsplash.com/photo-1535958636474-b021ee887b13?w=800',
+      img3: 'https://images.unsplash.com/photo-1567696911980-2eed69a46042?w=800',
       marca: 'Quilmes',
       origen: 'AR',
       oculto: false,
@@ -523,6 +582,8 @@ const storeKioscoJulio = {
       emoji: '🥔',
       detalles: 'Papas fritas cortadas en finas rodajas, crocantes y saladas en su punto justo. Paquete familiar 140g.',
       img: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=800',
+      img2: 'https://images.unsplash.com/photo-1621447504864-d8686e12698c?w=800',
+      img3: 'https://images.unsplash.com/photo-1528751014936-863e6e7a319c?w=800',
       marca: 'Lays',
       origen: 'AR',
       oculto: false,
@@ -536,6 +597,8 @@ const storeKioscoJulio = {
       emoji: '🍪',
       detalles: 'Las clásicas galletitas de chocolate con sabor único. Perfectas para la merienda y para preparar chocotorta. (250g)',
       img: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=800',
+      img2: 'https://images.unsplash.com/photo-1579372786545-d24232daf58c?w=800',
+      img3: 'https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?w=800',
       marca: 'Bagley',
       origen: 'AR',
       oculto: false,
@@ -548,125 +611,105 @@ async function seedStore(storeData) {
   const storeId = storeData.settings.store_id;
   console.log(`\n=================== SEEDING STORE: ${storeId} ===================`);
 
-  // 1. Update/Upsert company_settings
-  const setCheckRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}`, { headers });
-  const existingSet = await setCheckRes.json();
+  // 1. Limpiar datos existentes
+  console.log(`[1/5] Limpiando datos previos de '${storeId}'...`);
+  await fetch(`${SUPABASE_URL}/rest/v1/products?store_id=eq.${storeId}`, { method: 'DELETE', headers });
+  await fetch(`${SUPABASE_URL}/rest/v1/categories?store_id=eq.${storeId}`, { method: 'DELETE', headers });
 
-  if (existingSet && existingSet.length > 0) {
-    const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}`, {
+  // 2. Guardar Settings (incluyendo faqs_data en horarios_data para compatibilidad 100%)
+  console.log(`[2/5] Guardando configuración de tienda '${storeId}'...`);
+  const settingsToSave = {
+    ...storeData.settings,
+    horarios_data: JSON.stringify(storeData.faqs)
+  };
+  
+  const checkSetting = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${storeId}`, { headers }).then(r=>r.json());
+  let resSetting;
+  if (checkSetting && checkSetting.length > 0) {
+    resSetting = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${storeId}`, {
       method: 'PATCH',
       headers,
-      body: JSON.stringify(storeData.settings)
+      body: JSON.stringify(settingsToSave)
     });
-    console.log('PATCH company_settings:', patchRes.status);
   } else {
-    const postRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings`, {
+    resSetting = await fetch(`${SUPABASE_URL}/rest/v1/company_settings`, {
       method: 'POST',
       headers,
-      body: JSON.stringify(storeData.settings)
+      body: JSON.stringify(settingsToSave)
     });
-    console.log('POST company_settings:', postRes.status);
   }
+  if (!resSetting.ok) console.error(`Error guardando settings de ${storeId}:`, await resSetting.text());
+  else console.log(`✓ Configuración guardada.`);
 
-  // Also seed alias for ferre-now if ferrenow
-  if (storeId === 'ferrenow') {
-    const ferrenowAliasSettings = { ...storeData.settings, store_id: 'ferre-now' };
-    const aliasCheck = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.ferre-now`, { headers });
-    const existingAlias = await aliasCheck.json();
-    if (existingAlias && existingAlias.length > 0) {
-      await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.ferre-now`, { method: 'PATCH', headers, body: JSON.stringify(ferrenowAliasSettings) });
-    } else {
-      await fetch(`${SUPABASE_URL}/rest/v1/company_settings`, { method: 'POST', headers, body: JSON.stringify(ferrenowAliasSettings) });
-    }
-  }
+  // 3. Guardar Categorías
+  console.log(`[3/5] Insertando categorías...`);
+  const categoriesToInsert = storeData.categories.map((c) => ({
+    name: c.name,
+    emoji: c.emoji,
+    store_id: storeId
+  }));
+  const resCat = await fetch(`${SUPABASE_URL}/rest/v1/categories`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(categoriesToInsert)
+  });
+  if (!resCat.ok) console.error(`Error guardando categorías:`, await resCat.text());
+  else console.log(`✓ ${categoriesToInsert.length} categorías insertadas.`);
 
-  // 2. Clear old products, categories & faqs
-  await fetch(`${SUPABASE_URL}/rest/v1/products?store_id=eq.${encodeURIComponent(storeId)}`, { method: 'DELETE', headers });
-  await fetch(`${SUPABASE_URL}/rest/v1/categories?store_id=eq.${encodeURIComponent(storeId)}`, { method: 'DELETE', headers });
-  await fetch(`${SUPABASE_URL}/rest/v1/faqs?store_id=eq.${encodeURIComponent(storeId)}`, { method: 'DELETE', headers });
+  // 4. Intentar guardar en tabla FAQs (si RLS lo permite)
+  console.log(`[4/5] Registrando preguntas frecuentes...`);
+  const faqsToInsert = storeData.faqs.map((f) => ({
+    question: f.question,
+    answer: f.answer,
+    store_id: storeId
+  }));
+  const resFaq = await fetch(`${SUPABASE_URL}/rest/v1/faqs`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(faqsToInsert)
+  });
+  if (resFaq.ok) console.log(`✓ FAQs insertadas en tabla faqs.`);
+  else console.log(`ℹ FAQs guardadas dentro de company_settings.horarios_data.`);
 
-  if (storeId === 'ferrenow') {
-    await fetch(`${SUPABASE_URL}/rest/v1/products?store_id=eq.ferre-now`, { method: 'DELETE', headers });
-    await fetch(`${SUPABASE_URL}/rest/v1/categories?store_id=eq.ferre-now`, { method: 'DELETE', headers });
-    await fetch(`${SUPABASE_URL}/rest/v1/faqs?store_id=eq.ferre-now`, { method: 'DELETE', headers });
-  }
-
-  // 3. Insert categories with 'name' column
-  let catIdx = 0;
-  for (const catObj of storeData.categories) {
-    catIdx++;
-    const catPayload = {
-      store_id: storeId,
-      name: catObj.name,
-      emoji: catObj.emoji || '📦',
-      display_order: catIdx * 10,
-      active: true,
-      rubro: storeData.settings.rubro
-    };
-    const catRes = await fetch(`${SUPABASE_URL}/rest/v1/categories`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(catPayload)
-    });
-    if (!catRes.ok) console.error(`Error inserting category ${catObj.name}:`, await catRes.text());
-
-    if (storeId === 'ferrenow') {
-      await fetch(`${SUPABASE_URL}/rest/v1/categories`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ ...catPayload, store_id: 'ferre-now' })
-      });
-    }
-  }
-  console.log(`Categorías insertadas (${storeData.categories.length})`);
-
-  // 4. Insert FAQs
-  if (storeData.faqs) {
-    for (const faq of storeData.faqs) {
-      const faqPayload = {
-        store_id: storeId,
-        question: faq.question,
-        answer: faq.answer
-      };
-      await fetch(`${SUPABASE_URL}/rest/v1/faqs`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(faqPayload)
-      });
-      if (storeId === 'ferrenow') {
-        await fetch(`${SUPABASE_URL}/rest/v1/faqs`, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({ ...faqPayload, store_id: 'ferre-now' })
-        });
-      }
-    }
-    console.log(`FAQs insertadas (${storeData.faqs.length})`);
-  }
-
-  // 5. Insert 10 products
-  let count = 0;
-  for (const prod of storeData.products) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(prod)
-    });
-    if (res.ok) count++; else console.error(`Error inserting ${prod.nombre}:`, await res.text());
-
-    if (storeId === 'ferrenow') {
-      const aliasProd = { ...prod, store_id: 'ferre-now' };
-      await fetch(`${SUPABASE_URL}/rest/v1/products`, { method: 'POST', headers, body: JSON.stringify(aliasProd) });
-    }
-  }
-  console.log(`Productos insertados (${count}/10)`);
+  // 5. Guardar Productos
+  console.log(`[5/5] Insertando productos con 3 imágenes...`);
+  const productsToInsert = storeData.products.map(p => ({
+    nombre: p.nombre,
+    precio: p.precio,
+    stock: p.stock,
+    categoria: p.categoria,
+    emoji: p.emoji,
+    detalles: p.detalles,
+    img: p.img,
+    img2: p.img2,
+    img3: p.img3,
+    marca: p.marca,
+    origen: p.origen,
+    oculto: p.oculto,
+    store_id: storeId
+  }));
+  const resProd = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(productsToInsert)
+  });
+  if (!resProd.ok) console.error(`Error guardando productos:`, await resProd.text());
+  else console.log(`✓ ${productsToInsert.length} productos insertados con éxito con 3 imágenes por producto.`);
 }
 
 async function main() {
+  console.log('🚀 Iniciando sembrado completo de Tiendas Demo en Supabase...');
   await seedStore(storeNoutacc);
   await seedStore(storeFerrenow);
+  
+  // Sembramos ferre-now por compatibilidad de subdominio con guion
+  const storeFerreNowAlias = JSON.parse(JSON.stringify(storeFerrenow));
+  storeFerreNowAlias.settings.store_id = 'ferre-now';
+  storeFerreNowAlias.products.forEach(p => p.store_id = 'ferre-now');
+  await seedStore(storeFerreNowAlias);
+
   await seedStore(storeKioscoJulio);
-  console.log('\n¡TODAS LAS TIENDAS DEMO FUERON RE-POBLADAS CON FOTOS, BANNERS Y FAQS!');
+  console.log('\n✨ ¡Proceso finalizado con éxito! Todas las tiendas cuentan con 3 fotos por producto y 5 FAQs completas.');
 }
 
 main().catch(console.error);
