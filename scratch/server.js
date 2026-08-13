@@ -373,11 +373,22 @@ const server = http.createServer(async (req, res) => {
       
       if (SUPABASE_KEY) {
         const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
-        const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}`, {
-          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-        });
-        if (configRes.ok) {
-          const data = await configRes.json();
+        const targetUrl = `${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}&apikey=${encodeURIComponent(SUPABASE_KEY)}`;
+        let configRes = null;
+        for (let attempt = 1; attempt <= 3; attempt++) {
+          try {
+            configRes = await fetch(targetUrl, {
+              headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+            });
+            if (configRes.ok) break;
+            if (attempt < 3) await new Promise(r => setTimeout(r, 300 * attempt));
+          } catch (e) {
+            if (attempt < 3) await new Promise(r => setTimeout(r, 300 * attempt));
+          }
+        }
+
+        if (configRes && configRes.ok) {
+          const data = await configRes.json().catch(() => []);
           if (data && data.length > 0) {
             const cfg = data[0];
             const title = cfg.business_name ? `${cfg.business_name} — Tu tienda online` : 'Dale! Te Pido';
@@ -390,6 +401,10 @@ const server = http.createServer(async (req, res) => {
           }
         }
       }
+
+      const initialScript = `<script>window.__INITIAL_STORE_ID__ = ${JSON.stringify(storeId)};</script>`;
+      html = html.replace('<head>', `<head>\n${initialScript}`);
+
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       return res.end(html);
     } catch (e) {

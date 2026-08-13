@@ -81,6 +81,14 @@ export default async function handler(req, res) {
     }
   }
 
+  // Extract from rawPath if not a root or static route
+  if (!storeId && rawPath !== '/' && rawPath !== '') {
+    const cleanPath = rawPath.replace(/^\//, '');
+    if (cleanPath && !cleanPath.includes('.') && !cleanPath.includes('/')) {
+      storeId = cleanPath;
+    }
+  }
+
   // If still no store ID (e.g. accessing raw localhost, or unrecognized domain), fallback to serving landing.html directly
   if (!storeId) {
     try {
@@ -93,7 +101,7 @@ export default async function handler(req, res) {
     }
   }
 
-  // 3. Render the store HTML with injected OG tags
+  // 3. Render the store HTML with injected OG tags and initial STORE_ID
   try {
     const filePath = path.join(process.cwd(), 'tienda.html');
     let html = fs.readFileSync(filePath, 'utf8');
@@ -103,13 +111,24 @@ export default async function handler(req, res) {
     const SUPABASE_KEY = keyMatch ? keyMatch[1] : '';
 
     if (SUPABASE_KEY) {
-      // Fetch store data
-      const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}`, {
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-      });
+      // Fetch store data with retries and apikey parameter
+      let configRes = null;
+      const targetUrl = `${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}&apikey=${encodeURIComponent(SUPABASE_KEY)}`;
       
-      if (configRes.ok) {
-        const data = await configRes.json();
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          configRes = await fetch(targetUrl, {
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+          });
+          if (configRes.ok) break;
+          if (attempt < 3) await new Promise(r => setTimeout(r, 300 * attempt));
+        } catch (e) {
+          if (attempt < 3) await new Promise(r => setTimeout(r, 300 * attempt));
+        }
+      }
+
+      if (configRes && configRes.ok) {
+        const data = await configRes.json().catch(() => []);
         if (data && data.length > 0) {
           const cfg = data[0];
           
@@ -134,6 +153,10 @@ export default async function handler(req, res) {
         }
       }
     }
+
+    // Inject initial store ID script into HTML head
+    const initialScript = `<script>window.__INITIAL_STORE_ID__ = ${JSON.stringify(storeId)};</script>`;
+    html = html.replace('<head>', `<head>\n${initialScript}`);
 
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
