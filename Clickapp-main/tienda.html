@@ -1572,6 +1572,15 @@ async function loadSheet() {
     setStatus('ok', `${products.length} productos · catálogo actualizado`);
     document.getElementById('sync-time').textContent = new Date().toLocaleTimeString('es-AR');
     render();
+
+    // Auto-abrir producto si viene en la URL (?p=ID o ?producto=ID o #p=ID)
+    const targetPId = urlParams.get('p') || urlParams.get('producto') || urlParams.get('product') || (window.location.hash ? window.location.hash.replace(/^#p=|^#producto=|^#product=|^#/, '') : null);
+    if (targetPId) {
+      const foundP = findProduct(targetPId);
+      if (foundP) {
+        setTimeout(() => openProductDrawer(foundP.id), 250);
+      }
+    }
   } catch(e) {
     setStatus('err', 'Error al cargar el catálogo');
     console.error(e);
@@ -1620,7 +1629,8 @@ function render() {
     return `
     <div class="product-card ${p.stock <= 0 ? 'out-of-stock' : ''}" style="animation-delay:${Math.min(i,12)*30}ms;cursor:pointer;"
       onclick='openProductDrawer(${JSON.stringify(p.id)})'>
-      <div class="product-img">
+      <div class="product-img" style="position:relative;">
+        <button type="button" class="card-share-btn" onclick='event.stopPropagation(); shareProduct(${JSON.stringify(p.id)})' title="Compartir producto" style="position:absolute;top:8px;right:8px;z-index:2;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;padding:0;line-height:1;"><i class="bi bi-share"></i></button>
         ${p.img
           ? `<img src="${optimizeImg(p.img)}" alt="${p.name}" loading="lazy" class="main-img" onerror="this.style.display='none';this.parentElement.querySelector('.product-img-fallback').style.display='flex'"/>
              ${p.img2 ? `<img src="${optimizeImg(p.img2)}" alt="${p.name} detalle" loading="lazy" class="hover-img"/>` : ''}
@@ -2058,13 +2068,14 @@ function openProductDrawer(id) {
 
   const body = document.getElementById('pdrawer-body');
   body.innerHTML = `
-    <div class="pdrawer-badges">
+    <div class="pdrawer-badges" style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;">
       <span class="pdrawer-badge">${p.cat||'General'}</span>
       ${p.marca?`<span class="pdrawer-badge"><i class="bi bi-tag"></i> ${p.marca}</span>`:''}
       ${flag?`<span class="pdrawer-badge">${flag} ${originName}</span>`:''}
       <span class="pdrawer-badge">
         ${p.stock===0?'<span style="color:var(--red);">Sin stock</span>':`Stock: ${p.stock} uds.`}
       </span>
+      <button type="button" class="pdrawer-share-btn" onclick="shareProduct('${p.id}')" title="Compartir enlace de este producto" style="margin-left:auto;background:var(--zinc);border:1px solid rgba(255,255,255,0.15);color:var(--white);border-radius:12px;padding:4px 10px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer;"><i class="bi bi-share"></i> Compartir</button>
     </div>
     <div class="pdrawer-name">${p.name}</div>
     <div class="pdrawer-price" id="pdrawer-price-display" data-base-price="${p.price}" data-currency="${p.currency||p.divisa||'ARS'}"><small>${currSymbol}</small>${p.price.toLocaleString('es-AR')}</div>
@@ -2222,6 +2233,13 @@ function openProductDrawer(id) {
   document.getElementById('pdrawer-overlay').classList.add('open');
   document.getElementById('pdrawer').classList.add('open');
   document.body.style.overflow = 'hidden';
+
+  // Actualizar URL dinámicamente con ?p=ID sin recargar la página
+  try {
+    const curUrl = new URL(window.location.href);
+    curUrl.searchParams.set('p', p.id);
+    window.history.replaceState({ productDrawerId: p.id }, '', curUrl.toString());
+  } catch(e) {}
 }
 
 function addFromDrawer(id) {
@@ -2332,6 +2350,68 @@ function closeProductDrawer() {
   document.getElementById('pdrawer-overlay').classList.remove('open');
   document.getElementById('pdrawer').classList.remove('open');
   document.body.style.overflow = '';
+
+  // Limpiar parámetro ?p= de la URL al cerrar el modal
+  try {
+    const curUrl = new URL(window.location.href);
+    curUrl.searchParams.delete('p');
+    curUrl.searchParams.delete('producto');
+    curUrl.searchParams.delete('product');
+    window.history.replaceState({}, '', curUrl.toString());
+  } catch(e) {}
+}
+
+/* ═══════════════════════════════════════════ SHARE PRODUCT */
+function shareProduct(id) {
+  const p = findProduct(id);
+  if (!p) return;
+  const url = new URL(window.location.href);
+  url.searchParams.set('p', p.id);
+  const shareUrl = url.toString();
+  const title = p.name;
+  const curr = getCurrencySymbol(p.currency || p.divisa);
+  const priceStr = `${curr}${p.price.toLocaleString('es-AR')}`;
+  const text = `${p.name} - ${priceStr} en ${CFG.name || 'nuestra tienda'}`;
+
+  if (navigator.share && (!navigator.canShare || navigator.canShare({ title, text, url: shareUrl }))) {
+    navigator.share({
+      title: title,
+      text: text,
+      url: shareUrl
+    }).catch(err => {
+      if (err && err.name !== 'AbortError') {
+        copyToClipboardFallback(shareUrl);
+      }
+    });
+  } else {
+    copyToClipboardFallback(shareUrl);
+  }
+}
+
+function copyToClipboardFallback(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('🔗 ¡Enlace del producto copiado!');
+    }).catch(() => {
+      promptCopyFallback(text);
+    });
+  } else {
+    promptCopyFallback(text);
+  }
+}
+
+function promptCopyFallback(text) {
+  const input = document.createElement('input');
+  input.value = text;
+  document.body.appendChild(input);
+  input.select();
+  try {
+    document.execCommand('copy');
+    showToast('🔗 ¡Enlace del producto copiado!');
+  } catch (err) {
+    showToast('🔗 Copiá este enlace: ' + text);
+  }
+  document.body.removeChild(input);
 }
 
 function setCarouselSlide(index, total) {

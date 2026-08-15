@@ -132,10 +132,36 @@ export default async function handler(req, res) {
         if (data && data.length > 0) {
           const cfg = data[0];
           
-          const title = cfg.business_name ? `${cfg.business_name} — Tu tienda online` : 'Dale! Te Pido';
-          const desc = cfg.desc || 'Elegí tus productos, armá tu pedido y coordiná por WhatsApp.';
-          const logo = cfg.logo || 'https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png';
-          const url = `https://${storeId}.daletepido.com.ar/`;
+          let title = cfg.business_name ? `${cfg.business_name} — Tu tienda online` : 'Dale! Te Pido';
+          let desc = cfg.desc || 'Elegí tus productos, armá tu pedido y coordiná por WhatsApp.';
+          let logo = cfg.logo || 'https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png';
+          let url = `https://${storeId}.daletepido.com.ar/`;
+
+          const productId = req.query.p || req.query.producto || req.query.product;
+          if (productId) {
+            try {
+              const prodUrl = `${SUPABASE_URL}/rest/v1/products?store_id=eq.${encodeURIComponent(storeId)}&id=eq.${encodeURIComponent(productId)}&apikey=${encodeURIComponent(SUPABASE_KEY)}`;
+              const prodRes = await fetch(prodUrl, {
+                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+              });
+              if (prodRes.ok) {
+                const prods = await prodRes.json().catch(() => []);
+                if (prods && prods.length > 0) {
+                  const p = prods[0];
+                  if (p.nombre) {
+                    const symbol = p.divisa === 'USD' ? 'US$' : '$';
+                    const priceFormatted = p.precio ? `${symbol}${parseFloat(p.precio).toLocaleString('es-AR')}` : '';
+                    title = `${p.nombre} ${priceFormatted ? '— ' + priceFormatted : ''} | ${cfg.business_name || 'Tienda'}`;
+                    desc = p.detalles || p.detalle || desc;
+                    if (p.img) logo = p.img;
+                    url = `https://${storeId}.daletepido.com.ar/?p=${encodeURIComponent(p.id)}`;
+                  }
+                }
+              }
+            } catch(e) {
+              console.warn('Error fetching product for OG tags:', e.message);
+            }
+          }
 
           // Replace title
           html = html.replace(/<title>.*?<\/title>/, `<title>${title}</title>`);
