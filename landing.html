@@ -95,7 +95,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
-        :root { --red:#D60000; --red-dark:#a30000; --red-light:#ff3a3a; --dark:#0f0d0d; --dark-2:#1a1515; --white:#ffffff; --fog:#f7f4f4; --silver:#9a8f8f; --zinc:#2e2626; }
+        :root { --red:#D60000; --red-dark:#a30000; --red-light:#ff3a3a; --dark:#0f0d0d; --dark-2:#1a1515; --white:#ffffff; --fog:#f4f5f8; --silver:#475569; --zinc:#2e2626; }
         * { box-sizing:border-box; margin:0; padding:0; }
         html { scroll-behavior:smooth; }
         body { font-family:'Poppins',sans-serif; background:var(--white); color:var(--dark); overflow-x:hidden; line-height:1.6; }
@@ -225,23 +225,23 @@
         .logo-strip-item span { font-size:20px; }
         section { padding:80px 24px; }
         .section-label { font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--red); margin-bottom:12px; }
-        .section-title { font-size:clamp(1.8rem,4vw,2.8rem); font-weight:800; letter-spacing:-1px; margin-bottom:14px; line-height:1.15; }
-        .section-sub { font-size:1.05rem; color:var(--silver); max-width:520px; }
+        .section-title { font-size:clamp(1.8rem,4vw,2.8rem); font-weight:800; letter-spacing:-1px; margin-bottom:14px; line-height:1.15; color:#0f172a; }
+        .section-sub { font-size:1.05rem; color:#475569; max-width:520px; line-height:1.6; }
         .container { max-width:1100px; margin:0 auto; }
         .how-section { background:var(--fog); }
         .steps-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:24px; margin-top:52px; }
-        .step-card { background:var(--white); border:1px solid #e8e3e3; border-radius:16px; padding:28px; transition:transform .2s,box-shadow .2s; }
+        .step-card { background:var(--white); border:1px solid #e2e8f0; border-radius:16px; padding:28px; transition:transform .2s,box-shadow .2s; box-shadow:0 6px 20px rgba(0,0,0,0.03); }
         .step-card:hover { transform:translateY(-4px); box-shadow:0 12px 40px rgba(0,0,0,0.08); }
         .step-num { width:40px; height:40px; background:var(--red); color:var(--white); border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px; margin-bottom:18px; }
-        .step-card h3 { font-size:1.05rem; font-weight:700; margin-bottom:8px; }
-        .step-card p { font-size:14px; color:var(--silver); line-height:1.55; }
+        .step-card h3 { font-size:1.05rem; font-weight:700; color:#0f172a; margin-bottom:8px; }
+        .step-card p { font-size:14px; color:#475569; line-height:1.55; }
         .features-section { background:var(--white); }
         .features-grid { display:grid; grid-template-columns:1fr 1fr; gap:48px; margin-top:52px; align-items:center; }
         .feature-list { list-style:none; display:flex; flex-direction:column; gap:20px; }
         .feature-item { display:flex; gap:16px; align-items:flex-start; }
         .feature-icon { width:42px; height:42px; min-width:42px; background:rgba(214,0,0,0.08); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; }
-        .feature-item h4 { font-size:15px; font-weight:700; margin-bottom:4px; }
-        .feature-item p { font-size:13px; color:var(--silver); line-height:1.5; }
+        .feature-item h4 { font-size:15px; font-weight:700; color:#0f172a; margin-bottom:4px; }
+        .feature-item p { font-size:13px; color:#475569; line-height:1.5; }
         .mockup-box { background:var(--dark); border-radius:24px; padding:6px; box-shadow:0 32px 80px rgba(0,0,0,0.25); overflow:hidden; }
         .mockup-inner { background:linear-gradient(145deg,#1a1515,#0f0d0d); border-radius:18px; padding:24px; min-height:380px; display:flex; flex-direction:column; gap:10px; }
         .mock-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
@@ -278,16 +278,16 @@
         .testimonial-role { font-size:11px; color:var(--silver); }
         .pricing-section { background:var(--white); }
         .pricing-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; margin-top:52px; max-width:1080px; margin-left:auto; margin-right:auto; }
-        .price-card { border:2px solid #e8e3e3; border-radius:20px; padding:32px; text-align:center; position:relative; transition:transform .2s,box-shadow .2s; }
-        .price-card:hover { transform:translateY(-4px); box-shadow:0 16px 48px rgba(0,0,0,0.1); }
+        .price-card { border:2px solid #e2e8f0; border-radius:20px; padding:32px; text-align:center; position:relative; transition:transform .2s,box-shadow .2s; background:#ffffff; box-shadow:0 6px 24px rgba(0,0,0,0.03); }
+        .price-card:hover { transform:translateY(-4px); box-shadow:0 16px 48px rgba(0,0,0,0.08); }
         .price-card.featured { border-color:var(--red); box-shadow:0 8px 40px rgba(214,0,0,0.15); }
         .price-badge { position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:var(--red); color:var(--white); font-size:11px; font-weight:700; letter-spacing:.06em; padding:4px 14px; border-radius:999px; white-space:nowrap; }
-        .price-name { font-size:13px; font-weight:600; color:var(--silver); text-transform:uppercase; letter-spacing:.08em; margin-bottom:12px; }
-        .price-amount { font-size:3rem; font-weight:800; letter-spacing:-2px; margin-bottom:6px; }
-        .price-amount small { font-size:1rem; font-weight:400; color:var(--silver); letter-spacing:0; }
-        .price-period { font-size:13px; color:var(--silver); margin-bottom:24px; }
+        .price-name { font-size:13px; font-weight:700; color:#0f172a; text-transform:uppercase; letter-spacing:.08em; margin-bottom:12px; }
+        .price-amount { font-size:3rem; font-weight:800; letter-spacing:-2px; margin-bottom:6px; color:#0f172a; }
+        .price-amount small { font-size:1rem; font-weight:500; color:#475569; letter-spacing:0; }
+        .price-period { font-size:13px; color:#475569; margin-bottom:24px; }
         .price-features { list-style:none; text-align:left; margin-bottom:28px; display:flex; flex-direction:column; gap:10px; }
-        .price-features li { font-size:13.5px; display:flex; align-items:center; gap:8px; }
+        .price-features li { font-size:13.5px; display:flex; align-items:center; gap:8px; color:#334155; }
         .price-features li::before { content:'â'; color:var(--red); font-weight:800; font-size:14px; }
         .price-cta { display:block; width:100%; padding:12px; border-radius:10px; font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; border:2px solid var(--red); background:transparent; color:var(--red); transition:background .2s,color .2s; }
         .price-cta:hover { background:var(--red); color:var(--white); }
@@ -408,93 +408,93 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px;">
                 
                 <!-- DEMO 1: NOUTACC -->
-                <div class="demo-card" style="background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(119, 197, 159, 0.25); border-radius: 24px; padding: 28px; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; position: relative; overflow: hidden;" onmouseenter="this.style.transform='translateY(-6px)'; this.style.borderColor='#77C59F'; this.style.boxShadow='0 20px 40px rgba(119, 197, 159, 0.15)';" onmouseleave="this.style.transform='translateY(0)'; this.style.borderColor='rgba(119, 197, 159, 0.25)'; this.style.boxShadow='none';">
-                    <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: rgba(119, 197, 159, 0.15); border-radius: 50%; filter: blur(20px);"></div>
+                <div class="demo-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 24px; padding: 28px; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.04);" onmouseenter="this.style.transform='translateY(-6px)'; this.style.borderColor='#059669'; this.style.boxShadow='0 20px 40px rgba(5, 150, 105, 0.12)';" onmouseleave="this.style.transform='translateY(0)'; this.style.borderColor='#e2e8f0'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.04)';">
+                    <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: rgba(5, 150, 105, 0.08); border-radius: 50%; filter: blur(20px);"></div>
                     <div>
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-                            <span style="font-size: 36px; background: rgba(119, 197, 159, 0.15); border: 1px solid rgba(119, 197, 159, 0.3); width: 64px; height: 64px; border-radius: 16px; display: flex; align-items: center; justify-content: center;">🍞</span>
-                            <span style="background: rgba(119, 197, 159, 0.15); color: #77C59F; border: 1px solid rgba(119, 197, 159, 0.3); font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 4px 12px; border-radius: 99px;">
+                            <span style="font-size: 36px; background: rgba(5, 150, 105, 0.1); border: 1px solid rgba(5, 150, 105, 0.25); width: 64px; height: 64px; border-radius: 16px; display: flex; align-items: center; justify-content: center;">🍞</span>
+                            <span style="background: rgba(5, 150, 105, 0.1); color: #047857; border: 1px solid rgba(5, 150, 105, 0.25); font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 4px 12px; border-radius: 99px;">
                                 🌿 Sin TACC & Deli
                             </span>
                         </div>
-                        <h3 style="font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 4px;">Noutacc - 100% Sin TACC</h3>
-                        <div style="display: inline-flex; align-items: center; gap: 6px; font-family: monospace; font-size: 12px; color: #77C59F; background: rgba(119, 197, 159, 0.12); border: 1px solid rgba(119, 197, 159, 0.25); padding: 4px 10px; border-radius: 8px; margin-bottom: 12px;">
+                        <h3 style="font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Noutacc - 100% Sin TACC</h3>
+                        <div style="display: inline-flex; align-items: center; gap: 6px; font-family: monospace; font-size: 12px; color: #047857; background: rgba(5, 150, 105, 0.08); border: 1px solid rgba(5, 150, 105, 0.2); padding: 4px 10px; border-radius: 8px; margin-bottom: 12px;">
                             <i class="bi bi-globe"></i> noutacc.daletepido.com.ar
                         </div>
-                        <p style="font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.55; margin-bottom: 24px;">
+                        <p style="font-size: 14px; color: #475569; line-height: 1.55; margin-bottom: 24px;">
                             Catálogo especializado con productos 100% libres de gluten: panadería, rotisería, salados y delicias pasteleras sin contaminación cruzada.
                         </p>
                     </div>
 
                     <div>
-                        <div style="display: flex; align-items: center; gap: 12px; font-size: 12px; color: rgba(255,255,255,0.5); border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-bottom: 20px;">
-                            <span><i class="bi bi-geo-alt-fill" style="color:#77C59F;"></i> Córdoba</span>
+                        <div style="display: flex; align-items: center; gap: 12px; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 16px; margin-bottom: 20px;">
+                            <span><i class="bi bi-geo-alt-fill" style="color:#047857;"></i> Córdoba</span>
                             <span>•</span>
-                            <span><i class="bi bi-clock-fill" style="color:#77C59F;"></i> Lun-Sáb</span>
+                            <span><i class="bi bi-clock-fill" style="color:#047857;"></i> Lun-Sáb</span>
                         </div>
-                        <a href="https://noutacc.daletepido.com.ar/" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px 20px; background: #77C59F; color: #0A0A0C; font-weight: 800; font-size: 14px; text-decoration: none; border-radius: 14px; transition: all 0.2s ease; box-shadow: 0 4px 15px rgba(119, 197, 159, 0.3);" onmouseenter="this.style.opacity='0.9'; this.style.transform='scale(1.02)'" onmouseleave="this.style.opacity='1'; this.style.transform='scale(1)'">
+                        <a href="https://noutacc.daletepido.com.ar/" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px 20px; background: #059669; color: #ffffff; font-weight: 800; font-size: 14px; text-decoration: none; border-radius: 14px; transition: all 0.2s ease; box-shadow: 0 4px 15px rgba(5, 150, 105, 0.25);" onmouseenter="this.style.opacity='0.9'; this.style.transform='scale(1.02)'" onmouseleave="this.style.opacity='1'; this.style.transform='scale(1)'">
                             <i class="bi bi-box-arrow-up-right"></i> Abrir noutacc.daletepido.com.ar
                         </a>
                     </div>
                 </div>
 
                 <!-- DEMO 2: FERRENOW -->
-                <div class="demo-card" style="background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(255, 107, 0, 0.25); border-radius: 24px; padding: 28px; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; position: relative; overflow: hidden;" onmouseenter="this.style.transform='translateY(-6px)'; this.style.borderColor='#FF6B00'; this.style.boxShadow='0 20px 40px rgba(255, 107, 0, 0.15)';" onmouseleave="this.style.transform='translateY(0)'; this.style.borderColor='rgba(255, 107, 0, 0.25)'; this.style.boxShadow='none';">
-                    <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: rgba(255, 107, 0, 0.15); border-radius: 50%; filter: blur(20px);"></div>
+                <div class="demo-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 24px; padding: 28px; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.04);" onmouseenter="this.style.transform='translateY(-6px)'; this.style.borderColor='#ea580c'; this.style.boxShadow='0 20px 40px rgba(234, 88, 12, 0.12)';" onmouseleave="this.style.transform='translateY(0)'; this.style.borderColor='#e2e8f0'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.04)';">
+                    <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: rgba(234, 88, 12, 0.08); border-radius: 50%; filter: blur(20px);"></div>
                     <div>
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-                            <span style="font-size: 36px; background: rgba(255, 107, 0, 0.15); border: 1px solid rgba(255, 107, 0, 0.3); width: 64px; height: 64px; border-radius: 16px; display: flex; align-items: center; justify-content: center;">🛠️</span>
-                            <span style="background: rgba(255, 107, 0, 0.15); color: #FF6B00; border: 1px solid rgba(255, 107, 0, 0.3); font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 4px 12px; border-radius: 99px;">
+                            <span style="font-size: 36px; background: rgba(234, 88, 12, 0.1); border: 1px solid rgba(234, 88, 12, 0.25); width: 64px; height: 64px; border-radius: 16px; display: flex; align-items: center; justify-content: center;">🛠️</span>
+                            <span style="background: rgba(234, 88, 12, 0.1); color: #c2410c; border: 1px solid rgba(234, 88, 12, 0.25); font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 4px 12px; border-radius: 99px;">
                                 🔧 Ferretería & Pro
                             </span>
                         </div>
-                        <h3 style="font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 4px;">FerreNow Herramientas</h3>
-                        <div style="display: inline-flex; align-items: center; gap: 6px; font-family: monospace; font-size: 12px; color: #FF6B00; background: rgba(255, 107, 0, 0.12); border: 1px solid rgba(255, 107, 0, 0.25); padding: 4px 10px; border-radius: 8px; margin-bottom: 12px;">
+                        <h3 style="font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">FerreNow Herramientas</h3>
+                        <div style="display: inline-flex; align-items: center; gap: 6px; font-family: monospace; font-size: 12px; color: #c2410c; background: rgba(234, 88, 12, 0.08); border: 1px solid rgba(234, 88, 12, 0.2); padding: 4px 10px; border-radius: 8px; margin-bottom: 12px;">
                             <i class="bi bi-globe"></i> ferrenow.daletepido.com.ar
                         </div>
-                        <p style="font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.55; margin-bottom: 24px;">
+                        <p style="font-size: 14px; color: #475569; line-height: 1.55; margin-bottom: 24px;">
                             Catálogo completo de herramientas eléctricas, manuales, electricidad, pintura e insumos con stock y especificaciones técnicas.
                         </p>
                     </div>
 
                     <div>
-                        <div style="display: flex; align-items: center; gap: 12px; font-size: 12px; color: rgba(255,255,255,0.5); border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-bottom: 20px;">
-                            <span><i class="bi bi-geo-alt-fill" style="color:#FF6B00;"></i> Buenos Aires</span>
+                        <div style="display: flex; align-items: center; gap: 12px; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 16px; margin-bottom: 20px;">
+                            <span><i class="bi bi-geo-alt-fill" style="color:#c2410c;"></i> Buenos Aires</span>
                             <span>•</span>
-                            <span><i class="bi bi-clock-fill" style="color:#FF6B00;"></i> Envíos en el Día</span>
+                            <span><i class="bi bi-clock-fill" style="color:#c2410c;"></i> Envíos en el Día</span>
                         </div>
-                        <a href="https://ferrenow.daletepido.com.ar/" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px 20px; background: #FF6B00; color: #fff; font-weight: 800; font-size: 14px; text-decoration: none; border-radius: 14px; transition: all 0.2s ease; box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);" onmouseenter="this.style.opacity='0.9'; this.style.transform='scale(1.02)'" onmouseleave="this.style.opacity='1'; this.style.transform='scale(1)'">
+                        <a href="https://ferrenow.daletepido.com.ar/" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px 20px; background: #ea580c; color: #ffffff; font-weight: 800; font-size: 14px; text-decoration: none; border-radius: 14px; transition: all 0.2s ease; box-shadow: 0 4px 15px rgba(234, 88, 12, 0.25);" onmouseenter="this.style.opacity='0.9'; this.style.transform='scale(1.02)'" onmouseleave="this.style.opacity='1'; this.style.transform='scale(1)'">
                             <i class="bi bi-box-arrow-up-right"></i> Abrir ferrenow.daletepido.com.ar
                         </a>
                     </div>
                 </div>
 
                 <!-- DEMO 3: KIOSCO JULIO -->
-                <div class="demo-card" style="background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(233, 30, 99, 0.25); border-radius: 24px; padding: 28px; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; position: relative; overflow: hidden;" onmouseenter="this.style.transform='translateY(-6px)'; this.style.borderColor='#E91E63'; this.style.boxShadow='0 20px 40px rgba(233, 30, 99, 0.15)';" onmouseleave="this.style.transform='translateY(0)'; this.style.borderColor='rgba(233, 30, 99, 0.25)'; this.style.boxShadow='none';">
-                    <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: rgba(233, 30, 99, 0.15); border-radius: 50%; filter: blur(20px);"></div>
+                <div class="demo-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 24px; padding: 28px; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.04);" onmouseenter="this.style.transform='translateY(-6px)'; this.style.borderColor='#be185d'; this.style.boxShadow='0 20px 40px rgba(190, 24, 93, 0.12)';" onmouseleave="this.style.transform='translateY(0)'; this.style.borderColor='#e2e8f0'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.04)';">
+                    <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: rgba(219, 39, 119, 0.08); border-radius: 50%; filter: blur(20px);"></div>
                     <div>
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-                            <span style="font-size: 36px; background: rgba(233, 30, 99, 0.15); border: 1px solid rgba(233, 30, 99, 0.3); width: 64px; height: 64px; border-radius: 16px; display: flex; align-items: center; justify-content: center;">🍬</span>
-                            <span style="background: rgba(233, 30, 99, 0.15); color: #E91E63; border: 1px solid rgba(233, 30, 99, 0.3); font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 4px 12px; border-radius: 99px;">
+                            <span style="font-size: 36px; background: rgba(219, 39, 119, 0.1); border: 1px solid rgba(219, 39, 119, 0.25); width: 64px; height: 64px; border-radius: 16px; display: flex; align-items: center; justify-content: center;">🍬</span>
+                            <span style="background: rgba(219, 39, 119, 0.1); color: #be185d; border: 1px solid rgba(219, 39, 119, 0.25); font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 4px 12px; border-radius: 99px;">
                                 🥤 Kiosco 24hs
                             </span>
                         </div>
-                        <h3 style="font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 4px;">Kiosco Julio 24hs</h3>
-                        <div style="display: inline-flex; align-items: center; gap: 6px; font-family: monospace; font-size: 12px; color: #E91E63; background: rgba(233, 30, 99, 0.12); border: 1px solid rgba(233, 30, 99, 0.25); padding: 4px 10px; border-radius: 8px; margin-bottom: 12px;">
+                        <h3 style="font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Kiosco Julio 24hs</h3>
+                        <div style="display: inline-flex; align-items: center; gap: 6px; font-family: monospace; font-size: 12px; color: #be185d; background: rgba(219, 39, 119, 0.08); border: 1px solid rgba(219, 39, 119, 0.2); padding: 4px 10px; border-radius: 8px; margin-bottom: 12px;">
                             <i class="bi bi-globe"></i> kioscojulio.daletepido.com.ar
                         </div>
-                        <p style="font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.55; margin-bottom: 24px;">
+                        <p style="font-size: 14px; color: #475569; line-height: 1.55; margin-bottom: 24px;">
                             Catálogo dinámico de golosinas, chocolates, energizantes, snacks y bebidas heladas listo para recibir pedidos al instante.
                         </p>
                     </div>
 
                     <div>
-                        <div style="display: flex; align-items: center; gap: 12px; font-size: 12px; color: rgba(255,255,255,0.5); border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-bottom: 20px;">
-                            <span><i class="bi bi-geo-alt-fill" style="color:#E91E63;"></i> Buenos Aires</span>
+                        <div style="display: flex; align-items: center; gap: 12px; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 16px; margin-bottom: 20px;">
+                            <span><i class="bi bi-geo-alt-fill" style="color:#be185d;"></i> Buenos Aires</span>
                             <span>•</span>
-                            <span><i class="bi bi-clock-fill" style="color:#E91E63;"></i> Abierto 24hs</span>
+                            <span><i class="bi bi-clock-fill" style="color:#be185d;"></i> Abierto 24hs</span>
                         </div>
-                        <a href="https://kioscojulio.daletepido.com.ar/" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px 20px; background: #E91E63; color: #fff; font-weight: 800; font-size: 14px; text-decoration: none; border-radius: 14px; transition: all 0.2s ease; box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);" onmouseenter="this.style.opacity='0.9'; this.style.transform='scale(1.02)'" onmouseleave="this.style.opacity='1'; this.style.transform='scale(1)'">
+                        <a href="https://kioscojulio.daletepido.com.ar/" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px 20px; background: #be185d; color: #ffffff; font-weight: 800; font-size: 14px; text-decoration: none; border-radius: 14px; transition: all 0.2s ease; box-shadow: 0 4px 15px rgba(190, 24, 93, 0.25);" onmouseenter="this.style.opacity='0.9'; this.style.transform='scale(1.02)'" onmouseleave="this.style.opacity='1'; this.style.transform='scale(1)'">
                             <i class="bi bi-box-arrow-up-right"></i> Abrir kioscojulio.daletepido.com.ar
                         </a>
                     </div>
