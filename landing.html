@@ -73,6 +73,30 @@
             "@type": "Answer",
             "text": "Para nada. El sistema te guía paso a paso y en menos de 15 minutos tenés tu catálogo activo listo para publicar en Instagram o imprimir tu código QR."
           }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo personalizar la imagen, logo y categorías de mi tienda?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Desde tu Panel de Control podés cargar tu logotipo, banner de portada, definir tu color de marca, actualizar precios en tiempo real y crear categorías ilimitadas."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué incluye el Código QR y Kit Imprimible?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Incluye tu código QR único vectorizado en alta definición y diseños listos para imprimir en stands de mostrador, vinilos para vidriera y cartelería para tu local físico."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Los enlaces de mis productos se pueden compartir individualmente?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "¡Totalmente! Cada producto tiene su propio enlace profundo de compartir. Al enviarlo por WhatsApp o publicar en redes sociales, genera automáticamente la tarjeta con foto, título y precio."
+          }
         }
       ]
     }
@@ -859,6 +883,93 @@
         </div>
     </section>
 
+    <!-- ── SECCIÓN PREGUNTAS FRECUENTES (FAQ) ── -->
+    <section id="faq-section" style="background: #ffffff; padding: 90px 24px; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;">
+        <div class="container" style="max-width: 860px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 50px;">
+                <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(214,0,0,0.08); border: 1px solid rgba(214,0,0,0.25); color: var(--red); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; padding: 6px 16px; border-radius: 999px; margin-bottom: 14px;">
+                    ❓ RESOLVEMOS TUS DUDAS
+                </div>
+                <h2 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: #0f172a; letter-spacing: -1px; margin-bottom: 12px;">
+                    Preguntas Frecuentes (FAQ)
+                </h2>
+                <p style="font-size: 16px; color: #475569; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+                    Todo lo que necesitás saber sobre cómo funciona Dale! Te Pido, los pagos y la entrega de pedidos.
+                </p>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 16px;" id="faq-accordion">
+                
+                <!-- FAQ Item 1 -->
+                <div class="faq-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s;">
+                    <button type="button" onclick="toggleFaq(this)" style="width: 100%; text-align: left; padding: 22px 28px; background: transparent; border: none; font-size: 17px; font-weight: 700; color: #0f172a; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-family: inherit;">
+                        <span>¿Tiene algún costo de comisión por cada venta que realice?</span>
+                        <i class="bi bi-chevron-down faq-icon" style="font-size: 18px; color: var(--red); transition: transform 0.3s ease;"></i>
+                    </button>
+                    <div class="faq-answer" style="display: none; padding: 0 28px 24px 28px; color: #475569; font-size: 15px; line-height: 1.6; border-top: 1px solid #f1f5f9; padding-top: 16px;">
+                        No. Dale! Te Pido cobra una tarifa fija o podés empezar con el plan gratuito. Toda la ganancia de tus ventas es 100% tuya, sin intermediarios ni porcentajes sobre tus presupuestos.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="faq-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s;">
+                    <button type="button" onclick="toggleFaq(this)" style="width: 100%; text-align: left; padding: 22px 28px; background: transparent; border: none; font-size: 17px; font-weight: 700; color: #0f172a; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-family: inherit;">
+                        <span>¿Cómo reciben los clientes su pedido por WhatsApp?</span>
+                        <i class="bi bi-chevron-down faq-icon" style="font-size: 18px; color: var(--red); transition: transform 0.3s ease;"></i>
+                    </button>
+                    <div class="faq-answer" style="display: none; padding: 0 28px 24px 28px; color: #475569; font-size: 15px; line-height: 1.6; border-top: 1px solid #f1f5f9; padding-top: 16px;">
+                        El cliente ingresa a tu catálogo digital desde su celular o computadora, selecciona productos y cantidades, y al hacer clic en "Enviar Pedido", se le abre automáticamente tu chat de WhatsApp con el mensaje estructurado y el total calculado.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="faq-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s;">
+                    <button type="button" onclick="toggleFaq(this)" style="width: 100%; text-align: left; padding: 22px 28px; background: transparent; border: none; font-size: 17px; font-weight: 700; color: #0f172a; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-family: inherit;">
+                        <span>¿Necesito conocimientos técnicos para crear mi catálogo?</span>
+                        <i class="bi bi-chevron-down faq-icon" style="font-size: 18px; color: var(--red); transition: transform 0.3s ease;"></i>
+                    </button>
+                    <div class="faq-answer" style="display: none; padding: 0 28px 24px 28px; color: #475569; font-size: 15px; line-height: 1.6; border-top: 1px solid #f1f5f9; padding-top: 16px;">
+                        Para nada. El sistema te guía paso a paso y en menos de 15 minutos tenés tu catálogo activo listo para publicar en Instagram o imprimir tu código QR.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="faq-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s;">
+                    <button type="button" onclick="toggleFaq(this)" style="width: 100%; text-align: left; padding: 22px 28px; background: transparent; border: none; font-size: 17px; font-weight: 700; color: #0f172a; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-family: inherit;">
+                        <span>¿Puedo personalizar la imagen, logo y categorías de mi tienda?</span>
+                        <i class="bi bi-chevron-down faq-icon" style="font-size: 18px; color: var(--red); transition: transform 0.3s ease;"></i>
+                    </button>
+                    <div class="faq-answer" style="display: none; padding: 0 28px 24px 28px; color: #475569; font-size: 15px; line-height: 1.6; border-top: 1px solid #f1f5f9; padding-top: 16px;">
+                        Sí. Desde tu Panel de Control podés cargar tu logotipo, banner de portada, definir tu color de marca, actualizar precios en tiempo real y crear categorías ilimitadas.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 5 -->
+                <div class="faq-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s;">
+                    <button type="button" onclick="toggleFaq(this)" style="width: 100%; text-align: left; padding: 22px 28px; background: transparent; border: none; font-size: 17px; font-weight: 700; color: #0f172a; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-family: inherit;">
+                        <span>¿Qué incluye el Código QR y Kit Imprimible?</span>
+                        <i class="bi bi-chevron-down faq-icon" style="font-size: 18px; color: var(--red); transition: transform 0.3s ease;"></i>
+                    </button>
+                    <div class="faq-answer" style="display: none; padding: 0 28px 24px 28px; color: #475569; font-size: 15px; line-height: 1.6; border-top: 1px solid #f1f5f9; padding-top: 16px;">
+                        Incluye tu código QR único vectorizado en alta definición y diseños listos para imprimir en stands de mostrador, vinilos para vidriera y cartelería para tu local físico.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 6 -->
+                <div class="faq-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s;">
+                    <button type="button" onclick="toggleFaq(this)" style="width: 100%; text-align: left; padding: 22px 28px; background: transparent; border: none; font-size: 17px; font-weight: 700; color: #0f172a; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-family: inherit;">
+                        <span>¿Los enlaces de mis productos se pueden compartir individualmente?</span>
+                        <i class="bi bi-chevron-down faq-icon" style="font-size: 18px; color: var(--red); transition: transform 0.3s ease;"></i>
+                    </button>
+                    <div class="faq-answer" style="display: none; padding: 0 28px 24px 28px; color: #475569; font-size: 15px; line-height: 1.6; border-top: 1px solid #f1f5f9; padding-top: 16px;">
+                        ¡Totalmente! Cada producto tiene su propio enlace profundo de compartir. Al enviarlo por WhatsApp o publicar en redes sociales, genera automáticamente la tarjeta con foto, título y precio.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
     <!-- SECCIÓN CTA DE ALTO IMPACTO: COMPROBADOR DE DISPONIBILIDAD -->
     <section id="cta-section-pro" class="cta-section-pro" style="background: linear-gradient(180deg, #0f0d0d 0%, #0A0A0C 100%); padding: 100px 24px; position: relative; overflow: hidden; border-top: 1px solid rgba(255,255,255,0.08);">
         <!-- Glows & background graphics -->
@@ -1040,6 +1151,29 @@
     </footer>
 
     <script>
+        function toggleFaq(btn) {
+            const item = btn.closest('.faq-item');
+            const answer = item.querySelector('.faq-answer');
+            const icon = btn.querySelector('.faq-icon');
+            
+            const isOpen = answer.style.display === 'block';
+            
+            // Cerrar todas las demás respuestas
+            document.querySelectorAll('#faq-accordion .faq-answer').forEach(ans => ans.style.display = 'none');
+            document.querySelectorAll('#faq-accordion .faq-icon').forEach(ic => ic.style.transform = 'rotate(0deg)');
+            document.querySelectorAll('#faq-accordion .faq-item').forEach(it => {
+                it.style.borderColor = '#e2e8f0';
+                it.style.boxShadow = 'none';
+            });
+
+            if (!isOpen) {
+                answer.style.display = 'block';
+                icon.style.transform = 'rotate(180deg)';
+                item.style.borderColor = 'var(--red)';
+                item.style.boxShadow = '0 8px 24px rgba(0,0,0,0.04)';
+            }
+        }
+
         function openRegisterModal() {
             document.getElementById('register-modal').style.display = 'flex';
         }
