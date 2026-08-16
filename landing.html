@@ -1,12 +1,83 @@
-<!-- DTP_VERSION_2026_08_06_V2 -->
+<!-- DTP_VERSION_2026_08_16_V3 -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dale! Te Pido — Tu catálogo online conectado a WhatsApp</title>
-    <meta name="description" content="Mostra tus productos online, arma pedidos y cerrá ventas por WhatsApp. Sin comisiones, listo en minutos.">
+    <title>Catálogo Digital para WhatsApp sin Comisiones | Dale! Te Pido</title>
+    <meta name="description" content="Creá tu catálogo digital interactivo en 15 minutos. Recibí pedidos organizados directamente en tu WhatsApp sin pagar comisiones por venta. Comenzá gratis hoy.">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://daletepido.com.ar/" />
+    <meta name="google-site-verification" content="GSC_VERIFICATION_TOKEN" />
+
+    <!-- Google Analytics 4 (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+    <!-- Schema Structured Data (JSON-LD): Organization & SoftwareApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Dale! Te Pido",
+      "operatingSystem": "All",
+      "applicationCategory": "BusinessApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "ARS"
+      },
+      "description": "Plataforma de catálogo digital interactivo conectado directamente a WhatsApp sin comisiones por venta.",
+      "url": "https://daletepido.com.ar/",
+      "author": {
+        "@type": "Organization",
+        "name": "Dale! Te Pido",
+        "url": "https://daletepido.com.ar/",
+        "logo": "https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png"
+      }
+    }
+    </script>
+
+    <!-- Schema Structured Data (JSON-LD): FAQPage -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Tiene algún costo de comisión por cada venta que realice?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Dale! Te Pido cobra una tarifa fija o podés empezar con el plan gratis. Toda la ganancia de tus ventas es 100% tuya, sin intermediarios ni porcentajes por presupuesto."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cómo reciben los clientes su pedido por WhatsApp?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El cliente ingresa a tu catálogo digital, agrega productos y variantes al carrito, y al hacer clic en enviar pedido, se le abre automáticamente un mensaje con la lista ordenada en tu chat de WhatsApp."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Necesito conocimientos técnicos para crear mi catálogo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Para nada. El sistema te guía paso a paso y en menos de 15 minutos tenés tu catálogo activo listo para publicar en Instagram o imprimir tu código QR."
+          }
+        }
+      ]
+    }
+    </script>
+
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0A0A0C">
     <meta name="mobile-web-app-capable" content="yes">
@@ -245,31 +316,46 @@
 
     <nav>
         <div class="nav-brand">
-            <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" class="nav-logo">
+            <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Logo de Dale! Te Pido - Plataforma de catálogos digitales" class="nav-logo">
         </div>
         <div class="nav-menu">
             <a href="#demo-stores-section" class="nav-link">Demos en Vivo</a>
             <a href="#how-section" class="nav-link">Cómo Funciona</a>
             <a href="#features-section" class="nav-link">Características</a>
             <a href="#pricing-section" class="nav-link">Planes</a>
-            <a href="#reviews-section" class="nav-link">Opiniones</a>
+            <a href="#faq-section" class="nav-link">Preguntas Frecuentes</a>
+            <a href="/ayuda" class="nav-link">Ayuda</a>
         </div>
         <div class="nav-actions">
-            <a href="/alta-usuario.html?action=login" class="nav-login">Iniciar Sesión</a>
-            <a href="#cta-section-pro" onclick="scrollToCtaSection(event)" class="nav-cta">🚀 Crear mi Tienda</a>
+            <button type="button" class="nav-share-btn" onclick="shareLandingPage()" style="background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15);padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;" title="Compartir plataforma"><i class="bi bi-share"></i> Compartir</button>
+            <a href="/alta-usuario?action=login" class="nav-login">Iniciar Sesión</a>
+            <a href="/alta-usuario" class="nav-cta">🚀 Crear Mi Catálogo</a>
         </div>
     </nav>
 
     <header class="hero">
         <canvas id="canvas-connections"></canvas>
         <div class="hero-content">
-            <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" style="max-width: 260px; width: 220px; height: auto; margin: 0 auto 1.2rem auto; display: block;">
+            <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Logo oficial de Dale! Te Pido" style="max-width: 260px; width: 220px; height: auto; margin: 0 auto 1.2rem auto; display: block;">
             <div class="hero-badge">⚡ 15 DÍAS DE PRUEBA GRATUITA · SIN COMISIONES POR VENTA</div>
-            <h1>Tu catálogo digital online<br>conectado directo a <span class="text-glow">WhatsApp</span></h1>
-            <p>Mostrá tus productos con fotos y precios en tiempo real. Recibí presupuestos y pedidos ordenados directamente en tu chat de WhatsApp sin pagar comisiones por venta.</p>
+            <h1>Vendé más con tu propio Catálogo Digital conectado a <span class="text-glow">WhatsApp</span></h1>
+            <p>Creamos la solución ideal para comercios, tiendas, ferreterías, indumentaria y gastronomía que buscan mostrar sus productos online y recibir pedidos organizados directamente en su WhatsApp sin intermediarios ni comisiones por venta.</p>
             <div class="hero-btns">
-                <a href="#cta-section-pro" onclick="scrollToCtaSection(event)" class="btn-primary"><i class="bi bi-rocket-takeoff-fill"></i> Empezar 15 Días Gratis</a>
+                <a href="/alta-usuario" class="btn-primary"><i class="bi bi-rocket-takeoff-fill"></i> Crear Mi Catálogo Gratis</a>
                 <a href="#demo-stores-section" class="btn-secondary"><i class="bi bi-shop"></i> Ver Demos en Vivo</a>
+            </div>
+
+            <!-- TL;DR / KEY TAKEAWAYS -->
+            <div class="tldr-box" style="max-width:760px; margin:32px auto 0; text-align:left; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:20px 24px; backdrop-filter:blur(10px);">
+                <div style="font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:#ff6666; margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+                    <span>⚡</span> PUNTOS CLAVE (TL;DR)
+                </div>
+                <ul style="list-style:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:10px; font-size:13.5px; color:rgba(255,255,255,0.85); line-height:1.5;">
+                    <li style="display:flex; align-items:start; gap:8px;"><span>✅</span> <span><strong>Listo en 15 minutos:</strong> Subí tus productos de forma rápida y empezá hoy.</span></li>
+                    <li style="display:flex; align-items:start; gap:8px;"><span>💰</span> <span><strong>0% Comisiones:</strong> Todo el cobro va directo a tu bolsillo sin retenciones.</span></li>
+                    <li style="display:flex; align-items:start; gap:8px;"><span>📲</span> <span><strong>Pedidos por WhatsApp:</strong> Recibí la lista completa lista para despachar.</span></li>
+                    <li style="display:flex; align-items:start; gap:8px;"><span>🔗</span> <span><strong>QR y Link propio:</strong> Imprimí tu cartel o compartilo en Instagram.</span></li>
+                </ul>
             </div>
             
             <div class="hero-stats-grid">
@@ -1518,7 +1604,40 @@
                 changeLandingJaimePose('empatia', 'Solo capacitado para Dale! Te Pido');
             }
         }
+
+        function shareLandingPage() {
+            const shareData = {
+                title: 'Dale! Te Pido — Catálogo Digital para WhatsApp',
+                text: 'Mostrá tus productos online, armá pedidos y recibilos directo en tu WhatsApp sin comisiones.',
+                url: 'https://daletepido.com.ar/'
+            };
+            if (navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
+                navigator.share(shareData).catch(() => {});
+            } else if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText('https://daletepido.com.ar/').then(() => {
+                    alert('🔗 ¡Enlace de Dale! Te Pido copiado al portapapeles!');
+                }).catch(() => {
+                    alert('🔗 Enlace: https://daletepido.com.ar/');
+                });
+            } else {
+                alert('🔗 Enlace: https://daletepido.com.ar/');
+            }
+        }
     </script>
+
+    <!-- CTA FIJO EN MOBILE -->
+    <div class="mobile-sticky-bar" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(10,10,12,0.95);backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,0.15);padding:10px 16px;box-shadow:0 -8px 24px rgba(0,0,0,0.6);">
+        <a href="/alta-usuario" class="btn-primary" style="width:100%;justify-content:center;padding:12px 18px;font-size:14px;margin:0;border-radius:10px;"><i class="bi bi-rocket-takeoff-fill"></i> Crear Mi Catálogo Gratis</a>
+    </div>
+    <style>
+        @media (max-width: 768px) {
+            .mobile-sticky-bar { display: flex !important; }
+            body { padding-bottom: 70px; }
+        }
+        @media (min-width: 769px) {
+            .mobile-sticky-bar { display: none !important; }
+        }
+    </style>
     <script src="/js/jaime-widget.js"></script>
 </body>
 </html>

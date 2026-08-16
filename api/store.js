@@ -25,18 +25,23 @@ export default async function handler(req, res) {
     '/kit-imprimible': 'kit-imprimible.html',
     '/kit-imprimible.html': 'kit-imprimible.html',
     '/landing': 'landing.html',
-    '/landing.html': 'landing.html'
+    '/landing.html': 'landing.html',
+    '/robots.txt': { file: 'robots.txt', type: 'text/plain; charset=utf-8' },
+    '/sitemap.xml': { file: 'sitemap.xml', type: 'application/xml; charset=utf-8' },
+    '/llms.txt': { file: 'llms.txt', type: 'text/plain; charset=utf-8' }
   };
 
-  // 1. Serve static page if requested directly (e.g. /dashboard, /ayuda, /alta-usuario)
+  // 1. Serve static page if requested directly (e.g. /dashboard, /ayuda, /alta-usuario, /robots.txt)
   if (routeMap[rawPath]) {
     try {
-      const targetFile = routeMap[rawPath];
+      const entry = routeMap[rawPath];
+      const targetFile = typeof entry === 'string' ? entry : entry.file;
+      const contentType = typeof entry === 'string' ? 'text/html; charset=utf-8' : entry.type;
       const filePath = path.join(process.cwd(), targetFile);
       if (fs.existsSync(filePath)) {
-        const html = fs.readFileSync(filePath, 'utf8');
-        res.setHeader('Content-Type', 'text/html; charset=utf-8');
-        return res.status(200).send(html);
+        const content = fs.readFileSync(filePath, 'utf8');
+        res.setHeader('Content-Type', contentType);
+        return res.status(200).send(content);
       }
     } catch (e) {
       console.error('Error serving static route:', e);
