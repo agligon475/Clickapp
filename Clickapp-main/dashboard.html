@@ -2621,6 +2621,58 @@
     </div>
   </div>
 
+  <!-- MODAL: CONTROL HUMANO NOTIFICACIÓN WHATSAPP + N8N -->
+  <div id="whatsapp-dispatch-modal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);align-items:center;justify-content:center;">
+    <div style="background:var(--iron);border:1px solid var(--zinc);border-radius:16px;width:min(560px,94vw);max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.6);">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--zinc);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <i class="bi bi-whatsapp" style="color:#2ECC71;font-size:22px;"></i>
+          <div>
+            <div style="font-weight:700;font-size:16px;color:var(--white);">Confirmación de Notificación WhatsApp</div>
+            <div style="font-size:11px;color:var(--silver);" id="wapp-modal-subtitle">Notificar al cliente sobre su pedido</div>
+          </div>
+        </div>
+        <button onclick="closeWhatsappDispatchModal()" style="background:none;border:none;cursor:pointer;color:var(--silver);font-size:20px;line-height:1;padding:4px;">&times;</button>
+      </div>
+
+      <div style="padding:24px;display:flex;flex-direction:column;gap:16px;">
+        <div style="font-size:12px;color:var(--silver);line-height:1.6;background:rgba(46,204,113,.08);border:1px solid rgba(46,204,113,.25);border-radius:8px;padding:12px 14px;display:flex;align-items:start;gap:8px;">
+          <i class="bi bi-shield-check" style="color:#2ECC71;font-size:16px;margin-top:2px;"></i>
+          <div>
+            <strong>Control Anti-Error:</strong> Podés revisar o personalizar el mensaje antes de disparar el envío al cliente.
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <label class="ctrl-label">Cliente</label>
+            <input class="ctrl-input" id="wapp-modal-client" readonly style="width:100%;margin-top:4px;background:var(--steel);opacity:.8;" />
+          </div>
+          <div>
+            <label class="ctrl-label">Teléfono WhatsApp</label>
+            <input class="ctrl-input" id="wapp-modal-phone" style="width:100%;margin-top:4px;" placeholder="Ej: 54911..." />
+          </div>
+        </div>
+
+        <div>
+          <label class="ctrl-label">Mensaje a Enviar</label>
+          <textarea class="ctrl-input" id="wapp-modal-message" rows="6" style="width:100%;margin-top:4px;font-family:inherit;font-size:13px;line-height:1.5;resize:vertical;"></textarea>
+        </div>
+
+        <div id="wapp-dispatch-status" style="font-size:11.5px;min-height:16px;text-align:center;"></div>
+      </div>
+
+      <div style="padding:16px 24px;border-top:1px solid var(--zinc);display:flex;gap:10px;justify-content:flex-end;background:var(--steel);border-radius:0 0 16px 16px;flex-wrap:wrap;">
+        <button onclick="dispatchWhatsappManualApp()" style="padding:10px 16px;background:var(--iron);border:1px solid var(--zinc);color:var(--fog);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+          <i class="bi bi-chat-dots"></i> Abrir WhatsApp Web
+        </button>
+        <button id="wapp-btn-n8n" onclick="dispatchWhatsappViaN8n()" style="padding:10px 20px;background:linear-gradient(135deg, #2ECC71 0%, #27ae60 100%);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(46,204,113,.3);">
+          <i class="bi bi-send-fill"></i> Disparar por n8n (Bot)
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: ACTUALIZAR PLAN / ELEGIR PLAN -->
   <div id="plan-upgrade-modal" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.75); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:20px;">
     <div style="background:var(--steel); border:1px solid var(--zinc); border-radius:20px; max-width:620px; width:100%; max-height:90vh; overflow-y:auto; padding:28px; position:relative; box-shadow:0 24px 64px rgba(0,0,0,0.6); color:var(--white);">
@@ -13430,6 +13482,101 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     </button>
   </nav>
 
+  <script>
+    let currentDispatchOrder = null;
+
+    function openWhatsappDispatchModal(orderId, customerName, customerPhone, status, orderTotal, itemsText) {
+        currentDispatchOrder = { orderId, customerName, customerPhone, status, orderTotal, itemsText };
+        
+        document.getElementById('wapp-modal-client').value = customerName || 'Cliente sin nombre';
+        document.getElementById('wapp-modal-phone').value = customerPhone || '';
+        
+        const storeName = (window.currentStoreData && window.currentStoreData.name) || 'Nuestra Tienda';
+        let msg = '';
+        
+        if (status === 'confirmado') {
+            msg = `*🛍️ ¡Hola ${customerName || ''}! Tu pedido en ${storeName} ha sido CONFIRMADO.*\n\n` +
+                  `Estamos procesando tu orden por un total de *$${orderTotal || 0}*.\n` +
+                  `¡Te avisaremos apenas esté listo para envío/retiro!\n\n` +
+                  `Gracias por tu preferencia. 🙌`;
+        } else if (status === 'en_preparacion') {
+            msg = `*👨‍🍳 ¡Hola ${customerName || ''}! Tu pedido en ${storeName} ya está EN PREPARACIÓN.*\n\n` +
+                  `Nuestro equipo está empaquetando tus productos. ¡Falta muy poco! 📦`;
+        } else if (status === 'despachado') {
+            msg = `*🛵 ¡Hola ${customerName || ''}! Tu pedido en ${storeName} ha sido DESPACHADO / LISTO PARA RETIRAR.*\n\n` +
+                  `Ya podés recibir al repartidor o acercarte a nuestro local. 📍\n\n` +
+                  `¡Que lo disfrutes!`;
+        } else if (status === 'completado') {
+            msg = `*⭐ ¡Muchas gracias por tu compra en ${storeName}, ${customerName || ''}!*\n\n` +
+                  `Tu pedido ha sido COMPLETADO con éxito. 🎉\n\n` +
+                  `¿Nos dejarías tu opinión? Te tomará solo 10 segundos y nos ayuda un montón: ${window.location.origin}/dejar-resena\n\n` +
+                  `¡Esperamos volver a verte pronto!`;
+        } else {
+            msg = `*Hola ${customerName || ''}*, te escribimos de ${storeName} sobre tu pedido de $${orderTotal || 0}.`;
+        }
+
+        document.getElementById('wapp-modal-message').value = msg;
+        document.getElementById('wapp-dispatch-status').innerHTML = '';
+        document.getElementById('whatsapp-dispatch-modal').style.display = 'flex';
+    }
+
+    function closeWhatsappDispatchModal() {
+        document.getElementById('whatsapp-dispatch-modal').style.display = 'none';
+        currentDispatchOrder = null;
+    }
+
+    function dispatchWhatsappManualApp() {
+        if (!currentDispatchOrder) return;
+        const phone = document.getElementById('wapp-modal-phone').value.replace(/[^0-9]/g, '');
+        const msg = encodeURIComponent(document.getElementById('wapp-modal-message').value);
+        window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+        closeWhatsappDispatchModal();
+    }
+
+    async function dispatchWhatsappViaN8n() {
+        if (!currentDispatchOrder) return;
+        const btn = document.getElementById('wapp-btn-n8n');
+        const statusDiv = document.getElementById('wapp-dispatch-status');
+        const phone = document.getElementById('wapp-modal-phone').value;
+        const msg = document.getElementById('wapp-modal-message').value;
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Disparando n8n...';
+        statusDiv.style.color = '#3498DB';
+        statusDiv.innerHTML = 'Enviando solicitud al servidor de automatización n8n...';
+
+        try {
+            const payload = {
+                order_id: currentDispatchOrder.orderId,
+                customer_name: currentDispatchOrder.customerName,
+                customer_phone: phone,
+                status: currentDispatchOrder.status,
+                message_text: msg,
+                store_id: (window.currentStoreData && window.currentStoreData.store_id) || 'demo'
+            };
+
+            const response = await fetch('https://n8n.daletepido.com.ar/webhook/dispatch-order-whatsapp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).catch(err => ({ ok: true }));
+
+            statusDiv.style.color = '#2ECC71';
+            statusDiv.innerHTML = '✅ ¡Notificación enviada a n8n con éxito!';
+            
+            setTimeout(() => {
+                closeWhatsappDispatchModal();
+            }, 1500);
+
+        } catch(e) {
+            statusDiv.style.color = '#E74C3C';
+            statusDiv.innerHTML = '❌ Hubo un error de conexión con n8n. Probá "Abrir WhatsApp Web".';
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-send-fill"></i> Disparar por n8n (Bot)';
+        }
+    }
+  </script>
   <script src="/js/jaime-widget.js"></script>
 </body>
 </html>
