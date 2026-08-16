@@ -237,9 +237,51 @@
         .hero-stat-val { font-size: 2.2rem; font-weight: 900; color: #ffffff; letter-spacing: -1px; line-height: 1.1; }
         .hero-stat-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: .08em; font-weight: 600; margin-top: 4px; }
 
+        .mobile-menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            line-height: 1;
+        }
+
+        .mobile-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0; right: 0;
+            background: rgba(10, 10, 12, 0.96);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 20px 24px;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.8);
+        }
+
+        .mobile-dropdown-menu.active {
+            display: flex;
+        }
+
+        .mobile-nav-link {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 8px 0;
+            transition: color 0.2s;
+        }
+
+        .mobile-nav-link:hover {
+            color: #ffffff;
+        }
+
         @media(max-width: 900px) {
             nav { padding: 14px 20px; }
             .nav-menu { display: none; }
+            .desktop-only { display: none !important; }
+            .mobile-menu-toggle { display: block; }
             .hero-stats-grid { grid-template-columns: 1fr; gap: 16px; }
         }
         .logo-strip { background:var(--fog); padding:24px 32px; text-align:center; border-top:1px solid #eee; border-bottom:1px solid #eee; }
@@ -342,6 +384,8 @@
         <div class="nav-brand">
             <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Logo de Dale! Te Pido - Plataforma de catálogos digitales" class="nav-logo">
         </div>
+        
+        <!-- MENÚ DESKTOP -->
         <div class="nav-menu">
             <a href="#demo-stores-section" class="nav-link">Demos</a>
             <a href="#how-section" class="nav-link">Usos</a>
@@ -350,9 +394,31 @@
             <a href="#faq-section" class="nav-link">FAQ</a>
             <a href="javascript:void(0)" onclick="openContactModal()" class="nav-link">Contacto</a>
         </div>
+
+        <!-- ACCIONES DESKTOP & BOTÓN HAMBURGUESA MOBILE -->
         <div class="nav-actions">
-            <a href="/alta-usuario?action=login" class="nav-login">Ingresar</a>
-            <a href="/alta-usuario" class="nav-cta">🚀 Nuevo Catálogo</a>
+            <a href="/alta-usuario?action=login" class="nav-login desktop-only">Ingresar</a>
+            <a href="/alta-usuario" class="nav-cta desktop-only">🚀 Nuevo Catálogo</a>
+            <button type="button" class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Abrir Menú">
+                <i class="bi bi-list" id="mobile-menu-icon" style="font-size: 26px; color: #fff;"></i>
+            </button>
+        </div>
+
+        <!-- DESPLEGABLE MENÚ MOBILE -->
+        <div class="mobile-dropdown-menu" id="mobile-dropdown-menu">
+            <a href="#demo-stores-section" onclick="closeMobileMenu()" class="mobile-nav-link">Demos</a>
+            <a href="#how-section" onclick="closeMobileMenu()" class="mobile-nav-link">Usos</a>
+            <a href="#features-section" onclick="closeMobileMenu()" class="mobile-nav-link">Características</a>
+            <a href="#pricing-section" onclick="closeMobileMenu()" class="mobile-nav-link">Planes</a>
+            <a href="#faq-section" onclick="closeMobileMenu()" class="mobile-nav-link">FAQ</a>
+            <a href="javascript:void(0)" onclick="closeMobileMenu(); openContactModal();" class="mobile-nav-link">Contacto</a>
+            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 8px 0;">
+            <a href="/alta-usuario?action=login" onclick="closeMobileMenu()" class="mobile-nav-link" style="color: #fff; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                <i class="bi bi-box-arrow-in-right" style="color: var(--red); font-size: 18px;"></i> Ingresar (Iniciar Sesión)
+            </a>
+            <a href="/alta-usuario" onclick="closeMobileMenu()" class="mobile-nav-link mobile-cta-btn" style="background: linear-gradient(135deg, #D60000 0%, #b30000 100%); color: #fff; text-align: center; border-radius: 10px; padding: 12px; margin-top: 6px; font-weight: 700; text-decoration: none;">
+                🚀 Nuevo Catálogo
+            </a>
         </div>
     </nav>
 
@@ -1151,6 +1217,27 @@
     </footer>
 
     <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-dropdown-menu');
+            const icon = document.getElementById('mobile-menu-icon');
+            if (!menu) return;
+            const isOpen = menu.classList.contains('active');
+            if (isOpen) {
+                menu.classList.remove('active');
+                if (icon) icon.className = 'bi bi-list';
+            } else {
+                menu.classList.add('active');
+                if (icon) icon.className = 'bi bi-x-lg';
+            }
+        }
+
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobile-dropdown-menu');
+            const icon = document.getElementById('mobile-menu-icon');
+            if (menu) menu.classList.remove('active');
+            if (icon) icon.className = 'bi bi-list';
+        }
+
         function toggleFaq(btn) {
             const item = btn.closest('.faq-item');
             const answer = item.querySelector('.faq-answer');
