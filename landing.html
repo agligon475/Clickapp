@@ -319,17 +319,16 @@
             <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Logo de Dale! Te Pido - Plataforma de catálogos digitales" class="nav-logo">
         </div>
         <div class="nav-menu">
-            <a href="#demo-stores-section" class="nav-link">Demos en Vivo</a>
-            <a href="#how-section" class="nav-link">Cómo Funciona</a>
+            <a href="#demo-stores-section" class="nav-link">Demos</a>
+            <a href="#how-section" class="nav-link">Usos</a>
             <a href="#features-section" class="nav-link">Características</a>
             <a href="#pricing-section" class="nav-link">Planes</a>
-            <a href="#faq-section" class="nav-link">Preguntas Frecuentes</a>
-            <a href="/ayuda" class="nav-link">Ayuda</a>
+            <a href="#faq-section" class="nav-link">FAQ</a>
+            <a href="javascript:void(0)" onclick="openContactModal()" class="nav-link">Contacto</a>
         </div>
         <div class="nav-actions">
-            <button type="button" class="nav-share-btn" onclick="shareLandingPage()" style="background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15);padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;" title="Compartir plataforma"><i class="bi bi-share"></i> Compartir</button>
-            <a href="/alta-usuario?action=login" class="nav-login">Iniciar Sesión</a>
-            <a href="/alta-usuario" class="nav-cta">🚀 Crear Mi Catálogo</a>
+            <a href="/alta-usuario?action=login" class="nav-login">Ingresar</a>
+            <a href="/alta-usuario" class="nav-cta">🚀 Nuevo Catálogo</a>
         </div>
     </nav>
 
@@ -341,8 +340,8 @@
             <h1>Vendé más con tu propio Catálogo Digital conectado a <span class="text-glow">WhatsApp</span></h1>
             <p>Creamos la solución ideal para comercios, tiendas, ferreterías, indumentaria y gastronomía que buscan mostrar sus productos online y recibir pedidos organizados directamente en su WhatsApp sin intermediarios ni comisiones por venta.</p>
             <div class="hero-btns">
-                <a href="/alta-usuario" class="btn-primary"><i class="bi bi-rocket-takeoff-fill"></i> Crear Mi Catálogo Gratis</a>
-                <a href="#demo-stores-section" class="btn-secondary"><i class="bi bi-shop"></i> Ver Demos en Vivo</a>
+                <a href="/alta-usuario" class="btn-primary"><i class="bi bi-rocket-takeoff-fill"></i> Nuevo Catálogo</a>
+                <a href="#demo-stores-section" class="btn-secondary"><i class="bi bi-shop"></i> Ver Demos</a>
             </div>
 
             <!-- TL;DR / KEY TAKEAWAYS -->
@@ -1021,9 +1020,12 @@
                 <div>
                     © 2026 Dale! Te Pido · Catálogos y Presupuestos Online. Todos los derechos reservados.
                 </div>
-                <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: center;">
                     <a href="/ayuda" target="_blank" style="color: rgba(255,255,255,0.85); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: color 0.2s;" onmouseenter="this.style.color='var(--red)'" onmouseleave="this.style.color='rgba(255,255,255,0.85)'">
-                        ❓ Centro de Ayuda <i class="bi bi-box-arrow-up-right" style="font-size: 11px;"></i>
+                        ❓ Ayuda <i class="bi bi-box-arrow-up-right" style="font-size: 11px;"></i>
+                    </a>
+                    <a href="javascript:void(0)" onclick="shareLandingPage()" style="color: rgba(255,255,255,0.85); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: color 0.2s;" onmouseenter="this.style.color='var(--red)'" onmouseleave="this.style.color='rgba(255,255,255,0.85)'">
+                        <i class="bi bi-share"></i> Compartir
                     </a>
                     <a href="javascript:void(0)" onclick="openContactModal()" style="color: rgba(255,255,255,0.85); text-decoration: none; font-weight: 600; transition: color 0.2s;" onmouseenter="this.style.color='var(--red)'" onmouseleave="this.style.color='rgba(255,255,255,0.85)'">
                         💬 Contacto
@@ -1033,9 +1035,6 @@
                     </a>
                     <a href="javascript:void(0)" onclick="openLegalModal('Términos y Legales', 'El uso de la plataforma Dale! Te Pido está sujeto a la prestación del servicio acordado en nuestros planes. Queda prohibida la reproducción no autorizada.')" style="color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s;" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.5)'">
                         Términos y Legales
-                    </a>
-                    <a href="javascript:void(0)" onclick="openLegalModal('Uso de Datos', 'Tus datos y archivos de catálogo se almacenan de forma encriptada en servidores de alta seguridad Supabase y Cloudinary.')" style="color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s;" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.5)'">
-                        Políticas de Uso de Datos
                     </a>
                 </div>
             </div>
@@ -1627,7 +1626,7 @@
 
     <!-- CTA FIJO EN MOBILE -->
     <div class="mobile-sticky-bar" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(10,10,12,0.95);backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,0.15);padding:10px 16px;box-shadow:0 -8px 24px rgba(0,0,0,0.6);">
-        <a href="/alta-usuario" class="btn-primary" style="width:100%;justify-content:center;padding:12px 18px;font-size:14px;margin:0;border-radius:10px;"><i class="bi bi-rocket-takeoff-fill"></i> Crear Mi Catálogo Gratis</a>
+        <a href="/alta-usuario" class="btn-primary" style="width:100%;justify-content:center;padding:12px 18px;font-size:14px;margin:0;border-radius:10px;"><i class="bi bi-rocket-takeoff-fill"></i> Nuevo Catálogo</a>
     </div>
     <style>
         @media (max-width: 768px) {
