@@ -218,9 +218,22 @@ body::before{
 </footer>
 
 <script>
-const rawSupabaseUrl = localStorage.getItem('storeapp_supabase_url');
-const SUPABASE_URL = (rawSupabaseUrl && rawSupabaseUrl.startsWith('http')) ? rawSupabaseUrl : 'https://iaylgsthwildjkiiwgfd.supabase.co';
-const SUPABASE_KEY = localStorage.getItem('storeapp_supabase_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+const DEFAULT_SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
+const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+
+let rawSupabaseUrl = localStorage.getItem('storeapp_supabase_url');
+if (rawSupabaseUrl && !rawSupabaseUrl.startsWith('http')) {
+  localStorage.removeItem('storeapp_supabase_url');
+  rawSupabaseUrl = null;
+}
+let rawSupabaseKey = localStorage.getItem('storeapp_supabase_key');
+if (rawSupabaseKey && (!rawSupabaseKey.startsWith('eyJ') || rawSupabaseKey.length < 50)) {
+  localStorage.removeItem('storeapp_supabase_key');
+  rawSupabaseKey = null;
+}
+
+const SUPABASE_URL = rawSupabaseUrl || DEFAULT_SUPABASE_URL;
+const SUPABASE_KEY = rawSupabaseKey || DEFAULT_SUPABASE_KEY;
 
 // Obtener store_id dinámicamente desde el subdominio, parámetro de URL o localStorage
 const getStoreId = () => {

@@ -1085,8 +1085,22 @@ a.logo{
 
 <script>
 /* ═══════════════════════════════════════════ SUPABASE CONFIG */
-const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+const DEFAULT_SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
+const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+
+let rawSupabaseUrl = localStorage.getItem('storeapp_supabase_url');
+if (rawSupabaseUrl && !rawSupabaseUrl.startsWith('http')) {
+  localStorage.removeItem('storeapp_supabase_url');
+  rawSupabaseUrl = null;
+}
+let rawSupabaseKey = localStorage.getItem('storeapp_supabase_key');
+if (rawSupabaseKey && (!rawSupabaseKey.startsWith('eyJ') || rawSupabaseKey.length < 50)) {
+  localStorage.removeItem('storeapp_supabase_key');
+  rawSupabaseKey = null;
+}
+
+let SUPABASE_URL = rawSupabaseUrl || DEFAULT_SUPABASE_URL;
+let SUPABASE_KEY = rawSupabaseKey || DEFAULT_SUPABASE_KEY;
 
 // Obtener store_id del objeto inyectado por servidor, parámetro de URL '?store=...', pathname, subdominio o localStorage
 const urlParams = new URLSearchParams(window.location.search);
@@ -1137,28 +1151,41 @@ let storeNosotros = '';
 let storeFaqs = [];
 let WHATSAPP_NUMBER = CFG.wapp || '5491141819344';
 
-/* Helper robusto para peticiones a Supabase con reintentos automáticos y apikey en URL */
+/* Helper robusto para peticiones a Supabase con reintentos automáticos y recuperación ante 401 */
 async function fetchSupabase(endpoint, options = {}, retries = 3, delayMs = 400) {
-  let url = endpoint.startsWith('http') ? endpoint : `${SUPABASE_URL}${endpoint}`;
-  if (!url.includes('apikey=')) {
-    const sep = url.includes('?') ? '&' : '?';
-    url = url + sep + 'apikey=' + encodeURIComponent(SUPABASE_KEY);
-  }
-  
-  const headers = {
-    'apikey': SUPABASE_KEY,
-    'Authorization': `Bearer ${SUPABASE_KEY}`,
-    ...(options.headers || {})
-  };
-  
-  const fetchOptions = { ...options, headers };
-
   let lastError = null;
+
   for (let attempt = 1; attempt <= retries; attempt++) {
+    let currentKey = SUPABASE_KEY;
+    let currentUrl = endpoint.startsWith('http') ? endpoint : `${SUPABASE_URL}${endpoint}`;
+    if (!currentUrl.includes('apikey=')) {
+      const sep = currentUrl.includes('?') ? '&' : '?';
+      currentUrl = currentUrl + sep + 'apikey=' + encodeURIComponent(currentKey);
+    }
+    
+    const headers = {
+      'apikey': currentKey,
+      'Authorization': `Bearer ${currentKey}`,
+      ...(options.headers || {})
+    };
+    
+    const fetchOptions = { ...options, headers };
+
     try {
-      const res = await fetch(url, fetchOptions);
+      const res = await fetch(currentUrl, fetchOptions);
       if (res.ok) return res;
-      if ((res.status >= 500 || res.status === 429 || res.status === 401) && attempt < retries) {
+
+      // Auto-recuperación si LocalStorage tenía credenciales inválidas (401)
+      if (res.status === 401 && (localStorage.getItem('storeapp_supabase_key') || localStorage.getItem('storeapp_supabase_url'))) {
+        console.warn('[Supabase] Credenciales de LocalStorage inválidas (401). Purgando LocalStorage y restaurando valores por defecto...');
+        localStorage.removeItem('storeapp_supabase_key');
+        localStorage.removeItem('storeapp_supabase_url');
+        SUPABASE_URL = DEFAULT_SUPABASE_URL;
+        SUPABASE_KEY = DEFAULT_SUPABASE_KEY;
+        continue;
+      }
+
+      if ((res.status >= 500 || res.status === 429) && attempt < retries) {
         console.warn(`[Supabase] Reintento ${attempt}/${retries} HTTP ${res.status}`);
         await new Promise(r => setTimeout(r, delayMs * Math.pow(2, attempt - 1)));
         continue;
