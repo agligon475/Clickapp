@@ -5,7 +5,6 @@
   <script>
     (function() {
       const urlParams = new URLSearchParams(window.location.search);
-      const urlStore = urlParams.get('store');
       let valid = false;
 
       const sessionRaw = localStorage.getItem('daletepido_session');
@@ -15,19 +14,6 @@
           if (session && session.store_id && session.token) {
             valid = true;
           }
-        } catch(e) {}
-      }
-
-      if (!valid && urlStore) {
-        const newSession = {
-          store_id: urlStore.toLowerCase(),
-          token: 'store-access-' + urlStore.toLowerCase(),
-          timestamp: Date.now()
-        };
-        try {
-          localStorage.setItem('daletepido_session', JSON.stringify(newSession));
-          localStorage.setItem('storeapp_logged_in_' + urlStore.toLowerCase(), 'true');
-          valid = true;
         } catch(e) {}
       }
 
@@ -2397,6 +2383,18 @@
 
 <body>
 
+  <!-- ── FULL-PAGE DASHBOARD INITIAL LOADER ── -->
+  <div id="dashboard-main-loader" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0A0A0C; z-index: 999999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity .4s ease, visibility .4s ease;">
+    <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
+      <div style="width: 38px; height: 38px; border: 3px solid rgba(215, 38, 56, 0.2); border-top-color: #D72638; border-radius: 50%; animation: dtpSpin 0.8s linear infinite;"></div>
+      <span style="font-family: sans-serif; font-size: 24px; font-weight: 800; color: #fff; letter-spacing: -0.5px;">Dale<span style="color: #D72638;">TePido</span></span>
+    </div>
+    <p style="font-family: sans-serif; font-size: 13px; color: #A1A1AA; margin: 0;">Cargando tu panel de control...</p>
+  </div>
+  <style>
+    @keyframes dtpSpin { to { transform: rotate(360deg); } }
+  </style>
+
   <!-- ── DASHBOARD LOGIN OVERLAY ── -->
   <div id="dash-login-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--black); z-index: 100000; display: flex; align-items: center; justify-content: center; padding: 20px;">
     <div class="card" style="width: 100%; max-width: 400px; padding: 32px; background: var(--steel); border: 1px solid var(--zinc); border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);">
@@ -2801,7 +2799,7 @@
         style="background:var(--steel); border:1px solid var(--zinc); border-radius:12px; padding:28px; margin-bottom:24px; animation:fadeUp .35s ease both; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
         <div>
           <h2 style="font-family:var(--font-h); font-size:24px; font-weight:800; margin-bottom:6px; color:var(--white);">
-            Hola <span id="welcome-store-name" style="color:var(--red);">FerreNow</span>, ¡qué bueno verte de nuevo!
+            Hola <span id="welcome-store-name" style="color:var(--red);">...</span>, ¡qué bueno verte de nuevo!
           </h2>
           <p style="color:var(--silver); font-size:14px; margin:0;">¿Qué vamos a hacer hoy?</p>
         </div>
@@ -5847,14 +5845,26 @@
       showView(name, el);
     }
 
+    function hideDashboardLoader() {
+      const loader = document.getElementById('dashboard-main-loader');
+      if (loader && loader.style.opacity !== '0') {
+        loader.style.opacity = '0';
+        loader.style.visibility = 'hidden';
+        setTimeout(() => { if (loader && loader.parentNode) loader.parentNode.removeChild(loader); }, 450);
+      }
+    }
+
     function updateWelcomeGreeting() {
-      let storeName = 'Mi Tienda';
+      let storeName = '';
       try {
         const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + STORE_ID) || localStorage.getItem('storeapp_cfg') || '{}');
-        if (sc.name) storeName = sc.name;
+        if (sc.name && sc.name !== 'FerreNow' && sc.name !== 'FerreApp') storeName = sc.name;
+        else if (window.CURRENT_STORE_BUSINESS_NAME) storeName = window.CURRENT_STORE_BUSINESS_NAME;
+        else storeName = STORE_ID;
       } catch (e) { }
       const el = document.getElementById('welcome-store-name');
-      if (el) el.textContent = storeName;
+      if (el && storeName) el.textContent = storeName;
+      hideDashboardLoader();
     }
 
     function checkOnboardingStatus() {
@@ -12133,6 +12143,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         if (typeof loadPages === 'function') loadPages();
         if (typeof loadCategoriesList === 'function') loadCategoriesList();
         if (typeof loadPickupsList === 'function') loadPickupsList();
+        if (typeof hideDashboardLoader === 'function') hideDashboardLoader();
       }, 500);
 
       document.addEventListener('click', (e) => {
@@ -13063,7 +13074,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     }
 
     function redirectToLogin() {
-      window.location.href = '/alta-usuario.html?action=login';
+      window.location.replace('/alta-usuario.html?action=login');
     }
 
     function logoutDashboard() {
@@ -13072,7 +13083,8 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         localStorage.removeItem('storeapp_store_id');
         localStorage.removeItem('daletepido_store_id');
         localStorage.removeItem('store_id');
-        redirectToLogin();
+        sessionStorage.clear();
+        window.location.replace('/alta-usuario.html?action=login');
       }
     }
 
