@@ -5583,6 +5583,15 @@
         }
       }
 
+      if (tabla === 'company_settings' && typeof data === 'object' && data !== null && !Array.isArray(data)) {
+        delete data.socials;
+        delete data.payment_methods;
+        delete data.gerente;
+        delete data.design_settings;
+        delete data.phone;
+        delete data.email;
+      }
+
       try {
         const response = await fetch(`${SUPABASE_URL}/rest/v1/${tabla}`, {
           method: 'POST',
@@ -5624,6 +5633,15 @@
           if (typeof data === 'object' && data !== null) {
             data.store_id = STORE_ID;
           }
+        }
+
+        if (tabla === 'company_settings' && typeof data === 'object' && data !== null) {
+          delete data.socials;
+          delete data.payment_methods;
+          delete data.gerente;
+          delete data.design_settings;
+          delete data.phone;
+          delete data.email;
         }
 
         const response = await fetch(url, {
@@ -10575,13 +10593,28 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
           direccion: storeCfg.direccion !== undefined ? storeCfg.direccion : row.direccion,
           horario: storeCfg.horario !== undefined ? storeCfg.horario : row.horario,
           billing_info: storeCfg.billing_info !== undefined ? storeCfg.billing_info : row.billing_info,
-          socials: storeCfg.socials !== undefined ? storeCfg.socials : row.socials,
           password: storeCfg.password !== undefined ? storeCfg.password : row.password,
           admin_email: storeCfg.admin_email !== undefined ? storeCfg.admin_email : row.admin_email,
           pay_cash: storeCfg.payment_methods?.efectivo !== undefined ? storeCfg.payment_methods.efectivo : row.pay_cash,
           pay_transfer: storeCfg.payment_methods?.transferencia !== undefined ? storeCfg.payment_methods.transferencia : row.pay_transfer,
           pay_agreement: storeCfg.payment_methods?.convenir !== undefined ? storeCfg.payment_methods.convenir : row.pay_agreement
         };
+
+        if (storeCfg.socials && typeof storeCfg.socials === 'object') {
+          if (storeCfg.socials.web !== undefined) updatePayload.social_web = storeCfg.socials.web;
+          if (storeCfg.socials.ig !== undefined) {
+            updatePayload.social_ig = storeCfg.socials.ig;
+            updatePayload.instagram = storeCfg.socials.ig;
+          }
+          if (storeCfg.socials.fb !== undefined) {
+            updatePayload.social_fb = storeCfg.socials.fb;
+            updatePayload.facebook = storeCfg.socials.fb;
+          }
+          if (storeCfg.socials.x !== undefined) updatePayload.social_x = storeCfg.socials.x;
+          if (storeCfg.socials.ml !== undefined) updatePayload.social_ml = storeCfg.socials.ml;
+          if (storeCfg.socials.tn !== undefined) updatePayload.social_tn = storeCfg.socials.tn;
+          if (storeCfg.socials.maps !== undefined) updatePayload.social_maps = storeCfg.socials.maps;
+        }
 
         await updateInSupabase('company_settings', row.id, updatePayload);
       } catch (e) {
