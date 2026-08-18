@@ -3484,6 +3484,12 @@
               </div>
               <!-- Hidden WhatsApp field for backward compatibility with design code -->
               <input type="hidden" id="cfg-wapp" value="" />
+              <div style="margin-top:16px; border-top:1px solid rgba(255,255,255,0.06); padding-top:14px;">
+                <button class="abm-btn-new" style="width:100%; justify-content:center; padding:10px; font-size:13px;" onclick="applyConfigWithStatus('marca-identidad-status')">
+                  <i class="bi bi-floppy2"></i> Guardar identidad
+                </button>
+                <div id="marca-identidad-status" style="font-size:11px; margin-top:6px; text-align:center; min-height:14px; color:var(--silver);"></div>
+              </div>
             </div>
           </div>
 
@@ -3600,6 +3606,13 @@
                   </button>
                 </div>
               </div>
+
+              <div style="margin-top:16px; border-top:1px solid rgba(255,255,255,0.06); padding-top:14px;">
+                <button class="abm-btn-new" style="width:100%; justify-content:center; padding:10px; font-size:13px;" onclick="applyConfigWithStatus('marca-colors-status')">
+                  <i class="bi bi-floppy2"></i> Guardar colores y tema
+                </button>
+                <div id="marca-colors-status" style="font-size:11px; margin-top:6px; text-align:center; min-height:14px; color:var(--silver);"></div>
+              </div>
             </div>
           </div>
 
@@ -3628,6 +3641,13 @@
                     <span>Fuerte</span>
                   </button>
                 </div>
+              </div>
+
+              <div style="margin-top:16px; border-top:1px solid rgba(255,255,255,0.06); padding-top:14px;">
+                <button class="abm-btn-new" style="width:100%; justify-content:center; padding:10px; font-size:13px;" onclick="applyConfigWithStatus('marca-font-status')">
+                  <i class="bi bi-floppy2"></i> Guardar tipografía
+                </button>
+                <div id="marca-font-status" style="font-size:11px; margin-top:6px; text-align:center; min-height:14px; color:var(--silver);"></div>
               </div>
             </div>
           </div>
@@ -3678,6 +3698,13 @@
                 <input type="range" id="cfg-overlay" min="0" max="90" value="48" step="2"
                   style="width:100%;accent-color:var(--red);" oninput="updateOverlay(this.value)" />
               </div>
+
+              <div style="margin-top:16px; border-top:1px solid rgba(255,255,255,0.06); padding-top:14px;">
+                <button class="abm-btn-new" style="width:100%; justify-content:center; padding:10px; font-size:13px;" onclick="saveBannersConfigWithStatus('design-bg-status')">
+                  <i class="bi bi-floppy2"></i> Guardar imagen de fondo
+                </button>
+                <div id="design-bg-status" style="font-size:11px; margin-top:6px; text-align:center; min-height:14px; color:var(--silver);"></div>
+              </div>
             </div>
           </div>
 
@@ -3699,6 +3726,13 @@
                 <label class="ctrl-label">DESCRIPCIÓN</label>
                 <textarea class="ctrl-input" id="cfg-desc" rows="2" oninput="previewUpdate()"
                   style="resize:vertical;">Elegí tus productos, armá tu pedido y coordiná por WhatsApp.</textarea>
+              </div>
+
+              <div style="margin-top:16px; border-top:1px solid rgba(255,255,255,0.06); padding-top:14px;">
+                <button class="abm-btn-new" style="width:100%; justify-content:center; padding:10px; font-size:13px;" onclick="saveBannersConfigWithStatus('design-text-status')">
+                  <i class="bi bi-floppy2"></i> Guardar texto del banner
+                </button>
+                <div id="design-text-status" style="font-size:11px; margin-top:6px; text-align:center; min-height:14px; color:var(--silver);"></div>
               </div>
             </div>
           </div>
@@ -3893,6 +3927,13 @@
               <div style="font-size:10px;color:var(--silver);margin-top:3px;">Enlace a la ubicación de tu tienda física en Google Maps</div>
             </div>
           </div>
+
+          <div style="margin-top:16px; border-top:1px solid rgba(255,255,255,0.06); padding-top:14px;">
+            <button class="abm-btn-new" style="width:100%; justify-content:center; padding:10px; font-size:13px;" onclick="saveConfigWithStatus('enlaces-card-status')">
+              <i class="bi bi-floppy2"></i> Guardar redes sociales y enlaces
+            </button>
+            <div id="enlaces-card-status" style="font-size:11px; margin-top:6px; text-align:center; min-height:14px; color:var(--silver);"></div>
+          </div>
         </div>
       </div>
       <div style="display:flex; justify-content:flex-end; margin-top:20px;">
@@ -3924,6 +3965,13 @@
             <textarea class="ctrl-input" id="pages-nosotros-text" rows="8"
               placeholder="Escribe aquí la historia de la ferretería..."></textarea>
           </div>
+
+          <div style="margin-top:16px; border-top:1px solid rgba(255,255,255,0.06); padding-top:14px;">
+            <button class="abm-btn-new" style="width:100%; justify-content:center; padding:10px; font-size:13px;" onclick="savePagesWithStatus('pages-nosotros-status')">
+              <i class="bi bi-floppy2"></i> Guardar página Nosotros
+            </button>
+            <div id="pages-nosotros-status" style="font-size:11px; margin-top:6px; text-align:center; min-height:14px; color:var(--silver);"></div>
+          </div>
         </div>
       </div>
 
@@ -3939,6 +3987,13 @@
             onclick="addFaqItem()">
             <i class="bi bi-plus"></i> Agregar Pregunta
           </button>
+
+          <div style="margin-top:16px; border-top:1px solid rgba(255,255,255,0.06); padding-top:14px;">
+            <button class="abm-btn-new" style="width:100%; justify-content:center; padding:10px; font-size:13px;" onclick="savePagesWithStatus('pages-faq-status')">
+              <i class="bi bi-floppy2"></i> Guardar Preguntas Frecuentes
+            </button>
+            <div id="pages-faq-status" style="font-size:11px; margin-top:6px; text-align:center; min-height:14px; color:var(--silver);"></div>
+          </div>
         </div>
       </div>
 
@@ -4348,6 +4403,13 @@
                 <input class="ctrl-input" type="password" id="cfg-store-password" placeholder="Clave para proteger el acceso a este panel" />
               </div>
 
+              <div style="grid-column:1/-1; margin-top:16px; border-top:1px solid rgba(255,255,255,0.06); padding-top:14px;">
+                <button class="abm-btn-new" style="width:100%; justify-content:center; padding:10px; font-size:13px;" onclick="saveConfigWithStatus('cfg-basica-tienda-status')">
+                  <i class="bi bi-floppy2"></i> Guardar datos de la tienda
+                </button>
+                <div id="cfg-basica-tienda-status" style="font-size:11px; margin-top:6px; text-align:center; min-height:14px; color:var(--silver);"></div>
+              </div>
+
             </div>
           </div>
         </div>
@@ -4422,6 +4484,13 @@
                   <i class="bi bi-download"></i> Ver / Descargar Comprobante
                 </a>
               </div>
+            </div>
+
+            <div style="margin-top:16px; border-top:1px solid rgba(255,255,255,0.06); padding-top:14px;">
+              <button class="abm-btn-new" style="width:100%; justify-content:center; padding:10px; font-size:13px;" onclick="saveConfigWithStatus('cfg-basica-billing-status')">
+                <i class="bi bi-floppy2"></i> Guardar datos de facturación
+              </button>
+              <div id="cfg-basica-billing-status" style="font-size:11px; margin-top:6px; text-align:center; min-height:14px; color:var(--silver);"></div>
             </div>
           </div>
         </div>
@@ -4510,6 +4579,13 @@
               base de datos, ejecutá en Supabase SQL Editor:<br />
               <code
                 style="background:var(--iron);padding:2px 6px;border-radius:4px;font-size:10px;color:var(--red);">ALTER TABLE products ADD COLUMN IF NOT EXISTS codigo text;</code>
+            </div>
+
+            <div style="margin-top:16px; border-top:1px solid rgba(255,255,255,0.06); padding-top:14px;">
+              <button class="abm-btn-new" style="width:100%; justify-content:center; padding:10px; font-size:13px;" onclick="saveAdvancedConfigWithStatus('adv-db-status')">
+                <i class="bi bi-floppy2"></i> Guardar base de datos
+              </button>
+              <div id="adv-db-status" style="font-size:11px; margin-top:6px; text-align:center; min-height:14px; color:var(--silver);"></div>
             </div>
           </div>
         </div>
@@ -4600,6 +4676,13 @@
                 <div id="adv-claude-status" style="font-size:11px;color:var(--silver);"></div>
               </div>
             </div>
+
+            <div style="margin-top:16px; border-top:1px solid rgba(255,255,255,0.06); padding-top:14px;">
+              <button class="abm-btn-new" style="width:100%; justify-content:center; padding:10px; font-size:13px;" onclick="saveAdvancedConfigWithStatus('adv-ai-status')">
+                <i class="bi bi-floppy2"></i> Guardar configuración de IA
+              </button>
+              <div id="adv-ai-status" style="font-size:11px; margin-top:6px; text-align:center; min-height:14px; color:var(--silver);"></div>
+            </div>
           </div>
         </div>
 
@@ -4636,6 +4719,13 @@
                 <input type="file" accept="image/*" style="display:none;" onchange="testCloudinaryUpload(this)" />
               </div>
               <span id="cfg-upload-result" style="font-size:11px;display:block;margin-top:6px;"></span>
+            </div>
+
+            <div style="margin-top:16px; border-top:1px solid rgba(255,255,255,0.06); padding-top:14px;">
+              <button class="abm-btn-new" style="width:100%; justify-content:center; padding:10px; font-size:13px;" onclick="saveAdvancedConfigWithStatus('adv-img-status')">
+                <i class="bi bi-floppy2"></i> Guardar configuración de imágenes
+              </button>
+              <div id="adv-img-status" style="font-size:11px; margin-top:6px; text-align:center; min-height:14px; color:var(--silver);"></div>
             </div>
           </div>
         </div>
@@ -7311,6 +7401,111 @@
         }
         showToastDash('✓ Diseño guardado con éxito');
       } catch (e) { alert('Error al guardar: ' + e.message); }
+    }
+
+    async function saveConfigWithStatus(statusId) {
+      const statusEl = document.getElementById(statusId);
+      if (statusEl) {
+        statusEl.style.color = 'var(--silver)';
+        statusEl.textContent = 'Guardando...';
+      }
+      try {
+        await saveConfig();
+        if (statusEl) {
+          statusEl.style.color = 'var(--green)';
+          statusEl.textContent = '✓ Cambios guardados con éxito';
+          setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 3500);
+        }
+      } catch (e) {
+        if (statusEl) {
+          statusEl.style.color = 'var(--red)';
+          statusEl.textContent = '✕ Error al guardar: ' + e.message;
+        }
+      }
+    }
+
+    async function applyConfigWithStatus(statusId) {
+      const statusEl = document.getElementById(statusId);
+      if (statusEl) {
+        statusEl.style.color = 'var(--silver)';
+        statusEl.textContent = 'Guardando...';
+      }
+      try {
+        await applyConfig();
+        if (statusEl) {
+          statusEl.style.color = 'var(--green)';
+          statusEl.textContent = '✓ Cambios guardados con éxito';
+          setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 3500);
+        }
+      } catch (e) {
+        if (statusEl) {
+          statusEl.style.color = 'var(--red)';
+          statusEl.textContent = '✕ Error al guardar: ' + e.message;
+        }
+      }
+    }
+
+    async function saveBannersConfigWithStatus(statusId) {
+      const statusEl = document.getElementById(statusId);
+      if (statusEl) {
+        statusEl.style.color = 'var(--silver)';
+        statusEl.textContent = 'Guardando...';
+      }
+      try {
+        await saveBannersConfig();
+        if (statusEl) {
+          statusEl.style.color = 'var(--green)';
+          statusEl.textContent = '✓ Cambios guardados con éxito';
+          setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 3500);
+        }
+      } catch (e) {
+        if (statusEl) {
+          statusEl.style.color = 'var(--red)';
+          statusEl.textContent = '✕ Error al guardar: ' + e.message;
+        }
+      }
+    }
+
+    async function saveAdvancedConfigWithStatus(statusId) {
+      const statusEl = document.getElementById(statusId);
+      if (statusEl) {
+        statusEl.style.color = 'var(--silver)';
+        statusEl.textContent = 'Guardando...';
+      }
+      try {
+        await saveAdvancedConfig();
+        if (statusEl) {
+          statusEl.style.color = 'var(--green)';
+          statusEl.textContent = '✓ Cambios guardados con éxito';
+          setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 3500);
+        }
+      } catch (e) {
+        if (statusEl) {
+          statusEl.style.color = 'var(--red)';
+          statusEl.textContent = '✕ Error al guardar: ' + e.message;
+        }
+      }
+    }
+
+    async function savePagesWithStatus(statusId) {
+      const statusEl = document.getElementById(statusId);
+      if (statusEl) {
+        statusEl.style.color = 'var(--silver)';
+        statusEl.textContent = 'Guardando...';
+      }
+      try {
+        await savePages();
+        if (statusEl) {
+          statusEl.style.color = 'var(--green)';
+          statusEl.textContent = '✓ Cambios guardados con éxito';
+          setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 3500);
+        }
+      } catch (e) {
+        if (statusEl) {
+          statusEl.style.color = 'var(--red)';
+          statusEl.textContent = '✕ Error al guardar: ' + e.message;
+        }
+      }
     }
 
     function exportConfig() {
