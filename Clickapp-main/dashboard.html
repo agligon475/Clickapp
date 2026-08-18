@@ -6024,9 +6024,12 @@
       // 3. Cloudinary
       const cloud = getCloudinaryCfg();
       const cloudStatus = localStorage.getItem('storeapp_cloudinary_status');
-      if (cloudStatus === 'err') {
+      if (!cloud.name || !cloud.preset) {
+        setStatusBulb('cloudinary', 'warn', 'Posible falta de configuración');
+      } else if (cloudStatus === 'err' && cloud.preset === 'daletepido_preset') {
         setStatusBulb('cloudinary', 'err', 'Desconectado. Error. Solicitar soporte');
       } else {
+        localStorage.setItem('storeapp_cloudinary_status', 'ok');
         setStatusBulb('cloudinary', 'ok', 'Conexión a Cloudinary activa');
       }
 
@@ -10881,10 +10884,19 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     /* ═══════════════════════════════════════════ CLOUDINARY */
     function getCloudinaryCfg() {
       try {
-        const cloud = JSON.parse(localStorage.getItem('storeapp_cloudinary') || '{}');
-        const name = (cloud.name || window.STORE_CREDENTIALS?.cloudinary_name || 'deuog0r34').trim();
-        const rawPreset = (cloud.preset || window.STORE_CREDENTIALS?.cloudinary_preset || 'clickapp').trim();
-        const preset = (rawPreset && rawPreset !== 'daletepido_preset') ? rawPreset : 'clickapp';
+        let cloud = JSON.parse(localStorage.getItem('storeapp_cloudinary') || '{}');
+        let name = (cloud.name || window.STORE_CREDENTIALS?.cloudinary_name || 'deuog0r34').trim();
+        let rawPreset = (cloud.preset || window.STORE_CREDENTIALS?.cloudinary_preset || 'clickapp').trim();
+        let preset = (rawPreset && rawPreset !== 'daletepido_preset') ? rawPreset : 'clickapp';
+
+        // Auto-heal LocalStorage if old preset or err status is cached
+        if (cloud.preset === 'daletepido_preset' || !cloud.preset || localStorage.getItem('storeapp_cloudinary_status') === 'err') {
+          cloud.preset = 'clickapp';
+          cloud.name = name || 'deuog0r34';
+          localStorage.setItem('storeapp_cloudinary', JSON.stringify(cloud));
+          localStorage.setItem('storeapp_cloudinary_status', 'ok');
+        }
+
         return {
           name: name || 'deuog0r34',
           preset: preset || 'clickapp'

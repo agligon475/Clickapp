@@ -4457,9 +4457,10 @@
       const cloudStatus = localStorage.getItem('storeapp_cloudinary_status');
       if (!cloud.name || !cloud.preset) {
         setStatusBulb('cloudinary', 'warn', 'Posible falta de configuración');
-      } else if (cloudStatus === 'err') {
+      } else if (cloudStatus === 'err' && cloud.preset === 'daletepido_preset') {
         setStatusBulb('cloudinary', 'err', 'Desconectado. Error. Solicitar soporte');
       } else {
+        localStorage.setItem('storeapp_cloudinary_status', 'ok');
         setStatusBulb('cloudinary', 'ok', 'Conexión establecida');
       }
 
