@@ -1399,13 +1399,13 @@ async function loadSheet() {
         }
         
         CFG.socials = {
-          web: cfg.social_web !== null ? cfg.social_web : (parsedSocials.web || ''),
+          web: (cfg.social_web != null && cfg.social_web !== '') ? cfg.social_web : (parsedSocials.web || ''),
           ig: cfg.social_ig || cfg.instagram || parsedSocials.ig || '',
           fb: cfg.social_fb || cfg.facebook || parsedSocials.fb || '',
-          x: cfg.social_x !== null ? cfg.social_x : (parsedSocials.x || ''),
-          ml: cfg.social_ml !== null ? cfg.social_ml : (parsedSocials.ml || ''),
-          tn: cfg.social_tn !== null ? cfg.social_tn : (parsedSocials.tn || ''),
-          maps: cfg.social_maps !== null ? cfg.social_maps : (parsedSocials.maps || '')
+          x: (cfg.social_x != null && cfg.social_x !== '') ? cfg.social_x : (parsedSocials.x || ''),
+          ml: (cfg.social_ml != null && cfg.social_ml !== '') ? cfg.social_ml : (parsedSocials.ml || ''),
+          tn: (cfg.social_tn != null && cfg.social_tn !== '') ? cfg.social_tn : (parsedSocials.tn || ''),
+          maps: (cfg.social_maps != null && cfg.social_maps !== '') ? cfg.social_maps : (parsedSocials.maps || '')
         };
 
         let parsedDesign = {};
@@ -1415,14 +1415,14 @@ async function loadSheet() {
           try { parsedDesign = JSON.parse(cfg.email); } catch (e) {}
         }
 
-        CFG.h1 = cfg.h1 !== null ? cfg.h1 : (parsedDesign.h1 || CFG.h1 || '');
-        CFG.h2 = cfg.h2 !== null ? cfg.h2 : (parsedDesign.h2 || CFG.h2 || '');
-        CFG.desc = cfg.desc !== null ? cfg.desc : (parsedDesign.desc || CFG.desc || '');
-        CFG.emoji = cfg.emoji !== null ? cfg.emoji : (parsedDesign.emoji || CFG.emoji || '🏪');
-        CFG.theme = cfg.theme !== null ? cfg.theme : (parsedDesign.theme || CFG.theme || 'dark');
-        CFG.font = cfg.font !== null ? cfg.font : (parsedDesign.font || CFG.font || '');
-        CFG.fontBody = cfg.font_body !== null ? cfg.font_body : (parsedDesign.font_body || parsedDesign.fontBody || CFG.fontBody || '');
-        CFG.bg = cfg.bg !== null ? cfg.bg : (parsedDesign.bg || CFG.bg || '');
+        CFG.h1 = cfg.h1 != null ? cfg.h1 : (parsedDesign.h1 || CFG.h1 || '');
+        CFG.h2 = cfg.h2 != null ? cfg.h2 : (parsedDesign.h2 || CFG.h2 || '');
+        CFG.desc = cfg.desc != null ? cfg.desc : (parsedDesign.desc || CFG.desc || '');
+        CFG.emoji = cfg.emoji != null ? cfg.emoji : (parsedDesign.emoji || CFG.emoji || '🏪');
+        CFG.theme = cfg.theme != null ? cfg.theme : (parsedDesign.theme || CFG.theme || 'dark');
+        CFG.font = cfg.font != null ? cfg.font : (parsedDesign.font || CFG.font || '');
+        CFG.fontBody = cfg.font_body != null ? cfg.font_body : (parsedDesign.font_body || parsedDesign.fontBody || CFG.fontBody || '');
+        CFG.bg = cfg.bg != null ? cfg.bg : (parsedDesign.bg || CFG.bg || '');
         
         bannerData = {
           banner1: {
@@ -1430,14 +1430,14 @@ async function loadSheet() {
             title: cfg.banner1_title || 'Productos',
             img: cfg.banner1_img || '',
             cat: cfg.banner1_cat || '',
-            active: cfg.banner1_active !== null ? cfg.banner1_active : (parsedDesign.banner1_active !== false)
+            active: cfg.banner1_active != null ? cfg.banner1_active : (parsedDesign.banner1_active !== false)
           },
           banner2: {
             label: cfg.banner2_label || 'PROMOCIÓN',
             title: cfg.banner2_title || 'Especiales',
             img: cfg.banner2_img || '',
             cat: cfg.banner2_cat || '',
-            active: cfg.banner2_active !== null ? cfg.banner2_active : (parsedDesign.banner2_active !== false)
+            active: cfg.banner2_active != null ? cfg.banner2_active : (parsedDesign.banner2_active !== false)
           }
         };
       }

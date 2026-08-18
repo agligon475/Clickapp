@@ -139,7 +139,7 @@ export default async function handler(req, res) {
           
           let title = cfg.business_name ? `${cfg.business_name} — Tu tienda online` : 'Dale! Te Pido';
           let desc = cfg.desc || 'Elegí tus productos, armá tu pedido y coordiná por WhatsApp.';
-          let logo = cfg.logo || 'https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png';
+          let logo = cfg.logo_url || cfg.logo || 'https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png';
           let url = `https://${storeId}.daletepido.com.ar/`;
 
           const productId = req.query.p || req.query.producto || req.query.product;
