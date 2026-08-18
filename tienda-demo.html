@@ -1650,8 +1650,8 @@ function renderBanners(bannerData) {
   
   if (!banner1El || !banner2El || !container) return;
 
-  const b1Active = bannerData.banner1 && bannerData.banner1.active !== false && bannerData.banner1.title;
-  const b2Active = bannerData.banner2 && bannerData.banner2.active !== false && bannerData.banner2.title;
+  const b1Active = bannerData.banner1 && bannerData.banner1.active !== false && (bannerData.banner1.title || bannerData.banner1.img);
+  const b2Active = bannerData.banner2 && bannerData.banner2.active !== false && (bannerData.banner2.title || bannerData.banner2.img);
   
   const renderBanner = (el, data, isActive) => {
     if (!isActive) {

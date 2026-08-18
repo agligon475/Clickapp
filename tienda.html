@@ -1508,6 +1508,7 @@ async function loadSheet() {
       CFG.font = cfg.font !== null ? cfg.font : (parsedDesign.font || CFG.font || '');
       CFG.fontBody = cfg.font_body !== null ? cfg.font_body : (parsedDesign.font_body || parsedDesign.fontBody || CFG.fontBody || '');
       CFG.bg = cfg.bg !== null ? cfg.bg : (parsedDesign.bg || CFG.bg || '');
+      CFG.logo = cfg.logo_url || parsedDesign.logo || CFG.logo || '';
       
       bannerData = {
         banner1: {
@@ -1756,8 +1757,8 @@ function renderBanners(bannerData) {
     };
   };
 
-  const b1Active = bannerData.banner1 && bannerData.banner1.active !== false && bannerData.banner1.title;
-  const b2Active = bannerData.banner2 && bannerData.banner2.active !== false && bannerData.banner2.title;
+  const b1Active = bannerData.banner1 && bannerData.banner1.active !== false && (bannerData.banner1.title || bannerData.banner1.img);
+  const b2Active = bannerData.banner2 && bannerData.banner2.active !== false && (bannerData.banner2.title || bannerData.banner2.img);
   const mode = bannerData.mode || bannerData.banner_mode || 'double';
 
   if (mode === 'single' || !b2Active) {
@@ -2570,13 +2571,11 @@ function applyStoredConfig() {
   if (cfg.fontBody) root.setProperty('--font-body', `'${cfg.fontBody}', sans-serif`);
 
   // Logo image takes priority over emoji
-  const logoImg = localStorage.getItem(`storeapp_logo_${STORE_ID}`) || localStorage.getItem('storeapp_logo');
+  const logoImg = cfg.logo || cfg.logo_url || localStorage.getItem(`storeapp_logo_${STORE_ID}`) || localStorage.getItem('storeapp_logo');
   const logoEl  = document.querySelector('.logo');
   if (logoEl) {
     if (logoImg) {
       logoEl.innerHTML = `<img src="${optimizeImg(logoImg, 80, 80)}" alt="${cfg.name||'Logo'}" style="height:32px;width:32px;object-fit:contain;border-radius:6px;"/> ${cfg.name||'Mi Tienda'}`;
-    } else if (cfg.logo) {
-      logoEl.innerHTML = `<img src="${optimizeImg(cfg.logo, 80, 80)}" alt="${cfg.name||'Logo'}" style="height:32px;width:32px;object-fit:contain;border-radius:6px;"/> ${cfg.name||'Mi Tienda'}`;
     } else if (cfg.name) {
       logoEl.innerHTML = `<span class="logo-icon">${cfg.emoji||'🏪'}</span>${cfg.name}`;
     }

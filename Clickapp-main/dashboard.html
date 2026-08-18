@@ -7668,44 +7668,92 @@
     window.saveBannersConfig = saveBannersConfig;
 
     /* ═══════════════════════════════════════════ LOGO UPLOAD */
-    function uploadLogo(input) {
+    async function uploadLogo(input) {
       const file = input.files[0];
       if (!file) return;
-      if (file.size > 300 * 1024) { alert('El archivo es muy grande. Máximo 300KB.'); return; }
-      const reader = new FileReader();
-      reader.onload = e => {
-        const dataUrl = e.target.result;
-        localStorage.setItem('storeapp_logo', dataUrl);
-        cfg.logo = dataUrl;
-        document.getElementById('logo-preview').src = dataUrl;
-        document.getElementById('logo-preview-wrap').style.display = 'block';
-        // Update preview in design panel
+      if (file.size > 3 * 1024 * 1024) { alert('El archivo es muy grande. Máximo 3MB.'); return; }
+      
+      const prevWrap = document.getElementById('logo-preview-wrap');
+      const prevImg = document.getElementById('logo-preview');
+      
+      let logoUrl = '';
+      try {
+        logoUrl = await uploadToCloudinary(file);
+      } catch(e) {
+        console.warn('Cloudinary logo upload failed, fallback to DataURL:', e);
+        logoUrl = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = ev => resolve(ev.target.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      if (logoUrl) {
+        localStorage.setItem(`storeapp_logo_${STORE_ID}`, logoUrl);
+        localStorage.setItem('storeapp_logo', logoUrl);
+        cfg.logo = logoUrl;
+        if (prevImg) prevImg.src = logoUrl;
+        if (prevWrap) prevWrap.style.display = 'block';
+
         const prevIcon = document.getElementById('prev-icon');
         if (prevIcon) {
           prevIcon.innerHTML = '';
           const img = document.createElement('img');
-          img.src = dataUrl;
+          img.src = logoUrl;
           img.style.cssText = 'width:18px;height:18px;object-fit:contain;border-radius:3px;';
           prevIcon.appendChild(img);
         }
-      };
-      reader.readAsDataURL(file);
+
+        try {
+          const resSettings = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+          });
+          if (resSettings.ok) {
+            const rows = await resSettings.json();
+            if (rows && rows.length > 0) {
+              await updateInSupabase('company_settings', rows[0].id, { logo_url: logoUrl });
+            }
+          }
+        } catch(err) {
+          console.error('Error syncing logo_url to Supabase:', err);
+        }
+      }
     }
 
-    function removeLogo() {
+    async function removeLogo() {
+      localStorage.removeItem(`storeapp_logo_${STORE_ID}`);
       localStorage.removeItem('storeapp_logo');
       cfg.logo = '';
-      document.getElementById('logo-preview-wrap').style.display = 'none';
-      document.getElementById('logo-input').value = '';
+      const wrap = document.getElementById('logo-preview-wrap');
+      if (wrap) wrap.style.display = 'none';
+      const input = document.getElementById('logo-input');
+      if (input) input.value = '';
       const prevIcon = document.getElementById('prev-icon');
-      if (prevIcon) prevIcon.textContent = cfg.emoji || '🔧';
+      if (prevIcon) prevIcon.textContent = cfg.emoji || '🏪';
+
+      try {
+        const resSettings = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        if (resSettings.ok) {
+          const rows = await resSettings.json();
+          if (rows && rows.length > 0) {
+            await updateInSupabase('company_settings', rows[0].id, { logo_url: '' });
+          }
+        }
+      } catch(err) {
+        console.error('Error clearing logo_url in Supabase:', err);
+      }
     }
 
     function initLogoPreview() {
-      const saved = localStorage.getItem('storeapp_logo');
+      const saved = localStorage.getItem(`storeapp_logo_${STORE_ID}`) || localStorage.getItem('storeapp_logo') || cfg.logo;
       if (saved) {
-        document.getElementById('logo-preview').src = saved;
-        document.getElementById('logo-preview-wrap').style.display = 'block';
+        const img = document.getElementById('logo-preview');
+        if (img) img.src = saved;
+        const wrap = document.getElementById('logo-preview-wrap');
+        if (wrap) wrap.style.display = 'block';
       }
     }
 
