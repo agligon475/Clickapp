@@ -6233,7 +6233,7 @@
 
             // Sincronizar y proteger credenciales críticas contra sobreescrituras accidentales
             const cloudName = storeCreds?.cloudinary_name || dbCfg.cloudinary_name || dbCfg.cloudinary_cloud || 'deuog0r34';
-            const cloudPreset = storeCreds?.cloudinary_preset || dbCfg.cloudinary_preset || 'daletepido_preset';
+            const cloudPreset = storeCreds?.cloudinary_preset || dbCfg.cloudinary_preset || 'clickapp';
             localStorage.setItem('storeapp_cloudinary', JSON.stringify({ name: cloudName, preset: cloudPreset }));
 
             const aiProvider = storeCreds?.ai_provider || dbCfg.ai_provider || 'gemini';
@@ -7173,7 +7173,7 @@
 
           // Preservar y asegurar credenciales críticas de Cloudinary, IA y DB
           dataToSave.cloudinary_name = dbRow?.cloudinary_name || window.STORE_CREDENTIALS?.cloudinary_name || 'deuog0r34';
-          dataToSave.cloudinary_preset = dbRow?.cloudinary_preset || window.STORE_CREDENTIALS?.cloudinary_preset || 'daletepido_preset';
+          dataToSave.cloudinary_preset = dbRow?.cloudinary_preset || window.STORE_CREDENTIALS?.cloudinary_preset || 'clickapp';
           dataToSave.ai_provider = dbRow?.ai_provider || window.STORE_CREDENTIALS?.ai_provider || 'gemini';
           dataToSave.claude_key = dbRow?.claude_key || window.STORE_CREDENTIALS?.claude_key || '';
           dataToSave.gemini_key = dbRow?.gemini_key || window.STORE_CREDENTIALS?.gemini_key || '';
@@ -10883,13 +10883,14 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       try {
         const cloud = JSON.parse(localStorage.getItem('storeapp_cloudinary') || '{}');
         const name = (cloud.name || window.STORE_CREDENTIALS?.cloudinary_name || 'deuog0r34').trim();
-        const preset = (cloud.preset || window.STORE_CREDENTIALS?.cloudinary_preset || 'daletepido_preset').trim();
+        const rawPreset = (cloud.preset || window.STORE_CREDENTIALS?.cloudinary_preset || 'clickapp').trim();
+        const preset = (rawPreset && rawPreset !== 'daletepido_preset') ? rawPreset : 'clickapp';
         return {
           name: name || 'deuog0r34',
-          preset: preset || 'daletepido_preset'
+          preset: preset || 'clickapp'
         };
       } catch (e) {
-        return { name: 'deuog0r34', preset: 'daletepido_preset' };
+        return { name: 'deuog0r34', preset: 'clickapp' };
       }
     }
 

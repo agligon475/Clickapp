@@ -467,7 +467,7 @@
         try {
           const formData = new FormData();
           formData.append('file', selectedFile);
-          formData.append('upload_preset', 'daletepido_preset');
+          formData.append('upload_preset', 'clickapp');
 
           const cloudRes = await fetch('https://api.cloudinary.com/v1_1/deuog0r34/image/upload', {
             method: 'POST',
