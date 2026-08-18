@@ -7794,9 +7794,14 @@
       const h1Val = document.getElementById('cfg-h1')?.value || cfg.h1;
       const h2Val = document.getElementById('cfg-h2')?.value || cfg.h2;
       const descVal = document.getElementById('cfg-desc')?.value || cfg.desc;
+      const heroBgVal = cfg.bg || localStorage.getItem(`storeapp_hero_img_${STORE_ID}`) || localStorage.getItem('storeapp_hero_img') || '';
       cfg.h1 = h1Val;
       cfg.h2 = h2Val;
       cfg.desc = descVal;
+      cfg.bg = heroBgVal;
+
+      localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
+      localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
 
       const bannerData = {
         mode: window.BANNER_LAYOUT_MODE || 'double',
@@ -7819,6 +7824,7 @@
       };
 
       localStorage.setItem(`storeapp_banners_${STORE_ID}`, JSON.stringify(bannerData));
+      localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
 
       // Patch company_settings in Supabase
       try {
@@ -7835,7 +7841,7 @@
             parsedEmail.h1 = h1Val;
             parsedEmail.h2 = h2Val;
             parsedEmail.desc = descVal;
-            parsedEmail.bg = cfg.bg || localStorage.getItem('storeapp_hero_img') || '';
+            parsedEmail.bg = heroBgVal;
             parsedEmail.heroOverlay = cfg.heroOverlay || 'rgba(0,0,0,0.48)';
             parsedEmail.banner_mode = bannerData.mode;
             parsedEmail.banner1_bg = bannerData.banner1.bg;
@@ -7844,6 +7850,10 @@
             parsedEmail.banner2_active = bannerData.banner2.active;
 
             const patchPayload = {
+              h1: h1Val,
+              h2: h2Val,
+              desc: descVal,
+              bg: heroBgVal,
               email: JSON.stringify(parsedEmail),
               banner_mode: bannerData.mode,
               banner1_label: bannerData.banner1.label,
@@ -11869,114 +11879,6 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       }
       if (typeof setStatusMsg === 'function') {
         setStatusMsg('banners-status', 'ok', 'Datos cargados');
-      }
-    }
-
-    function previewBanner(bannerId) {
-      const urlEl    = document.getElementById(bannerId + '-img');
-      const bgEl     = document.getElementById(bannerId + '-bg');
-      const previewEl = document.getElementById(bannerId + '-preview');
-      const imgEl    = previewEl?.querySelector('img');
-
-      if (!urlEl || !previewEl || !imgEl) return;
-
-      const url = urlEl.value.trim();
-      const bg  = bgEl ? bgEl.value : '#1C1C1E';
-
-      if (url && url.startsWith('http')) {
-        // Image mode
-        previewEl.style.background = '';
-        imgEl.src = url;
-        imgEl.style.display = 'block';
-        previewEl.style.display = 'block';
-        imgEl.onerror = () => { previewEl.style.display = 'none'; };
-      } else {
-        // Color mode – show a solid bg swatch preview
-        previewEl.style.background = bg;
-        previewEl.style.display    = 'block';
-        imgEl.style.display = 'none';
-        imgEl.src = '';
-      }
-    }
-
-    async function handleBannerUpload(input, bannerId) {
-      const file = input.files[0];
-      if (!file) return;
-
-      const statusEl = document.getElementById('banners-status');
-      statusEl.style.color = 'var(--silver)';
-      statusEl.textContent = 'Subiendo imagen...';
-
-      try {
-        const url = await uploadToCloudinary(file);
-        document.getElementById(bannerId + '-img').value = url;
-        statusEl.style.color = 'var(--green)';
-        statusEl.textContent = '✓ Imagen subida correctamente';
-        previewBanner(bannerId);
-      } catch (e) {
-        statusEl.style.color = 'var(--red)';
-        statusEl.textContent = '✕ Error: ' + e.message;
-      }
-    }
-
-    async function saveBannersConfig() {
-      const b1Label  = document.getElementById('banner1-label').value.trim();
-      const b1Title  = document.getElementById('banner1-title').value.trim();
-      const b1Img    = document.getElementById('banner1-img').value.trim();
-      const b1Cat    = document.getElementById('banner1-cat').value.trim();
-      const b1Bg     = document.getElementById('banner1-bg')?.value || '#1C1C1E';
-      const b1Active = document.getElementById('banner1-active') ? document.getElementById('banner1-active').checked : true;
-
-      const b2Label  = document.getElementById('banner2-label').value.trim();
-      const b2Title  = document.getElementById('banner2-title').value.trim();
-      const b2Img    = document.getElementById('banner2-img').value.trim();
-      const b2Cat    = document.getElementById('banner2-cat').value.trim();
-      const b2Bg     = document.getElementById('banner2-bg')?.value || '#1C1C1E';
-      const b2Active = document.getElementById('banner2-active') ? document.getElementById('banner2-active').checked : true;
-
-      const bannerData = {
-        banner1: { label: b1Label, title: b1Title, img: b1Img, cat: b1Cat, bg: b1Bg, active: b1Active },
-        banner2: { label: b2Label, title: b2Title, img: b2Img, cat: b2Cat, bg: b2Bg, active: b2Active }
-      };
-      localStorage.setItem(`storeapp_banners_${STORE_ID}`, JSON.stringify(bannerData));
-      localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
-
-      const statusEl = document.getElementById('banners-status');
-      statusEl.style.color = 'var(--silver)';
-      statusEl.textContent = 'Guardando en Supabase...';
-
-      try {
-        const dataToSave = {
-          banner1_label: b1Label, banner1_title: b1Title, banner1_img: b1Img, banner1_cat: b1Cat,
-          banner2_label: b2Label, banner2_title: b2Title, banner2_img: b2Img, banner2_cat: b2Cat,
-          banner1_bg: b1Bg, banner1_active: b1Active,
-          banner2_bg: b2Bg, banner2_active: b2Active
-        };
-
-        const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
-          cache: 'no-cache',
-          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-        });
-
-        if (!configRes.ok) throw new Error('No se pudo verificar la configuración en Supabase');
-        const configData = await configRes.json();
-
-        if (configData && configData.length > 0) {
-          const dbRow = configData[0];
-          const id = dbRow.id;
-
-          await updateInSupabase('company_settings', id, dataToSave);
-        } else {
-          await postToSupabase('company_settings', dataToSave);
-        }
-
-        statusEl.style.color = 'var(--green)';
-        statusEl.textContent = '✓ Banners guardados en Supabase correctamente. Recargando...';
-        showToastDash('✓ Banners guardados con éxito. Recargando...');
-        setTimeout(() => { window.location.reload(); }, 1200);
-      } catch (e) {
-        statusEl.style.color = 'var(--orange)';
-        statusEl.textContent = '⚠ Error al guardar en Supabase: ' + e.message;
       }
     }
 

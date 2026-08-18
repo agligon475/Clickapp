@@ -1731,7 +1731,7 @@ function renderBanners(bannerData) {
       ${data.img ? `<div class="promo-banner-overlay"></div>` : ''}
       <div class="promo-banner-content" style="${hasBg ? `color:${textCol};` : ''}">
         ${data.label ? `<div class="promo-banner-label" style="${hasBg ? `color:${textCol};opacity:.8;` : ''}">${data.label}</div>` : ''}
-        <div class="promo-banner-title" style="${hasBg ? `color:${textCol};` : ''}">${data.title}</div>
+        ${data.title ? `<div class="promo-banner-title" style="${hasBg ? `color:${textCol};` : ''}">${data.title}</div>` : ''}
         <div class="promo-banner-cta" style="${hasBg && ctaCol ? `color:${ctaCol};` : ''}">Ver productos <i class="bi bi-arrow-right"></i></div>
       </div>
     `;
