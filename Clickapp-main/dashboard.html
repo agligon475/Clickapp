@@ -5592,6 +5592,15 @@
         delete data.email;
       }
 
+      if (tabla === 'products' && typeof data === 'object' && data !== null) {
+        if (Array.isArray(data)) {
+          data.forEach(item => { delete item.currency; delete item.divisa; });
+        } else {
+          delete data.currency;
+          delete data.divisa;
+        }
+      }
+
       try {
         const response = await fetch(`${SUPABASE_URL}/rest/v1/${tabla}`, {
           method: 'POST',
@@ -5642,6 +5651,11 @@
           delete data.design_settings;
           delete data.phone;
           delete data.email;
+        }
+
+        if (tabla === 'products' && typeof data === 'object' && data !== null) {
+          delete data.currency;
+          delete data.divisa;
         }
 
         const response = await fetch(url, {
@@ -5757,8 +5771,6 @@
       return {
         nombre: p.name,
         precio: p.price,
-        divisa: p.currency || p.divisa || 'ARS',
-        currency: p.currency || p.divisa || 'ARS',
         stock: Math.round(parseFloat(p.stock) || 0),
         categoria: p.cat || null,
         emoji: p.emoji || '📦',
