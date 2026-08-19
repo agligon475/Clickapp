@@ -1653,58 +1653,117 @@ function renderBanners(bannerData) {
   
   if (!banner1El || !banner2El || !container) return;
 
-  const b1Active = bannerData.banner1 && bannerData.banner1.active !== false && (bannerData.banner1.title || bannerData.banner1.img);
-  const b2Active = bannerData.banner2 && bannerData.banner2.active !== false && (bannerData.banner2.title || bannerData.banner2.img);
-  
-  const renderBanner = (el, data, isActive) => {
-    if (!isActive) {
+  const renderBannerContent = (el, data) => {
+    if (!data || (!data.title && !data.img && !data.label && !data.bg)) {
       el.style.display = 'none';
       return;
     }
-    
+
     el.style.display = 'flex';
     el.style.cursor = 'pointer';
     const cat     = data.cat || 'all';
-    const hasBg   = data.bg && !data.img;
+    const hasBg   = !!data.bg;
     const bgColor = data.bg || '#1C1C1E';
     const textCol = hasBg && typeof getContrastColor === 'function' ? getContrastColor(bgColor) : '#ffffff';
     const ctaCol  = hasBg ? textCol : '';
 
-    el.style.background = data.img ? '' : bgColor;
+    if (data.img && data.img.trim()) {
+      el.style.background = '';
+      el.style.backgroundColor = '';
+    } else {
+      el.style.background = bgColor;
+      el.style.backgroundColor = bgColor;
+    }
     
     el.innerHTML = `
-      ${data.img ? `<img class="promo-banner-img" src="${optimizeImg(data.img)}" alt="${data.title}" loading="lazy"/>` : ''}
-      ${data.img ? `<div class="promo-banner-overlay"></div>` : ''}
+      ${(data.img && data.img.trim()) ? `<img class="promo-banner-img" src="${optimizeImg(data.img)}" alt="${data.title || ''}" loading="lazy"/>` : ''}
+      ${(data.img && data.img.trim()) ? `<div class="promo-banner-overlay"></div>` : ''}
       <div class="promo-banner-content" style="${hasBg ? `color:${textCol};` : ''}">
         ${data.label ? `<div class="promo-banner-label" style="${hasBg ? `color:${textCol};opacity:.8;` : ''}">${data.label}</div>` : ''}
-        <div class="promo-banner-title" style="${hasBg ? `color:${textCol};` : ''}">${data.title}</div>
+        ${data.title ? `<div class="promo-banner-title" style="${hasBg ? `color:${textCol};` : ''}">${data.title}</div>` : ''}
         <div class="promo-banner-cta" style="${hasBg && ctaCol ? `color:${ctaCol};` : ''}">Ver productos <i class="bi bi-arrow-right"></i></div>
       </div>
     `;
     
     el.onclick = () => {
-      if (cat !== 'all') {
-        const btn = document.querySelector(`[data-cat="${cat}"]`);
-        if (btn) filterCat(btn, cat);
+      let targetCat = (data.cat || '').trim();
+      if (targetCat && targetCat !== 'all') {
+        let btn = null;
+        try {
+          btn = document.querySelector(`[data-cat="${CSS.escape ? CSS.escape(targetCat) : targetCat}"]`);
+        } catch(e) {}
+        
+        if (!btn && typeof products !== 'undefined' && Array.isArray(products)) {
+          const matchProd = products.find(p => p.cat_id === targetCat || p.category_id === targetCat || p.id === targetCat);
+          if (matchProd && matchProd.cat) {
+            targetCat = matchProd.cat;
+            try {
+              btn = document.querySelector(`[data-cat="${CSS.escape ? CSS.escape(targetCat) : targetCat}"]`);
+            } catch(e) {}
+          }
+        }
+
+        if (!btn) {
+          const allBtns = Array.from(document.querySelectorAll('.cat-btn'));
+          btn = allBtns.find(b => 
+            b.dataset.cat.toLowerCase().includes(targetCat.toLowerCase()) || 
+            targetCat.toLowerCase().includes(b.dataset.cat.toLowerCase())
+          );
+        }
+
+        if (btn) {
+          filterCat(btn, btn.dataset.cat);
+        } else {
+          if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(targetCat)) {
+            filterCat(document.querySelector('[data-cat="all"]'), 'all');
+          } else {
+            onSearch(targetCat);
+          }
+        }
       } else {
         filterCat(document.querySelector('[data-cat="all"]'), 'all');
       }
-      window.scrollTo({ top: document.getElementById('banners-container').offsetTop + 300, behavior: 'smooth' });
+      const gridEl = document.getElementById('grid');
+      if (gridEl) gridEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
   };
-  
-  renderBanner(banner1El, bannerData.banner1, b1Active);
-  renderBanner(banner2El, bannerData.banner2, b2Active);
 
-  if (!b1Active && !b2Active) {
-    container.style.display = 'none';
+  const b1Active = bannerData.banner1 && (bannerData.banner1.title || bannerData.banner1.img || bannerData.banner1.label || bannerData.banner1.bg);
+  const b2Active = bannerData.banner2 && bannerData.banner2.active !== false && (bannerData.banner2.title || bannerData.banner2.img || bannerData.banner2.label || bannerData.banner2.bg);
+  const mode = bannerData.mode || bannerData.banner_mode || 'double';
+
+  if (mode === 'single') {
+    banner1El.style.gridColumn = '1 / -1';
+    banner1El.style.display = 'flex';
+    renderBannerContent(banner1El, bannerData.banner1);
+    banner2El.style.display = 'none';
+    if (container) container.style.display = 'grid';
   } else {
-    container.style.display = 'grid';
-    if (b1Active && b2Active) {
-      container.style.gridTemplateColumns = '1fr 1fr';
+    banner1El.style.gridColumn = '';
+    banner2El.style.gridColumn = '';
+    let hasAny = false;
+    if (b1Active) {
+      banner1El.style.display = 'flex';
+      renderBannerContent(banner1El, bannerData.banner1);
+      hasAny = true;
     } else {
-      container.style.gridTemplateColumns = '1fr';
+      banner1El.style.display = 'none';
     }
+    if (b2Active) {
+      banner2El.style.display = 'flex';
+      renderBannerContent(banner2El, bannerData.banner2);
+      hasAny = true;
+    } else {
+      banner2El.style.display = 'none';
+    }
+
+    if (b1Active && !b2Active) {
+      banner1El.style.gridColumn = '1 / -1';
+    } else if (!b1Active && b2Active) {
+      banner2El.style.gridColumn = '1 / -1';
+    }
+
+    if (container) container.style.display = hasAny ? 'grid' : 'none';
   }
 }
 

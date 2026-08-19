@@ -1788,35 +1788,42 @@ function renderBanners(bannerData) {
     };
   };
 
-  const b1Active = bannerData.banner1 && bannerData.banner1.active !== false && (bannerData.banner1.title || bannerData.banner1.img || bannerData.banner1.label);
-  const b2Active = bannerData.banner2 && bannerData.banner2.active !== false && (bannerData.banner2.title || bannerData.banner2.img || bannerData.banner2.label);
+  const b1Active = bannerData.banner1 && (bannerData.banner1.title || bannerData.banner1.img || bannerData.banner1.label || bannerData.banner1.bg);
+  const b2Active = bannerData.banner2 && bannerData.banner2.active !== false && (bannerData.banner2.title || bannerData.banner2.img || bannerData.banner2.label || bannerData.banner2.bg);
   const mode = bannerData.mode || bannerData.banner_mode || 'double';
 
-  if (mode === 'single' || !b2Active) {
-    if (b1Active) {
-      banner1El.style.gridColumn = '1 / -1';
-      renderBannerContent(banner1El, bannerData.banner1);
-    } else {
-      banner1El.style.display = 'none';
-    }
+  if (mode === 'single') {
+    banner1El.style.gridColumn = '1 / -1';
+    banner1El.style.display = 'flex';
+    renderBannerContent(banner1El, bannerData.banner1);
     banner2El.style.display = 'none';
+    if (container) container.style.display = 'grid';
   } else {
     banner1El.style.gridColumn = '';
     banner2El.style.gridColumn = '';
+    let hasAny = false;
     if (b1Active) {
+      banner1El.style.display = 'flex';
       renderBannerContent(banner1El, bannerData.banner1);
+      hasAny = true;
     } else {
       banner1El.style.display = 'none';
     }
     if (b2Active) {
+      banner2El.style.display = 'flex';
       renderBannerContent(banner2El, bannerData.banner2);
+      hasAny = true;
     } else {
       banner2El.style.display = 'none';
     }
-  }
 
-  if (container) {
-    container.style.display = (b1Active || b2Active) ? 'grid' : 'none';
+    if (b1Active && !b2Active) {
+      banner1El.style.gridColumn = '1 / -1';
+    } else if (!b1Active && b2Active) {
+      banner2El.style.gridColumn = '1 / -1';
+    }
+
+    if (container) container.style.display = hasAny ? 'grid' : 'none';
   }
 }
 

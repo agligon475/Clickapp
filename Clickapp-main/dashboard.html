@@ -7783,6 +7783,9 @@
       const btnDouble = document.getElementById('btn-banner-mode-double');
       const cardB2 = document.getElementById('card-banner-2-wrap');
 
+      const b1Act = document.getElementById('banner1-active');
+      const b2Act = document.getElementById('banner2-active');
+
       if (mode === 'single') {
         if (btnSingle) {
           btnSingle.style.borderColor = 'var(--red)';
@@ -7793,6 +7796,8 @@
           btnDouble.style.background = 'var(--iron)';
         }
         if (cardB2) cardB2.style.display = 'none';
+        if (b1Act) b1Act.checked = true;
+        if (b2Act) b2Act.checked = false;
       } else {
         if (btnSingle) {
           btnSingle.style.borderColor = 'var(--zinc)';
@@ -7803,6 +7808,8 @@
           btnDouble.style.background = 'rgba(215,38,56,0.15)';
         }
         if (cardB2) cardB2.style.display = 'block';
+        if (b1Act) b1Act.checked = true;
+        if (b2Act) b2Act.checked = true;
       }
     }
     window.setBannerLayoutMode = setBannerLayoutMode;
@@ -7943,6 +7950,7 @@
       localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
       localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
 
+      const isSingle = (window.BANNER_LAYOUT_MODE || 'double') === 'single';
       const bannerData = {
         mode: window.BANNER_LAYOUT_MODE || 'double',
         banner1: {
@@ -7951,7 +7959,7 @@
           img: document.getElementById('banner1-img')?.value || '',
           cat: document.getElementById('banner1-cat')?.value || '',
           bg: document.getElementById('banner1-bg')?.value || '#1C1C1E',
-          active: document.getElementById('banner1-active')?.checked !== false
+          active: true
         },
         banner2: {
           label: document.getElementById('banner2-label')?.value || '',
@@ -7959,7 +7967,7 @@
           img: document.getElementById('banner2-img')?.value || '',
           cat: document.getElementById('banner2-cat')?.value || '',
           bg: document.getElementById('banner2-bg')?.value || '#1C1C1E',
-          active: document.getElementById('banner2-active')?.checked !== false
+          active: !isSingle && (document.getElementById('banner2-active')?.checked !== false)
         }
       };
 
