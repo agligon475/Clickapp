@@ -270,7 +270,9 @@ a.logo{
   border:1px solid var(--zinc);
   transition:all .2s;
   animation:fadeUp .4s ease both;
-  background:var(--iron);
+  background-color:var(--banner-bg, var(--iron));
+  background-size:cover;
+  background-position:center;
   display:flex;align-items:center;justify-content:center;
   font-size:48px;
 }
@@ -291,24 +293,25 @@ a.logo{
 .promo-banner-content{
   position:relative;z-index:2;
   text-align:center;padding:20px;
-  color:#fff;
+  color:var(--banner-text-col, #fff);
 }
 .promo-banner-label{
   font-family:var(--font-body);
   font-size:12px;font-weight:600;
-  color:rgba(255,255,255,.8);
+  color:var(--banner-text-col, rgba(255,255,255,.8));
+  opacity:0.85;
   text-transform:uppercase;letter-spacing:.1em;
   margin-bottom:8px;
 }
 .promo-banner-title{
   font-family:var(--font-head);
   font-size:28px;font-weight:800;
-  color:#fff;line-height:1.1;
+  color:var(--banner-text-col, #fff);line-height:1.1;
   margin-bottom:6px;
 }
 .promo-banner-cta{
   font-size:12px;
-  color:var(--red);font-weight:600;
+  color:var(--banner-cta-col, var(--banner-text-col, #fff));font-weight:600;
   margin-top:10px;display:flex;align-items:center;gap:6px;
   justify-content:center;
 }

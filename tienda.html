@@ -292,7 +292,9 @@ a.logo{
   border:1px solid var(--zinc);
   transition:all .2s;
   animation:fadeUp .4s ease both;
-  background:var(--iron);
+  background-color:var(--banner-bg, var(--iron));
+  background-size:cover;
+  background-position:center;
   display:flex;align-items:center;justify-content:center;
   font-size:48px;
 }
@@ -313,24 +315,25 @@ a.logo{
 .promo-banner-content{
   position:relative;z-index:2;
   text-align:center;padding:20px;
-  color:#fff;
+  color:var(--banner-text-col, #fff);
 }
 .promo-banner-label{
   font-family:var(--font-body);
   font-size:12px;font-weight:600;
-  color:rgba(255,255,255,.8);
+  color:var(--banner-text-col, rgba(255,255,255,.8));
+  opacity:0.85;
   text-transform:uppercase;letter-spacing:.1em;
   margin-bottom:8px;
 }
 .promo-banner-title{
   font-family:var(--font-head);
   font-size:28px;font-weight:800;
-  color:#fff;line-height:1.1;
+  color:var(--banner-text-col, #fff);line-height:1.1;
   margin-bottom:6px;
 }
 .promo-banner-cta{
   font-size:12px;
-  color:var(--red);font-weight:600;
+  color:var(--banner-cta-col, var(--banner-text-col, #fff));font-weight:600;
   margin-top:10px;display:flex;align-items:center;gap:6px;
   justify-content:center;
 }
@@ -1714,7 +1717,7 @@ function renderBanners(bannerData) {
   }
 
   const renderBannerContent = (el, data) => {
-    if (!data || (!data.title && !data.img && !data.label)) {
+    if (!data || (!data.title && !data.img && !data.label && !data.bg)) {
       el.style.display = 'none';
       return;
     }
@@ -1725,23 +1728,27 @@ function renderBanners(bannerData) {
     const hasBg   = !!data.bg;
     const bgColor = data.bg || '#1C1C1E';
     const textCol = hasBg && typeof getContrastColor === 'function' ? getContrastColor(bgColor) : '#ffffff';
-    const ctaCol  = hasBg ? textCol : '';
+    const ctaCol  = hasBg ? textCol : '#ffffff';
 
-    if (data.img) {
-      el.style.background = '';
-      el.style.backgroundColor = '';
+    if (data.img && data.img.trim()) {
+      el.style.removeProperty('--banner-bg');
+      el.style.removeProperty('--banner-text-col');
+      el.style.removeProperty('--banner-cta-col');
+      el.classList.remove('has-custom-bg');
     } else {
-      el.style.background = bgColor;
-      el.style.backgroundColor = bgColor;
+      el.style.setProperty('--banner-bg', bgColor);
+      el.style.setProperty('--banner-text-col', textCol);
+      el.style.setProperty('--banner-cta-col', ctaCol);
+      el.classList.add('has-custom-bg');
     }
     
     el.innerHTML = `
-      ${data.img ? `<img class="promo-banner-img" src="${optimizeImg(data.img)}" alt="${data.title || ''}" loading="lazy"/>` : ''}
-      ${data.img ? `<div class="promo-banner-overlay"></div>` : ''}
-      <div class="promo-banner-content" style="${hasBg ? `color:${textCol};` : ''}">
-        ${data.label ? `<div class="promo-banner-label" style="${hasBg ? `color:${textCol};opacity:.8;` : ''}">${data.label}</div>` : ''}
-        ${data.title ? `<div class="promo-banner-title" style="${hasBg ? `color:${textCol};` : ''}">${data.title}</div>` : ''}
-        <div class="promo-banner-cta" style="${hasBg && ctaCol ? `color:${ctaCol};` : ''}">Ver productos <i class="bi bi-arrow-right"></i></div>
+      ${(data.img && data.img.trim()) ? `<img class="promo-banner-img" src="${optimizeImg(data.img)}" alt="${data.title || ''}" loading="lazy"/>` : ''}
+      ${(data.img && data.img.trim()) ? `<div class="promo-banner-overlay"></div>` : ''}
+      <div class="promo-banner-content">
+        ${data.label ? `<div class="promo-banner-label">${data.label}</div>` : ''}
+        ${data.title ? `<div class="promo-banner-title">${data.title}</div>` : ''}
+        <div class="promo-banner-cta">Ver productos <i class="bi bi-arrow-right"></i></div>
       </div>
     `;
     
