@@ -1499,9 +1499,19 @@ async function loadSheet() {
       let parsedDesign = {};
       if (cfg.design_settings) {
         parsedDesign = typeof cfg.design_settings === 'string' ? JSON.parse(cfg.design_settings) : cfg.design_settings;
-      } else if (cfg.email) {
-        try { parsedDesign = JSON.parse(cfg.email); } catch (e) {}
       }
+      if (cfg.email) {
+        try {
+          const fromEmail = typeof cfg.email === 'string' ? JSON.parse(cfg.email) : cfg.email;
+          parsedDesign = { ...fromEmail, ...parsedDesign };
+        } catch (e) {}
+      }
+
+      let localBannerData = null;
+      try {
+        const storedBanners = localStorage.getItem(`storeapp_banners_${STORE_ID}`) || localStorage.getItem('storeapp_banners');
+        if (storedBanners) localBannerData = JSON.parse(storedBanners);
+      } catch(e) {}
 
       CFG.h1 = cfg.h1 != null ? cfg.h1 : (parsedDesign.h1 || CFG.h1 || '');
       CFG.h2 = cfg.h2 != null ? cfg.h2 : (parsedDesign.h2 || CFG.h2 || '');
@@ -1514,21 +1524,21 @@ async function loadSheet() {
       CFG.logo = cfg.logo_url || parsedDesign.logo || CFG.logo || '';
       
       bannerData = {
-        mode: cfg.banner_mode || parsedDesign.banner_mode || 'double',
+        mode: cfg.banner_mode || parsedDesign.banner_mode || (localBannerData && localBannerData.mode) || 'double',
         banner1: {
-          label: (cfg.banner1_label != null && cfg.banner1_label !== '') ? cfg.banner1_label : (parsedDesign.banner1_label || ''),
-          title: (cfg.banner1_title != null && cfg.banner1_title !== '') ? cfg.banner1_title : (parsedDesign.banner1_title || ''),
+          label: (cfg.banner1_label != null && cfg.banner1_label !== '') ? cfg.banner1_label : (parsedDesign.banner1_label || (localBannerData && localBannerData.banner1 && localBannerData.banner1.label) || ''),
+          title: (cfg.banner1_title != null && cfg.banner1_title !== '') ? cfg.banner1_title : (parsedDesign.banner1_title || (localBannerData && localBannerData.banner1 && localBannerData.banner1.title) || ''),
           img: cfg.banner1_img != null ? cfg.banner1_img : (parsedDesign.banner1_img || ''),
           cat: cfg.banner1_cat != null ? cfg.banner1_cat : (parsedDesign.banner1_cat || ''),
-          bg: parsedDesign.banner1_bg || '#1C1C1E',
+          bg: cfg.banner1_bg || parsedDesign.banner1_bg || (localBannerData && localBannerData.banner1 && localBannerData.banner1.bg) || '#1C1C1E',
           active: cfg.banner1_active != null ? cfg.banner1_active : (parsedDesign.banner1_active !== false)
         },
         banner2: {
-          label: (cfg.banner2_label != null && cfg.banner2_label !== '') ? cfg.banner2_label : (parsedDesign.banner2_label || ''),
-          title: (cfg.banner2_title != null && cfg.banner2_title !== '') ? cfg.banner2_title : (parsedDesign.banner2_title || ''),
+          label: (cfg.banner2_label != null && cfg.banner2_label !== '') ? cfg.banner2_label : (parsedDesign.banner2_label || (localBannerData && localBannerData.banner2 && localBannerData.banner2.label) || ''),
+          title: (cfg.banner2_title != null && cfg.banner2_title !== '') ? cfg.banner2_title : (parsedDesign.banner2_title || (localBannerData && localBannerData.banner2 && localBannerData.banner2.title) || ''),
           img: cfg.banner2_img != null ? cfg.banner2_img : (parsedDesign.banner2_img || ''),
           cat: cfg.banner2_cat != null ? cfg.banner2_cat : (parsedDesign.banner2_cat || ''),
-          bg: parsedDesign.banner2_bg || '#1C1C1E',
+          bg: cfg.banner2_bg || parsedDesign.banner2_bg || (localBannerData && localBannerData.banner2 && localBannerData.banner2.bg) || '#1C1C1E',
           active: cfg.banner2_active != null ? cfg.banner2_active : (parsedDesign.banner2_active !== false)
         }
       };
