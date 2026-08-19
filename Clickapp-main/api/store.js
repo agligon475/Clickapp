@@ -46,6 +46,8 @@ export default async function handler(req, res) {
     } catch (e) {
       console.error('Error serving static route:', e);
     }
+  }
+
   // Serve bgd-samples static images
   if (rawPath.startsWith('/bgd-samples/')) {
     try {
