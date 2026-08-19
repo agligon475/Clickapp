@@ -1722,12 +1722,18 @@ function renderBanners(bannerData) {
     el.style.display = 'flex';
     el.style.cursor = 'pointer';
     const cat     = data.cat || 'all';
-    const hasBg   = data.bg && !data.img;
+    const hasBg   = !!data.bg;
     const bgColor = data.bg || '#1C1C1E';
     const textCol = hasBg && typeof getContrastColor === 'function' ? getContrastColor(bgColor) : '#ffffff';
     const ctaCol  = hasBg ? textCol : '';
 
-    el.style.background = data.img ? '' : bgColor;
+    if (data.img) {
+      el.style.background = '';
+      el.style.backgroundColor = '';
+    } else {
+      el.style.background = bgColor;
+      el.style.backgroundColor = bgColor;
+    }
     
     el.innerHTML = `
       ${data.img ? `<img class="promo-banner-img" src="${optimizeImg(data.img)}" alt="${data.title || ''}" loading="lazy"/>` : ''}
@@ -1740,17 +1746,39 @@ function renderBanners(bannerData) {
     `;
     
     el.onclick = () => {
-      const targetCat = data.cat || '';
+      let targetCat = (data.cat || '').trim();
       if (targetCat && targetCat !== 'all') {
-        let btn = document.querySelector(`[data-cat="${targetCat}"]`);
+        let btn = null;
+        try {
+          btn = document.querySelector(`[data-cat="${CSS.escape ? CSS.escape(targetCat) : targetCat}"]`);
+        } catch(e) {}
+        
+        if (!btn && typeof products !== 'undefined' && Array.isArray(products)) {
+          const matchProd = products.find(p => p.cat_id === targetCat || p.category_id === targetCat || p.id === targetCat);
+          if (matchProd && matchProd.cat) {
+            targetCat = matchProd.cat;
+            try {
+              btn = document.querySelector(`[data-cat="${CSS.escape ? CSS.escape(targetCat) : targetCat}"]`);
+            } catch(e) {}
+          }
+        }
+
         if (!btn) {
           const allBtns = Array.from(document.querySelectorAll('.cat-btn'));
-          btn = allBtns.find(b => b.dataset.cat.toLowerCase().includes(targetCat.toLowerCase()) || targetCat.toLowerCase().includes(b.dataset.cat.toLowerCase()));
+          btn = allBtns.find(b => 
+            b.dataset.cat.toLowerCase().includes(targetCat.toLowerCase()) || 
+            targetCat.toLowerCase().includes(b.dataset.cat.toLowerCase())
+          );
         }
+
         if (btn) {
           filterCat(btn, btn.dataset.cat);
         } else {
-          onSearch(targetCat);
+          if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(targetCat)) {
+            filterCat(document.querySelector('[data-cat="all"]'), 'all');
+          } else {
+            onSearch(targetCat);
+          }
         }
       } else {
         filterCat(document.querySelector('[data-cat="all"]'), 'all');

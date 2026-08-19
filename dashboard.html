@@ -7999,10 +7999,14 @@
               banner1_title: bannerData.banner1.title,
               banner1_img: bannerData.banner1.img,
               banner1_cat: bannerData.banner1.cat,
+              banner1_bg: bannerData.banner1.bg,
+              banner1_active: bannerData.banner1.active,
               banner2_label: bannerData.banner2.label,
               banner2_title: bannerData.banner2.title,
               banner2_img: bannerData.banner2.img,
-              banner2_cat: bannerData.banner2.cat
+              banner2_cat: bannerData.banner2.cat,
+              banner2_bg: bannerData.banner2.bg,
+              banner2_active: bannerData.banner2.active
             };
 
             await updateInSupabase('company_settings', dbRow.id, patchPayload);
