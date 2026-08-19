@@ -1425,18 +1425,21 @@ async function loadSheet() {
         CFG.bg = cfg.bg != null ? cfg.bg : (parsedDesign.bg || CFG.bg || '');
         
         bannerData = {
+          mode: cfg.banner_mode || parsedDesign.banner_mode || 'double',
           banner1: {
-            label: cfg.banner1_label || 'NUEVAS',
-            title: cfg.banner1_title || 'Productos',
-            img: cfg.banner1_img || '',
-            cat: cfg.banner1_cat || '',
+            label: (cfg.banner1_label != null && cfg.banner1_label !== '') ? cfg.banner1_label : (parsedDesign.banner1_label || ''),
+            title: (cfg.banner1_title != null && cfg.banner1_title !== '') ? cfg.banner1_title : (parsedDesign.banner1_title || ''),
+            img: cfg.banner1_img != null ? cfg.banner1_img : (parsedDesign.banner1_img || ''),
+            cat: cfg.banner1_cat != null ? cfg.banner1_cat : (parsedDesign.banner1_cat || ''),
+            bg: parsedDesign.banner1_bg || '#1C1C1E',
             active: cfg.banner1_active != null ? cfg.banner1_active : (parsedDesign.banner1_active !== false)
           },
           banner2: {
-            label: cfg.banner2_label || 'PROMOCIÓN',
-            title: cfg.banner2_title || 'Especiales',
-            img: cfg.banner2_img || '',
-            cat: cfg.banner2_cat || '',
+            label: (cfg.banner2_label != null && cfg.banner2_label !== '') ? cfg.banner2_label : (parsedDesign.banner2_label || ''),
+            title: (cfg.banner2_title != null && cfg.banner2_title !== '') ? cfg.banner2_title : (parsedDesign.banner2_title || ''),
+            img: cfg.banner2_img != null ? cfg.banner2_img : (parsedDesign.banner2_img || ''),
+            cat: cfg.banner2_cat != null ? cfg.banner2_cat : (parsedDesign.banner2_cat || ''),
+            bg: parsedDesign.banner2_bg || '#1C1C1E',
             active: cfg.banner2_active != null ? cfg.banner2_active : (parsedDesign.banner2_active !== false)
           }
         };

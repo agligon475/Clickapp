@@ -1511,18 +1511,21 @@ async function loadSheet() {
       CFG.logo = cfg.logo_url || parsedDesign.logo || CFG.logo || '';
       
       bannerData = {
+        mode: cfg.banner_mode || parsedDesign.banner_mode || 'double',
         banner1: {
-          label: cfg.banner1_label || 'NUEVAS',
-          title: cfg.banner1_title || 'Productos',
-          img: cfg.banner1_img || '',
-          cat: cfg.banner1_cat || '',
+          label: (cfg.banner1_label != null && cfg.banner1_label !== '') ? cfg.banner1_label : (parsedDesign.banner1_label || ''),
+          title: (cfg.banner1_title != null && cfg.banner1_title !== '') ? cfg.banner1_title : (parsedDesign.banner1_title || ''),
+          img: cfg.banner1_img != null ? cfg.banner1_img : (parsedDesign.banner1_img || ''),
+          cat: cfg.banner1_cat != null ? cfg.banner1_cat : (parsedDesign.banner1_cat || ''),
+          bg: parsedDesign.banner1_bg || '#1C1C1E',
           active: cfg.banner1_active != null ? cfg.banner1_active : (parsedDesign.banner1_active !== false)
         },
         banner2: {
-          label: cfg.banner2_label || 'PROMOCIÓN',
-          title: cfg.banner2_title || 'Especiales',
-          img: cfg.banner2_img || '',
-          cat: cfg.banner2_cat || '',
+          label: (cfg.banner2_label != null && cfg.banner2_label !== '') ? cfg.banner2_label : (parsedDesign.banner2_label || ''),
+          title: (cfg.banner2_title != null && cfg.banner2_title !== '') ? cfg.banner2_title : (parsedDesign.banner2_title || ''),
+          img: cfg.banner2_img != null ? cfg.banner2_img : (parsedDesign.banner2_img || ''),
+          cat: cfg.banner2_cat != null ? cfg.banner2_cat : (parsedDesign.banner2_cat || ''),
+          bg: parsedDesign.banner2_bg || '#1C1C1E',
           active: cfg.banner2_active != null ? cfg.banner2_active : (parsedDesign.banner2_active !== false)
         }
       };
@@ -1711,11 +1714,11 @@ function renderBanners(bannerData) {
   }
 
   const renderBannerContent = (el, data) => {
-    if (!data || (!data.title && !data.img)) {
+    if (!data || (!data.title && !data.img && !data.label)) {
       el.style.display = 'none';
       return;
     }
-    
+
     el.style.display = 'flex';
     el.style.cursor = 'pointer';
     const cat     = data.cat || 'all';
@@ -1727,7 +1730,7 @@ function renderBanners(bannerData) {
     el.style.background = data.img ? '' : bgColor;
     
     el.innerHTML = `
-      ${data.img ? `<img class="promo-banner-img" src="${optimizeImg(data.img)}" alt="${data.title}" loading="lazy"/>` : ''}
+      ${data.img ? `<img class="promo-banner-img" src="${optimizeImg(data.img)}" alt="${data.title || ''}" loading="lazy"/>` : ''}
       ${data.img ? `<div class="promo-banner-overlay"></div>` : ''}
       <div class="promo-banner-content" style="${hasBg ? `color:${textCol};` : ''}">
         ${data.label ? `<div class="promo-banner-label" style="${hasBg ? `color:${textCol};opacity:.8;` : ''}">${data.label}</div>` : ''}
@@ -1757,8 +1760,8 @@ function renderBanners(bannerData) {
     };
   };
 
-  const b1Active = bannerData.banner1 && bannerData.banner1.active !== false && (bannerData.banner1.title || bannerData.banner1.img);
-  const b2Active = bannerData.banner2 && bannerData.banner2.active !== false && (bannerData.banner2.title || bannerData.banner2.img);
+  const b1Active = bannerData.banner1 && bannerData.banner1.active !== false && (bannerData.banner1.title || bannerData.banner1.img || bannerData.banner1.label);
+  const b2Active = bannerData.banner2 && bannerData.banner2.active !== false && (bannerData.banner2.title || bannerData.banner2.img || bannerData.banner2.label);
   const mode = bannerData.mode || bannerData.banner_mode || 'double';
 
   if (mode === 'single' || !b2Active) {
