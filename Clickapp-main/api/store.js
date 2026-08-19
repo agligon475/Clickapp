@@ -46,6 +46,19 @@ export default async function handler(req, res) {
     } catch (e) {
       console.error('Error serving static route:', e);
     }
+  // Serve bgd-samples static images
+  if (rawPath.startsWith('/bgd-samples/')) {
+    try {
+      const fileName = path.basename(rawPath);
+      const filePath = path.join(process.cwd(), 'bgd-samples', fileName);
+      if (fs.existsSync(filePath)) {
+        const content = fs.readFileSync(filePath);
+        res.setHeader('Content-Type', 'image/jpeg');
+        return res.status(200).send(content);
+      }
+    } catch (e) {
+      console.error('Error serving bgd-samples image:', e);
+    }
   }
 
   // 2. Serve landing.html directly for main domains root '/'

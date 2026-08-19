@@ -1110,6 +1110,47 @@
       border-style: solid;
     }
 
+    .bg-sample-card {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid var(--zinc);
+      cursor: pointer;
+      height: 60px;
+      transition: all .2s ease;
+      background: var(--iron);
+    }
+    .bg-sample-card:hover {
+      border-color: var(--red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(215, 38, 56, 0.3);
+    }
+    .bg-sample-card.active {
+      border-color: var(--red);
+      box-shadow: 0 0 0 2px var(--red);
+    }
+    .bg-sample-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .bg-sample-card span {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.78);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 600;
+      text-align: center;
+      padding: 2px 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     /* ── PREVIEW SPOTLIGHT ── */
     .prev-spotlight-label {
       position: absolute;
@@ -3692,6 +3733,64 @@
               </label>
               <p style="font-size:10px;color:var(--silver);margin-bottom:10px;">Recomendado: 1400×400px mínimo. Se
                 aplica un overlay oscuro automáticamente.</p>
+
+              <!-- GALERIA DE FONDOS PREDETERMINADOS -->
+              <div class="ctrl-group" style="margin-top:14px; margin-bottom:14px;">
+                <label class="ctrl-label" style="display:flex; align-items:center; justify-content:space-between;">
+                  <span><i class="bi bi-grid-fill" style="color:var(--red);"></i> Fondos Predeterminados</span>
+                  <span style="font-size:10px; color:var(--silver);">12 variaciones</span>
+                </label>
+                <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(90px, 1fr)); gap:8px; max-height:220px; overflow-y:auto; padding:6px; background:var(--black); border:1px solid var(--zinc); border-radius:10px;" id="bg-samples-picker">
+                  <div class="bg-sample-card" onclick="selectBgSample('/bgd-samples/blob_background.jpg')" title="Gotas / Blobs">
+                    <img src="/bgd-samples/blob_background.jpg" alt="Blobs" />
+                    <span>Blobs</span>
+                  </div>
+                  <div class="bg-sample-card" onclick="selectBgSample('/bgd-samples/block_background.jpg')" title="Bloques Geométricos">
+                    <img src="/bgd-samples/block_background.jpg" alt="Bloques" />
+                    <span>Bloques</span>
+                  </div>
+                  <div class="bg-sample-card" onclick="selectBgSample('/bgd-samples/blurry_background.jpg')" title="Degradado Desenlazado">
+                    <img src="/bgd-samples/blurry_background.jpg" alt="Blurry" />
+                    <span>Blurry</span>
+                  </div>
+                  <div class="bg-sample-card" onclick="selectBgSample('/bgd-samples/code_background.jpg')" title="Código & Tech">
+                    <img src="/bgd-samples/code_background.jpg" alt="Code" />
+                    <span>Code</span>
+                  </div>
+                  <div class="bg-sample-card" onclick="selectBgSample('/bgd-samples/material_background.jpg')" title="Material Minimal">
+                    <img src="/bgd-samples/material_background.jpg" alt="Material" />
+                    <span>Material</span>
+                  </div>
+                  <div class="bg-sample-card" onclick="selectBgSample('/bgd-samples/peak_background.jpg')" title="Picos & Montañas">
+                    <img src="/bgd-samples/peak_background.jpg" alt="Peak" />
+                    <span>Peak</span>
+                  </div>
+                  <div class="bg-sample-card" onclick="selectBgSample('/bgd-samples/rain_background.jpg')" title="Lluvia de Luces">
+                    <img src="/bgd-samples/rain_background.jpg" alt="Rain" />
+                    <span>Rain</span>
+                  </div>
+                  <div class="bg-sample-card" onclick="selectBgSample('/bgd-samples/scattered_background.jpg')" title="Partículas">
+                    <img src="/bgd-samples/scattered_background.jpg" alt="Disperso" />
+                    <span>Disperso</span>
+                  </div>
+                  <div class="bg-sample-card" onclick="selectBgSample('/bgd-samples/scribbles_background.jpg')" title="Garabatos">
+                    <img src="/bgd-samples/scribbles_background.jpg" alt="Scribbles" />
+                    <span>Garabatos</span>
+                  </div>
+                  <div class="bg-sample-card" onclick="selectBgSample('/bgd-samples/split_background.jpg')" title="Corte Diagonal">
+                    <img src="/bgd-samples/split_background.jpg" alt="Split" />
+                    <span>Split</span>
+                  </div>
+                  <div class="bg-sample-card" onclick="selectBgSample('/bgd-samples/step_background.jpg')" title="Escalones 3D">
+                    <img src="/bgd-samples/step_background.jpg" alt="Step" />
+                    <span>Step</span>
+                  </div>
+                  <div class="bg-sample-card" onclick="selectBgSample('/bgd-samples/wave_background.jpg')" title="Ondas Fluídas">
+                    <img src="/bgd-samples/wave_background.jpg" alt="Wave" />
+                    <span>Wave</span>
+                  </div>
+                </div>
+              </div>
 
               <div class="ctrl-group">
                 <label class="ctrl-label">Intensidad del overlay <span id="overlay-val">48%</span></label>
@@ -7602,14 +7701,43 @@
       previewUpdate();
     }
 
+    function selectBgSample(url) {
+      localStorage.setItem('storeapp_hero_img', url);
+      localStorage.setItem('storeapp_hero_img_' + STORE_ID, url);
+      cfg.bg = url;
+      const wrap = document.getElementById('hero-img-preview-wrap');
+      const prev = document.getElementById('hero-img-preview');
+      if (prev) prev.src = url;
+      if (wrap) wrap.style.display = 'block';
+
+      // Highlight active card
+      document.querySelectorAll('.bg-sample-card').forEach(card => {
+        const img = card.querySelector('img');
+        if (img && img.getAttribute('src') === url) {
+          card.classList.add('active');
+        } else {
+          card.classList.remove('active');
+        }
+      });
+
+      if (typeof previewUpdate === 'function') previewUpdate();
+    }
+    window.selectBgSample = selectBgSample;
+
     function removeHeroImg() {
       localStorage.removeItem('storeapp_hero_img');
+      localStorage.removeItem('storeapp_hero_img_' + STORE_ID);
       cfg.bg = '';
-      document.getElementById('hero-img-preview-wrap').style.display = 'none';
-      document.getElementById('hero-img-preview').src = '';
-      document.getElementById('hero-img-input').value = '';
-      previewUpdate();
+      const wrap = document.getElementById('hero-img-preview-wrap');
+      if (wrap) wrap.style.display = 'none';
+      const prev = document.getElementById('hero-img-preview');
+      if (prev) prev.src = '';
+      const input = document.getElementById('hero-img-input');
+      if (input) input.value = '';
+      document.querySelectorAll('.bg-sample-card').forEach(card => card.classList.remove('active'));
+      if (typeof previewUpdate === 'function') previewUpdate();
     }
+    window.removeHeroImg = removeHeroImg;
 
     function updateOverlay(val) {
       document.getElementById('overlay-val').textContent = val + '%';
@@ -7619,10 +7747,22 @@
     }
 
     function initHeroImgPreview() {
-      const saved = cfg.bg || localStorage.getItem('storeapp_hero_img');
+      const saved = cfg.bg || localStorage.getItem('storeapp_hero_img_' + STORE_ID) || localStorage.getItem('storeapp_hero_img');
       if (saved) {
-        document.getElementById('hero-img-preview').src = saved;
-        document.getElementById('hero-img-preview-wrap').style.display = 'block';
+        const prev = document.getElementById('hero-img-preview');
+        const wrap = document.getElementById('hero-img-preview-wrap');
+        if (prev) prev.src = saved;
+        if (wrap) wrap.style.display = 'block';
+
+        // Highlight card if saved matches a preset sample
+        document.querySelectorAll('.bg-sample-card').forEach(card => {
+          const img = card.querySelector('img');
+          if (img && img.getAttribute('src') === saved) {
+            card.classList.add('active');
+          } else {
+            card.classList.remove('active');
+          }
+        });
       }
     }
 

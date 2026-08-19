@@ -24,7 +24,19 @@ const filesToSync = [
   'manifest.json',
   'sw.js',
   'icon-192.png',
-  'icon-512.png'
+  'icon-512.png',
+  'bgd-samples/blob_background.jpg',
+  'bgd-samples/block_background.jpg',
+  'bgd-samples/blurry_background.jpg',
+  'bgd-samples/code_background.jpg',
+  'bgd-samples/material_background.jpg',
+  'bgd-samples/peak_background.jpg',
+  'bgd-samples/rain_background.jpg',
+  'bgd-samples/scattered_background.jpg',
+  'bgd-samples/scribbles_background.jpg',
+  'bgd-samples/split_background.jpg',
+  'bgd-samples/step_background.jpg',
+  'bgd-samples/wave_background.jpg'
 ];
 
 const destinations = [
