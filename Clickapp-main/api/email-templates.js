@@ -453,3 +453,66 @@ export function getPlanPaymentInstructionsEmail({ storeName, storeId, planKey = 
 
   return { subject: `Instrucciones de Pago: ${planInfo.name} - Dale! Te Pido`, html: getEmailLayout({ title, bodyContent }) };
 }
+
+/**
+ * Correo de Prospección / Venta a Nuevos Posibles Clientes (Leads)
+ */
+export function getProspectEmail({
+  prospectName = '',
+  subject = 'Potenciá tus ventas por WhatsApp con tu propio Catálogo Digital sin comisiones',
+  badgeText = '🚀 INVITACIÓN EXCLUSIVA',
+  greetingText = '',
+  bodyText = '',
+  ctaText = 'Crear mi Tienda Gratis Ahora →',
+  ctaUrl = 'https://daletepido.com.ar/alta-usuario.html',
+  extraNotes = ''
+}) {
+  const greeting = greetingText || `¡Hola${prospectName ? ' ' + prospectName : ''}! 👋`;
+  const defaultBody = bodyText || `
+    Nos comunicamos de parte de <strong>Dale! Te Pido</strong> para presentarte la solución definitiva para impulsar las ventas de tu negocio.<br/><br/>
+    Con tu propio <strong>Catálogo Digital Interactivo</strong> podrás:
+    <ul>
+      <li>📲 Recibir pedidos directos a tu WhatsApp con resumen de productos, precios y datos del cliente.</li>
+      <li>🏷️ Cargar productos ilimitados con fotos, categorías, subrubros y marca de agua automática.</li>
+      <li>🛵 Gestionar repartidores y cadetes con asignación de envíos en tiempo real.</li>
+      <li>⚡ Cero comisiones por venta: todo lo que vendés es 100% tuyo.</li>
+    </ul>
+    ¡Podés crear y probar tu catálogo completamente gratis en menos de 2 minutos!
+  `;
+
+  const title = subject || 'Propuesta Especial de Dale! Te Pido';
+
+  const bodyContent = `
+    <div class="greeting">${greeting}</div>
+    <div class="badge badge-purple">${badgeText || '🚀 INVITACIÓN EXCLUSIVA'}</div>
+    
+    <div class="text">
+      ${defaultBody}
+    </div>
+
+    <div class="btn-container" style="margin: 32px 0;">
+      <a href="${ctaUrl || 'https://daletepido.com.ar/alta-usuario.html'}" target="_blank" class="btn-primary" style="font-size:16px; padding:16px 36px;">${ctaText || 'Crear mi Tienda Gratis Ahora →'}</a>
+    </div>
+
+    ${extraNotes ? `
+    <div class="box" style="border-left: 4px solid #A855F7; background: rgba(168,85,247,0.05); margin-top: 20px;">
+      <div style="font-size:13.5px; color:#dddddd; line-height:1.6;">
+        ${extraNotes}
+      </div>
+    </div>` : ''}
+
+    <div class="box" style="border-left: 4px solid #22D3EE; background: rgba(34, 211, 238, 0.05); margin-top: 20px;">
+      <div class="box-title" style="color: #67e8f9;">🎁 Prueba Gratuita y Asesoramiento Sin Cargo</div>
+      <div style="font-size: 13.5px; color: #dddddd; line-height: 1.6;">
+        Si querés ver una demostración en vivo o tenés alguna duda sobre la configuración, simplemente respondé a este correo o escribinos por WhatsApp. Estaremos encantados de ayudarte.
+      </div>
+    </div>
+
+    <div class="text" style="margin-top:20px; font-weight:600; color:#ffffff;">
+      Te esperamos en Dale! Te Pido.
+    </div>
+  `;
+
+  return { subject: title, html: getEmailLayout({ title, bodyContent }) };
+}
+

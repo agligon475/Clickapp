@@ -1,4 +1,4 @@
-import { getWelcomeEmail, getPlanPaymentInstructionsEmail } from './email-templates.js';
+import { getWelcomeEmail, getPlanPaymentInstructionsEmail, getProspectEmail } from './email-templates.js';
 
 export default async function handler(req, res) {
   // CORS Headers
@@ -15,18 +15,51 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { store_id, business_name, admin_email, wapp, type, plan_key, plan_level } = req.body || {};
+    const {
+      store_id,
+      business_name,
+      admin_email,
+      wapp,
+      type,
+      plan_key,
+      plan_level,
+      // Lead / prospect outreach fields
+      prospect_email,
+      prospect_name,
+      subject: customSubject,
+      badge_text,
+      greeting: customGreeting,
+      body_text,
+      btn_text,
+      btn_url,
+      extra_notes
+    } = req.body || {};
 
-    if (!admin_email || !store_id) {
-      return res.status(400).json({ success: false, error: 'Store ID y Email son requeridos' });
+    const targetEmail = admin_email || prospect_email;
+
+    if (!targetEmail) {
+      return res.status(400).json({ success: false, error: 'El email de destino es requerido' });
     }
 
-    const storeName = business_name || store_id;
+    const storeName = business_name || prospect_name || store_id || '';
     const effectivePlanLevel = (plan_level || (plan_key && plan_key.startsWith('enterprise') ? 'enterprise' : 'starter')).toLowerCase();
     let emailSubject = '';
     let htmlBody = '';
 
-    if (type === 'plan_instructions' || plan_key) {
+    if (type === 'prospect') {
+      const emailObj = getProspectEmail({
+        prospectName: prospect_name || storeName,
+        subject: customSubject,
+        badgeText: badge_text,
+        greetingText: customGreeting,
+        bodyText: body_text,
+        ctaText: btn_text,
+        ctaUrl: btn_url,
+        extraNotes: extra_notes
+      });
+      emailSubject = emailObj.subject;
+      htmlBody = emailObj.html;
+    } else if (type === 'plan_instructions' || plan_key) {
       const emailObj = getPlanPaymentInstructionsEmail({ storeName, storeId: store_id, planKey: plan_key || 'starter_mensual' });
       emailSubject = emailObj.subject;
       htmlBody = emailObj.html;
@@ -35,6 +68,7 @@ export default async function handler(req, res) {
       emailSubject = emailObj.subject;
       htmlBody = emailObj.html;
     }
+
 
     const host = req.headers['x-forwarded-host'] || req.headers.host || 'daletepido.com.ar';
     const protocol = req.headers['x-forwarded-proto'] || 'https';
@@ -56,7 +90,7 @@ export default async function handler(req, res) {
           },
           body: JSON.stringify({
             from: fromEmail,
-            to: [admin_email],
+            to: [targetEmail],
             subject: emailSubject,
             html: htmlBody
           })
@@ -92,7 +126,7 @@ export default async function handler(req, res) {
       }
     } else {
       try {
-        await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(admin_email)}`, {
+        await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
