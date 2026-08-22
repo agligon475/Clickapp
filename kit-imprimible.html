@@ -3,20 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kit Imprimible Comercial — DaleTepido</title>
+  <title>Kit Imprimible de Difusión & Código QR — Dale! Te Pido</title>
   
-  <!-- Premium Fonts and Icons -->
+  <!-- Google Fonts & Bootstrap Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
 
   <style>
     :root {
-      --brand-main: #D60000;
-      --brand-secondary: #000000;
-      --brand-muted: #706765;
-      --font: 'Poppins', sans-serif;
+      --brand-main: #D72638;
+      --brand-dark: #A81D2A;
+      --brand-secondary: #0F172A;
+      --brand-muted: #64748B;
+      --bg-page: #F1F5F9;
+      --font-main: 'Barlow', 'Poppins', sans-serif;
     }
 
     * {
@@ -26,8 +28,8 @@
     }
 
     body {
-      font-family: var(--font);
-      background: #f1f5f9;
+      font-family: var(--font-main);
+      background: var(--bg-page);
       color: var(--brand-secondary);
       padding: 20px;
       display: flex;
@@ -41,70 +43,483 @@
     /* Print settings overrides */
     @media print {
       body {
-        background: none;
-        padding: 0;
+        background: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
       }
       .no-print {
         display: none !important;
       }
-      .a4-page {
+      .modal-wrapper {
         box-shadow: none !important;
-        margin: 0 !important;
         border: none !important;
+        margin: 0 !important;
         padding: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+      }
+      .tab-content {
+        display: none !important;
+      }
+      .tab-content.active {
+        display: block !important;
+      }
+      .page-card {
+        box-shadow: none !important;
+        margin: 0 auto !important;
+        page-break-inside: avoid;
       }
     }
 
-    /* Floating action buttons */
-    .controls {
-      background: #fff;
-      padding: 16px 24px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-      margin-bottom: 20px;
-      display: flex;
-      gap: 16px;
-      align-items: center;
+    /* MODAL CONTAINER UI */
+    .modal-wrapper {
+      background: #ffffff;
       width: 100%;
-      max-width: 900px;
-      justify-content: space-between;
+      max-width: 860px;
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+      border: 1px solid #E2E8F0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
-    .btn {
-      padding: 10px 20px;
-      font-size: 14px;
-      font-weight: 600;
+    /* MODAL HEADER */
+    .modal-header {
+      padding: 20px 24px 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #F1F5F9;
+    }
+
+    .modal-title-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .modal-icon-badge {
+      width: 44px;
+      height: 44px;
+      background: #FFF0F0;
+      border: 1px solid #FECDD3;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--brand-main);
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .modal-title-text h2 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #0F172A;
+      line-height: 1.2;
+    }
+
+    .modal-title-text p {
+      font-size: 12.5px;
+      color: #64748B;
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    .btn-close-modal {
+      background: none;
+      border: none;
+      color: #94A3B8;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 6px;
       border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-close-modal:hover {
+      background: #F1F5F9;
+      color: #0F172A;
+    }
+
+    /* TABS NAV BAR */
+    .tabs-bar-container {
+      padding: 16px 24px;
+      background: #FAFAFA;
+      border-bottom: 1px solid #F1F5F9;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .tabs-pills {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .tab-pill {
+      background: #ffffff;
+      border: 1.5px solid #E2E8F0;
+      color: #475569;
+      padding: 10px 18px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 700;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      border: none;
-      text-decoration: none;
+      white-space: nowrap;
       transition: all 0.2s;
     }
 
-    .btn-primary {
+    .tab-pill:hover {
+      border-color: #CBD5E1;
+      color: #0F172A;
+    }
+
+    .tab-pill.active {
       background: var(--brand-main);
-      color: #fff;
+      border-color: var(--brand-main);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(215, 38, 56, 0.3);
     }
 
-    .btn-primary:hover {
-      background: #b50000;
+    .btn-print-main {
+      width: 100%;
+      background: var(--brand-main);
+      color: #ffffff;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 6px 20px rgba(215, 38, 56, 0.35);
+      transition: all 0.2s;
     }
 
-    .btn-secondary {
-      background: #f8fafc;
-      color: var(--brand-secondary);
-      border: 1px solid #cbd5e1;
+    .btn-print-main:hover {
+      background: var(--brand-dark);
+      transform: translateY(-1px);
     }
 
-    .btn-secondary:hover {
-      background: #f1f5f9;
+    /* PREVIEW BODY STYLES */
+    .preview-body {
+      padding: 32px 24px;
+      background: #E2E8F0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 520px;
+      overflow-x: auto;
     }
 
-    /* A4 Container (exact scale) */
-    .a4-page {
+    .tab-content {
+      display: none;
+      width: 100%;
+    }
+
+    .tab-content.active {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ============================================================
+       DESIGN 1: STAND MOSTRADOR (A5)
+       ============================================================ */
+    .a5-card {
+      background: #ffffff;
+      width: 148mm;
+      min-height: 210mm;
+      border: 4px solid var(--brand-main);
+      border-radius: 24px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .a5-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .a5-logo-img {
+      width: 60px;
+      height: 60px;
+      border-radius: 14px;
+      object-fit: cover;
+      border: 1px solid #E2E8F0;
+      background: #fff;
+    }
+
+    .a5-title-wrap h1 {
+      font-size: 24px;
+      font-weight: 900;
+      color: #0F172A;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .a5-title-wrap p {
+      font-size: 13px;
+      color: #64748B;
+      font-weight: 500;
+      margin-top: 3px;
+    }
+
+    .a5-center-box {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 20px;
+      padding: 24px 18px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 18px 0;
+    }
+
+    .a5-center-title {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--brand-main);
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+
+    .a5-center-sub {
+      font-size: 13px;
+      color: #64748B;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    .a5-qr-img {
+      width: 190px;
+      height: 190px;
+      border-radius: 12px;
+      background: #fff;
+      padding: 10px;
+      border: 1px solid #E2E8F0;
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .a5-pill-url {
+      background: var(--brand-main);
+      color: #ffffff;
+      padding: 10px 28px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 800;
+      display: inline-block;
+      letter-spacing: 0.02em;
+      box-shadow: 0 4px 12px rgba(215, 38, 56, 0.25);
+    }
+
+    .a5-footer {
+      border-top: 1px solid #E2E8F0;
+      padding-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    /* ============================================================
+       DESIGN 2: AFICHE VIDRIERA (A4)
+       ============================================================ */
+    .a4-afiche-card {
+      background: #ffffff;
+      width: 210mm;
+      min-height: 297mm;
+      border: 5px solid var(--brand-main);
+      border-radius: 28px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+      box-sizing: border-box;
+    }
+
+    .a4-afiche-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .a4-afiche-logo {
+      width: 70px;
+      height: 70px;
+      border-radius: 16px;
+      object-fit: cover;
+      border: 1px solid #E2E8F0;
+    }
+
+    .a4-banner-top {
+      background: #FFF0F0;
+      border: 1.5px solid #FECDD3;
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--brand-main);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      margin: 20px 0;
+    }
+
+    .a4-afiche-center {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 22px;
+      padding: 32px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .a4-afiche-qr {
+      width: 230px;
+      height: 230px;
+      border-radius: 16px;
+      background: #fff;
+      padding: 12px;
+      border: 1px solid #CBD5E1;
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .a4-link-badge {
+      background: #ffffff;
+      border: 1px solid #CBD5E1;
+      border-radius: 10px;
+      padding: 10px 24px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #0F172A;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .a4-steps-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .a4-step-card {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 14px 10px;
+      text-align: center;
+    }
+
+    .a4-step-num {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--brand-main);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .a4-step-txt {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1E293B;
+    }
+
+    .a4-dark-footer {
+      background: #0F172A;
+      color: #ffffff;
+      border-radius: 14px;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* ============================================================
+       DESIGN 3: TARJETITAS (8 POR HOJA A4)
+       ============================================================ */
+    .a4-tarjetas-page {
+      background: #ffffff;
+      width: 210mm;
+      min-height: 297mm;
+      padding: 12mm 10mm;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+      box-sizing: border-box;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(4, 1fr);
+      gap: 10mm;
+    }
+
+    .tarjeta-item {
+      border: 2px dashed #334155;
+      border-radius: 16px;
+      padding: 14px;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-sizing: border-box;
+    }
+
+    .tarjeta-qr {
+      width: 68px;
+      height: 68px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      border: 1px solid #E2E8F0;
+    }
+
+    .tarjeta-info h3 {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0F172A;
+      line-height: 1.2;
+    }
+
+    .tarjeta-info p {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--brand-main);
+      margin: 3px 0;
+    }
+
+    .tarjeta-info span {
+      font-size: 10.5px;
+      color: #64748B;
+      font-weight: 500;
+      word-break: break-all;
+    }
+
+    /* ============================================================
+       DESIGN 4: STAND TRIANGULAR CON COLGANTES (EXISTENTE)
+       ============================================================ */
+    .a4-triangular-page {
       background: #fff;
       width: 210mm;
       height: 297mm;
@@ -118,7 +533,6 @@
       box-sizing: border-box;
     }
 
-    /* ------------------- PIECE 1: EXPOSITOR DE MESA (STAND) ------------------- */
     .stand-container {
       border: 0.8px solid #000;
       height: 272mm;
@@ -129,7 +543,6 @@
       background: #fff;
     }
 
-    /* Fold line annotations */
     .fold-line-dashed {
       border-top: 1.2px dashed #000;
       width: 100%;
@@ -138,17 +551,15 @@
 
     .fold-label {
       position: absolute;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
-      color: #000000;
+      color: #000;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
     }
 
-    /* Top flap (will go backward to lock) */
     .stand-top-flap {
       height: 48mm;
-      background: #ffffff;
+      background: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -156,7 +567,6 @@
       padding: 10px;
     }
 
-    /* Front Body Top Half */
     .stand-body-top {
       height: 98mm;
       padding: 8mm 6mm;
@@ -169,7 +579,6 @@
       transform: rotate(180deg);
     }
 
-    /* Front Body Bottom Half */
     .stand-body-bottom {
       height: 86mm;
       display: flex;
@@ -178,10 +587,9 @@
       position: relative;
     }
 
-    /* Bottom flap */
     .stand-bottom-flap {
       height: 40mm;
-      background: #ffffff;
+      background: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -189,21 +597,12 @@
       padding: 10px;
     }
 
-    /* ------------------- PIECE 2: COLGANTES CIRCULARES ------------------- */
     .right-column {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
       height: 272mm;
-      padding: 2mm 0;
-    }
-
-    .circle-hanger-wrapper {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
 
     .circle-hanger {
@@ -212,7 +611,6 @@
       border: 0.8px solid #000;
       border-radius: 50%;
       background: #fff;
-      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -228,14 +626,6 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding-top: 2mm;
-    }
-
-    .circle-hanger-content {
-      margin-top: 4mm;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
 
     .circle-qr-box {
@@ -248,241 +638,219 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-    }
-
-    .cut-label-bottom {
-      margin-top: 2mm;
-      font-size: 9px;
-      color: var(--brand-muted);
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    /* ------------------- INSTRUCTIONS / DIAGRAMS ------------------- */
-    .assembly-guide {
-      width: 78mm;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 14px;
-      font-size: 10.5px;
-      color: #334155;
-      background: #f8fafc;
-    }
-
-    .assembly-title {
-      font-weight: 700;
-      font-size: 11.5px;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-      color: var(--brand-main);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .num-badge {
-      background: var(--brand-main);
-      color: #fff;
-      border-radius: 50%;
-      width: 16px;
-      height: 16px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 9.5px;
-      flex-shrink: 0;
-      margin-top: 1px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Controls Panel -->
-  <div class="controls no-print">
-    <div style="display:flex; flex-direction:column; gap:4px;">
-      <h3 style="font-weight:700;">Kit Imprimible Oficial</h3>
-      <p style="font-size:12px; color:#64748b;">Imprimí este archivo en hoja A4 (escala 100%) en papel satinado o ilustración grueso.</p>
-    </div>
-    <div style="display:flex; gap:10px;">
-      <button class="btn btn-secondary" onclick="window.close()"><i class="bi bi-x-lg"></i> Cerrar</button>
-      <button class="btn btn-primary" onclick="window.print()"><i class="bi bi-printer-fill"></i> Imprimir Kit</button>
-    </div>
-  </div>
-
-  <!-- A4 PAGE WRAPPER -->
-  <div class="a4-page">
+  <!-- MODAL WRAPPER -->
+  <div class="modal-wrapper">
     
-    <!-- LEFT SIDE: EXPOSITOR DE MESA -->
-    <div class="stand-container">
-      
-      <!-- 1. SOLAPA SUPERIOR (PLIEGUE HACIA ATRÁS) -->
-      <div class="stand-top-flap">
-        <div style="transform: rotate(180deg); font-size: 9px; color: var(--brand-muted); text-align: center; font-weight: 600; line-height: 1.5;">
-          (Doblar hacia atrás y enganchar en la solapa inferior)<br/>
-          <span style="font-size:10px; font-weight:700;">↑ SOLAPA DE SOPORTE TRASERO ↑</span>
+    <!-- HEADER -->
+    <div class="modal-header no-print">
+      <div class="modal-title-group">
+        <div class="modal-icon-badge">
+          <i class="bi bi-qr-code-scan"></i>
         </div>
-        <!-- Fold line dashed with label -->
-        <div class="fold-line-dashed" style="position: absolute; bottom: 0; left: 0; right: 0;">
-          <span class="fold-label" style="left: 0; top: 4px;">DOBLAR</span>
+        <div class="modal-title-text">
+          <h2>Kit Imprimible de Difusión & Código QR</h2>
+          <p>Imprimí carteles para tu mostrador, vidriera o tarjetas con el QR de tu tienda</p>
         </div>
       </div>
-
-      <!-- 2. CUERPO SUPERIOR (FRENTE INFORMATIVO) -->
-      <div class="stand-body-top">
-        <div style="font-size: 10px; font-weight: 700; color: var(--brand-muted); letter-spacing: 0.12em; text-transform: uppercase;">
-          www.daletepido.com.ar
-        </div>
-        
-        <!-- Large Red Logo Badge -->
-        <div style="background: var(--brand-main); padding: 10px 32px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; margin: 4px 0; width: 85%;">
-          <img src="/img-default/daletepido-logo-white-hq.png" alt="Dale! Te Pido" style="height: 38px; width: auto;" />
-        </div>
-
-        <div style="margin: 4px 0;">
-          <h4 style="font-size: 16px; font-weight: 800; color: var(--brand-secondary); text-transform: uppercase; letter-spacing: 0.02em; margin-bottom: 2px;">¡Te escuchamos!</h4>
-          <p style="font-size: 10px; font-weight: 500; color: var(--brand-muted); line-height: 1.4; max-width: 90%; margin: 0 auto;">
-            Hacé tu pedido online y recibilo o retíralo sin ninguna demora.
-          </p>
-        </div>
-
-        <!-- Instructions card -->
-        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; width: 100%; text-align: left;">
-          <div style="font-size: 11px; font-weight: 800; color: var(--brand-main); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.04em;">
-            ¿Cómo realizar tu pedido?
-          </div>
-          <div style="display:flex; flex-direction:column; gap:8px; font-size: 10.5px; color: var(--brand-secondary); line-height: 1.4;">
-            <div style="display:flex; gap:8px; align-items: flex-start;">
-              <span class="num-badge">1</span>
-              <span><strong>Escaneá</strong> el código QR de abajo.</span>
-            </div>
-            <div style="display:flex; gap:8px; align-items: flex-start;">
-              <span class="num-badge">2</span>
-              <span><strong>Elegí</strong> tus productos y armá tu carrito.</span>
-            </div>
-            <div style="display:flex; gap:8px; align-items: flex-start;">
-              <span class="num-badge">3</span>
-              <span><strong>Enviá</strong> tu pedido directo por WhatsApp.</span>
-            </div>
-          </div>
-        </div>
-
-        <div style="font-size: 9px; font-weight: 600; color: var(--brand-muted); opacity: 0.8;">
-          ¡Listo! Tu pedido ya se procesa al instante.
-        </div>
-      </div>
-
-      <!-- 3. CUERPO INFERIOR (FRENTE QR) -->
-      <div class="stand-body-bottom">
-        <!-- Fold line dashed -->
-        <div class="fold-line-dashed" style="position: absolute; top: 0; left: 0; right: 0;"></div>
-
-        <!-- Header banner stretching fully -->
-        <div style="background: var(--brand-main); width: 100%; height: 14mm; display: flex; align-items: center; justify-content: center; color: #fff;">
-          <img src="/img-default/daletepido-logo-white-hq.png" alt="Dale! Te Pido" style="height: 36px; width: auto;" />
-        </div>
-
-        <!-- QR Display Space -->
-        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; padding-top: 2mm;">
-          <div style="font-size: 8px; font-weight: 800; color: var(--brand-main); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2mm;">
-            ESCANEÁ EL CÓDIGO QR PARA PEDIR
-          </div>
-
-          <!-- QR Box -->
-          <div style="background:#fff; border: 1.2px solid #000; border-radius: 16px; padding: 3mm; display: inline-flex; align-items: center; justify-content: center; width: 42mm; height: 42mm;">
-            <img id="stand-qr-img" src="" alt="Código QR de la Tienda" style="width: 100%; height: 100%; display: block; border-radius: 8px;" />
-          </div>
-
-          <!-- Store Name display -->
-          <div id="stand-store-name" style="font-size: 15px; font-weight: 800; color: var(--brand-secondary); text-transform: uppercase; margin-top: 3mm; text-align:center; letter-spacing:0.02em;">
-            CARGANDO TIENDA...
-          </div>
-          
-          <div id="stand-store-url" style="font-size: 9px; font-weight: 500; color: var(--brand-muted); margin-top: 1px;">
-            ...
-          </div>
-        </div>
-      </div>
-
-      <!-- 4. SOLAPA INFERIOR (CIERRE Y PLIEGUE) -->
-      <div class="stand-bottom-flap">
-        <!-- Fold line dashed with label -->
-        <div class="fold-line-dashed" style="position: absolute; top: 0; left: 0; right: 0;">
-          <span class="fold-label" style="right: 0; top: 4px;">DOBLAR</span>
-        </div>
-        <div style="font-size: 9px; color: var(--brand-muted); text-align: center; font-weight: 600; line-height: 1.5; margin-top: 10px;">
-          <span style="font-size:10px; font-weight:700;">↑ SOLAPA DE CIERRE ↑</span><br/>
-          (Doblar hacia atrás y trabar con la solapa superior)
-        </div>
-      </div>
-
+      <button class="btn-close-modal" onclick="window.close()" title="Cerrar"><i class="bi bi-x-lg"></i></button>
     </div>
 
-    <!-- RIGHT SIDE: COLGANTES Y DIAGRAMA -->
-    <div class="right-column">
+    <!-- TABS BAR & PRINT BUTTON -->
+    <div class="tabs-bar-container no-print">
+      <div class="tabs-pills">
+        <button class="tab-pill active" onclick="switchTab('stand-a5')">
+          <i class="bi bi-display"></i> Stand Mostrador (A5)
+        </button>
+        <button class="tab-pill" onclick="switchTab('afiche-a4')">
+          <i class="bi bi-image"></i> Afiche Vidriera (A4)
+        </button>
+        <button class="tab-pill" onclick="switchTab('tarjetas')">
+          <i class="bi bi-credit-card-2-front"></i> Tarjetitas (8/Hoja)
+        </button>
+        <button class="tab-pill" onclick="switchTab('triangular-a4')">
+          <i class="bi bi-box-seam"></i> Stand Triangular (A4)
+        </button>
+      </div>
+
+      <button class="btn-print-main" onclick="window.print()">
+        <i class="bi bi-printer-fill"></i> Imprimir este Diseño
+      </button>
+    </div>
+
+    <!-- PREVIEW AREA -->
+    <div class="preview-body">
       
-      <!-- HANGER 1 -->
-      <div class="circle-hanger-wrapper">
-        <div class="circle-hanger">
-          <!-- Top circle segment header -->
-          <div class="circle-red-header">
-            <img src="/img-default/daletepido-logo-white-hq.png" alt="Dale! Te Pido" style="height: 32px; width: auto; margin-bottom: 2px;" />
-            <span style="font-size: 7.5px; font-weight: 700; letter-spacing: 0.08em; text-transform:uppercase;">Escaneá y Pedí</span>
+      <!-- TAB 1: STAND MOSTRADOR A5 -->
+      <div id="tab-stand-a5" class="tab-content active">
+        <div class="a5-card page-card">
+          <div class="a5-header">
+            <img class="a5-logo-img dyn-logo" src="/dashboard-icon.png" alt="Logo" />
+            <div class="a5-title-wrap">
+              <h1 class="dyn-name">Cargando...</h1>
+              <p class="dyn-tagline">Catálogo & Pedidos Online</p>
+            </div>
           </div>
-          
-          <div class="circle-hanger-content">
-            <div class="circle-qr-box">
-              <img class="hanger-qr-img" src="" alt="QR" style="width:100%; height:100%; border-radius:6px;" />
-            </div>
-            <div class="hanger-store-name" style="font-size: 11px; font-weight: 800; color: var(--brand-secondary); text-transform: uppercase; margin-top: 2mm; text-align:center;">
-              Cargando...
-            </div>
-            <div class="hanger-store-url" style="font-size: 7.5px; font-weight: 500; color: var(--brand-muted); margin-top: 0.5px;">
-              ...
-            </div>
+
+          <div class="a5-center-box">
+            <div class="a5-center-title">¡Hacé tu pedido online!</div>
+            <div class="a5-center-sub">Escaneá el código QR con la cámara de tu celular</div>
+            <img class="a5-qr-img dyn-qr" src="" alt="Código QR" />
+            <div class="a5-pill-url dyn-url">cargando.daletepido.com.ar</div>
+          </div>
+
+          <div class="a5-footer">
+            <div>📍 <span class="dyn-address">Consultar Dirección</span></div>
+            <div>📲 WhatsApp: <span class="dyn-wapp">Consultar</span></div>
           </div>
         </div>
-        <div class="cut-label-bottom"><i class="bi bi-scissors"></i> LÍNEA DE CORTE</div>
       </div>
 
-      <!-- HANGER 2 -->
-      <div class="circle-hanger-wrapper">
-        <div class="circle-hanger">
-          <!-- Top circle segment header -->
-          <div class="circle-red-header" style="height: 22mm;">
-            <img src="/img-default/daletepido-logo-white-hq.png" alt="Dale! Te Pido" style="height: 36px; width: auto;" />
+      <!-- TAB 2: AFICHE VIDRIERA A4 -->
+      <div id="tab-afiche-a4" class="tab-content">
+        <div class="a4-afiche-card page-card">
+          <div class="a4-afiche-header">
+            <img class="a4-afiche-logo dyn-logo" src="/dashboard-icon.png" alt="Logo" />
+            <div class="a5-title-wrap">
+              <h1 class="dyn-name" style="font-size:28px;">Cargando...</h1>
+              <p class="dyn-tagline" style="font-size:14px;">Catálogo & Pedidos Online</p>
+            </div>
           </div>
-          
-          <div class="circle-hanger-content" style="margin-top: 6mm;">
-            <div class="circle-qr-box">
-              <img class="hanger-qr-img" src="" alt="QR" style="width:100%; height:100%; border-radius:6px;" />
+
+          <div class="a4-banner-top">
+            ⚡ HACÉ TU PEDIDO EN SEGUNDOS
+          </div>
+
+          <div class="a4-afiche-center">
+            <img class="a4-afiche-qr dyn-qr" src="" alt="Código QR" />
+            <div class="a4-link-badge">
+              <i class="bi bi-link-45deg" style="color:var(--brand-main); font-size:18px;"></i>
+              <span class="dyn-url">cargando.daletepido.com.ar</span>
             </div>
-            <div class="hanger-store-name" style="font-size: 11px; font-weight: 800; color: var(--brand-secondary); text-transform: uppercase; margin-top: 2mm; text-align:center;">
-              Cargando...
+          </div>
+
+          <div class="a4-steps-grid">
+            <div class="a4-step-card">
+              <span class="a4-step-num">1</span>
+              <span class="a4-step-txt">Escaneá el QR</span>
             </div>
-            <div class="hanger-store-url" style="font-size: 7.5px; font-weight: 500; color: var(--brand-muted); margin-top: 0.5px;">
-              ...
+            <div class="a4-step-card">
+              <span class="a4-step-num">2</span>
+              <span class="a4-step-txt">Elegí Productos</span>
             </div>
+            <div class="a4-step-card">
+              <span class="a4-step-num">3</span>
+              <span class="a4-step-txt">¡Listo! Pedí por WhatsApp</span>
+            </div>
+          </div>
+
+          <div class="a4-dark-footer">
+            <div>📍 <span class="dyn-address">Consultar Dirección</span></div>
+            <div>📲 WhatsApp: <span class="dyn-wapp">Consultar</span></div>
           </div>
         </div>
-        <div class="cut-label-bottom"><i class="bi bi-scissors"></i> LÍNEA DE CORTE</div>
       </div>
 
-      <!-- ASSEMBLY INSTRUCTIONS CARD -->
-      <div class="assembly-guide">
-        <div class="assembly-title">
-          <span style="background:var(--brand-main); color:#fff; border-radius:50%; width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:10px;">i</span>
-          GUÍA DE ARMADO
+      <!-- TAB 3: TARJETITAS (8 POR HOJA A4) -->
+      <div id="tab-tarjetas" class="tab-content">
+        <div class="a4-tarjetas-page page-card">
+          <!-- 8 Mini Cards -->
+          <script>
+            for (let i = 0; i < 8; i++) {
+              document.write(`
+                <div class="tarjeta-item">
+                  <img class="tarjeta-qr dyn-qr" src="" alt="QR" />
+                  <div class="tarjeta-info">
+                    <h3 class="dyn-name">Cargando...</h3>
+                    <p>¡Hacé tu pedido online!</p>
+                    <span class="dyn-url">cargando.daletepido.com.ar</span>
+                  </div>
+                </div>
+              `);
+            }
+          </script>
         </div>
-        <div style="line-height:1.4; display:flex; flex-direction:column; gap:8px;">
-          <div>
-            <strong>1. Expositor de Mesa:</strong> Recortá por la línea de puntos exterior. Realizá los pliegues en las 3 líneas discontinuas. Enganchá la solapa superior con la inferior por detrás para formar la estructura de soporte triangular.
+      </div>
+
+      <!-- TAB 4: STAND TRIANGULAR A4 (CON COLGANTES) -->
+      <div id="tab-triangular-a4" class="tab-content">
+        <div class="a4-triangular-page page-card">
+          <!-- Left: Expositor -->
+          <div class="stand-container">
+            <div class="stand-top-flap">
+              <div style="transform: rotate(180deg); font-size: 9px; color: #666; text-align: center; font-weight: 600;">
+                ↑ SOLAPA DE SOPORTE TRASERO ↑
+              </div>
+              <div class="fold-line-dashed" style="position: absolute; bottom: 0; left: 0; right: 0;"></div>
+            </div>
+
+            <div class="stand-body-top">
+              <div style="font-size: 10px; font-weight: 700; color: #666;" class="dyn-url">daletepido.com.ar</div>
+              <div style="background: var(--brand-main); padding: 8px 24px; border-radius: 10px; margin: 4px 0;">
+                <img src="/img-default/daletepido-logo-white-hq.png" alt="Logo" style="height: 32px;" />
+              </div>
+              <h4 class="dyn-name" style="font-size: 15px; font-weight: 800;">Cargando...</h4>
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; width: 100%; font-size: 10px; text-align: left;">
+                <strong style="color:var(--brand-main); display:block; margin-bottom:4px;">¿Cómo realizar tu pedido?</strong>
+                1. Escaneá el QR<br/>2. Armá tu carrito<br/>3. Enviá por WhatsApp
+              </div>
+            </div>
+
+            <div class="stand-body-bottom">
+              <div class="fold-line-dashed" style="position: absolute; top: 0; left: 0; right: 0;"></div>
+              <div style="background: var(--brand-main); width: 100%; height: 12mm; display: flex; align-items: center; justify-content: center; color: #fff;">
+                <img src="/img-default/daletepido-logo-white-hq.png" alt="Logo" style="height: 28px;" />
+              </div>
+              <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1;">
+                <div style="background:#fff; border: 1px solid #000; border-radius: 12px; padding: 2mm; width: 40mm; height: 40mm;">
+                  <img class="dyn-qr" src="" alt="QR" style="width:100%; height:100%; border-radius:6px;" />
+                </div>
+                <div class="dyn-name" style="font-size: 14px; font-weight: 800; margin-top: 2mm;">Cargando...</div>
+                <div class="dyn-url" style="font-size: 9px; color: #666;">...</div>
+              </div>
+            </div>
+
+            <div class="stand-bottom-flap">
+              <div class="fold-line-dashed" style="position: absolute; top: 0; left: 0; right: 0;"></div>
+              <div style="font-size: 9px; color: #666; text-align: center;">↑ SOLAPA DE CIERRE ↑</div>
+            </div>
           </div>
-          <div>
-            <strong>2. Colgantes Circulares:</strong> Recortá a lo largo del círculo exterior negro. Hacé una perforación en la parte superior para colgarlo en góndolas, mesas o vidrieras, o usalos directamente como stickers.
+
+          <!-- Right: Colgantes -->
+          <div class="right-column">
+            <div class="circle-hanger">
+              <div class="circle-red-header">
+                <img src="/img-default/daletepido-logo-white-hq.png" alt="Logo" style="height: 26px;" />
+                <span style="font-size: 7px; font-weight: 700; text-transform:uppercase;">Escaneá y Pedí</span>
+              </div>
+              <div style="margin-top: 3mm; display:flex; flex-direction:column; align-items:center;">
+                <div class="circle-qr-box">
+                  <img class="dyn-qr" src="" alt="QR" style="width:100%; height:100%;" />
+                </div>
+                <div class="dyn-name" style="font-size: 10px; font-weight: 800; margin-top: 1mm;">Cargando...</div>
+              </div>
+            </div>
+
+            <div class="circle-hanger">
+              <div class="circle-red-header">
+                <img src="/img-default/daletepido-logo-white-hq.png" alt="Logo" style="height: 28px;" />
+              </div>
+              <div style="margin-top: 3mm; display:flex; flex-direction:column; align-items:center;">
+                <div class="circle-qr-box">
+                  <img class="dyn-qr" src="" alt="QR" style="width:100%; height:100%;" />
+                </div>
+                <div class="dyn-name" style="font-size: 10px; font-weight: 800; margin-top: 1mm;">Cargando...</div>
+              </div>
+            </div>
+
+            <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; font-size: 9.5px; color: #334155; background: #f8fafc;">
+              <strong style="color:var(--brand-main); font-size:10px; display:block; margin-bottom:4px;">GUÍA DE ARMADO</strong>
+              Recortá por el borde. Doblá por las líneas de puntos para armar el stand de mesa.
+            </div>
           </div>
         </div>
       </div>
@@ -491,7 +859,19 @@
   </div>
 
   <script>
-    // 1. Read store param from URL
+    // Tab Switcher Function
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pill').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      const selectedPill = Array.from(document.querySelectorAll('.tab-pill')).find(btn => btn.getAttribute('onclick').includes(tabId));
+      if (selectedPill) selectedPill.classList.add('active');
+      
+      const targetContent = document.getElementById('tab-' + tabId);
+      if (targetContent) targetContent.classList.add('active');
+    }
+
+    // Load URL Params & Supabase Store Data
     const params = new URLSearchParams(window.location.search);
     const storeId = params.get('store') || '';
 
@@ -499,66 +879,72 @@
       document.body.innerHTML = `
         <div style="padding: 40px; text-align: center; font-family: sans-serif;">
           <h2>Error: Falta especificar el parámetro "store"</h2>
-          <p>Ejemplo: <code>kit-imprimible.html?store=kioscojulio</code></p>
+          <p>Ejemplo: <code>kit-imprimible.html?store=ferreteria-demo</code></p>
         </div>
       `;
     } else {
-      // Set the dynamic QR image sources
+      // Set QR Images
       const qrUrl = `/api/qr?store=${encodeURIComponent(storeId)}`;
-      document.getElementById('stand-qr-img').src = qrUrl;
-      document.querySelectorAll('.hanger-qr-img').forEach(img => img.src = qrUrl);
+      document.querySelectorAll('.dyn-qr').forEach(img => img.src = qrUrl);
 
-      // Set default URL text
-      const storeUrl = `${storeId}.daletepido.com.ar`;
-      document.getElementById('stand-store-url').textContent = storeUrl;
-      document.querySelectorAll('.hanger-store-url').forEach(el => el.textContent = storeUrl);
+      // Default URL
+      const formattedUrl = `${storeId}.daletepido.com.ar`;
+      document.querySelectorAll('.dyn-url').forEach(el => el.textContent = formattedUrl);
 
-      // Fetch the business name from Supabase configuration
+      // Supabase credentials
       const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
       const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
 
-      async function loadStoreName() {
+      async function loadStoreDetails() {
         try {
-          const targetUrl = `${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}&apikey=${encodeURIComponent(SUPABASE_KEY)}`;
-          let res = null;
-          for (let attempt = 1; attempt <= 3; attempt++) {
-            try {
-              res = await fetch(targetUrl, {
-                headers: {
-                  'apikey': SUPABASE_KEY,
-                  'Authorization': `Bearer ${SUPABASE_KEY}`
-                }
-              });
-              if (res.ok) break;
-              if (attempt < 3) await new Promise(r => setTimeout(r, 300 * attempt));
-            } catch (e) {
-              if (attempt < 3) await new Promise(r => setTimeout(r, 300 * attempt));
-            }
+          // Fetch settings & store data
+          const [resSettings, resStore] = await Promise.all([
+            fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}&apikey=${encodeURIComponent(SUPABASE_KEY)}`, {
+              headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+            }).then(r => r.ok ? r.json() : []).catch(() => []),
+            fetch(`${SUPABASE_URL}/rest/v1/stores?store_id=eq.${encodeURIComponent(storeId)}&apikey=${encodeURIComponent(SUPABASE_KEY)}`, {
+              headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+            }).then(r => r.ok ? r.json() : []).catch(() => [])
+          ]);
+
+          const settings = resSettings && resSettings.length > 0 ? resSettings[0] : {};
+          const store = resStore && resStore.length > 0 ? resStore[0] : {};
+
+          const bizName = settings.business_name || store.name || storeId;
+          const tagline = settings.tagline || settings.subrubro || settings.rubro || 'Catálogo & Pedidos Online';
+          const logoUrl = settings.logo_url || '/dashboard-icon.png';
+          const address = settings.direccion || 'Atención y Envíos a Domicilio';
+          const wapp = settings.wapp || store.whatsapp_phone || 'Consultar por WhatsApp';
+          const primaryColor = settings.primary_color || '#D72638';
+
+          // Apply primary color variable if valid
+          if (primaryColor && primaryColor.startsWith('#')) {
+            document.documentElement.style.setProperty('--brand-main', primaryColor);
           }
-          if (res && res.ok) {
-            const data = await res.json().catch(() => []);
-            if (data && data.length > 0) {
-              const bizName = data[0].business_name || storeId;
-              document.getElementById('stand-store-name').textContent = bizName;
-              document.querySelectorAll('.hanger-store-name').forEach(el => el.textContent = bizName);
-              document.title = `Kit Imprimible Comercial — ${bizName}`;
-            } else {
-              fallbackToId();
-            }
-          } else {
-            fallbackToId();
-          }
+
+          // Populate text & images
+          document.querySelectorAll('.dyn-name').forEach(el => el.textContent = bizName);
+          document.querySelectorAll('.dyn-tagline').forEach(el => el.textContent = tagline);
+          document.querySelectorAll('.dyn-address').forEach(el => el.textContent = address);
+          document.querySelectorAll('.dyn-wapp').forEach(el => el.textContent = wapp);
+          document.querySelectorAll('.dyn-logo').forEach(img => {
+            img.src = logoUrl;
+            img.onerror = () => { img.src = '/dashboard-icon.png'; };
+          });
+
+          document.title = `Kit Imprimible de Difusión & Código QR — ${bizName}`;
         } catch (e) {
-          fallbackToId();
+          fallbackStoreDetails();
         }
       }
 
-      function fallbackToId() {
-        document.getElementById('stand-store-name').textContent = storeId;
-        document.querySelectorAll('.hanger-store-name').forEach(el => el.textContent = storeId);
+      function fallbackStoreDetails() {
+        document.querySelectorAll('.dyn-name').forEach(el => el.textContent = storeId);
+        document.querySelectorAll('.dyn-address').forEach(el => el.textContent = 'Atención y Envíos');
+        document.querySelectorAll('.dyn-wapp').forEach(el => el.textContent = 'Consultar');
       }
 
-      loadStoreName();
+      loadStoreDetails();
     }
   </script>
 </body>
