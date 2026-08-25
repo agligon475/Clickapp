@@ -1023,7 +1023,34 @@ a.logo{
 
   <div class="drawer-footer">
     <!-- Summary -->
+    <!-- Coupon Section -->
+    <div id="coupon-section" style="margin-bottom:12px; padding:10px; background:rgba(255,255,255,0.03); border:1px dashed var(--border); border-radius:8px;">
+      <div id="coupon-input-box" style="display:flex; gap:6px;">
+        <input type="text" id="coupon-code-input" placeholder="¿Tenés un cupón?" style="flex:1; background:var(--body); border:1px solid var(--border); color:var(--text); padding:6px 10px; border-radius:6px; font-size:12px; text-transform:uppercase;" oninput="this.value = this.value.toUpperCase().replace(/\s+/g, '')" />
+        <button type="button" onclick="applyCoupon()" style="padding:6px 14px; background:var(--accent); color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px;">
+          <i class="bi bi-ticket-perforated"></i> Aplicar
+        </button>
+      </div>
+      <div id="coupon-applied-box" style="display:none; align-items:center; justify-content:space-between; font-size:12px; background:rgba(74,222,128,0.1); border:1px solid rgba(74,222,128,0.3); padding:6px 10px; border-radius:6px;">
+        <div style="display:flex; align-items:center; gap:6px; color:#4ade80; font-weight:600;">
+          <i class="bi bi-tag-fill"></i>
+          <span id="coupon-applied-info">Cupón APLICADO</span>
+        </div>
+        <button type="button" onclick="removeCoupon()" title="Quitar cupón" style="background:none; border:none; color:var(--muted); cursor:pointer; font-size:14px;">
+          <i class="bi bi-x-circle-fill"></i>
+        </button>
+      </div>
+    </div>
+
     <div id="cart-summary">
+      <div id="subtotal-row" style="display:flex; justify-content:space-between; font-size:13px; color:var(--muted); margin-bottom:4px;">
+        <span>Subtotal</span>
+        <span id="subtotal-val">$0</span>
+      </div>
+      <div id="discount-row" style="display:none; justify-content:space-between; font-size:13px; color:#4ade80; font-weight:600; margin-bottom:6px;">
+        <span>Descuento (<span id="discount-code-label"></span>)</span>
+        <span id="discount-val">-$0</span>
+      </div>
       <div class="total-row">
         <span class="total-label">Total</span>
         <span class="total-val" id="total-val">$0</span>
@@ -1425,6 +1452,7 @@ async function loadSheet() {
 
     if (configData && configData.length > 0) {
       const cfg = configData[0];
+      window.STORE_COUPONS = (cfg.billing_info && Array.isArray(cfg.billing_info.coupons)) ? cfg.billing_info.coupons : [];
 
       // Verificar si la tienda se encuentra suspendida por el Super Admin
       if (cfg.status === 'SUSPENDED_PAYMENT' || cfg.status === 'DISABLED') {
@@ -1844,13 +1872,117 @@ function renderBanners(bannerData) {
   }
 }
 
-function cartTotal() {
+window.APPLIED_COUPON = null;
+
+function getCartSubtotal() {
   return Object.entries(cart).reduce((s,[id,q])=>{
     const p = findProduct(id);
     if (!p) return s;
     const price = cartDetails[id] ? cartDetails[id].price : p.price;
     return s + (price * q);
   },0);
+}
+
+function getCartDiscountAmount() {
+  if (!window.APPLIED_COUPON) return 0;
+  const coupon = window.APPLIED_COUPON;
+  const pct = parseFloat(coupon.discount_percentage) || 0;
+  if (pct <= 0) return 0;
+
+  if (coupon.scope === 'total') {
+    const subtotal = getCartSubtotal();
+    return Math.round((subtotal * pct) / 100);
+  } else if (coupon.scope === 'products') {
+    const eligibleIds = (coupon.product_ids || []).map(String);
+    const eligibleSubtotal = Object.entries(cart).reduce((sum, [id, q]) => {
+      const p = findProduct(id);
+      if (!p) return sum;
+      const baseId = String(id).split('_')[0];
+      if (eligibleIds.includes(baseId) || eligibleIds.includes(String(p.id))) {
+        const price = cartDetails[id] ? cartDetails[id].price : p.price;
+        return sum + (price * q);
+      }
+      return sum;
+    }, 0);
+    return Math.round((eligibleSubtotal * pct) / 100);
+  }
+  return 0;
+}
+
+function applyCoupon(codeToApply = null) {
+  const input = document.getElementById('coupon-code-input');
+  const code = (codeToApply || (input ? input.value : '')).trim().toUpperCase();
+
+  if (!code) {
+    showToast('⚠ Ingresá el código de tu cupón');
+    return;
+  }
+
+  if (!window.STORE_COUPONS || !Array.isArray(window.STORE_COUPONS) || window.STORE_COUPONS.length === 0) {
+    showToast('❌ El cupón ingresado no es válido');
+    return;
+  }
+
+  const found = window.STORE_COUPONS.find(c => c.code && c.code.toUpperCase() === code);
+
+  if (!found) {
+    showToast('❌ Cupón no encontrado');
+    return;
+  }
+
+  if (found.status === 'paused') {
+    showToast('❌ El cupón se encuentra inactivo');
+    return;
+  }
+
+  const now = new Date();
+  if (found.valid_from && new Date(found.valid_from) > now) {
+    showToast('❌ El cupón aún no está vigente');
+    return;
+  }
+
+  if (found.valid_until && new Date(found.valid_until) < now) {
+    showToast('❌ El cupón ha expirado');
+    return;
+  }
+
+  if (found.usage_limit && (parseInt(found.used_count) || 0) >= parseInt(found.usage_limit)) {
+    showToast('❌ El cupón ha alcanzado el límite máximo de usos');
+    return;
+  }
+
+  // Check product scope eligibility
+  if (found.scope === 'products') {
+    const eligibleIds = (found.product_ids || []).map(String);
+    const hasEligibleProduct = Object.keys(cart).some(pid => {
+      const baseId = String(pid).split('_')[0];
+      const p = findProduct(pid);
+      return eligibleIds.includes(baseId) || (p && eligibleIds.includes(String(p.id)));
+    });
+
+    if (!hasEligibleProduct) {
+      showToast('❌ Ningún producto de tu carrito califica para este cupón');
+      return;
+    }
+  }
+
+  window.APPLIED_COUPON = found;
+  showToast(`🎉 ¡Cupón ${found.code} (-${found.discount_percentage}%) aplicado!`);
+  updateCartUI();
+}
+
+function removeCoupon() {
+  window.APPLIED_COUPON = null;
+  const input = document.getElementById('coupon-code-input');
+  if (input) input.value = '';
+  showToast('Cupón removido');
+  updateCartUI();
+}
+
+function cartTotal() {
+  const subtotal = getCartSubtotal();
+  const discount = getCartDiscountAmount();
+  return Math.max(0, subtotal - discount);
 }
 function cartQty() { return Object.values(cart).reduce((a,b)=>a+b,0); }
 
@@ -1991,6 +2123,7 @@ function enviarWhatsApp() {
     ``,
     ...lines,
     ``,
+    window.APPLIED_COUPON ? `🎁 *Cupón:* ${window.APPLIED_COUPON.code} (-${window.APPLIED_COUPON.discount_percentage}%) → Ahorro: -${getCartDiscountAmount().toLocaleString('es-AR')}` : null,
     `💰 *Total:* ${totalFormatted}`,
     `💳 *Pago:* ${pago}`,
     `🚚 *Logística:* ${logis}`,
@@ -1999,6 +2132,20 @@ function enviarWhatsApp() {
     `👤 *Cliente:* ${nombre}`,
     `🪪 *DNI:* ${dni}`,
   ].filter(l=>l!==undefined).join('\n');
+
+  if (window.APPLIED_COUPON && window.STORE_COUPONS) {
+    const cObj = window.STORE_COUPONS.find(c => c.id === window.APPLIED_COUPON.id);
+    if (cObj) {
+      cObj.used_count = (parseInt(cObj.used_count) || 0) + 1;
+      try {
+        fetchSupabase(`/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ billing_info: { coupons: window.STORE_COUPONS } })
+        }).catch(() => {});
+      } catch(e) {}
+    }
+  }
 
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
 
