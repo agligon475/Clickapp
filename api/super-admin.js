@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 import { getResetPasswordEmail } from './email-templates.js';
 
-const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://iaylgsthwildjkiiwgfd.supabase.co';
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
 
 const SUPER_ADMIN_PASSWORD = process.env.SUPER_ADMIN_PASSWORD || 'super-admin-alicari';
 
@@ -112,7 +112,8 @@ export default async function handler(req, res) {
         });
       } else {
         const errText = await patchRes.text();
-        return res.status(500).json({ success: false, error: 'Error actualizando base de datos: ' + errText });
+        console.error('Error al registrar comprobante en Supabase:', patchRes.status, errText);
+        return res.status(400).json({ success: false, error: 'Error actualizando base de datos en Supabase: ' + (errText || `HTTP ${patchRes.status}`) });
       }
     }
 
@@ -132,7 +133,9 @@ export default async function handler(req, res) {
       });
 
       if (!response.ok) {
-        return res.status(500).json({ success: false, error: `Error Supabase ${response.status}` });
+        const errText = await response.text();
+        console.error('Error al listar tiendas en Supabase:', response.status, errText);
+        return res.status(400).json({ success: false, error: `Error Supabase ${response.status}: ${errText}` });
       }
 
       const stores = await response.json();
@@ -212,7 +215,9 @@ export default async function handler(req, res) {
       });
 
       if (!patchRes.ok) {
-        return res.status(500).json({ success: false, error: `HTTP Error ${patchRes.status}` });
+        const errText = await patchRes.text();
+        console.error('Error al actualizar tienda en Supabase:', patchRes.status, errText);
+        return res.status(400).json({ success: false, error: `Error actualizando tienda en Supabase (${patchRes.status}): ${errText}` });
       }
 
       return res.status(200).json({ success: true, store_id, payload, message: 'Datos de la tienda actualizados exitosamente' });
@@ -242,7 +247,9 @@ export default async function handler(req, res) {
       });
 
       if (!patchRes.ok) {
-        return res.status(500).json({ success: false, error: `HTTP Error ${patchRes.status}` });
+        const errText = await patchRes.text();
+        console.error('Error enviando comprobante en Supabase:', patchRes.status, errText);
+        return res.status(400).json({ success: false, error: `Error registrando comprobante en Supabase (${patchRes.status}): ${errText}` });
       }
 
       return res.status(200).json({
@@ -279,7 +286,9 @@ export default async function handler(req, res) {
       });
 
       if (!patchRes.ok) {
-        return res.status(500).json({ success: false, error: `HTTP Error ${patchRes.status}` });
+        const errText = await patchRes.text();
+        console.error('Error resolviendo upgrade en Supabase:', patchRes.status, errText);
+        return res.status(400).json({ success: false, error: `Error resolviendo solicitud en Supabase (${patchRes.status}): ${errText}` });
       }
 
       return res.status(200).json({ success: true, store_id, message: approve ? 'Upgrade aprobado' : 'Solicitud archivada' });
@@ -420,7 +429,9 @@ export default async function handler(req, res) {
       });
 
       if (!patchRes.ok) {
-        return res.status(500).json({ success: false, error: `HTTP Error ${patchRes.status}` });
+        const errText = await patchRes.text();
+        console.error('Error renovando trial en Supabase:', patchRes.status, errText);
+        return res.status(400).json({ success: false, error: `Error renovando trial en Supabase (${patchRes.status}): ${errText}` });
       }
 
       return res.status(200).json({
