@@ -5551,6 +5551,10 @@
       window.localStorage.removeItem('storeapp_supabase_key');
       rawSupabaseKey = null;
     }
+    if ((!rawSupabaseUrl || rawSupabaseUrl === 'https://iaylgsthwildjkiiwgfd.supabase.co') && rawSupabaseKey && rawSupabaseKey !== VALID_ANON_KEY) {
+      window.localStorage.removeItem('storeapp_supabase_key');
+      rawSupabaseKey = null;
+    }
 
     let SUPABASE_URL = rawSupabaseUrl || 'https://iaylgsthwildjkiiwgfd.supabase.co';
     let SUPABASE_KEY = rawSupabaseKey || VALID_ANON_KEY;

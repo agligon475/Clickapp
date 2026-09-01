@@ -1083,6 +1083,10 @@ if (rawSupabaseKey && (!rawSupabaseKey.startsWith('eyJ') || rawSupabaseKey.lengt
   localStorage.removeItem('storeapp_supabase_key');
   rawSupabaseKey = null;
 }
+if ((!rawSupabaseUrl || rawSupabaseUrl === DEFAULT_SUPABASE_URL) && rawSupabaseKey && rawSupabaseKey !== DEFAULT_SUPABASE_KEY) {
+  localStorage.removeItem('storeapp_supabase_key');
+  rawSupabaseKey = null;
+}
 
 let SUPABASE_URL = rawSupabaseUrl || DEFAULT_SUPABASE_URL;
 let SUPABASE_KEY = rawSupabaseKey || DEFAULT_SUPABASE_KEY;
