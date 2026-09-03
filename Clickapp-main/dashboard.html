@@ -1652,10 +1652,11 @@
 
     /* KANBAN */
     .kanban-board {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 10px;
-      padding-bottom: 8px;
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      scroll-behavior: smooth;
     }
 
     .kanban-col {
@@ -10656,50 +10657,20 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     function renderAllOrders(orders) {
       orders = applyAutoLost(orders || allOrders || []);
 
-      // ── KANBAN BOARD ──────────────────────────────────
+      // ── KANBAN BOARD (TODOS LOS ESTADIOS) ──────────────────────────────────
       const kanban = document.getElementById('kanban-board');
       if (kanban) {
-        const kanbanCols = [
-          {
-            key: 'NUEVO',
-            label: 'NUEVO',
-            color: '#F39C12',
-            icon: 'bi-hourglass-split',
-            states: ['confirmar', 'en_curso']
-          },
-          {
-            key: 'TRANSITO',
-            label: 'TRÁNSITO',
-            color: '#9B59B6',
-            icon: 'bi-truck',
-            states: ['despachado', 'listo_retirar', 'retirado', 'enviado', 'entregado']
-          },
-          {
-            key: 'COBRANZAS',
-            label: 'COBRANZAS',
-            color: '#2ECC71',
-            icon: 'bi-cash-coin',
-            states: ['por_cobrar', 'cobrado']
-          },
-          {
-            key: 'ANOMALIAS',
-            label: 'ANOMALÍAS',
-            color: '#D72638',
-            icon: 'bi-exclamation-triangle',
-            states: ['devuelto', 'perdido']
-          }
-        ];
-
-        kanban.innerHTML = kanbanCols.map(col => {
-          const cols = orders.filter(o => col.states.includes(o.estado));
-          return `<div class="kanban-col">
-        <div class="kanban-col-head" style="border-top:3px solid ${col.color};">
-          <span style="color:${col.color};"><i class="bi ${col.icon}"></i> ${col.label}</span>
-          <span class="kanban-count">${cols.length}</span>
+        const allStates = getStates();
+        kanban.innerHTML = allStates.map(st => {
+          const cols = orders.filter(o => o.estado === st.key);
+          return `<div class="kanban-col" style="min-width: 220px; flex: 1;">
+        <div class="kanban-col-head" style="border-top:3px solid ${st.text};">
+          <span style="color:${st.text}; font-weight:700;"><i class="bi ${st.icon}"></i> ${st.label.toUpperCase()}</span>
+          <span class="kanban-count" style="background:${st.bg}; color:${st.text}; font-weight:700;">${cols.length}</span>
         </div>
         <div class="kanban-cards">
           ${cols.length ? cols.map(o => `
-            <div class="kanban-card" style="border-left:3px solid ${col.color};">
+            <div class="kanban-card" style="border-left:3px solid ${st.text};">
               <div class="kc-id">${o.id}</div>
               <div class="kc-client">${o.cliente}</div>
               <div class="kc-prods">${o.productos}</div>
@@ -10708,7 +10679,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
                 <span class="kc-date">${(o.fecha || '').split(' ')[0]}</span>
               </div>
               <select onchange="changeOrderEstado('${o.id}',this.value)" class="kc-select">
-                ${getStates().map(st => `<option value="${st.key}" ${o.estado === st.key ? 'selected' : ''}>${st.label}</option>`).join('')}
+                ${allStates.map(s => `<option value="${s.key}" ${o.estado === s.key ? 'selected' : ''}>${s.label}</option>`).join('')}
               </select>
             </div>`).join('')
               : `<div style="font-size:11px;color:var(--silver);text-align:center;padding:16px;">Sin pedidos</div>`}
