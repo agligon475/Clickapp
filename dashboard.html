@@ -3172,73 +3172,69 @@
 
     <div style="height: 1px; background: rgba(255,255,255,0.08); margin: 0 12px 14px 12px;"></div>
 
-    <div class="sb-section collapsed">
+    <!-- 1. INFORMACIÓN GENERAL -->
+    <div class="sb-section">
       <div class="sb-section-header" onclick="toggleAccordion(this)">
-        <span>Inicio</span>
+        <span>Información General</span>
         <i class="bi bi-chevron-up toggle-icon"></i>
       </div>
       <div class="sb-section-content">
         <div class="sb-item active" onclick="showView('dashboard',this)"><i class="bi bi-house"></i> <span>Inicio</span></div>
+        <div class="sb-item" onclick="showView('reports',this)"><i class="bi bi-bar-chart-line"></i> <span>Analítica y Reportes</span></div>
       </div>
     </div>
 
+    <!-- 2. PEDIDOS Y ENTREGAS -->
     <div class="sb-section">
       <div class="sb-section-header" onclick="toggleAccordion(this)">
-        <span>Negocio</span>
-        <i class="bi bi-chevron-up toggle-icon"></i>
-      </div>
-      <div class="sb-section-content">
-        <div class="sb-item" onclick="showView('reports',this)"><i class="bi bi-bar-chart-line"></i> <span>Analítica</span></div>
-      </div>
-    </div>
-
-    <div class="sb-section">
-      <div class="sb-section-header" onclick="toggleAccordion(this)">
-        <span>Gestión</span>
+        <span>Pedidos y Entregas</span>
         <i class="bi bi-chevron-up toggle-icon"></i>
       </div>
       <div class="sb-section-content">
         <div class="sb-item" onclick="showView('orders',this)"><i class="bi bi-receipt"></i> <span>Pedidos</span></div>
-        <div class="sb-item" onclick="showView('pickups',this)"><i class="bi bi-truck"></i> <span>PickUp / Delivery</span></div>
+        <div class="sb-item" onclick="showView('pickups',this)"><i class="bi bi-truck"></i> <span>Envíos y Zonas</span></div>
       </div>
     </div>
 
+    <!-- 3. CATÁLOGO DE PRODUCTOS -->
     <div class="sb-section">
       <div class="sb-section-header" onclick="toggleAccordion(this)">
-        <span>Inventario</span>
+        <span>Catálogo de Productos</span>
         <i class="bi bi-chevron-up toggle-icon"></i>
       </div>
       <div class="sb-section-content">
-        <div class="sb-item" onclick="showView('abm',this)"><i class="bi bi-pencil-square"></i> <span>ABM</span></div>
+        <div class="sb-item" onclick="showView('abm',this)"><i class="bi bi-pencil-square"></i> <span>Productos (ABM)</span></div>
         <div class="sb-item" onclick="showView('categories',this)"><i class="bi bi-tags"></i> <span>Categorías</span></div>
         <div class="sb-item" onclick="showView('coupons',this)"><i class="bi bi-ticket-perforated"></i> <span>Cupones</span></div>
       </div>
     </div>
 
+    <!-- 4. IDENTIDAD Y DISEÑO -->
     <div class="sb-section">
       <div class="sb-section-header" onclick="toggleAccordion(this)">
-        <span>Personalización</span>
+        <span>Identidad y Diseño</span>
         <i class="bi bi-chevron-up toggle-icon"></i>
       </div>
       <div class="sb-section-content">
-        <div class="sb-item" onclick="showView('marca',this)"><i class="bi bi-palette"></i> <span>Marca</span></div>
-        <div class="sb-item" onclick="showView('rubro',this)"><i class="bi bi-shop"></i> <span>Rubro y plantilla</span></div>
-        <div class="sb-item" onclick="showView('design-catalogo',this)"><i class="bi bi-image"></i> <span>Diseño de catálogo</span></div>
-        <div class="sb-item" onclick="showView('enlaces',this)"><i class="bi bi-link-45deg"></i> <span>Enlaces</span></div>
-        <div class="sb-item" onclick="showView('pages-internas',this)"><i class="bi bi-file-text"></i> <span>Páginas internas</span></div>
+        <div class="sb-item" onclick="showView('rubro',this)"><i class="bi bi-magic"></i> <span>Setup Guiado (8 Pasos)</span></div>
+        <div class="sb-item" onclick="showView('marca',this)"><i class="bi bi-palette"></i> <span>Marca y Estética</span></div>
+        <div class="sb-item" onclick="showView('design-catalogo',this)"><i class="bi bi-image"></i> <span>Diseño de Catálogo</span></div>
+        <div class="sb-item" onclick="showView('enlaces',this)"><i class="bi bi-link-45deg"></i> <span>Redes y Enlaces</span></div>
+        <div class="sb-item" onclick="showView('pages-internas',this)"><i class="bi bi-file-text"></i> <span>Páginas (Nosotros & FAQs)</span></div>
       </div>
     </div>
 
+    <!-- 5. AJUSTES DEL COMERCIO -->
     <div class="sb-section">
       <div class="sb-section-header" onclick="toggleAccordion(this)">
-        <span>Ajustes</span>
+        <span>Ajustes del Comercio</span>
         <i class="bi bi-chevron-up toggle-icon"></i>
       </div>
       <div class="sb-section-content">
-        <div class="sb-item" onclick="showView('account-plan',this)"><i class="bi bi-wallet2"></i> <span>Mi Cuenta y Plan</span></div>
-        <div class="sb-item" onclick="showView('config-basica',this)"><i class="bi bi-gear"></i> <span>Configuración básica</span></div>
-        <div class="sb-item" onclick="showView('config-avanzada',this)"><i class="bi bi-shield-lock"></i> <span>Configuración avanzada</span></div>
+        <div class="sb-item" onclick="showView('config-basica',this)"><i class="bi bi-gear"></i> <span>Datos del Comercio</span></div>
         <div class="sb-item" onclick="showView('mensajes',this)"><i class="bi bi-chat-dots"></i> <span>Mensajes</span></div>
+        <div class="sb-item" onclick="showView('account-plan',this)"><i class="bi bi-wallet2"></i> <span>Facturación y Plan</span></div>
+        <div class="sb-item" onclick="showView('config-avanzada',this)"><i class="bi bi-shield-lock"></i> <span>Avanzado (Dominio/SEO)</span></div>
       </div>
     </div>
 
@@ -4871,28 +4867,7 @@
       </div>
     </div>
 
-    <!-- ══ PRODUCTOS (catálogo) ══ -->
-    <div class="view" id="view-products">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-        <span
-          style="font-family:var(--font-h);font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;">Catálogo
-          de productos</span>
-        <span id="prod-count" style="font-size:12px;color:var(--silver);"></span>
-      </div>
-      <div class="prod-grid" id="prod-grid"></div>
-
-      <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px;">
-        <button class="sb-btn" style="background:#444;border:none;color:#fff;padding:12px 24px;font-size:14px;"
-          onclick="exportProducts()">
-          Exportar CSV
-        </button>
-        <button class="abm-btn-new" onclick="saveLocalProducts(this)" style="padding:12px 24px;font-size:14px;">
-          <i class="bi bi-floppy2"></i> Guardar configuración
-        </button>
-      </div>
-    </div><!-- /view-products -->
-
-    <!-- ══ ABM ══ -->
+    <!-- ══ ABM (Catálogo de Productos) ══ -->
     <div class="view" id="view-abm">
 
       <div
@@ -5104,27 +5079,18 @@
               </div>
 
               <!-- 3. Rubro principal -->
-              <div class="ctrl-group">
-                <label class="ctrl-label">Rubro principal</label>
-                <select class="ctrl-input" id="cfg-store-rubro" onchange="updateSubrubros('cfg-store-rubro','cfg-store-subrubro')">
-                  <option value="">Seleccioná...</option>
-                  <option value="Super">🛒 Súper</option>
-                  <option value="Farmacias">💊 Farmacias</option>
-                  <option value="Bebidas">🍺 Bebidas</option>
-                  <option value="Kioscos">🍬 Kioscos</option>
-                  <option value="Mascotas">🐾 Mascotas</option>
-                  <option value="Cafe">☕ Café &amp; Deli</option>
-                  <option value="Helados">🍦 Helados</option>
-                  <option value="Tiendas">🏪 Tiendas</option>
+              <div class="ctrl-group" style="grid-column:1/-1;">
+                <label class="ctrl-label">Rubro principal (Sincronizado con Setup Guiado)</label>
+                <select class="ctrl-input" id="cfg-store-rubro" onchange="syncRubroFromBasicConfig(this.value)">
+                  <option value="kiosco_almacen">🏪 Kiosco / Almacén</option>
+                  <option value="industrial">🏭 Industrial</option>
+                  <option value="gastronomia">🍔 Gastronomía</option>
+                  <option value="tecnologia">📱 Tecnología</option>
+                  <option value="indumentaria">👕 Indumentaria</option>
+                  <option value="insumos">📦 Insumos</option>
+                  <option value="otros">✨ Otros</option>
                 </select>
-              </div>
-
-              <!-- 4. Subrubro -->
-              <div class="ctrl-group">
-                <label class="ctrl-label">Subrubro</label>
-                <select class="ctrl-input" id="cfg-store-subrubro">
-                  <option value="">Primero elegí un rubro...</option>
-                </select>
+                <div style="font-size:11px; color:var(--silver); margin-top:4px;">Al cambiar el rubro se actualizará automáticamente tu plantilla y configuración de tienda.</div>
               </div>
 
               <!-- 5. Dirección física -->
@@ -5249,18 +5215,29 @@
 
               <!-- 8. Métodos de pago -->
               <div class="ctrl-group" style="grid-column:1/-1;">
-                <label class="ctrl-label">Métodos de pago aceptados</label>
+                <label class="ctrl-label">Métodos de pago aceptados (Sincronizados con Setup Guiado)</label>
                 <div style="display: flex; gap: 24px; align-items: center; margin-top: 8px; flex-wrap: wrap;">
                   <label style="display: flex; align-items: center; gap: 8px; color: var(--white); font-size: 13px; cursor: pointer; user-select: none;">
-                    <input type="checkbox" id="cfg-pay-efectivo" checked style="width: 16px; height: 16px; accent-color: var(--red);" /> Efectivo
+                    <input type="checkbox" id="cfg-pay-efectivo" checked onchange="syncPayMethodCheckboxes()" style="width: 16px; height: 16px; accent-color: var(--red);" /> Efectivo
                   </label>
                   <label style="display: flex; align-items: center; gap: 8px; color: var(--white); font-size: 13px; cursor: pointer; user-select: none;">
-                    <input type="checkbox" id="cfg-pay-transferencia" checked style="width: 16px; height: 16px; accent-color: var(--red);" /> Transferencia
+                    <input type="checkbox" id="cfg-pay-transferencia" checked onchange="syncPayMethodCheckboxes()" style="width: 16px; height: 16px; accent-color: var(--red);" /> Transferencia
                   </label>
                   <label style="display: flex; align-items: center; gap: 8px; color: var(--white); font-size: 13px; cursor: pointer; user-select: none;">
-                    <input type="checkbox" id="cfg-pay-convenir" checked style="width: 16px; height: 16px; accent-color: var(--red);" /> A convenir
+                    <input type="checkbox" id="cfg-pay-convenir" checked onchange="syncPayMethodCheckboxes()" style="width: 16px; height: 16px; accent-color: var(--red);" /> Contra entrega / A convenir
                   </label>
                 </div>
+              </div>
+
+              <!-- Cuadro Informativo de Redes Sociales -->
+              <div style="grid-column:1/-1; background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.25); border-radius:10px; padding:12px 16px; margin:10px 0; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+                <div style="font-size:12.5px; color:var(--white);">
+                  <i class="bi bi-link-45deg" style="color:#3B82F6; font-size:16px; margin-right:4px;"></i>
+                  <strong>Redes Sociales y GPS</strong>: Administrá tus enlaces de Instagram, Facebook, TikTok y Google Maps en el apartado <strong>Redes y Enlaces</strong>.
+                </div>
+                <button type="button" onclick="showView('enlaces')" style="background:#3B82F6; color:#fff; border:none; border-radius:6px; padding:6px 12px; font-size:12px; font-weight:600; cursor:pointer;">
+                  Ir a Redes y Enlaces
+                </button>
               </div>
 
               <!-- 9. Contraseña del panel -->
@@ -6609,22 +6586,23 @@
     // ← FIX CRÍTICO: TITLES debe estar ANTES de usarse
     const TITLES = {
       dashboard: 'Inicio',
-      rubro: 'Rubro y Plantilla',
-      reports: 'Analítica',
+      rubro: 'Setup Guiado (8 Pasos)',
+      reports: 'Analítica y Reportes',
       'new-order': 'Nuevo Pedido',
       orders: 'Pedidos',
-      products: 'Productos',
-      abm: 'ABM · Productos',
+      products: 'Productos (ABM)',
+      abm: 'Productos (ABM)',
       categories: 'Categorías',
-      pickups: 'PickUp · Repartidores & Delivery',
+      coupons: 'Cupones de Descuento',
+      pickups: 'Envíos, Cadetería y PickUp',
       'new-pickup': 'Formulario de Repartidor',
-      marca: 'Marca',
+      marca: 'Marca y Estética',
       'design-catalogo': 'Diseño de Catálogo',
-      enlaces: 'Enlaces',
-      'pages-internas': 'Páginas Internas',
-      'config-basica': 'Configuración Básica',
-      'config-avanzada': 'Configuración Avanzada',
-      'account-plan': 'Mi Cuenta y Plan',
+      enlaces: 'Redes y Enlaces',
+      'pages-internas': 'Páginas (Nosotros & FAQs)',
+      'config-basica': 'Datos del Comercio',
+      'config-avanzada': 'Configuración Avanzada (Dominio/SEO)',
+      'account-plan': 'Facturación y Plan',
       mensajes: 'Plantillas de Mensajes'
     };
 
@@ -13943,6 +13921,29 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       if (el8) el8.textContent = channelNames[s.notificationChannel] || 'Directo (WhatsApp)';
     }
     window.renderRubroViewSummary = renderRubroViewSummary;
+
+    function syncRubroFromBasicConfig(val) {
+      if (!window.onboardingState) return;
+      window.onboardingState.rubro = val;
+      if (typeof renderRubroViewSummary === 'function') renderRubroViewSummary();
+    }
+    window.syncRubroFromBasicConfig = syncRubroFromBasicConfig;
+
+    function syncPayMethodCheckboxes() {
+      if (!window.onboardingState) return;
+      const pays = [];
+      const chkCash = document.getElementById('cfg-pay-efectivo');
+      const chkTransfer = document.getElementById('cfg-pay-transferencia');
+      const chkCod = document.getElementById('cfg-pay-convenir');
+
+      if (chkCash && chkCash.checked) pays.push('efectivo');
+      if (chkTransfer && chkTransfer.checked) pays.push('transferencia');
+      if (chkCod && chkCod.checked) pays.push('contra_entrega');
+
+      window.onboardingState.paymentTypes = pays;
+      if (typeof renderRubroViewSummary === 'function') renderRubroViewSummary();
+    }
+    window.syncPayMethodCheckboxes = syncPayMethodCheckboxes;
 
     function closeOnboardingModal() {
       const modal = document.getElementById('onboarding-modal-overlay');
