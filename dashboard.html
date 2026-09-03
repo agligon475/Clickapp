@@ -3488,57 +3488,120 @@
 
     <!-- ══ NEGOCIO: RUBRO Y PLANTILLA ══ -->
     <div class="view" id="view-rubro">
-      <div style="background: linear-gradient(135deg, rgba(215,38,56,0.15) 0%, rgba(215,38,56,0.05) 100%); border: 1px solid rgba(215,38,56,0.3); border-radius: 14px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+      <!-- Banner de Setup Paso a Paso -->
+      <div style="background: linear-gradient(135deg, rgba(215,38,56,0.18) 0%, rgba(215,38,56,0.06) 100%); border: 1px solid rgba(215,38,56,0.35); border-radius: 16px; padding: 20px 24px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
         <div>
-          <div style="font-weight: 800; color: #fff; font-size: 15px;"><i class="bi bi-magic" style="color:var(--red); margin-right: 6px;"></i> Asistente de Setup Paso a Paso</div>
-          <div style="font-size: 12.5px; color: var(--silver); margin-top: 2px;">Configurá el rubro, tipos de productos, medios de pago, entrega y estética en 8 simples pasos.</div>
+          <div style="font-weight: 800; color: var(--white); font-size: 17px; display: flex; align-items: center; gap: 8px;">
+            <i class="bi bi-magic" style="color:var(--red); font-size: 20px;"></i> Configuración Inicial & Setup Paso a Paso (8 Pasos)
+          </div>
+          <div style="font-size: 13px; color: var(--silver); margin-top: 4px; line-height: 1.4;">
+            Personalizá todos los aspectos clave de tu negocio: rubro, productos, medios de pago, envíos y estética corporativa.
+          </div>
         </div>
-        <button onclick="openOnboardingModal(true)" style="background: var(--red); color: #fff; border: none; padding: 9px 18px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(215,38,56,0.4);">
-          <i class="bi bi-play-circle-fill"></i> Iniciar Setup (8 Pasos)
+        <button type="button" onclick="openOnboardingModal(true)" style="background: var(--red); color: #fff; border: none; padding: 11px 22px; border-radius: 12px; font-weight: 700; font-size: 13.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(215,38,56,0.4); transition: transform 0.2s;">
+          <i class="bi bi-play-circle-fill"></i> Lanzar Setup Completo (8 Pasos)
         </button>
       </div>
 
-      <div
-        style="background:var(--steel);border:1px solid var(--zinc);border-radius:12px;padding:24px;margin-bottom:24px;">
-        <h2 style="font-family:var(--font-h);font-size:20px;font-weight:700;color:var(--white);margin-bottom:8px;">
-          Seleccioná tu Rubro</h2>
-        <p style="color:var(--silver);font-size:13px;margin-bottom:20px;">Elegí el rubro principal de tu negocio. Al
-          cambiar de rubro, tu tienda se adaptará automáticamente con categorías, ejemplos y estilos diseñados
-          específicamente para tu sector.</p>
+      <!-- Resumen de los 8 Parámetros Configurados -->
+      <div style="background:var(--steel); border:1px solid var(--zinc); border-radius:16px; padding:24px; margin-bottom:24px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:20px; border-bottom:1px solid var(--zinc); padding-bottom:14px;">
+          <div>
+            <h2 style="font-size:19px; font-weight:800; color:var(--white); margin:0 0 4px 0;">Resumen del Setup de tu Comercio</h2>
+            <p style="color:var(--silver); font-size:13px; margin:0;">Hacé click en cualquier ítem para editarlo directamente en el asistente.</p>
+          </div>
+          <div id="onb-view-status-badge" style="display:inline-flex; align-items:center; gap:6px; background:rgba(46,204,113,0.15); border:1px solid rgba(46,204,113,0.3); color:#2ECC71; font-size:12px; font-weight:700; padding:6px 12px; border-radius:20px;">
+            <i class="bi bi-check-circle-fill"></i> Setup 8/8 Pasos
+          </div>
+        </div>
 
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));gap:16px;">
-          <!-- Kiosco -->
-          <div class="rubro-card" onclick="applyRubro('kiosco')"
-            style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:20px;cursor:pointer;transition:border-color 0.2s;">
-            <div style="font-size:32px;margin-bottom:12px;">🏪</div>
-            <h3 style="font-size:16px;font-weight:700;color:var(--white);margin-bottom:6px;">Kiosco / Almacén</h3>
-            <p style="font-size:12px;color:var(--fog);margin:0;">Bebidas, snacks, golosinas y despensa.</p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px;" id="rubro-summary-grid">
+          <!-- 1. Rubro -->
+          <div class="rubro-card" onclick="openOnboardingStep(1)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+              <span style="font-size:24px;">🏪</span>
+              <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 1</span>
+            </div>
+            <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">1. Rubro de la Empresa</h3>
+            <p style="font-size:12.5px; color:var(--silver); margin:0;" id="view-rubro-val-1">Kiosco - Almacén</p>
           </div>
-          <!-- Ferreteria -->
-          <div class="rubro-card" onclick="applyRubro('ferreteria')"
-            style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:20px;cursor:pointer;transition:border-color 0.2s;">
-            <div style="font-size:32px;margin-bottom:12px;">🛠️</div>
-            <h3 style="font-size:16px;font-weight:700;color:var(--white);margin-bottom:6px;">Ferretería</h3>
-            <p style="font-size:12px;color:var(--fog);margin:0;">Herramientas, materiales y electricidad.</p>
+
+          <!-- 2. Tipos de Productos -->
+          <div class="rubro-card" onclick="openOnboardingStep(2)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+              <span style="font-size:24px;">📦</span>
+              <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 2</span>
+            </div>
+            <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">2. Tipos de Productos</h3>
+            <p style="font-size:12.5px; color:var(--silver); margin:0;" id="view-rubro-val-2">Productos manufacturados</p>
           </div>
-          <!-- Gastronomia -->
-          <div class="rubro-card" onclick="applyRubro('gastronomia')"
-            style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:20px;cursor:pointer;transition:border-color 0.2s;">
-            <div style="font-size:32px;margin-bottom:12px;">🍔</div>
-            <h3 style="font-size:16px;font-weight:700;color:var(--white);margin-bottom:6px;">Gastronomía / Delivery</h3>
-            <p style="font-size:12px;color:var(--fog);margin:0;">Comidas rápidas, postres, menú y adicionales.</p>
+
+          <!-- 3. Medios de Pago -->
+          <div class="rubro-card" onclick="openOnboardingStep(3)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+              <span style="font-size:24px;">💳</span>
+              <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 3</span>
+            </div>
+            <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">3. Medios de Pago</h3>
+            <p style="font-size:12.5px; color:var(--silver); margin:0;" id="view-rubro-val-3">Efectivo, Transferencia</p>
           </div>
-          <!-- Electronica -->
-          <div class="rubro-card" onclick="applyRubro('electronica')"
-            style="background:var(--iron);border:1px solid var(--zinc);border-radius:10px;padding:20px;cursor:pointer;transition:border-color 0.2s;">
-            <div style="font-size:32px;margin-bottom:12px;">📱</div>
-            <h3 style="font-size:16px;font-weight:700;color:var(--white);margin-bottom:6px;">Tecnología / Electrónica
-            </h3>
-            <p style="font-size:12px;color:var(--fog);margin:0;">Celulares, accesorios y hardware.</p>
+
+          <!-- 4. Delivery & PickUp -->
+          <div class="rubro-card" onclick="openOnboardingStep(4)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+              <span style="font-size:24px;">🚚</span>
+              <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 4</span>
+            </div>
+            <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">4. Envíos y Delivery</h3>
+            <p style="font-size:12.5px; color:var(--silver); margin:0;" id="view-rubro-val-4">Habilitado (Delivery y PickUp)</p>
+          </div>
+
+          <!-- 5. Estilo Visual -->
+          <div class="rubro-card" onclick="openOnboardingStep(5)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+              <span style="font-size:24px;">🎨</span>
+              <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 5</span>
+            </div>
+            <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">5. Estilo de Empresa</h3>
+            <p style="font-size:12.5px; color:var(--silver); margin:0;" id="view-rubro-val-5">Vibrante y con energías</p>
+          </div>
+
+          <!-- 6. Colores -->
+          <div class="rubro-card" onclick="openOnboardingStep(6)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+              <div style="display:flex; gap:6px;" id="view-rubro-colors-preview">
+                <span style="width:18px; height:18px; border-radius:50%; background:#D72638; border:1px solid #fff;"></span>
+                <span style="width:18px; height:18px; border-radius:50%; background:#2ECC71; border:1px solid #fff;"></span>
+                <span style="width:18px; height:18px; border-radius:50%; background:#1E2022; border:1px solid #fff;"></span>
+              </div>
+              <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 6</span>
+            </div>
+            <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">6. Paleta de Colores</h3>
+            <p style="font-size:12.5px; color:var(--silver); margin:0;" id="view-rubro-val-6">Rojo Pasión / Personalizado</p>
+          </div>
+
+          <!-- 7. Tono -->
+          <div class="rubro-card" onclick="openOnboardingStep(7)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+              <span style="font-size:24px;">🗣️</span>
+              <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 7</span>
+            </div>
+            <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">7. Tono de Marca</h3>
+            <p style="font-size:12.5px; color:var(--silver); margin:0;" id="view-rubro-val-7">Amistoso</p>
+          </div>
+
+          <!-- 8. Notificaciones -->
+          <div class="rubro-card" onclick="openOnboardingStep(8)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+              <span style="font-size:24px;">🔔</span>
+              <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 8</span>
+            </div>
+            <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">8. Avisos a Clientes</h3>
+            <p style="font-size:12.5px; color:var(--silver); margin:0;" id="view-rubro-val-8">Directo por WhatsApp</p>
           </div>
         </div>
       </div>
-    </div>
+    </div><!-- /view-rubro -->
 
     <!-- ══ INICIO (DASHBOARD) ══ -->
     <div class="view active" id="view-dashboard">
@@ -6860,6 +6923,7 @@
 
       if (name === 'coupons') { renderCouponsTable(); }
       if (name === 'mensajes' && typeof loadMessageTemplates === 'function') { loadMessageTemplates(); }
+      if (name === 'rubro' && typeof renderRubroViewSummary === 'function') { renderRubroViewSummary(); }
       if (name === 'qr' || name === 'kit') {
         const storeId = (typeof STORE_ID !== 'undefined' && STORE_ID) ? STORE_ID : (new URLSearchParams(window.location.search).get('store') || '');
         window.open('/kit-imprimible.html?store=' + encodeURIComponent(storeId), '_blank');
@@ -13775,12 +13839,110 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         if (isCompleted || isDismissed || isSkippedSession) return;
       }
 
-      window.onboardingState.currentStep = 1;
+      if (!window.onboardingState.currentStep) window.onboardingState.currentStep = 1;
       renderOnboardingStep();
       modal.classList.add('open');
       modal.style.display = 'flex';
       document.body.style.overflow = 'hidden';
     }
+
+    function openOnboardingStep(stepNum) {
+      window.onboardingState.currentStep = stepNum || 1;
+      openOnboardingModal(true);
+    }
+    window.openOnboardingStep = openOnboardingStep;
+
+    function renderRubroViewSummary() {
+      const s = window.onboardingState;
+      if (!s) return;
+
+      // 1. Rubro
+      const rubroNames = {
+        kiosco_almacen: 'Kiosco - Almacén',
+        industrial: 'Industrial',
+        gastronomia: 'Gastronomía',
+        tecnologia: 'Tecnología',
+        indumentaria: 'Indumentaria',
+        insumos: 'Insumos',
+        otros: s.rubroOtrosDetalle ? `Otros (${s.rubroOtrosDetalle})` : 'Otros'
+      };
+      const el1 = document.getElementById('view-rubro-val-1');
+      if (el1) el1.textContent = rubroNames[s.rubro] || s.rubro || 'Kiosco - Almacén';
+
+      // 2. Tipos de productos
+      const prodNames = {
+        fraccionados: 'Fraccionados',
+        manufacturados: 'Manufacturados',
+        combos: 'Combos',
+        variables_gastronomia: 'Variables (Gastronomía)',
+        variables_talle: 'Variables (Talle)',
+        variables_especificaciones: 'Variables (Especificaciones)'
+      };
+      const el2 = document.getElementById('view-rubro-val-2');
+      if (el2) {
+        const activeTypes = (s.productTypes || []).map(t => prodNames[t] || t);
+        el2.textContent = activeTypes.length ? activeTypes.join(', ') : 'Manufacturados';
+      }
+
+      // 3. Medios de pago
+      const payNames = {
+        efectivo: 'Efectivo',
+        transferencia: 'Transferencia',
+        contra_entrega: 'Contra entrega'
+      };
+      const el3 = document.getElementById('view-rubro-val-3');
+      if (el3) {
+        const activePays = (s.paymentTypes || []).map(p => payNames[p] || p);
+        el3.textContent = activePays.length ? activePays.join(', ') : 'Efectivo, Transferencia';
+      }
+
+      // 4. Delivery & PickUp
+      const el4 = document.getElementById('view-rubro-val-4');
+      if (el4) {
+        el4.textContent = (s.hasDeliveryPickup === 'si') ? 'Habilitado (Delivery y PickUp)' : 'Deshabilitado (Venta local)';
+      }
+
+      // 5. Estilo visual
+      const styleNames = {
+        clasico: 'Clásico y profesional',
+        vibrante: 'Vibrante y con energías',
+        relajado: 'Relajado y natural',
+        minimalista: 'Minimalista'
+      };
+      const el5 = document.getElementById('view-rubro-val-5');
+      if (el5) el5.textContent = styleNames[s.brandStyle] || 'Vibrante y con energías';
+
+      // 6. Colores
+      const el6 = document.getElementById('view-rubro-val-6');
+      if (el6) el6.textContent = `${s.color1 || '#D72638'} / ${s.color2 || '#2ECC71'}`;
+      const colorPrev = document.getElementById('view-rubro-colors-preview');
+      if (colorPrev) {
+        colorPrev.innerHTML = `
+          <span style="width:18px; height:18px; border-radius:50%; background:${s.color1 || '#D72638'}; border:1px solid #fff;"></span>
+          <span style="width:18px; height:18px; border-radius:50%; background:${s.color2 || '#2ECC71'}; border:1px solid #fff;"></span>
+          <span style="width:18px; height:18px; border-radius:50%; background:${s.color3 || '#1E2022'}; border:1px solid #fff;"></span>
+        `;
+      }
+
+      // 7. Tono
+      const toneNames = {
+        amistoso: 'Amistoso',
+        formal: 'Formal',
+        informal: 'Informal'
+      };
+      const el7 = document.getElementById('view-rubro-val-7');
+      if (el7) el7.textContent = toneNames[s.brandTone] || 'Amistoso';
+
+      // 8. Avisos
+      const channelNames = {
+        whatsapp: 'Directo (WhatsApp)',
+        mail: 'Ordenado (Mail)',
+        desactivado: 'Desactivado (Sin avisos)'
+      };
+      const el8 = document.getElementById('view-rubro-val-8');
+      if (el8) el8.textContent = channelNames[s.notificationChannel] || 'Directo (WhatsApp)';
+    }
+    window.renderRubroViewSummary = renderRubroViewSummary;
 
     function closeOnboardingModal() {
       const modal = document.getElementById('onboarding-modal-overlay');
@@ -14221,6 +14383,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         console.warn('Error al guardar onboarding:', e);
       }
 
+      if (typeof renderRubroViewSummary === 'function') renderRubroViewSummary();
       closeOnboardingModal();
       alert('🎉 ¡Excelente! Tu tienda ha sido configurada con éxito.');
     }
