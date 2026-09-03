@@ -1854,37 +1854,53 @@
 
     /* LIGHT MODE */
     body.light-mode {
-      --black: #F0F2F5;
+      --black: #F3F4F6;
       --steel: #FFFFFF;
-      --iron: #E8EAED;
-      --zinc: #D1D5DB;
+      --iron: #E5E7EB;
+      --zinc: #9CA3AF;
       --silver: #1F2937;
       --fog: #111827;
       --white: #030712;
+      color: #030712;
     }
 
     body.light-mode .topbar {
       background: #fff;
+      color: #030712;
     }
 
     body.light-mode .sidebar {
       background: #fff;
+      color: #111827;
     }
 
     body.light-mode .card {
       background: #fff;
+      color: #111827;
+      border-color: #E5E7EB;
     }
 
     body.light-mode .metric {
       background: #fff;
+      color: #111827;
+    }
+
+    body.light-mode .metric-val {
+      color: #030712 !important;
+    }
+
+    body.light-mode .metric-lbl {
+      color: #374151 !important;
     }
 
     body.light-mode .modal {
       background: #fff;
+      color: #111827;
     }
 
     body.light-mode .modal-head {
       background: #fff;
+      color: #030712;
     }
 
     body.light-mode .modal-footer {
@@ -1893,18 +1909,19 @@
 
     body.light-mode .ctrl-input {
       background: #F9FAFB;
-      color: #111827;
+      color: #111827 !important;
       border-color: #D1D5DB;
     }
 
     body.light-mode .data-table th {
-      color: #6B7280;
-      border-color: #E5E7EB;
+      color: #111827 !important;
+      font-weight: 700;
+      border-color: #D1D5DB;
     }
 
     body.light-mode .data-table td {
-      border-color: #F3F4F6;
-      color: #374151;
+      border-color: #E5E7EB;
+      color: #111827 !important;
     }
 
     body.light-mode .data-table tr:hover td {
@@ -1918,10 +1935,23 @@
 
     body.light-mode .kanban-col-head {
       background: #F3F4F6;
+      color: #111827 !important;
+    }
+
+    body.light-mode .kc-client,
+    body.light-mode .kc-total {
+      color: #030712 !important;
+    }
+
+    body.light-mode .kc-id,
+    body.light-mode .kc-prods,
+    body.light-mode .kc-date {
+      color: #374151 !important;
     }
 
     body.light-mode .sb-item {
-      color: #374151;
+      color: #111827 !important;
+      font-weight: 600;
     }
 
     body.light-mode .sb-item:hover {
@@ -1930,26 +1960,38 @@
 
     body.light-mode .sb-item.active {
       background: #FEF2F2;
-      color: var(--red);
+      color: var(--red) !important;
     }
 
     body.light-mode .sb-item.active i {
-      color: var(--red);
+      color: var(--red) !important;
+    }
+
+    body.light-mode .sb-accordion-header {
+      color: #111827 !important;
+      font-weight: 700;
+    }
+
+    body.light-mode .card-title,
+    body.light-mode .topbar-title {
+      color: #030712 !important;
     }
 
     body.light-mode .abm-action {
       background: #F3F4F6;
       border-color: #E5E7EB;
+      color: #111827 !important;
     }
 
     body.light-mode .period-select {
       background: #F9FAFB;
-      color: #111827;
+      color: #111827 !important;
     }
 
     body.light-mode .status-pill {
       background: #F3F4F6;
       border-color: #E5E7EB;
+      color: #111827 !important;
     }
 
     body.light-mode .modal-overlay {
