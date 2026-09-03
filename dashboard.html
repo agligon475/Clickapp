@@ -7430,11 +7430,11 @@
         setDot('ok', `${products.length} productos · ${new Date().toLocaleTimeString('es-AR')}`);
         dbStatusState = 'ok';
         if (typeof updateStatusLights === 'function') updateStatusLights();
-        updateMetrics();
-        updateCharts();
-        if (typeof renderProducts === 'function') renderProducts();
-        // Inicializar ABM con productos frescos (UUID) para que saveLocalProducts funcione
-        initABM();
+        
+        try { updateMetrics(); } catch(err) { console.warn('Error en updateMetrics:', err); }
+        try { updateCharts(); } catch(err) { console.warn('Error en updateCharts:', err); }
+        try { if (typeof renderProducts === 'function') renderProducts(); } catch(err) { console.warn('Error en renderProducts:', err); }
+        try { initABM(); } catch(err) { console.warn('Error en initABM:', err); }
       } catch (e) {
         // Mostrar tarjeta de error si falla la conexión
         const errCard = document.getElementById('connection-error-card');
@@ -7443,7 +7443,7 @@
         setDot('err', 'Error al cargar desde Supabase');
         dbStatusState = 'err';
         if (typeof updateStatusLights === 'function') updateStatusLights();
-        console.error(e);
+        console.error('Error crítico en loadSheet:', e);
       }
     }
 
@@ -7496,15 +7496,15 @@
       });
       const avg = count > 0 ? revenue / count : 0;
 
-      document.getElementById('m-ord').textContent = count;
-      document.getElementById('m-rev').textContent = '$' + Math.round(revenue).toLocaleString('es-AR');
-      document.getElementById('m-avg').textContent = '$' + Math.round(avg).toLocaleString('es-AR');
-      document.getElementById('m-prods').textContent = products.length || '—';
+      const mOrd = document.getElementById('m-ord'); if (mOrd) mOrd.textContent = count;
+      const mRev = document.getElementById('m-rev'); if (mRev) mRev.textContent = '$' + Math.round(revenue).toLocaleString('es-AR');
+      const mAvg = document.getElementById('m-avg'); if (mAvg) mAvg.textContent = '$' + Math.round(avg).toLocaleString('es-AR');
+      const mProds = document.getElementById('m-prods'); if (mProds) mProds.textContent = (products && products.length) ? products.length : '—';
       
-      document.getElementById('m-ord-d').innerHTML = `<span style="color:var(--silver);">en el período</span>`;
-      document.getElementById('m-rev-d').innerHTML = `<span style="color:var(--silver);">en el período</span>`;
-      document.getElementById('m-avg-d').innerHTML = `<span style="color:var(--silver);">en el período</span>`;
-      document.getElementById('m-prods-d').innerHTML = products.length ? `<span style="color:var(--silver);">en catálogo</span>` : '';
+      const mOrdD = document.getElementById('m-ord-d'); if (mOrdD) mOrdD.innerHTML = `<span style="color:var(--silver);">en el período</span>`;
+      const mRevD = document.getElementById('m-rev-d'); if (mRevD) mRevD.innerHTML = `<span style="color:var(--silver);">en el período</span>`;
+      const mAvgD = document.getElementById('m-avg-d'); if (mAvgD) mAvgD.innerHTML = `<span style="color:var(--silver);">en el período</span>`;
+      const mProdsD = document.getElementById('m-prods-d'); if (mProdsD) mProdsD.innerHTML = (products && products.length) ? `<span style="color:var(--silver);">en catálogo</span>` : '';
     }
 
     /* CHARTS */
@@ -7890,65 +7890,81 @@
     }
 
     function updateMetricsFromOrders(orders) {
-      const total = orders.reduce((s, o) => s + o.total, 0);
+      if (!orders) orders = [];
+      const total = orders.reduce((s, o) => s + (parseFloat(o.total) || 0), 0);
       const avg = orders.length ? Math.round(total / orders.length) : 0;
       const clientes = new Set(orders.map(o => o.dni || o.cliente).filter(Boolean)).size;
 
-      document.getElementById('m-ord').textContent = orders.length;
-      document.getElementById('m-rev').textContent = total >= 1000000
+      const elOrd = document.getElementById('m-ord'); if (elOrd) elOrd.textContent = orders.length;
+      const elRev = document.getElementById('m-rev'); if (elRev) elRev.textContent = total >= 1000000
         ? '$' + (total / 1000000).toFixed(1) + 'M'
         : '$' + Math.round(total / 1000) + 'K';
-      document.getElementById('m-avg').textContent = '$' + Math.round(avg / 1000) + 'K';
-      document.getElementById('m-prods').textContent = products.length || '—';
+      const elAvg = document.getElementById('m-avg'); if (elAvg) elAvg.textContent = '$' + Math.round(avg / 1000) + 'K';
+      const elProds = document.getElementById('m-prods'); if (elProds) elProds.textContent = (products && products.length) ? products.length : '—';
 
-      document.getElementById('m-ord-d').innerHTML = `<i class="bi bi-people"></i> ${clientes} clientes únicos`;
-      document.getElementById('m-rev-d').innerHTML = `<span style="color:var(--silver);">total acumulado</span>`;
-      document.getElementById('m-avg-d').innerHTML = `<span style="color:var(--silver);">por pedido</span>`;
-      document.getElementById('m-prods-d').innerHTML = `<span style="color:var(--silver);">en catálogo</span>`;
+      const elOrdD = document.getElementById('m-ord-d'); if (elOrdD) elOrdD.innerHTML = `<i class="bi bi-people"></i> ${clientes} clientes únicos`;
+      const elRevD = document.getElementById('m-rev-d'); if (elRevD) elRevD.innerHTML = `<span style="color:var(--silver);">total acumulado</span>`;
+      const elAvgD = document.getElementById('m-avg-d'); if (elAvgD) elAvgD.innerHTML = `<span style="color:var(--silver);">por pedido</span>`;
+      const elProdsD = document.getElementById('m-prods-d'); if (elProdsD) elProdsD.innerHTML = `<span style="color:var(--silver);">en catálogo</span>`;
 
       // Update daily orders chart
       if (cOrders && orders.length) {
-        const days30 = Array.from({ length: 30 }, (_, i) => {
-          const d = new Date(); d.setDate(d.getDate() - 29 + i);
-          return d.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' });
-        });
-        const countByDay = {};
-        orders.forEach(o => {
-          const d = (o.fecha || '').split(' ')[0] || '';
-          countByDay[d] = (countByDay[d] || 0) + 1;
-        });
-        cOrders.data.labels = days30;
-        cOrders.data.datasets[0].data = days30.map(d => countByDay[d] || 0);
-        cOrders.update();
+        try {
+          const days30 = Array.from({ length: 30 }, (_, i) => {
+            const d = new Date(); d.setDate(d.getDate() - 29 + i);
+            return d.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' });
+          });
+          const countByDay = {};
+          orders.forEach(o => {
+            const d = (o.fecha || '').split(' ')[0] || '';
+            countByDay[d] = (countByDay[d] || 0) + 1;
+          });
+          cOrders.data.labels = days30;
+          cOrders.data.datasets[0].data = days30.map(d => countByDay[d] || 0);
+          cOrders.update();
+        } catch (e) {
+          console.warn('Error al actualizar gráfico de pedidos:', e);
+        }
       }
 
       // Update payment donut
       if (cPago && orders.length) {
-        const map = {};
-        orders.forEach(o => { map[o.pago] = (map[o.pago] || 0) + 1; });
-        const entries = Object.entries(map).sort((a, b) => b[1] - a[1]);
-        const reds = ['#D72638', '#E74C3C', '#922B21', '#F1948A', '#CD6155'];
-        cPago.data.labels = entries.map(e => e[0]);
-        cPago.data.datasets[0].data = entries.map(e => e[1]);
-        cPago.data.datasets[0].backgroundColor = reds.slice(0, entries.length);
-        cPago.update();
+        try {
+          const map = {};
+          orders.forEach(o => { map[o.pago] = (map[o.pago] || 0) + 1; });
+          const entries = Object.entries(map).sort((a, b) => b[1] - a[1]);
+          const reds = ['#D72638', '#E74C3C', '#922B21', '#F1948A', '#CD6155'];
+          cPago.data.labels = entries.map(e => e[0]);
+          cPago.data.datasets[0].data = entries.map(e => e[1]);
+          cPago.data.datasets[0].backgroundColor = reds.slice(0, entries.length);
+          cPago.update();
+        } catch (e) {
+          console.warn('Error al actualizar gráfico de pagos:', e);
+        }
       }
     }
 
-    /* PRODUCTS VIEW */
+    /* PRODUCTS VIEW (Defensivo) */
     function renderProducts() {
-      if (!products.length) { document.getElementById('prod-grid').innerHTML = `<p style="color:var(--silver);grid-column:1/-1;">Sincronizá tu Sheet para ver los productos.</p>`; return; }
-      document.getElementById('prod-count').textContent = `${products.length} productos`;
-      document.getElementById('prod-grid').innerHTML = products.map(p => {
+      const grid = document.getElementById('prod-grid');
+      const cnt = document.getElementById('prod-count');
+      if (!grid) return;
+      if (!products || !products.length) {
+        grid.innerHTML = `<p style="color:var(--silver);grid-column:1/-1;">Sincronizá tu Sheet para ver los productos.</p>`;
+        if (cnt) cnt.textContent = `0 productos`;
+        return;
+      }
+      if (cnt) cnt.textContent = `${products.length} productos`;
+      grid.innerHTML = (products || []).map(p => {
         const sc = p.stock === 0 ? 'stock-out' : p.stock < 5 ? 'stock-low' : 'stock-ok';
         const sl = p.stock === 0 ? 'Sin stock' : p.stock < 5 ? `Bajo: ${p.stock}` : `${p.stock} uds.`;
         return `<div class="prod-item">
-      <div class="prod-emoji">${p.emoji}</div>
+      <div class="prod-emoji">${p.emoji || '📦'}</div>
       <div class="prod-body">
-        <div class="prod-cat">${p.cat}</div>
-        <div class="prod-name">${p.name}</div>
+        <div class="prod-cat">${p.cat || 'General'}</div>
+        <div class="prod-name">${p.name || 'Producto'}</div>
         <div class="prod-row">
-          <span class="prod-price">$${p.price.toLocaleString('es-AR')}</span>
+          <span class="prod-price">$${(p.price || 0).toLocaleString('es-AR')}</span>
           <span class="prod-stock ${sc}">${sl}</span>
         </div>
       </div>
