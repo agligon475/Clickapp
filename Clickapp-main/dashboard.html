@@ -2900,6 +2900,20 @@
       transform: translateY(-1px);
       box-shadow: 0 6px 20px rgba(215, 38, 56, 0.6);
     }
+    /* ── ACCESSIBILITY & FOCUS VISIBLE IMPROVEMENTS ── */
+    *:focus-visible {
+      outline: 2px solid var(--red, #D72638) !important;
+      outline-offset: 2px !important;
+    }
+    .onb-opt-card:focus-visible {
+      outline: 2px solid var(--red, #D72638) !important;
+      outline-offset: 2px !important;
+      border-color: var(--red, #D72638) !important;
+    }
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--red, #D72638) !important;
+      outline-offset: 2px !important;
+    }
   </style>
 
   <!-- ── DASHBOARD LOGIN OVERLAY ── -->
@@ -3083,17 +3097,17 @@
   </div>
 
   <!-- MODAL: TICKET DE SOPORTE -->
-  <div id="ticket-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+  <div id="ticket-modal" role="dialog" aria-modal="true" aria-labelledby="ticket-modal-title" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
     <div style="background:var(--iron);border:1px solid var(--zinc);border-radius:16px;width:min(520px,94vw);max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.5);">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--zinc);">
         <div style="display:flex;align-items:center;gap:10px;">
           <i class="bi bi-headset" style="color:#f59e0b;font-size:20px;"></i>
           <div>
-            <div style="font-weight:700;font-size:15px;color:var(--white);">Ticket de Soporte</div>
+            <div id="ticket-modal-title" style="font-weight:700;font-size:15px;color:var(--white);">Ticket de Soporte</div>
             <div style="font-size:11px;color:var(--silver);">Te responderemos en menos de 24 horas</div>
           </div>
         </div>
-        <button onclick="closeTicketModal()" style="background:none;border:none;cursor:pointer;color:var(--silver);font-size:20px;line-height:1;padding:4px;">&times;</button>
+        <button onclick="closeTicketModal()" aria-label="Cerrar modal de soporte" style="background:none;border:none;cursor:pointer;color:var(--silver);font-size:20px;line-height:1;padding:4px;">&times;</button>
       </div>
       <div style="padding:24px;display:flex;flex-direction:column;gap:16px;">
         <div style="font-size:12px;color:var(--silver);line-height:1.6;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:12px 14px;">
@@ -3128,17 +3142,17 @@
   </div>
 
   <!-- MODAL: CONTROL HUMANO NOTIFICACIÓN WHATSAPP + N8N -->
-  <div id="whatsapp-dispatch-modal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);align-items:center;justify-content:center;">
+  <div id="whatsapp-dispatch-modal" role="dialog" aria-modal="true" aria-labelledby="wapp-modal-title" aria-describedby="wapp-modal-subtitle" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);align-items:center;justify-content:center;">
     <div style="background:var(--iron);border:1px solid var(--zinc);border-radius:16px;width:min(560px,94vw);max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.6);">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--zinc);">
         <div style="display:flex;align-items:center;gap:10px;">
           <i class="bi bi-whatsapp" style="color:#2ECC71;font-size:22px;"></i>
           <div>
-            <div style="font-weight:700;font-size:16px;color:var(--white);">Confirmación de Notificación WhatsApp</div>
+            <div id="wapp-modal-title" style="font-weight:700;font-size:16px;color:var(--white);">Confirmación de Notificación WhatsApp</div>
             <div style="font-size:11px;color:var(--silver);" id="wapp-modal-subtitle">Notificar al cliente sobre su pedido</div>
           </div>
         </div>
-        <button onclick="closeWhatsappDispatchModal()" style="background:none;border:none;cursor:pointer;color:var(--silver);font-size:20px;line-height:1;padding:4px;">&times;</button>
+        <button onclick="closeWhatsappDispatchModal()" aria-label="Cerrar modal de WhatsApp" style="background:none;border:none;cursor:pointer;color:var(--silver);font-size:20px;line-height:1;padding:4px;">&times;</button>
       </div>
 
       <div style="padding:24px;display:flex;flex-direction:column;gap:16px;">
@@ -3180,14 +3194,14 @@
   </div>
 
   <!-- MODAL: ACTUALIZAR PLAN / ELEGIR PLAN -->
-  <div id="plan-upgrade-modal" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.75); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:20px;">
+  <div id="plan-upgrade-modal" role="dialog" aria-modal="true" aria-labelledby="plan-upgrade-title" aria-hidden="true" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.75); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:20px;">
     <div style="background:var(--steel); border:1px solid var(--zinc); border-radius:20px; max-width:620px; width:100%; max-height:90vh; overflow-y:auto; padding:28px; position:relative; box-shadow:0 24px 64px rgba(0,0,0,0.6); color:var(--white);">
-      <button onclick="closePlanUpgradeModal()" style="position:absolute; top:18px; right:18px; background:var(--iron); border:1px solid var(--zinc); color:var(--silver); width:32px; height:32px; border-radius:50%; font-size:18px; cursor:pointer;">&times;</button>
+      <button onclick="closePlanUpgradeModal()" aria-label="Cerrar modal de planes" style="position:absolute; top:18px; right:18px; background:var(--iron); border:1px solid var(--zinc); color:var(--silver); width:32px; height:32px; border-radius:50%; font-size:18px; cursor:pointer;">&times;</button>
       <div style="text-align:center; margin-bottom:24px;">
         <div style="display:inline-flex; align-items:center; justify-content:center; width:54px; height:54px; background:rgba(215,38,56,0.15); border-radius:16px; color:var(--red); font-size:28px; margin-bottom:12px;">
           <i class="bi bi-rocket-takeoff-fill"></i>
         </div>
-        <h2 style="font-size:22px; font-weight:800; margin-bottom:6px;">Actualizar Plan de tu Comercio</h2>
+        <h2 id="plan-upgrade-title" style="font-size:22px; font-weight:800; margin-bottom:6px;">Actualizar Plan de tu Comercio</h2>
         <p style="font-size:13px; color:var(--silver);">Elegí el plan que mejor se adapte al crecimiento de tu negocio.</p>
       </div>
 
@@ -3230,7 +3244,7 @@
   </div>
 
   <!-- MODAL: SETUP ONBOARDING PASO A PASO -->
-  <div id="onboarding-modal-overlay" class="onboarding-overlay">
+  <div id="onboarding-modal-overlay" class="onboarding-overlay" role="dialog" aria-modal="true" aria-labelledby="onb-step-title" aria-describedby="onb-step-subtitle" aria-hidden="true">
     <div class="onboarding-card">
       <!-- Header -->
       <div class="onboarding-header">
@@ -3254,7 +3268,7 @@
       </div>
 
       <!-- Body -->
-      <div class="onboarding-body" id="onboarding-step-content">
+      <div class="onboarding-body" id="onboarding-step-content" aria-live="polite">
         <!-- Contenido dinámico del paso -->
       </div>
 
@@ -13615,11 +13629,11 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         rubros.forEach(r => {
           const isSel = selected === r.id;
           html += `
-            <div class="onb-opt-card ${isSel ? 'selected' : ''}" onclick="selectOnbSingle('rubro', '${r.id}')">
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="radio" aria-checked="${isSel ? 'true' : 'false'}" onclick="selectOnbSingle('rubro', '${r.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); selectOnbSingle('rubro', '${r.id}'); }">
               <div class="onb-opt-icon">${r.icon}</div>
               <div class="onb-opt-content">
-                <div class="onb-opt-title">${r.name}</div>
-                <div class="onb-opt-desc">${r.desc}</div>
+                <div class="onb-opt-title" id="onb-step-title">${r.name}</div>
+                <div class="onb-opt-desc" id="onb-step-subtitle">${r.desc}</div>
               </div>
               <div class="onb-check-indicator"><i class="bi bi-check-lg"></i></div>
             </div>
@@ -13657,7 +13671,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         prods.forEach(p => {
           const isSel = types.includes(p.id);
           html += `
-            <div class="onb-opt-card ${isSel ? 'selected' : ''}" onclick="toggleOnbMulti('productTypes', '${p.id}')">
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="checkbox" aria-checked="${isSel ? 'true' : 'false'}" onclick="toggleOnbMulti('productTypes', '${p.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); toggleOnbMulti('productTypes', '${p.id}'); }">
               <div class="onb-opt-icon">${p.icon}</div>
               <div class="onb-opt-content">
                 <div class="onb-opt-title">${p.name}</div>
@@ -13687,7 +13701,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         payments.forEach(p => {
           const isSel = payTypes.includes(p.id);
           html += `
-            <div class="onb-opt-card ${isSel ? 'selected' : ''}" onclick="toggleOnbMulti('paymentTypes', '${p.id}')">
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="checkbox" aria-checked="${isSel ? 'true' : 'false'}" onclick="toggleOnbMulti('paymentTypes', '${p.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); toggleOnbMulti('paymentTypes', '${p.id}'); }">
               <div class="onb-opt-icon">${p.icon}</div>
               <div class="onb-opt-content">
                 <div class="onb-opt-title">${p.name}</div>
@@ -13716,7 +13730,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         opts.forEach(o => {
           const isSel = isDelivery === o.id;
           html += `
-            <div class="onb-opt-card ${isSel ? 'selected' : ''}" onclick="selectOnbSingle('hasDeliveryPickup', '${o.id}')">
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="radio" aria-checked="${isSel ? 'true' : 'false'}" onclick="selectOnbSingle('hasDeliveryPickup', '${o.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); selectOnbSingle('hasDeliveryPickup', '${o.id}'); }">
               <div class="onb-opt-icon">${o.icon}</div>
               <div class="onb-opt-content">
                 <div class="onb-opt-title">${o.name}</div>
@@ -13747,7 +13761,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         styles.forEach(s => {
           const isSel = style === s.id;
           html += `
-            <div class="onb-opt-card ${isSel ? 'selected' : ''}" onclick="selectOnbSingle('brandStyle', '${s.id}')">
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="radio" aria-checked="${isSel ? 'true' : 'false'}" onclick="selectOnbSingle('brandStyle', '${s.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); selectOnbSingle('brandStyle', '${s.id}'); }">
               <div class="onb-opt-icon">${s.icon}</div>
               <div class="onb-opt-content">
                 <div class="onb-opt-title">${s.name}</div>
@@ -13840,7 +13854,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         tones.forEach(t => {
           const isSel = tone === t.id;
           html += `
-            <div class="onb-opt-card ${isSel ? 'selected' : ''}" onclick="selectOnbSingle('brandTone', '${t.id}')">
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="radio" aria-checked="${isSel ? 'true' : 'false'}" onclick="selectOnbSingle('brandTone', '${t.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); selectOnbSingle('brandTone', '${t.id}'); }">
               <div class="onb-opt-icon">${t.icon}</div>
               <div class="onb-opt-content">
                 <div class="onb-opt-title">${t.name}</div>
@@ -13870,7 +13884,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         channels.forEach(c => {
           const isSel = channel === c.id;
           html += `
-            <div class="onb-opt-card ${isSel ? 'selected' : ''}" onclick="selectOnbSingle('notificationChannel', '${c.id}')">
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="radio" aria-checked="${isSel ? 'true' : 'false'}" onclick="selectOnbSingle('notificationChannel', '${c.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); selectOnbSingle('notificationChannel', '${c.id}'); }">
               <div class="onb-opt-icon">${c.icon}</div>
               <div class="onb-opt-content">
                 <div class="onb-opt-title">${c.name}</div>
@@ -13966,6 +13980,80 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     document.skipOnboardingNow = skipOnboardingNow;
     document.skipOnboardingForever = skipOnboardingForever;
     document.checkAndOpenOnboardingModal = checkAndOpenOnboardingModal;
+
+    // ── MODAL ACCESSIBILITY (A11Y) MANAGER ──
+    window.ModalA11y = {
+      lastFocusedElement: null,
+
+      open: function(modalEl) {
+        if (!modalEl) return;
+        this.lastFocusedElement = document.activeElement;
+        modalEl.setAttribute('aria-hidden', 'false');
+        setTimeout(() => {
+          const focusables = modalEl.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex="0"]:not([tabindex="-1"])');
+          if (focusables.length > 0) {
+            focusables[0].focus();
+          }
+        }, 50);
+      },
+
+      close: function(modalEl) {
+        if (!modalEl) return;
+        modalEl.setAttribute('aria-hidden', 'true');
+        if (this.lastFocusedElement && typeof this.lastFocusedElement.focus === 'function') {
+          try { this.lastFocusedElement.focus(); } catch (e) {}
+        }
+      },
+
+      getActiveOpenModal: function() {
+        const modals = document.querySelectorAll('.modal-overlay, .onboarding-overlay, [id$="-modal"]');
+        for (let m of modals) {
+          if (m.classList.contains('open') || m.style.display === 'flex' || m.style.display === 'block') {
+            return m;
+          }
+        }
+        return null;
+      }
+    };
+
+    // Global Keydown Listener for Escape key & Tab Focus Trap
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const onbModal = document.getElementById('onboarding-modal-overlay');
+        if (onbModal && (onbModal.classList.contains('open') || onbModal.style.display === 'flex')) {
+          if (typeof skipOnboardingNow === 'function') skipOnboardingNow();
+          else if (typeof closeOnboardingModal === 'function') closeOnboardingModal();
+          return;
+        }
+        if (typeof closeModal === 'function') closeModal();
+        if (typeof closeCouponModal === 'function') closeCouponModal();
+        if (typeof closeCategoryModal === 'function') closeCategoryModal();
+        if (typeof closeTicketModal === 'function') closeTicketModal();
+        if (typeof closeWhatsappDispatchModal === 'function') closeWhatsappDispatchModal();
+        if (typeof closePlanUpgradeModal === 'function') closePlanUpgradeModal();
+        if (typeof closeUpgradePlanModal === 'function') closeUpgradePlanModal();
+        if (typeof closeStepByStepModal === 'function') closeStepByStepModal();
+      }
+
+      if (e.key === 'Tab') {
+        const activeModal = ModalA11y.getActiveOpenModal();
+        if (activeModal) {
+          const focusables = Array.from(activeModal.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex="0"]:not([tabindex="-1"])'));
+          if (focusables.length > 0) {
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+
+            if (e.shiftKey && document.activeElement === first) {
+              e.preventDefault();
+              last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+              e.preventDefault();
+              first.focus();
+            }
+          }
+        }
+      }
+    });
 
     document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
@@ -14390,7 +14478,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
   </script>
 
   <!-- ══ MODAL ══ -->
-  <div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-text" aria-hidden="true" onclick="if(event.target===this)closeModal()">
     <div class="modal" style="width:min(600px,95vw);">
       <div class="modal-head">
         <span class="modal-title" id="modal-title-text">Nuevo producto</span>
@@ -14705,7 +14793,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
   </div>
 
   <!-- MODAL: COUPON -->
-  <div class="modal-overlay" id="modal-coupon" style="display:none;" onclick="if(event.target===this)closeCouponModal()">
+  <div class="modal-overlay" id="modal-coupon" role="dialog" aria-modal="true" aria-labelledby="coupon-modal-title" aria-hidden="true" style="display:none;" onclick="if(event.target===this)closeCouponModal()">
     <div class="modal" style="width:min(540px,95vw);">
       <div class="modal-head">
         <span class="modal-title" id="coupon-modal-title"><i class="bi bi-ticket-perforated" style="color:var(--red);"></i> Nuevo Cupón</span>
@@ -14770,7 +14858,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
   </div>
 
   <!-- MODAL: CATEGORY -->
-  <div class="modal-overlay" id="modal-category" onclick="if(event.target===this)closeCategoryModal()">
+  <div class="modal-overlay" id="modal-category" role="dialog" aria-modal="true" aria-labelledby="cat-modal-title" aria-hidden="true" onclick="if(event.target===this)closeCategoryModal()">
     <div class="modal" style="width:min(400px,95vw);">
       <div class="modal-head">
         <span class="modal-title" id="cat-modal-title">Nueva Categoría</span>
@@ -14806,11 +14894,11 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
   </div>
 
   <!-- MODAL: STEP-BY-STEP CONFIGURATION -->
-  <div class="modal-overlay" id="modal-step-by-step" onclick="if(event.target===this)closeStepByStepModal()">
+  <div class="modal-overlay" id="modal-step-by-step" role="dialog" aria-modal="true" aria-labelledby="stepbystep-modal-title" aria-hidden="true" onclick="if(event.target===this)closeStepByStepModal()">
     <div class="modal" style="width:min(600px, 95vw);">
       <div class="modal-head">
-        <span class="modal-title"><i class="bi bi-magic" style="color:var(--red);margin-right:6px;"></i>Configuración Paso a Paso</span>
-        <button class="modal-close" onclick="closeStepByStepModal()" aria-label="Cerrar asistente"><i class="bi bi-x"></i></button>
+        <span class="modal-title" id="stepbystep-modal-title"><i class="bi bi-magic" style="color:var(--red);margin-right:6px;"></i>Configuración Paso a Paso</span>
+        <button class="modal-close" onclick="closeStepByStepModal()" aria-label="Cerrar asistente paso a paso"><i class="bi bi-x"></i></button>
       </div>
       
       <!-- Progress Bar / Steps indicator -->
@@ -15203,13 +15291,13 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
   </script>
 
   <!-- MODAL MEMBRESÍAS Y PLANES -->
-  <div id="modal-upgrade-plan" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); z-index:99999; align-items:center; justify-content:center; padding:20px;">
+  <div id="modal-upgrade-plan" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="upgrade-plan-title" aria-hidden="true" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); z-index:99999; align-items:center; justify-content:center; padding:20px;">
     <div class="modal-card" style="max-width: 580px; width:100%; background:#141416; border:1px solid #2E2E33; border-radius:18px; padding:28px; color:#fff;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-        <h3 style="font-family:var(--font-h); font-size:22px; font-weight:800; text-transform:uppercase; margin:0; display:flex; align-items:center; gap:8px;">
+        <h3 id="upgrade-plan-title" style="font-family:var(--font-h); font-size:22px; font-weight:800; text-transform:uppercase; margin:0; display:flex; align-items:center; gap:8px;">
           <i class="bi bi-star-fill" style="color:#F59E0B;"></i> Planes y Membresías
         </h3>
-        <button onclick="closeUpgradePlanModal()" style="background:transparent; border:none; color:#aaa; font-size:20px; cursor:pointer;"><i class="bi bi-x-lg"></i></button>
+        <button onclick="closeUpgradePlanModal()" aria-label="Cerrar modal de membresías" style="background:transparent; border:none; color:#aaa; font-size:20px; cursor:pointer;"><i class="bi bi-x-lg"></i></button>
       </div>
 
       <p style="font-size:13px; color:#aaa; line-height:1.5; margin-bottom:20px;">
