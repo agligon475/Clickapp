@@ -191,39 +191,55 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 9px 10px;
+      padding: 9px 12px;
       border-radius: 8px;
       font-size: 13px;
-      font-weight: 500;
-      color: var(--fog);
+      font-weight: 600;
+      color: #010101 !important;
       cursor: pointer;
-      transition: all .12s;
+      transition: all .15s ease;
       border: 1px solid transparent;
+      border-left: 4px solid transparent;
       white-space: nowrap;
       overflow: hidden;
     }
 
+    .sb-item span {
+      color: #010101 !important;
+      font-weight: 600;
+    }
+
     .sb-item:hover {
-      background: var(--iron);
-      color: var(--white);
+      background: rgba(215, 38, 56, 0.08);
+      color: #010101 !important;
+      transform: translateX(2px);
     }
 
     .sb-item.active {
-      background: var(--iron);
-      color: var(--white);
-      border-color: var(--zinc);
+      background: rgba(215, 38, 56, 0.14) !important;
+      border-left: 4px solid var(--red, #D72638) !important;
+      border-color: rgba(215, 38, 56, 0.25);
+      border-left-color: var(--red, #D72638) !important;
+      box-shadow: 0 2px 8px rgba(215, 38, 56, 0.12);
+    }
+
+    .sb-item.active span {
+      color: var(--red, #D72638) !important;
+      font-weight: 800 !important;
     }
 
     .sb-item.active i {
-      color: var(--red);
+      color: var(--red, #D72638) !important;
+      transform: scale(1.15);
     }
 
     .sb-item i {
       font-size: 15px;
       width: 18px;
-      color: var(--silver);
+      color: #010101;
       text-align: center;
       flex-shrink: 0;
+      transition: transform 0.15s ease, color 0.15s ease;
     }
 
     .sb-btn {
@@ -3049,14 +3065,24 @@
         <input class="ctrl-input" id="login-store-id" placeholder="ej: mi-tienda o admin@tienda.com" style="background: var(--black);" />
       </div>
       
-      <div class="ctrl-group" style="margin-bottom: 24px;">
+      <div class="ctrl-group" style="margin-bottom: 18px;">
         <label class="ctrl-label">Contraseña</label>
         <input class="ctrl-input" type="password" id="login-password" placeholder="Ingresá tu contraseña" style="background: var(--black);" />
         <div id="login-info-msg" style="font-size: 10px; color: var(--silver); margin-top: 6px;">Si es tu primera vez o no tiene contraseña, dejalo en blanco.</div>
       </div>
       
+      <div style="margin-bottom: 20px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--zinc); border-radius: 10px; padding: 12px;">
+        <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; user-select: none;">
+          <input type="checkbox" id="login-start-onboarding-chk" checked style="accent-color: var(--red); width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0;" />
+          <div>
+            <span style="font-size: 12.5px; font-weight: 700; color: var(--white); display: block;">🚀 Iniciar Setup Guiado (8 pasos)</span>
+            <span style="font-size: 11px; color: var(--silver); display: block; margin-top: 2px; line-height: 1.3;">Si es tu primera vez o querés configurar la tienda al ingresar. Si desmarcás, ingresarás directamente.</span>
+          </div>
+        </label>
+      </div>
+      
       <button id="login-submit-btn" onclick="handleLoginSubmit()" class="sb-btn" style="width: 100%; justify-content: center; background: var(--red); color: white; border: none; height: 44px; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
-        <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+        <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión / Ingresar
       </button>
       
       <div id="login-error-msg" style="color: var(--red); font-size: 12px; text-align: center; margin-top: 12px; display: none;"></div>
@@ -3202,6 +3228,7 @@
         <div class="sb-item" onclick="showView('account-plan',this)"><i class="bi bi-wallet2"></i> <span>Mi Cuenta y Plan</span></div>
         <div class="sb-item" onclick="showView('config-basica',this)"><i class="bi bi-gear"></i> <span>Configuración básica</span></div>
         <div class="sb-item" onclick="showView('config-avanzada',this)"><i class="bi bi-shield-lock"></i> <span>Configuración avanzada</span></div>
+        <div class="sb-item" onclick="showView('mensajes',this)"><i class="bi bi-chat-dots"></i> <span>Mensajes</span></div>
       </div>
     </div>
 
@@ -3294,7 +3321,20 @@
         </div>
 
         <div>
-          <label class="ctrl-label">Mensaje a Enviar</label>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+            <label class="ctrl-label" style="margin:0;">Mensaje a Enviar</label>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="font-size:11px;color:var(--silver);">Plantilla predeterminada:</span>
+              <select id="wapp-modal-template-select" onchange="selectPredefinedTemplateInModal(this.value)" style="background:var(--steel);color:var(--white);border:1px solid var(--zinc);font-size:11.5px;padding:4px 8px;border-radius:6px;cursor:pointer;">
+                <option value="">-- Elegir Plantilla --</option>
+                <option value="confirmado">1. Pedido Confirmado</option>
+                <option value="preparacion">2. En Preparación</option>
+                <option value="listo">3. Listo / En Camino</option>
+                <option value="entregado">4. Entregado / Completado</option>
+                <option value="cancelado">5. Cancelado</option>
+              </select>
+            </div>
+          </div>
           <textarea class="ctrl-input" id="wapp-modal-message" rows="6" style="width:100%;margin-top:4px;font-family:inherit;font-size:13px;line-height:1.5;resize:vertical;"></textarea>
         </div>
 
@@ -5558,6 +5598,91 @@
       </div><!-- /adv-unlocked-container -->
     </div><!-- /view-config-avanzada -->
 
+    <!-- ══ MENSAJES PREDETERMINADOS ══ -->
+    <div class="view" id="view-mensajes">
+      <div class="card" style="padding: 24px; margin-bottom: 20px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+          <div>
+            <h3 style="margin: 0 0 6px 0; font-size: 18px; font-weight: 700; color: var(--white); display: flex; align-items: center; gap: 8px;">
+              <i class="bi bi-chat-dots-fill" style="color: var(--red);"></i> Mensajes Predeterminados para Pedidos
+            </h3>
+            <p style="margin: 0; font-size: 13px; color: var(--silver);">
+              Personalizá las plantillas de mensaje que tus gestores enviarán por WhatsApp o notificaciones al cambiar de estadío en la zona de <strong>Pedidos</strong>.
+            </p>
+          </div>
+          <button type="button" class="sb-btn" onclick="restoreDefaultMessageTemplates()" style="width: auto; padding: 8px 14px; background: var(--iron); border: 1px solid var(--zinc); color: var(--white); border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+            <i class="bi bi-arrow-counterclockwise"></i> Restaurar Sugeridos
+          </button>
+        </div>
+
+        <div style="background: rgba(215, 38, 56, 0.08); border: 1px solid rgba(215, 38, 56, 0.25); border-radius: 12px; padding: 14px; margin-bottom: 20px;">
+          <div style="font-size: 12px; font-weight: 700; color: var(--red); margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+            <i class="bi bi-info-circle-fill"></i> Etiquetas dinámicas disponibles (Hacé click para insertar en el campo enfocado):
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" onclick="insertMsgTag('{nombre_cliente}')" style="background: var(--steel); border: 1px solid var(--zinc); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; color: var(--white); cursor: pointer; font-family: monospace;">{nombre_cliente}</button>
+            <button type="button" onclick="insertMsgTag('{id_pedido}')" style="background: var(--steel); border: 1px solid var(--zinc); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; color: var(--white); cursor: pointer; font-family: monospace;">{id_pedido}</button>
+            <button type="button" onclick="insertMsgTag('{total}')" style="background: var(--steel); border: 1px solid var(--zinc); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; color: var(--white); cursor: pointer; font-family: monospace;">{total}</button>
+            <button type="button" onclick="insertMsgTag('{nombre_tienda}')" style="background: var(--steel); border: 1px solid var(--zinc); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; color: var(--white); cursor: pointer; font-family: monospace;">{nombre_tienda}</button>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr; gap: 16px;">
+          <!-- 1. Confirmado -->
+          <div style="background: var(--iron); border: 1px solid var(--zinc); border-radius: 12px; padding: 16px;">
+            <label class="ctrl-label" style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; color: var(--white); margin-bottom: 8px;">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: #3B82F6; display: inline-block;"></span>
+              1. Mensaje - Pedido Confirmado
+            </label>
+            <textarea id="msg-template-confirmado" class="ctrl-input" rows="3" style="width: 100%; background: var(--black); resize: vertical; font-size: 13px;" placeholder="Mensaje al confirmar el pedido..." onfocus="window.lastFocusedMsgInput = this;"></textarea>
+          </div>
+
+          <!-- 2. En Preparación -->
+          <div style="background: var(--iron); border: 1px solid var(--zinc); border-radius: 12px; padding: 16px;">
+            <label class="ctrl-label" style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; color: var(--white); margin-bottom: 8px;">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: #F59E0B; display: inline-block;"></span>
+              2. Mensaje - En Preparación
+            </label>
+            <textarea id="msg-template-preparacion" class="ctrl-input" rows="3" style="width: 100%; background: var(--black); resize: vertical; font-size: 13px;" placeholder="Mensaje al comenzar la preparación..." onfocus="window.lastFocusedMsgInput = this;"></textarea>
+          </div>
+
+          <!-- 3. Listo / En Camino -->
+          <div style="background: var(--iron); border: 1px solid var(--zinc); border-radius: 12px; padding: 16px;">
+            <label class="ctrl-label" style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; color: var(--white); margin-bottom: 8px;">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: #8B5CF6; display: inline-block;"></span>
+              3. Mensaje - Listo para Retirar / En Camino
+            </label>
+            <textarea id="msg-template-listo" class="ctrl-input" rows="3" style="width: 100%; background: var(--black); resize: vertical; font-size: 13px;" placeholder="Mensaje cuando el pedido está listo o despachado..." onfocus="window.lastFocusedMsgInput = this;"></textarea>
+          </div>
+
+          <!-- 4. Completado / Entregado -->
+          <div style="background: var(--iron); border: 1px solid var(--zinc); border-radius: 12px; padding: 16px;">
+            <label class="ctrl-label" style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; color: var(--white); margin-bottom: 8px;">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: #10B981; display: inline-block;"></span>
+              4. Mensaje - Pedido Entregado / Completado
+            </label>
+            <textarea id="msg-template-entregado" class="ctrl-input" rows="3" style="width: 100%; background: var(--black); resize: vertical; font-size: 13px;" placeholder="Mensaje de agradecimiento al completar..." onfocus="window.lastFocusedMsgInput = this;"></textarea>
+          </div>
+
+          <!-- 5. Cancelado -->
+          <div style="background: var(--iron); border: 1px solid var(--zinc); border-radius: 12px; padding: 16px;">
+            <label class="ctrl-label" style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; color: var(--white); margin-bottom: 8px;">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: #EF4444; display: inline-block;"></span>
+              5. Mensaje - Pedido Cancelado
+            </label>
+            <textarea id="msg-template-cancelado" class="ctrl-input" rows="3" style="width: 100%; background: var(--black); resize: vertical; font-size: 13px;" placeholder="Mensaje en caso de cancelación..." onfocus="window.lastFocusedMsgInput = this;"></textarea>
+          </div>
+        </div>
+
+        <div style="margin-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+          <div id="msg-templates-status-msg" style="font-size: 12px; font-weight: 600;"></div>
+          <button type="button" class="sb-btn" onclick="saveMessageTemplates()" style="width: auto; padding: 10px 24px; background: var(--red); color: white; border: none; border-radius: 8px; font-size: 13.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+            <i class="bi bi-floppy-fill"></i> Guardar Plantillas de Mensajes
+          </button>
+        </div>
+      </div>
+    </div><!-- /view-mensajes -->
+
     <!-- ══ COUPONS ══ -->
     <div class="view" id="view-coupons">
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:16px;">
@@ -6225,6 +6350,16 @@
           timestamp: Date.now()
         }));
         
+        // Procesar selección de setup guiado
+        const startOnboardingChk = document.getElementById('login-start-onboarding-chk');
+        const wantsOnboarding = startOnboardingChk ? startOnboardingChk.checked : true;
+
+        if (wantsOnboarding) {
+          sessionStorage.removeItem('onboarding_skipped_session_' + finalStoreId);
+        } else {
+          sessionStorage.setItem('onboarding_skipped_session_' + finalStoreId, 'true');
+        }
+
         // Si cambió la tienda actual en el input, redireccionar
         if (finalStoreId !== STORE_ID.toLowerCase()) {
           window.localStorage.setItem('storeapp_store_id', finalStoreId);
@@ -6232,7 +6367,13 @@
         } else {
           // Si es la misma tienda, ocultar overlay y continuar
           document.getElementById('dash-login-overlay').style.display = 'none';
-          setTimeout(() => { if (typeof checkAndOpenOnboardingModal === 'function') checkAndOpenOnboardingModal(); }, 600);
+          setTimeout(() => {
+            if (wantsOnboarding && typeof openOnboardingModal === 'function') {
+              openOnboardingModal(true);
+            } else if (typeof checkAndOpenOnboardingModal === 'function') {
+              checkAndOpenOnboardingModal();
+            }
+          }, 600);
         }
         
       } catch(err) {
@@ -6410,7 +6551,8 @@
       'pages-internas': 'Páginas Internas',
       'config-basica': 'Configuración Básica',
       'config-avanzada': 'Configuración Avanzada',
-      'account-plan': 'Mi Cuenta y Plan'
+      'account-plan': 'Mi Cuenta y Plan',
+      mensajes: 'Plantillas de Mensajes'
     };
 
     let products = [];
@@ -6707,6 +6849,7 @@
       }
 
       if (name === 'coupons') { renderCouponsTable(); }
+      if (name === 'mensajes' && typeof loadMessageTemplates === 'function') { loadMessageTemplates(); }
       if (name === 'qr' || name === 'kit') {
         const storeId = (typeof STORE_ID !== 'undefined' && STORE_ID) ? STORE_ID : (new URLSearchParams(window.location.search).get('store') || '');
         window.open('/kit-imprimible.html?store=' + encodeURIComponent(storeId), '_blank');
@@ -6746,7 +6889,8 @@
         'config-avanzada': 'bi-shield-lock',
         'account-plan': 'bi-wallet2',
         categories: 'bi-tags',
-        pickups: 'bi-truck'
+        pickups: 'bi-truck',
+        mensajes: 'bi-chat-dots'
       };
       const icon = icons[name] || 'bi-speedometer';
       const vt = document.getElementById('view-title');
@@ -15613,35 +15757,130 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
   <script>
     let currentDispatchOrder = null;
 
+    // ── GESTIÓN DE PLANTILLAS DE MENSAJES PREDETERMINADOS ──
+    const DEFAULT_MSG_TEMPLATES = {
+      confirmado: '¡Hola {nombre_cliente}! Confirmamos tu pedido #{id_pedido} en {nombre_tienda} por un total de ${total}. ¡Muchas gracias por tu compra! 🙌',
+      preparacion: '¡Buenas noticias, {nombre_cliente}! Tu pedido #{id_pedido} en {nombre_tienda} ya está en preparación. 👨‍🍳📦',
+      listo: '¡Hola {nombre_cliente}! Tu pedido #{id_pedido} ya se encuentra listo para retirar / en camino con el repartidor. 🛵📍',
+      entregado: '¡Muchas gracias por elegirnos, {nombre_cliente}! Tu pedido #{id_pedido} por ${total} ha sido entregado. ¡Que lo disfrutes! ⭐🎉',
+      cancelado: 'Hola {nombre_cliente}, te informamos que tu pedido #{id_pedido} en {nombre_tienda} ha sido cancelado. Para más detalles, por favor contactanos.'
+    };
+
+    function getStoreMsgTemplates() {
+      try {
+        const storeId = (typeof STORE_ID !== 'undefined' && STORE_ID) ? STORE_ID : 'default';
+        const saved = localStorage.getItem('daletepido_msg_templates_' + storeId);
+        if (saved) return JSON.parse(saved);
+      } catch(e) {}
+      return { ...DEFAULT_MSG_TEMPLATES };
+    }
+
+    function loadMessageTemplates() {
+      const tmpl = getStoreMsgTemplates();
+      const elConf = document.getElementById('msg-template-confirmado');
+      const elPrep = document.getElementById('msg-template-preparacion');
+      const elList = document.getElementById('msg-template-listo');
+      const elEntr = document.getElementById('msg-template-entregado');
+      const elCanc = document.getElementById('msg-template-cancelado');
+
+      if (elConf) elConf.value = tmpl.confirmado || DEFAULT_MSG_TEMPLATES.confirmado;
+      if (elPrep) elPrep.value = tmpl.preparacion || DEFAULT_MSG_TEMPLATES.preparacion;
+      if (elList) elList.value = tmpl.listo || DEFAULT_MSG_TEMPLATES.listo;
+      if (elEntr) elEntr.value = tmpl.entregado || DEFAULT_MSG_TEMPLATES.entregado;
+      if (elCanc) elCanc.value = tmpl.cancelado || DEFAULT_MSG_TEMPLATES.cancelado;
+    }
+
+    function saveMessageTemplates() {
+      const storeId = (typeof STORE_ID !== 'undefined' && STORE_ID) ? STORE_ID : 'default';
+      const tmpl = {
+        confirmado: document.getElementById('msg-template-confirmado').value.trim(),
+        preparacion: document.getElementById('msg-template-preparacion').value.trim(),
+        listo: document.getElementById('msg-template-listo').value.trim(),
+        entregado: document.getElementById('msg-template-entregado').value.trim(),
+        cancelado: document.getElementById('msg-template-cancelado').value.trim()
+      };
+      localStorage.setItem('daletepido_msg_templates_' + storeId, JSON.stringify(tmpl));
+
+      const statusEl = document.getElementById('msg-templates-status-msg');
+      if (statusEl) {
+        statusEl.style.color = 'var(--green)';
+        statusEl.textContent = '✓ Plantillas guardadas exitosamente.';
+        setTimeout(() => { statusEl.textContent = ''; }, 3000);
+      }
+      if (typeof showToastDash === 'function') {
+        showToastDash('✓ Plantillas de mensajes guardadas');
+      }
+    }
+
+    function restoreDefaultMessageTemplates() {
+      if (!confirm('¿Deseás restaurar los mensajes predeterminados sugeridos?')) return;
+      const storeId = (typeof STORE_ID !== 'undefined' && STORE_ID) ? STORE_ID : 'default';
+      localStorage.removeItem('daletepido_msg_templates_' + storeId);
+      loadMessageTemplates();
+      if (typeof showToastDash === 'function') {
+        showToastDash('Restauradas plantillas por defecto');
+      }
+    }
+
+    function insertMsgTag(tag) {
+      const target = window.lastFocusedMsgInput || document.getElementById('msg-template-confirmado');
+      if (!target) return;
+      const start = target.selectionStart || target.value.length;
+      const end = target.selectionEnd || target.value.length;
+      const val = target.value;
+      target.value = val.substring(0, start) + tag + val.substring(end);
+      target.focus();
+      target.selectionStart = target.selectionEnd = start + tag.length;
+    }
+
+    function formatOrderMessage(templateStr, orderData) {
+      if (!templateStr) return '';
+      const storeName = (window.currentStoreData && window.currentStoreData.name) || (typeof CONFIG !== 'undefined' && CONFIG.nombre) || (typeof STORE_ID !== 'undefined' ? STORE_ID : 'Nuestra Tienda');
+      const cName = orderData.cliente_nombre || orderData.customerName || 'Cliente';
+      const pId = orderData.id || orderData.orderId || '001';
+      const totalVal = (typeof orderData.total !== 'undefined') ? orderData.total : (orderData.orderTotal || '0');
+
+      return templateStr
+        .replaceAll('{nombre_cliente}', cName)
+        .replaceAll('{id_pedido}', pId)
+        .replaceAll('{total}', totalVal)
+        .replaceAll('{nombre_tienda}', storeName);
+    }
+
+    function selectPredefinedTemplateInModal(tmplKey) {
+      if (!tmplKey) return;
+      const tmplMap = getStoreMsgTemplates();
+      const rawTmpl = tmplMap[tmplKey] || DEFAULT_MSG_TEMPLATES[tmplKey] || '';
+      if (!rawTmpl) return;
+
+      const order = currentDispatchOrder || {};
+      const formatted = formatOrderMessage(rawTmpl, order);
+      document.getElementById('wapp-modal-message').value = formatted;
+    }
+
     function openWhatsappDispatchModal(orderId, customerName, customerPhone, status, orderTotal, itemsText) {
         currentDispatchOrder = { orderId, customerName, customerPhone, status, orderTotal, itemsText };
         
         document.getElementById('wapp-modal-client').value = customerName || 'Cliente sin nombre';
         document.getElementById('wapp-modal-phone').value = customerPhone || '';
         
-        const storeName = (window.currentStoreData && window.currentStoreData.name) || 'Nuestra Tienda';
+        const tmplMap = getStoreMsgTemplates();
+        let key = status;
+        if (status === 'despachado') key = 'listo';
+        if (status === 'completado') key = 'entregado';
+        if (status === 'en_preparacion') key = 'preparacion';
+
+        const rawTmpl = tmplMap[key] || DEFAULT_MSG_TEMPLATES[key];
         let msg = '';
-        
-        if (status === 'confirmado') {
-            msg = `*🛍️ ¡Hola ${customerName || ''}! Tu pedido en ${storeName} ha sido CONFIRMADO.*\n\n` +
-                  `Estamos procesando tu orden por un total de *$${orderTotal || 0}*.\n` +
-                  `¡Te avisaremos apenas esté listo para envío/retiro!\n\n` +
-                  `Gracias por tu preferencia. 🙌`;
-        } else if (status === 'en_preparacion') {
-            msg = `*👨‍🍳 ¡Hola ${customerName || ''}! Tu pedido en ${storeName} ya está EN PREPARACIÓN.*\n\n` +
-                  `Nuestro equipo está empaquetando tus productos. ¡Falta muy poco! 📦`;
-        } else if (status === 'despachado') {
-            msg = `*🛵 ¡Hola ${customerName || ''}! Tu pedido en ${storeName} ha sido DESPACHADO / LISTO PARA RETIRAR.*\n\n` +
-                  `Ya podés recibir al repartidor o acercarte a nuestro local. 📍\n\n` +
-                  `¡Que lo disfrutes!`;
-        } else if (status === 'completado') {
-            msg = `*⭐ ¡Muchas gracias por tu compra en ${storeName}, ${customerName || ''}!*\n\n` +
-                  `Tu pedido ha sido COMPLETADO con éxito. 🎉\n\n` +
-                  `¿Nos dejarías tu opinión? Te tomará solo 10 segundos y nos ayuda un montón: ${window.location.origin}/dejar-resena\n\n` +
-                  `¡Esperamos volver a verte pronto!`;
+        if (rawTmpl) {
+          msg = formatOrderMessage(rawTmpl, currentDispatchOrder);
         } else {
-            msg = `*Hola ${customerName || ''}*, te escribimos de ${storeName} sobre tu pedido de $${orderTotal || 0}.`;
+          const storeName = (window.currentStoreData && window.currentStoreData.name) || 'Nuestra Tienda';
+          msg = `*Hola ${customerName || ''}*, te escribimos de ${storeName} sobre tu pedido #${orderId} de $${orderTotal || 0}.`;
         }
+
+        const sel = document.getElementById('wapp-modal-template-select');
+        if (sel) sel.value = key || '';
 
         document.getElementById('wapp-modal-message').value = msg;
         document.getElementById('wapp-dispatch-status').innerHTML = '';
