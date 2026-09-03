@@ -2578,6 +2578,328 @@
   </div>
   <style>
     @keyframes dtpSpin { to { transform: rotate(360deg); } }
+
+    /* ── ONBOARDING SETUP MODAL STYLES ── */
+    .onboarding-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 99998;
+      background: rgba(10, 12, 16, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .onboarding-overlay.open {
+      opacity: 1;
+    }
+    .onboarding-card {
+      background: var(--steel, #18181b);
+      border: 1px solid var(--zinc, #27272a);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 620px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      color: var(--white, #ffffff);
+      position: relative;
+    }
+    .onboarding-overlay.open .onboarding-card {
+      transform: translateY(0) scale(1);
+    }
+    .onboarding-header {
+      padding: 24px 28px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0) 100%);
+    }
+    .onboarding-badge-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .onboarding-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(215, 38, 56, 0.15);
+      border: 1px solid rgba(215, 38, 56, 0.3);
+      color: #ff4d4d;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .onboarding-step-counter {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--silver, #a1a1aa);
+    }
+    .onboarding-progress-track {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+    .onboarding-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #D72638 0%, #ff6b6b 100%);
+      border-radius: 10px;
+      transition: width 0.35s ease;
+    }
+    .onboarding-dots {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      padding: 0 4px;
+    }
+    .onboarding-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      transition: all 0.25s ease;
+    }
+    .onboarding-dot.active {
+      background: var(--red, #D72638);
+      transform: scale(1.3);
+      box-shadow: 0 0 10px rgba(215, 38, 56, 0.6);
+    }
+    .onboarding-dot.completed {
+      background: #2ECC71;
+    }
+    .onboarding-body {
+      padding: 24px 28px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .onboarding-step-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin: 0 0 6px 0;
+      line-height: 1.3;
+      color: #ffffff;
+    }
+    .onboarding-step-subtitle {
+      font-size: 13px;
+      color: var(--silver, #a1a1aa);
+      margin: 0 0 20px 0;
+      line-height: 1.5;
+    }
+    .onb-grid-2col {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 540px) {
+      .onb-grid-2col {
+        grid-template-columns: 1fr;
+      }
+    }
+    .onb-opt-card {
+      background: var(--iron, #27272a);
+      border: 1.5px solid var(--zinc, #3f3f46);
+      border-radius: 14px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      position: relative;
+      user-select: none;
+    }
+    .onb-opt-card:hover {
+      border-color: rgba(215, 38, 56, 0.5);
+      background: rgba(255, 255, 255, 0.03);
+      transform: translateY(-2px);
+    }
+    .onb-opt-card.selected {
+      border-color: var(--red, #D72638);
+      background: rgba(215, 38, 56, 0.12);
+      box-shadow: 0 0 16px rgba(215, 38, 56, 0.2);
+    }
+    .onb-opt-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--white);
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+    .onb-opt-card.selected .onb-opt-icon {
+      background: var(--red, #D72638);
+      color: #ffffff;
+    }
+    .onb-opt-content {
+      flex: 1;
+    }
+    .onb-opt-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 2px;
+    }
+    .onb-opt-desc {
+      font-size: 11.5px;
+      color: var(--silver, #a1a1aa);
+      line-height: 1.4;
+    }
+    .onb-check-indicator {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid var(--zinc, #71717a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: transparent;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: all 0.2s ease;
+    }
+    .onb-opt-card.selected .onb-check-indicator {
+      background: var(--red, #D72638);
+      border-color: var(--red, #D72638);
+      color: #ffffff;
+    }
+    .onb-color-picker-group {
+      background: var(--iron, #27272a);
+      border: 1px solid var(--zinc, #3f3f46);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .onb-color-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .onb-color-row:last-child {
+      border-bottom: none;
+    }
+    .onb-color-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .onb-color-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .onb-color-input-wrap input[type="color"] {
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: transparent;
+    }
+    .onb-color-input-wrap input[type="text"] {
+      width: 80px;
+      background: var(--black, #121214);
+      border: 1px solid var(--zinc, #3f3f46);
+      color: #fff;
+      font-size: 12px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-family: monospace;
+    }
+    .onboarding-footer {
+      padding: 16px 28px 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      background: rgba(0, 0, 0, 0.2);
+    }
+    .onb-footer-actions-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .onb-footer-actions-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .onb-btn-link {
+      background: transparent;
+      border: none;
+      color: var(--silver, #a1a1aa);
+      font-size: 12px;
+      cursor: pointer;
+      padding: 6px 4px;
+      text-decoration: underline;
+      transition: color 0.2s ease;
+    }
+    .onb-btn-link:hover {
+      color: #ffffff;
+    }
+    .onb-btn-link.danger:hover {
+      color: #ff6b6b;
+    }
+    .onb-btn-prev {
+      background: var(--iron, #27272a);
+      border: 1px solid var(--zinc, #3f3f46);
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .onb-btn-prev:hover {
+      background: var(--zinc, #3f3f46);
+    }
+    .onb-btn-next {
+      background: linear-gradient(135deg, #D72638 0%, #b81d2c 100%);
+      border: none;
+      color: #ffffff;
+      padding: 10px 22px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(215, 38, 56, 0.4);
+      transition: all 0.2s ease;
+    }
+    .onb-btn-next:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(215, 38, 56, 0.6);
+    }
   </style>
 
   <!-- ── DASHBOARD LOGIN OVERLAY ── -->
@@ -2907,6 +3229,53 @@
     </div>
   </div>
 
+  <!-- MODAL: SETUP ONBOARDING PASO A PASO -->
+  <div id="onboarding-modal-overlay" class="onboarding-overlay">
+    <div class="onboarding-card">
+      <!-- Header -->
+      <div class="onboarding-header">
+        <div class="onboarding-badge-row">
+          <span class="onboarding-badge"><i class="bi bi-rocket-takeoff-fill"></i> Setup de Tienda</span>
+          <span class="onboarding-step-counter">Paso <span id="onb-step-num">1</span> de 8</span>
+        </div>
+        <div class="onboarding-progress-track">
+          <div class="onboarding-progress-fill" id="onb-progress-fill" style="width: 12.5%;"></div>
+        </div>
+        <div class="onboarding-dots">
+          <div class="onboarding-dot active" id="onb-dot-1"></div>
+          <div class="onboarding-dot" id="onb-dot-2"></div>
+          <div class="onboarding-dot" id="onb-dot-3"></div>
+          <div class="onboarding-dot" id="onb-dot-4"></div>
+          <div class="onboarding-dot" id="onb-dot-5"></div>
+          <div class="onboarding-dot" id="onb-dot-6"></div>
+          <div class="onboarding-dot" id="onb-dot-7"></div>
+          <div class="onboarding-dot" id="onb-dot-8"></div>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="onboarding-body" id="onboarding-step-content">
+        <!-- Contenido dinámico del paso -->
+      </div>
+
+      <!-- Footer -->
+      <div class="onboarding-footer">
+        <div class="onb-footer-actions-left">
+          <button class="onb-btn-link" onclick="skipOnboardingNow()" title="Omitir solo por esta sesión">Omitir ahora</button>
+          <button class="onb-btn-link danger" onclick="skipOnboardingForever()" title="No volver a mostrar en futuros logins">Omitir para siempre</button>
+        </div>
+        <div class="onb-footer-actions-right">
+          <button class="onb-btn-prev" id="onb-prev-btn" onclick="prevOnboardingStep()" style="display:none;">
+            <i class="bi bi-arrow-left"></i> Anterior
+          </button>
+          <button class="onb-btn-next" id="onb-next-btn" onclick="nextOnboardingStep()">
+            Siguiente <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- MAIN -->
   <main class="main" role="main">
 
@@ -2936,6 +3305,16 @@
 
     <!-- ══ NEGOCIO: RUBRO Y PLANTILLA ══ -->
     <div class="view" id="view-rubro">
+      <div style="background: linear-gradient(135deg, rgba(215,38,56,0.15) 0%, rgba(215,38,56,0.05) 100%); border: 1px solid rgba(215,38,56,0.3); border-radius: 14px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <div style="font-weight: 800; color: #fff; font-size: 15px;"><i class="bi bi-magic" style="color:var(--red); margin-right: 6px;"></i> Asistente de Setup Paso a Paso</div>
+          <div style="font-size: 12.5px; color: var(--silver); margin-top: 2px;">Configurá el rubro, tipos de productos, medios de pago, entrega y estética en 8 simples pasos.</div>
+        </div>
+        <button onclick="openOnboardingModal(true)" style="background: var(--red); color: #fff; border: none; padding: 9px 18px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(215,38,56,0.4);">
+          <i class="bi bi-play-circle-fill"></i> Iniciar Setup (8 Pasos)
+        </button>
+      </div>
+
       <div
         style="background:var(--steel);border:1px solid var(--zinc);border-radius:12px;padding:24px;margin-bottom:24px;">
         <h2 style="font-family:var(--font-h);font-size:20px;font-weight:700;color:var(--white);margin-bottom:8px;">
@@ -5720,6 +6099,7 @@
         } else {
           // Si es la misma tienda, ocultar overlay y continuar
           document.getElementById('dash-login-overlay').style.display = 'none';
+          setTimeout(() => { if (typeof checkAndOpenOnboardingModal === 'function') checkAndOpenOnboardingModal(); }, 600);
         }
         
       } catch(err) {
@@ -13081,6 +13461,512 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       }
     }
 
+    // ── ONBOARDING SETUP MODAL CONTROLLER ──
+    window.onboardingState = {
+      currentStep: 1,
+      rubro: 'kiosco_almacen',
+      rubroOtrosDetalle: '',
+      productTypes: ['manufacturados'],
+      paymentTypes: ['efectivo', 'transferencia'],
+      hasDeliveryPickup: 'si',
+      brandStyle: 'vibrante',
+      color1: '#D72638',
+      color2: '#2ECC71',
+      color3: '#1E2022',
+      brandTone: 'amistoso',
+      notificationChannel: 'whatsapp'
+    };
+
+    function openOnboardingModal(force = false) {
+      const modal = document.getElementById('onboarding-modal-overlay');
+      if (!modal) return;
+
+      if (!force) {
+        const isCompleted = localStorage.getItem('onboarding_completed_' + STORE_ID) === 'true' || (typeof CONFIG !== 'undefined' && CONFIG.onboarding_completed);
+        const isDismissed = localStorage.getItem('onboarding_dismissed_' + STORE_ID) === 'true' || (typeof CONFIG !== 'undefined' && CONFIG.onboarding_dismissed);
+        const isSkippedSession = sessionStorage.getItem('onboarding_skipped_session_' + STORE_ID) === 'true';
+        if (isCompleted || isDismissed || isSkippedSession) return;
+      }
+
+      window.onboardingState.currentStep = 1;
+      renderOnboardingStep();
+      modal.classList.add('open');
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeOnboardingModal() {
+      const modal = document.getElementById('onboarding-modal-overlay');
+      if (modal) {
+        modal.classList.remove('open');
+        setTimeout(() => { modal.style.display = 'none'; }, 300);
+        document.body.style.overflow = '';
+      }
+    }
+
+    function checkAndOpenOnboardingModal() {
+      openOnboardingModal(false);
+    }
+
+    function selectOnbSingle(key, val) {
+      window.onboardingState[key] = val;
+      renderOnboardingStep();
+    }
+
+    function toggleOnbMulti(key, val) {
+      const arr = window.onboardingState[key] || [];
+      const idx = arr.indexOf(val);
+      if (idx > -1) {
+        arr.splice(idx, 1);
+      } else {
+        arr.push(val);
+      }
+      window.onboardingState[key] = arr;
+      renderOnboardingStep();
+    }
+
+    function setOnbColor(num, val) {
+      window.onboardingState['color' + num] = val;
+      const textInput = document.getElementById('onb-color-text-' + num);
+      if (textInput) textInput.value = val.toUpperCase();
+      const colorInput = document.getElementById('onb-color-' + num);
+      if (colorInput) colorInput.value = val;
+    }
+
+    function applyOnbPreset(c1, c2, c3) {
+      window.onboardingState.color1 = c1;
+      window.onboardingState.color2 = c2;
+      window.onboardingState.color3 = c3;
+      renderOnboardingStep();
+    }
+
+    function nextOnboardingStep() {
+      if (window.onboardingState.currentStep === 1 && window.onboardingState.rubro === 'otros') {
+        const inp = document.getElementById('onb-rubro-otros-input');
+        if (inp) window.onboardingState.rubroOtrosDetalle = inp.value.trim();
+      }
+
+      if (window.onboardingState.currentStep < 8) {
+        window.onboardingState.currentStep++;
+        renderOnboardingStep();
+      } else {
+        saveOnboardingData();
+      }
+    }
+
+    function prevOnboardingStep() {
+      if (window.onboardingState.currentStep > 1) {
+        window.onboardingState.currentStep--;
+        renderOnboardingStep();
+      }
+    }
+
+    function renderOnboardingStep() {
+      const step = window.onboardingState.currentStep;
+      const container = document.getElementById('onboarding-step-content');
+      if (!container) return;
+
+      document.getElementById('onb-step-num').textContent = step;
+      document.getElementById('onb-progress-fill').style.width = ((step / 8) * 100) + '%';
+
+      for (let i = 1; i <= 8; i++) {
+        const dot = document.getElementById('onb-dot-' + i);
+        if (dot) {
+          dot.className = 'onboarding-dot' + (i === step ? ' active' : (i < step ? ' completed' : ''));
+        }
+      }
+
+      const prevBtn = document.getElementById('onb-prev-btn');
+      const nextBtn = document.getElementById('onb-next-btn');
+
+      if (prevBtn) prevBtn.style.display = step === 1 ? 'none' : 'inline-flex';
+      if (nextBtn) {
+        if (step === 8) {
+          nextBtn.innerHTML = '¡Listo! 🎉 <i class="bi bi-check-circle-fill"></i>';
+          nextBtn.style.background = 'linear-gradient(135deg, #2ECC71 0%, #27ae60 100%)';
+          nextBtn.style.boxShadow = '0 4px 14px rgba(46, 204, 113, 0.4)';
+        } else {
+          nextBtn.innerHTML = 'Siguiente <i class="bi bi-arrow-right"></i>';
+          nextBtn.style.background = 'linear-gradient(135deg, #D72638 0%, #b81d2c 100%)';
+          nextBtn.style.boxShadow = '0 4px 14px rgba(215, 38, 56, 0.4)';
+        }
+      }
+
+      let html = '';
+
+      if (step === 1) {
+        const selected = window.onboardingState.rubro;
+        const rubros = [
+          { id: 'kiosco_almacen', name: 'Kiosco - Almacén', icon: '🏪', desc: 'Golosinas, bebidas, galletitas y consumo diario' },
+          { id: 'industrial', name: 'Industrial', icon: '⚙️', desc: 'Maquinarias, insumos técnicos, herramientas y repuestos' },
+          { id: 'gastronomia', name: 'Gastronomía', icon: '🍔', desc: 'Restaurantes, comida rápida, panaderías y catering' },
+          { id: 'tecnologia', name: 'Tecnología', icon: '💻', desc: 'Celulares, periféricos, electrónica y computación' },
+          { id: 'indumentaria', name: 'Indumentaria', icon: '👗', desc: 'Ropa, calzado, accesorios y moda en general' },
+          { id: 'insumos', name: 'Insumos', icon: '📦', desc: 'Librería, empaques, descartables e imprenta' },
+          { id: 'otros', name: 'Otros', icon: '✨', desc: 'Especificá con detalle la actividad de tu empresa' }
+        ];
+
+        html += `
+          <h2 class="onboarding-step-title">¿Cuál es el rubro de tu empresa?</h2>
+          <p class="onboarding-step-subtitle">Seleccioná la categoría principal que mejor describe la actividad de tu comercio.</p>
+          <div class="onb-grid-2col">
+        `;
+
+        rubros.forEach(r => {
+          const isSel = selected === r.id;
+          html += `
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" onclick="selectOnbSingle('rubro', '${r.id}')">
+              <div class="onb-opt-icon">${r.icon}</div>
+              <div class="onb-opt-content">
+                <div class="onb-opt-title">${r.name}</div>
+                <div class="onb-opt-desc">${r.desc}</div>
+              </div>
+              <div class="onb-check-indicator"><i class="bi bi-check-lg"></i></div>
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+
+        if (selected === 'otros') {
+          html += `
+            <div style="margin-top: 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--zinc); border-radius: 12px; padding: 14px;">
+              <label class="ctrl-label" style="display:block; margin-bottom: 6px; font-weight: 700; color: var(--white);">Detallá tu rubro personalizado:</label>
+              <input type="text" id="onb-rubro-otros-input" class="ctrl-input" placeholder="Ej: Marroquinería, Joyería, Estética..." value="${window.onboardingState.rubroOtrosDetalle || ''}" onchange="window.onboardingState.rubroOtrosDetalle = this.value" style="width:100%; background: var(--black);" />
+            </div>
+          `;
+        }
+
+      } else if (step === 2) {
+        const types = window.onboardingState.productTypes || [];
+        const prods = [
+          { id: 'fraccionados', name: 'Productos fraccionados', icon: '⚖️', desc: 'Ventas por peso, gramos, metros o volumen' },
+          { id: 'manufacturados', name: 'Productos manufacturados', icon: '🏭', desc: 'Artículos producidos o ensamblados propios' },
+          { id: 'combos', name: 'Combos', icon: '🎁', desc: 'Packs armados con múltiples productos integrados' },
+          { id: 'variables_gastronomia', name: 'Variables (gastronomía)', icon: '🍕', desc: 'Gustos de pizza/helado, cocción y agregados' },
+          { id: 'variables_talle', name: 'Variables (por talle)', icon: '👟', desc: 'Talles (S, M, L, XL), números de calzado' },
+          { id: 'variables_especificaciones', name: 'Variables (por especificaciones)', icon: '🎨', desc: 'Colores, capacidad GB, material, potencia' }
+        ];
+
+        html += `
+          <h2 class="onboarding-step-title">¿Qué tipos de productos vendés?</h2>
+          <p class="onboarding-step-subtitle">Podés marcar una o varias opciones según las modalidades de tu catálogo.</p>
+          <div class="onb-grid-2col">
+        `;
+
+        prods.forEach(p => {
+          const isSel = types.includes(p.id);
+          html += `
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" onclick="toggleOnbMulti('productTypes', '${p.id}')">
+              <div class="onb-opt-icon">${p.icon}</div>
+              <div class="onb-opt-content">
+                <div class="onb-opt-title">${p.name}</div>
+                <div class="onb-opt-desc">${p.desc}</div>
+              </div>
+              <div class="onb-check-indicator"><i class="bi bi-check-lg"></i></div>
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+
+      } else if (step === 3) {
+        const payTypes = window.onboardingState.paymentTypes || [];
+        const payments = [
+          { id: 'efectivo', name: 'Efectivo', icon: '💵', desc: 'Pago presencial en caja o billetes al recibir' },
+          { id: 'transferencia', name: 'Transferencia', icon: '🏦', desc: 'MercadoPago, CBU, Alias o banco directo' },
+          { id: 'contra_entrega', name: 'Contra entrega', icon: '🚚', desc: 'Cobro de la mercadería al entregar' }
+        ];
+
+        html += `
+          <h2 class="onboarding-step-title">¿Qué tipos de pago aceptás?</h2>
+          <p class="onboarding-step-subtitle">Seleccioná todos los medios de pago habilitados para tus clientes.</p>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+        `;
+
+        payments.forEach(p => {
+          const isSel = payTypes.includes(p.id);
+          html += `
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" onclick="toggleOnbMulti('paymentTypes', '${p.id}')">
+              <div class="onb-opt-icon">${p.icon}</div>
+              <div class="onb-opt-content">
+                <div class="onb-opt-title">${p.name}</div>
+                <div class="onb-opt-desc">${p.desc}</div>
+              </div>
+              <div class="onb-check-indicator"><i class="bi bi-check-lg"></i></div>
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+
+      } else if (step === 4) {
+        const isDelivery = window.onboardingState.hasDeliveryPickup;
+        const opts = [
+          { id: 'si', name: 'Sí, dispongo de delivery o pick up', icon: '🚚', desc: 'Habilita la gestión de pickup y asignación de personas entregadoras' },
+          { id: 'no', name: 'No, únicamente venta en local', icon: '🏪', desc: 'Desactiva envíos; tus clientes compran y retiran presencialmente' }
+        ];
+
+        html += `
+          <h2 class="onboarding-step-title">¿Disponés de delivery o pick up?</h2>
+          <p class="onboarding-step-subtitle">Este punto habilitará el servicio de pickup para la carga de repartidores/entregadores.</p>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+        `;
+
+        opts.forEach(o => {
+          const isSel = isDelivery === o.id;
+          html += `
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" onclick="selectOnbSingle('hasDeliveryPickup', '${o.id}')">
+              <div class="onb-opt-icon">${o.icon}</div>
+              <div class="onb-opt-content">
+                <div class="onb-opt-title">${o.name}</div>
+                <div class="onb-opt-desc">${o.desc}</div>
+              </div>
+              <div class="onb-check-indicator"><i class="bi bi-check-lg"></i></div>
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+
+      } else if (step === 5) {
+        const style = window.onboardingState.brandStyle;
+        const styles = [
+          { id: 'clasico', name: 'Clásico y profesional', icon: '🏛️', desc: 'Líneas limpias, tipografías estructuradas e imagen sobria' },
+          { id: 'vibrante', name: 'Vibrante y con energías', icon: '⚡', desc: 'Colores llamativos, alto contraste y estética dinámica' },
+          { id: 'relajado', name: 'Relajado y natural', icon: '🌿', desc: 'Tonos cálidos, bordes redondeados y aspecto amigable' },
+          { id: 'minimalista', name: 'Minimalista', icon: '✨', desc: 'Espacios despejados, máxima simplicidad y elegancia' }
+        ];
+
+        html += `
+          <h2 class="onboarding-step-title">¿Qué estilo usa tu empresa?</h2>
+          <p class="onboarding-step-subtitle">Define la personalidad visual que tendrá tu tienda online.</p>
+          <div class="onb-grid-2col">
+        `;
+
+        styles.forEach(s => {
+          const isSel = style === s.id;
+          html += `
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" onclick="selectOnbSingle('brandStyle', '${s.id}')">
+              <div class="onb-opt-icon">${s.icon}</div>
+              <div class="onb-opt-content">
+                <div class="onb-opt-title">${s.name}</div>
+                <div class="onb-opt-desc">${s.desc}</div>
+              </div>
+              <div class="onb-check-indicator"><i class="bi bi-check-lg"></i></div>
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+
+      } else if (step === 6) {
+        const c1 = window.onboardingState.color1 || '#D72638';
+        const c2 = window.onboardingState.color2 || '#2ECC71';
+        const c3 = window.onboardingState.color3 || '#1E2022';
+
+        html += `
+          <h2 class="onboarding-step-title">¿Cuáles son los colores de tu empresa?</h2>
+          <p class="onboarding-step-subtitle">Personalizá los tonos principales o elegí una paleta sugerida.</p>
+
+          <div class="onb-color-picker-group">
+            <div class="onb-color-row">
+              <div class="onb-color-label">
+                <div style="width:20px;height:20px;border-radius:50%;background:${c1};border:1px solid #fff;"></div>
+                <span>Color 1 (Principal)</span>
+              </div>
+              <div class="onb-color-input-wrap">
+                <input type="color" id="onb-color-1" value="${c1}" onchange="setOnbColor(1, this.value)">
+                <input type="text" id="onb-color-text-1" value="${c1.toUpperCase()}" onchange="setOnbColor(1, this.value)">
+              </div>
+            </div>
+
+            <div class="onb-color-row">
+              <div class="onb-color-label">
+                <div style="width:20px;height:20px;border-radius:50%;background:${c2};border:1px solid #fff;"></div>
+                <span>Color 2 (Acento - opcional)</span>
+              </div>
+              <div class="onb-color-input-wrap">
+                <input type="color" id="onb-color-2" value="${c2}" onchange="setOnbColor(2, this.value)">
+                <input type="text" id="onb-color-text-2" value="${c2.toUpperCase()}" onchange="setOnbColor(2, this.value)">
+              </div>
+            </div>
+
+            <div class="onb-color-row">
+              <div class="onb-color-label">
+                <div style="width:20px;height:20px;border-radius:50%;background:${c3};border:1px solid #fff;"></div>
+                <span>Color 3 (Base - opcional)</span>
+              </div>
+              <div class="onb-color-input-wrap">
+                <input type="color" id="onb-color-3" value="${c3}" onchange="setOnbColor(3, this.value)">
+                <input type="text" id="onb-color-text-3" value="${c3.toUpperCase()}" onchange="setOnbColor(3, this.value)">
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 16px;">
+            <div style="font-size:12px; font-weight:700; color:var(--silver); margin-bottom:8px;">Paletas sugeridas en 1 click:</div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button onclick="applyOnbPreset('#D72638', '#FFD166', '#1E2022')" style="background:var(--iron); border:1px solid var(--zinc); padding:6px 12px; border-radius:8px; font-size:11px; color:#fff; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                <span style="width:12px;height:12px;border-radius:50%;background:#D72638;"></span> Rojo Pasión
+              </button>
+              <button onclick="applyOnbPreset('#2563EB', '#60A5FA', '#0F172A')" style="background:var(--iron); border:1px solid var(--zinc); padding:6px 12px; border-radius:8px; font-size:11px; color:#fff; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                <span style="width:12px;height:12px;border-radius:50%;background:#2563EB;"></span> Azul Tech
+              </button>
+              <button onclick="applyOnbPreset('#10B981', '#34D399', '#064E3B')" style="background:var(--iron); border:1px solid var(--zinc); padding:6px 12px; border-radius:8px; font-size:11px; color:#fff; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                <span style="width:12px;height:12px;border-radius:50%;background:#10B981;"></span> Verde Fresh
+              </button>
+              <button onclick="applyOnbPreset('#8B5CF6', '#F472B6', '#1E1B4B')" style="background:var(--iron); border:1px solid var(--zinc); padding:6px 12px; border-radius:8px; font-size:11px; color:#fff; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                <span style="width:12px;height:12px;border-radius:50%;background:#8B5CF6;"></span> Morado Neo
+              </button>
+            </div>
+          </div>
+        `;
+
+      } else if (step === 7) {
+        const tone = window.onboardingState.brandTone;
+        const tones = [
+          { id: 'amistoso', name: 'Amistoso', icon: '😊', desc: 'Cercano, cálido y descontracturado (Ej: "¡Hola! ¿Qué te preparamos hoy?")' },
+          { id: 'formal', name: 'Formal', icon: '👔', desc: 'Respetuoso, corporativo y profesional (Ej: "Bienvenido. Seleccione sus artículos.")' },
+          { id: 'informal', name: 'Informal', icon: '⚡', desc: 'Directo, fresco y juvenil (Ej: "Llevate todo con 1 click 🚀")' }
+        ];
+
+        html += `
+          <h2 class="onboarding-step-title">¿Cuál es el tono que utiliza tu empresa?</h2>
+          <p class="onboarding-step-subtitle">Determina el tono de respuesta del asistente virtual y los avisos automáticos.</p>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+        `;
+
+        tones.forEach(t => {
+          const isSel = tone === t.id;
+          html += `
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" onclick="selectOnbSingle('brandTone', '${t.id}')">
+              <div class="onb-opt-icon">${t.icon}</div>
+              <div class="onb-opt-content">
+                <div class="onb-opt-title">${t.name}</div>
+                <div class="onb-opt-desc">${t.desc}</div>
+              </div>
+              <div class="onb-check-indicator"><i class="bi bi-check-lg"></i></div>
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+
+      } else if (step === 8) {
+        const channel = window.onboardingState.notificationChannel;
+        const channels = [
+          { id: 'whatsapp', name: 'Directo (WhatsApp)', icon: '💬', desc: 'Envío automático de avisos y resúmenes al WhatsApp del cliente' },
+          { id: 'mail', name: 'Ordenado (Mail)', icon: '📧', desc: 'Comprobantes y avisos estructurados por correo electrónico' },
+          { id: 'desactivado', name: 'Desactivado (Sin avisos)', icon: '🔕', desc: 'Sin envío de notificaciones automáticas' }
+        ];
+
+        html += `
+          <h2 class="onboarding-step-title">¿Cómo querés enviar avisos a tus clientes?</h2>
+          <p class="onboarding-step-subtitle">Configurá la vía de notificación preferida para enviar las confirmaciones de pedido.</p>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+        `;
+
+        channels.forEach(c => {
+          const isSel = channel === c.id;
+          html += `
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" onclick="selectOnbSingle('notificationChannel', '${c.id}')">
+              <div class="onb-opt-icon">${c.icon}</div>
+              <div class="onb-opt-content">
+                <div class="onb-opt-title">${c.name}</div>
+                <div class="onb-opt-desc">${c.desc}</div>
+              </div>
+              <div class="onb-check-indicator"><i class="bi bi-check-lg"></i></div>
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+      }
+
+      container.innerHTML = html;
+    }
+
+    async function saveOnboardingData() {
+      const s = window.onboardingState;
+      if (typeof CONFIG === 'undefined') window.CONFIG = {};
+
+      if (s.rubro === 'otros' && s.rubroOtrosDetalle) {
+        CONFIG.rubro = s.rubroOtrosDetalle;
+      } else {
+        CONFIG.rubro = s.rubro;
+      }
+
+      const rubroInp = document.getElementById('cfg-store-rubro');
+      if (rubroInp) rubroInp.value = CONFIG.rubro;
+
+      CONFIG.product_types = s.productTypes;
+      CONFIG.payment_cash = s.paymentTypes.includes('efectivo');
+      CONFIG.payment_transfer = s.paymentTypes.includes('transferencia');
+      CONFIG.payment_cod = s.paymentTypes.includes('contra_entrega');
+
+      const chkCash = document.getElementById('cfg-pay-cash');
+      const chkTransfer = document.getElementById('cfg-pay-transfer');
+      if (chkCash) chkCash.checked = CONFIG.payment_cash;
+      if (chkTransfer) chkTransfer.checked = CONFIG.payment_transfer;
+
+      CONFIG.enable_pickup = (s.hasDeliveryPickup === 'si');
+      CONFIG.enable_delivery = (s.hasDeliveryPickup === 'si');
+
+      CONFIG.brand_style = s.brandStyle;
+      CONFIG.brand_tone = s.brandTone;
+      CONFIG.color = s.color1;
+      CONFIG.color_accent = s.color2;
+      CONFIG.color_base = s.color3;
+
+      const colorInp = document.getElementById('cfg-color');
+      if (colorInp) colorInp.value = s.color1;
+
+      CONFIG.notification_channel = s.notificationChannel;
+      CONFIG.onboarding_completed = true;
+
+      try {
+        localStorage.setItem('onboarding_completed_' + STORE_ID, 'true');
+        if (typeof saveConfig === 'function') {
+          await saveConfig();
+        }
+      } catch (e) {
+        console.warn('Error al guardar onboarding:', e);
+      }
+
+      closeOnboardingModal();
+      alert('🎉 ¡Excelente! Tu tienda ha sido configurada con éxito.');
+    }
+
+    function skipOnboardingNow() {
+      try {
+        sessionStorage.setItem('onboarding_skipped_session_' + STORE_ID, 'true');
+      } catch (e) {}
+      closeOnboardingModal();
+    }
+
+    async function skipOnboardingForever() {
+      try {
+        localStorage.setItem('onboarding_dismissed_' + STORE_ID, 'true');
+        if (typeof CONFIG !== 'undefined') CONFIG.onboarding_dismissed = true;
+        if (typeof saveConfig === 'function') await saveConfig();
+      } catch (e) {}
+      closeOnboardingModal();
+    }
+
+    document.openOnboardingModal = openOnboardingModal;
+    document.closeOnboardingModal = closeOnboardingModal;
+    document.nextOnboardingStep = nextOnboardingStep;
+    document.prevOnboardingStep = prevOnboardingStep;
+    document.selectOnbSingle = selectOnbSingle;
+    document.toggleOnbMulti = toggleOnbMulti;
+    document.setOnbColor = setOnbColor;
+    document.applyOnbPreset = applyOnbPreset;
+    document.saveOnboardingData = saveOnboardingData;
+    document.skipOnboardingNow = skipOnboardingNow;
+    document.skipOnboardingForever = skipOnboardingForever;
+    document.checkAndOpenOnboardingModal = checkAndOpenOnboardingModal;
+
     document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         if (typeof loadBannersConfig === 'function') loadBannersConfig();
@@ -13088,6 +13974,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         if (typeof loadCategoriesList === 'function') loadCategoriesList();
         if (typeof loadPickupsList === 'function') loadPickupsList();
         if (typeof hideDashboardLoader === 'function') hideDashboardLoader();
+        setTimeout(() => { checkAndOpenOnboardingModal(); }, 600);
       }, 500);
 
       document.addEventListener('click', (e) => {
