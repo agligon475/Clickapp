@@ -206,6 +206,37 @@
             -webkit-text-fill-color: transparent;
         }
 
+        /* PER-WORD RISE ANIMATION (Hyperframes / Linear style) */
+        .word-rise-container {
+            display: inline-block;
+            vertical-align: top;
+            margin-right: 0.24em;
+            overflow: hidden;
+            line-height: 1.18;
+            padding-bottom: 0.05em;
+        }
+
+        .word-rise-inner {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(115%) rotateX(-12deg);
+            will-change: transform, opacity;
+            animation: perWordRiseAnim 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation-delay: calc(var(--word-idx, 0) * 0.065s + 0.12s);
+            transform-origin: bottom center;
+        }
+
+        @keyframes perWordRiseAnim {
+            0% {
+                opacity: 0;
+                transform: translateY(115%) rotateX(-12deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotateX(0deg);
+            }
+        }
+
         .hero p {
             font-size: clamp(1.05rem, 2.2vw, 1.25rem);
             color: rgba(255,255,255,0.72);
@@ -1916,6 +1947,64 @@
       function setDemoSlide(index) {
         currentDemoIndex = index;
         moveDemoSlide(0);
+      }
+
+      // PER-WORD RISE ANIMATION INITIALIZER
+      function initPerWordRise() {
+        const h1 = document.querySelector('.hero h1');
+        if (!h1 || h1.dataset.wordRiseInit) return;
+        h1.dataset.wordRiseInit = 'true';
+
+        const fullText = h1.textContent.trim().replace(/\s+/g, ' ');
+        h1.setAttribute('aria-label', fullText);
+
+        let wordIndex = 0;
+        const processNode = (node) => {
+          if (node.nodeType === Node.TEXT_NODE) {
+            const words = node.textContent.split(/\s+/).filter(w => w.length > 0);
+            const fragment = document.createDocumentFragment();
+            words.forEach((word) => {
+              const wrap = document.createElement('span');
+              wrap.className = 'word-rise-container';
+              const inner = document.createElement('span');
+              inner.className = 'word-rise-inner';
+              inner.style.setProperty('--word-idx', wordIndex++);
+              inner.textContent = word;
+              wrap.appendChild(inner);
+              fragment.appendChild(wrap);
+            });
+            return fragment;
+          } else if (node.nodeType === Node.ELEMENT_NODE) {
+            const isGlow = node.classList.contains('text-glow');
+            const words = node.textContent.split(/\s+/).filter(w => w.length > 0);
+            const fragment = document.createDocumentFragment();
+            words.forEach((word) => {
+              const wrap = document.createElement('span');
+              wrap.className = 'word-rise-container';
+              const inner = document.createElement('span');
+              inner.className = 'word-rise-inner' + (isGlow ? ' text-glow' : '');
+              inner.style.setProperty('--word-idx', wordIndex++);
+              inner.textContent = word;
+              wrap.appendChild(inner);
+              fragment.appendChild(wrap);
+            });
+            return fragment;
+          }
+          return null;
+        };
+
+        const children = Array.from(h1.childNodes);
+        h1.innerHTML = '';
+        children.forEach(child => {
+          const res = processNode(child);
+          if (res) h1.appendChild(res);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPerWordRise);
+      } else {
+        initPerWordRise();
       }
     </script>
 
