@@ -213,10 +213,15 @@
         <div class="form-group">
           <label>Plantilla a Modificar</label>
           <select id="template-select" onchange="loadTemplate()">
-            <option value="welcome">🚀 Bienvenida / Registro de Tienda (15 Días Trial)</option>
-            <option value="reset_password">🔑 Restablecer Contraseña de Cuenta</option>
-            <option value="trial_reminder">⏳ Recordatorio Vencimiento de Trial (7 días)</option>
-            <option value="billing_reminder">📋 Recordatorio Datos de Facturación</option>
+            <option value="welcome">🚀 1. Bienvenida / Registro de Tienda (15 Días Trial)</option>
+            <option value="reset_password">🔑 2. Restablecer Contraseña de Cuenta</option>
+            <option value="trial_reminder_7">⏳ 3. Recordatorio Trial (7 Días Restantes)</option>
+            <option value="trial_reminder_3">⚠️ 4. Recordatorio Trial (3 Días Restantes)</option>
+            <option value="trial_ended">🔴 5. Fin de Prueba (Trial Expirado / Conversión)</option>
+            <option value="account_activated">✅ 6. Activación de Cuenta y Base de Conocimientos</option>
+            <option value="annual_benefit">🎁 7. Beneficio Plan Anual (2 Meses Gratis + Reseña)</option>
+            <option value="payment_instructions">📋 8. Instrucciones de Pago de Membresía</option>
+            <option value="billing_reminder">📋 9. Recordatorio Datos de Facturación</option>
           </select>
         </div>
 
@@ -291,12 +296,47 @@
         btnText: "Restablecer Contraseña",
         btnUrl: "https://daletepido.com.ar/reset-password"
       },
-      trial_reminder: {
-        subject: "Quedan {trial_days} días de prueba gratuita en tu tienda {business_name}",
-        heading: "Tu período de prueba está por vencer",
-        body: "Hola {business_name},\nTe recordamos que te quedan {trial_days} días de prueba gratis. Elegí el plan que mejor se adapte a tus ventas para continuar activo sin interrupciones.",
-        btnText: "Ver Planes y Membresías",
-        btnUrl: "https://daletepido.com.ar/dashboard?view=billing"
+      trial_reminder_7: {
+        subject: "⏳ Te quedan 7 días de prueba en Dale! Te Pido",
+        heading: "¡Mitad de tu prueba gratuita!",
+        body: "Hola {business_name},\nYa pasaron 8 días desde que abriste tu catálogo. Te quedan 7 días restantes para seguir disfrutando sin cargo y sin comisiones por venta.",
+        btnText: "Ir al Dashboard",
+        btnUrl: "https://daletepido.com.ar/dashboard"
+      },
+      trial_reminder_3: {
+        subject: "⚠️ Quedan solo 3 días de tu prueba gratuita en Dale! Te Pido",
+        heading: "¡Atención! Tu prueba finaliza pronto",
+        body: "Hola {business_name},\nTu período de prueba gratuito finaliza en 3 días. Asegurá la continuidad de tu tienda online para no interrumpir el flujo de pedidos de tus clientes.",
+        btnText: "Elegir Plan y Asegurar mi Tienda",
+        btnUrl: "https://daletepido.com.ar/dashboard#suscribirse"
+      },
+      trial_ended: {
+        subject: "🔴 Tu prueba ha finalizado - Mantené tu tienda activa en Dale! Te Pido",
+        heading: "Tu período de prueba finalizó 🏁",
+        body: "Hola {business_name},\nEsperamos que hayas disfrutado tus 15 días de prueba gratuita. Tu catálogo y productos siguen guardados. Elegí uno de nuestros planes accesibles para continuar activo.",
+        btnText: "Activar Suscripción Ahora",
+        btnUrl: "https://daletepido.com.ar/dashboard#suscribirse"
+      },
+      account_activated: {
+        subject: "✅ ¡Tu cuenta en Dale! Te Pido está activa y lista para vender!",
+        heading: "¡Cuenta Confirmada y Verificada! 🎉",
+        body: "Hola {business_name},\nTu correo electrónico ha sido verificado con éxito y tu catálogo digital ya se encuentra 100% activo en internet. Accedé a nuestra Base de Conocimientos para configurar tu WhatsApp y QR.",
+        btnText: "Explorar Base de Conocimientos",
+        btnUrl: "https://daletepido.com.ar/ayuda"
+      },
+      annual_benefit: {
+        subject: "🎁 Obtené 2 meses gratis al cambiar a tu Plan Anual en Dale! Te Pido",
+        heading: "Beneficio Exclusivo para Clientes 🎁",
+        body: "Hola {business_name},\nQueremos agradecerte por formar parte de Dale! Te Pido. Tenés disponible un 20% de descuento (2 meses gratis) al cambiar a la membresía anual.",
+        btnText: "Cambiar a Plan Anual y Ahorrar",
+        btnUrl: "https://daletepido.com.ar/dashboard#suscribirse"
+      },
+      payment_instructions: {
+        subject: "Instrucciones de Pago de Membresía — Dale! Te Pido",
+        heading: "Instrucciones para la Transferencia",
+        body: "Hola {business_name},\nTe enviamos los datos para realizar la transferencia bancaria / pago de tu membresía.\n\nCVU: 0000076500000014269976\nTitular: Agustin Licari Gonzalez\n\nUna vez realizado el pago, podés enviar el comprobante.",
+        btnText: "Adjuntar Comprobante de Pago",
+        btnUrl: "https://daletepido.com.ar/enviar-comprobante.html"
       },
       billing_reminder: {
         subject: "Recordatorio: Completa los datos de facturación de tu comercio",
