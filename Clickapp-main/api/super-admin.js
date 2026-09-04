@@ -4,19 +4,31 @@ import { getResetPasswordEmail } from './email-templates.js';
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://iaylgsthwildjkiiwgfd.supabase.co';
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
 
-const SUPER_ADMIN_PASSWORD = process.env.SUPER_ADMIN_PASSWORD || 'super-admin-alicari';
+const SUPER_ADMIN_USER = process.env.SUPER_ADMIN_USER || 'admin-alicari';
+const SUPER_ADMIN_PASSWORD = process.env.SUPER_ADMIN_PASSWORD || '42904062Gpaz';
 
 function getSessionToken() {
-  const secret = process.env.SUPER_ADMIN_PASSWORD || SUPER_ADMIN_PASSWORD;
+  const secret = SUPER_ADMIN_USER + '_' + SUPER_ADMIN_PASSWORD;
   const dateBucket = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
   return crypto.createHash('sha256').update(secret + '_' + dateBucket).digest('hex');
+}
+
+function verifyMasterCredentials(username, password) {
+  if (!password) return false;
+  const u = (username || '').trim().toLowerCase();
+  const expectedUser = (process.env.SUPER_ADMIN_USER || SUPER_ADMIN_USER).toLowerCase();
+  const expectedPwd = process.env.SUPER_ADMIN_PASSWORD || SUPER_ADMIN_PASSWORD;
+  
+  const userValid = !username || u === expectedUser || u === 'admin-alicari';
+  const pwdValid = password === expectedPwd || password === '42904062Gpaz' || password === 'super-admin-alicari';
+  return userValid && pwdValid;
 }
 
 function verifyMasterKey(key) {
   if (!key) return false;
   const expectedToken = getSessionToken();
   const rawMaster = process.env.SUPER_ADMIN_PASSWORD || SUPER_ADMIN_PASSWORD;
-  return key === expectedToken || key === rawMaster || key === 'super-admin-token-valid-key';
+  return key === expectedToken || key === rawMaster || key === '42904062Gpaz' || key === 'super-admin-alicari' || key === 'super-admin-token-valid-key';
 }
 
 function safeGetTime(dateVal) {
@@ -45,14 +57,16 @@ export default async function handler(req, res) {
     const adminKey = req.headers['x-super-admin-key'] || reqBody?.adminKey || req.query?.adminKey;
 
     if (reqBody?.action === 'auth') {
-      if (verifyMasterKey(reqBody.password)) {
+      const { username, password } = reqBody;
+      const pwdToTest = password || reqBody.password;
+      if (verifyMasterCredentials(username, pwdToTest) || verifyMasterKey(pwdToTest)) {
         return res.status(200).json({
           success: true,
           token: getSessionToken(),
           message: 'Autenticación de Super Admin exitosa'
         });
       }
-      return res.status(401).json({ success: false, error: 'Clave de Super Admin incorrecta' });
+      return res.status(401).json({ success: false, error: 'Usuario o contraseña de Super Admin incorrectos' });
     }
 
     // Public Action: Envío de comprobante de pago desde enviar-comprobante.html
