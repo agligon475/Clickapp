@@ -151,13 +151,13 @@
             min-height: 88vh;
             display: flex;
             align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 9rem 1.5rem 5rem;
+            justify-content: flex-start;
+            text-align: left;
+            padding: 9rem 3rem 5rem;
             background: #0A0A0C;
             background-image: 
-                radial-gradient(ellipse at 50% 0%, rgba(214, 0, 0, 0.25) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 80%, rgba(30, 64, 175, 0.08) 0%, transparent 50%);
+                radial-gradient(ellipse at 25% 10%, rgba(214, 0, 0, 0.3) 0%, transparent 60%),
+                radial-gradient(ellipse at 85% 80%, rgba(30, 64, 175, 0.1) 0%, transparent 50%);
             overflow: hidden;
         }
         #canvas-connections {
@@ -171,7 +171,8 @@
         .hero-content {
             position: relative;
             z-index: 2;
-            max-width: 820px;
+            max-width: 920px;
+            text-align: left;
         }
 
         .hero-badge {
@@ -198,6 +199,7 @@
             color: #ffffff;
             margin-bottom: 20px;
             letter-spacing: -1.8px;
+            text-align: left;
         }
 
         .hero h1 .text-glow {
@@ -240,12 +242,13 @@
         .hero p {
             font-size: clamp(1.05rem, 2.2vw, 1.25rem);
             color: rgba(255,255,255,0.72);
-            max-width: 640px;
-            margin: 0 auto 38px;
+            max-width: 680px;
+            margin: 0 0 38px;
             line-height: 1.6;
+            text-align: left;
         }
 
-        .hero-btns { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+        .hero-btns { display:flex; gap:14px; justify-content:flex-start; flex-wrap:wrap; }
         .btn-primary { display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg, #D60000 0%, #b30000 100%); color:var(--white); padding:16px 32px; border-radius:12px; font-weight:800; font-size:16px; text-decoration:none; border:none; cursor:pointer; font-family:inherit; transition:background .2s,transform .15s,box-shadow .2s; box-shadow:0 8px 32px rgba(214,0,0,0.45); text-transform:uppercase; letter-spacing:0.5px; }
         .btn-primary:hover { transform:translateY(-2px); box-shadow:0 12px 40px rgba(214,0,0,0.6); }
         .btn-secondary { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.06); color:var(--white); padding:16px 28px; border-radius:12px; font-weight:600; font-size:15px; text-decoration:none; border:1px solid rgba(255,255,255,0.15); cursor:pointer; font-family:inherit; transition:background .2s,transform .15s; }
@@ -456,7 +459,7 @@
     <header class="hero">
         <canvas id="canvas-connections"></canvas>
         <div class="hero-content">
-            <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Logo oficial de Dale! Te Pido" style="max-width: 260px; width: 220px; height: auto; margin: 0 auto 1.2rem auto; display: block;">
+            <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Logo oficial de Dale! Te Pido" style="max-width: 260px; width: 220px; height: auto; margin: 0 0 1.2rem 0; display: block;">
             <div class="hero-badge">⚡ 15 DÍAS DE PRUEBA GRATUITA · SIN COMISIONES POR VENTA</div>
             <h1>Vendé más con tu propio Catálogo Digital conectado a <span class="text-glow">WhatsApp</span></h1>
             <p>Creamos la solución ideal para comercios, tiendas, ferreterías, indumentaria y gastronomía que buscan mostrar sus productos online y recibir pedidos organizados directamente en su WhatsApp sin intermediarios ni comisiones por venta.</p>
@@ -466,7 +469,7 @@
             </div>
 
             <!-- TL;DR / KEY TAKEAWAYS -->
-            <div class="tldr-box" style="max-width:760px; margin:32px auto 0; text-align:left; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:20px 24px; backdrop-filter:blur(10px);">
+            <div class="tldr-box" style="max-width:760px; margin:32px 0 0; text-align:left; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:20px 24px; backdrop-filter:blur(10px);">
                 <div style="font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:#ff6666; margin-bottom:10px; display:flex; align-items:center; gap:6px;">
                     <span>⚡</span> LO QUE NECESITÁS SABER
                 </div>
