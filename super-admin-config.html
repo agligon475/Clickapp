@@ -196,11 +196,11 @@
     }
   </style>
 </head>
-<body class="dark-mode">
+<body class="light-theme">
 
   <header>
     <div class="brand-wrap">
-      <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Logo Dale! Te Pido" />
+      <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Logo Dale! Te Pido" style="filter: brightness(0);" />
       <h2>Configuración Avanzada Global</h2>
     </div>
     <div style="display: flex; gap: 10px;">
@@ -211,8 +211,9 @@
   <main>
     <!-- DIAGNÓSTICO -->
     <div class="card">
-      <div class="card-header-title" style="color: #D60000;">
-        <i class="bi bi-activity"></i> Diagnóstico de Conexiones en Vivo
+      <div class="card-header-title" style="color: #D60000; justify-content: space-between;">
+        <span><i class="bi bi-activity"></i> Diagnóstico de Conexiones en Vivo</span>
+        <button class="btn" onclick="testAllConnections()" style="font-size: 12px; padding: 6px 14px;"><i class="bi bi-arrow-repeat"></i> Probar Todas</button>
       </div>
       
       <div class="diag-item">
@@ -220,15 +221,15 @@
           <strong>Base de Datos Supabase PostgreSQL</strong>
           <div style="font-size: 12px; color: var(--text-muted);" id="diag-db-url">https://iaylgsthwildjkiiwgfd.supabase.co</div>
         </div>
-        <span class="badge-ok">🟢 Conectado</span>
+        <span class="badge-ok" id="badge-db">🟢 Conectado</span>
       </div>
 
       <div class="diag-item">
         <div>
-          <strong>Servicio de Correo Transaccional (Resend API)</strong>
-          <div style="font-size: 12px; color: var(--text-muted);">resend_active_key</div>
+          <strong>Servicio de Correo Transaccional (Resend / Email API)</strong>
+          <div style="font-size: 12px; color: var(--text-muted);" id="diag-email-svc">Resend API (Transaccional)</div>
         </div>
-        <span class="badge-ok">🟢 Operativo</span>
+        <span class="badge-ok" id="badge-email">🟢 Operativo</span>
       </div>
 
       <div class="diag-item">
@@ -236,7 +237,15 @@
           <strong>Servidor de Búsqueda de Imágenes por IA & Cloudinary</strong>
           <div style="font-size: 12px; color: var(--text-muted);" id="diag-cloud-name">deuog0r34 (Cloudinary)</div>
         </div>
-        <span class="badge-ok">🟢 Activo</span>
+        <span class="badge-ok" id="badge-cloud">🟢 Activo</span>
+      </div>
+
+      <div class="diag-item">
+        <div>
+          <strong>Motor de IA Seleccionado</strong>
+          <div style="font-size: 12px; color: var(--text-muted);" id="diag-ai-svc">Google Gemini (Gemini 2.5 Flash)</div>
+        </div>
+        <span class="badge-ok" id="badge-ai">🟢 Listo</span>
       </div>
     </div>
 
@@ -253,6 +262,11 @@
         <label>Supabase Service Role Key / API Key (Permisos Administrador)</label>
         <input type="password" id="cfg-supabase-key" class="ctrl-input" placeholder="eyJhbGciOiJIUzI1NiIsIn..." />
       </div>
+
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <button class="btn" onclick="testSupabase()"><i class="bi bi-lightning-charge-fill" style="color:#3B82F6;"></i> Probar Conexión Supabase</button>
+        <span id="status-db" style="font-size: 13px; font-weight: 600;"></span>
+      </div>
     </div>
 
     <!-- 2. CLOUDINARY (IMÁGENES) -->
@@ -267,6 +281,10 @@
           <label>Upload Preset</label>
           <input type="text" id="cfg-cloudinary-preset" class="ctrl-input" placeholder="clickapp" />
         </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; margin-top: 4px;">
+        <button class="btn" onclick="testCloudinary()"><i class="bi bi-cloud-check-fill" style="color:#34D399;"></i> Probar Conexión Cloudinary</button>
+        <span id="status-cloudinary" style="font-size: 13px; font-weight: 600;"></span>
       </div>
     </div>
 
@@ -291,9 +309,23 @@
           <input type="password" id="cfg-claude-key" class="ctrl-input" placeholder="sk-ant-api..." />
         </div>
       </div>
+      <div style="display: flex; align-items: center; gap: 12px; margin-top: 4px;">
+        <button class="btn" onclick="testAI()"><i class="bi bi-cpu-fill" style="color:#A855F7;"></i> Probar Conexión IA</button>
+        <span id="status-ai" style="font-size: 13px; font-weight: 600;"></span>
+      </div>
     </div>
 
-    <!-- 4. PARÁMETROS GLOBALES POR DEFECTO -->
+    <!-- 4. SERVICIO DE CORREO TRANSACCIONAL -->
+    <div class="card">
+      <div class="card-header-title"><i class="bi bi-envelope-check-fill" style="color:#E11D48;"></i> Servicio de Correo Transaccional</div>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">Servicio de envio activo vía Resend API con fallback automático a FormSubmit.</p>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <button class="btn" onclick="testEmail()"><i class="bi bi-envelope-check-fill" style="color:#E11D48;"></i> Probar Conexión de Correo</button>
+        <span id="status-email" style="font-size: 13px; font-weight: 600;"></span>
+      </div>
+    </div>
+
+    <!-- 5. PARÁMETROS GLOBALES POR DEFECTO -->
     <div class="card">
       <div class="card-header-title"><i class="bi bi-sliders" style="color:#F59E0B;"></i> Variables y Períodos por Defecto</div>
       <div class="form-group">
@@ -336,17 +368,148 @@
 
           document.getElementById('diag-db-url').textContent = c.supabase_url || 'https://iaylgsthwildjkiiwgfd.supabase.co';
           document.getElementById('diag-cloud-name').textContent = (c.cloudinary_name || 'deuog0r34') + ' (Cloudinary)';
+          document.getElementById('diag-ai-svc').textContent = (c.ai_provider === 'claude') ? 'Anthropic Claude AI (Claude Haiku 4.5)' : 'Google Gemini AI (Gemini 2.5 Flash)';
         }
       } catch (e) {
         console.warn('Error cargando credenciales globales:', e.message);
       }
     }
 
+    async function testSupabase() {
+      const el = document.getElementById('status-db');
+      const badge = document.getElementById('badge-db');
+      el.style.color = '#3B82F6';
+      el.textContent = '⏳ Probando conexión...';
+      try {
+        const res = await fetch('/api/super-admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-super-admin-key': masterToken },
+          body: JSON.stringify({
+            action: 'test_supabase',
+            supabase_url: document.getElementById('cfg-supabase-url').value.trim(),
+            supabase_key: document.getElementById('cfg-supabase-key').value.trim()
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          el.style.color = '#10B981';
+          el.textContent = '✓ ' + data.message;
+          badge.textContent = '🟢 Conectado';
+          badge.className = 'badge-ok';
+        } else {
+          el.style.color = '#EF4444';
+          el.textContent = '✕ ' + (data.error || 'Error de conexión');
+          badge.textContent = '🔴 Error';
+          badge.style.background = 'rgba(239, 68, 68, 0.15)';
+          badge.style.color = '#EF4444';
+        }
+      } catch(e) {
+        el.style.color = '#EF4444';
+        el.textContent = '✕ Error: ' + e.message;
+      }
+    }
+
+    async function testCloudinary() {
+      const el = document.getElementById('status-cloudinary');
+      const badge = document.getElementById('badge-cloud');
+      el.style.color = '#3B82F6';
+      el.textContent = '⏳ Probando CDN Cloudinary...';
+      try {
+        const res = await fetch('/api/super-admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-super-admin-key': masterToken },
+          body: JSON.stringify({
+            action: 'test_cloudinary',
+            cloudinary_name: document.getElementById('cfg-cloudinary-name').value.trim()
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          el.style.color = '#10B981';
+          el.textContent = '✓ ' + data.message;
+          badge.textContent = '🟢 Activo';
+          badge.className = 'badge-ok';
+        } else {
+          el.style.color = '#EF4444';
+          el.textContent = '✕ ' + (data.error || 'Error');
+        }
+      } catch(e) {
+        el.style.color = '#EF4444';
+        el.textContent = '✕ Error: ' + e.message;
+      }
+    }
+
+    async function testAI() {
+      const el = document.getElementById('status-ai');
+      const badge = document.getElementById('badge-ai');
+      el.style.color = '#3B82F6';
+      el.textContent = '⏳ Probando Motor IA...';
+      try {
+        const res = await fetch('/api/super-admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-super-admin-key': masterToken },
+          body: JSON.stringify({
+            action: 'test_ai',
+            ai_provider: document.getElementById('cfg-ai-provider').value,
+            gemini_key: document.getElementById('cfg-gemini-key').value.trim(),
+            claude_key: document.getElementById('cfg-claude-key').value.trim()
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          el.style.color = '#10B981';
+          el.textContent = '✓ ' + data.message;
+          badge.textContent = '🟢 Listo';
+          badge.className = 'badge-ok';
+        } else {
+          el.style.color = '#EF4444';
+          el.textContent = '✕ ' + (data.error || 'Error');
+        }
+      } catch(e) {
+        el.style.color = '#EF4444';
+        el.textContent = '✕ Error: ' + e.message;
+      }
+    }
+
+    async function testEmail() {
+      const el = document.getElementById('status-email');
+      const badge = document.getElementById('badge-email');
+      el.style.color = '#3B82F6';
+      el.textContent = '⏳ Verificando servicio de correo...';
+      try {
+        const res = await fetch('/api/super-admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-super-admin-key': masterToken },
+          body: JSON.stringify({ action: 'test_email' })
+        });
+        const data = await res.json();
+        if (data.success) {
+          el.style.color = '#10B981';
+          el.textContent = '✓ ' + data.message;
+          badge.textContent = '🟢 Operativo';
+          badge.className = 'badge-ok';
+        } else {
+          el.style.color = '#EF4444';
+          el.textContent = '✕ ' + (data.error || 'Error');
+        }
+      } catch(e) {
+        el.style.color = '#EF4444';
+        el.textContent = '✕ Error: ' + e.message;
+      }
+    }
+
+    async function testAllConnections() {
+      testSupabase();
+      testCloudinary();
+      testAI();
+      testEmail();
+    }
+
     async function saveConfig() {
       const statusEl = document.getElementById('status-msg');
       statusEl.style.display = 'block';
       statusEl.style.background = 'rgba(59,130,246,0.15)';
-      statusEl.style.color = '#60A5FA';
+      statusEl.style.color = '#3B82F6';
       statusEl.style.border = '1px solid #3B82F6';
       statusEl.textContent = 'Guardando configuración en la base de datos...';
 
@@ -379,6 +542,7 @@
           statusEl.textContent = '✓ Configuración de Base de Datos, Cloudinary e IA guardada exitosamente.';
           document.getElementById('diag-db-url').textContent = payload.supabase_url;
           document.getElementById('diag-cloud-name').textContent = payload.cloudinary_name + ' (Cloudinary)';
+          document.getElementById('diag-ai-svc').textContent = (payload.ai_provider === 'claude') ? 'Anthropic Claude AI (Claude Haiku 4.5)' : 'Google Gemini AI (Gemini 2.5 Flash)';
         } else {
           statusEl.style.background = 'rgba(239, 68, 68, 0.15)';
           statusEl.style.color = '#EF4444';
