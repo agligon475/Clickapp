@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editor Visual CMS de Correos — Super Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+  <script>
+    (function() {
+      const token = sessionStorage.getItem('super_admin_master_key');
+      if (!token || token.trim().length === 0) {
+        window.location.replace('super-admin-login.html');
+      }
+    })();
+  </script>
+
+  <style>
+    :root {
+      --bg-body: #F1F5F9;
+      --bg-card: #FFFFFF;
+      --bg-input: #F8FAFC;
+      --border-color: #CBD5E1;
+      --text-main: #0F172A;
+      --text-muted: #334155;
+      --purple-primary: #7C3AED;
+      --purple-hover: #6D28D9;
+      --font-title: 'Josefin Sans', sans-serif;
+      --font-body: 'Poppins', sans-serif;
+    }
+
+    body.dark-mode {
+      --bg-body: #0A0A0C;
+      --bg-card: #141416;
+      --bg-input: #1C1C1E;
+      --border-color: #27272A;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1, h2, h3 {
+      font-family: var(--font-title);
+    }
+
+    header {
+      background: var(--bg-card);
+      border-bottom: 1.5px solid var(--border-color);
+      padding: 16px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-wrap img {
+      height: 32px;
+      filter: brightness(0);
+    }
+    body.dark-mode .brand-wrap img {
+      filter: brightness(0) invert(1);
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1.5px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-main);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--bg-input);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--purple-primary);
+      color: #FFF;
+      border-color: var(--purple-primary);
+    }
+    .btn-primary:hover {
+      background: var(--purple-hover);
+    }
+
+    main {
+      flex: 1;
+      max-width: 1300px;
+      width: 100%;
+      margin: 28px auto;
+      padding: 0 20px;
+    }
+
+    .cms-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .cms-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .ctrl-input, select, textarea {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1.5px solid var(--border-color);
+      border-radius: 10px;
+      color: var(--text-main);
+      padding: 12px 14px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .var-badge {
+      display: inline-block;
+      background: rgba(124, 58, 237, 0.12);
+      color: var(--purple-primary);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .preview-box {
+      background: var(--bg-input);
+      border: 1.5px solid var(--border-color);
+      border-radius: 12px;
+      height: 560px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #FFF;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand-wrap">
+      <img src="/img-default/daletepido-logo-white-hq.png" alt="Logo" />
+      <h2>CMS de Plantillas Transaccionales</h2>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <a href="super-admin-secret-dashboard.html" class="btn"><i class="bi bi-arrow-left"></i> Volver al Dashboard</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="cms-grid">
+      <!-- FORM -->
+      <div class="card">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: var(--purple-primary);"><i class="bi bi-sliders"></i> Editor de Plantilla</h3>
+
+        <div class="form-group">
+          <label>Plantilla a Modificar</label>
+          <select id="template-select" onchange="loadTemplate()">
+            <option value="welcome">🚀 Bienvenida / Registro de Tienda (15 Días Trial)</option>
+            <option value="reset_password">🔑 Restablecer Contraseña de Cuenta</option>
+            <option value="trial_reminder">⏳ Recordatorio Vencimiento de Trial (7 días)</option>
+            <option value="billing_reminder">📋 Recordatorio Datos de Facturación</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Asunto del Correo</label>
+          <input type="text" id="tpl-subject" class="ctrl-input" placeholder="" oninput="updatePreview()" />
+        </div>
+
+        <div class="form-group" style="background: rgba(124,58,237,0.06); padding: 10px; border-radius: 8px; border: 1px dashed rgba(124,58,237,0.2);">
+          <label style="color: var(--purple-primary);">Variables Insertables (Haz clic para agregar):</label>
+          <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:4px;">
+            <span class="var-badge" onclick="insertVar('{business_name}')">{business_name}</span>
+            <span class="var-badge" onclick="insertVar('{admin_email}')">{admin_email}</span>
+            <span class="var-badge" onclick="insertVar('{login_link}')">{login_link}</span>
+            <span class="var-badge" onclick="insertVar('{trial_days}')">{trial_days}</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Título del Saludo / Encabezado</label>
+          <input type="text" id="tpl-heading" class="ctrl-input" placeholder="" oninput="updatePreview()" />
+        </div>
+
+        <div class="form-group">
+          <label>Cuerpo del Mensaje</label>
+          <textarea id="tpl-body" style="height: 110px; resize: vertical;" oninput="updatePreview()"></textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;" class="form-group">
+          <div>
+            <label>Texto Botón CTA</label>
+            <input type="text" id="tpl-btn-text" class="ctrl-input" placeholder="" oninput="updatePreview()" />
+          </div>
+          <div>
+            <label>Enlace Botón CTA</label>
+            <input type="text" id="tpl-btn-url" class="ctrl-input" placeholder="" oninput="updatePreview()" />
+          </div>
+        </div>
+
+        <div id="status-msg" style="display:none; font-size: 13px; margin-bottom: 12px;"></div>
+
+        <button class="btn btn-primary" style="width: 100%; justify-content: center; height: 46px;" onclick="saveTemplate()">
+          <i class="bi bi-floppy-fill"></i> Guardar Cambios en Plantilla
+        </button>
+      </div>
+
+      <!-- LIVE PREVIEW -->
+      <div class="card">
+        <h3 style="font-size: 20px; margin-bottom: 16px;"><i class="bi bi-eye-fill"></i> Vista Previa de la Plantilla</h3>
+        <div class="preview-box">
+          <iframe id="preview-iframe"></iframe>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const masterToken = sessionStorage.getItem('super_admin_master_key') || '';
+
+    const templates = {
+      welcome: {
+        subject: "¡Bienvenido a Dale! Te Pido! Tu tienda {business_name} ya está lista",
+        heading: "¡Felicitaciones por crear tu comercio!",
+        body: "Hola {business_name},\nTu tienda online ha sido creada con éxito. Tenés 15 días de prueba gratuita sin compromiso para configurar tus productos y empezar a vender.",
+        btnText: "Acceder a mi Panel de Control",
+        btnUrl: "https://daletepido.com.ar/dashboard"
+      },
+      reset_password: {
+        subject: "Restablecer Contraseña — Dale! Te Pido",
+        heading: "Recuperación de Acceso",
+        body: "Hola,\nRecibimos una solicitud para restablecer la contraseña de tu cuenta administradora. Hacé clic en el botón a continuación para ingresar una nueva clave.",
+        btnText: "Restablecer Contraseña",
+        btnUrl: "https://daletepido.com.ar/reset-password"
+      },
+      trial_reminder: {
+        subject: "Quedan {trial_days} días de prueba gratuita en tu tienda {business_name}",
+        heading: "Tu período de prueba está por vencer",
+        body: "Hola {business_name},\nTe recordamos que te quedan {trial_days} días de prueba gratis. Elegí el plan que mejor se adapte a tus ventas para continuar activo sin interrupciones.",
+        btnText: "Ver Planes y Membresías",
+        btnUrl: "https://daletepido.com.ar/dashboard?view=billing"
+      },
+      billing_reminder: {
+        subject: "Recordatorio: Completa los datos de facturación de tu comercio",
+        heading: "Datos de Facturación Pendientes",
+        body: "Hola {business_name},\nPor favor completá los datos fiscales de tu cuenta (CUIT / Razón Social) en el panel de control para mantener tu cuenta al día.",
+        btnText: "Completar Datos Fiscales",
+        btnUrl: "https://daletepido.com.ar/dashboard?view=billing"
+      }
+    };
+
+    function loadTemplate() {
+      const key = document.getElementById('template-select').value;
+      const t = templates[key] || templates.welcome;
+      document.getElementById('tpl-subject').value = t.subject;
+      document.getElementById('tpl-heading').value = t.heading;
+      document.getElementById('tpl-body').value = t.body;
+      document.getElementById('tpl-btn-text').value = t.btnText;
+      document.getElementById('tpl-btn-url').value = t.btnUrl;
+      updatePreview();
+    }
+
+    function insertVar(varText) {
+      const bodyEl = document.getElementById('tpl-body');
+      bodyEl.value += ' ' + varText;
+      updatePreview();
+    }
+
+    function updatePreview() {
+      const subject = document.getElementById('tpl-subject').value;
+      const heading = document.getElementById('tpl-heading').value;
+      const body = document.getElementById('tpl-body').value;
+      const btnText = document.getElementById('tpl-btn-text').value;
+      const btnUrl = document.getElementById('tpl-btn-url').value;
+
+      const iframe = document.getElementById('preview-iframe');
+      const html = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: 'Poppins', sans-serif; background:#F8FAFC; color:#0F172A; padding:24px; margin:0; }
+            .card { background:#FFF; border-radius:14px; padding:28px; border:1px solid #CBD5E1; max-width:540px; margin:0 auto; box-shadow:0 4px 12px rgba(0,0,0,0.05); }
+            h2 { color:#7C3AED; font-family:'Josefin Sans', sans-serif; margin-top:0; }
+            .btn { display:inline-block; background:#7C3AED; color:#FFF; padding:12px 24px; text-decoration:none; border-radius:8px; font-weight:700; margin-top:20px; }
+          </style>
+        </head>
+        <body>
+          <div class="card">
+            <h2>${heading || 'Encabezado'}</h2>
+            <p>${body ? body.replace(/\n/g, '<br>') : 'Contenido del correo...'}</p>
+            ${btnText ? `<a href="${btnUrl || '#'}" class="btn" target="_blank">${btnText}</a>` : ''}
+          </div>
+        </body>
+        </html>
+      `;
+      iframe.srcdoc = html;
+    }
+
+    function saveTemplate() {
+      const statusEl = document.getElementById('status-msg');
+      statusEl.style.display = 'block';
+      statusEl.style.color = '#16A34A';
+      statusEl.textContent = '✓ Cambios de plantilla guardados correctamente.';
+      setTimeout(() => { statusEl.style.display = 'none'; }, 3000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadTemplate();
+    });
+  </script>
+</body>
+</html>

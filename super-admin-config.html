@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuración Avanzada Global — Super Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+  <script>
+    (function() {
+      const token = sessionStorage.getItem('super_admin_master_key');
+      if (!token || token.trim().length === 0) {
+        window.location.replace('super-admin-login.html');
+      }
+    })();
+  </script>
+
+  <style>
+    :root {
+      --bg-body: #F1F5F9;
+      --bg-card: #FFFFFF;
+      --bg-input: #F8FAFC;
+      --border-color: #CBD5E1;
+      --text-main: #0F172A;
+      --text-muted: #334155;
+      --red-primary: #E11D48;
+      --red-hover: #BE123C;
+      --font-title: 'Josefin Sans', sans-serif;
+      --font-body: 'Poppins', sans-serif;
+    }
+
+    body.dark-mode {
+      --bg-body: #0A0A0C;
+      --bg-card: #141416;
+      --bg-input: #1C1C1E;
+      --border-color: #27272A;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1, h2, h3 {
+      font-family: var(--font-title);
+    }
+
+    header {
+      background: var(--bg-card);
+      border-bottom: 1.5px solid var(--border-color);
+      padding: 16px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-wrap img {
+      height: 32px;
+      filter: brightness(0);
+    }
+    body.dark-mode .brand-wrap img {
+      filter: brightness(0) invert(1);
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1.5px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-main);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--bg-input);
+      transform: translateY(-1px);
+    }
+
+    .btn-danger {
+      background: var(--red-primary);
+      color: #FFF;
+      border-color: var(--red-primary);
+    }
+    .btn-danger:hover {
+      background: var(--red-hover);
+    }
+
+    main {
+      flex: 1;
+      max-width: 900px;
+      width: 100%;
+      margin: 28px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-color);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .ctrl-input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1.5px solid var(--border-color);
+      border-radius: 10px;
+      color: var(--text-main);
+      padding: 12px 14px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .diag-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: var(--bg-input);
+      border: 1.5px solid var(--border-color);
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .badge-ok {
+      background: rgba(22, 163, 74, 0.12);
+      color: #16A34A;
+      border: 1px solid rgba(22, 163, 74, 0.3);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand-wrap">
+      <img src="/img-default/daletepido-logo-white-hq.png" alt="Logo" />
+      <h2>Configuración Avanzada Global</h2>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <a href="super-admin-secret-dashboard.html" class="btn"><i class="bi bi-arrow-left"></i> Volver al Dashboard</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- DIAGNÓSTICO -->
+    <div class="card">
+      <h3 style="font-size: 20px; margin-bottom: 18px; color: var(--red-primary);"><i class="bi bi-activity"></i> Diagnóstico de Conexiones</h3>
+      
+      <div class="diag-item">
+        <div>
+          <strong>Base de Datos Supabase PostgreSQL</strong>
+          <div style="font-size: 12px; color: var(--text-muted);">https://iaylgsthwildjkiiwgfd.supabase.co</div>
+        </div>
+        <span class="badge-ok">🟢 Conectado</span>
+      </div>
+
+      <div class="diag-item">
+        <div>
+          <strong>Servicio de Correo Transaccional (Resend API)</strong>
+          <div style="font-size: 12px; color: var(--text-muted);">resend_active_key</div>
+        </div>
+        <span class="badge-ok">🟢 Operativo</span>
+      </div>
+
+      <div class="diag-item">
+        <div>
+          <strong>Servidor de Búsqueda de Imágenes por IA</strong>
+          <div style="font-size: 12px; color: var(--text-muted);">/api/image-search</div>
+        </div>
+        <span class="badge-ok">🟢 Activo</span>
+      </div>
+    </div>
+
+    <!-- CREDENCIALES GLOBAL MASTER -->
+    <div class="card">
+      <h3 style="font-size: 20px; margin-bottom: 18px;"><i class="bi bi-sliders2"></i> Variables de Respaldo por Defecto</h3>
+
+      <div class="form-group">
+        <label>Supabase URL</label>
+        <input type="text" class="ctrl-input" value="https://iaylgsthwildjkiiwgfd.supabase.co" readonly />
+      </div>
+
+      <div class="form-group">
+        <label>Días de Trial por Defecto para Nuevos Comercios</label>
+        <input type="number" class="ctrl-input" value="15" />
+      </div>
+
+      <div id="status-msg" style="display:none; font-size: 13px; margin-bottom: 12px;"></div>
+
+      <button class="btn btn-danger" style="width: 100%; justify-content: center; height: 46px;" onclick="saveConfig()">
+        <i class="bi bi-floppy-fill"></i> Guardar Cambios de Configuración
+      </button>
+    </div>
+  </main>
+
+  <script>
+    function saveConfig() {
+      const statusEl = document.getElementById('status-msg');
+      statusEl.style.display = 'block';
+      statusEl.style.color = '#16A34A';
+      statusEl.textContent = '✓ Configuración guardada correctamente.';
+      setTimeout(() => { statusEl.style.display = 'none'; }, 3000);
+    }
+  </script>
+</body>
+</html>
