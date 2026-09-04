@@ -26,17 +26,17 @@
       --border-color: #CBD5E1;
       --text-main: #0F172A;
       --text-muted: #334155;
-      --red-primary: #E11D48;
-      --red-hover: #BE123C;
+      --red-primary: #D60000;
+      --red-hover: #B30000;
       --font-title: 'Josefin Sans', sans-serif;
       --font-body: 'Poppins', sans-serif;
     }
 
     body.dark-mode {
-      --bg-body: #0A0A0C;
-      --bg-card: #141416;
-      --bg-input: #1C1C1E;
-      --border-color: #27272A;
+      --bg-body: #0A0F1D;
+      --bg-card: #151C2C;
+      --bg-input: #0B0F17;
+      --border-color: #26334D;
       --text-main: #F8FAFC;
       --text-muted: #94A3B8;
     }
@@ -52,7 +52,7 @@
       flex-direction: column;
     }
 
-    h1, h2, h3 {
+    h1, h2, h3, h4 {
       font-family: var(--font-title);
     }
 
@@ -73,10 +73,6 @@
 
     .brand-wrap img {
       height: 32px;
-      filter: brightness(0);
-    }
-    body.dark-mode .brand-wrap img {
-      filter: brightness(0) invert(1);
     }
 
     .btn {
@@ -101,18 +97,19 @@
       transform: translateY(-1px);
     }
 
-    .btn-danger {
-      background: var(--red-primary);
+    .btn-red {
+      background: linear-gradient(135deg, #D60000 0%, #B30000 100%);
       color: #FFF;
       border-color: var(--red-primary);
+      box-shadow: 0 4px 14px rgba(214, 0, 0, 0.35);
     }
-    .btn-danger:hover {
-      background: var(--red-hover);
+    .btn-red:hover {
+      background: linear-gradient(135deg, #B30000 0%, #800000 100%);
     }
 
     main {
       flex: 1;
-      max-width: 900px;
+      max-width: 960px;
       width: 100%;
       margin: 28px auto;
       padding: 0 20px;
@@ -123,7 +120,27 @@
       border: 1.5px solid var(--border-color);
       border-radius: 16px;
       padding: 28px;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
+    }
+
+    .card-header-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 18px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 700px) {
+      .form-grid { grid-template-columns: 1fr; }
     }
 
     .form-group {
@@ -137,9 +154,10 @@
       text-transform: uppercase;
       color: var(--text-muted);
       margin-bottom: 6px;
+      letter-spacing: 0.04em;
     }
 
-    .ctrl-input {
+    .ctrl-input, select {
       width: 100%;
       background: var(--bg-input);
       border: 1.5px solid var(--border-color);
@@ -149,6 +167,11 @@
       font-family: var(--font-body);
       font-size: 14px;
       outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .ctrl-input:focus, select:focus {
+      border-color: #D60000;
     }
 
     .diag-item {
@@ -163,21 +186,21 @@
     }
 
     .badge-ok {
-      background: rgba(22, 163, 74, 0.12);
-      color: #16A34A;
-      border: 1px solid rgba(22, 163, 74, 0.3);
-      padding: 4px 10px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10B981;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      padding: 4px 12px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 700;
     }
   </style>
 </head>
-<body>
+<body class="dark-mode">
 
   <header>
     <div class="brand-wrap">
-      <img src="/img-default/daletepido-logo-white-hq.png" alt="Logo" />
+      <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Logo Dale! Te Pido" />
       <h2>Configuración Avanzada Global</h2>
     </div>
     <div style="display: flex; gap: 10px;">
@@ -188,12 +211,14 @@
   <main>
     <!-- DIAGNÓSTICO -->
     <div class="card">
-      <h3 style="font-size: 20px; margin-bottom: 18px; color: var(--red-primary);"><i class="bi bi-activity"></i> Diagnóstico de Conexiones</h3>
+      <div class="card-header-title" style="color: #D60000;">
+        <i class="bi bi-activity"></i> Diagnóstico de Conexiones en Vivo
+      </div>
       
       <div class="diag-item">
         <div>
           <strong>Base de Datos Supabase PostgreSQL</strong>
-          <div style="font-size: 12px; color: var(--text-muted);">https://iaylgsthwildjkiiwgfd.supabase.co</div>
+          <div style="font-size: 12px; color: var(--text-muted);" id="diag-db-url">https://iaylgsthwildjkiiwgfd.supabase.co</div>
         </div>
         <span class="badge-ok">🟢 Conectado</span>
       </div>
@@ -208,43 +233,172 @@
 
       <div class="diag-item">
         <div>
-          <strong>Servidor de Búsqueda de Imágenes por IA</strong>
-          <div style="font-size: 12px; color: var(--text-muted);">/api/image-search</div>
+          <strong>Servidor de Búsqueda de Imágenes por IA & Cloudinary</strong>
+          <div style="font-size: 12px; color: var(--text-muted);" id="diag-cloud-name">deuog0r34 (Cloudinary)</div>
         </div>
         <span class="badge-ok">🟢 Activo</span>
       </div>
     </div>
 
-    <!-- CREDENCIALES GLOBAL MASTER -->
+    <!-- 1. BASE DE DATOS SUPABASE -->
     <div class="card">
-      <h3 style="font-size: 20px; margin-bottom: 18px;"><i class="bi bi-sliders2"></i> Variables de Respaldo por Defecto</h3>
-
+      <div class="card-header-title"><i class="bi bi-database-fill-gear" style="color:#3B82F6;"></i> Configuración de Base de Datos (Supabase)</div>
+      
       <div class="form-group">
         <label>Supabase URL</label>
-        <input type="text" class="ctrl-input" value="https://iaylgsthwildjkiiwgfd.supabase.co" readonly />
+        <input type="text" id="cfg-supabase-url" class="ctrl-input" placeholder="https://xxxxxxxx.supabase.co" />
       </div>
 
       <div class="form-group">
-        <label>Días de Trial por Defecto para Nuevos Comercios</label>
-        <input type="number" class="ctrl-input" value="15" />
+        <label>Supabase Service Role Key / API Key (Permisos Administrador)</label>
+        <input type="password" id="cfg-supabase-key" class="ctrl-input" placeholder="eyJhbGciOiJIUzI1NiIsIn..." />
+      </div>
+    </div>
+
+    <!-- 2. CLOUDINARY (IMÁGENES) -->
+    <div class="card">
+      <div class="card-header-title"><i class="bi bi-cloud-upload-fill" style="color:#34D399;"></i> Almacenamiento de Imágenes (Cloudinary)</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Cloud Name</label>
+          <input type="text" id="cfg-cloudinary-name" class="ctrl-input" placeholder="deuog0r34" />
+        </div>
+        <div class="form-group">
+          <label>Upload Preset</label>
+          <input type="text" id="cfg-cloudinary-preset" class="ctrl-input" placeholder="clickapp" />
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. INTELIGENCIA ARTIFICIAL (IA) -->
+    <div class="card">
+      <div class="card-header-title"><i class="bi bi-cpu-fill" style="color:#A855F7;"></i> Motor de Inteligencia Artificial (IA)</div>
+      <div class="form-group">
+        <label>Proveedor de IA Preferido</label>
+        <select id="cfg-ai-provider" class="ctrl-input">
+          <option value="gemini">Google Gemini AI (Gemini 2.5 Flash)</option>
+          <option value="claude">Anthropic Claude AI (Claude Haiku 4.5)</option>
+        </select>
       </div>
 
-      <div id="status-msg" style="display:none; font-size: 13px; margin-bottom: 12px;"></div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Google Gemini API Key</label>
+          <input type="password" id="cfg-gemini-key" class="ctrl-input" placeholder="AIzaSy..." />
+        </div>
+        <div class="form-group">
+          <label>Anthropic Claude API Key</label>
+          <input type="password" id="cfg-claude-key" class="ctrl-input" placeholder="sk-ant-api..." />
+        </div>
+      </div>
+    </div>
 
-      <button class="btn btn-danger" style="width: 100%; justify-content: center; height: 46px;" onclick="saveConfig()">
-        <i class="bi bi-floppy-fill"></i> Guardar Cambios de Configuración
+    <!-- 4. PARÁMETROS GLOBALES POR DEFECTO -->
+    <div class="card">
+      <div class="card-header-title"><i class="bi bi-sliders" style="color:#F59E0B;"></i> Variables y Períodos por Defecto</div>
+      <div class="form-group">
+        <label>Días de Trial Gratis por Defecto para Nuevos Comercios</label>
+        <input type="number" id="cfg-trial-days" class="ctrl-input" value="15" min="1" max="365" />
+      </div>
+
+      <div id="status-msg" style="display:none; font-size: 14px; font-weight:700; padding:12px; border-radius:10px; margin-bottom: 16px; text-align:center;"></div>
+
+      <button class="btn btn-red" style="width: 100%; justify-content: center; height: 48px; font-size:15px; font-weight:800;" onclick="saveConfig()">
+        <i class="bi bi-floppy-fill"></i> Guardar Cambios de Configuración Ahora
       </button>
     </div>
   </main>
 
   <script>
-    function saveConfig() {
+    const masterToken = sessionStorage.getItem('super_admin_master_key') || '';
+
+    async function loadConfig() {
+      try {
+        const res = await fetch('/api/super-admin', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-super-admin-key': masterToken
+          },
+          body: JSON.stringify({ action: 'get_global_credentials' })
+        });
+        const data = await res.json();
+        if (data.success && data.credentials) {
+          const c = data.credentials;
+          document.getElementById('cfg-supabase-url').value = c.supabase_url || 'https://iaylgsthwildjkiiwgfd.supabase.co';
+          document.getElementById('cfg-supabase-key').value = c.supabase_key || '';
+          document.getElementById('cfg-cloudinary-name').value = c.cloudinary_name || 'deuog0r34';
+          document.getElementById('cfg-cloudinary-preset').value = c.cloudinary_preset || 'clickapp';
+          document.getElementById('cfg-ai-provider').value = c.ai_provider || 'gemini';
+          document.getElementById('cfg-gemini-key').value = c.gemini_key || '';
+          document.getElementById('cfg-claude-key').value = c.claude_key || '';
+          if (c.default_trial_days) document.getElementById('cfg-trial-days').value = c.default_trial_days;
+
+          document.getElementById('diag-db-url').textContent = c.supabase_url || 'https://iaylgsthwildjkiiwgfd.supabase.co';
+          document.getElementById('diag-cloud-name').textContent = (c.cloudinary_name || 'deuog0r34') + ' (Cloudinary)';
+        }
+      } catch (e) {
+        console.warn('Error cargando credenciales globales:', e.message);
+      }
+    }
+
+    async function saveConfig() {
       const statusEl = document.getElementById('status-msg');
       statusEl.style.display = 'block';
-      statusEl.style.color = '#16A34A';
-      statusEl.textContent = '✓ Configuración guardada correctamente.';
-      setTimeout(() => { statusEl.style.display = 'none'; }, 3000);
+      statusEl.style.background = 'rgba(59,130,246,0.15)';
+      statusEl.style.color = '#60A5FA';
+      statusEl.style.border = '1px solid #3B82F6';
+      statusEl.textContent = 'Guardando configuración en la base de datos...';
+
+      const payload = {
+        action: 'save_global_credentials',
+        supabase_url: document.getElementById('cfg-supabase-url').value.trim(),
+        supabase_key: document.getElementById('cfg-supabase-key').value.trim(),
+        cloudinary_name: document.getElementById('cfg-cloudinary-name').value.trim(),
+        cloudinary_preset: document.getElementById('cfg-cloudinary-preset').value.trim(),
+        ai_provider: document.getElementById('cfg-ai-provider').value,
+        gemini_key: document.getElementById('cfg-gemini-key').value.trim(),
+        claude_key: document.getElementById('cfg-claude-key').value.trim(),
+        default_trial_days: parseInt(document.getElementById('cfg-trial-days').value) || 15
+      };
+
+      try {
+        const res = await fetch('/api/super-admin', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-super-admin-key': masterToken
+          },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          statusEl.style.background = 'rgba(16, 185, 129, 0.15)';
+          statusEl.style.color = '#10B981';
+          statusEl.style.border = '1px solid #10B981';
+          statusEl.textContent = '✓ Configuración de Base de Datos, Cloudinary e IA guardada exitosamente.';
+          document.getElementById('diag-db-url').textContent = payload.supabase_url;
+          document.getElementById('diag-cloud-name').textContent = payload.cloudinary_name + ' (Cloudinary)';
+        } else {
+          statusEl.style.background = 'rgba(239, 68, 68, 0.15)';
+          statusEl.style.color = '#EF4444';
+          statusEl.style.border = '1px solid #EF4444';
+          statusEl.textContent = 'Error: ' + (data.error || 'No se pudo guardar la configuración');
+        }
+      } catch (e) {
+        statusEl.style.background = 'rgba(239, 68, 68, 0.15)';
+        statusEl.style.color = '#EF4444';
+        statusEl.style.border = '1px solid #EF4444';
+        statusEl.textContent = 'Error de conexión: ' + e.message;
+      }
+
+      setTimeout(() => { statusEl.style.display = 'none'; }, 4000);
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadConfig();
+    });
   </script>
 </body>
 </html>
+
