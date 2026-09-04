@@ -32,45 +32,52 @@
 
 ---
 
-## 💎 3. Paleta de Colores Oficial y Tokens UI
+## 💎 3. Paleta de Colores Oficial (Luces, Tonos y Sombras Estrictas)
 
-### 3.1 Colores Principales y Semánticos
-- **Rojo Primario Brand:** `#D60000` / `#E53E3E`
-  - *Cabeceras de Marca:* `linear-gradient(135deg, #D60000 0%, #7A0000 100%)`
-  - *Sombra / Glow:* `box-shadow: 0 4px 14px rgba(214, 0, 0, 0.35);`
-- **Verde Estado / Éxito:** `#10B981` / `#16A34A`
-  - *Glow de Actividad:* `rgba(16, 185, 129, 0.6)`
+> ⚠️ **REGLA DE ORO DE BRANDING:** Queda estrictamente prohibido utilizar tonos de rojo, gris o negro fuera de esta paleta oficial.
+
+### 3.1 Escala Oficial de Rojos (Branding & Luces)
+- **Sombra / Borgoña Oscuro:** `#4A0000`, `#7A0000`
+- **Rojo Medio:** `#A30000`
+- **Rojo Marca Principal:** `#D60000` / `#E53E3E`
+- **Luz / Gradiente Claro:** `#FF3333`, `#FF6666`, `#FFB3B3`
+- *Glow de Marca:* `box-shadow: 0 4px 20px rgba(214, 0, 0, 0.35);`
+
+### 3.2 Escala Oficial de Grises (Superficies, Bordes y Textos)
+- **Superficies Claras / Canvas:** `#FFFFFF`, `#FAFAFC`, `#F8FAFC`
+- **Bordes y Divisores Claros:** `#F1F5F9`, `#E2E8F0`, `#CBD5E1`
+- **Textos Secundarios / Subtítulos:** `#94A3B8`, `#64748B`
+- **Textos Principales / Cuerpo:** `#475569`, `#334155`
+
+### 3.3 Escala Oficial de Negros / Oscuros (FONDOS & MODOS OSCUROS)
+- **Negro Puro:** `#000000`
+- **Negro Fondo Hero / App:** `#0A0A0C`
+- **Negro Pizarra Profundo:** `#0F172A`
+- **Contenedores y Tarjetas Dark:** `#151C2C`, `#1E293B`, `#1A1515`
+
+### 3.4 Colores Semánticos Complementarios
+- **Verde Estado / Éxito:** `#10B981` / `#16A34A` (`rgba(16, 185, 129, 0.6)`)
 - **Naranja Advertencia / Trial:** `#D97706` / `#F59E0B`
-- **Violeta Acceso / CMS / Upgrades:** `#7C3AED` / `#8B5CF6`
-- **Azul Supabase / Info:** `#3B82F6` / `#0284C7`
+- **Violeta Acceso / CMS:** `#7C3AED` / `#8B5CF6`
+- **Azul Info:** `#3B82F6` / `#0284C7`
 
-### 3.2 Modos Claro y Oscuro (Tokens CSS)
-
-#### ☀️ Modo Claro (Default):
+### 3.5 Tokens CSS Principales (`:root`)
 ```css
 :root {
-  --bg-body: #F1F5F9;       /* Slate 100 */
-  --bg-card: #FFFFFF;       /* Pure White */
-  --bg-card-hover: #F8FAFC;
-  --bg-input: #F8FAFC;
-  --border-color: #CBD5E1;   /* Slate 300 - Alto contraste */
-  --text-main: #0F172A;     /* Slate 900 - Texto legible */
-  --text-muted: #334155;    /* Slate 700 */
   --red-primary: #D60000;
-  --green-success: #16A34A;
-}
-```
-
-#### 🌙 Modo Oscuro (Dark Mode):
-```css
-body.dark-mode {
-  --bg-body: #0A0F1D;       /* Deep Navy Dark */
-  --bg-card: #151C2C;       /* Card Dark */
-  --bg-card-hover: #1D263B;
-  --bg-input: #0E1322;
-  --border-color: #24304A;   /* Dark Border */
-  --text-main: #EDF2F7;
-  --text-muted: #CBD5E1;
+  --red-dark: #7A0000;
+  --red-light: #FF6666;
+  --bg-body: #FAFAFC;
+  --bg-card: #FFFFFF;
+  --bg-dark: #0A0A0C;
+  --bg-slate: #0F172A;
+  --bg-card-dark: #1E293B;
+  --border-light: #E2E8F0;
+  --border-medium: #CBD5E1;
+  --text-dark: #0F172A;
+  --text-muted: #475569;
+  --text-subtle: #64748B;
+  --green-success: #10B981;
 }
 ```
 
