@@ -249,10 +249,66 @@
         }
 
         .hero-btns { display:flex; gap:14px; justify-content:flex-start; flex-wrap:wrap; }
-        .btn-primary { display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg, #D60000 0%, #b30000 100%); color:var(--white); padding:16px 32px; border-radius:12px; font-weight:800; font-size:16px; text-decoration:none; border:none; cursor:pointer; font-family:inherit; transition:background .2s,transform .15s,box-shadow .2s; box-shadow:0 8px 32px rgba(214,0,0,0.45); text-transform:uppercase; letter-spacing:0.5px; }
+        .btn-primary { position:relative; overflow:hidden; display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg, #D60000 0%, #b30000 100%); color:var(--white); padding:16px 32px; border-radius:12px; font-weight:800; font-size:16px; text-decoration:none; border:none; cursor:pointer; font-family:inherit; transition:background .2s,transform .15s,box-shadow .2s; box-shadow:0 8px 32px rgba(214,0,0,0.45); text-transform:uppercase; letter-spacing:0.5px; }
+        .btn-primary::after { content:''; position:absolute; top:-50%; left:-60%; width:40%; height:200%; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); transform:rotate(25deg); animation:shimmerSweepAnim 3.5s infinite; }
         .btn-primary:hover { transform:translateY(-2px); box-shadow:0 12px 40px rgba(214,0,0,0.6); }
         .btn-secondary { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.06); color:var(--white); padding:16px 28px; border-radius:12px; font-weight:600; font-size:15px; text-decoration:none; border:1px solid rgba(255,255,255,0.15); cursor:pointer; font-family:inherit; transition:background .2s,transform .15s; }
         .btn-secondary:hover { background:rgba(255,255,255,0.12); transform:translateY(-2px); }
+
+        /* HYPERFRAMES SPOTLIGHT & MOTION ENHANCEMENTS */
+        .spotlight-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .spotlight-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(550px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(214, 0, 0, 0.08), transparent 45%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 2;
+            border-radius: inherit;
+        }
+        .spotlight-card:hover::before {
+            opacity: 1;
+        }
+
+        /* FEATURED PLAN BORDER GRADIENT SPIN */
+        @keyframes borderGlowSpin {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .price-card.featured {
+            border: 2.5px solid transparent !important;
+            background-image: linear-gradient(#ffffff, #ffffff), linear-gradient(135deg, #D60000, #ff6666, #7C3AED, #D60000) !important;
+            background-origin: border-box !important;
+            background-clip: padding-box, border-box !important;
+            background-size: 200% 200% !important;
+            animation: borderGlowSpin 4.5s ease infinite !important;
+            box-shadow: 0 12px 40px rgba(214, 0, 0, 0.2) !important;
+        }
+
+        /* SHIMMER EFFECT FOR BUTTONS */
+        @keyframes shimmerSweepAnim {
+            0% { left: -60%; }
+            25% { left: 140%; }
+            100% { left: 140%; }
+        }
+
+        /* HYPER REVEAL ON SCROLL */
+        .hyper-reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+        .hyper-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
         .hero-stats-grid {
             display: grid;
@@ -2004,10 +2060,43 @@
         });
       }
 
+      // HYPERFRAMES SPOTLIGHT AND SCROLL REVEAL INITIALIZER
+      function initHyperframesMotion() {
+        const cards = document.querySelectorAll('.step-card, .diff-card, .price-card, .testimonial-card');
+        cards.forEach(card => {
+          card.classList.add('spotlight-card');
+          card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+          });
+        });
+
+        const revealTargets = document.querySelectorAll('.step-card, .diff-card, .price-card, .testimonial-card, .feature-item');
+        revealTargets.forEach(el => el.classList.add('hyper-reveal'));
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('revealed');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1 });
+
+        revealTargets.forEach(el => observer.observe(el));
+      }
+
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initPerWordRise);
+        document.addEventListener('DOMContentLoaded', () => {
+          initPerWordRise();
+          initHyperframesMotion();
+        });
       } else {
         initPerWordRise();
+        initHyperframesMotion();
       }
     </script>
 
