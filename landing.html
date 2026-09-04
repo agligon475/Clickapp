@@ -131,20 +131,26 @@
             align-items: center;
             justify-content: space-between;
             padding: 16px 36px;
-            background: rgba(10, 10, 12, 0.88);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(18px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
         }
         .nav-brand { display: flex; align-items: center; gap: 12px; }
-        .nav-logo { height: 34px; width: auto; object-fit: contain; }
+        .nav-logo {
+            height: 34px;
+            width: auto;
+            object-fit: contain;
+            filter: brightness(0) saturate(100%) invert(14%) sepia(86%) saturate(6295%) hue-rotate(354deg) brightness(88%) contrast(108%);
+        }
         .nav-menu { display: flex; align-items: center; gap: 28px; }
-        .nav-link { color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
-        .nav-link:hover { color: #ffffff; }
+        .nav-link { color: #475569; text-decoration: none; font-size: 14px; font-weight: 600; transition: color 0.2s; }
+        .nav-link:hover { color: #D60000; }
         .nav-actions { display: flex; align-items: center; gap: 14px; }
-        .nav-login { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13.5px; font-weight: 600; padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); transition: all 0.2s; }
-        .nav-login:hover { background: rgba(255,255,255,0.08); color: #fff; }
-        .nav-cta { background: linear-gradient(135deg, #D60000 0%, #b30000 100%); color: #fff; border: none; padding: 10px 22px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; text-decoration: none; box-shadow: 0 6px 20px rgba(214,0,0,0.4); transition: all 0.2s; }
-        .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(214,0,0,0.6); }
+        .nav-login { color: #0f172a; text-decoration: none; font-size: 13.5px; font-weight: 600; padding: 8px 16px; border-radius: 8px; border: 1px solid #cbd5e1; transition: all 0.2s; }
+        .nav-login:hover { background: #f1f5f9; border-color: #94a3b8; color: #D60000; }
+        .nav-cta { background: linear-gradient(135deg, #D60000 0%, #b30000 100%); color: #fff; border: none; padding: 10px 22px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; text-decoration: none; box-shadow: 0 6px 20px rgba(214,0,0,0.3); transition: all 0.2s; }
+        .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(214,0,0,0.45); }
 
         .hero {
             position: relative;
@@ -153,10 +159,11 @@
             align-items: center;
             justify-content: center;
             padding: 8rem 2rem 6rem;
-            background: #0A0A0C;
+            background: #FAFAFC;
             background-image: 
-                radial-gradient(ellipse at 20% 20%, rgba(214, 0, 0, 0.28) 0%, transparent 60%),
-                radial-gradient(ellipse at 85% 75%, rgba(30, 64, 175, 0.12) 0%, transparent 50%);
+                radial-gradient(circle at 15% 20%, rgba(214, 0, 0, 0.07) 0%, transparent 55%),
+                radial-gradient(circle at 85% 75%, rgba(37, 99, 235, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 0%, #ffffff 0%, rgba(250, 250, 252, 0.6) 100%);
             overflow: hidden;
         }
         #canvas-connections {
@@ -194,26 +201,25 @@
             width: 100%;
         }
         .tldr-box {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.12);
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
             border-radius: 20px;
-            padding: 24px 26px;
-            backdrop-filter: blur(14px);
-            box-shadow: 0 12px 36px rgba(0,0,0,0.3);
+            padding: 26px;
+            box-shadow: 0 10px 30px rgba(15,23,42,0.06);
             transition: border-color .3s, box-shadow .3s;
         }
         .tldr-box:hover {
-            border-color: rgba(214,0,0,0.4);
-            box-shadow: 0 16px 44px rgba(214,0,0,0.15);
+            border-color: rgba(214,0,0,0.35);
+            box-shadow: 0 16px 40px rgba(214,0,0,0.1);
         }
 
         .hero-badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(214,0,0,0.12);
-            border: 1px solid rgba(214,0,0,0.35);
-            color: #ff6666;
+            background: rgba(214,0,0,0.06);
+            border: 1px solid rgba(214,0,0,0.22);
+            color: #D60000;
             font-size: 12px;
             font-weight: 700;
             letter-spacing: .08em;
@@ -222,20 +228,21 @@
             border-radius: 999px;
             margin-bottom: 24px;
             backdrop-filter: blur(8px);
+            box-shadow: 0 2px 10px rgba(214,0,0,0.04);
         }
 
         .hero h1 {
             font-size: clamp(2.5rem, 5.5vw, 4.4rem);
             font-weight: 900;
             line-height: 1.12;
-            color: #ffffff;
+            color: #0f172a;
             margin-bottom: 20px;
             letter-spacing: -1.8px;
             text-align: left;
         }
 
         .hero h1 .text-glow {
-            background: linear-gradient(135deg, #ffffff 30%, #ff6666 100%);
+            background: linear-gradient(135deg, #D60000 0%, #a30000 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -273,19 +280,20 @@
 
         .hero p {
             font-size: clamp(1.05rem, 2.2vw, 1.25rem);
-            color: rgba(255,255,255,0.72);
+            color: #475569;
             max-width: 680px;
             margin: 0 0 38px;
             line-height: 1.6;
             text-align: left;
+            font-weight: 450;
         }
 
         .hero-btns { display:flex; gap:14px; justify-content:flex-start; flex-wrap:wrap; }
-        .btn-primary { position:relative; overflow:hidden; display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg, #D60000 0%, #b30000 100%); color:var(--white); padding:16px 32px; border-radius:12px; font-weight:800; font-size:16px; text-decoration:none; border:none; cursor:pointer; font-family:inherit; transition:background .2s,transform .15s,box-shadow .2s; box-shadow:0 8px 32px rgba(214,0,0,0.45); text-transform:uppercase; letter-spacing:0.5px; }
+        .btn-primary { position:relative; overflow:hidden; display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg, #D60000 0%, #b30000 100%); color:#ffffff; padding:16px 32px; border-radius:12px; font-weight:800; font-size:16px; text-decoration:none; border:none; cursor:pointer; font-family:inherit; transition:background .2s,transform .15s,box-shadow .2s; box-shadow:0 8px 24px rgba(214,0,0,0.28); text-transform:uppercase; letter-spacing:0.5px; }
         .btn-primary::after { content:''; position:absolute; top:-50%; left:-60%; width:40%; height:200%; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); transform:rotate(25deg); animation:shimmerSweepAnim 3.5s infinite; }
-        .btn-primary:hover { transform:translateY(-2px); box-shadow:0 12px 40px rgba(214,0,0,0.6); }
-        .btn-secondary { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.06); color:var(--white); padding:16px 28px; border-radius:12px; font-weight:600; font-size:15px; text-decoration:none; border:1px solid rgba(255,255,255,0.15); cursor:pointer; font-family:inherit; transition:background .2s,transform .15s; }
-        .btn-secondary:hover { background:rgba(255,255,255,0.12); transform:translateY(-2px); }
+        .btn-primary:hover { transform:translateY(-2px); box-shadow:0 12px 36px rgba(214,0,0,0.45); }
+        .btn-secondary { display:inline-flex; align-items:center; gap:8px; background:#ffffff; color:#0f172a; padding:16px 28px; border-radius:12px; font-weight:600; font-size:15px; text-decoration:none; border:1.5px solid #cbd5e1; cursor:pointer; font-family:inherit; transition:background .2s,border-color .2s,transform .15s; box-shadow:0 4px 14px rgba(0,0,0,0.04); }
+        .btn-secondary:hover { background:#f8fafc; border-color:#94a3b8; transform:translateY(-2px); }
 
         /* HYPERFRAMES SPOTLIGHT & MOTION ENHANCEMENTS */
         .spotlight-card {
@@ -349,16 +357,16 @@
             width: 100%;
             box-sizing: border-box;
             margin: 0;
-            padding: 20px 16px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 22px 16px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
             border-radius: 20px;
-            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(15,23,42,0.06);
         }
 
         .hero-stat-item { text-align: center; }
-        .hero-stat-val { font-size: 2.2rem; font-weight: 900; color: #ffffff; letter-spacing: -1px; line-height: 1.1; }
-        .hero-stat-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: .08em; font-weight: 600; margin-top: 4px; }
+        .hero-stat-val { font-size: 2.2rem; font-weight: 900; color: #0f172a; letter-spacing: -1px; line-height: 1.1; }
+        .hero-stat-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; margin-top: 4px; }
 
         .mobile-menu-toggle {
             display: none;
@@ -374,13 +382,13 @@
             position: absolute;
             top: 100%;
             left: 0; right: 0;
-            background: rgba(10, 10, 12, 0.96);
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            border-bottom: 1px solid #e2e8f0;
             padding: 20px 24px;
             flex-direction: column;
             gap: 12px;
-            box-shadow: 0 16px 40px rgba(0,0,0,0.8);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.12);
         }
 
         .mobile-dropdown-menu.active {
@@ -388,7 +396,7 @@
         }
 
         .mobile-nav-link {
-            color: rgba(255, 255, 255, 0.85);
+            color: #334155;
             text-decoration: none;
             font-size: 15px;
             font-weight: 600;
@@ -397,7 +405,7 @@
         }
 
         .mobile-nav-link:hover {
-            color: #ffffff;
+            color: #D60000;
         }
 
         @media(max-width: 900px) {
@@ -523,7 +531,7 @@
             <a href="/alta-usuario?action=login" class="nav-login desktop-only">Ingresar</a>
             <a href="/alta-usuario" class="nav-cta desktop-only">🚀 Crear Catálogo</a>
             <button type="button" class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Abrir Menú">
-                <i class="bi bi-list" id="mobile-menu-icon" style="font-size: 26px; color: #fff;"></i>
+                <i class="bi bi-list" id="mobile-menu-icon" style="font-size: 26px; color: #0f172a;"></i>
             </button>
         </div>
 
@@ -535,8 +543,8 @@
             <a href="#pricing-section" onclick="closeMobileMenu()" class="mobile-nav-link">Planes</a>
             <a href="#faq-section" onclick="closeMobileMenu()" class="mobile-nav-link">FAQ</a>
             <a href="javascript:void(0)" onclick="closeMobileMenu(); openContactModal();" class="mobile-nav-link">Contacto</a>
-            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 8px 0;">
-            <a href="/alta-usuario?action=login" onclick="closeMobileMenu()" class="mobile-nav-link" style="color: #fff; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 8px 0;">
+            <a href="/alta-usuario?action=login" onclick="closeMobileMenu()" class="mobile-nav-link" style="color: #0f172a; font-weight: 700; display: flex; align-items: center; gap: 8px;">
                 <i class="bi bi-box-arrow-in-right" style="color: var(--red); font-size: 18px;"></i> Ingresar (Iniciar Sesión)
             </a>
             <a href="/alta-usuario" onclick="closeMobileMenu()" class="mobile-nav-link mobile-cta-btn" style="background: linear-gradient(135deg, #D60000 0%, #b30000 100%); color: #fff; text-align: center; border-radius: 10px; padding: 12px; margin-top: 6px; font-weight: 700; text-decoration: none;">
@@ -550,7 +558,7 @@
         <div class="hero-container">
             <!-- COLUMNA IZQUIERDA: MENSAJE & ACCIONES DE IMPACTO -->
             <div class="hero-left-col">
-                <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Logo oficial de Dale! Te Pido" style="max-width: 260px; width: 220px; height: auto; margin: 0 0 1.2rem 0; display: block;">
+                <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Logo oficial de Dale! Te Pido" style="max-width: 260px; width: 220px; height: auto; margin: 0 0 1.2rem 0; display: block; filter: brightness(0) saturate(100%) invert(14%) sepia(86%) saturate(6295%) hue-rotate(354deg) brightness(88%) contrast(108%);">
                 <div class="hero-badge">⚡ 15 DÍAS DE PRUEBA GRATUITA · SIN COMISIONES POR VENTA</div>
                 <h1>Vendé más con tu propio Catálogo Digital conectado a <span class="text-glow">WhatsApp</span></h1>
                 <p>Creamos la solución ideal para comercios, tiendas, ferreterías, indumentaria y gastronomía que buscan mostrar sus productos online y recibir pedidos organizados directamente en su WhatsApp sin intermediarios ni comisiones por venta.</p>
@@ -564,10 +572,10 @@
             <div class="hero-right-col">
                 <!-- TL;DR / KEY TAKEAWAYS -->
                 <div class="tldr-box">
-                    <div style="font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:#ff6666; margin-bottom:14px; display:flex; align-items:center; gap:6px;">
+                    <div style="font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:#D60000; margin-bottom:14px; display:flex; align-items:center; gap:6px;">
                         <span>⚡</span> LO QUE NECESITÁS SABER
                     </div>
-                    <ul style="list-style:none; display:flex; flex-direction:column; gap:14px; margin:0; padding:0; font-size:13.5px; color:rgba(255,255,255,0.88); line-height:1.45;">
+                    <ul style="list-style:none; display:flex; flex-direction:column; gap:14px; margin:0; padding:0; font-size:13.5px; color:#334155; line-height:1.45;">
                         <li style="display:flex; align-items:start; gap:10px;"><span>✅</span> <span><strong>Listo en 15 minutos:</strong> Subí tus productos de forma rápida y empezá hoy.</span></li>
                         <li style="display:flex; align-items:start; gap:10px;"><span>💰</span> <span><strong>0% Comisiones:</strong> Todo el cobro va directo a tu bolsillo sin retenciones.</span></li>
                         <li style="display:flex; align-items:start; gap:10px;"><span>📲</span> <span><strong>Pedidos por WhatsApp:</strong> Recibí la lista completa lista para despachar.</span></li>
@@ -1732,7 +1740,7 @@
                 draw() {
                     ctx.beginPath();
                     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                    ctx.fillStyle = 'rgba(214, 0, 0, 0.25)';
                     ctx.fill();
                 }
             }
@@ -1749,7 +1757,7 @@
                             ctx.beginPath();
                             ctx.moveTo(p.x, p.y);
                             ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.strokeStyle = 'rgba(255, 255, 255, ' + (0.18 * (1 - d / maxDist)) + ')';
+                            ctx.strokeStyle = 'rgba(214, 0, 0, ' + (0.14 * (1 - d / maxDist)) + ')';
                             ctx.lineWidth = 1;
                             ctx.stroke();
                         }
