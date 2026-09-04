@@ -1167,10 +1167,10 @@
                         Resolvemos tus dudas principales para que puedas dar el paso y empezar a vender hoy mismo.
                     </p>
                     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px;">
-                        <div style="font-weight: 800; font-size: 14px; color: #0f172a; margin-bottom: 4px;">¿Tenés otra consulta?</div>
-                        <div style="font-size: 13px; color: #64748b; margin-bottom: 12px;">Escribinos directamente a soporte por WhatsApp.</div>
-                        <a href="https://wa.me/5491100000000" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; color: var(--red); font-weight: 700; font-size: 13px; text-decoration: none;">
-                            <i class="bi bi-whatsapp"></i> Hablar con Soporte →
+                        <div style="font-weight: 800; font-size: 14px; color: #0f172a; margin-bottom: 4px;">¿Tenés otra consulta o necesitás soporte?</div>
+                        <div style="font-size: 13px; color: #64748b; margin-bottom: 14px;">Escribinos directamente a nuestro equipo técnico.</div>
+                        <a href="javascript:void(0)" onclick="openContactModal()" style="display: inline-flex; align-items: center; gap: 8px; background: var(--red); color: #ffffff; padding: 10px 18px; border-radius: 10px; font-weight: 700; font-size: 13px; text-decoration: none; box-shadow: 0 4px 14px rgba(214,0,0,0.25); transition: transform 0.2s;">
+                            <i class="bi bi-headset"></i> Enviar Mensaje a Soporte →
                         </a>
                     </div>
                 </div>
@@ -1317,28 +1317,40 @@
         </div>
     </div>
 
-    <!-- FORMULARIO MODAL CONTACTO -->
+    <!-- FORMULARIO MODAL MENSAJE A SOPORTE / CONTACTO -->
     <div id="contact-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.82); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(8px); padding:20px;">
-        <div style="background:#1a1515; border:1px solid rgba(214,0,0,0.35); border-radius:20px; padding:32px; max-width:460px; width:100%; position:relative; box-shadow:0 24px 64px rgba(214,0,0,0.35); color:#fff;">
-            <button onclick="closeContactModal()" style="position:absolute; top:16px; right:16px; background:transparent; border:none; color:rgba(255,255,255,0.6); font-size:24px; cursor:pointer;">&times;</button>
-            <h3 style="font-size:20px; font-weight:700; margin-bottom:6px; color:#fff; font-family:inherit; display:flex; align-items:center; gap:8px;">
-                💬 Contactar con nosotros
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:24px; padding:32px; max-width:480px; width:100%; position:relative; box-shadow:0 24px 64px rgba(0,0,0,0.25); color:#0f172a;">
+            <button onclick="closeContactModal()" style="position:absolute; top:16px; right:16px; background:transparent; border:none; color:#64748b; font-size:24px; cursor:pointer;" aria-label="Cerrar">&times;</button>
+            <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(214,0,0,0.08); border:1px solid rgba(214,0,0,0.2); color:#D60000; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; padding:4px 12px; border-radius:999px; margin-bottom:10px;">
+                🎧 SOPORTE TÉCNICO OFICIAL
+            </div>
+            <h3 style="font-size:22px; font-weight:800; margin-bottom:6px; color:#0f172a; font-family:inherit; display:flex; align-items:center; gap:8px;">
+                Enviar Mensaje a Soporte
             </h3>
-            <p style="font-size:13px; color:#9a8f8f; margin-bottom:20px;">Escribinos tu consulta o duda y nuestro equipo te responderá a la brevedad.</p>
+            <p style="font-size:13.5px; color:#64748b; margin-bottom:22px; line-height:1.5;">Completa los detalles a continuación para enviar tu consulta a nuestro equipo técnico (<strong style="color:#0f172a;">soporte@daletepido.com.ar</strong>).</p>
             <form onsubmit="handleContactSubmit(event)">
                 <div style="margin-bottom:14px;">
-                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Nombre y Apellido</label>
-                    <input type="text" id="contact-name" required placeholder="Ej: María Gómez" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
+                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:700; color:#475569; margin-bottom:6px;">Nombre y Apellido *</label>
+                    <input type="text" id="contact-name" required placeholder="Ej: María Gómez" style="width:100%; padding:11px 14px; border-radius:10px; border:1px solid #cbd5e1; background:#f8fafc; color:#0f172a; font-size:14px; font-family:inherit; outline:none;">
                 </div>
                 <div style="margin-bottom:14px;">
-                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Correo Electrónico / WhatsApp</label>
-                    <input type="text" id="contact-email-wapp" required placeholder="Ej: maria@ejemplo.com o 54911..." style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
+                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:700; color:#475569; margin-bottom:6px;">Correo Electrónico (para recibir la respuesta) *</label>
+                    <input type="email" id="contact-email-wapp" required placeholder="Ej: maria@tucomercio.com" style="width:100%; padding:11px 14px; border-radius:10px; border:1px solid #cbd5e1; background:#f8fafc; color:#0f172a; font-size:14px; font-family:inherit; outline:none;">
                 </div>
-                <div style="margin-bottom:20px;">
-                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Mensaje o Consulta</label>
-                    <textarea id="contact-message" required rows="4" placeholder="Escribí tu mensaje aquí..." style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none; resize:none;"></textarea>
+                <div style="margin-bottom:14px;">
+                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:700; color:#475569; margin-bottom:6px;">Asunto de la consulta *</label>
+                    <select id="contact-subject" required style="width:100%; padding:11px 14px; border-radius:10px; border:1px solid #cbd5e1; background:#f8fafc; color:#0f172a; font-size:14px; font-family:inherit; outline:none;">
+                        <option value="Consulta General" selected>Consulta General / Información</option>
+                        <option value="Soporte Técnico">Soporte Técnico / Ayuda con mi Tienda</option>
+                        <option value="Facturación y Planes">Facturación y Planes</option>
+                        <option value="Configuración Inicial">Solicitud de Configuración Inicial Bonificada</option>
+                    </select>
                 </div>
-                <button type="submit" style="width:100%; background:#D60000; color:#fff; border:none; padding:13px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:background .2s;">Enviar Mensaje</button>
+                <div style="margin-bottom:22px;">
+                    <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:700; color:#475569; margin-bottom:6px;">Detalle del Mensaje *</label>
+                    <textarea id="contact-message" required rows="4" placeholder="Describí tu consulta o problema en detalle..." style="width:100%; padding:11px 14px; border-radius:10px; border:1px solid #cbd5e1; background:#f8fafc; color:#0f172a; font-size:14px; font-family:inherit; outline:none; resize:none;"></textarea>
+                </div>
+                <button type="submit" style="width:100%; background:linear-gradient(135deg, #D60000 0%, #b30000 100%); color:#ffffff; border:none; padding:14px; border-radius:12px; font-size:14px; font-weight:800; cursor:pointer; font-family:inherit; transition:transform 0.15s, box-shadow 0.2s; box-shadow:0 8px 24px rgba(214,0,0,0.3); text-transform:uppercase; letter-spacing:0.5px;">📩 Enviar Mensaje a Soporte</button>
             </form>
         </div>
     </div>
@@ -1478,12 +1490,13 @@
             e.preventDefault();
             const name = document.getElementById('contact-name').value;
             const emailWapp = document.getElementById('contact-email-wapp').value;
+            const subject = document.getElementById('contact-subject')?.value || 'Consulta General';
             const message = document.getElementById('contact-message').value;
 
             const btn = e.target.querySelector('button[type="submit"]');
             const originalText = btn.innerHTML;
             btn.disabled = true;
-            btn.innerHTML = '<span style="display:inline-block; width:16px; height:16px; border:2px solid #fff; border-top-color:transparent; border-radius:50%; animation:spin 1s linear infinite; margin-right:8px; vertical-align:middle;"></span> Enviando...';
+            btn.innerHTML = '<span style="display:inline-block; width:16px; height:16px; border:2px solid #fff; border-top-color:transparent; border-radius:50%; animation:spin 1s linear infinite; margin-right:8px; vertical-align:middle;"></span> Enviando a Soporte...';
 
             fetch('https://formsubmit.co/ajax/soporte@daletepido.com.ar', {
                 method: 'POST',
@@ -1492,22 +1505,23 @@
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    _subject: `Consulta de Contacto Landing - ${name}`,
+                    _subject: `Ticket de Soporte [${subject}] - ${name}`,
                     Nombre: name,
                     Contacto: emailWapp,
+                    Asunto: subject,
                     Mensaje: message
                 })
             })
             .then(() => {
-                btn.innerHTML = '✓ ¡Mensaje enviado con éxito!';
+                btn.innerHTML = '✓ ¡Mensaje enviado a Soporte!';
                 btn.style.background = '#10b981';
                 setTimeout(() => {
                     closeContactModal();
                     e.target.reset();
                     btn.disabled = false;
                     btn.innerHTML = originalText;
-                    btn.style.background = '#D60000';
-                }, 2000);
+                    btn.style.background = 'linear-gradient(135deg, #D60000 0%, #b30000 100%)';
+                }, 2200);
             })
             .catch(() => {
                 btn.innerHTML = '✓ ¡Mensaje enviado!';
@@ -1517,8 +1531,8 @@
                     e.target.reset();
                     btn.disabled = false;
                     btn.innerHTML = originalText;
-                    btn.style.background = '#D60000';
-                }, 2000);
+                    btn.style.background = 'linear-gradient(135deg, #D60000 0%, #b30000 100%)';
+                }, 2200);
             });
         }
 
