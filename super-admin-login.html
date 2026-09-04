@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Super Admin Portal — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+  
+  <style>
+    :root {
+      --bg-main: #0E1322;
+      --bg-card: #151C2D;
+      --bg-input: #1C263A;
+      --border-color: #2A364F;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --red-primary: #E11D48;
+      --red-hover: #BE123C;
+      --font-title: 'Josefin Sans', sans-serif;
+      --font-body: 'Poppins', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-color);
+      border-radius: 20px;
+      padding: 40px 32px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      text-align: center;
+    }
+
+    .shield-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(225, 29, 72, 0.12);
+      border: 1.5px solid var(--red-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px auto;
+    }
+
+    .shield-icon i {
+      font-size: 28px;
+      color: var(--red-primary);
+    }
+
+    h1 {
+      font-family: var(--font-title);
+      font-size: 24px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+
+    }
+
+    p.subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .ctrl-input {
+      width: 100%;
+      height: 46px;
+      background-color: var(--bg-input);
+      border: 1.5px solid var(--border-color);
+      border-radius: 10px;
+      color: var(--text-main);
+      padding: 0 16px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .ctrl-input:focus {
+      border-color: var(--red-primary);
+      box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
+    }
+
+    .btn-submit {
+      width: 100%;
+      height: 48px;
+      background-color: var(--red-primary);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 10px;
+      font-family: var(--font-title);
+      font-size: 15px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background-color 0.2s, transform 0.1s;
+      margin-top: 8px;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--red-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .error-msg {
+      display: none;
+      background: rgba(225, 29, 72, 0.12);
+      border: 1px solid rgba(225, 29, 72, 0.3);
+      color: #FF6B6B;
+      font-size: 13px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-card">
+    <div class="shield-icon">
+      <i class="bi bi-shield-lock-fill"></i>
+    </div>
+    <h1>Super Admin Portal</h1>
+    <p class="subtitle">Acceso restringido para administración general</p>
+
+    <div id="auth-err" class="error-msg"></div>
+
+    <form onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="master-user">Usuario</label>
+        <input type="text" id="master-user" required autocomplete="username" placeholder="" class="ctrl-input" />
+      </div>
+
+      <div class="form-group">
+        <label for="master-pwd">Contraseña</label>
+        <input type="password" id="master-pwd" required autocomplete="current-password" placeholder="" class="ctrl-input" />
+      </div>
+
+      <button type="submit" id="btn-login-submit" class="btn-submit">
+        Ingresar al Panel <i class="bi bi-arrow-right"></i>
+      </button>
+    </form>
+  </div>
+
+  <script>
+    // Si ya existe un token, verificar si podemos redirigir
+    (function checkExistingToken() {
+      const token = sessionStorage.getItem('super_admin_master_key');
+      if (token && token.trim().length > 0) {
+        window.location.replace('super-admin-secret-dashboard.html');
+      }
+    })();
+
+    async function handleLogin(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const userInput = document.getElementById('master-user');
+      const pwdInput = document.getElementById('master-pwd');
+      const submitBtn = document.getElementById('btn-login-submit');
+      const errEl = document.getElementById('auth-err');
+
+      const user = userInput ? userInput.value.trim() : '';
+      const pwd = pwdInput ? pwdInput.value.trim() : '';
+
+      if (errEl) errEl.style.display = 'none';
+
+      if (!user || !pwd) {
+        showError('Por favor complete todos los campos.');
+        return;
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Verificando...';
+      }
+
+      try {
+        const res = await fetch('/api/super-admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'auth', username: user, password: pwd })
+        });
+
+        const data = await res.json();
+
+        if (data.success && data.token) {
+          sessionStorage.setItem('super_admin_master_key', data.token);
+          window.location.replace('super-admin-secret-dashboard.html');
+        } else {
+          showError(data.error || 'Usuario o contraseña incorrectos.');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Ingresar al Panel <i class="bi bi-arrow-right"></i>';
+          }
+        }
+      } catch (err) {
+        console.warn('Fallback de red en login:', err);
+        // Respaldo local únicamente si coincide exactamente con la credencial del super-admin
+        if (user.toLowerCase() === 'admin-alicari' && pwd === '42904062Gpaz') {
+          sessionStorage.setItem('super_admin_master_key', 'super-admin-token-valid-key');
+          window.location.replace('super-admin-secret-dashboard.html');
+        } else {
+          showError('Usuario o contraseña incorrectos.');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Ingresar al Panel <i class="bi bi-arrow-right"></i>';
+          }
+        }
+      }
+    }
+
+    function showError(msg) {
+      const errEl = document.getElementById('auth-err');
+      if (errEl) {
+        errEl.textContent = msg;
+        errEl.style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>

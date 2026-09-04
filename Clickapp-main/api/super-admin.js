@@ -14,21 +14,20 @@ function getSessionToken() {
 }
 
 function verifyMasterCredentials(username, password) {
-  if (!password) return false;
-  const u = (username || '').trim().toLowerCase();
-  const expectedUser = (process.env.SUPER_ADMIN_USER || SUPER_ADMIN_USER).toLowerCase();
-  const expectedPwd = process.env.SUPER_ADMIN_PASSWORD || SUPER_ADMIN_PASSWORD;
+  if (!username || !password) return false;
+  const u = String(username).trim().toLowerCase();
+  const p = String(password).trim();
+  const expectedUser = (process.env.SUPER_ADMIN_USER || SUPER_ADMIN_USER).trim().toLowerCase();
+  const expectedPwd = (process.env.SUPER_ADMIN_PASSWORD || SUPER_ADMIN_PASSWORD).trim();
   
-  const userValid = !username || u === expectedUser || u === 'admin-alicari';
-  const pwdValid = password === expectedPwd || password === '42904062Gpaz' || password === 'super-admin-alicari';
-  return userValid && pwdValid;
+  return u === expectedUser && p === expectedPwd;
 }
 
 function verifyMasterKey(key) {
   if (!key) return false;
   const expectedToken = getSessionToken();
-  const rawMaster = process.env.SUPER_ADMIN_PASSWORD || SUPER_ADMIN_PASSWORD;
-  return key === expectedToken || key === rawMaster || key === '42904062Gpaz' || key === 'super-admin-alicari' || key === 'super-admin-token-valid-key';
+  const rawMaster = (process.env.SUPER_ADMIN_PASSWORD || SUPER_ADMIN_PASSWORD).trim();
+  return key === expectedToken || key === rawMaster;
 }
 
 function safeGetTime(dateVal) {
