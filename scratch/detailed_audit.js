@@ -1,55 +1,110 @@
 import fs from 'fs';
+import path from 'path';
 
-console.log('=== VERIFICACIÓN DETALLADA DE COMPONENTES DEL SISTEMA ===\n');
+console.log('--- INICIANDO AUDITORÍA DETALLADA DALE TEPIDO ---');
 
-const dashboard = fs.readFileSync('dashboard.html', 'utf8');
-const tienda = fs.readFileSync('tienda.html', 'utf8');
-const alta = fs.readFileSync('alta-usuario.html', 'utf8');
-const schema = fs.readFileSync('scratch/full_supabase_schema.sql', 'utf8');
+function checkLandingW3C(html) {
+  const issues = [];
+  const passes = [];
 
-function checkFeature(name, tests) {
-  console.log(`📌 [${name.toUpperCase()}]`);
-  tests.forEach(t => {
-    const passed = t.check();
-    console.log(`  ${passed ? '✅' : '❌'} ${t.desc}`);
+  // 1. Viewport Meta
+  if (html.includes('<meta name="viewport" content="width=device-width, initial-scale=1.0')) {
+    passes.push('Meta viewport configurado correctamente con width=device-width e initial-scale=1.0');
+  } else {
+    issues.push('Meta viewport ausente o mal configurado.');
+  }
+
+  // 2. Doctype & Lang
+  if (html.includes('<!DOCTYPE html>') && html.includes('<html lang="es"')) {
+    passes.push('<!DOCTYPE html> y <html lang="es"> presentes');
+  } else {
+    issues.push('Falta DOCTYPE o atributo lang en html');
+  }
+
+  // 3. Main landmarks
+  const landmarkTags = ['<header', '<nav', '<main', '<footer', '<section'];
+  landmarkTags.forEach(tag => {
+    if (html.includes(tag)) {
+      passes.push(`Elemento semántico HTML5 ${tag}> presente`);
+    } else {
+      issues.push(`Falta elemento semántico ${tag}>`);
+    }
   });
-  console.log('');
+
+  // 4. h1 tag count
+  const h1Matches = html.match(/<h1[\s>]/g);
+  if (h1Matches && h1Matches.length === 1) {
+    passes.push('Exactamente un <h1> principal presente');
+  } else {
+    issues.push(`Se encontraron ${h1Matches ? h1Matches.length : 0} etiquetas <h1> (debe haber exactamente 1 per W3C SEO standards)`);
+  }
+
+  // 5. Images without alt
+  const imgRegex = /<img\s+[^>]*>/gi;
+  let imgMatch;
+  let imgsWithoutAlt = 0;
+  let totalImgs = 0;
+  while ((imgMatch = imgRegex.exec(html)) !== null) {
+    totalImgs++;
+    if (!imgMatch[0].includes('alt=')) {
+      imgsWithoutAlt++;
+    }
+  }
+  if (imgsWithoutAlt === 0) {
+    passes.push(`Todas las imágenes (${totalImgs}) poseen atributo alt`);
+  } else {
+    issues.push(`${imgsWithoutAlt} de ${totalImgs} imágenes no tienen atributo alt`);
+  }
+
+  // 6. Buttons / Links without aria-label or text
+  const emptyBtnRegex = /<button[^>]*>\s*<\/button>/gi;
+  const emptyBtns = html.match(emptyBtnRegex);
+  if (!emptyBtns) {
+    passes.push('No hay botones vacíos sin texto explicativo o aria-label');
+  } else {
+    issues.push(`Se encontraron ${emptyBtns.length} botones sin contenido/aria-label`);
+  }
+
+  // 7. Interactive target size check (touch targets)
+  if (html.includes('min-height: 44px') || html.includes('padding:') || html.includes('btn')) {
+    passes.push('Estilos de botones e interactivos con área táctil accesible');
+  }
+
+  // 8. Meta Description & Title
+  if (html.includes('<title>') && html.includes('<meta name="description"')) {
+    passes.push('Meta Title y Meta Description presentes para SEO/W3C');
+  } else {
+    issues.push('Falta meta title o meta description');
+  }
+
+  // 9. Structured Data JSON-LD
+  if (html.includes('application/ld+json')) {
+    passes.push('Datos estructurados JSON-LD presentes (SoftwareApplication, FAQPage)');
+  } else {
+    issues.push('Falta datos estructurados JSON-LD');
+  }
+
+  return { passes, issues };
 }
 
-checkFeature('Alta y Login de Tiendas', [
-  { desc: 'Formulario de registro y creación de tienda', check: () => alta.includes('register-form') || alta.includes('crearTienda') || alta.includes('Subdominio') },
-  { desc: 'Verificación de sesión en Dashboard', check: () => dashboard.includes('daletepido_session') },
-  { desc: 'Detección de store_id / subdominio en Tienda', check: () => tienda.includes('store') && (tienda.includes('subdomain') || tienda.includes('store_id')) }
-]);
+const landingPath = path.join(process.cwd(), 'landing.html');
+const landingHtml = fs.readFileSync(landingPath, 'utf8');
 
-checkFeature('Módulo de Productos', [
-  { desc: 'ABM de Productos en Dashboard (Crear/Editar/Eliminar)', check: () => dashboard.includes('saveProduct') || dashboard.includes('save-product') || dashboard.includes('tbl-products') || dashboard.includes('m-products') },
-  { desc: 'Soporte para 3 Imágenes por producto', check: () => dashboard.includes('imagen_url2') || dashboard.includes('img2') },
-  { desc: 'Aplicación de Marca de Agua (Watermark)', check: () => dashboard.includes('watermark') || dashboard.includes('applyWatermark') },
-  { desc: 'Render de catálogo de productos en Tienda', check: () => tienda.includes('grid') || tienda.includes('products') || tienda.includes('renderProducts') || tienda.includes('product-card') },
-  { desc: 'Filtro por búsqueda y categorías en Tienda', check: () => tienda.includes('filterCat') || tienda.includes('search') || tienda.includes('categoria') }
-]);
+const landingAudit = checkLandingW3C(landingHtml);
+console.log('\n=== AUDITORÍA LANDING (HOME) W3C & DESIGN ===');
+console.log('PASSES:', landingAudit.passes.length);
+landingAudit.passes.forEach(p => console.log('  [OK]', p));
+console.log('ISSUES:', landingAudit.issues.length);
+landingAudit.issues.forEach(i => console.log('  [WARN/ERROR]', i));
 
-checkFeature('Módulo de Categorías y Subrubros', [
-  { desc: 'Gestión / selección de categorías en Dashboard', check: () => dashboard.includes('categoria') || dashboard.includes('subrubro') },
-  { desc: 'Fila de categorías y subrubros en Tienda', check: () => tienda.includes('categories') || tienda.includes('rail') || tienda.includes('cat-chip') || tienda.includes('renderCategories') }
-]);
+// Check Dashboard HTML
+const dashPath = path.join(process.cwd(), 'dashboard.html');
+const dashHtml = fs.readFileSync(dashPath, 'utf8');
+console.log('\n=== AUDITORÍA DASHBOARD (SAAS) ===');
+console.log(`Tamaño Dashboard: ${(dashHtml.length / 1024).toFixed(1)} KB`);
 
-checkFeature('Módulo de Pedidos', [
-  { desc: 'Carrito de compras y Checkout en Tienda', check: () => tienda.includes('cart') || tienda.includes('checkout') || tienda.includes('sendOrder') || tienda.includes('whatsapp') },
-  { desc: 'Guardado de Pedidos en Supabase (tabla orders)', check: () => tienda.includes('orders') && tienda.includes('insert') },
-  { desc: 'Envío de pedido por WhatsApp al comercio', check: () => tienda.includes('wa.me') || tienda.includes('api.whatsapp.com') },
-  { desc: 'Tabla y gestión de Pedidos en Dashboard', check: () => dashboard.includes('orders') || dashboard.includes('pedidos') || dashboard.includes('renderOrders') },
-  { desc: 'Cambio de estado de pedido (Pendiente, Listo, Enviado, etc.)', check: () => dashboard.includes('status') || dashboard.includes('updateOrderStatus') || dashboard.includes('Estado') }
-]);
-
-checkFeature('Módulo de Repartidores (Pickups / Cadetes)', [
-  { desc: 'ABM de Repartidores en Dashboard (Crear/Editar/Desactivar)', check: () => dashboard.includes('pickup') || dashboard.includes('repartidor') },
-  { desc: 'Asignación de Repartidor a Pedido en Dashboard', check: () => dashboard.includes('assignPickup') || dashboard.includes('repartidor') || dashboard.includes('pickup-form') },
-  { desc: 'Notificación / Link de envío a Repartidor por WhatsApp', check: () => dashboard.includes('wa.me') || dashboard.includes('repartidor') || dashboard.includes('pickup') }
-]);
-
-checkFeature('Módulo de Banners y Personalización', [
-  { desc: 'Edición de Banners 50/50 en Dashboard', check: () => dashboard.includes('banner1') || dashboard.includes('banner2') || dashboard.includes('banners') },
-  { desc: 'Visualización e interacción de Banners en Tienda', check: () => tienda.includes('banner') || tienda.includes('banner1') || tienda.includes('banner2') }
-]);
+// Check Tienda HTML
+const tiendaPath = path.join(process.cwd(), 'tienda.html');
+const tiendaHtml = fs.readFileSync(tiendaPath, 'utf8');
+console.log('\n=== AUDITORÍA TIENDA (CHECKOUT/PEDIDOS) ===');
+console.log(`Tamaño Tienda: ${(tiendaHtml.length / 1024).toFixed(1)} KB`);

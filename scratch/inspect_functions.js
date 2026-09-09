@@ -1,15 +1,27 @@
 import fs from 'fs';
+import path from 'path';
 
-console.log('=== INSPECCIONANDO ALTA-USUARIO Y DASHBOARD PRODUCTOS ===\n');
+const dashHtml = fs.readFileSync(path.join(process.cwd(), 'dashboard.html'), 'utf8');
+const tiendaHtml = fs.readFileSync(path.join(process.cwd(), 'tienda.html'), 'utf8');
 
-const alta = fs.readFileSync('alta-usuario.html', 'utf8');
-const dashboard = fs.readFileSync('dashboard.html', 'utf8');
+function extractFunctions(html, label) {
+  console.log(`=== FUNCIONES EN ${label} ===`);
+  const fnRegex = /function\s+([a-zA-Z0-9_$]+)\s*\(/g;
+  let match;
+  const fns = new Set();
+  while ((match = fnRegex.exec(html)) !== null) {
+    fns.add(match[1]);
+  }
+  
+  const constFnRegex = /(?:const|let|var)\s+([a-zA-Z0-9_$]+)\s*=\s*(?:function|\([^)]*\)\s*=>)/g;
+  while ((match = constFnRegex.exec(html)) !== null) {
+    fns.add(match[1]);
+  }
 
-console.log('--- ALTA USUARIO HTML ---');
-console.log('Tiene IDs de formularios:');
-const altaIds = [...alta.matchAll(/id="([^"]+)"/g)].map(m => m[1]);
-console.log(altaIds.filter(id => id.includes('form') || id.includes('store') || id.includes('login') || id.includes('reg') || id.includes('pass') || id.includes('user')));
+  console.log(`Total funciones encontradas: ${fns.size}`);
+  Array.from(fns).sort().forEach(fn => console.log(`  - ${fn}`));
+}
 
-console.log('\n--- FUNCTIONS IN DASHBOARD ---');
-const dashboardFuncs = [...dashboard.matchAll(/function\s+([a-zA-Z0-9_]+)\s*\(/g)].map(m => m[1]);
-console.log(dashboardFuncs.slice(0, 50));
+extractFunctions(dashHtml, 'DASHBOARD.HTML');
+console.log('\n----------------------------------------\n');
+extractFunctions(tiendaHtml, 'TIENDA.HTML');
