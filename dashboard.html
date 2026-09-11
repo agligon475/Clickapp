@@ -2042,6 +2042,492 @@
       transform: scale(1.05);
     }
 
+    /* ── NOTIFICATION CENTER TOPBAR BUTTON & DRAWER ── */
+    .topbar-notif-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--iron);
+      border: 1px solid var(--zinc);
+      color: var(--silver);
+      cursor: pointer;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .15s;
+      position: relative;
+    }
+
+    .topbar-notif-btn:hover {
+      border-color: var(--red);
+      color: var(--red);
+      transform: translateY(-1px);
+    }
+
+    .notif-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: var(--red);
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 700;
+      min-width: 17px;
+      height: 17px;
+      border-radius: 99px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+      box-shadow: 0 0 8px rgba(215, 38, 56, 0.6);
+      border: 1.5px solid var(--steel);
+      animation: notifBadgePulse 2s infinite ease-in-out;
+    }
+
+    @keyframes notifBadgePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+
+    .notif-bell-wobble {
+      animation: notifBellWobble 0.6s ease-in-out;
+    }
+
+    @keyframes notifBellWobble {
+      0% { transform: rotate(0deg); }
+      20% { transform: rotate(-15deg); }
+      40% { transform: rotate(15deg); }
+      60% { transform: rotate(-10deg); }
+      80% { transform: rotate(10deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    /* NOTIFICATION DRAWER */
+    .notif-drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 99990;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+
+    .notif-drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .notif-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: min(440px, 94vw);
+      background: var(--steel);
+      border-left: 1px solid var(--zinc);
+      z-index: 99995;
+      display: flex;
+      flex-direction: column;
+      box-shadow: -12px 0 40px rgba(0, 0, 0, 0.6);
+      transform: translateX(105%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .notif-drawer.active {
+      transform: translateX(0);
+    }
+
+    .notif-drawer-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--zinc);
+      background: var(--steel);
+      flex-shrink: 0;
+    }
+
+    .notif-drawer-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .notif-drawer-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+      font-family: var(--font-h);
+      letter-spacing: 0.02em;
+    }
+
+    .notif-unread-pill {
+      background: rgba(215, 38, 56, 0.18);
+      color: #ff4d4d;
+      border: 1px solid rgba(215, 38, 56, 0.35);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    .notif-drawer-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .notif-icon-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--iron);
+      border: 1px solid var(--zinc);
+      color: var(--silver);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      transition: all 0.15s ease;
+    }
+
+    .notif-icon-btn:hover {
+      border-color: var(--red);
+      color: var(--white);
+      background: rgba(215, 38, 56, 0.15);
+    }
+
+    .notif-text-link-btn {
+      background: none;
+      border: none;
+      color: var(--silver);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 6px;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .notif-text-link-btn:hover {
+      color: var(--red);
+      background: rgba(215, 38, 56, 0.08);
+    }
+
+    /* Filter pills */
+    .notif-filter-row {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+    .notif-filter-row::-webkit-scrollbar { display: none; }
+
+    .notif-filter-btn {
+      padding: 5px 10px;
+      border-radius: 8px;
+      background: var(--iron);
+      border: 1px solid var(--zinc);
+      color: var(--silver);
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .notif-filter-btn:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      color: var(--white);
+    }
+
+    .notif-filter-btn.active {
+      background: var(--red);
+      border-color: var(--red);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(215, 38, 56, 0.35);
+    }
+
+    .notif-filter-count {
+      font-size: 10px;
+      opacity: 0.85;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 1px 5px;
+      border-radius: 10px;
+    }
+
+    /* Drawer list body */
+    .notif-drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Notification Cards */
+    .notif-card {
+      background: var(--iron);
+      border: 1px solid var(--zinc);
+      border-radius: 12px;
+      padding: 13px 14px;
+      position: relative;
+      transition: all 0.2s ease;
+      display: flex;
+      gap: 12px;
+    }
+
+    .notif-card.unread {
+      background: linear-gradient(135deg, rgba(215, 38, 56, 0.08) 0%, var(--iron) 100%);
+      border-color: rgba(215, 38, 56, 0.35);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .notif-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .notif-card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .notif-card-icon.order {
+      background: rgba(46, 204, 113, 0.15);
+      border: 1px solid rgba(46, 204, 113, 0.3);
+      color: #2ECC71;
+    }
+
+    .notif-card-icon.setup {
+      background: rgba(243, 156, 18, 0.15);
+      border: 1px solid rgba(243, 156, 18, 0.3);
+      color: #F39C12;
+    }
+
+    .notif-card-icon.system {
+      background: rgba(52, 152, 219, 0.15);
+      border: 1px solid rgba(52, 152, 219, 0.3);
+      color: #3498DB;
+    }
+
+    .notif-card-icon.ai {
+      background: rgba(215, 38, 56, 0.15);
+      border: 1px solid rgba(215, 38, 56, 0.3);
+      color: #D72638;
+    }
+
+    .notif-card-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .notif-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 3px;
+    }
+
+    .notif-card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.3;
+    }
+
+    .notif-card-time {
+      font-size: 10.5px;
+      color: var(--silver);
+      white-space: nowrap;
+      opacity: 0.8;
+    }
+
+    .notif-card-desc {
+      font-size: 12px;
+      color: var(--silver);
+      line-height: 1.45;
+      margin-bottom: 8px;
+      word-break: break-word;
+    }
+
+    .notif-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .notif-action-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--zinc);
+      color: var(--white);
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .notif-action-btn:hover {
+      background: var(--red);
+      border-color: var(--red);
+      color: #ffffff;
+    }
+
+    .notif-card-dismiss-btn {
+      background: none;
+      border: none;
+      color: var(--silver);
+      font-size: 12px;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      opacity: 0.6;
+      transition: all 0.15s ease;
+    }
+
+    .notif-card-dismiss-btn:hover {
+      opacity: 1;
+      color: var(--red);
+    }
+
+    /* Empty state */
+    .notif-empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--silver);
+    }
+
+    .notif-empty-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--zinc);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: var(--silver);
+      margin-bottom: 14px;
+    }
+
+    /* FLOATING TOASTS */
+    .notif-toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+      max-width: min(380px, 90vw);
+    }
+
+    .notif-toast {
+      pointer-events: auto;
+      background: #18181b;
+      border: 1px solid rgba(215, 38, 56, 0.4);
+      border-left: 4px solid var(--red);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: #ffffff;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      animation: notifToastSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    @keyframes notifToastSlideIn {
+      from { transform: translateX(100%) scale(0.9); opacity: 0; }
+      to { transform: translateX(0) scale(1); opacity: 1; }
+    }
+
+    .notif-toast.hiding {
+      transform: translateX(100%) scale(0.9);
+      opacity: 0;
+    }
+
+    /* Light mode adaptations */
+    body.light-mode .notif-drawer {
+      background: #FFFFFF;
+      border-left-color: #E5E7EB;
+      box-shadow: -12px 0 40px rgba(0, 0, 0, 0.15);
+    }
+    body.light-mode .notif-drawer-header {
+      background: #FAFAFA;
+      border-bottom-color: #E5E7EB;
+    }
+    body.light-mode .notif-card {
+      background: #F9FAFB;
+      border-color: #E5E7EB;
+    }
+    body.light-mode .notif-card.unread {
+      background: #FFF5F5;
+      border-color: #FED7D7;
+    }
+    body.light-mode .notif-card-title {
+      color: #111827;
+    }
+    body.light-mode .notif-card-desc {
+      color: #4B5563;
+    }
+    body.light-mode .notif-filter-btn {
+      background: #F3F4F6;
+      border-color: #E5E7EB;
+      color: #374151;
+    }
+    body.light-mode .notif-action-btn {
+      background: #FFFFFF;
+      border-color: #D1D5DB;
+      color: #111827;
+    }
+    body.light-mode .topbar-notif-btn {
+      background: #F3F4F6;
+      border-color: #E5E7EB;
+      color: #374151;
+    }
+    body.light-mode .notif-icon-btn {
+      background: #F3F4F6;
+      border-color: #E5E7EB;
+      color: #374151;
+    }
+
     /* CONFIG VIEW */
     .masonry-grid {
       display: grid;
@@ -3507,11 +3993,11 @@
         <i class="bi bi-speedometer" style="margin-right:6px;"></i> Panel de Control
       </span>
       <div class="topbar-right">
-        <select class="period-select" onchange="setPeriod(this.value)">
-          <option value="7">Última semana</option>
-          <option value="30" selected>Último mes</option>
-          <option value="365">Último año</option>
-        </select>
+        <!-- Campana de Notificaciones -->
+        <button class="topbar-notif-btn" id="notif-bell-btn" onclick="toggleNotificationCenter()" title="Centro de Notificaciones">
+          <i class="bi bi-bell-fill" id="notif-bell-icon"></i>
+          <span class="notif-badge" id="notif-badge" style="display:none;">0</span>
+        </button>
         <button class="jaime-topbar-btn" onclick="if(typeof toggleJaime === 'function'){ toggleJaime(); } else if(typeof showJaimeCharacter === 'function'){ showJaimeCharacter(); }" id="jaime-topbar-btn" title="Consultar a jAIme 24/7">
           <img src="/img/jaime/jaime-mobile-buenaonda.png" alt="jAIme" style="width:20px; height:20px; object-fit:contain;" />
         </button>
@@ -3524,6 +4010,58 @@
         </div>
       </div>
     </div>
+
+    <!-- ════ CENTRO DE NOTIFICACIONES DRAWER ════ -->
+    <div id="notif-drawer-overlay" class="notif-drawer-overlay" onclick="toggleNotificationCenter(false)"></div>
+    <aside id="notif-drawer" class="notif-drawer" aria-label="Centro de Notificaciones">
+      <!-- Header -->
+      <div class="notif-drawer-header">
+        <div class="notif-drawer-title-row">
+          <div class="notif-drawer-title">
+            <i class="bi bi-bell-fill" style="color:var(--red);"></i>
+            <span>Notificaciones</span>
+            <span id="notif-unread-count-pill" class="notif-unread-pill" style="display:none;">0</span>
+          </div>
+          <div class="notif-drawer-actions">
+            <button id="notif-sound-btn" class="notif-icon-btn" onclick="toggleNotifSound()" title="Silenciar / Activar sonido">
+              <i class="bi bi-volume-up-fill" id="notif-sound-icon"></i>
+            </button>
+            <button class="notif-icon-btn" onclick="toggleNotificationCenter(false)" title="Cerrar">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
+        </div>
+        <!-- Summary / Actions Row -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; margin-bottom:12px;">
+          <span style="font-size:11.5px; color:var(--silver);" id="notif-status-summary">Alertas y avisos de tu tienda</span>
+          <button class="notif-text-link-btn" onclick="markAllNotificationsAsRead()">
+            <i class="bi bi-check2-all"></i> Marcar todas leídas
+          </button>
+        </div>
+        <!-- Filters -->
+        <div class="notif-filter-row">
+          <button class="notif-filter-btn active" data-filter="all" onclick="setNotifFilter('all', this)">
+            Todas <span class="notif-filter-count" id="notif-count-all">0</span>
+          </button>
+          <button class="notif-filter-btn" data-filter="order" onclick="setNotifFilter('order', this)">
+            Pedidos 🛍️ <span class="notif-filter-count" id="notif-count-order">0</span>
+          </button>
+          <button class="notif-filter-btn" data-filter="setup" onclick="setNotifFilter('setup', this)">
+            Configuración ⚙️ <span class="notif-filter-count" id="notif-count-setup">0</span>
+          </button>
+          <button class="notif-filter-btn" data-filter="system" onclick="setNotifFilter('system', this)">
+            Sistema 📢 <span class="notif-filter-count" id="notif-count-system">0</span>
+          </button>
+        </div>
+      </div>
+      <!-- List body -->
+      <div class="notif-drawer-body" id="notif-list-container">
+        <!-- Generado dinámicamente -->
+      </div>
+    </aside>
+
+    <!-- Floating Toasts Container -->
+    <div id="notif-toast-container" class="notif-toast-container"></div>
 
     <!-- ══ NEGOCIO: RUBRO Y PLANTILLA ══ -->
     <div class="view" id="view-rubro">
@@ -7478,6 +8016,13 @@
         try { updateCharts(); } catch(err) { console.warn('Error en updateCharts:', err); }
         try { if (typeof renderProducts === 'function') renderProducts(); } catch(err) { console.warn('Error en renderProducts:', err); }
         try { initABM(); } catch(err) { console.warn('Error en initABM:', err); }
+        try {
+          if (typeof NotificationCenter !== 'undefined') {
+            NotificationCenter.checkSetupHealth();
+            NotificationCenter.syncSystemBroadcasts();
+            NotificationCenter.render();
+          }
+        } catch(err) { console.warn('Error en NotificationCenter health check:', err); }
       } catch (e) {
         // Mostrar tarjeta de error si falla la conexión
         const errCard = document.getElementById('connection-error-card');
@@ -11090,6 +11635,532 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         cPago.data.datasets[0].backgroundColor = reds.slice(0, entries.length);
         cPago.update();
       }
+
+      // Sincronizar notificaciones de nuevos pedidos
+      try {
+        if (typeof NotificationCenter !== 'undefined') {
+          NotificationCenter.syncOrders(orders);
+        }
+      } catch (err) {
+        console.warn('Error en NotificationCenter syncOrders:', err);
+      }
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       CENTRO DE NOTIFICACIONES MULTI-CUENTA (DTC NotificationCenter)
+       ══════════════════════════════════════════════════════════ */
+    const NotificationCenter = {
+      filter: 'all',
+      soundEnabled: localStorage.getItem('storeapp_notif_sound') !== '0',
+      audioCtx: null,
+
+      getStorageKey() {
+        const store = typeof STORE_ID !== 'undefined' && STORE_ID ? STORE_ID : (localStorage.getItem('storeapp_store_id') || 'default');
+        return `storeapp_notifications_${store.toLowerCase()}`;
+      },
+
+      getAll() {
+        try {
+          const raw = localStorage.getItem(this.getStorageKey());
+          return raw ? JSON.parse(raw) : [];
+        } catch (e) {
+          console.warn('Error al leer notificaciones:', e);
+          return [];
+        }
+      },
+
+      saveAll(notifs) {
+        try {
+          localStorage.setItem(this.getStorageKey(), JSON.stringify(notifs));
+          this.render();
+        } catch (e) {
+          console.warn('Error al guardar notificaciones:', e);
+        }
+      },
+
+      playChime() {
+        if (!this.soundEnabled) return;
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContext) return;
+          if (!this.audioCtx) this.audioCtx = new AudioContext();
+          if (this.audioCtx.state === 'suspended') {
+            this.audioCtx.resume();
+          }
+
+          const now = this.audioCtx.currentTime;
+          
+          // Chime tone 1
+          const osc1 = this.audioCtx.createOscillator();
+          const gain1 = this.audioCtx.createGain();
+          osc1.type = 'sine';
+          osc1.frequency.setValueAtTime(587.33, now); // D5
+          gain1.gain.setValueAtTime(0.12, now);
+          gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc1.connect(gain1);
+          gain1.connect(this.audioCtx.destination);
+          osc1.start(now);
+          osc1.stop(now + 0.35);
+
+          // Chime tone 2 (higher note)
+          const osc2 = this.audioCtx.createOscillator();
+          const gain2 = this.audioCtx.createGain();
+          osc2.type = 'sine';
+          osc2.frequency.setValueAtTime(880.00, now + 0.12); // A5
+          gain2.gain.setValueAtTime(0.15, now + 0.12);
+          gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+          osc2.connect(gain2);
+          gain2.connect(this.audioCtx.destination);
+          osc2.start(now + 0.12);
+          osc2.stop(now + 0.6);
+        } catch (e) {
+          console.debug('Notification chime silent or restricted by browser autoplay policy:', e);
+        }
+      },
+
+      showToast(notif) {
+        const container = document.getElementById('notif-toast-container');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = 'notif-toast';
+        toast.setAttribute('role', 'alert');
+        
+        const iconClass = notif.category === 'order' ? 'bi-bag-check-fill'
+                        : notif.category === 'setup' ? 'bi-gear-wide-connected'
+                        : notif.category === 'ai' ? 'bi-robot'
+                        : 'bi-megaphone-fill';
+
+        const iconColor = notif.category === 'order' ? '#2ECC71'
+                        : notif.category === 'setup' ? '#F39C12'
+                        : notif.category === 'ai' ? '#D72638'
+                        : '#3498DB';
+
+        toast.innerHTML = `
+          <div style="font-size: 20px; color: ${iconColor}; display: flex; align-items: center;">
+            <i class="bi ${iconClass}"></i>
+          </div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 2px;">${notif.title}</div>
+            <div style="font-size: 11.5px; color: #A1A1AA; line-height: 1.35;">${notif.desc}</div>
+          </div>
+          <button style="background: none; border: none; color: #71717A; cursor: pointer; padding: 2px;" onclick="event.stopPropagation(); this.closest('.notif-toast').remove();">
+            <i class="bi bi-x"></i>
+          </button>
+        `;
+
+        toast.onclick = () => {
+          this.markAsRead(notif.id);
+          if (notif.actionView) {
+            goToView(notif.actionView);
+          } else {
+            toggleNotificationCenter(true);
+          }
+          toast.classList.add('hiding');
+          setTimeout(() => toast.remove(), 250);
+        };
+
+        container.appendChild(toast);
+
+        // Auto remove after 5.5 seconds
+        setTimeout(() => {
+          if (toast.isConnected) {
+            toast.classList.add('hiding');
+            setTimeout(() => toast.remove(), 250);
+          }
+        }, 5500);
+      },
+
+      add(item, notify = false) {
+        const notifs = this.getAll();
+        
+        // If uniqueId exists (for setup/system checks), avoid duplicate
+        if (item.uniqueId) {
+          const existingIdx = notifs.findIndex(n => n.uniqueId === item.uniqueId);
+          if (existingIdx !== -1) {
+            // Update timestamp or status if needed, don't create duplicates
+            notifs[existingIdx] = { ...notifs[existingIdx], ...item, id: notifs[existingIdx].id, read: notifs[existingIdx].read };
+            this.saveAll(notifs);
+            return;
+          }
+        }
+
+        const newNotif = {
+          id: 'ntf_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+          uniqueId: item.uniqueId || null,
+          category: item.category || 'system', // 'order' | 'setup' | 'system' | 'ai'
+          title: item.title || 'Notificación',
+          desc: item.desc || '',
+          timestamp: item.timestamp || new Date().toISOString(),
+          read: false,
+          actionLabel: item.actionLabel || '',
+          actionView: item.actionView || '',
+          actionFn: item.actionFn || '',
+          priority: item.priority || 'normal'
+        };
+
+        notifs.unshift(newNotif);
+        // Limit to last 60 notifications per store
+        if (notifs.length > 60) notifs.length = 60;
+        
+        this.saveAll(notifs);
+
+        if (notify) {
+          this.playChime();
+          this.showToast(newNotif);
+          const bell = document.getElementById('notif-bell-btn');
+          if (bell) {
+            bell.classList.remove('notif-bell-wobble');
+            void bell.offsetWidth; // force reflow
+            bell.classList.add('notif-bell-wobble');
+          }
+        }
+      },
+
+      removeByUniqueId(uniqueId) {
+        const notifs = this.getAll().filter(n => n.uniqueId !== uniqueId);
+        this.saveAll(notifs);
+      },
+
+      dismiss(id) {
+        const notifs = this.getAll().filter(n => n.id !== id);
+        this.saveAll(notifs);
+      },
+
+      markAsRead(id) {
+        const notifs = this.getAll().map(n => n.id === id ? { ...n, read: true } : n);
+        this.saveAll(notifs);
+      },
+
+      markAllAsRead() {
+        const notifs = this.getAll().map(n => ({ ...n, read: true }));
+        this.saveAll(notifs);
+      },
+
+      // Diagnostic engine to check store setup completeness
+      checkSetupHealth() {
+        const currentCfg = typeof cfg !== 'undefined' ? cfg : {};
+        const activeProds = typeof products !== 'undefined' ? products : [];
+        const activePickups = typeof window.currentPickups !== 'undefined' ? window.currentPickups : [];
+
+        // 1. Check WhatsApp phone
+        const hasPhone = Boolean(currentCfg.wapp && String(currentCfg.wapp).trim().length >= 6);
+        if (!hasPhone) {
+          this.add({
+            uniqueId: 'setup_missing_phone',
+            category: 'setup',
+            title: 'Configurá tu WhatsApp para recibir pedidos',
+            desc: 'Tu tienda necesita un número de WhatsApp válido para que los clientes puedan enviarte sus pedidos directamente.',
+            actionLabel: 'Configurar WhatsApp',
+            actionView: 'config-basica',
+            priority: 'high'
+          });
+        } else {
+          this.removeByUniqueId('setup_missing_phone');
+        }
+
+        // 2. Check Payment methods (CBU / Alias / Transfer)
+        const payMethods = currentCfg.payment_methods || {};
+        const hasPayment = payMethods.efectivo || payMethods.transferencia || payMethods.convenir;
+        if (!hasPayment) {
+          this.add({
+            uniqueId: 'setup_missing_payment',
+            category: 'setup',
+            title: 'Activá tus medios de pago',
+            desc: 'No tenés ningún método de pago habilitado (Efectivo, Transferencia o A convenir). Habilitalos para no perder ventas.',
+            actionLabel: 'Ajustar Medios de Pago',
+            actionView: 'config-basica',
+            priority: 'high'
+          });
+        } else {
+          this.removeByUniqueId('setup_missing_payment');
+        }
+
+        // 3. Check Logo
+        const hasLogo = Boolean(currentCfg.logo && String(currentCfg.logo).trim().length > 4);
+        if (!hasLogo) {
+          this.add({
+            uniqueId: 'setup_missing_logo',
+            category: 'setup',
+            title: 'Personalizá tu marca: Subí el logo de tu tienda',
+            desc: 'Las tiendas con logo transmiten un 80% más de confianza. Podés subir tu imagen o usar nuestro asistente con IA.',
+            actionLabel: 'Subir Logo',
+            actionView: 'marca',
+            priority: 'normal'
+          });
+        } else {
+          this.removeByUniqueId('setup_missing_logo');
+        }
+
+        // 4. Check Products
+        if (!activeProds || activeProds.length === 0) {
+          this.add({
+            uniqueId: 'setup_no_products',
+            category: 'setup',
+            title: 'Tu catálogo está vacío',
+            desc: 'Cargá tus primeros productos para que tus clientes puedan empezar a comprar en tu catálogo digital.',
+            actionLabel: 'Crear Producto',
+            actionView: 'abm',
+            priority: 'high'
+          });
+        } else {
+          this.removeByUniqueId('setup_no_products');
+        }
+
+        // 5. Check Envíos / Zonas de Entrega
+        if (!activePickups || activePickups.length === 0) {
+          this.add({
+            uniqueId: 'setup_missing_shipping',
+            category: 'setup',
+            title: 'Configurá tus opciones de envío y retiro',
+            desc: 'Definí si ofrecés retiro en local (PickUp) o envíos a domicilio con sus respectivos costos y zonas.',
+            actionLabel: 'Configurar Envíos',
+            actionView: 'pickups',
+            priority: 'normal'
+          });
+        } else {
+          this.removeByUniqueId('setup_missing_shipping');
+        }
+      },
+
+      // Sync orders to detect and notify newly received orders
+      syncOrders(orders) {
+        if (!Array.isArray(orders) || !orders.length) return;
+
+        const store = typeof STORE_ID !== 'undefined' && STORE_ID ? STORE_ID : 'default';
+        const keySeen = `storeapp_known_order_ids_${store.toLowerCase()}`;
+        let knownIds = [];
+        try {
+          knownIds = JSON.parse(localStorage.getItem(keySeen) || '[]');
+        } catch (e) { knownIds = []; }
+
+        const isFirstRun = knownIds.length === 0;
+
+        orders.forEach(o => {
+          const ordId = String(o.id || '');
+          if (!ordId || ordId === '—') return;
+
+          if (!knownIds.includes(ordId)) {
+            knownIds.push(ordId);
+            if (!isFirstRun) {
+              const totalFmt = Number(o.total || 0).toLocaleString('es-AR');
+              this.add({
+                uniqueId: `order_${ordId}`,
+                category: 'order',
+                title: `¡Nuevo Pedido #${ordId}!`,
+                desc: `${o.cliente || 'Cliente'} pidió ${o.productos || 'productos'} por $${totalFmt} (${o.logistica || 'Entrega'}).`,
+                actionLabel: 'Ver en Pedidos',
+                actionView: 'orders',
+                timestamp: o.fecha ? parseOrderDate(o.fecha).toISOString() : new Date().toISOString(),
+                priority: 'high'
+              }, true);
+            }
+          }
+        });
+
+        // Save known order IDs (keep up to 300)
+        if (knownIds.length > 300) knownIds = knownIds.slice(-300);
+        localStorage.setItem(keySeen, JSON.stringify(knownIds));
+      },
+
+      // Load system announcements
+      syncSystemBroadcasts() {
+        // Welcome notification if fresh
+        const welcomeKey = `dtp_welcome_broadcast_seen_${(typeof STORE_ID !== 'undefined' ? STORE_ID : '').toLowerCase()}`;
+        if (!localStorage.getItem(welcomeKey)) {
+          this.add({
+            uniqueId: 'system_welcome_dtp',
+            category: 'system',
+            title: '¡Te damos la bienvenida a DaleTePido!',
+            desc: 'Tu tienda digital está lista. Podés personalizar diseño, gestionar pedidos en tiempo real y chatear con jAIme 24/7.',
+            actionLabel: 'Ver Setup Guiado',
+            actionView: 'rubro',
+            priority: 'normal'
+          });
+          localStorage.setItem(welcomeKey, '1');
+        }
+      },
+
+      formatRelativeTime(isoStr) {
+        try {
+          const date = new Date(isoStr);
+          if (isNaN(date.getTime())) return 'Reciente';
+          const now = new Date();
+          const diffMs = now - date;
+          const diffMins = Math.floor(diffMs / 60000);
+          const diffHours = Math.floor(diffMins / 60);
+          const diffDays = Math.floor(diffHours / 24);
+
+          if (diffMins < 1) return 'Ahora mismo';
+          if (diffMins < 60) return `Hace ${diffMins} min`;
+          if (diffHours < 24) return `Hace ${diffHours} h`;
+          if (diffDays === 1) return 'Ayer';
+          if (diffDays < 7) return `Hace ${diffDays} días`;
+          return date.toLocaleDateString('es-AR', { day: '2-digit', month: 'short' });
+        } catch (e) {
+          return 'Reciente';
+        }
+      },
+
+      render() {
+        const notifs = this.getAll();
+        const unreadCount = notifs.filter(n => !n.read).length;
+
+        // 1. Update Topbar Bell Badge
+        const badge = document.getElementById('notif-badge');
+        if (badge) {
+          if (unreadCount > 0) {
+            badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+            badge.style.display = 'flex';
+          } else {
+            badge.style.display = 'none';
+          }
+        }
+
+        // 2. Update Drawer Header Elements
+        const unreadPill = document.getElementById('notif-unread-count-pill');
+        if (unreadPill) {
+          if (unreadCount > 0) {
+            unreadPill.textContent = `${unreadCount} pendiente${unreadCount !== 1 ? 's' : ''}`;
+            unreadPill.style.display = 'inline-block';
+          } else {
+            unreadPill.style.display = 'none';
+          }
+        }
+
+        const countAll = document.getElementById('notif-count-all');
+        const countOrder = document.getElementById('notif-count-order');
+        const countSetup = document.getElementById('notif-count-setup');
+        const countSystem = document.getElementById('notif-count-system');
+
+        if (countAll) countAll.textContent = notifs.length;
+        if (countOrder) countOrder.textContent = notifs.filter(n => n.category === 'order').length;
+        if (countSetup) countSetup.textContent = notifs.filter(n => n.category === 'setup').length;
+        if (countSystem) countSystem.textContent = notifs.filter(n => n.category === 'system' || n.category === 'ai').length;
+
+        const soundIcon = document.getElementById('notif-sound-icon');
+        if (soundIcon) {
+          soundIcon.className = this.soundEnabled ? 'bi bi-volume-up-fill' : 'bi bi-volume-mute-fill';
+          soundIcon.style.color = this.soundEnabled ? 'var(--silver)' : 'var(--red)';
+        }
+
+        // 3. Render List Body
+        const container = document.getElementById('notif-list-container');
+        if (!container) return;
+
+        let filtered = notifs;
+        if (this.filter === 'order') filtered = notifs.filter(n => n.category === 'order');
+        else if (this.filter === 'setup') filtered = notifs.filter(n => n.category === 'setup');
+        else if (this.filter === 'system') filtered = notifs.filter(n => n.category === 'system' || n.category === 'ai');
+
+        if (filtered.length === 0) {
+          container.innerHTML = `
+            <div class="notif-empty-state">
+              <div class="notif-empty-icon">
+                <i class="bi bi-bell-slash"></i>
+              </div>
+              <div style="font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 4px;">
+                ${this.filter === 'all' ? '¡Todo al día!' : 'Sin notificaciones en esta sección'}
+              </div>
+              <p style="font-size: 12.5px; color: var(--silver); margin: 0; max-width: 260px; line-height: 1.4;">
+                ${this.filter === 'all' 
+                  ? 'No tenés alertas pendientes por el momento. Cuando haya novedades o pedidos, te avisaremos aquí.'
+                  : 'No hay alertas activas en esta categoría.'}
+              </p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = filtered.map(n => {
+          const catClass = n.category || 'system';
+          const iconName = catClass === 'order' ? 'bi-bag-check-fill'
+                         : catClass === 'setup' ? 'bi-gear-wide-connected'
+                         : catClass === 'ai' ? 'bi-robot'
+                         : 'bi-megaphone-fill';
+
+          return `
+            <div class="notif-card ${!n.read ? 'unread' : ''}" id="card-${n.id}">
+              <div class="notif-card-icon ${catClass}">
+                <i class="bi ${iconName}"></i>
+              </div>
+              <div class="notif-card-content">
+                <div class="notif-card-header">
+                  <span class="notif-card-title">${n.title}</span>
+                  <span class="notif-card-time">${this.formatRelativeTime(n.timestamp)}</span>
+                </div>
+                <div class="notif-card-desc">${n.desc}</div>
+                <div class="notif-card-footer">
+                  <div>
+                    ${n.actionLabel ? `
+                      <button class="notif-action-btn" onclick="NotificationCenter.handleAction('${n.id}', '${n.actionView || ''}')">
+                        ${n.actionLabel} <i class="bi bi-arrow-right-short" style="font-size:14px;"></i>
+                      </button>
+                    ` : ''}
+                  </div>
+                  <div style="display:flex; align-items:center; gap:4px;">
+                    ${!n.read ? `
+                      <button class="notif-card-dismiss-btn" title="Marcar como leída" onclick="NotificationCenter.markAsRead('${n.id}')">
+                        <i class="bi bi-check2"></i>
+                      </button>
+                    ` : ''}
+                    <button class="notif-card-dismiss-btn" title="Eliminar notificación" onclick="NotificationCenter.dismiss('${n.id}')">
+                      <i class="bi bi-trash3"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      },
+
+      handleAction(notifId, actionView) {
+        this.markAsRead(notifId);
+        toggleNotificationCenter(false);
+        if (actionView) {
+          goToView(actionView);
+        }
+      }
+    };
+
+    // Global helper functions
+    function toggleNotificationCenter(forceState = null) {
+      const drawer = document.getElementById('notif-drawer');
+      const overlay = document.getElementById('notif-drawer-overlay');
+      if (!drawer || !overlay) return;
+
+      const isCurrentlyActive = drawer.classList.contains('active');
+      const willBeActive = forceState !== null ? forceState : !isCurrentlyActive;
+
+      if (willBeActive) {
+        drawer.classList.add('active');
+        overlay.classList.add('active');
+        NotificationCenter.render();
+      } else {
+        drawer.classList.remove('active');
+        overlay.classList.remove('active');
+      }
+    }
+
+    function toggleNotifSound() {
+      NotificationCenter.soundEnabled = !NotificationCenter.soundEnabled;
+      localStorage.setItem('storeapp_notif_sound', NotificationCenter.soundEnabled ? '1' : '0');
+      NotificationCenter.render();
+      if (NotificationCenter.soundEnabled) {
+        NotificationCenter.playChime();
+      }
+    }
+
+    function markAllNotificationsAsRead() {
+      NotificationCenter.markAllAsRead();
+    }
+
+    function setNotifFilter(filterName, btn) {
+      NotificationCenter.filter = filterName;
+      document.querySelectorAll('.notif-filter-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      NotificationCenter.render();
     }
 
     /* ACCORDION */
@@ -13138,6 +14209,9 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     initCharts();
     initTrialBanner();
     initVerificationBanner();
+    if (typeof NotificationCenter !== 'undefined') {
+      NotificationCenter.render();
+    }
 
     function handleUrlHashNavigation() {
       const hash = window.location.hash.replace('#', '').trim();
