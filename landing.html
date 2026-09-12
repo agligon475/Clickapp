@@ -532,7 +532,121 @@
         footer a { color:rgba(255,255,255,0.85); text-decoration:none; }
         footer a:hover { color:var(--red); }
         
+        /* ESTILOS ESPACIOSOS Y MODERNOS PARA SECCIÓN jAIme */
+        .jaime-card-wrapper {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 28px;
+            padding: 44px 48px;
+            box-shadow: 0 20px 60px rgba(15, 23, 42, 0.05);
+            display: grid;
+            grid-template-columns: 1fr 1.25fr;
+            gap: 48px;
+            align-items: center;
+            max-width: 1140px;
+            margin: 0 auto;
+        }
+        .jaime-stage-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 50% 35%, rgba(214, 0, 0, 0.05) 0%, rgba(248, 250, 252, 0.85) 70%, transparent 100%);
+            border: 1px solid #f1f5f9;
+            border-radius: 22px;
+            padding: 32px 24px 24px;
+            position: relative;
+        }
+        .jaime-img-container {
+            height: 230px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .jaime-img-container img {
+            height: 220px;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.12));
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .jaime-poses-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 16px;
+        }
+        .jaime-pose-btn {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: #334155;
+            padding: 7px 14px;
+            border-radius: 10px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+        .jaime-pose-btn:hover {
+            background: #f8fafc;
+            border-color: #94a3b8;
+            color: #0f172a;
+            transform: translateY(-1px);
+        }
+        .jaime-pose-btn.active {
+            background: rgba(214, 0, 0, 0.08);
+            border-color: rgba(214, 0, 0, 0.35);
+            color: var(--red);
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(214, 0, 0, 0.08);
+        }
+        .jaime-chat-console {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 22px;
+            padding: 28px;
+        }
+        .jaime-quick-prompt {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #334155;
+            padding: 7px 13px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+        .jaime-quick-prompt:hover {
+            background: rgba(214, 0, 0, 0.06);
+            border-color: rgba(214, 0, 0, 0.25);
+            color: var(--red);
+        }
+
         /* REGLAS MOBILE-FIRST AVANZADAS Y FLUIDEZ */
+        @media(max-width: 900px) {
+            .jaime-card-wrapper {
+                grid-template-columns: 1fr;
+                gap: 32px;
+                padding: 28px 20px;
+            }
+            .jaime-stage-box {
+                padding: 24px 16px 20px;
+            }
+            .jaime-chat-console {
+                padding: 20px 16px;
+            }
+        }
         @media(max-width: 768px) {
             nav { padding: 12px 16px; }
             .nav-logo { height: 28px; }
@@ -589,7 +703,7 @@
         <!-- ACCIONES DESKTOP & BOTÓN HAMBURGUESA MOBILE -->
         <div class="nav-actions">
             <a href="/alta-usuario?action=login" class="nav-login desktop-only">Ingresar</a>
-            <a href="/alta-usuario" class="nav-cta desktop-only">🚀 Crear Catálogo</a>
+            <a href="/alta-usuario" class="nav-cta desktop-only">Crear Catálogo</a>
             <button type="button" class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Abrir Menú">
                 <i class="bi bi-list" id="mobile-menu-icon" style="font-size: 26px; color: #0f172a;"></i>
             </button>
@@ -605,10 +719,10 @@
             <a href="javascript:void(0)" onclick="closeMobileMenu(); openContactModal();" class="mobile-nav-link">Contacto</a>
             <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 8px 0;">
             <a href="/alta-usuario?action=login" onclick="closeMobileMenu()" class="mobile-nav-link" style="color: #0f172a; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-                <i class="bi bi-box-arrow-in-right" style="color: var(--red); font-size: 18px;"></i> Ingresar (Iniciar Sesión)
+                <i class="bi bi-box-arrow-in-right" style="color: var(--red); font-size: 18px;"></i> Iniciar Sesión
             </a>
             <a href="/alta-usuario" onclick="closeMobileMenu()" class="mobile-nav-link mobile-cta-btn" style="background: linear-gradient(135deg, #D60000 0%, #b30000 100%); color: #fff; text-align: center; border-radius: 10px; padding: 12px; margin-top: 6px; font-weight: 700; text-decoration: none;">
-                🚀 Crear Catálogo
+                Crear Catálogo
             </a>
         </div>
     </nav>
@@ -1060,11 +1174,11 @@
                 <h2 class="section-title">Empezá hoy,<br>crecé sin límites</h2>
                 <p class="section-sub" style="margin:0 auto">Sin permanencia mínima. Cancelás cuando quieras sin costo de salida.</p>
                 
-                <!-- SELECTOR DE FACTURACIÓN MENSUAL / ANUAL CON DESCUENTO -->
+                <!-- SELECTOR DE PLAN MENSUAL / ANUAL CON DESCUENTO -->
                 <div class="pricing-toggle-wrap">
                     <div class="pricing-toggle-box">
                         <button type="button" id="toggle-opt-monthly" class="pricing-toggle-opt active" onclick="setBillingPeriod('monthly', event)">
-                            Facturación Mensual
+                            Plan Mensual
                         </button>
                         <button type="button" id="toggle-opt-annual" class="pricing-toggle-opt" onclick="setBillingPeriod('annual', event)">
                             Plan Anual <span class="pricing-save-pill">🔥 2 MESES GRATIS</span>
@@ -1087,7 +1201,7 @@
                             <li><span style="color:#10b981; font-weight:800; flex-shrink:0; margin-top:2px;">✓</span> <span>Subdominio personalizado</span></li>
                         </ul>
                     </div>
-                    <button class="price-cta" onclick="openRegisterModal('Starter')">Crear mi tienda Starter</button>
+                    <button class="price-cta" onclick="openRegisterModal('Starter')">Elegir Starter</button>
                 </div>
 
                 <!-- PLAN PRO (MÁS VENDIDO) -->
@@ -1105,7 +1219,7 @@
                             <li><span style="color:#10b981; font-weight:800; flex-shrink:0; margin-top:2px;">✓</span> <span>Soporte prioritario por WhatsApp</span></li>
                         </ul>
                     </div>
-                    <button class="price-cta" onclick="openRegisterModal('PRO')">Quiero el Plan PRO</button>
+                    <button class="price-cta" onclick="openRegisterModal('PRO')">Elegir Plan PRO</button>
                 </div>
 
                 <!-- PLAN ENTERPRISE -->
@@ -1121,7 +1235,7 @@
                             <li><span style="color:#10b981; font-weight:800; flex-shrink:0; margin-top:2px;">✓</span> <span>Asistencia personalizada en tu local</span></li>
                         </ul>
                     </div>
-                    <button class="price-cta" onclick="openRegisterModal('Enterprise')">Contactar por Enterprise</button>
+                    <button class="price-cta" onclick="openRegisterModal('Enterprise')">Elegir Enterprise</button>
                 </div>
             </div>
 
@@ -1160,8 +1274,8 @@
                     </div>
                 </div>
                 <div>
-                    <a href="https://daleteanoto.com.ar" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 12px; background: #ffffff; color: #c8102e; text-decoration: none; padding: 18px 34px; border-radius: 16px; font-weight: 900; font-size: 16px; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4); transition: all 0.25s ease;" onmouseenter="this.style.transform='scale(1.04)'; this.style.boxShadow='0 16px 44px rgba(0, 0, 0, 0.5)'; this.style.background='#fff0f2';" onmouseleave="this.style.transform='none'; this.style.boxShadow='0 12px 36px rgba(0, 0, 0, 0.4)'; this.style.background='#ffffff';">
-                        Conocer Dale!TeAnoto 🚀 <i class="bi bi-arrow-right-short" style="font-size: 22px;"></i>
+                    <a href="https://daleteanoto.com.ar" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 10px; background: #ffffff; color: #c8102e; text-decoration: none; padding: 16px 28px; border-radius: 14px; font-weight: 800; font-size: 15px; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4); transition: all 0.25s ease;" onmouseenter="this.style.transform='scale(1.03)'; this.style.boxShadow='0 16px 44px rgba(0, 0, 0, 0.5)'; this.style.background='#fff0f2';" onmouseleave="this.style.transform='none'; this.style.boxShadow='0 12px 36px rgba(0, 0, 0, 0.4)'; this.style.background='#ffffff';">
+                        Ver Dale! Te Anoto <i class="bi bi-arrow-right-short" style="font-size: 20px;"></i>
                     </a>
                 </div>
             </div>
@@ -1198,14 +1312,14 @@
 
             <div style="text-align: center; margin-top: 40px;">
                 <a href="/dejar-resena.html" target="_blank" style="color: #F59E0B; font-size: 14px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(245,158,11,0.3); padding: 10px 22px; border-radius: 999px; background: rgba(245,158,11,0.05); transition: all 0.2s;">
-                    ⭐ ¿Usás Dale! Te Pido? Dejanos tu reseña aquí
+                    ⭐ Dejanos tu reseña
                 </a>
             </div>
         </div>
     </section>
 
     <!-- SECCIÓN DEDICADA A jAIme: ASISTENTE VIRTUAL DE LA PLATAFORMA -->
-    <section id="jaime-showcase-section" style="background: #F8FAFC; padding: 110px 24px 110px; position: relative; overflow: hidden;">
+    <section id="jaime-showcase-section" style="background: #F8FAFC; padding: 100px 24px 110px; position: relative; overflow: hidden;">
         <!-- SVG SHAPE DIVIDER TOP (codeshack.io Wave Separator from #reviews-section #0A0A0C) -->
         <div style="position: absolute; top: 0; left: 0; width: 100%; overflow: hidden; line-height: 0; z-index: 3; pointer-events: none;">
             <svg viewBox="0 0 1200 120" preserveAspectRatio="none" style="position: relative; display: block; width: calc(100% + 1.3px); height: 44px;">
@@ -1214,57 +1328,68 @@
         </div>
 
         <div class="container" style="position: relative; z-index: 2;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 48px; align-items: center;">
-                
-                <!-- Columna Izquierda: Presentación de jAIme y Poses -->
-                <div>
-                    <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(214,0,0,0.08); border: 1px solid rgba(214,0,0,0.25); color: var(--red); font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 16px; border-radius: 999px; margin-bottom: 16px;">
-                        🤖 INTELIGENCIA ARTIFICIAL A TU SERVICIO
-                    </div>
-                    <h2 style="font-size: clamp(2.2rem, 4.5vw, 3.2rem); font-weight: 800; color: #0f172a; letter-spacing: -1px; line-height: 1.15; margin-bottom: 18px;">
-                        Conocé a <span style="color:var(--red);">jAIme</span> 🤖<br>
-                        Tu asistente virtual 24/7
-                    </h2>
-                    <p style="font-size: 1.05rem; color: #475569; line-height: 1.6; margin-bottom: 28px;">
-                        ¿Tenés dudas sobre cómo cargar productos, configurar tu WhatsApp, descargar tu Código QR o cambiar tu plan? <strong>jAIme</strong> está capacitado exclusivamente para ayudarte en el uso de <strong>Dale! Te Pido</strong> al instante.
-                    </p>
-
-                    <!-- Selector interactivo de posturas -->
-                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; box-shadow: 0 6px 20px rgba(0,0,0,0.03);">
-                        <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; margin-bottom: 12px;">
-                            🎭 Posturas y expresiones de jAIme:
-                        </div>
-                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                            <button onclick="changeLandingJaimePose('buenaonda', '¡Buena Onda! Listo para recibirte.')" style="background: rgba(214,0,0,0.08); border: 1px solid rgba(214,0,0,0.25); color: var(--red); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;">😎 Buena Onda</button>
-                            <button onclick="changeLandingJaimePose('pensando', 'Pensando la mejor solución para vos...')" style="background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;">🤔 Pensando</button>
-                            <button onclick="changeLandingJaimePose('alegria', '¡Alegría! Resolvemos tus ventas al instante.')" style="background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;">🎉 Alegría</button>
-                            <button onclick="changeLandingJaimePose('resolucion', 'Paso a paso resolutivo para tu catálogo.')" style="background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;">💪 Resolución</button>
-                            <button onclick="changeLandingJaimePose('empatia', 'Acá estoy para escucharte.')" style="background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;">🤝 Empatía</button>
-                        </div>
-                    </div>
+            <!-- CABECERA DE SECCIÓN CENTRADA Y AMPLIA -->
+            <div style="text-align: center; max-width: 780px; margin: 0 auto 44px;">
+                <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(214,0,0,0.08); border: 1px solid rgba(214,0,0,0.25); color: var(--red); font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 18px; border-radius: 999px; margin-bottom: 16px;">
+                    🤖 INTELIGENCIA ARTIFICIAL A TU SERVICIO
                 </div>
+                <h2 style="font-size: clamp(2.2rem, 4.5vw, 3.2rem); font-weight: 800; color: #0f172a; letter-spacing: -1px; line-height: 1.15; margin-bottom: 16px;">
+                    Conocé a <span style="color:var(--red);">jAIme</span>, tu asistente 24/7
+                </h2>
+                <p style="font-size: 1.05rem; color: #475569; line-height: 1.6; margin: 0;">
+                    ¿Tenés dudas sobre cómo cargar productos, configurar tu WhatsApp, descargar tu Código QR o cambiar de plan? <strong>jAIme</strong> está capacitado exclusivamente para ayudarte en <strong>Dale! Te Pido</strong> al instante.
+                </p>
+            </div>
 
-                <!-- Columna Derecha: Tarjeta Interactiva con jAIme transparente sin fondo y Chat en Vivo -->
-                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 24px; padding: 28px; box-shadow: 0 20px 50px rgba(0,0,0,0.06); display: flex; flex-direction: column; align-items: center; position: relative;">
-                    
-                    <!-- Imagen Flotante Transparente de jAIme -->
-                    <div style="height: 220px; width: 100%; display: flex; align-items: center; justify-content: center; position: relative; margin-bottom: 12px;">
-                        <img id="landing-jaime-img" src="/img/jaime/jaime-buenaonda.png" alt="jAIme Asistente" style="height: 210px; width: auto; object-fit: contain; filter: drop-shadow(0 12px 24px rgba(0,0,0,0.15)); transition: all 0.3s ease;">
+            <!-- TARJETA UNIFICADA ESPACIOSA -->
+            <div class="jaime-card-wrapper">
+                
+                <!-- COLUMNA IZQUIERDA: ESCENARIO INTERACTIVO DE jAIme Y POSTURAS -->
+                <div class="jaime-stage-box">
+                    <div class="jaime-img-container">
+                        <img id="landing-jaime-img" src="/img/jaime/jaime-buenaonda.png" alt="jAIme Asistente Virtual">
                     </div>
-                    <div id="landing-jaime-caption" style="font-size: 13px; font-weight: 700; color: var(--red); background: rgba(214,0,0,0.08); border: 1px solid rgba(214,0,0,0.25); padding: 4px 14px; border-radius: 99px; margin-bottom: 20px;">
+                    
+                    <div id="landing-jaime-caption" style="font-size: 13px; font-weight: 700; color: var(--red); background: rgba(214,0,0,0.08); border: 1px solid rgba(214,0,0,0.25); padding: 5px 16px; border-radius: 99px; text-align: center; margin-bottom: 6px;">
                         ¡Hola! Probá preguntarme algo sobre Dale! Te Pido
                     </div>
 
-                    <!-- Mini Demo Chat interactivo -->
-                    <div style="width: 100%; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
-                        <div id="landing-jaime-chat-box" style="min-height: 110px; max-height: 160px; overflow-y: auto; font-size: 13px; color: #1e293b; line-height: 1.5; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px;">
-                            👋 <strong>jAIme:</strong> "¡Hola! Podés hacerme preguntas sobre cómo crear productos, cambiar precios, configurar WhatsApp o descargar tu QR. Recordá que solo estoy capacitado para ayudarte con Dale! Te Pido."
-                        </div>
+                    <div class="jaime-poses-row">
+                        <button type="button" class="jaime-pose-btn active" data-pose="buenaonda" onclick="changeLandingJaimePose('buenaonda', '¡Buena Onda! Listo para recibirte.', this)">😎 Buena Onda</button>
+                        <button type="button" class="jaime-pose-btn" data-pose="pensando" onclick="changeLandingJaimePose('pensando', 'Pensando la mejor solución para vos...', this)">🤔 Pensando</button>
+                        <button type="button" class="jaime-pose-btn" data-pose="alegria" onclick="changeLandingJaimePose('alegria', '¡Alegría! Resolvemos tus ventas al instante.', this)">🎉 Alegría</button>
+                        <button type="button" class="jaime-pose-btn" data-pose="resolucion" onclick="changeLandingJaimePose('resolucion', 'Paso a paso resolutivo para tu catálogo.', this)">💪 Resolución</button>
+                        <button type="button" class="jaime-pose-btn" data-pose="empatia" onclick="changeLandingJaimePose('empatia', 'Acá estoy para escucharte.', this)">🤝 Empatía</button>
+                    </div>
+                </div>
 
-                        <div style="display: flex; gap: 8px;">
-                            <input type="text" id="landing-jaime-input" placeholder="Preguntale algo a jAIme..." style="flex: 1; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; color: #0f172a; font-size: 13px; font-family: inherit; outline: none;" onkeypress="if(event.key==='Enter')askLandingJaime()">
-                            <button onclick="askLandingJaime()" style="background: var(--red); color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer;">Preguntar</button>
+                <!-- COLUMNA DERECHA: CONSOLA DE CHAT EN VIVO -->
+                <div class="jaime-chat-console">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
+                        <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14.5px; color: #0f172a;">
+                            <span>💬</span> Chat en vivo con jAIme
                         </div>
+                        <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #10b981; font-weight: 700; background: rgba(16,185,129,0.1); padding: 3px 10px; border-radius: 99px;">
+                            <span style="width: 7px; height: 7px; background: #10b981; border-radius: 50%; box-shadow: 0 0 6px #10b981;"></span> En línea
+                        </div>
+                    </div>
+
+                    <!-- PREGUNTAS RÁPIDAS SUGERIDAS -->
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                        <button type="button" class="jaime-quick-prompt" onclick="askLandingJaimePrompt('¿Cómo creo o agrego productos en mi catálogo?')">🛒 ¿Cómo cargo productos?</button>
+                        <button type="button" class="jaime-quick-prompt" onclick="askLandingJaimePrompt('¿Cómo recibo los pedidos en mi WhatsApp?')">📱 ¿Cómo llegan los pedidos?</button>
+                        <button type="button" class="jaime-quick-prompt" onclick="askLandingJaimePrompt('¿Cómo descargo el Código QR e imprimo los carteles?')">🖨️ ¿Cómo descargo el QR?</button>
+                    </div>
+
+                    <div id="landing-jaime-chat-box" style="min-height: 130px; max-height: 190px; overflow-y: auto; font-size: 13.5px; color: #1e293b; line-height: 1.55; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px;">
+                        👋 <strong>jAIme:</strong> "¡Hola! Podés hacerme preguntas sobre cómo crear productos, cambiar precios, configurar WhatsApp o descargar tu QR. Recordá que solo estoy capacitado para ayudarte con Dale! Te Pido."
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="landing-jaime-input" placeholder="Escribile una pregunta a jAIme..." style="flex: 1; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 12px 16px; color: #0f172a; font-size: 13.5px; font-family: inherit; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--red)'" onblur="this.style.borderColor='#cbd5e1'" onkeypress="if(event.key==='Enter')askLandingJaime()">
+                        <button onclick="askLandingJaime()" style="background: var(--red); color: #fff; border: none; padding: 12px 20px; border-radius: 12px; font-weight: 700; font-size: 13.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s;">
+                            <i class="bi bi-send-fill" style="font-size: 12px;"></i> Preguntar
+                        </button>
                     </div>
                 </div>
 
@@ -1300,7 +1425,7 @@
                         <div style="font-weight: 800; font-size: 14px; color: #0f172a; margin-bottom: 4px;">¿Tenés otra consulta o necesitás soporte?</div>
                         <div style="font-size: 13px; color: #64748b; margin-bottom: 14px;">Escribinos directamente a nuestro equipo técnico.</div>
                         <a href="javascript:void(0)" onclick="openContactModal()" style="display: inline-flex; align-items: center; gap: 8px; background: var(--red); color: #ffffff; padding: 10px 18px; border-radius: 10px; font-weight: 700; font-size: 13px; text-decoration: none; box-shadow: 0 4px 14px rgba(214,0,0,0.25); transition: transform 0.2s;">
-                            <i class="bi bi-headset"></i> Enviar Mensaje a Soporte →
+                            <i class="bi bi-headset"></i> Contactar Soporte
                         </a>
                     </div>
                 </div>
@@ -1404,7 +1529,7 @@
             <!-- BOTÓN PRINCIPAL ÚNICO DE ALTO IMPACTO -->
             <div style="display: flex; justify-content: center;">
                 <a href="javascript:void(0)" id="cta-register-btn" onclick="registerWithGeneratedLink()" class="btn-primary" style="padding: 18px 44px; font-size: 17px; border-radius: 14px; box-shadow: 0 12px 40px rgba(214,0,0,0.6); display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s;">
-                    <i class="bi bi-shop"></i> Registrar mi tienda con este enlace
+                    <i class="bi bi-rocket-takeoff-fill"></i> Crear mi Tienda
                 </a>
             </div>
         </div>
@@ -1448,7 +1573,7 @@
                         <option value="Otro">Otro rubro</option>
                     </select>
                 </div>
-                <button type="submit" style="width:100%; background:linear-gradient(135deg, #D60000 0%, #b30000 100%); color:#fff; border:none; padding:15px; border-radius:12px; font-size:15px; font-weight:800; cursor:pointer; font-family:inherit; transition:background .2s; box-shadow:0 8px 24px rgba(214,0,0,0.4); text-transform:uppercase; letter-spacing:0.5px;">⚡ Activar mi Tienda Gratis Ahora</button>
+                <button type="submit" style="width:100%; background:linear-gradient(135deg, #D60000 0%, #b30000 100%); color:#fff; border:none; padding:15px; border-radius:12px; font-size:15px; font-weight:800; cursor:pointer; font-family:inherit; transition:background .2s; box-shadow:0 8px 24px rgba(214,0,0,0.4); text-transform:uppercase; letter-spacing:0.5px;">⚡ Crear Tienda Gratis</button>
             </form>
         </div>
     </div>
@@ -1478,7 +1603,7 @@
                     <select id="contact-subject" required style="width:100%; padding:11px 14px; border-radius:10px; border:1px solid #cbd5e1; background:#f8fafc; color:#0f172a; font-size:14px; font-family:inherit; outline:none; box-sizing:border-box;">
                         <option value="Consulta General" selected>Consulta General / Información</option>
                         <option value="Soporte Técnico">Soporte Técnico / Ayuda con mi Tienda</option>
-                        <option value="Facturación y Planes">Facturación y Planes</option>
+                        <option value="Planes y Pagos">Planes y Pagos</option>
                         <option value="Configuración Inicial">Solicitud de Configuración Inicial Bonificada</option>
                     </select>
                 </div>
@@ -1486,7 +1611,7 @@
                     <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:700; color:#475569; margin-bottom:6px;">Detalle del Mensaje *</label>
                     <textarea id="contact-message" required rows="4" placeholder="Describí tu consulta o problema en detalle..." style="width:100%; padding:11px 14px; border-radius:10px; border:1px solid #cbd5e1; background:#f8fafc; color:#0f172a; font-size:14px; font-family:inherit; outline:none; resize:none; box-sizing:border-box;"></textarea>
                 </div>
-                <button type="submit" style="width:100%; background:linear-gradient(135deg, #D60000 0%, #b30000 100%); color:#ffffff; border:none; padding:14px; border-radius:12px; font-size:14px; font-weight:800; cursor:pointer; font-family:inherit; transition:transform 0.15s, box-shadow 0.2s; box-shadow:0 8px 24px rgba(214,0,0,0.3); text-transform:uppercase; letter-spacing:0.5px;">📩 Enviar Mensaje a Soporte</button>
+                <button type="submit" style="width:100%; background:linear-gradient(135deg, #D60000 0%, #b30000 100%); color:#ffffff; border:none; padding:14px; border-radius:12px; font-size:14px; font-weight:800; cursor:pointer; font-family:inherit; transition:transform 0.15s, box-shadow 0.2s; box-shadow:0 8px 24px rgba(214,0,0,0.3); text-transform:uppercase; letter-spacing:0.5px;">📩 Enviar Mensaje</button>
             </form>
         </div>
     </div>
@@ -1604,7 +1729,7 @@
             const subTitle = document.getElementById('reg-modal-subtitle');
             if (subTitle) {
                 if (planName) {
-                    subTitle.innerHTML = `Plan seleccionado: <strong style="color:#ff6666;">${planName} (${period === 'annual' ? 'Facturación Anual con 2 meses bonificados' : 'Facturación Mensual'})</strong> · 15 días de prueba gratis.`;
+                    subTitle.innerHTML = `Plan seleccionado: <strong style="color:#ff6666;">${planName} (${period === 'annual' ? 'Plan Anual con 2 meses gratis' : 'Plan Mensual'})</strong> · 15 días de prueba gratis.`;
                 } else {
                     subTitle.textContent = '15 días de prueba gratuita. Sin tarjetas ni compromisos.';
                 }
@@ -1847,7 +1972,7 @@
                             </div>
 
                             <a href="/dashboard.html?store=${storeId}" style="display:block; width:100%; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#fff; border:none; padding:16px; border-radius:12px; font-size:15px; font-weight:800; text-decoration:none; box-shadow:0 8px 24px rgba(16,185,129,0.4); text-transform:uppercase; letter-spacing:0.5px;">
-                                🚀 IR A MI PANEL DE CONTROL (DASHBOARD)
+                                🚀 Ir al Panel de Control
                             </a>
 
                             <p style="font-size:12px; color:rgba(255,255,255,0.45); margin-top:16px; line-height:1.4;">
@@ -1860,7 +1985,7 @@
                 console.error('Error de registro:', err);
                 alert('Ocurrió un error al crear la tienda: ' + err.message);
                 btn.disabled = false;
-                btn.innerHTML = '⚡ Activar mi Tienda Gratis Ahora';
+                btn.innerHTML = '⚡ Crear Tienda Gratis';
             }
         }
 
@@ -1992,7 +2117,7 @@
                 if (btnEl) {
                     btnEl.style.opacity = '1';
                     btnEl.style.pointerEvents = 'auto';
-                    btnEl.innerHTML = '<i class="bi bi-shop"></i> Registrar mi tienda con este enlace';
+                    btnEl.innerHTML = '<i class="bi bi-rocket-takeoff-fill"></i> Crear mi Tienda';
                 }
                 return;
             }
@@ -2023,7 +2148,7 @@
                     if (displayEl) displayEl.style.color = '#f87171';
                     if (btnEl) {
                         btnEl.style.opacity = '0.85';
-                        btnEl.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> Nombre ocupado — Probar con otro';
+                        btnEl.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> Nombre no disponible';
                     }
                 } else {
                     // LIBRE - DISPONIBLE
@@ -2039,7 +2164,7 @@
                     if (btnEl) {
                         btnEl.style.opacity = '1';
                         btnEl.style.pointerEvents = 'auto';
-                        btnEl.innerHTML = '<i class="bi bi-shop"></i> Registrar mi tienda con este enlace';
+                        btnEl.innerHTML = '<i class="bi bi-rocket-takeoff-fill"></i> Crear mi Tienda';
                     }
                 }
             } catch (err) {
@@ -2136,11 +2261,27 @@
 
         window.addEventListener('DOMContentLoaded', loadLandingReviews);
 
-        function changeLandingJaimePose(pose, captionText) {
+        function changeLandingJaimePose(pose, captionText, btnEl) {
             const imgEl = document.getElementById('landing-jaime-img');
             const capEl = document.getElementById('landing-jaime-caption');
             if (imgEl) imgEl.src = `/img/jaime/jaime-${pose}.png`;
             if (capEl && captionText) capEl.textContent = captionText;
+
+            document.querySelectorAll('.jaime-pose-btn').forEach(b => b.classList.remove('active'));
+            if (btnEl) {
+                btnEl.classList.add('active');
+            } else {
+                const matchingBtn = document.querySelector(`.jaime-pose-btn[data-pose="${pose}"]`);
+                if (matchingBtn) matchingBtn.classList.add('active');
+            }
+        }
+
+        function askLandingJaimePrompt(promptText) {
+            const input = document.getElementById('landing-jaime-input');
+            if (input) {
+                input.value = promptText;
+                askLandingJaime();
+            }
         }
 
         async function askLandingJaime() {
@@ -2166,7 +2307,7 @@
                 chatBox.innerHTML = `💬 <strong>Tú:</strong> "${q}"<br/><br/>🤖 <strong>jAIme:</strong> ${replyText}`;
                 changeLandingJaimePose(pose, pose === 'empatia' ? 'Solo capacitado para Dale! Te Pido' : '¡Acá tenés la respuesta!');
             } catch(e) {
-                chatBox.innerHTML = `🤖 <strong>jAIme:</strong> Solo estoy para ayudarte con Dale! Te Pido. Podés preguntarme sobre cómo cargar productos, configurar tu WhatsApp, descargar tu Código QR o solicitar tu cambio de plan. 🚀`;
+                chatBox.innerHTML = `🤖 <strong>jAIme:</strong> Solo estoy para ayudarte con Dale! Te Pido. Podés preguntarme sobre cómo cargar productos, configurar tu WhatsApp, descargar tu Código QR o cambiar tu plan. 🚀`;
                 changeLandingJaimePose('empatia', 'Solo capacitado para Dale! Te Pido');
             }
         }
@@ -2230,13 +2371,13 @@
             btnMonthly.classList.remove('active');
 
             if (starterAmount) starterAmount.innerHTML = '$15.900 <small>/ mes</small>';
-            if (starterPeriod) starterPeriod.innerHTML = '<span style="color:#10b981; font-weight:700;">Facturado $190.800/año</span><span style="font-size:11px; color:#64748b;">(¡Ahorrás $48.000 al año!)</span>';
+            if (starterPeriod) starterPeriod.innerHTML = '<span style="color:#10b981; font-weight:700;">Total $190.800 / año</span><span style="font-size:11px; color:#64748b;">(Ahorrás $48.000 al año)</span>';
 
             if (proAmount) proAmount.innerHTML = '$23.900 <small>/ mes</small>';
-            if (proPeriod) proPeriod.innerHTML = '<span style="color:#10b981; font-weight:700;">Facturado $286.800/año</span><span style="font-size:11px; color:#64748b;">(¡Ahorrás $72.000 al año!)</span>';
+            if (proPeriod) proPeriod.innerHTML = '<span style="color:#10b981; font-weight:700;">Total $286.800 / año</span><span style="font-size:11px; color:#64748b;">(Ahorrás $72.000 al año)</span>';
 
             if (entAmount) entAmount.innerHTML = '$47.900 <small>/ mes</small>';
-            if (entPeriod) entPeriod.innerHTML = '<span style="color:#10b981; font-weight:700;">Facturado $574.800/año</span><span style="font-size:11px; color:#64748b;">(¡Ahorrás $144.000 al año!)</span>';
+            if (entPeriod) entPeriod.innerHTML = '<span style="color:#10b981; font-weight:700;">Total $574.800 / año</span><span style="font-size:11px; color:#64748b;">(Ahorrás $144.000 al año)</span>';
         } else {
             btnMonthly.classList.add('active');
             btnAnnual.classList.remove('active');
