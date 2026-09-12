@@ -8,6 +8,7 @@ const filesToSync = [
   // a static file for "/" which overrides the api/store rewrite.
   // Store template lives in submodule subdirectories only.
   'alta-usuario.html',
+  'CENTRO-NOTIFICACIONES-GUIA.md',
   'landing.html',
   'ayuda.html',
   'vercel.json',
