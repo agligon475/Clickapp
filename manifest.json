@@ -14,9 +14,10 @@
     "standalone",
     "minimal-ui"
   ],
-  "background_color": "#D72638",
-  "theme_color": "#D72638",
+  "background_color": "#0A0A0C",
+  "theme_color": "#0A0A0C",
   "orientation": "portrait-primary",
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
   "categories": [
     "business",
     "shopping",
@@ -29,6 +30,65 @@
       "platform": "play",
       "url": "https://play.google.com/store/apps/details?id=ar.com.daletepido.app",
       "id": "ar.com.daletepido.app"
+    }
+  ],
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "handle_links": "preferred",
+  "edge_side_panel": {
+    "preferred_width": 480
+  },
+  "tab_strip": {
+    "home_tab": {
+      "scope_patterns": [
+        "/dashboard.html",
+        "/dashboard",
+        "/alta-usuario.html",
+        "/alta-usuario",
+        "/"
+      ]
+    },
+    "new_tab_button": {
+      "url": "/dashboard.html"
+    }
+  },
+  "note_taking": {
+    "new_note_url": "/dashboard.html?action=new-note"
+  },
+  "scope_extensions": [
+    {
+      "origin": "*.daletepido.ar"
+    },
+    {
+      "origin": "*.vercel.app"
+    }
+  ],
+  "widgets": [
+    {
+      "name": "Pedidos Recientes",
+      "short_name": "Pedidos",
+      "description": "Ver pedidos recientes en tu comercio",
+      "tag": "pedidos-widget",
+      "template": "pedidos-template",
+      "ms_ac_template": "/widgets/pedidos.json",
+      "data": "/api/auth",
+      "type": "application/json",
+      "screenshots": [
+        {
+          "src": "/screenshot-narrow.png",
+          "sizes": "750x1334",
+          "label": "Widget de Pedidos"
+        }
+      ],
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ],
+      "auth": false,
+      "update": 3600
     }
   ],
   "icons": [
