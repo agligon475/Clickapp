@@ -11,6 +11,8 @@ const filesToSync = [
   'CENTRO-NOTIFICACIONES-GUIA.md',
   'landing.html',
   'ayuda.html',
+  'terminos.html',
+  'privacidad.html',
   'vercel.json',
   'main.py',
   'requirements.txt',

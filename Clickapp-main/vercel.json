@@ -73,6 +73,22 @@
       "destination": "/landing.html"
     },
     {
+      "source": "/terminos",
+      "destination": "/terminos.html"
+    },
+    {
+      "source": "/terminos-y-condiciones",
+      "destination": "/terminos.html"
+    },
+    {
+      "source": "/privacidad",
+      "destination": "/privacidad.html"
+    },
+    {
+      "source": "/politicas-de-privacidad",
+      "destination": "/privacidad.html"
+    },
+    {
       "source": "/robots.txt",
       "destination": "/robots.txt"
     },

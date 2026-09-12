@@ -26,6 +26,12 @@ export default async function handler(req, res) {
     '/kit-imprimible.html': 'kit-imprimible.html',
     '/landing': 'landing.html',
     '/landing.html': 'landing.html',
+    '/terminos': 'terminos.html',
+    '/terminos.html': 'terminos.html',
+    '/terminos-y-condiciones': 'terminos.html',
+    '/privacidad': 'privacidad.html',
+    '/privacidad.html': 'privacidad.html',
+    '/politicas-de-privacidad': 'privacidad.html',
     '/robots.txt': { file: 'robots.txt', type: 'text/plain; charset=utf-8' },
     '/sitemap.xml': { file: 'sitemap.xml', type: 'application/xml; charset=utf-8' },
     '/llms.txt': { file: 'llms.txt', type: 'text/plain; charset=utf-8' }
