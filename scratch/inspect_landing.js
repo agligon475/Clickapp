@@ -1,13 +1,13 @@
 import fs from 'fs';
 
-const html = fs.readFileSync('landing.html', 'utf8');
+const content = fs.readFileSync('landing.html', 'utf8');
 
-console.log('=== INSPECTING LANDING.HTML SECTIONS ===');
-const sections = [...html.matchAll(/<section[^>]*id="([^"]+)"[^>]*>/g)].map(m => m[1]);
-console.log('Sections with ID:', sections);
+const headings = [...content.matchAll(/<h[1-4][^>]*>(.*?)<\/h[1-4]>/gis)].map(m => m[1].replace(/<[^>]+>/g, '').trim());
+console.log('Headings count:', headings.length);
+headings.forEach((h, i) => console.log(`${i+1}: ${h.substring(0, 80)}`));
 
-const h1s = [...html.matchAll(/<h1[^>]*>(.*?)<\/h1>/gs)].map(m => m[1].replace(/<[^>]+>/g, '').trim());
-console.log('H1s:', h1s);
-
-const h2s = [...html.matchAll(/<h2[^>]*>(.*?)<\/h2>/gs)].map(m => m[1].replace(/<[^>]+>/g, '').trim());
-console.log('H2s:', h2s);
+const priceMatches = content.match(/.{0,50}(?:precio|plan|gratis|mensual|anual|\$|tarifa|pricing).{0,50}/gi);
+console.log('\nPrice matches snippet count:', priceMatches ? priceMatches.length : 0);
+if (priceMatches) {
+  priceMatches.slice(0, 15).forEach(p => console.log('MATCH:', p.trim().replace(/\s+/g, ' ')));
+}

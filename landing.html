@@ -492,16 +492,22 @@
         .testimonial-avatar { width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,var(--red),var(--red-dark)); color:var(--white); display:flex; align-items:center; justify-content:center; font-size:18px; }
         .testimonial-name { font-size:13px; font-weight:700; color:var(--text-dark); font-family:'Josefin Sans',sans-serif; }
         .testimonial-role { font-size:11px; color:var(--text-silver); }
-        .pricing-section { background:var(--white); padding: 60px 0; }
-        .pricing-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; margin-top:52px; max-width:1080px; margin-left:auto; margin-right:auto; padding-top: 18px; align-items: stretch; }
+        .pricing-section { background:var(--white); padding: clamp(60px, 8vw, 90px) 20px; }
+        .pricing-toggle-wrap { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 32px auto 0; max-width: 480px; }
+        .pricing-toggle-box { background: #f1f5f9; border: 1.5px solid #e2e8f0; border-radius: 999px; padding: 4px; display: inline-flex; align-items: center; gap: 4px; position: relative; box-shadow: inset 0 2px 6px rgba(0,0,0,0.04); }
+        .pricing-toggle-opt { padding: 8px 18px; border-radius: 999px; font-size: 13.5px; font-weight: 700; color: #64748b; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); border: none; background: transparent; cursor: pointer; font-family: 'Josefin Sans', sans-serif; display: inline-flex; align-items: center; gap: 8px; }
+        .pricing-toggle-opt.active { background: #D60000; color: #ffffff; box-shadow: 0 4px 14px rgba(214,0,0,0.35); transform: scale(1.02); }
+        .pricing-save-pill { background: #10B981; color: #ffffff; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: 0 2px 6px rgba(16,185,129,0.3); }
+        .pricing-toggle-opt.active .pricing-save-pill { background: #ffffff; color: #D60000; }
+        .pricing-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; margin-top:40px; max-width:1080px; margin-left:auto; margin-right:auto; padding-top: 18px; align-items: stretch; }
         .price-card { border:2px solid var(--border-light); border-radius:20px; padding:36px 28px 32px; text-align:center; position:relative; transition:transform .2s,box-shadow .2s; background:var(--white); box-shadow:0 6px 24px rgba(0,0,0,0.03); display:flex; flex-direction:column; justify-content:space-between; height:100%; }
         .price-card:hover { transform:translateY(-4px); box-shadow:0 16px 48px rgba(0,0,0,0.08); border-color:var(--border-medium); }
         .price-card.featured { border-color:var(--red); box-shadow:0 8px 40px rgba(214,0,0,0.15); z-index:2; }
         .price-badge { position:absolute; top:-14px; left:50%; transform:translateX(-50%); background:var(--red); color:var(--white); font-size:11px; font-weight:700; letter-spacing:.06em; padding:5px 16px; border-radius:999px; white-space:nowrap; font-family:'Josefin Sans',sans-serif; z-index:10; box-shadow:0 4px 12px rgba(214,0,0,0.25); }
         .price-name { font-size:13px; font-weight:700; color:var(--text-dark); text-transform:uppercase; letter-spacing:.08em; margin-bottom:12px; font-family:'Josefin Sans',sans-serif; }
-        .price-amount { font-size:3rem; font-weight:800; letter-spacing:-2px; margin-bottom:6px; color:var(--text-dark); font-family:'Josefin Sans',sans-serif; }
+        .price-amount { font-size:2.8rem; font-weight:800; letter-spacing:-1.5px; margin-bottom:6px; color:var(--text-dark); font-family:'Josefin Sans',sans-serif; transition: all 0.2s ease; }
         .price-amount small { font-size:1rem; font-weight:500; color:var(--text-muted); letter-spacing:0; }
-        .price-period { font-size:13px; color:var(--text-muted); margin-bottom:24px; }
+        .price-period { font-size:13px; color:var(--text-muted); margin-bottom:24px; min-height: 38px; display: flex; flex-direction: column; justify-content: center; }
         .price-features { list-style:none; text-align:left; margin-bottom:28px; display:flex; flex-direction:column; gap:12px; padding:0; flex:1; }
         .price-features li { font-size:13.5px; display:flex; align-items:flex-start; gap:10px; color:var(--text-body); line-height:1.45; }
         .price-features li::before { content: none !important; display: none !important; }
@@ -509,7 +515,7 @@
         .price-cta:hover { background:var(--red); color:var(--white); }
         .price-card.featured .price-cta { background:var(--red); color:var(--white); }
         .price-card.featured .price-cta:hover { background:var(--red-medium); border-color:var(--red-medium); }
-        .cta-section { background:linear-gradient(135deg, #D60000 0%, #7A0000 100%); padding:80px 24px; text-align:center; position:relative; overflow:hidden; }
+        .cta-section { background:linear-gradient(135deg, #D60000 0%, #7A0000 100%); padding: clamp(60px, 8vw, 90px) 20px; text-align:center; position:relative; overflow:hidden; }
         .cta-section::before { content:''; position:absolute; width:500px; height:500px; border-radius:50%; background:rgba(255,255,255,0.08); top:-200px; right:-100px; }
         .cta-section::after { content:''; position:absolute; width:300px; height:300px; border-radius:50%; background:rgba(255,255,255,0.06); bottom:-100px; left:-50px; }
         .cta-inner { position:relative; z-index:1; max-width:640px; margin:0 auto; }
@@ -525,7 +531,42 @@
         footer p { font-size:12px; color:var(--text-subtle); }
         footer a { color:rgba(255,255,255,0.85); text-decoration:none; }
         footer a:hover { color:var(--red); }
-        @media(max-width:768px){ nav{padding:14px 20px} section{padding:60px 20px} .features-grid{grid-template-columns:1fr} .mockup-box{display:none} .hero-stats{gap:24px} }
+        
+        /* REGLAS MOBILE-FIRST AVANZADAS Y FLUIDEZ */
+        @media(max-width: 768px) {
+            nav { padding: 12px 16px; }
+            .nav-logo { height: 28px; }
+            .nav-actions { gap: 8px; }
+            .hero { padding: 6.5rem 16px 3.5rem; min-height: auto; }
+            .hero-left-col { text-align: center; }
+            .hero h1 { font-size: clamp(2rem, 7.5vw, 2.75rem); text-align: center; letter-spacing: -1px; margin-bottom: 14px; }
+            .hero p { font-size: 14.5px; text-align: center; margin: 0 auto 26px; }
+            .hero-btns { flex-direction: column; width: 100%; gap: 10px; }
+            .hero-btns .btn-primary, .hero-btns .btn-secondary { width: 100%; justify-content: center; padding: 14px 20px; font-size: 15px; text-align: center; }
+            .hero-stats-grid { grid-template-columns: repeat(3, 1fr); padding: 14px 8px; gap: 6px; }
+            .hero-stat-val { font-size: clamp(1.25rem, 4.5vw, 1.7rem); }
+            .hero-stat-label { font-size: 9.5px; }
+            .tldr-box { padding: 18px 16px; text-align: left; }
+            .tldr-box h3 { font-size: 15px; }
+            .tldr-box li { font-size: 13px; }
+            
+            section { padding: 60px 16px; }
+            .features-grid { grid-template-columns: 1fr; gap: 32px; }
+            .mockup-box { display: block; max-width: 320px; margin: 0 auto; }
+            
+            .pricing-toggle-wrap { width: 100%; }
+            .pricing-toggle-box { width: 100%; justify-content: center; }
+            .pricing-toggle-opt { padding: 8px 12px; font-size: 12px; }
+            .pricing-grid { grid-template-columns: 1fr; gap: 20px; margin-top: 28px; }
+            .price-card { padding: 32px 20px 26px; }
+            
+            #demo-slider-track > div { padding: 22px 16px !important; }
+            .demo-slide-footer { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; text-align: center; }
+            .demo-slide-footer a { width: 100%; justify-content: center; }
+            
+            #daleteanoto-section > div > div { padding: 24px 18px !important; gap: 20px !important; }
+            #daleteanoto-section a { width: 100%; justify-content: center; }
+        }
     </style>
 </head>
 <body>
@@ -679,7 +720,7 @@
                             <p style="font-size: 15px; color: #475569; line-height: 1.6; margin-bottom: 24px;">
                                 Menú interactivo con productos de panadería y repostería artesanal sin gluten. Permite a los clientes elegir sus sabores y enviar su pedido directo al WhatsApp de la panadería.
                             </p>
-                            <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+                            <div class="demo-slide-footer" style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #e2e8f0; padding-top: 20px;">
                                 <span style="font-size: 13px; color: #64748b; font-weight: 600;"><i class="bi bi-geo-alt-fill" style="color:#047857;"></i> Buenos Aires · Retiro & Envíos</span>
                                 <a href="https://noutacc.daletepido.com.ar/" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: #059669; color: #ffffff; font-weight: 800; font-size: 14px; text-decoration: none; border-radius: 12px; box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);">
                                     Probar Demo <i class="bi bi-box-arrow-up-right"></i>
@@ -702,7 +743,7 @@
                             <p style="font-size: 15px; color: #475569; line-height: 1.6; margin-bottom: 24px;">
                                 Catálogo completo de herramientas eléctricas, insumos de electricidad y construcción con fotos, precios y stock organizado por categorías y subrubros.
                             </p>
-                            <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+                            <div class="demo-slide-footer" style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #e2e8f0; padding-top: 20px;">
                                 <span style="font-size: 13px; color: #64748b; font-weight: 600;"><i class="bi bi-geo-alt-fill" style="color:#c2410c;"></i> Buenos Aires · Envíos en el Día</span>
                                 <a href="https://ferrenow.daletepido.com.ar/" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: #ea580c; color: #ffffff; font-weight: 800; font-size: 14px; text-decoration: none; border-radius: 12px; box-shadow: 0 4px 14px rgba(234, 88, 12, 0.3);">
                                     Probar Demo <i class="bi bi-box-arrow-up-right"></i>
@@ -725,7 +766,7 @@
                             <p style="font-size: 15px; color: #475569; line-height: 1.6; margin-bottom: 24px;">
                                 Catálogo dinámico de golosinas, chocolates, energizantes, snacks y bebidas heladas listo para tomar pedidos inmediatos a domicilio o retiro.
                             </p>
-                            <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+                            <div class="demo-slide-footer" style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #e2e8f0; padding-top: 20px;">
                                 <span style="font-size: 13px; color: #64748b; font-weight: 600;"><i class="bi bi-geo-alt-fill" style="color:#be185d;"></i> Buenos Aires · Abierto 24hs</span>
                                 <a href="https://kioscojulio.daletepido.com.ar/" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: #be185d; color: #ffffff; font-weight: 800; font-size: 14px; text-decoration: none; border-radius: 12px; box-shadow: 0 4px 14px rgba(190, 24, 93, 0.3);">
                                     Probar Demo <i class="bi bi-box-arrow-up-right"></i>
@@ -737,10 +778,10 @@
                 </div>
 
                 <!-- NAVIGATION BUTTONS & DOTS -->
-                <button onclick="moveDemoSlide(-1)" aria-label="Ver demo anterior" style="position: absolute; left: -20px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 6px 20px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; color: #0f172a; font-size: 18px; z-index: 10;">
+                <button onclick="moveDemoSlide(-1)" class="demo-nav-btn demo-nav-prev" aria-label="Ver demo anterior" style="position: absolute; left: -18px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 6px 20px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; color: #0f172a; font-size: 18px; z-index: 10;">
                     <i class="bi bi-chevron-left"></i>
                 </button>
-                <button onclick="moveDemoSlide(1)" aria-label="Ver siguiente demo" style="position: absolute; right: -20px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 6px 20px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; color: #0f172a; font-size: 18px; z-index: 10;">
+                <button onclick="moveDemoSlide(1)" class="demo-nav-btn demo-nav-next" aria-label="Ver siguiente demo" style="position: absolute; right: -18px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 6px 20px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; color: #0f172a; font-size: 18px; z-index: 10;">
                     <i class="bi bi-chevron-right"></i>
                 </button>
 
@@ -1015,17 +1056,30 @@
     <section class="pricing-section" id="pricing-section">
         <div class="container">
             <div style="text-align:center">
-                <div class="section-label">Planes</div>
+                <div class="section-label">Planes Flexibles</div>
                 <h2 class="section-title">Empezá hoy,<br>crecé sin límites</h2>
-                <p class="section-sub" style="margin:0 auto">Sin permanencia mínima. Cancelás cuando quieras.</p>
+                <p class="section-sub" style="margin:0 auto">Sin permanencia mínima. Cancelás cuando quieras sin costo de salida.</p>
+                
+                <!-- SELECTOR DE FACTURACIÓN MENSUAL / ANUAL CON DESCUENTO -->
+                <div class="pricing-toggle-wrap">
+                    <div class="pricing-toggle-box">
+                        <button type="button" id="toggle-opt-monthly" class="pricing-toggle-opt active" onclick="setBillingPeriod('monthly', event)">
+                            Facturación Mensual
+                        </button>
+                        <button type="button" id="toggle-opt-annual" class="pricing-toggle-opt" onclick="setBillingPeriod('annual', event)">
+                            Plan Anual <span class="pricing-save-pill">🔥 2 MESES GRATIS</span>
+                        </button>
+                    </div>
+                </div>
             </div>
+
             <div class="pricing-grid">
                 <!-- PLAN STARTER -->
                 <div class="price-card">
                     <div>
                         <div class="price-name">Plan Starter</div>
-                        <div class="price-amount">$19.900 <small>/ mes</small></div>
-                        <div class="price-period">Para empezar sin riesgos</div>
+                        <div class="price-amount" id="price-starter-amount">$19.900 <small>/ mes</small></div>
+                        <div class="price-period" id="price-starter-period">Para empezar sin riesgos</div>
                         <ul class="price-features">
                             <li><span style="color:#10b981; font-weight:800; flex-shrink:0; margin-top:2px;">✓</span> <span>Hasta 12 productos</span></li>
                             <li><span style="color:#10b981; font-weight:800; flex-shrink:0; margin-top:2px;">✓</span> <span>QR para tu local</span></li>
@@ -1033,16 +1087,16 @@
                             <li><span style="color:#10b981; font-weight:800; flex-shrink:0; margin-top:2px;">✓</span> <span>Subdominio personalizado</span></li>
                         </ul>
                     </div>
-                    <button class="price-cta" onclick="openRegisterModal()">Crear mi tienda Starter</button>
+                    <button class="price-cta" onclick="openRegisterModal('Starter')">Crear mi tienda Starter</button>
                 </div>
 
-                <!-- PLAN PRO -->
+                <!-- PLAN PRO (MÁS VENDIDO) -->
                 <div class="price-card featured">
                     <div>
-                        <div style="background:linear-gradient(135deg, #D60000 0%, #b30000 100%); color:#ffffff; font-size:11px; font-weight:800; padding:6px 18px; border-radius:999px; display:inline-block; margin:0 auto 16px; text-transform:uppercase; letter-spacing:0.06em; box-shadow:0 4px 12px rgba(214,0,0,0.3); font-family:'Josefin Sans',sans-serif;">⚡ MÁS VENDIDO</div>
+                        <div style="background:linear-gradient(135deg, #D60000 0%, #b30000 100%); color:#ffffff; font-size:11px; font-weight:800; padding:6px 18px; border-radius:999px; display:inline-block; margin:0 auto 16px; text-transform:uppercase; letter-spacing:0.06em; box-shadow:0 4px 12px rgba(214,0,0,0.3); font-family:'Josefin Sans',sans-serif;">⚡ MÁS ELEGIDO POR COMERCIOS</div>
                         <div class="price-name">Plan PRO</div>
-                        <div class="price-amount">$29.900 <small>/ mes</small></div>
-                        <div class="price-period">Para comercios que crecen</div>
+                        <div class="price-amount" id="price-pro-amount">$29.900 <small>/ mes</small></div>
+                        <div class="price-period" id="price-pro-period">Para comercios que crecen</div>
                         <ul class="price-features">
                             <li><span style="color:#10b981; font-weight:800; flex-shrink:0; margin-top:2px;">✓</span> <span>Productos e imágenes ilimitadas</span></li>
                             <li><span style="color:#10b981; font-weight:800; flex-shrink:0; margin-top:2px;">✓</span> <span>Posicionamiento local (SEO/GEO)</span></li>
@@ -1051,15 +1105,15 @@
                             <li><span style="color:#10b981; font-weight:800; flex-shrink:0; margin-top:2px;">✓</span> <span>Soporte prioritario por WhatsApp</span></li>
                         </ul>
                     </div>
-                    <button class="price-cta" onclick="openRegisterModal()">Quiero el Plan PRO</button>
+                    <button class="price-cta" onclick="openRegisterModal('PRO')">Quiero el Plan PRO</button>
                 </div>
 
                 <!-- PLAN ENTERPRISE -->
                 <div class="price-card">
                     <div>
                         <div class="price-name">Plan Enterprise</div>
-                        <div class="price-amount">$59.900 <small>/ mes</small></div>
-                        <div class="price-period">Para negocios a gran escala</div>
+                        <div class="price-amount" id="price-enterprise-amount">$59.900 <small>/ mes</small></div>
+                        <div class="price-period" id="price-enterprise-period">Para negocios a gran escala</div>
                         <ul class="price-features">
                             <li><span style="color:#10b981; font-weight:800; flex-shrink:0; margin-top:2px;">✓</span> <span>Soporte prioritario 24/7</span></li>
                             <li><span style="color:#10b981; font-weight:800; flex-shrink:0; margin-top:2px;">✓</span> <span>Te ayudamos a cargar todo tu catálogo</span></li>
@@ -1067,7 +1121,7 @@
                             <li><span style="color:#10b981; font-weight:800; flex-shrink:0; margin-top:2px;">✓</span> <span>Asistencia personalizada en tu local</span></li>
                         </ul>
                     </div>
-                    <button class="price-cta" onclick="openRegisterModal()">Contactar por Enterprise</button>
+                    <button class="price-cta" onclick="openRegisterModal('Enterprise')">Contactar por Enterprise</button>
                 </div>
             </div>
 
@@ -1357,35 +1411,35 @@
     </section>
 
     <!-- FORMULARIO MODAL REGISTRO -->
-    <div id="register-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(8px); padding:20px;">
-        <div id="register-modal-card" style="background:#1a1515; border:1px solid rgba(214,0,0,0.4); border-radius:20px; padding:32px; max-width:460px; width:100%; position:relative; box-shadow:0 24px 64px rgba(214,0,0,0.35); color:#fff;">
-            <button onclick="closeRegisterModal()" aria-label="Cerrar modal de registro" style="position:absolute; top:16px; right:16px; background:transparent; border:none; color:rgba(255,255,255,0.6); font-size:24px; cursor:pointer;">&times;</button>
+    <div id="register-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(8px); padding:16px;">
+        <div id="register-modal-card" style="background:#1a1515; border:1px solid rgba(214,0,0,0.4); border-radius:20px; padding: clamp(20px, 5vw, 32px); max-width:460px; width:100%; max-height:92vh; overflow-y:auto; -webkit-overflow-scrolling:touch; position:relative; box-shadow:0 24px 64px rgba(214,0,0,0.35); color:#fff; box-sizing:border-box;">
+            <button onclick="closeRegisterModal()" aria-label="Cerrar modal de registro" style="position:absolute; top:14px; right:14px; background:transparent; border:none; color:rgba(255,255,255,0.6); font-size:24px; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center;">&times;</button>
             <h3 style="font-size:22px; font-weight:800; margin-bottom:6px; color:#fff; font-family:inherit;">🚀 Crear mi Tienda Online</h3>
-            <p style="font-size:13px; color:#9a8f8f; margin-bottom:20px;">15 días de prueba gratuita. Sin tarjetas ni compromisos.</p>
+            <p id="reg-modal-subtitle" style="font-size:13px; color:#9a8f8f; margin-bottom:20px;">15 días de prueba gratuita. Sin tarjetas ni compromisos.</p>
             <form onsubmit="handleRegisterSubmit(event)" id="landing-register-form">
                 <div style="margin-bottom:14px;">
                     <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Nombre de tu Comercio *</label>
-                    <input type="text" id="reg-store" required placeholder="Ej: Pizzería Don Antonio" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
+                    <input type="text" id="reg-store" required placeholder="Ej: Pizzería Don Antonio" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none; box-sizing:border-box;">
                 </div>
                 <div style="margin-bottom:14px;">
                     <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Nombre y Apellido *</label>
-                    <input type="text" id="reg-name" required placeholder="Ej: Juan Pérez" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
+                    <input type="text" id="reg-name" required placeholder="Ej: Juan Pérez" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none; box-sizing:border-box;">
                 </div>
                 <div style="margin-bottom:14px;">
                     <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Correo Electrónico (Para recibir la activación) *</label>
-                    <input type="email" id="reg-email" required placeholder="Ej: contacto@tutienda.com" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
+                    <input type="email" id="reg-email" required placeholder="Ej: contacto@tutienda.com" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none; box-sizing:border-box;">
                 </div>
                 <div style="margin-bottom:14px;">
                     <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Contraseña para acceder a tu Panel *</label>
-                    <input type="password" id="reg-password" required minlength="6" placeholder="Mínimo 6 caracteres" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
+                    <input type="password" id="reg-password" required minlength="6" placeholder="Mínimo 6 caracteres" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none; box-sizing:border-box;">
                 </div>
                 <div style="margin-bottom:14px;">
                     <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">WhatsApp de contacto (donde recibirás los pedidos) *</label>
-                    <input type="tel" id="reg-wapp" required placeholder="Ej: 5491100000000" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none;">
+                    <input type="tel" id="reg-wapp" required placeholder="Ej: 5491100000000" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-size:14px; font-family:inherit; outline:none; box-sizing:border-box;">
                 </div>
                 <div style="margin-bottom:20px;">
                     <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:6px;">Rubro principal *</label>
-                    <select id="reg-rubro" required style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:#1a1515; color:#fff; font-size:14px; font-family:inherit; outline:none;">
+                    <select id="reg-rubro" required style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:#1a1515; color:#fff; font-size:14px; font-family:inherit; outline:none; box-sizing:border-box;">
                         <option value="" disabled selected>Seleccioná tu rubro</option>
                         <option value="Ferretería">Ferretería</option>
                         <option value="Gastronomía">Gastronomía</option>
@@ -1400,9 +1454,9 @@
     </div>
 
     <!-- FORMULARIO MODAL MENSAJE A SOPORTE / CONTACTO -->
-    <div id="contact-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.82); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(8px); padding:20px;">
-        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:24px; padding:32px; max-width:480px; width:100%; position:relative; box-shadow:0 24px 64px rgba(0,0,0,0.25); color:#0f172a;">
-            <button onclick="closeContactModal()" style="position:absolute; top:16px; right:16px; background:transparent; border:none; color:#64748b; font-size:24px; cursor:pointer;" aria-label="Cerrar">&times;</button>
+    <div id="contact-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.82); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(8px); padding:16px;">
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:24px; padding: clamp(20px, 5vw, 32px); max-width:480px; width:100%; max-height:92vh; overflow-y:auto; -webkit-overflow-scrolling:touch; position:relative; box-shadow:0 24px 64px rgba(0,0,0,0.25); color:#0f172a; box-sizing:border-box;">
+            <button onclick="closeContactModal()" style="position:absolute; top:14px; right:14px; background:transparent; border:none; color:#64748b; font-size:24px; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center;" aria-label="Cerrar">&times;</button>
             <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(214,0,0,0.08); border:1px solid rgba(214,0,0,0.2); color:#D60000; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; padding:4px 12px; border-radius:999px; margin-bottom:10px;">
                 🎧 SOPORTE TÉCNICO OFICIAL
             </div>
@@ -1413,15 +1467,15 @@
             <form onsubmit="handleContactSubmit(event)">
                 <div style="margin-bottom:14px;">
                     <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:700; color:#475569; margin-bottom:6px;">Nombre y Apellido *</label>
-                    <input type="text" id="contact-name" required placeholder="Ej: María Gómez" style="width:100%; padding:11px 14px; border-radius:10px; border:1px solid #cbd5e1; background:#f8fafc; color:#0f172a; font-size:14px; font-family:inherit; outline:none;">
+                    <input type="text" id="contact-name" required placeholder="Ej: María Gómez" style="width:100%; padding:11px 14px; border-radius:10px; border:1px solid #cbd5e1; background:#f8fafc; color:#0f172a; font-size:14px; font-family:inherit; outline:none; box-sizing:border-box;">
                 </div>
                 <div style="margin-bottom:14px;">
                     <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:700; color:#475569; margin-bottom:6px;">Correo Electrónico (para recibir la respuesta) *</label>
-                    <input type="email" id="contact-email-wapp" required placeholder="Ej: maria@tucomercio.com" style="width:100%; padding:11px 14px; border-radius:10px; border:1px solid #cbd5e1; background:#f8fafc; color:#0f172a; font-size:14px; font-family:inherit; outline:none;">
+                    <input type="email" id="contact-email-wapp" required placeholder="Ej: maria@tucomercio.com" style="width:100%; padding:11px 14px; border-radius:10px; border:1px solid #cbd5e1; background:#f8fafc; color:#0f172a; font-size:14px; font-family:inherit; outline:none; box-sizing:border-box;">
                 </div>
                 <div style="margin-bottom:14px;">
                     <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:700; color:#475569; margin-bottom:6px;">Asunto de la consulta *</label>
-                    <select id="contact-subject" required style="width:100%; padding:11px 14px; border-radius:10px; border:1px solid #cbd5e1; background:#f8fafc; color:#0f172a; font-size:14px; font-family:inherit; outline:none;">
+                    <select id="contact-subject" required style="width:100%; padding:11px 14px; border-radius:10px; border:1px solid #cbd5e1; background:#f8fafc; color:#0f172a; font-size:14px; font-family:inherit; outline:none; box-sizing:border-box;">
                         <option value="Consulta General" selected>Consulta General / Información</option>
                         <option value="Soporte Técnico">Soporte Técnico / Ayuda con mi Tienda</option>
                         <option value="Facturación y Planes">Facturación y Planes</option>
@@ -1430,7 +1484,7 @@
                 </div>
                 <div style="margin-bottom:22px;">
                     <label style="display:block; font-size:11px; text-transform:uppercase; font-weight:700; color:#475569; margin-bottom:6px;">Detalle del Mensaje *</label>
-                    <textarea id="contact-message" required rows="4" placeholder="Describí tu consulta o problema en detalle..." style="width:100%; padding:11px 14px; border-radius:10px; border:1px solid #cbd5e1; background:#f8fafc; color:#0f172a; font-size:14px; font-family:inherit; outline:none; resize:none;"></textarea>
+                    <textarea id="contact-message" required rows="4" placeholder="Describí tu consulta o problema en detalle..." style="width:100%; padding:11px 14px; border-radius:10px; border:1px solid #cbd5e1; background:#f8fafc; color:#0f172a; font-size:14px; font-family:inherit; outline:none; resize:none; box-sizing:border-box;"></textarea>
                 </div>
                 <button type="submit" style="width:100%; background:linear-gradient(135deg, #D60000 0%, #b30000 100%); color:#ffffff; border:none; padding:14px; border-radius:12px; font-size:14px; font-weight:800; cursor:pointer; font-family:inherit; transition:transform 0.15s, box-shadow 0.2s; box-shadow:0 8px 24px rgba(214,0,0,0.3); text-transform:uppercase; letter-spacing:0.5px;">📩 Enviar Mensaje a Soporte</button>
             </form>
@@ -1438,9 +1492,9 @@
     </div>
 
     <!-- MODAL INFORMACIÓN LEGAL -->
-    <div id="legal-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.82); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(8px); padding:20px;">
-        <div style="background:#1a1515; border:1px solid rgba(255,255,255,0.15); border-radius:20px; padding:32px; max-width:500px; width:100%; position:relative; box-shadow:0 24px 64px rgba(0,0,0,0.5); color:#fff;">
-            <button onclick="closeLegalModal()" aria-label="Cerrar modal de legales" style="position:absolute; top:16px; right:16px; background:transparent; border:none; color:rgba(255,255,255,0.6); font-size:24px; cursor:pointer;">&times;</button>
+    <div id="legal-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.82); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(8px); padding:16px;">
+        <div style="background:#1a1515; border:1px solid rgba(255,255,255,0.15); border-radius:20px; padding: clamp(20px, 5vw, 32px); max-width:500px; width:100%; max-height:92vh; overflow-y:auto; -webkit-overflow-scrolling:touch; position:relative; box-shadow:0 24px 64px rgba(0,0,0,0.5); color:#fff; box-sizing:border-box;">
+            <button onclick="closeLegalModal()" aria-label="Cerrar modal de legales" style="position:absolute; top:14px; right:14px; background:transparent; border:none; color:rgba(255,255,255,0.6); font-size:24px; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center;">&times;</button>
             <h3 id="legal-modal-title" style="font-size:20px; font-weight:700; margin-bottom:12px; color:#fff; font-family:inherit;">
                 Información Legal
             </h3>
@@ -1543,8 +1597,18 @@
             }
         }
 
-        function openRegisterModal() {
-            document.getElementById('register-modal').style.display = 'flex';
+        function openRegisterModal(planName, billingPeriod) {
+            const period = billingPeriod || currentBillingPeriod || 'monthly';
+            const modal = document.getElementById('register-modal');
+            if (modal) modal.style.display = 'flex';
+            const subTitle = document.getElementById('reg-modal-subtitle');
+            if (subTitle) {
+                if (planName) {
+                    subTitle.innerHTML = `Plan seleccionado: <strong style="color:#ff6666;">${planName} (${period === 'annual' ? 'Facturación Anual con 2 meses bonificados' : 'Facturación Mensual'})</strong> · 15 días de prueba gratis.`;
+                } else {
+                    subTitle.textContent = '15 días de prueba gratuita. Sin tarjetas ni compromisos.';
+                }
+            }
         }
 
         function closeRegisterModal() {
@@ -2144,6 +2208,54 @@
 
     <!-- DEMO SLIDER SCRIPT -->
     <script>
+      // GESTIÓN DE PLANES Y SELECTOR ANUAL / MENSUAL
+      let currentBillingPeriod = 'monthly';
+
+      function setBillingPeriod(period, e) {
+        if (e) e.stopPropagation();
+        currentBillingPeriod = period;
+        const btnMonthly = document.getElementById('toggle-opt-monthly');
+        const btnAnnual = document.getElementById('toggle-opt-annual');
+        if (!btnMonthly || !btnAnnual) return;
+
+        const starterAmount = document.getElementById('price-starter-amount');
+        const starterPeriod = document.getElementById('price-starter-period');
+        const proAmount = document.getElementById('price-pro-amount');
+        const proPeriod = document.getElementById('price-pro-period');
+        const entAmount = document.getElementById('price-enterprise-amount');
+        const entPeriod = document.getElementById('price-enterprise-period');
+
+        if (period === 'annual') {
+            btnAnnual.classList.add('active');
+            btnMonthly.classList.remove('active');
+
+            if (starterAmount) starterAmount.innerHTML = '$15.900 <small>/ mes</small>';
+            if (starterPeriod) starterPeriod.innerHTML = '<span style="color:#10b981; font-weight:700;">Facturado $190.800/año</span><span style="font-size:11px; color:#64748b;">(¡Ahorrás $48.000 al año!)</span>';
+
+            if (proAmount) proAmount.innerHTML = '$23.900 <small>/ mes</small>';
+            if (proPeriod) proPeriod.innerHTML = '<span style="color:#10b981; font-weight:700;">Facturado $286.800/año</span><span style="font-size:11px; color:#64748b;">(¡Ahorrás $72.000 al año!)</span>';
+
+            if (entAmount) entAmount.innerHTML = '$47.900 <small>/ mes</small>';
+            if (entPeriod) entPeriod.innerHTML = '<span style="color:#10b981; font-weight:700;">Facturado $574.800/año</span><span style="font-size:11px; color:#64748b;">(¡Ahorrás $144.000 al año!)</span>';
+        } else {
+            btnMonthly.classList.add('active');
+            btnAnnual.classList.remove('active');
+
+            if (starterAmount) starterAmount.innerHTML = '$19.900 <small>/ mes</small>';
+            if (starterPeriod) starterPeriod.textContent = 'Para empezar sin riesgos';
+
+            if (proAmount) proAmount.innerHTML = '$29.900 <small>/ mes</small>';
+            if (proPeriod) proPeriod.textContent = 'Para comercios que crecen';
+
+            if (entAmount) entAmount.innerHTML = '$59.900 <small>/ mes</small>';
+            if (entPeriod) entPeriod.textContent = 'Para negocios a gran escala';
+        }
+      }
+
+      function toggleBillingPeriod() {
+        setBillingPeriod(currentBillingPeriod === 'monthly' ? 'annual' : 'monthly');
+      }
+
       let currentDemoIndex = 0;
       function moveDemoSlide(direction) {
         const track = document.getElementById('demo-slider-track');
@@ -2165,6 +2277,27 @@
         currentDemoIndex = index;
         moveDemoSlide(0);
       }
+
+      // SOPORTE TÁCTIL SWIPE EN SLIDER PARA MÓVILES
+      (function initDemoTouchSwipe() {
+        const container = document.getElementById('demo-slider-container');
+        if (!container) return;
+        let startX = 0;
+        let endX = 0;
+
+        container.addEventListener('touchstart', (e) => {
+          startX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        container.addEventListener('touchend', (e) => {
+          endX = e.changedTouches[0].screenX;
+          const diff = startX - endX;
+          if (Math.abs(diff) > 45) {
+            if (diff > 0) moveDemoSlide(1);
+            else moveDemoSlide(-1);
+          }
+        }, { passive: true });
+      })();
 
       // PER-WORD RISE ANIMATION INITIALIZER
       function initPerWordRise() {
