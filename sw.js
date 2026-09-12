@@ -1,10 +1,14 @@
-const CACHE_NAME = 'daletepido-v15';
+const CACHE_NAME = 'daletepido-v16';
 const ASSETS_TO_CACHE = [
   '/',
   '/landing',
+  '/landing.html',
   '/dashboard',
+  '/dashboard.html',
   '/tienda',
+  '/tienda.html',
   '/alta-usuario',
+  '/alta-usuario.html',
   '/ayuda',
   '/manifest.json',
   '/favicon.ico',
