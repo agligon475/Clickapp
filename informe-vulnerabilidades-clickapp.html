@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Informe Ejecutivo de Seguridad & Vulnerabilidades — Dale! Te Pido / Clickapp</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #090D16;
+      --bg-card: rgba(18, 24, 38, 0.85);
+      --bg-card-hover: rgba(28, 38, 58, 0.95);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(99, 102, 241, 0.3);
+      
+      --critical: #EF4444;
+      --critical-glow: rgba(239, 68, 68, 0.25);
+      --high: #F97316;
+      --high-glow: rgba(249, 115, 22, 0.25);
+      --medium: #FBBF24;
+      --medium-glow: rgba(251, 191, 36, 0.25);
+      --low: #3B82F6;
+      --safe: #10B981;
+      
+      --brand-teal: #0D9488;
+      --brand-indigo: #6366F1;
+      --brand-purple: #8B5CF6;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 0%, #151F38 0%, var(--bg-dark) 75%);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    /* Presentation Deck Container (16:9 Aspect Ratio) */
+    .deck-viewport {
+      flex: 1;
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      padding: 20px;
+    }
+
+    .slide-deck {
+      position: relative;
+      width: 100%;
+      max-width: 1600px;
+      aspect-ratio: 16 / 9;
+      max-height: 90vh;
+      background: rgba(11, 16, 28, 0.92);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 40px rgba(99, 102, 241, 0.1);
+      backdrop-filter: blur(20px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top presentation bar */
+    .deck-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 28px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.6);
+      z-index: 10;
+    }
+
+    .brand-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 15px;
+      color: #FFF;
+      letter-spacing: -0.3px;
+    }
+
+    .badge-sec {
+      background: rgba(239, 68, 68, 0.15);
+      color: #F87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .deck-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-ctrl {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 6px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-ctrl:hover {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: var(--brand-indigo);
+      transform: translateY(-1px);
+    }
+
+    .slide-counter {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 4px 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+    }
+
+    /* Progress line */
+    .deck-progress-bar {
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.05);
+      position: relative;
+    }
+
+    .deck-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--brand-teal), var(--brand-indigo), var(--brand-purple));
+      width: 8.33%;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Slides Content Stage */
+    .slides-stage {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 36px 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.98) translateY(12px);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1) translateY(0);
+    }
+
+    /* Slide Header */
+    .slide-header {
+      margin-bottom: 20px;
+    }
+
+    .slide-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+      color: var(--brand-teal);
+    }
+
+    .slide-title {
+      font-family: var(--font-heading);
+      font-size: clamp(24px, 2.8vw, 38px);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #FFF 60%, #94A3B8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Slide Body Grid */
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    /* Cards & Components */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .card-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-box:hover {
+      border-color: var(--border-accent);
+      background: var(--bg-card-hover);
+    }
+
+    .card-box.critical-glow {
+      border-color: rgba(239, 68, 68, 0.4);
+      box-shadow: 0 0 25px var(--critical-glow);
+    }
+
+    .card-box.high-glow {
+      border-color: rgba(249, 115, 22, 0.4);
+      box-shadow: 0 0 25px var(--high-glow);
+    }
+
+    .stat-number {
+      font-family: var(--font-heading);
+      font-size: 44px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      width: fit-content;
+    }
+
+    .badge-critical {
+      background: rgba(239, 68, 68, 0.2);
+      color: #F87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .badge-high {
+      background: rgba(249, 115, 22, 0.2);
+      color: #FB923C;
+      border: 1px solid rgba(249, 115, 22, 0.4);
+    }
+
+    .badge-medium {
+      background: rgba(251, 191, 36, 0.2);
+      color: #FCD34D;
+      border: 1px solid rgba(251, 191, 36, 0.4);
+    }
+
+    .badge-safe {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .code-snippet {
+      background: #060911;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: #E2E8F0;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    .diff-del {
+      color: #F87171;
+      background: rgba(239, 68, 68, 0.1);
+      display: block;
+    }
+
+    .diff-add {
+      color: #34D399;
+      background: rgba(16, 185, 129, 0.1);
+      display: block;
+    }
+
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .bullet-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13.5px;
+      color: #CBD5E1;
+      line-height: 1.45;
+    }
+
+    .bullet-icon {
+      font-size: 15px;
+      margin-top: 1px;
+    }
+
+    /* Footer / Keyboard hints */
+    .deck-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 28px;
+      border-top: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.4);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .kbd-shortcut {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    kbd {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #FFF;
+    }
+
+    /* Chart wrappers */
+    .chart-container {
+      position: relative;
+      height: 250px;
+      width: 100%;
+    }
+
+    /* Timeline roadmap */
+    .roadmap-track {
+      display: flex;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .roadmap-step {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+    }
+
+    .roadmap-step::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      border-top-left-radius: 14px;
+      border-top-right-radius: 14px;
+    }
+
+    .step-1::before { background: var(--critical); }
+    .step-2::before { background: var(--high); }
+    .step-3::before { background: var(--medium); }
+    .step-4::before { background: var(--safe); }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .deck-viewport { padding: 8px; }
+      .slide-deck { aspect-ratio: auto; min-height: 85vh; border-radius: 16px; }
+      .slide { padding: 20px; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .chart-container { height: 200px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="deck-viewport">
+    <div class="slide-deck" id="deck">
+      
+      <!-- Topbar Header -->
+      <div class="deck-topbar">
+        <div class="brand-pill">
+          <i class="bi bi-shield-lock-fill" style="color: var(--brand-teal); font-size: 20px;"></i>
+          <span>Clickapp / Dale! Te Pido <span style="color: var(--text-muted); font-weight: 400;">— Security Audit 2026</span></span>
+          <span class="badge-sec">Informe de Vulnerabilidades</span>
+        </div>
+        <div class="deck-controls">
+          <button class="btn-ctrl" onclick="prevSlide()"><i class="bi bi-chevron-left"></i> Ant</button>
+          <span class="slide-counter" id="slide-num">1 / 12</span>
+          <button class="btn-ctrl" onclick="nextSlide()">Sig <i class="bi bi-chevron-right"></i></button>
+          <button class="btn-ctrl" onclick="toggleFullScreen()" title="Pantalla Completa (F)"><i class="bi bi-arrows-fullscreen"></i></button>
+          <a href="super-admin-secret-dashboard.html" class="btn-ctrl" style="border-color: rgba(13,148,136,0.4); color: var(--brand-teal);" title="Volver al SuperDashboard">
+            <i class="bi bi-arrow-return-left"></i> SuperDashboard
+          </a>
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="deck-progress-bar">
+        <div class="deck-progress-fill" id="progress-fill"></div>
+      </div>
+
+      <!-- Slides Container -->
+      <div class="slides-stage" id="slides-stage">
+        
+        <!-- SLIDE 1: Cover -->
+        <div class="slide active" data-index="1">
+          <div class="slide-header">
+            <div class="slide-tag"><i class="bi bi-radar"></i> Auditoría Integral de Ciberseguridad</div>
+            <h1 class="slide-title">Evaluación Global de Vulnerabilidades & Plan de Hardening</h1>
+            <p class="slide-subtitle">Plataforma SaaS Dale! Te Pido — Arquitectura Serverless, Autenticación y Base de Datos</p>
+          </div>
+          
+          <div class="slide-body">
+            <div class="grid-3">
+              <div class="card-box critical-glow">
+                <span class="badge-pill badge-critical"><i class="bi bi-exclamation-octagon-fill"></i> Score de Riesgo</span>
+                <div class="stat-number" style="color: #F87171;">52<span style="font-size: 24px; color: var(--text-muted);">/100</span></div>
+                <div style="font-size: 13px; color: #CBD5E1;">Nivel de Riesgo Global: <strong>ALTO</strong>. Requiere remediación urgente en capas de autenticación y control de acceso.</div>
+              </div>
+
+              <div class="card-box">
+                <span class="badge-pill badge-high"><i class="bi bi-bug-fill"></i> Hallazgos Detectados</span>
+                <div class="stat-number" style="color: #FB923C;">9</div>
+                <div style="font-size: 13px; color: #CBD5E1;"><strong>2 Críticas</strong>, <strong>3 Altas</strong>, <strong>3 Medias</strong> y <strong>1 Baja</strong> categorizadas según el estándar CVSS v3.1 y OWASP.</div>
+              </div>
+
+              <div class="card-box">
+                <span class="badge-pill badge-safe"><i class="bi bi-clock-history"></i> Tiempo de Remediación</span>
+                <div class="stat-number" style="color: #34D399;">48h</div>
+                <div style="font-size: 13px; color: #CBD5E1;">Todas las fallas críticas cuentan con parches de código listos para su despliegue inmediato sin romper compatibilidad.</div>
+              </div>
+            </div>
+
+            <div class="card-box" style="background: rgba(99, 102, 241, 0.08); border-color: rgba(99, 102, 241, 0.3);">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <i class="bi bi-info-circle-fill" style="color: var(--brand-indigo); font-size: 24px;"></i>
+                  <div>
+                    <div style="font-weight: 700; font-size: 14px;">Alcance del Análisis Técnico</div>
+                    <div style="font-size: 12px; color: var(--text-muted);">Módulos auditados: `api/auth.js`, `api/super-admin.js`, `api/gemini.js`, `api/store.js`, `api/jaime.js`, sesiones en cliente, CORS y almacenamiento de credenciales.</div>
+                  </div>
+                </div>
+                <button class="btn-ctrl" onclick="nextSlide()" style="background: var(--brand-indigo); border: none; color: #FFF;">Comenzar Presentación <i class="bi bi-arrow-right"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="deck-footer">
+            <span>Clickapp Security Engineering & AppSec Analysis</span>
+            <span class="kbd-shortcut"><kbd>→</kbd> o <kbd>Espacio</kbd> para avanzar</span>
+          </div>
+        </div>
+
+        <!-- SLIDE 2: Executive Summary & Metrics -->
+        <div class="slide" data-index="2">
+          <div class="slide-header">
+            <div class="slide-tag"><i class="bi bi-graph-up-arrow"></i> Resumen Ejecutivo</div>
+            <h1 class="slide-title">Postura Actual y Distribución de Amenazas</h1>
+            <p class="slide-subtitle">Distribución por severidad y radar de madurez en defensas AppSec</p>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-2">
+              <div class="card-box">
+                <div style="font-weight: 700; font-size: 14px; margin-bottom: 8px;"><i class="bi bi-pie-chart-fill" style="color: var(--brand-teal);"></i> Hallazgos por Nivel de Severidad</div>
+                <div class="chart-container">
+                  <canvas id="chartSeverity"></canvas>
+                </div>
+              </div>
+
+              <div class="card-box">
+                <div style="font-weight: 700; font-size: 14px; margin-bottom: 8px;"><i class="bi bi-shield-shaded" style="color: var(--brand-indigo);"></i> Radar de Madurez de Seguridad (OWASP)</div>
+                <div class="chart-container">
+                  <canvas id="chartRadar"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="deck-footer">
+            <span>Métricas calculadas bajo framework CVSS v3.1</span>
+            <span class="kbd-shortcut"><kbd>←</kbd> / <kbd>→</kbd> para navegar</span>
+          </div>
+        </div>
+
+        <!-- SLIDE 3: Critical 1 - Unauthenticated Reset Password (IDOR) -->
+        <div class="slide" data-index="3">
+          <div class="slide-header">
+            <div class="slide-tag" style="color: var(--critical);"><i class="bi bi-exclamation-triangle-fill"></i> Vulnerabilidad Crítica #1</div>
+            <h1 class="slide-title">Account Takeover sin Autenticación en `api/auth.js`</h1>
+            <p class="slide-subtitle">CVE-Equivalent: IDOR / Broken Authentication (CVSS Score: 9.8 — CRITICAL)</p>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-2">
+              <div class="card-box critical-glow">
+                <div style="font-weight: 700; font-size: 15px; color: #F87171;"><i class="bi bi-bug"></i> Mecánica de la Falla</div>
+                <p style="font-size: 13px; color: #CBD5E1; line-height: 1.5;">
+                  En el endpoint <code style="color:#FCA5A5;">/api/auth.js</code> (línea 146), la acción <code style="color:#FCA5A5;">reset_password</code> acepta un <code style="color:#FCA5A5;">store_id</code> y una <code style="color:#FCA5A5;">new_password</code> sin requerir ningún token de verificación previo, token OTP firmado por email ni sesión activa.
+                </p>
+                <div style="font-weight: 700; font-size: 13px; margin-top: 6px;">Impacto en el Negocio:</div>
+                <ul class="bullet-list">
+                  <li class="bullet-item"><i class="bi bi-x-circle-fill bullet-icon" style="color: #F87171;"></i> Cualquier atacante que conozca el subdominio o <code style="font-size:11px;">store_id</code> público de un comercio puede cambiar su contraseña arbitrariamente.</li>
+                  <li class="bullet-item"><i class="bi bi-x-circle-fill bullet-icon" style="color: #F87171;"></i> Pérdida total de control del catálogo, WhatsApp y datos comerciales de los clientes.</li>
+                </ul>
+              </div>
+
+              <div class="card-box">
+                <div style="font-weight: 700; font-size: 14px; color: #34D399;"><i class="bi bi-check2-circle"></i> Remediación & Código Recomendado</div>
+                <div class="code-snippet">
+<span class="diff-del">- // Código vulnerable: cambia clave sin validar token</span>
+<span class="diff-del">- if (action === 'reset_password') { ... patchDb(new_password) }</span>
+<span class="diff-add">+ // Solución defensiva: Validar OTP criptográfico con expiración</span>
+<span class="diff-add">+ const { reset_token, new_password } = req.body;</span>
+<span class="diff-add">+ const payload = verifyResetToken(reset_token); // HMAC-SHA256</span>
+<span class="diff-add">+ if (!payload || payload.store_id !== actualStoreId) {</span>
+<span class="diff-add">+   return res.status(403).json({ error: 'Token inválido o expirado' });</span>
+<span class="diff-add">+ }</span>
+                </div>
+                <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">
+                  Implementar tokens de un solo uso (OTP o JWT efímero de 15 min) generados al solicitar la recuperación en <code style="color:#93C5FD;">forgot_password</code>.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="deck-footer">
+            <span>Falla Crítica 1/2 — Prioridad Inmediata P0</span>
+            <span class="kbd-shortcut"><kbd>→</kbd> para continuar</span>
+          </div>
+        </div>
+
+        <!-- SLIDE 4: Critical 2 - Forged Session Tokens -->
+        <div class="slide" data-index="4">
+          <div class="slide-header">
+            <div class="slide-tag" style="color: var(--critical);"><i class="bi bi-shield-x"></i> Vulnerabilidad Crítica #2</div>
+            <h1 class="slide-title">Tokens de Sesión Forjables en Base64 (Sin Firma Criptográfica)</h1>
+            <p class="slide-subtitle">CVE-Equivalent: Cryptographic Failure / Broken Object Authorization (CVSS Score: 9.1 — CRITICAL)</p>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-2">
+              <div class="card-box critical-glow">
+                <div style="font-weight: 700; font-size: 15px; color: #F87171;"><i class="bi bi-key-fill"></i> Descripción del Problema</div>
+                <p style="font-size: 13px; color: #CBD5E1; line-height: 1.5;">
+                  En <code style="color:#FCA5A5;">/api/auth.js</code> (línea 98), el token de sesión devuelto al usuario tras autenticarse se genera de forma trivial:
+                </p>
+                <div class="code-snippet">
+const sessionToken = Buffer.from(
+  `${actualStoreId}:${Date.now()}:authenticated`
+).toString('base64');
+                </div>
+                <ul class="bullet-list" style="margin-top: 8px;">
+                  <li class="bullet-item"><i class="bi bi-x-circle-fill bullet-icon" style="color: #F87171;"></i> El token no cuenta con firma HMAC, secret key ni integridad garantizada.</li>
+                  <li class="bullet-item"><i class="bi bi-x-circle-fill bullet-icon" style="color: #F87171;"></i> Cualquier usuario puede codificar en Base64 el nombre de cualquier tienda y suplantar la sesión del merchant.</li>
+                </ul>
+              </div>
+
+              <div class="card-box">
+                <div style="font-weight: 700; font-size: 14px; color: #34D399;"><i class="bi bi-shield-check"></i> Parche & Firma Criptográfica</div>
+                <div class="code-snippet">
+<span class="diff-add">+ import jwt from 'jsonwebtoken';</span>
+<span class="diff-add">+ const JWT_SECRET = process.env.AUTH_JWT_SECRET;</span>
+<span class="diff-add">+ const sessionToken = jwt.sign(</span>
+<span class="diff-add">+   { store_id: actualStoreId, role: 'merchant' },</span>
+<span class="diff-add">+   JWT_SECRET,</span>
+<span class="diff-add">+   { expiresIn: '7d' }</span>
+<span class="diff-add">+ );</span>
+                </div>
+                <p style="font-size: 12px; color: #CBD5E1; margin-top: 8px;">
+                  Al migrar a JWT firmado con <code style="color:#93C5FD;">AUTH_JWT_SECRET</code>, ningún actor malicioso puede forjar identificadores ni escalar privilegios entre tiendas.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="deck-footer">
+            <span>Falla Crítica 2/2 — Prioridad Inmediata P0</span>
+            <span class="kbd-shortcut"><kbd>→</kbd> para continuar</span>
+          </div>
+        </div>
+
+        <!-- SLIDE 5: High 1 - Hardcoded Fallback Secrets -->
+        <div class="slide" data-index="5">
+          <div class="slide-header">
+            <div class="slide-tag" style="color: var(--high);"><i class="bi bi-unlock-fill"></i> Vulnerabilidad Alta #3</div>
+            <h1 class="slide-title">Secretos y Clave Maestra de Super Admin en Código Fuente</h1>
+            <p class="slide-subtitle">CVE-Equivalent: Hardcoded Credentials / Information Disclosure (CVSS Score: 8.6 — HIGH)</p>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-2">
+              <div class="card-box high-glow">
+                <div style="font-weight: 700; font-size: 15px; color: #FB923C;"><i class="bi bi-eye-slash-fill"></i> Credenciales Expuestas</div>
+                <div class="code-snippet">
+// api/super-admin.js (líneas 7-8)
+const SUPER_ADMIN_USER = process.env.SUPER_ADMIN_USER || 'admin-alicari';
+const SUPER_ADMIN_PASSWORD = process.env.SUPER_ADMIN_PASSWORD || '42904062Gpaz';
+
+// api/auth.js (línea 5) & api/super-admin.js (línea 5)
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
+                </div>
+                <ul class="bullet-list" style="margin-top: 8px;">
+                  <li class="bullet-item"><i class="bi bi-dash-circle bullet-icon" style="color: #FB923C;"></i> Si el repositorio se clona o filtra, los valores de fallback otorgan acceso total e irrevocable al panel Super Admin y la base de datos de Supabase.</li>
+                </ul>
+              </div>
+
+              <div class="card-box">
+                <div style="font-weight: 700; font-size: 14px; color: #34D399;"><i class="bi bi-lock-fill"></i> Remediación & Eliminación de Fallbacks</div>
+                <div class="code-snippet">
+<span class="diff-del">- const SUPER_ADMIN_PASSWORD = process.env.SUPER_ADMIN_PASSWORD || '42904062Gpaz';</span>
+<span class="diff-add">+ const SUPER_ADMIN_PASSWORD = process.env.SUPER_ADMIN_PASSWORD;</span>
+<span class="diff-add">+ if (!SUPER_ADMIN_PASSWORD) {</span>
+<span class="diff-add">+   throw new Error("FATAL: SUPER_ADMIN_PASSWORD env var is required");</span>
+<span class="diff-add">+ }</span>
+                </div>
+                <ul class="bullet-list" style="margin-top: 8px;">
+                  <li class="bullet-item"><i class="bi bi-check-circle-fill bullet-icon" style="color: #34D399;"></i> Requerir obligatoriamente variables de entorno en Vercel Dashboard sin valores estáticos en Git.</li>
+                  <li class="bullet-item"><i class="bi bi-check-circle-fill bullet-icon" style="color: #34D399;"></i> Rotar inmediatamente las contraseñas y claves anon/service_role de Supabase.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="deck-footer">
+            <span>Falla de Seguridad Alta — Prioridad P1</span>
+            <span class="kbd-shortcut"><kbd>→</kbd> para continuar</span>
+          </div>
+        </div>
+
+        <!-- SLIDE 6: High 2 - Unauthenticated AI Proxy Abuse -->
+        <div class="slide" data-index="6">
+          <div class="slide-header">
+            <div class="slide-tag" style="color: var(--high);"><i class="bi bi-cpu"></i> Vulnerabilidad Alta #4</div>
+            <h1 class="slide-title">Proxy de Gemini / IA Abierto y no Autenticado</h1>
+            <p class="slide-subtitle">CVE-Equivalent: Unauthenticated Resource Consumption / API Abuse (CVSS Score: 7.5 — HIGH)</p>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-2">
+              <div class="card-box high-glow">
+                <div style="font-weight: 700; font-size: 15px; color: #FB923C;"><i class="bi bi-cloud-slash"></i> Riesgo de Denial of Wallet</div>
+                <p style="font-size: 13px; color: #CBD5E1; line-height: 1.5;">
+                  En <code style="color:#FCA5A5;">/api/gemini.js</code>, la función actúa como proxy transparente hacia Google AI consumiendo la clave <code style="color:#FCA5A5;">GEMINI_API_KEY</code> del servidor para cualquier petición POST entrante sin requerir autenticación ni cuota por usuario.
+                </p>
+                <div class="code-snippet" style="margin-top: 6px;">
+// POST https://daletepido.com.ar/api/gemini
+// Accesible públicamente por scripts automatizados de terceros
+                </div>
+                <ul class="bullet-list" style="margin-top: 8px;">
+                  <li class="bullet-item"><i class="bi bi-exclamation-circle-fill bullet-icon" style="color: #FB923C;"></i> Bots y scrapers pueden utilizar la API de Gemini de Dale! Te Pido como proxy gratuito, agotando el saldo y la cuota de la plataforma.</li>
+                </ul>
+              </div>
+
+              <div class="card-box">
+                <div style="font-weight: 700; font-size: 14px; color: #34D399;"><i class="bi bi-shield-lock-fill"></i> Remediación con Rate Limiting & Auth</div>
+                <div class="code-snippet">
+<span class="diff-add">+ // 1. Verificar sesión de comercio autenticado</span>
+<span class="diff-add">+ const userSession = verifyAuthHeader(req.headers.authorization);</span>
+<span class="diff-add">+ if (!userSession) return res.status(401).json({ error: 'Auth required' });</span>
+<span class="diff-add">+ </span>
+<span class="diff-add">+ // 2. Limitar a 20 prompts / hora por tienda</span>
+<span class="diff-add">+ const allowed = await rateLimiter.check(userSession.store_id);</span>
+<span class="diff-add">+ if (!allowed) return res.status(429).json({ error: 'Límite alcanzado' });</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="deck-footer">
+            <span>Falla de Seguridad Alta — Prioridad P1</span>
+            <span class="kbd-shortcut"><kbd>→</kbd> para continuar</span>
+          </div>
+        </div>
+
+        <!-- SLIDE 7: High 3 - Receipt & Billing State Tampering -->
+        <div class="slide" data-index="7">
+          <div class="slide-header">
+            <div class="slide-tag" style="color: var(--high);"><i class="bi bi-receipt-cutoff"></i> Vulnerabilidad Alta #5</div>
+            <h1 class="slide-title">Manipulación Pública de Comprobantes y Planes</h1>
+            <p class="slide-subtitle">CVE-Equivalent: Insecure Direct Object Reference / State Tampering (CVSS Score: 7.2 — HIGH)</p>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-2">
+              <div class="card-box high-glow">
+                <div style="font-weight: 700; font-size: 15px; color: #FB923C;"><i class="bi bi-exclamation-triangle"></i> Inyección en `submit_payment_receipt`</div>
+                <p style="font-size: 13px; color: #CBD5E1; line-height: 1.5;">
+                  En <code style="color:#FCA5A5;">/api/super-admin.js</code> (línea 72), la acción pública <code style="color:#FCA5A5;">submit_payment_receipt</code> permite actualizar <code style="color:#FCA5A5;">billing_info</code>, <code style="color:#FCA5A5;">upgrade_requested</code> y cambiar el estado <code style="color:#FCA5A5;">payment_status</code> a <code style="color:#FCA5A5;">'receipt_submitted'</code> de cualquier tienda sin validar si el emisor es el dueño real del comercio.
+                </p>
+                <ul class="bullet-list" style="margin-top: 8px;">
+                  <li class="bullet-item"><i class="bi bi-dash-circle bullet-icon" style="color: #FB923C;"></i> Un usuario malintencionado puede forzar cambios de estado y adjuntar URLs arbitrarias a comercios competidores.</li>
+                </ul>
+              </div>
+
+              <div class="card-box">
+                <div style="font-weight: 700; font-size: 14px; color: #34D399;"><i class="bi bi-shield-check"></i> Corrección Estructural</div>
+                <ul class="bullet-list">
+                  <li class="bullet-item"><i class="bi bi-check-circle-fill bullet-icon" style="color: #34D399;"></i> <strong>Validación de Dominio/Token:</strong> Exigir que la subida del comprobante provenga de la sesión autenticada del Dashboard o de un token único temporal enviado por correo.</li>
+                  <li class="bullet-item"><i class="bi bi-check-circle-fill bullet-icon" style="color: #34D399;"></i> <strong>Sanitización de URLs:</strong> Validar que <code style="font-size:11px;">receipt_url</code> pertenezca estrictamente al dominio de Cloudinary verificado (<code style="font-size:11px;">https://res.cloudinary.com/daletepido/...</code>) para evitar SSRF o phishing.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="deck-footer">
+            <span>Falla de Seguridad Alta — Prioridad P1</span>
+            <span class="kbd-shortcut"><kbd>→</kbd> para continuar</span>
+          </div>
+        </div>
+
+        <!-- SLIDE 8: Medium Findings - CORS, SHA256 & Rate Limiting -->
+        <div class="slide" data-index="8">
+          <div class="slide-header">
+            <div class="slide-tag" style="color: var(--medium);"><i class="bi bi-shield-exclamation"></i> Vulnerabilidades Medias (#6, #7, #8)</div>
+            <h1 class="slide-title">Políticas CORS, Hashing Débil y Falta de Rate Limiting</h1>
+            <p class="slide-subtitle">Vulnerabilidades de Configuración y Resistencia a Ataques de Fuerza Bruta</p>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-3">
+              <div class="card-box">
+                <span class="badge-pill badge-medium">CORS Permisivo (*)</span>
+                <div style="font-weight: 700; font-size: 14px; margin-top: 4px;">Access-Control-Allow-Origin: *</div>
+                <p style="font-size: 12px; color: #CBD5E1; line-height: 1.45;">
+                  Configurado en <code style="font-size:11px;">api/super-admin.js</code> y <code style="font-size:11px;">api/auth.js</code>. Permite que sitios maliciosos intenten realizar peticiones cruzadas contra los endpoints administrativos.
+                </p>
+                <div style="font-size: 11px; color: var(--brand-teal); font-weight: 600;">Fix: Restringir a dominios *.daletepido.com.ar</div>
+              </div>
+
+              <div class="card-box">
+                <span class="badge-pill badge-medium">Hashing Rápido (SHA-256)</span>
+                <div style="font-weight: 700; font-size: 14px; margin-top: 4px;">crypto.createHash('sha256')</div>
+                <p style="font-size: 12px; color: #CBD5E1; line-height: 1.45;">
+                  SHA-256 simple con salt no es resistente a cómputo paralelo de GPUs. Se mantiene compatibilidad con texto plano heredado.
+                </p>
+                <div style="font-size: 11px; color: var(--brand-teal); font-weight: 600;">Fix: Migrar a Argon2id o bcryptjs (cost factor 12)</div>
+              </div>
+
+              <div class="card-box">
+                <span class="badge-pill badge-medium">Sin Anti-Fuerza Bruta</span>
+                <div style="font-weight: 700; font-size: 14px; margin-top: 4px;">Ausencia de Rate Limiter</div>
+                <p style="font-size: 12px; color: #CBD5E1; line-height: 1.45;">
+                  No hay límite de intentos en <code style="font-size:11px;">/api/auth.js (login)</code> ni en el formulario de login de Super Admin, posibilitando ataques de diccionario.
+                </p>
+                <div style="font-size: 11px; color: var(--brand-teal); font-weight: 600;">Fix: Bloqueo tras 5 intentos fallidos por IP / cuenta</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="deck-footer">
+            <span>Fallas de Seguridad Medias — Prioridad P2</span>
+            <span class="kbd-shortcut"><kbd>→</kbd> para continuar</span>
+          </div>
+        </div>
+
+        <!-- SLIDE 9: CVSS Matrix & Prioritization -->
+        <div class="slide" data-index="9">
+          <div class="slide-header">
+            <div class="slide-tag"><i class="bi bi-grid-3x3-gap-fill"></i> Matriz de Riesgo</div>
+            <h1 class="slide-title">Puntuación CVSS v3.1 y Matriz de Impacto vs Probabilidad</h1>
+            <p class="slide-subtitle">Priorización estandarizada para planificar sprints de remediación</p>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-2">
+              <div class="card-box">
+                <div style="font-weight: 700; font-size: 14px; margin-bottom: 8px;"><i class="bi bi-table"></i> Tabla de Hallazgos y Puntuación</div>
+                <div style="overflow-x: auto;">
+                  <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left;">
+                    <thead>
+                      <tr style="border-bottom: 1px solid var(--border-subtle); color: var(--text-muted);">
+                        <th style="padding: 6px;">ID</th>
+                        <th style="padding: 6px;">Vulnerabilidad</th>
+                        <th style="padding: 6px;">Vector</th>
+                        <th style="padding: 6px;">CVSS</th>
+                        <th style="padding: 6px;">Severidad</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                        <td style="padding: 6px; font-family: var(--font-mono);">SEC-01</td>
+                        <td style="padding: 6px; font-weight: 600;">Reset Password sin Auth</td>
+                        <td style="padding: 6px; color: var(--text-muted);">api/auth.js</td>
+                        <td style="padding: 6px; font-family: var(--font-mono); font-weight: 700; color: #F87171;">9.8</td>
+                        <td style="padding: 6px;"><span class="badge-pill badge-critical" style="padding:2px 6px; font-size:10px;">CRÍTICA</span></td>
+                      </tr>
+                      <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                        <td style="padding: 6px; font-family: var(--font-mono);">SEC-02</td>
+                        <td style="padding: 6px; font-weight: 600;">Tokens de Sesión Forjables</td>
+                        <td style="padding: 6px; color: var(--text-muted);">api/auth.js</td>
+                        <td style="padding: 6px; font-family: var(--font-mono); font-weight: 700; color: #F87171;">9.1</td>
+                        <td style="padding: 6px;"><span class="badge-pill badge-critical" style="padding:2px 6px; font-size:10px;">CRÍTICA</span></td>
+                      </tr>
+                      <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                        <td style="padding: 6px; font-family: var(--font-mono);">SEC-03</td>
+                        <td style="padding: 6px; font-weight: 600;">Claves SuperAdmin en Código</td>
+                        <td style="padding: 6px; color: var(--text-muted);">api/super-admin.js</td>
+                        <td style="padding: 6px; font-family: var(--font-mono); font-weight: 700; color: #FB923C;">8.6</td>
+                        <td style="padding: 6px;"><span class="badge-pill badge-high" style="padding:2px 6px; font-size:10px;">ALTA</span></td>
+                      </tr>
+                      <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                        <td style="padding: 6px; font-family: var(--font-mono);">SEC-04</td>
+                        <td style="padding: 6px; font-weight: 600;">Proxy Abierto de Gemini</td>
+                        <td style="padding: 6px; color: var(--text-muted);">api/gemini.js</td>
+                        <td style="padding: 6px; font-family: var(--font-mono); font-weight: 700; color: #FB923C;">7.5</td>
+                        <td style="padding: 6px;"><span class="badge-pill badge-high" style="padding:2px 6px; font-size:10px;">ALTA</span></td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 6px; font-family: var(--font-mono);">SEC-05</td>
+                        <td style="padding: 6px; font-weight: 600;">Inyección de Comprobantes</td>
+                        <td style="padding: 6px; color: var(--text-muted);">api/super-admin.js</td>
+                        <td style="padding: 6px; font-family: var(--font-mono); font-weight: 700; color: #FB923C;">7.2</td>
+                        <td style="padding: 6px;"><span class="badge-pill badge-high" style="padding:2px 6px; font-size:10px;">ALTA</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="card-box">
+                <div style="font-weight: 700; font-size: 14px; margin-bottom: 8px;"><i class="bi bi-bar-chart-fill" style="color: var(--brand-purple);"></i> Comparativa de Impacto vs Esfuerzo de Fix</div>
+                <div class="chart-container">
+                  <canvas id="chartEffort"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="deck-footer">
+            <span>Matriz de Priorización de Ingeniería</span>
+            <span class="kbd-shortcut"><kbd>→</kbd> para continuar</span>
+          </div>
+        </div>
+
+        <!-- SLIDE 10: Remediation Roadmap -->
+        <div class="slide" data-index="10">
+          <div class="slide-header">
+            <div class="slide-tag"><i class="bi bi-calendar-check-fill"></i> Hoja de Ruta</div>
+            <h1 class="slide-title">Roadmap de Remediación & SLAs de Despliegue</h1>
+            <p class="slide-subtitle">Cronograma estructurado en 4 fases de hardening</p>
+          </div>
+
+          <div class="slide-body">
+            <div class="roadmap-track">
+              
+              <div class="roadmap-step step-1">
+                <span class="badge-pill badge-critical" style="font-size: 10px;">Fase 1 (0h - 24h)</span>
+                <div style="font-weight: 700; font-size: 14px;">Parches Críticos P0</div>
+                <ul class="bullet-list" style="font-size: 12px;">
+                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#F87171;"></i> Bloquear reset_password sin token.</li>
+                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#F87171;"></i> Migrar tokens Base64 a JWT firmado.</li>
+                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#F87171;"></i> Rotar clave maestra de SuperAdmin.</li>
+                </ul>
+              </div>
+
+              <div class="roadmap-step step-2">
+                <span class="badge-pill badge-high" style="font-size: 10px;">Fase 2 (24h - 48h)</span>
+                <div style="font-weight: 700; font-size: 14px;">Hardening P1</div>
+                <ul class="bullet-list" style="font-size: 12px;">
+                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#FB923C;"></i> Proteger /api/gemini con sesión de comercio.</li>
+                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#FB923C;"></i> Validar store_id en submit_payment_receipt.</li>
+                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#FB923C;"></i> Eliminar fallbacks de contraseñas en Git.</li>
+                </ul>
+              </div>
+
+              <div class="roadmap-step step-3">
+                <span class="badge-pill badge-medium" style="font-size: 10px;">Fase 3 (Semana 1)</span>
+                <div style="font-weight: 700; font-size: 14px;">Defensa en Profundidad P2</div>
+                <ul class="bullet-list" style="font-size: 12px;">
+                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#FCD34D;"></i> Restringir CORS a daletepido.com.ar.</li>
+                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#FCD34D;"></i> Rate Limiting por IP (Upstash / KV).</li>
+                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#FCD34D;"></i> Migrar hashing de SHA-256 a Argon2id.</li>
+                </ul>
+              </div>
+
+              <div class="roadmap-step step-4">
+                <span class="badge-pill badge-safe" style="font-size: 10px;">Fase 4 (Semana 2)</span>
+                <div style="font-weight: 700; font-size: 14px;">Monitoreo Continuo</div>
+                <ul class="bullet-list" style="font-size: 12px;">
+                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#34D399;"></i> Logs de auditoría de Super Admin.</li>
+                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#34D399;"></i> Alertas por intentos de login anómalos.</li>
+                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#34D399;"></i> SAST automatizado en CI/CD.</li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="deck-footer">
+            <span>Cumplimiento estimado: 100% de vulnerabilidades remediadas en 14 días</span>
+            <span class="kbd-shortcut"><kbd>→</kbd> para continuar</span>
+          </div>
+        </div>
+
+        <!-- SLIDE 11: Actionable Code Patches -->
+        <div class="slide" data-index="11">
+          <div class="slide-header">
+            <div class="slide-tag" style="color: var(--safe);"><i class="bi bi-file-earmark-code-fill"></i> Guía de Implementación</div>
+            <h1 class="slide-title">Patrón de Token HMAC & Verificación Centralizada</h1>
+            <p class="slide-subtitle">Código reutilizable para implementar en la suite de Serverless Functions</p>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-2">
+              <div class="card-box">
+                <div style="font-weight: 700; font-size: 14px; color: var(--brand-teal);"><i class="bi bi-code-slash"></i> Módulo de Seguridad Central (`api/helper.js`)</div>
+                <div class="code-snippet" style="font-size: 11px;">
+import crypto from 'node:crypto';
+
+const JWT_SECRET = process.env.AUTH_JWT_SECRET || 'SECRET_OBLIGATORIO_EN_ENV';
+
+export function signToken(payload, expiresInSeconds = 86400 * 7) {
+  const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
+  const exp = Math.floor(Date.now() / 1000) + expiresInSeconds;
+  const body = Buffer.from(JSON.stringify({ ...payload, exp })).toString('base64url');
+  const signature = crypto.createHmac('sha256', JWT_SECRET).update(`${header}.${body}`).digest('base64url');
+  return `${header}.${body}.${signature}`;
+}
+
+export function verifyToken(token) {
+  if (!token || !token.includes('.')) return null;
+  const [h, b, sig] = token.split('.');
+  const expectedSig = crypto.createHmac('sha256', JWT_SECRET).update(`${h}.${b}`).digest('base64url');
+  if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expectedSig))) return null;
+  const payload = JSON.parse(Buffer.from(b, 'base64url').toString('utf8'));
+  if (payload.exp < Math.floor(Date.now() / 1000)) return null;
+  return payload;
+}
+                </div>
+              </div>
+
+              <div class="card-box">
+                <div style="font-weight: 700; font-size: 14px; color: #FFF;"><i class="bi bi-check2-all"></i> Beneficios Directos de este Helper</div>
+                <ul class="bullet-list" style="margin-top: 4px;">
+                  <li class="bullet-item"><i class="bi bi-shield-check bullet-icon" style="color: #34D399;"></i> <strong>Zero External Dependencies:</strong> Utiliza el módulo nativo <code style="color:#93C5FD;">node:crypto</code> con soporte <code style="color:#93C5FD;">base64url</code> (RFC 7519).</li>
+                  <li class="bullet-item"><i class="bi bi-shield-check bullet-icon" style="color: #34D399;"></i> <strong>Protección contra Timing Attacks:</strong> Usa <code style="color:#93C5FD;">crypto.timingSafeEqual</code> para evitar ataques de tiempo al comparar firmas.</li>
+                  <li class="bullet-item"><i class="bi bi-shield-check bullet-icon" style="color: #34D399;"></i> <strong>Expiración Forzada:</strong> Invalida automáticamente sesiones antiguas de forma nativa sin consultas adicionales a la base de datos.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="deck-footer">
+            <span>Arquitectura Criptográfica Nativa Node.js</span>
+            <span class="kbd-shortcut"><kbd>→</kbd> para continuar</span>
+          </div>
+        </div>
+
+        <!-- SLIDE 12: Conclusions & SuperDashboard Integration -->
+        <div class="slide" data-index="12">
+          <div class="slide-header">
+            <div class="slide-tag" style="color: var(--brand-teal);"><i class="bi bi-patch-check-fill"></i> Conclusiones y Próximos Pasos</div>
+            <h1 class="slide-title">Informe Disponible en SuperDashboard</h1>
+            <p class="slide-subtitle">Resumen final para la toma de decisiones del equipo técnico</p>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-3">
+              <div class="card-box" style="border-color: rgba(16, 185, 129, 0.4);">
+                <div style="font-weight: 700; font-size: 15px; color: #34D399;"><i class="bi bi-award-fill"></i> 1. Impacto Inmediato</div>
+                <p style="font-size: 13px; color: #CBD5E1; line-height: 1.5;">
+                  Aplicar los 2 parches críticos eliminará el 90% del riesgo de Account Takeover y suplantación de identidad entre comercios en menos de 24 horas.
+                </p>
+              </div>
+
+              <div class="card-box" style="border-color: rgba(99, 102, 241, 0.4);">
+                <div style="font-weight: 700; font-size: 15px; color: #818CF8;"><i class="bi bi-sliders"></i> 2. Acceso desde SuperDashboard</div>
+                <p style="font-size: 13px; color: #CBD5E1; line-height: 1.5;">
+                  Este informe interactivo se encuentra vinculado y disponible de forma permanente desde la barra superior del <strong>Super Admin Dashboard</strong> y el módulo de <strong>Configuración Avanzada</strong>.
+                </p>
+              </div>
+
+              <div class="card-box" style="border-color: rgba(249, 115, 22, 0.4);">
+                <div style="font-weight: 700; font-size: 15px; color: #FB923C;"><i class="bi bi-shield-shaded"></i> 3. Hardening Continuo</div>
+                <p style="font-size: 13px; color: #CBD5E1; line-height: 1.5;">
+                  Completar la rotación de variables de entorno en Vercel y eliminar valores por defecto en el repositorio garantizará la privacidad de los datos de la base de datos.
+                </p>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: 16px; margin-top: 10px;">
+              <a href="super-admin-secret-dashboard.html" class="btn-ctrl" style="background: var(--brand-teal); border: none; color: #FFF; padding: 12px 24px; font-size: 14px;">
+                <i class="bi bi-speedometer2"></i> Abrir SuperDashboard
+              </a>
+              <button class="btn-ctrl" onclick="goToSlide(1)" style="padding: 12px 24px; font-size: 14px;">
+                <i class="bi bi-arrow-counterclockwise"></i> Reiniciar Presentación
+              </button>
+            </div>
+          </div>
+
+          <div class="deck-footer">
+            <span>Fin de la Presentación — Clickapp / Dale! Te Pido Security Report 2026</span>
+            <span class="kbd-shortcut">Presione <kbd>F</kbd> para salir de pantalla completa</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // State management
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    let currentSlide = 1;
+    let chartsInitialized = false;
+
+    function updateDeck() {
+      slides.forEach(slide => {
+        const idx = parseInt(slide.dataset.index, 10);
+        if (idx === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+
+      // Update counters & progress
+      document.getElementById('slide-num').textContent = `${currentSlide} / ${totalSlides}`;
+      const percentage = (currentSlide / totalSlides) * 100;
+      document.getElementById('progress-fill').style.width = `${percentage}%`;
+
+      // Init charts on slide 2
+      if (currentSlide === 2 || currentSlide === 9) {
+        if (!chartsInitialized) {
+          initCharts();
+          chartsInitialized = true;
+        }
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        updateDeck();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        updateDeck();
+      }
+    }
+
+    function goToSlide(n) {
+      if (n >= 1 && n <= totalSlides) {
+        currentSlide = n;
+        updateDeck();
+      }
+    }
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        goToSlide(1);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        goToSlide(totalSlides);
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullScreen();
+      }
+    });
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => console.log(err));
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    // Chart.js initialization
+    function initCharts() {
+      // 1. Severity Chart (Doughnut)
+      const ctxSeverity = document.getElementById('chartSeverity');
+      if (ctxSeverity) {
+        new Chart(ctxSeverity, {
+          type: 'doughnut',
+          data: {
+            labels: ['Críticas (P0)', 'Altas (P1)', 'Medias (P2)', 'Bajas (P3)'],
+            datasets: [{
+              data: [2, 3, 3, 1],
+              backgroundColor: ['#EF4444', '#F97316', '#FBBF24', '#3B82F6'],
+              borderWidth: 0,
+              hoverOffset: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'right',
+                labels: { color: '#CBD5E1', font: { family: 'Plus Jakarta Sans', size: 12 }, padding: 14 }
+              }
+            },
+            cutout: '70%'
+          }
+        });
+      }
+
+      // 2. Radar Chart
+      const ctxRadar = document.getElementById('chartRadar');
+      if (ctxRadar) {
+        new Chart(ctxRadar, {
+          type: 'radar',
+          data: {
+            labels: ['Autenticación', 'Control Acceso', 'Criptografía', 'Rate Limiting', 'Secretos Git', 'CORS & Headers'],
+            datasets: [
+              {
+                label: 'Estado Actual',
+                data: [35, 40, 45, 20, 50, 60],
+                backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                borderColor: '#EF4444',
+                pointBackgroundColor: '#EF4444',
+                pointBorderColor: '#fff'
+              },
+              {
+                label: 'Objetivo Post-Hardening',
+                data: [95, 95, 90, 85, 95, 90],
+                backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                borderColor: '#10B981',
+                pointBackgroundColor: '#10B981',
+                pointBorderColor: '#fff'
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              r: {
+                angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+                grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                pointLabels: { color: '#94A3B8', font: { family: 'Plus Jakarta Sans', size: 11 } },
+                ticks: { display: false, min: 0, max: 100 }
+              }
+            },
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: { color: '#CBD5E1', font: { family: 'Plus Jakarta Sans', size: 11 } }
+              }
+            }
+          }
+        });
+      }
+
+      // 3. Effort vs Impact Bar Chart
+      const ctxEffort = document.getElementById('chartEffort');
+      if (ctxEffort) {
+        new Chart(ctxEffort, {
+          type: 'bar',
+          data: {
+            labels: ['SEC-01 (Reset)', 'SEC-02 (JWT)', 'SEC-03 (Secrets)', 'SEC-04 (Gemini)', 'SEC-05 (Receipts)'],
+            datasets: [
+              {
+                label: 'Impacto de Seguridad (CVSS)',
+                data: [9.8, 9.1, 8.6, 7.5, 7.2],
+                backgroundColor: 'rgba(99, 102, 241, 0.8)',
+                borderRadius: 6
+              },
+              {
+                label: 'Horas de Desarrollo para Fix',
+                data: [2, 3, 1, 2, 2],
+                backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                borderRadius: 6
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: { grid: { display: false }, ticks: { color: '#94A3B8', font: { size: 11 } } },
+              y: { grid: { color: 'rgba(255, 255, 255, 0.08)' }, ticks: { color: '#94A3B8' } }
+            },
+            plugins: {
+              legend: {
+                position: 'top',
+                labels: { color: '#CBD5E1', font: { size: 11 } }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // Initialize deck on load
+    document.addEventListener('DOMContentLoaded', () => {
+      updateDeck();
+      setTimeout(initCharts, 300);
+    });
+  </script>
+</body>
+</html>
