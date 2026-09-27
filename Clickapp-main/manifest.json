@@ -58,10 +58,10 @@
   },
   "scope_extensions": [
     {
-      "origin": "*.daletepido.ar"
+      "origin": "https://daletepido.ar"
     },
     {
-      "origin": "*.vercel.app"
+      "origin": "https://clickapp.ar"
     }
   ],
   "widgets": [
