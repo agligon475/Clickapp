@@ -27,22 +27,24 @@
   <!-- Premium Fonts and Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Josefin+Sans:ital,wght@0,300..700;1,300..700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
 
   <style>
     :root {
-      --bg: #0b0f19;
-      --panel: rgba(17, 24, 39, 0.7);
-      --border: rgba(255, 255, 255, 0.08);
-      --primary: #D60000;
-      --primary-hover: #b50000;
-      --primary-glow: rgba(214, 0, 0, 0.35);
-      --text: #f3f4f6;
-      --text-muted: #9ca3af;
-      --success: #10b981;
-      --error: #ef4444;
+      --bg: #F6F6F6;
+      --panel: #FFFFFF;
+      --border: #E5E5E5;
+      --primary: #F60000;
+      --primary-hover: #D60000;
+      --primary-glow: rgba(246, 0, 0, 0.15);
+      --text: #010101;
+      --text-muted: #737373;
+      --success: #16A34A;
+      --error: #DC2626;
       --font: 'Josefin Sans', sans-serif;
+      --font-b: 'Poppins', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
     }
 
     * {
@@ -54,16 +56,17 @@
     body {
       background-color: var(--bg);
       background-image: 
-        radial-gradient(at 0% 0%, rgba(215, 38, 56, 0.08) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(30, 64, 175, 0.08) 0px, transparent 50%);
-      font-family: var(--font);
+        radial-gradient(at 0% 0%, rgba(246, 0, 0, 0.04) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(1, 1, 1, 0.02) 0px, transparent 50%);
+      font-family: var(--font-b);
       color: var(--text);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 24px 16px;
+      padding: 32px 16px;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
     .container {
@@ -72,15 +75,13 @@
       animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
-    /* Glassmorphism Panel */
+    /* Crisp Minimalist Panel */
     .card {
       background: var(--panel);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--border);
-      border-radius: 24px;
+      border-radius: 20px;
       padding: 40px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
       position: relative;
     }
 
@@ -91,8 +92,8 @@
       left: 0;
       right: 0;
       height: 4px;
-      background: linear-gradient(90deg, var(--primary), #1e40af);
-      border-radius: 24px 24px 0 0;
+      background: var(--primary);
+      border-radius: 20px 20px 0 0;
     }
 
     header {
@@ -106,23 +107,25 @@
       justify-content: center;
       width: 56px;
       height: 56px;
-      background: rgba(215, 38, 56, 0.1);
-      border: 1px solid rgba(215, 38, 56, 0.2);
+      background: rgba(246, 0, 0, 0.08);
+      border: 1px solid rgba(246, 0, 0, 0.15);
       border-radius: 16px;
       color: var(--primary);
-      font-size: 28px;
+      font-size: 26px;
       margin-bottom: 16px;
-      box-shadow: 0 8px 16px rgba(215, 38, 56, 0.15);
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    h1, h2, h3, .h1, .h2, .h3 {
+      font-family: var(--font) !important;
     }
 
     h1 {
       font-size: 28px;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: -0.02em;
       margin-bottom: 8px;
-      background: linear-gradient(135deg, #fff 30%, var(--text-muted));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #010101;
     }
 
     .subtitle {
@@ -142,10 +145,11 @@
     }
 
     .step-title {
-      font-size: 18px;
-      font-weight: 600;
+      font-size: 17px;
+      font-weight: 700;
+      font-family: var(--font);
       margin-bottom: 20px;
-      color: #fff;
+      color: #010101;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -163,6 +167,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      font-family: var(--font-mono);
     }
 
     .grid-2 {
@@ -176,7 +181,7 @@
         grid-template-columns: 1fr;
       }
       .card {
-        padding: 24px 16px;
+        padding: 24px 18px;
       }
     }
 
@@ -191,12 +196,13 @@
 
     label {
       display: block;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-muted);
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #525252;
       margin-bottom: 8px;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
+      font-family: var(--font);
     }
 
     .input-wrapper {
@@ -215,21 +221,21 @@
 
     input, select, textarea {
       width: 100%;
-      background: rgba(31, 41, 55, 0.4);
+      background: #FFFFFF;
       border: 1px solid var(--border);
-      border-radius: 12px;
-      color: #fff;
-      font-family: var(--font);
-      font-size: 15px;
-      padding: 12px 16px 12px 44px;
+      border-radius: 10px;
+      color: #010101;
+      font-family: var(--font-b);
+      font-size: 14px;
+      padding: 11px 16px 11px 44px;
       transition: all 0.2s ease;
       outline: none;
     }
 
     input:focus, select:focus, textarea:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px var(--primary-glow);
-      background: rgba(31, 41, 55, 0.7);
+      border-color: #010101;
+      box-shadow: 0 0 0 3px rgba(1, 1, 1, 0.06);
+      background: #FFFFFF;
     }
 
     /* Sanitizer / Suggester info */
@@ -241,9 +247,9 @@
     }
 
     .input-hint span {
-      font-family: monospace;
+      font-family: var(--font-mono);
       color: var(--primary);
-      font-weight: 600;
+      font-weight: 700;
     }
 
     /* Emoji Selector */
@@ -257,7 +263,7 @@
     .emoji-btn {
       width: 40px;
       height: 40px;
-      background: rgba(255, 255, 255, 0.03);
+      background: #F6F6F6;
       border: 1px solid var(--border);
       border-radius: 10px;
       font-size: 20px;
@@ -269,7 +275,7 @@
     }
 
     .emoji-btn:hover, .emoji-btn.active {
-      background: rgba(215, 38, 56, 0.15);
+      background: #FFF5F5;
       border-color: var(--primary);
       transform: scale(1.08);
     }
@@ -288,10 +294,10 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 14px 24px;
+      padding: 13px 24px;
       font-size: 14px;
-      font-weight: 600;
-      border-radius: 12px;
+      font-weight: 700;
+      border-radius: 10px;
       cursor: pointer;
       transition: all 0.2s ease;
       font-family: var(--font);
@@ -303,12 +309,13 @@
       background: var(--primary);
       color: #fff;
       flex: 1;
-      box-shadow: 0 4px 12px var(--primary-glow);
+      box-shadow: 0 3px 12px var(--primary-glow);
     }
 
     .btn-primary:hover {
       background: var(--primary-hover);
       transform: translateY(-1px);
+      box-shadow: 0 5px 16px var(--primary-glow);
     }
 
     .btn-primary:active {
@@ -316,13 +323,14 @@
     }
 
     .btn-secondary {
-      background: rgba(255, 255, 255, 0.05);
+      background: #F6F6F6;
       border: 1px solid var(--border);
-      color: var(--text);
+      color: #010101;
     }
 
     .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.08);
+      background: #EBEBEB;
+      border-color: #D4D4D4;
     }
 
     /* Success state */
@@ -342,25 +350,27 @@
 
     .success-panel h2 {
       font-size: 24px;
-      font-weight: 700;
+      font-weight: 800;
       margin-bottom: 12px;
+      color: #010101;
     }
 
     .success-link-box {
-      background: rgba(16, 185, 129, 0.08);
-      border: 1px solid rgba(16, 185, 129, 0.2);
-      border-radius: 16px;
+      background: #F0FDF4;
+      border: 1px solid #BBF7D0;
+      border-radius: 14px;
       padding: 16px;
       margin: 24px 0;
-      font-family: monospace;
-      font-size: 14px;
+      font-family: var(--font-mono);
+      font-size: 13.5px;
       word-break: break-all;
+      color: var(--success);
     }
 
     .success-link-box a {
       color: var(--success);
-      font-weight: bold;
-      text-decoration: none;
+      font-weight: 700;
+      text-decoration: underline;
     }
 
     /* Keyframes */
@@ -375,12 +385,12 @@
     }
 
     @keyframes scaleUp {
-      from { opacity: 0; transform: scale(0.9); }
+      from { opacity: 0; transform: scale(0.95); }
       to { opacity: 1; transform: scale(1); }
     }
 
     .loading-spinner {
-      border: 2px solid rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
       border-left-color: #fff;
       border-radius: 50%;
       width: 18px;
@@ -399,15 +409,15 @@
 <main class="container" role="main">
   <div class="card">
     <div style="text-align: center; margin-bottom: 24px;">
-      <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" style="max-height: 44px; width: auto; margin-bottom: 12px; display: inline-block;" />
+      <img src="/img-default/daletepido-logo-black-hq.png" onerror="this.src='/img-default/daletepido-logo-white-hq.png'" alt="Dale! Te Pido" style="max-height: 42px; width: auto; margin-bottom: 12px; display: inline-block;" />
     </div>
 
     <!-- MODE TOGGLE TABS: LOGIN vs REGISTRO -->
-    <div style="display:flex; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:14px; padding:4px; margin-bottom:28px;">
-      <button id="tab-login-btn" type="button" onclick="switchAuthTab('login')" style="flex:1; padding:10px 16px; background:var(--primary); color:#fff; border:none; border-radius:10px; font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s;">
+    <div style="display:flex; background:#F6F6F6; border:1px solid var(--border); border-radius:12px; padding:4px; margin-bottom:28px;">
+      <button id="tab-login-btn" type="button" onclick="switchAuthTab('login')" style="flex:1; padding:9px 16px; background:var(--primary); color:#fff; border:none; border-radius:8px; font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s;">
         <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
       </button>
-      <button id="tab-register-btn" type="button" onclick="switchAuthTab('register')" style="flex:1; padding:10px 16px; background:transparent; color:var(--text-muted); border:none; border-radius:10px; font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s;">
+      <button id="tab-register-btn" type="button" onclick="switchAuthTab('register')" style="flex:1; padding:9px 16px; background:transparent; color:var(--text-muted); border:none; border-radius:8px; font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s;">
         <i class="bi bi-plus-circle"></i> Registrar Comercio
       </button>
     </div>
