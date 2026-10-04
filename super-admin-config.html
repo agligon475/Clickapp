@@ -20,23 +20,23 @@
 
   <style>
     :root {
-      --bg-body: #F1F5F9;
+      --bg-body: #F6F6F6;
       --bg-card: #FFFFFF;
-      --bg-input: #F8FAFC;
-      --border-color: #CBD5E1;
+      --bg-input: #FAFAFC;
+      --border-color: #E2E8F0;
       --text-main: #0F172A;
-      --text-muted: #334155;
-      --red-primary: #D60000;
-      --red-hover: #B30000;
+      --text-muted: #64748B;
+      --red-primary: #F60000;
+      --red-hover: #D60000;
       --font-title: 'Josefin Sans', sans-serif;
       --font-body: 'Poppins', sans-serif;
     }
 
     body.dark-mode {
-      --bg-body: #0A0F1D;
+      --bg-body: #0B0F17;
       --bg-card: #151C2C;
-      --bg-input: #0B0F17;
-      --border-color: #26334D;
+      --bg-input: #0E1322;
+      --border-color: #24304A;
       --text-main: #F8FAFC;
       --text-muted: #94A3B8;
     }
@@ -63,16 +63,31 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
     .brand-wrap {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
 
     .brand-wrap img {
       height: 32px;
+      filter: brightness(0);
+      transition: filter 0.2s;
+    }
+    body.dark-mode .brand-wrap img {
+      filter: brightness(0) invert(1);
+    }
+
+    .brand-wrap h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
     }
 
     .btn {
@@ -98,13 +113,14 @@
     }
 
     .btn-red {
-      background: linear-gradient(135deg, #D60000 0%, #B30000 100%);
+      background: var(--red-primary);
       color: #FFF;
       border-color: var(--red-primary);
-      box-shadow: 0 4px 14px rgba(214, 0, 0, 0.35);
+      box-shadow: 0 4px 14px rgba(246, 0, 0, 0.25);
     }
     .btn-red:hover {
-      background: linear-gradient(135deg, #B30000 0%, #800000 100%);
+      background: var(--red-hover);
+      box-shadow: 0 6px 18px rgba(246, 0, 0, 0.35);
     }
 
     main {
@@ -117,10 +133,11 @@
 
     .card {
       background: var(--bg-card);
-      border: 1.5px solid var(--border-color);
+      border: 1px solid var(--border-color);
       border-radius: 16px;
       padding: 28px;
       margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
     }
 
     .card-header-title {
@@ -167,11 +184,12 @@
       font-family: var(--font-body);
       font-size: 14px;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
     .ctrl-input:focus, select:focus {
-      border-color: #D60000;
+      border-color: var(--red-primary);
+      box-shadow: 0 0 0 3px rgba(246, 0, 0, 0.12);
     }
 
     .diag-item {
@@ -180,15 +198,15 @@
       justify-content: space-between;
       padding: 14px 18px;
       background: var(--bg-input);
-      border: 1.5px solid var(--border-color);
+      border: 1px solid var(--border-color);
       border-radius: 10px;
       margin-bottom: 10px;
     }
 
     .badge-ok {
-      background: rgba(16, 185, 129, 0.15);
+      background: rgba(16, 185, 129, 0.12);
       color: #10B981;
-      border: 1px solid rgba(16, 185, 129, 0.35);
+      border: 1px solid rgba(16, 185, 129, 0.3);
       padding: 4px 12px;
       border-radius: 20px;
       font-size: 12px;
@@ -200,11 +218,11 @@
 
   <header>
     <div class="brand-wrap">
-      <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Logo Dale! Te Pido" style="filter: brightness(0);" />
+      <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" onerror="this.src='/img-default/daletepido-logo-white-hq.png'" alt="Dale! Te Pido" />
       <h2>Configuración Avanzada Global</h2>
     </div>
     <div style="display: flex; gap: 10px;">
-      <a href="informe-vulnerabilidades-clickapp.html" target="_blank" class="btn" style="border-color: rgba(239, 68, 68, 0.4); color: #DC2626;"><i class="bi bi-shield-lock-fill" style="color: #DC2626;"></i> Informe de Vulnerabilidades (PPT)</a>
+      <a href="informe-vulnerabilidades-clickapp.html" target="_blank" class="btn" style="border-color: rgba(239, 68, 68, 0.4); color: var(--red-primary);"><i class="bi bi-shield-lock-fill" style="color: var(--red-primary);"></i> Informe de Vulnerabilidades (PPT)</a>
       <a href="super-admin-secret-dashboard.html" class="btn"><i class="bi bi-arrow-left"></i> Volver al Dashboard</a>
     </div>
   </header>

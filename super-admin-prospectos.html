@@ -20,23 +20,25 @@
 
   <style>
     :root {
-      --bg-body: #F1F5F9;
+      --bg-body: #F6F6F6;
       --bg-card: #FFFFFF;
-      --bg-input: #F8FAFC;
-      --border-color: #CBD5E1;
+      --bg-input: #FAFAFC;
+      --border-color: #E2E8F0;
       --text-main: #0F172A;
-      --text-muted: #334155;
+      --text-muted: #64748B;
       --blue-primary: #2563EB;
       --blue-hover: #1D4ED8;
+      --red-primary: #F60000;
+      --red-hover: #D60000;
       --font-title: 'Josefin Sans', sans-serif;
       --font-body: 'Poppins', sans-serif;
     }
 
     body.dark-mode {
-      --bg-body: #0A0A0C;
-      --bg-card: #141416;
-      --bg-input: #1C1C1E;
-      --border-color: #27272A;
+      --bg-body: #0B0F17;
+      --bg-card: #151C2C;
+      --bg-input: #0E1322;
+      --border-color: #24304A;
       --text-main: #F8FAFC;
       --text-muted: #94A3B8;
     }
@@ -63,20 +65,31 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
     .brand-wrap {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
 
     .brand-wrap img {
       height: 32px;
       filter: brightness(0);
+      transition: filter 0.2s;
     }
     body.dark-mode .brand-wrap img {
       filter: brightness(0) invert(1);
+    }
+
+    .brand-wrap h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
     }
 
     .btn {
@@ -132,9 +145,10 @@
 
     .card {
       background: var(--bg-card);
-      border: 1.5px solid var(--border-color);
+      border: 1px solid var(--border-color);
       border-radius: 16px;
       padding: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
     }
 
     .form-group {
@@ -147,6 +161,7 @@
       font-weight: 700;
       text-transform: uppercase;
       color: var(--text-muted);
+      letter-spacing: 0.04em;
       margin-bottom: 6px;
     }
 
@@ -160,6 +175,12 @@
       font-family: var(--font-body);
       font-size: 14px;
       outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .ctrl-input:focus, select:focus, textarea:focus {
+      border-color: var(--blue-primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
     }
 
     .preview-box {
@@ -184,7 +205,7 @@
 
   <header>
     <div class="brand-wrap">
-      <img src="/img-default/daletepido-logo-white-hq.png" alt="Logo" />
+      <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" onerror="this.src='/img-default/daletepido-logo-white-hq.png'" alt="Dale! Te Pido" />
       <h2>Prospección de Clientes</h2>
     </div>
     <div style="display: flex; gap: 10px;">
