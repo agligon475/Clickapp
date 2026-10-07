@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 import { getEmailLayout } from './email-templates.js';
 
 const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
 
 function verifyPassword(password, storedPassword) {
   if (!storedPassword) return false;
@@ -49,6 +49,45 @@ export default async function handler(req, res) {
     const cleanStoreId = store_id.trim().toLowerCase();
     const isEmail = cleanStoreId.includes('@');
 
+    // Prioridad 1: Autenticación segura mediante RPC en PostgreSQL (credenciales aisladas en store_auth)
+    if (action === 'login' || !action) {
+      try {
+        const rpcRes = await fetch(`${SUPABASE_URL}/rest/v1/rpc/verify_store_login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`
+          },
+          body: JSON.stringify({
+            p_identifier: cleanStoreId,
+            p_password: (password || '').trim()
+          })
+        });
+
+        if (rpcRes.ok) {
+          const rpcData = await rpcRes.json();
+          if (rpcData && rpcData.success) {
+            const actualStoreId = (rpcData.store_id || cleanStoreId).toLowerCase();
+            const sessionToken = Buffer.from(`${actualStoreId}:${Date.now()}:authenticated`).toString('base64');
+            return res.status(200).json({
+              success: true,
+              store_id: actualStoreId,
+              admin_email: rpcData.admin_email || '',
+              token: sessionToken,
+              plan_level: rpcData.plan_level || 'starter',
+              message: 'Autenticación exitosa'
+            });
+          } else if (rpcData && rpcData.error) {
+            const status = rpcData.error.includes('no existe') ? 404 : 401;
+            return res.status(status).json({ success: false, error: rpcData.error });
+          }
+        }
+      } catch (rpcErr) {
+        console.warn('RPC verify_store_login no disponible, utilizando consulta directa:', rpcErr);
+      }
+    }
+
     let queryParam = '';
     if (isEmail) {
       queryParam = `admin_email=eq.${encodeURIComponent(cleanStoreId)}`;
@@ -56,7 +95,7 @@ export default async function handler(req, res) {
       queryParam = `store_id=eq.${encodeURIComponent(cleanStoreId)}`;
     }
 
-    // Consulta directa a la base de datos mediante el parámetro correspondiente
+    // Consulta directa a la base de datos (fallback)
     const configRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?${queryParam}`, {
       headers: {
         'apikey': SUPABASE_KEY,
@@ -150,6 +189,36 @@ export default async function handler(req, res) {
 
       const hashedPassword = hashPassword(new_password.trim());
 
+      // 1. Intentar actualizar mediante RPC segura en PostgreSQL (store_auth)
+      try {
+        const rpcReset = await fetch(`${SUPABASE_URL}/rest/v1/rpc/reset_store_password`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`
+          },
+          body: JSON.stringify({
+            p_store_id: actualStoreId,
+            p_new_password_hash: hashedPassword
+          })
+        });
+
+        if (rpcReset.ok) {
+          const rpcResetData = await rpcReset.json();
+          if (rpcResetData && rpcResetData.success) {
+            return res.status(200).json({
+              success: true,
+              store_id: actualStoreId,
+              message: 'Tu contraseña ha sido restablecida exitosamente. Ya podés ingresar.'
+            });
+          }
+        }
+      } catch (errRpcReset) {
+        console.warn('RPC reset_store_password no disponible, usando fallback:', errRpcReset);
+      }
+
+      // 2. Fallback: Actualizar en company_settings (el trigger de la base de datos se encargará de neutralizarlo)
       const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(actualStoreId)}`, {
         method: 'PATCH',
         headers: {
