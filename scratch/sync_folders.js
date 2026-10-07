@@ -26,6 +26,7 @@ const filesToSync = [
   'super-admin-prospectos.html',
   'super-admin-email-cms.html',
   'super-admin-config.html',
+  'informe-vulnerabilidades-clickapp.html',
   'enviar-comprobante.html',
   'api/email-templates.js',
   'manifest.json',

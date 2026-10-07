@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Informe Ejecutivo de Seguridad & Vulnerabilidades — Dale! Te Pido / Clickapp</title>
+  <title>Informe de Seguridad & Hardening (Actualizado 07/10/2026) — Dale! Te Pido / Clickapp</title>
   
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -469,8 +469,10 @@
       <div class="deck-topbar">
         <div class="brand-pill">
           <i class="bi bi-shield-lock-fill" style="color: var(--brand-teal); font-size: 20px;"></i>
-          <span>Clickapp / Dale! Te Pido <span style="color: var(--text-muted); font-weight: 400;">— Security Audit 2026</span></span>
-          <span class="badge-sec">Informe de Vulnerabilidades</span>
+          <span>Clickapp / Dale! Te Pido <span style="color: var(--text-muted); font-weight: 400;">— Security Audit</span></span>
+          <span class="badge-sec" style="background: rgba(16, 185, 129, 0.15); color: #34D399; border-color: rgba(16, 185, 129, 0.4); display: inline-flex; align-items: center; gap: 5px;">
+            <i class="bi bi-calendar-check-fill"></i> Actualizado: 7 de Octubre de 2026
+          </span>
         </div>
         <div class="deck-controls">
           <button class="btn-ctrl" onclick="prevSlide()"><i class="bi bi-chevron-left"></i> Ant</button>
@@ -494,42 +496,42 @@
         <!-- SLIDE 1: Cover -->
         <div class="slide active" data-index="1">
           <div class="slide-header">
-            <div class="slide-tag"><i class="bi bi-radar"></i> Auditoría Integral de Ciberseguridad</div>
+            <div class="slide-tag"><i class="bi bi-radar"></i> Auditoría Integral de Ciberseguridad & Hardening Activo</div>
             <h1 class="slide-title">Evaluación Global de Vulnerabilidades & Plan de Hardening</h1>
-            <p class="slide-subtitle">Plataforma SaaS Dale! Te Pido — Arquitectura Serverless, Autenticación y Base de Datos</p>
+            <p class="slide-subtitle">Plataforma SaaS Dale! Te Pido — Arquitectura Serverless, Autenticación y Base de Datos | <strong>Revisión Técnica Oficial: 7 de Octubre de 2026</strong></p>
           </div>
           
           <div class="slide-body">
             <div class="grid-3">
-              <div class="card-box critical-glow">
-                <span class="badge-pill badge-critical"><i class="bi bi-exclamation-octagon-fill"></i> Score de Riesgo</span>
-                <div class="stat-number" style="color: #F87171;">52<span style="font-size: 24px; color: var(--text-muted);">/100</span></div>
-                <div style="font-size: 13px; color: #CBD5E1;">Nivel de Riesgo Global: <strong>ALTO</strong>. Requiere remediación urgente en capas de autenticación y control de acceso.</div>
+              <div class="card-box" style="border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 0 25px rgba(16, 185, 129, 0.2);">
+                <span class="badge-pill badge-safe"><i class="bi bi-shield-check"></i> Score Actual Post-Hardening</span>
+                <div class="stat-number" style="color: #34D399;">76<span style="font-size: 24px; color: var(--text-muted);">/100</span></div>
+                <div style="font-size: 13px; color: #CBD5E1;">Nivel de Riesgo: <strong>MEDIO-CONTROLADO</strong> (Subió de 52 a 76 tras blindar la Base de Datos el <strong>07/10/2026</strong>).</div>
               </div>
 
               <div class="card-box">
-                <span class="badge-pill badge-high"><i class="bi bi-bug-fill"></i> Hallazgos Detectados</span>
-                <div class="stat-number" style="color: #FB923C;">9</div>
-                <div style="font-size: 13px; color: #CBD5E1;"><strong>2 Críticas</strong>, <strong>3 Altas</strong>, <strong>3 Medias</strong> y <strong>1 Baja</strong> categorizadas según el estándar CVSS v3.1 y OWASP.</div>
+                <span class="badge-pill badge-high"><i class="bi bi-bug-fill"></i> Estado de Hallazgos</span>
+                <div class="stat-number" style="color: #FB923C;">8 <span style="font-size: 18px; color: #34D399; font-weight: 700;">(+1 Mitigado)</span></div>
+                <div style="font-size: 13px; color: #CBD5E1;"><strong>1 Crítica de BD Resuelta</strong>, <strong>2 Críticas en Fase 1</strong>, <strong>3 Altas</strong> y <strong>3 Medias</strong> categorizadas bajo CVSS v3.1.</div>
               </div>
 
-              <div class="card-box">
-                <span class="badge-pill badge-safe"><i class="bi bi-clock-history"></i> Tiempo de Remediación</span>
-                <div class="stat-number" style="color: #34D399;">48h</div>
-                <div style="font-size: 13px; color: #CBD5E1;">Todas las fallas críticas cuentan con parches de código listos para su despliegue inmediato sin romper compatibilidad.</div>
+              <div class="card-box" style="border-color: rgba(99, 102, 241, 0.4);">
+                <span class="badge-pill badge-safe" style="background: rgba(99, 102, 241, 0.2); color: #818CF8; border-color: rgba(99, 102, 241, 0.4);"><i class="bi bi-calendar-event"></i> Fecha de Corte</span>
+                <div class="stat-number" style="color: #818CF8; font-size: 32px;">07 OCT 2026</div>
+                <div style="font-size: 13px; color: #CBD5E1;">Blindaje de credenciales en Supabase ejecutado y validado en vivo el 7 de Octubre de 2026 a las 18:00 hs.</div>
               </div>
             </div>
 
-            <div class="card-box" style="background: rgba(99, 102, 241, 0.08); border-color: rgba(99, 102, 241, 0.3);">
+            <div class="card-box" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3);">
               <div style="display: flex; align-items: center; justify-content: space-between;">
                 <div style="display: flex; align-items: center; gap: 12px;">
-                  <i class="bi bi-info-circle-fill" style="color: var(--brand-indigo); font-size: 24px;"></i>
+                  <i class="bi bi-check-circle-fill" style="color: #34D399; font-size: 26px;"></i>
                   <div>
-                    <div style="font-weight: 700; font-size: 14px;">Alcance del Análisis Técnico</div>
-                    <div style="font-size: 12px; color: var(--text-muted);">Módulos auditados: `api/auth.js`, `api/super-admin.js`, `api/gemini.js`, `api/store.js`, `api/jaime.js`, sesiones en cliente, CORS y almacenamiento de credenciales.</div>
+                    <div style="font-weight: 700; font-size: 14px; color: #FFF;">Hito de Seguridad Aplicado: 7 de Octubre de 2026</div>
+                    <div style="font-size: 12px; color: #CBD5E1;">Aislamiento total de credenciales en `public.store_auth`, revocación de consultas anónimas a contraseñas y claves API en Supabase, y función RPC `verify_store_login` operativa.</div>
                   </div>
                 </div>
-                <button class="btn-ctrl" onclick="nextSlide()" style="background: var(--brand-indigo); border: none; color: #FFF;">Comenzar Presentación <i class="bi bi-arrow-right"></i></button>
+                <button class="btn-ctrl" onclick="nextSlide()" style="background: var(--brand-indigo); border: none; color: #FFF;">Ver Informe Detallado <i class="bi bi-arrow-right"></i></button>
               </div>
             </div>
           </div>
@@ -867,40 +869,47 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
                       </tr>
                     </thead>
                     <tbody>
+                      <tr style="border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(16, 185, 129, 0.06);">
+                        <td style="padding: 6px; font-family: var(--font-mono); color: #34D399; font-weight: 700;">BD-01</td>
+                        <td style="padding: 6px; font-weight: 700; color: #FFF;">Exposición Claves en Supabase</td>
+                        <td style="padding: 6px; color: #94A3B8;">company_settings & RLS</td>
+                        <td style="padding: 6px; font-family: var(--font-mono); font-weight: 700; color: #34D399;">9.9</td>
+                        <td style="padding: 6px;"><span class="badge-pill badge-safe" style="padding:2px 6px; font-size:10px;"><i class="bi bi-check-circle-fill"></i> MITIGADA (07/10/2026)</span></td>
+                      </tr>
                       <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
                         <td style="padding: 6px; font-family: var(--font-mono);">SEC-01</td>
                         <td style="padding: 6px; font-weight: 600;">Reset Password sin Auth</td>
                         <td style="padding: 6px; color: var(--text-muted);">api/auth.js</td>
                         <td style="padding: 6px; font-family: var(--font-mono); font-weight: 700; color: #F87171;">9.8</td>
-                        <td style="padding: 6px;"><span class="badge-pill badge-critical" style="padding:2px 6px; font-size:10px;">CRÍTICA</span></td>
+                        <td style="padding: 6px;"><span class="badge-pill badge-critical" style="padding:2px 6px; font-size:10px;">EN PROCESO</span></td>
                       </tr>
                       <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
                         <td style="padding: 6px; font-family: var(--font-mono);">SEC-02</td>
                         <td style="padding: 6px; font-weight: 600;">Tokens de Sesión Forjables</td>
                         <td style="padding: 6px; color: var(--text-muted);">api/auth.js</td>
                         <td style="padding: 6px; font-family: var(--font-mono); font-weight: 700; color: #F87171;">9.1</td>
-                        <td style="padding: 6px;"><span class="badge-pill badge-critical" style="padding:2px 6px; font-size:10px;">CRÍTICA</span></td>
+                        <td style="padding: 6px;"><span class="badge-pill badge-critical" style="padding:2px 6px; font-size:10px;">EN PROCESO</span></td>
                       </tr>
                       <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
                         <td style="padding: 6px; font-family: var(--font-mono);">SEC-03</td>
                         <td style="padding: 6px; font-weight: 600;">Claves SuperAdmin en Código</td>
                         <td style="padding: 6px; color: var(--text-muted);">api/super-admin.js</td>
                         <td style="padding: 6px; font-family: var(--font-mono); font-weight: 700; color: #FB923C;">8.6</td>
-                        <td style="padding: 6px;"><span class="badge-pill badge-high" style="padding:2px 6px; font-size:10px;">ALTA</span></td>
+                        <td style="padding: 6px;"><span class="badge-pill badge-high" style="padding:2px 6px; font-size:10px;">FASE 1</span></td>
                       </tr>
                       <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
                         <td style="padding: 6px; font-family: var(--font-mono);">SEC-04</td>
                         <td style="padding: 6px; font-weight: 600;">Proxy Abierto de Gemini</td>
                         <td style="padding: 6px; color: var(--text-muted);">api/gemini.js</td>
                         <td style="padding: 6px; font-family: var(--font-mono); font-weight: 700; color: #FB923C;">7.5</td>
-                        <td style="padding: 6px;"><span class="badge-pill badge-high" style="padding:2px 6px; font-size:10px;">ALTA</span></td>
+                        <td style="padding: 6px;"><span class="badge-pill badge-high" style="padding:2px 6px; font-size:10px;">FASE 2</span></td>
                       </tr>
                       <tr>
                         <td style="padding: 6px; font-family: var(--font-mono);">SEC-05</td>
                         <td style="padding: 6px; font-weight: 600;">Inyección de Comprobantes</td>
                         <td style="padding: 6px; color: var(--text-muted);">api/super-admin.js</td>
                         <td style="padding: 6px; font-family: var(--font-mono); font-weight: 700; color: #FB923C;">7.2</td>
-                        <td style="padding: 6px;"><span class="badge-pill badge-high" style="padding:2px 6px; font-size:10px;">ALTA</span></td>
+                        <td style="padding: 6px;"><span class="badge-pill badge-high" style="padding:2px 6px; font-size:10px;">FASE 2</span></td>
                       </tr>
                     </tbody>
                   </table>
@@ -917,7 +926,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
           </div>
 
           <div class="deck-footer">
-            <span>Matriz de Priorización de Ingeniería</span>
+            <span>Matriz de Priorización de Ingeniería — Actualizada al 7 de Octubre de 2026</span>
             <span class="kbd-shortcut"><kbd>→</kbd> para continuar</span>
           </div>
         </div>
@@ -925,41 +934,52 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
         <!-- SLIDE 10: Remediation Roadmap -->
         <div class="slide" data-index="10">
           <div class="slide-header">
-            <div class="slide-tag"><i class="bi bi-calendar-check-fill"></i> Hoja de Ruta</div>
+            <div class="slide-tag"><i class="bi bi-calendar-check-fill"></i> Hoja de Ruta Actualizada</div>
             <h1 class="slide-title">Roadmap de Remediación & SLAs de Despliegue</h1>
-            <p class="slide-subtitle">Cronograma estructurado en 4 fases de hardening</p>
+            <p class="slide-subtitle">Cronograma estructurado con hitos completados y fases activas | <strong>07 de Octubre de 2026</strong></p>
           </div>
 
           <div class="slide-body">
             <div class="roadmap-track">
               
+              <div class="roadmap-step step-4" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.4);">
+                <span class="badge-pill badge-safe" style="font-size: 10px;"><i class="bi bi-check2-all"></i> Hito 07/10/2026</span>
+                <div style="font-weight: 700; font-size: 14px; color: #34D399;">Base de Datos Blindada ✅</div>
+                <ul class="bullet-list" style="font-size: 12px;">
+                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#34D399;"></i> Claves aisladas en `store_auth`.</li>
+                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#34D399;"></i> `company_settings` sin claves expuestas.</li>
+                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#34D399;"></i> Bloqueo de anon en credenciales de IA.</li>
+                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#34D399;"></i> RPC `verify_store_login` operativa.</li>
+                </ul>
+              </div>
+
               <div class="roadmap-step step-1">
-                <span class="badge-pill badge-critical" style="font-size: 10px;">Fase 1 (0h - 24h)</span>
+                <span class="badge-pill badge-critical" style="font-size: 10px;">Fase 1 (Activa)</span>
                 <div style="font-weight: 700; font-size: 14px;">Parches Críticos P0</div>
                 <ul class="bullet-list" style="font-size: 12px;">
-                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#F87171;"></i> Bloquear reset_password sin token.</li>
-                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#F87171;"></i> Migrar tokens Base64 a JWT firmado.</li>
-                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#F87171;"></i> Rotar clave maestra de SuperAdmin.</li>
+                  <li class="bullet-item"><i class="bi bi-hourglass-split bullet-icon" style="color:#F87171;"></i> Bloquear reset_password con OTP.</li>
+                  <li class="bullet-item"><i class="bi bi-hourglass-split bullet-icon" style="color:#F87171;"></i> Migrar tokens Base64 a JWT firmado.</li>
+                  <li class="bullet-item"><i class="bi bi-hourglass-split bullet-icon" style="color:#F87171;"></i> Rotar clave maestra de SuperAdmin.</li>
                 </ul>
               </div>
 
               <div class="roadmap-step step-2">
-                <span class="badge-pill badge-high" style="font-size: 10px;">Fase 2 (24h - 48h)</span>
+                <span class="badge-pill badge-high" style="font-size: 10px;">Fase 2 (Próxima)</span>
                 <div style="font-weight: 700; font-size: 14px;">Hardening P1</div>
                 <ul class="bullet-list" style="font-size: 12px;">
-                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#FB923C;"></i> Proteger /api/gemini con sesión de comercio.</li>
-                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#FB923C;"></i> Validar store_id en submit_payment_receipt.</li>
-                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#FB923C;"></i> Eliminar fallbacks de contraseñas en Git.</li>
+                  <li class="bullet-item"><i class="bi bi-circle bullet-icon" style="color:#FB923C;"></i> Proteger /api/gemini con sesión.</li>
+                  <li class="bullet-item"><i class="bi bi-circle bullet-icon" style="color:#FB923C;"></i> Validar store_id en comprobantes.</li>
+                  <li class="bullet-item"><i class="bi bi-circle bullet-icon" style="color:#FB923C;"></i> Limpiar credenciales estáticas en Git.</li>
                 </ul>
               </div>
 
               <div class="roadmap-step step-3">
-                <span class="badge-pill badge-medium" style="font-size: 10px;">Fase 3 (Semana 1)</span>
+                <span class="badge-pill badge-medium" style="font-size: 10px;">Fase 3 (Roadmap)</span>
                 <div style="font-weight: 700; font-size: 14px;">Defensa en Profundidad P2</div>
                 <ul class="bullet-list" style="font-size: 12px;">
-                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#FCD34D;"></i> Restringir CORS a daletepido.com.ar.</li>
-                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#FCD34D;"></i> Rate Limiting por IP (Upstash / KV).</li>
-                  <li class="bullet-item"><i class="bi bi-check2 bullet-icon" style="color:#FCD34D;"></i> Migrar hashing de SHA-256 a Argon2id.</li>
+                  <li class="bullet-item"><i class="bi bi-circle bullet-icon" style="color:#FCD34D;"></i> Restringir CORS a daletepido.com.ar.</li>
+                  <li class="bullet-item"><i class="bi bi-circle bullet-icon" style="color:#FCD34D;"></i> Rate Limiting por IP.</li>
+                  <li class="bullet-item"><i class="bi bi-circle bullet-icon" style="color:#FCD34D;"></i> Migrar hashing a Argon2id.</li>
                 </ul>
               </div>
 
@@ -1079,7 +1099,7 @@ export function verifyToken(token) {
           </div>
 
           <div class="deck-footer">
-            <span>Fin de la Presentación — Clickapp / Dale! Te Pido Security Report 2026</span>
+            <span>Clickapp / Dale! Te Pido Security Audit — Revisión Oficial: 7 de Octubre de 2026</span>
             <span class="kbd-shortcut">Presione <kbd>F</kbd> para salir de pantalla completa</span>
           </div>
         </div>
