@@ -475,6 +475,23 @@
           </span>
         </div>
         <div class="deck-controls">
+          <select id="slide-jump-select" onchange="goToSlide(parseInt(this.value))" class="btn-ctrl" style="background: rgba(18, 24, 38, 0.95); color: #FFF; border-color: rgba(99, 102, 241, 0.4); padding: 6px 12px; font-weight: 600; font-family: var(--font-body); cursor: pointer; border-radius: 8px;">
+            <option value="1">1. Portada & Resumen Global (08/10/2026)</option>
+            <option value="2">2. Postura Actual & Métricas Radar</option>
+            <option value="3">3. SEC-01: Reset Password Inseguro</option>
+            <option value="4">4. SEC-02: Tokens Forjables</option>
+            <option value="5">5. SEC-03: Claves en Código</option>
+            <option value="6">6. SEC-04: Proxy de IA Gemini</option>
+            <option value="7">7. SEC-05: Inyección de Comprobantes</option>
+            <option value="8">8. SEC-06 al SEC-08: Hardening Adicional</option>
+            <option value="9">9. Matriz de Priorización CVSS vs Esfuerzo</option>
+            <option value="10">10. Roadmap de Remediación & SLAs</option>
+            <option value="11">11. ⚡ Auditoría Lighthouse & Web Vitals (NUEVO)</option>
+            <option value="12">12. 🔒 Blindaje Supabase RLS en Vivo (NUEVO)</option>
+            <option value="13">13. 🚀 Prueba E2E Circuito Completo (NUEVO)</option>
+            <option value="14">14. 🛡️ Patrón de Token HMAC & Criptografía</option>
+            <option value="15">15. 📊 Conclusiones & SuperDashboard</option>
+          </select>
           <button class="btn-ctrl" onclick="prevSlide()"><i class="bi bi-chevron-left"></i> Ant</button>
           <span class="slide-counter" id="slide-num">1 / 15</span>
           <button class="btn-ctrl" onclick="nextSlide()">Sig <i class="bi bi-chevron-right"></i></button>
@@ -518,20 +535,50 @@
               <div class="card-box" style="border-color: rgba(99, 102, 241, 0.4);">
                 <span class="badge-pill badge-safe" style="background: rgba(99, 102, 241, 0.2); color: #818CF8; border-color: rgba(99, 102, 241, 0.4);"><i class="bi bi-calendar-event"></i> Última Sincronización</span>
                 <div class="stat-number" style="color: #818CF8; font-size: 30px;">08 OCT 2026</div>
-                <div style="font-size: 13px; color: #CBD5E1;">Verificación RLS y Auditoría Lighthouse completadas y sincronizadas con el SuperDashboard a las 18:35 hs.</div>
+                <div style="font-size: 13px; color: #CBD5E1;">Verificación RLS y Auditoría Lighthouse completadas y sincronizadas con el SuperDashboard a las 19:30 hs.</div>
               </div>
             </div>
 
-            <div class="card-box" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3);">
-              <div style="display: flex; align-items: center; justify-content: space-between;">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                  <i class="bi bi-check-circle-fill" style="color: #34D399; font-size: 26px;"></i>
-                  <div>
-                    <div style="font-weight: 700; font-size: 14px; color: #FFF;">Hitos Técnicos Verificados en Vivo (08/10/2026):</div>
-                    <div style="font-size: 12px; color: #CBD5E1;">Blindaje RLS Supabase validado (store_auth bloqueada a anon, RPC de login segura) + Auditoría Lighthouse de 4 vistas core.</div>
-                  </div>
+            <!-- Panel interactivo de accesos directos a los hitos -->
+            <div class="card-box" style="background: rgba(18, 24, 38, 0.95); border-color: rgba(99, 102, 241, 0.3); padding: 18px 24px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                <div style="font-weight: 700; font-size: 14px; color: #FFF; display: flex; align-items: center; gap: 8px;">
+                  <i class="bi bi-lightning-charge-fill" style="color: #FBBF24;"></i> Accesos Directos a los Hitos Verificados (08/10/2026):
                 </div>
-                <button class="btn-ctrl" onclick="nextSlide()" style="background: var(--brand-indigo); border: none; color: #FFF;">Ver Informe Detallado <i class="bi bi-arrow-right"></i></button>
+                <span style="font-size: 12px; color: var(--text-muted);">Hacé clic en cualquier botón para ir a la diapositiva directa</span>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+                <button onclick="goToSlide(11)" class="btn-ctrl" style="background: rgba(96, 165, 250, 0.15); border-color: rgba(96, 165, 250, 0.4); color: #93C5FD; text-align: left; padding: 10px 14px; justify-content: flex-start; height: auto;">
+                  <i class="bi bi-speedometer2" style="font-size: 18px; color: #60A5FA;"></i>
+                  <div>
+                    <div style="font-weight: 700; font-size: 12px; color: #FFF;">11. Auditoría Lighthouse</div>
+                    <div style="font-size: 10.5px; color: #93C5FD;">Scores Core Web Vitals</div>
+                  </div>
+                </button>
+
+                <button onclick="goToSlide(12)" class="btn-ctrl" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: #6EE7B7; text-align: left; padding: 10px 14px; justify-content: flex-start; height: auto;">
+                  <i class="bi bi-shield-check" style="font-size: 18px; color: #34D399;"></i>
+                  <div>
+                    <div style="font-weight: 700; font-size: 12px; color: #FFF;">12. Blindaje Supabase RLS</div>
+                    <div style="font-size: 10.5px; color: #6EE7B7;">Aislamiento DB en vivo</div>
+                  </div>
+                </button>
+
+                <button onclick="goToSlide(13)" class="btn-ctrl" style="background: rgba(168, 85, 247, 0.15); border-color: rgba(168, 85, 247, 0.4); color: #D8B4FE; text-align: left; padding: 10px 14px; justify-content: flex-start; height: auto;">
+                  <i class="bi bi-diagram-3-fill" style="font-size: 18px; color: #C084FC;"></i>
+                  <div>
+                    <div style="font-weight: 700; font-size: 12px; color: #FFF;">13. Test E2E Completo</div>
+                    <div style="font-size: 10.5px; color: #D8B4FE;">Flujo 5/5 validado</div>
+                  </div>
+                </button>
+
+                <button onclick="goToSlide(2)" class="btn-ctrl" style="background: rgba(99, 102, 241, 0.15); border-color: rgba(99, 102, 241, 0.4); color: #A5B4FC; text-align: left; padding: 10px 14px; justify-content: flex-start; height: auto;">
+                  <i class="bi bi-graph-up-arrow" style="font-size: 18px; color: #818CF8;"></i>
+                  <div>
+                    <div style="font-weight: 700; font-size: 12px; color: #FFF;">2. Radar de Defensas</div>
+                    <div style="font-size: 10.5px; color: #A5B4FC;">Métricas interactivas</div>
+                  </div>
+                </button>
               </div>
             </div>
           </div>
@@ -1285,6 +1332,8 @@ export function verifyToken(token) {
       document.getElementById('slide-num').textContent = `${currentSlide} / ${totalSlides}`;
       const percentage = (currentSlide / totalSlides) * 100;
       document.getElementById('progress-fill').style.width = `${percentage}%`;
+      const selectEl = document.getElementById('slide-jump-select');
+      if (selectEl) selectEl.value = String(currentSlide);
 
       // Init charts on slide 2
       if (currentSlide === 2 || currentSlide === 9) {
