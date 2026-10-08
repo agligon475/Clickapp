@@ -471,12 +471,12 @@
           <i class="bi bi-shield-lock-fill" style="color: var(--brand-teal); font-size: 20px;"></i>
           <span>Clickapp / Dale! Te Pido <span style="color: var(--text-muted); font-weight: 400;">— Security Audit</span></span>
           <span class="badge-sec" style="background: rgba(16, 185, 129, 0.15); color: #34D399; border-color: rgba(16, 185, 129, 0.4); display: inline-flex; align-items: center; gap: 5px;">
-            <i class="bi bi-calendar-check-fill"></i> DATA DE UPDATE: 08/10/2026 — 18:35 hs
+            <i class="bi bi-calendar-check-fill"></i> DATA DE UPDATE: 08/10/2026 — 19:30 hs
           </span>
         </div>
         <div class="deck-controls">
           <button class="btn-ctrl" onclick="prevSlide()"><i class="bi bi-chevron-left"></i> Ant</button>
-          <span class="slide-counter" id="slide-num">1 / 14</span>
+          <span class="slide-counter" id="slide-num">1 / 15</span>
           <button class="btn-ctrl" onclick="nextSlide()">Sig <i class="bi bi-chevron-right"></i></button>
           <button class="btn-ctrl" onclick="toggleFullScreen()" title="Pantalla Completa (F)"><i class="bi bi-arrows-fullscreen"></i></button>
           <a href="super-admin-secret-dashboard.html" class="btn-ctrl" style="border-color: rgba(13,148,136,0.4); color: var(--brand-teal);" title="Volver al SuperDashboard">
@@ -1108,18 +1108,62 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
             </div>
           </div>
 
+        <!-- SLIDE 13: Prueba de Circuito Completo End-to-End (E2E) -->
+        <div class="slide" data-index="13">
+          <div class="slide-header">
+            <div class="slide-tag" style="color: #A855F7;"><i class="bi bi-diagram-3-fill"></i> Validación Integral del Circuito SaaS</div>
+            <h1 class="slide-title">Prueba de Flujo Completo End-to-End (E2E)</h1>
+            <p class="slide-subtitle">Simulación de punta a punta: Auth ➔ Catálogo ➔ Checkout ➔ WhatsApp ➔ Dashboard | <strong style="color: #34D399;">DATA DE UPDATE: 08/10/2026 — 19:30 hs</strong></p>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-3" style="margin-bottom: 12px;">
+              <div class="card-box" style="border-color: rgba(168, 85, 247, 0.4);">
+                <span class="badge-pill" style="background: rgba(168, 85, 247, 0.2); color: #C084FC; font-size: 10px;"><i class="bi bi-cart-check-fill"></i> Checkout & Registro</span>
+                <div class="stat-number" style="color: #C084FC; font-size: 28px;">✅ PASSED (21ms)</div>
+                <div style="font-size: 12px; color: #CBD5E1;">Creación de pedido con ítems, subtotales, recargo de envío y método de pago empaquetado en JSON estructurado.</div>
+              </div>
+
+              <div class="card-box" style="border-color: rgba(34, 197, 94, 0.4);">
+                <span class="badge-pill badge-safe" style="font-size: 10px;"><i class="bi bi-whatsapp"></i> Payload WhatsApp</span>
+                <div class="stat-number" style="color: #34D399; font-size: 28px;">✅ PASSED (0ms)</div>
+                <div style="font-size: 12px; color: #CBD5E1;">Generación inmediata del enlace `wa.me` con formato legible de mensaje, emojis, viñetas y datos de entrega.</div>
+              </div>
+
+              <div class="card-box" style="border-color: rgba(99, 102, 241, 0.4);">
+                <span class="badge-pill badge-safe" style="font-size: 10px; background: rgba(99, 102, 241, 0.2); color: #818CF8;"><i class="bi bi-arrow-repeat"></i> Máquina de Estados</span>
+                <div class="stat-number" style="color: #818CF8; font-size: 28px;">✅ 4/4 ESTADOS</div>
+                <div style="font-size: 12px; color: #CBD5E1;">Ciclo de vida validado: <code style="color:#93C5FD;">CONFIRMAR</code> ➔ <code style="color:#93C5FD;">PREPARAR</code> ➔ <code style="color:#93C5FD;">ENTREGAR</code> ➔ <code style="color:#93C5FD;">FINALIZADO</code>.</div>
+              </div>
+            </div>
+
+            <div class="card-box" style="background: rgba(18, 24, 38, 0.9); border-color: rgba(168, 85, 247, 0.3); padding: 14px 20px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <div style="font-weight: 700; font-size: 13px; color: #C084FC;"><i class="bi bi-check2-circle"></i> Resultados del Test Suite E2E (`scratch/test_live_e2e_full_circuit.js`):</div>
+                <span style="font-family: var(--font-mono); font-size: 11px; color: #34D399;">100% OPERATIVO EN PRODUCCIÓN</span>
+              </div>
+              <div class="code-snippet" style="font-size: 11px; line-height: 1.5; margin: 0; padding: 10px;">
+[Paso 1] Autenticación RPC (verify_store_login):  ✅ PASSED (474ms - Aislamiento criptográfico en PostgreSQL)
+[Paso 2] Carga de Catálogo Público (tienda.html): ✅ PASSED (4640ms - 5 productos listados con variantes)
+[Paso 3] Checkout y Creación de Pedido (Cliente):  ✅ PASSED (21ms - Pedido empaquetado con total y entrega)
+[Paso 4] Despacho y Formateo a WhatsApp:          ✅ PASSED (0ms - Enlace wa.me con formato enriquecido)
+[Paso 5] Transición de Estados (Dashboard):       ✅ PASSED (4 transiciones confirmadas en tiempo real)
+              </div>
+            </div>
+          </div>
+
           <div class="deck-footer">
-            <span>Verificación en Vivo contra Supabase Postgres — Test Suite Automatizado</span>
+            <span>Clickapp E2E Automation Suite — Validación de Arquitectura Integral</span>
             <span class="kbd-shortcut"><kbd>→</kbd> para continuar</span>
           </div>
         </div>
 
-        <!-- SLIDE 13: Actionable Code Patches -->
-        <div class="slide" data-index="13">
+        <!-- SLIDE 14: Actionable Code Patches -->
+        <div class="slide" data-index="14">
           <div class="slide-header">
             <div class="slide-tag" style="color: var(--safe);"><i class="bi bi-file-earmark-code-fill"></i> Guía de Implementación</div>
             <h1 class="slide-title">Patrón de Token HMAC & Verificación Centralizada</h1>
-            <p class="slide-subtitle">Código reutilizable para implementar en la suite de Serverless Functions | <strong style="color: #34D399;">DATA DE UPDATE: 08/10/2026</strong></p>
+            <p class="slide-subtitle">Código reutilizable para implementar en la suite de Serverless Functions | <strong style="color: #34D399;">DATA DE UPDATE: 08/10/2026 — 19:30 hs</strong></p>
           </div>
 
           <div class="slide-body">
@@ -1168,12 +1212,12 @@ export function verifyToken(token) {
           </div>
         </div>
 
-        <!-- SLIDE 14: Conclusions & SuperDashboard Integration -->
-        <div class="slide" data-index="14">
+        <!-- SLIDE 15: Conclusions & SuperDashboard Integration -->
+        <div class="slide" data-index="15">
           <div class="slide-header">
             <div class="slide-tag" style="color: var(--brand-teal);"><i class="bi bi-patch-check-fill"></i> Conclusiones y Próximos Pasos</div>
             <h1 class="slide-title">Informe Disponible en SuperDashboard</h1>
-            <p class="slide-subtitle">Resumen final para la toma de decisiones del equipo técnico | <strong style="color: #34D399;">DATA DE UPDATE: 08/10/2026</strong></p>
+            <p class="slide-subtitle">Resumen final para la toma de decisiones del equipo técnico | <strong style="color: #34D399;">DATA DE UPDATE: 08/10/2026 — 19:30 hs</strong></p>
           </div>
 
           <div class="slide-body">
