@@ -903,31 +903,32 @@ a.logo{
 
 <!-- ── TOPBAR ── -->
 <nav class="topbar">
-  <a href="#" class="logo">
+  <a href="#" class="logo" aria-label="Página de inicio de la tienda">
     <span class="logo-icon" id="logo-icon">🏪</span>
-    <img id="logo-img" style="display:none; height:34px; width:34px; object-fit:contain; border-radius:8px;"/>
+    <img id="logo-img" alt="Logo de la tienda" style="display:none; height:34px; width:34px; object-fit:contain; border-radius:8px;"/>
     <span id="logo-text">Mi Tienda</span>
   </a>
   <span class="tagline" id="tagline">Tu tienda digital</span>
 
   <div class="search-wrap">
-    <i class="bi bi-search search-icon"></i>
+    <i class="bi bi-search search-icon" aria-hidden="true"></i>
     <input type="text" class="search-input" id="search"
       placeholder="Buscar productos..."
+      aria-label="Buscar productos en el catálogo"
       oninput="onSearch(this.value)"/>
   </div>
 
   <div class="nav-links" style="display: flex; gap: 16px; margin-left: 12px; margin-right: 12px; flex-shrink: 0;">
-    <a href="javascript:void(0)" onclick="openPagesDrawer('nosotros')" class="nav-link-item" style="color: var(--silver); text-decoration: none; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: color 0.2s;">
-      <i class="bi bi-info-circle" style="font-size:16px;"></i> <span class="hide-mobile">Nosotros</span>
+    <a href="javascript:void(0)" onclick="openPagesDrawer('nosotros')" class="nav-link-item" style="color: var(--silver); text-decoration: none; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: color 0.2s;" aria-label="Ver información sobre nosotros">
+      <i class="bi bi-info-circle" style="font-size:16px;" aria-hidden="true"></i> <span class="hide-mobile">Nosotros</span>
     </a>
-    <a href="javascript:void(0)" onclick="openPagesDrawer('faq')" class="nav-link-item" style="color: var(--silver); text-decoration: none; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: color 0.2s;">
-      <i class="bi bi-question-circle" style="font-size:16px;"></i> <span class="hide-mobile">FAQs</span>
+    <a href="javascript:void(0)" onclick="openPagesDrawer('faq')" class="nav-link-item" style="color: var(--silver); text-decoration: none; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: color 0.2s;" aria-label="Ver preguntas frecuentes">
+      <i class="bi bi-question-circle" style="font-size:16px;" aria-hidden="true"></i> <span class="hide-mobile">FAQs</span>
     </a>
   </div>
 
-  <button class="cart-btn" onclick="openCart()">
-    <i class="bi bi-bag"></i>
+  <button class="cart-btn" onclick="openCart()" aria-label="Abrir carrito de compras">
+    <i class="bi bi-bag" aria-hidden="true"></i>
     <span class="cart-n" id="cart-n">0</span>
   </button>
 </nav>
@@ -956,15 +957,15 @@ a.logo{
 <div class="page">
 
   <!-- Category rail -->
-  <div class="cat-rail" id="cat-rail">
-    <button class="cat-btn active" data-cat="all" onclick="filterCat(this,'all')">
+  <div class="cat-rail" id="cat-rail" role="region" aria-label="Categorías de productos">
+    <button class="cat-btn active" data-cat="all" onclick="filterCat(this,'all')" aria-label="Ver todos los productos">
       <i class="bi bi-grid-3x3-gap"></i> Todos
     </button>
     <!-- populated by JS -->
   </div>
 
   <!-- BANNERS PROMOCIONALES 50/50 -->
-  <div id="banners-container" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:32px;">
+  <div id="banners-container" style="display:none;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:32px;">
     <!-- Banner 1 - populated by JS -->
     <div id="banner-1" class="promo-banner"></div>
     <!-- Banner 2 - populated by JS -->
@@ -2898,28 +2899,28 @@ loadSheet();
 </script>
 <!-- ── PRODUCT DETAIL DRAWER ── -->
 <div class="pdrawer-overlay" id="pdrawer-overlay" onclick="closeProductDrawer()"></div>
-<div class="pdrawer" id="pdrawer">
+<div class="pdrawer" id="pdrawer" role="dialog" aria-modal="true" aria-label="Detalle del producto">
   <div class="pdrawer-img" id="pdrawer-img">
     <span style="font-size:72px;">📦</span>
   </div>
-  <button class="pdrawer-close" onclick="closeProductDrawer()"><i class="bi bi-x"></i></button>
+  <button class="pdrawer-close" onclick="closeProductDrawer()" aria-label="Cerrar detalle del producto"><i class="bi bi-x" aria-hidden="true"></i></button>
   <div class="pdrawer-body" id="pdrawer-body"></div>
   <div class="pdrawer-add" id="pdrawer-id" data-id="">
     <div class="pdrawer-add-qty" id="pdrawer-qty-wrap">
-      <button id="pdrawer-dec"><i class="bi bi-dash"></i></button>
+      <button id="pdrawer-dec" aria-label="Disminuir cantidad"><i class="bi bi-dash" aria-hidden="true"></i></button>
       <span id="pdrawer-qty-num" data-id="">0</span>
-      <button id="pdrawer-inc"><i class="bi bi-plus"></i></button>
+      <button id="pdrawer-inc" aria-label="Aumentar cantidad"><i class="bi bi-plus" aria-hidden="true"></i></button>
     </div>
-    <button class="pdrawer-add-btn" id="pdrawer-add-btn">Agregar al carrito</button>
+    <button class="pdrawer-add-btn" id="pdrawer-add-btn" aria-label="Agregar producto al carrito">Agregar al carrito</button>
   </div>
 </div>
 
 <!-- ── DRAWER DE PÁGINAS INTERNAS (Nosotros / FAQ) ── -->
 <div class="drawer-overlay" id="pages-drawer-overlay" onclick="closePagesDrawer()"></div>
-<div class="drawer" id="pages-drawer">
+<div class="drawer" id="pages-drawer" role="dialog" aria-modal="true" aria-label="Información de la tienda">
   <div class="drawer-head">
     <span class="drawer-title" id="pages-drawer-title">Información</span>
-    <button class="drawer-close" onclick="closePagesDrawer()"><i class="bi bi-x"></i></button>
+    <button class="drawer-close" onclick="closePagesDrawer()" aria-label="Cerrar panel"><i class="bi bi-x" aria-hidden="true"></i></button>
   </div>
   <div class="drawer-items" id="pages-drawer-body" style="padding: 24px; overflow-y: auto; height: calc(100% - 60px);">
     <!-- Contenido dinámico -->
