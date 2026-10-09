@@ -36,7 +36,7 @@ jobs:
 
       - name: Compilar APK Release con Gradle
         working-directory: android
-        run: gradle assembleRelease --no-daemon --stacktrace
+        run: gradle assembleRelease --no-daemon --info --stacktrace
 
       - name: Subir APK generado como Artefacto descargable
         uses: actions/upload-artifact@v4
