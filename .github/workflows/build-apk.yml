@@ -34,11 +34,11 @@ jobs:
             -storepass "daletepido2026pass" -keypass "daletepido2026pass" \
             -dname "CN=DaleTePido, OU=Mobile, O=DaleTePido, L=Buenos Aires, S=Buenos Aires, C=AR"
 
-      - name: Compilar APK Release con Gradle
+      - name: Compilar APK con Gradle
         id: gradle_step
         working-directory: android
         run: |
-          gradle assembleRelease --no-daemon --stacktrace 2>&1 | tee gradle-build.log
+          gradle assemble --no-daemon --stacktrace 2>&1 | tee gradle-build.log
 
       - name: Publicar Diagnóstico en Job Summary
         if: always()
@@ -50,10 +50,18 @@ jobs:
             echo '```' >> $GITHUB_STEP_SUMMARY
           fi
 
+      - name: Localizar y preparar APK generado
+        run: |
+          mkdir -p dist-apk
+          echo "Buscando archivos APK generados..."
+          find android/ -name "*.apk"
+          find android/ -name "*.apk" -exec cp {} dist-apk/ \;
+          echo "Archivos listos para subida:"
+          ls -la dist-apk/
+
       - name: Subir APK generado como Artefacto descargable
         uses: actions/upload-artifact@v4
         with:
           name: DaleTePido-Android-APK
-          path: |
-            android/app/build/outputs/apk/release/*.apk
+          path: dist-apk/*.apk
           retention-days: 30
