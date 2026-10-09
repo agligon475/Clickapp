@@ -9,7 +9,7 @@ async function sleep(ms) {
 }
 
 async function run() {
-  console.log('📱 Iniciando prueba interactiva E2E de Mobile-First Product Wizard...');
+  console.log('📱 Iniciando prueba interactiva E2E de Mobile-First Product Wizard (Pasos 1 al 5)...');
 
   const newTabRes = await fetch(`http://127.0.0.1:${PORT}/json/new?http://localhost:5500/dashboard.html?demo=1`, { method: 'PUT' });
   const tabData = await newTabRes.json();
@@ -56,109 +56,120 @@ async function run() {
 
   await sleep(1500);
 
-  // 1. Abrir Modal de Producto
+  // 1. Abrir Modal de Producto (inicia en Paso 1)
   console.log('✨ Abriendo Product Wizard con openModal()...');
   await send('Runtime.evaluate', {
     expression: `openModal();`
   });
   await sleep(600);
 
-  // Capturar Paso 0: Arquetipos
-  console.log('📸 Capturando Paso 0 (Selector de Arquetipos / Modalidad)...');
-  const shot0 = await send('Page.captureScreenshot', { format: 'png' });
-  const p0Path = path.join(ARTIFACTS_DIR, `product_wizard_mobile_step0_${Date.now()}.png`);
-  fs.writeFileSync(p0Path, Buffer.from(shot0.data, 'base64'));
-  console.log('✓ Guardado:', p0Path);
+  // Capturar Paso 1: Arquetipos (con Opciones / Modelos para tecnología / electrodomésticos)
+  console.log('📸 Capturando Paso 1 (Selector de Modalidad 1 de 5)...');
+  const shot1 = await send('Page.captureScreenshot', { format: 'png' });
+  const p1Path = path.join(ARTIFACTS_DIR, `product_wizard_mobile_step1_${Date.now()}.png`);
+  fs.writeFileSync(p1Path, Buffer.from(shot1.data, 'base64'));
+  console.log('✓ Guardado:', p1Path);
 
-  // 2. Elegir Arquetipo "weight" (Al Peso / Fraccionado)
-  console.log('⚖️ Seleccionando modalidad: Al Peso / Fraccionado...');
+  // 2. Elegir Arquetipo "variants" (Con Variantes y Modelos / Opciones)
+  console.log('🎛️ Seleccionando arquetipo: Con Variantes y Modelos...');
   await send('Runtime.evaluate', {
-    expression: `selectProductArchetype('weight', false); goToProductStep(1);`
+    expression: `selectProductArchetype('variants', false); goToProductStep(2);`
   });
   await sleep(500);
 
-  // Intentar avanzar sin nombre (probar validación inline)
-  console.log('🔍 Probando validación inline (Siguiente sin nombre)...');
-  const valResult = await send('Runtime.evaluate', {
-    expression: `goToProductStep(2);`
+  // Probar validación inline: intentar avanzar al Paso 3 sin nombre
+  console.log('🔍 Probando validación inline (Paso 2 -> Paso 3 sin nombre)...');
+  await send('Runtime.evaluate', {
+    expression: `goToProductStep(3);`
   });
   const errVisible = await send('Runtime.evaluate', {
     expression: `document.getElementById('m-name-error').style.display === 'block'`
   });
   console.log('✓ Validación inline funcionando:', errVisible.result.value ? 'SÍ (bloqueó avance)' : 'NO');
 
-  // Completar Nombre y Categoría
+  // Completar Nombre, Categoría y Marca de Tecnología / Electrodomésticos
   await send('Runtime.evaluate', {
     expression: `
-      document.getElementById('m-name').value = 'Jamón Cocido Feteado Primera Calidad';
+      document.getElementById('m-name').value = 'Celular Smartphone Pro Max 5G';
       if (document.getElementById('m-cat').options.length > 1) {
         document.getElementById('m-cat').selectedIndex = 1;
       } else {
-        document.getElementById('m-cat').innerHTML = '<option value="fiambreria" selected>Fiambrería</option>';
+        document.getElementById('m-cat').innerHTML = '<option value="tecnologia" selected>Tecnología y Celulares</option>';
       }
-      document.getElementById('m-marca').value = 'Bocatti';
-      document.getElementById('m-emoji').value = '🥓';
+      document.getElementById('m-marca').value = 'Samsung';
+      document.getElementById('m-emoji').value = '📱';
+      clearPwErrors();
     `
   });
   await sleep(300);
 
-  // Capturar Paso 1: Básicos
-  console.log('📸 Capturando Paso 1 (Datos Básicos completados)...');
-  const shot1 = await send('Page.captureScreenshot', { format: 'png' });
-  const p1Path = path.join(ARTIFACTS_DIR, `product_wizard_mobile_step1_${Date.now()}.png`);
-  fs.writeFileSync(p1Path, Buffer.from(shot1.data, 'base64'));
-  console.log('✓ Guardado:', p1Path);
-
-  // 3. Avanzar a Paso 2: Precios & Configuración de Fraccionado
-  console.log('➡️ Avanzando a Paso 2 (Precios y Fraccionado)...');
-  await send('Runtime.evaluate', {
-    expression: `goToProductStep(2); document.getElementById('m-price').value = '18500'; document.getElementById('m-stock').value = '15.5'; document.getElementById('m-weight-unit').value = 'kg'; document.getElementById('m-weight-min').value = '100g';`
-  });
-  await sleep(500);
-
-  console.log('📸 Capturando Paso 2 (Precios & Unidad de Medida)...');
+  // Capturar Paso 2: Básicos
+  console.log('📸 Capturando Paso 2 (Datos Básicos completados)...');
   const shot2 = await send('Page.captureScreenshot', { format: 'png' });
   const p2Path = path.join(ARTIFACTS_DIR, `product_wizard_mobile_step2_${Date.now()}.png`);
   fs.writeFileSync(p2Path, Buffer.from(shot2.data, 'base64'));
   console.log('✓ Guardado:', p2Path);
 
-  // 4. Avanzar a Paso 3: Fotos
-  console.log('➡️ Avanzando a Paso 3 (Fotos)...');
+  // 3. Avanzar a Paso 3: Precios, Stock y Plantillas de Variantes de Tecnología
+  console.log('➡️ Avanzando a Paso 3 (Precios y Plantillas de Modelos / Opciones)...');
   await send('Runtime.evaluate', {
-    expression: `goToProductStep(3); document.getElementById('m-img').value = 'https://images.unsplash.com/photo-1524438418049-ab2acb7aa48f?w=400'; previewImgUrl(document.getElementById('m-img').value, 0);`
+    expression: `
+      goToProductStep(3);
+      document.getElementById('m-price').value = '850000';
+      document.getElementById('m-stock').value = '20';
+      addTechPresetGroup();
+    `
   });
   await sleep(500);
 
-  console.log('📸 Capturando Paso 3 (Fotos)...');
+  console.log('📸 Capturando Paso 3 (Precios y Modelos de Capacidad 128/256/512GB)...');
   const shot3 = await send('Page.captureScreenshot', { format: 'png' });
   const p3Path = path.join(ARTIFACTS_DIR, `product_wizard_mobile_step3_${Date.now()}.png`);
   fs.writeFileSync(p3Path, Buffer.from(shot3.data, 'base64'));
   console.log('✓ Guardado:', p3Path);
 
-  // 5. Avanzar a Paso 4: Detalle & Vista Previa
-  console.log('➡️ Avanzando a Paso 4 (Detalles & Vista previa)...');
+  // 4. Avanzar a Paso 4: Fotos
+  console.log('➡️ Avanzando a Paso 4 (Fotos)...');
   await send('Runtime.evaluate', {
     expression: `
       goToProductStep(4);
-      document.getElementById('m-detalle').value = 'Jamón cocido seleccionado feteado a la vista. Envasado al vacío o al corte directo.';
-      document.querySelector('input[name="m-pills"][value="Oferta"]').checked = true;
+      document.getElementById('m-img').value = 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400';
+      previewImgUrl(document.getElementById('m-img').value, 0);
+    `
+  });
+  await sleep(500);
+
+  console.log('📸 Capturando Paso 4 (Fotos del producto)...');
+  const shot4 = await send('Page.captureScreenshot', { format: 'png' });
+  const p4Path = path.join(ARTIFACTS_DIR, `product_wizard_mobile_step4_${Date.now()}.png`);
+  fs.writeFileSync(p4Path, Buffer.from(shot4.data, 'base64'));
+  console.log('✓ Guardado:', p4Path);
+
+  // 5. Avanzar a Paso 5: Detalle & Vista Previa
+  console.log('➡️ Avanzando a Paso 5 (Detalles & Vista previa)...');
+  await send('Runtime.evaluate', {
+    expression: `
+      goToProductStep(5);
+      document.getElementById('m-detalle').value = 'Smartphone de alta gama con pantalla AMOLED de 120Hz, cámara triple de 108MP y batería de 5000 mAh. Garantía oficial de 1 año.';
+      const pillO = document.querySelector('input[name="m-pills"][value="Nuevo ingreso"]');
+      if (pillO) pillO.checked = true;
       renderProductWizardPreview();
     `
   });
   await sleep(500);
 
-  console.log('📸 Capturando Paso 4 (Vista previa final en mobile)...');
-  const shot4 = await send('Page.captureScreenshot', { format: 'png' });
-  const p4Path = path.join(ARTIFACTS_DIR, `product_wizard_mobile_step4_${Date.now()}.png`);
-  fs.writeFileSync(p4Path, Buffer.from(shot4.data, 'base64'));
-  console.log('✓ Guardado:', p4Path);
+  console.log('📸 Capturando Paso 5 (Vista previa final en mobile)...');
+  const shot5 = await send('Page.captureScreenshot', { format: 'png' });
+  const p5Path = path.join(ARTIFACTS_DIR, `product_wizard_mobile_step5_${Date.now()}.png`);
+  fs.writeFileSync(p5Path, Buffer.from(shot5.data, 'base64'));
+  console.log('✓ Guardado:', p5Path);
 
   // Cerrar pestaña
   await send('Page.close');
   ws.close();
   await fetch(`http://127.0.0.1:${PORT}/json/close/${tabData.id}`);
 
-  console.log('🎉 PRUEBA DE NAVEGADOR MÓVIL COMPLETADA CON ÉXITO ABSOLUTO!');
+  console.log('🎉 PRUEBA DE NAVEGADOR MÓVIL (PASOS 1 AL 5) COMPLETADA CON ÉXITO ABSOLUTO!');
 }
 
 run().catch(e => {

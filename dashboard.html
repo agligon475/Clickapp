@@ -11127,14 +11127,14 @@
     window.addOptionRow = addOptionRow;
 
     /* ═══════════════════════════════════════════ PRODUCT WIZARD CONTROLLER */
-    window.pwCurrentStep = 0;
+    window.pwCurrentStep = 1;
     window.pwCurrentArchetype = 'simple';
 
     const PW_ARCHETYPES = {
-      simple: { name: '📦 Producto Simple', icon: '📦', badge: 'Estándar', placeholder: 'Ej: Sierra Circular, Coca-Cola 1.5L o Remera Algodón' },
-      weight: { name: '⚖️ Al Peso / Fraccionado', icon: '⚖️', badge: 'Granel', placeholder: 'Ej: Jamón Cocido Bocatti, Queso Gouda o Nueces Peladas' },
+      simple: { name: '📦 Producto Simple', icon: '📦', badge: 'Estándar', placeholder: 'Ej: Heladera, Celular, Coca-Cola 1.5L o Remera Algodón' },
+      weight: { name: '⚖️ Al Peso / Fraccionado', icon: '⚖️', badge: 'Granel', placeholder: 'Ej: Jamón Cocido Bocatti, Queso Gouda o Tornillos x Kg' },
       food: { name: '🍔 Gastronómico / Preparado', icon: '🍔', badge: 'Cocina', placeholder: 'Ej: Hamburguesa Doble Bacon, Pizza Especial o Ensalada César' },
-      variants: { name: '👕 Con Variantes (Talle / Color)', icon: '👕', badge: 'Moda', placeholder: 'Ej: Medias de Algodón, Remera Lisa o Zapatillas Urbanas' },
+      variants: { name: '🎛️ Con Opciones y Modelos', icon: '🎛️', badge: 'Opciones', placeholder: 'Ej: Celular Smart 128GB/256GB, Microondas 20L/30L, TV 50" o Remera' },
       pack: { name: '🎁 Pack / Combo / Grupal', icon: '🎁', badge: 'Mayorista', placeholder: 'Ej: Paquete Gomitas x25 un., Pack Cervezas x6 o Caja Bombones' }
     };
 
@@ -11142,8 +11142,8 @@
       if (!PW_ARCHETYPES[type]) type = 'simple';
       window.pwCurrentArchetype = type;
 
-      // Actualizar tarjetas de selección en Paso 0
-      document.querySelectorAll('#pw-step-0 .pw-archetype-card').forEach(card => {
+      // Actualizar tarjetas de selección en Paso 1
+      document.querySelectorAll('#pw-step-1 .pw-archetype-card').forEach(card => {
         if (card.dataset.archetype === type) {
           card.classList.add('selected');
         } else {
@@ -11151,7 +11151,7 @@
         }
       });
 
-      // Actualizar banners de modo en Pasos 1 y 2
+      // Actualizar banners de modo en Pasos 2 y 3
       const info = PW_ARCHETYPES[type];
       const b1 = document.getElementById('pw-banner-arch-name');
       const b2 = document.getElementById('pw-banner-arch-name-2');
@@ -11164,7 +11164,7 @@
         nameInput.placeholder = info.placeholder;
       }
 
-      // Adaptar Paso 2 dinámicamente
+      // Adaptar Paso 3 dinámicamente
       const weightPanel = document.getElementById('pw-weight-panel');
       const packPanel = document.getElementById('pw-pack-panel');
       const presetsBar = document.getElementById('pw-variants-presets-bar');
@@ -11211,7 +11211,7 @@
 
       if (autoAdvance) {
         setTimeout(() => {
-          goToProductStep(1);
+          goToProductStep(2);
         }, 220);
       }
     }
@@ -11241,6 +11241,34 @@
       }
     }
     window.updateWeightLabels = updateWeightLabels;
+
+    function addTechPresetGroup() {
+      const chk = document.getElementById('m-has-variations');
+      if (chk && !chk.checked) {
+        chk.checked = true;
+        toggleVariationsEditor();
+      }
+      addVariantGroup('Capacidad / Modelo', [
+        { name: '128 GB', priceDelta: 0 },
+        { name: '256 GB', priceDelta: 0 },
+        { name: '512 GB', priceDelta: 0 }
+      ]);
+    }
+    window.addTechPresetGroup = addTechPresetGroup;
+
+    function addVoltagePresetGroup() {
+      const chk = document.getElementById('m-has-variations');
+      if (chk && !chk.checked) {
+        chk.checked = true;
+        toggleVariationsEditor();
+      }
+      addVariantGroup('Voltaje / Alimentación', [
+        { name: '220V', priceDelta: 0 },
+        { name: '110V', priceDelta: 0 },
+        { name: 'Bivolt (110-220V)', priceDelta: 0 }
+      ]);
+    }
+    window.addVoltagePresetGroup = addVoltagePresetGroup;
 
     function addSizePresetGroup() {
       const chk = document.getElementById('m-has-variations');
@@ -11280,20 +11308,21 @@
     window.clearPwErrors = clearPwErrors;
 
     const PW_STEP_TITLES = [
-      { badge: 'Paso 0 de 4', title: '¿Qué tipo de producto querés publicar?' },
-      { badge: 'Paso 1 de 4', title: 'Información principal, categoría y código' },
-      { badge: 'Paso 2 de 4', title: 'Precios, moneda, stock y modalidad' },
-      { badge: 'Paso 3 de 4', title: 'Imágenes del producto y catálogo con IA' },
-      { badge: 'Paso 4 de 4', title: 'Detalles, promociones y vista previa' }
+      null,
+      { badge: 'Paso 1 de 5', title: '¿Qué tipo de producto querés publicar?' },
+      { badge: 'Paso 2 de 5', title: 'Información principal, categoría y código' },
+      { badge: 'Paso 3 de 5', title: 'Precios, moneda, stock y modalidad' },
+      { badge: 'Paso 4 de 5', title: 'Imágenes del producto y catálogo con IA' },
+      { badge: 'Paso 5 de 5', title: 'Detalles, promociones y vista previa' }
     ];
 
     function goToProductStep(stepIndex) {
-      if (stepIndex < 0) stepIndex = 0;
-      if (stepIndex > 4) stepIndex = 4;
+      if (stepIndex < 1) stepIndex = 1;
+      if (stepIndex > 5) stepIndex = 5;
 
-      // Validación al avanzar desde Paso 1 o superior
+      // Validación al avanzar desde Paso 2 o superior
       if (stepIndex > window.pwCurrentStep) {
-        if (window.pwCurrentStep === 1 || (window.pwCurrentStep === 0 && stepIndex > 1)) {
+        if (window.pwCurrentStep === 2 || (window.pwCurrentStep === 1 && stepIndex > 2)) {
           const nameVal = document.getElementById('m-name')?.value.trim();
           const catVal = document.getElementById('m-cat')?.value.trim();
           let hasErr = false;
@@ -11317,8 +11346,8 @@
       clearPwErrors();
       window.pwCurrentStep = stepIndex;
 
-      // Mostrar únicamente el contenedor del paso actual
-      for (let i = 0; i <= 4; i++) {
+      // Mostrar únicamente el contenedor del paso actual (1 al 5)
+      for (let i = 1; i <= 5; i++) {
         const stepEl = document.getElementById(`pw-step-${i}`);
         if (stepEl) {
           if (i === stepIndex) stepEl.classList.add('active');
@@ -11334,7 +11363,7 @@
       }
 
       // Actualizar el banner de resumen de paso
-      const bInfo = PW_STEP_TITLES[stepIndex] || PW_STEP_TITLES[0];
+      const bInfo = PW_STEP_TITLES[stepIndex] || PW_STEP_TITLES[1];
       const badgeEl = document.getElementById('pw-step-badge');
       const titleEl = document.getElementById('pw-step-title-text');
       if (badgeEl) badgeEl.textContent = bInfo.badge;
@@ -11345,7 +11374,7 @@
       const nextBtn = document.getElementById('pw-btn-next');
 
       if (prevBtn) {
-        if (stepIndex === 0) {
+        if (stepIndex === 1) {
           prevBtn.innerHTML = '<i class="bi bi-x-lg"></i> Cancelar';
           prevBtn.onclick = closeModal;
         } else {
@@ -11355,7 +11384,7 @@
       }
 
       if (nextBtn) {
-        if (stepIndex === 4) {
+        if (stepIndex === 5) {
           nextBtn.innerHTML = '<i class="bi bi-check2-circle"></i> Guardar producto';
           nextBtn.onclick = saveModal;
           nextBtn.style.background = 'linear-gradient(135deg, #10B981 0%, #059669 100%)';
@@ -11368,7 +11397,7 @@
         }
       }
 
-      if (stepIndex === 4) {
+      if (stepIndex === 5) {
         renderProductWizardPreview();
       }
 
@@ -11386,7 +11415,7 @@
     window.nextProductStep = nextProductStep;
 
     function prevProductStep() {
-      if (window.pwCurrentStep > 0) {
+      if (window.pwCurrentStep > 1) {
         goToProductStep(window.pwCurrentStep - 1);
       }
     }
@@ -11588,14 +11617,14 @@
           else detectedType = 'simple';
         }
         selectProductArchetype(detectedType, false);
-        goToProductStep(1); // En edición va directo a Datos Básicos
+        goToProductStep(2); // En edición va directo a Datos Básicos (Paso 2)
       } else {
         let defaultType = 'simple';
         if (isGastro) defaultType = 'food';
-        else if (['indumentaria', 'ropa', 'calzado'].includes(normalizedRubro)) defaultType = 'variants';
+        else if (['indumentaria', 'ropa', 'calzado', 'tecnologia', 'electronica', 'electrodomesticos', 'computacion'].includes(normalizedRubro)) defaultType = 'variants';
         else if (['fiambreria', 'verduleria', 'dietetica'].includes(normalizedRubro)) defaultType = 'weight';
         selectProductArchetype(defaultType, false);
-        goToProductStep(0); // En nuevo producto va al Paso 0 (Selector de Tipo)
+        goToProductStep(1); // En nuevo producto va al Paso 1 (Selector de Tipo)
       }
 
       document.getElementById('modal-overlay').classList.add('open');
@@ -11754,14 +11783,14 @@
         .map(cb => cb.value).slice(0, 3).join(',');
 
       if (!name) { 
-        goToProductStep(1);
+        goToProductStep(2);
         const eName = document.getElementById('m-name-error');
         if (eName) eName.style.display = 'block';
         document.getElementById('m-name')?.focus();
         return; 
       }
       if (!cat) { 
-        goToProductStep(1);
+        goToProductStep(2);
         const eCat = document.getElementById('m-cat-error');
         if (eCat) eCat.style.display = 'block';
         document.getElementById('m-cat')?.focus();
@@ -17356,34 +17385,34 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         <!-- Stepper Superior Mobile-First -->
         <div class="pw-stepper-wrap" id="pw-stepper-wrap">
           <div class="pw-stepper-nav">
-            <button type="button" class="pw-step-pill active" onclick="goToProductStep(0)" id="pw-pill-0" title="Tipo">
-              <span class="pw-pill-num">0</span> <span class="pw-pill-label">Tipo</span>
+            <button type="button" class="pw-step-pill active" onclick="goToProductStep(1)" id="pw-pill-1" title="Tipo">
+              <span class="pw-pill-num">1</span> <span class="pw-pill-label">Tipo</span>
             </button>
             <div class="pw-step-line"></div>
-            <button type="button" class="pw-step-pill" onclick="goToProductStep(1)" id="pw-pill-1" title="Básicos">
-              <span class="pw-pill-num">1</span> <span class="pw-pill-label">Básicos</span>
+            <button type="button" class="pw-step-pill" onclick="goToProductStep(2)" id="pw-pill-2" title="Básicos">
+              <span class="pw-pill-num">2</span> <span class="pw-pill-label">Básicos</span>
             </button>
             <div class="pw-step-line"></div>
-            <button type="button" class="pw-step-pill" onclick="goToProductStep(2)" id="pw-pill-2" title="Precios">
-              <span class="pw-pill-num">2</span> <span class="pw-pill-label">Precios</span>
+            <button type="button" class="pw-step-pill" onclick="goToProductStep(3)" id="pw-pill-3" title="Precios">
+              <span class="pw-pill-num">3</span> <span class="pw-pill-label">Precios</span>
             </button>
             <div class="pw-step-line"></div>
-            <button type="button" class="pw-step-pill" onclick="goToProductStep(3)" id="pw-pill-3" title="Fotos">
-              <span class="pw-pill-num">3</span> <span class="pw-pill-label">Fotos</span>
+            <button type="button" class="pw-step-pill" onclick="goToProductStep(4)" id="pw-pill-4" title="Fotos">
+              <span class="pw-pill-num">4</span> <span class="pw-pill-label">Fotos</span>
             </button>
             <div class="pw-step-line"></div>
-            <button type="button" class="pw-step-pill" onclick="goToProductStep(4)" id="pw-pill-4" title="Final">
-              <span class="pw-pill-num">4</span> <span class="pw-pill-label">Final</span>
+            <button type="button" class="pw-step-pill" onclick="goToProductStep(5)" id="pw-pill-5" title="Final">
+              <span class="pw-pill-num">5</span> <span class="pw-pill-label">Final</span>
             </button>
           </div>
           <div class="pw-step-summary-banner" id="pw-step-title-banner">
-            <span class="pw-step-badge" id="pw-step-badge">Paso 0 de 4</span>
+            <span class="pw-step-badge" id="pw-step-badge">Paso 1 de 5</span>
             <span class="pw-step-title-text" id="pw-step-title-text">¿Qué tipo de producto querés publicar?</span>
           </div>
         </div>
 
-        <!-- ════════ PASO 0: ARQUETIPO / NATURALEZA DEL PRODUCTO ════════ -->
-        <div class="product-wizard-step active" id="pw-step-0">
+        <!-- ════════ PASO 1: ARQUETIPO / NATURALEZA DEL PRODUCTO ════════ -->
+        <div class="product-wizard-step active" id="pw-step-1">
           <div style="font-size:12px;color:var(--fog);margin-bottom:8px;">
             Elegí la modalidad de venta para adaptar el formulario a tu negocio:
           </div>
@@ -17397,7 +17426,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
                   <span class="pw-arch-title">Producto Simple</span>
                   <span class="pw-arch-badge">Estándar</span>
                 </div>
-                <p class="pw-arch-desc">Venta por unidad cerrada con precio fijo (ej: lata de gaseosa, herramienta, shampoo, libro).</p>
+                <p class="pw-arch-desc">Venta por unidad cerrada con precio fijo (ej: lata de gaseosa, herramienta, electrodoméstico estándar, libro).</p>
               </div>
               <div class="pw-arch-check"><i class="bi bi-check-lg"></i></div>
             </div>
@@ -17428,15 +17457,15 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
               <div class="pw-arch-check"><i class="bi bi-check-lg"></i></div>
             </div>
 
-            <!-- Variantes Talle / Color -->
+            <!-- Variantes / Modelos / Opciones -->
             <div class="pw-archetype-card" data-archetype="variants" onclick="selectProductArchetype('variants')">
-              <div class="pw-arch-icon">👕</div>
+              <div class="pw-arch-icon">🎛️</div>
               <div class="pw-arch-info">
                 <div class="pw-arch-head">
-                  <span class="pw-arch-title">Con Variantes (Talle / Color)</span>
-                  <span class="pw-arch-badge">Moda</span>
+                  <span class="pw-arch-title">Con Variantes y Modelos</span>
+                  <span class="pw-arch-badge">Opciones</span>
                 </div>
-                <p class="pw-arch-desc">Indumentaria o calzado con opciones obligatorias (ej: medias en 3 talles x 3 colores).</p>
+                <p class="pw-arch-desc">Modelos, capacidades o medidas a elección (ej: celulares 128GB/256GB, voltaje 220V/110V, talles o colores).</p>
               </div>
               <div class="pw-arch-check"><i class="bi bi-check-lg"></i></div>
             </div>
@@ -17456,18 +17485,18 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           </div>
         </div>
 
-        <!-- ════════ PASO 1: INFORMACIÓN BÁSICA & CATALOGACIÓN ════════ -->
-        <div class="product-wizard-step" id="pw-step-1">
+        <!-- ════════ PASO 2: INFORMACIÓN BÁSICA & CATALOGACIÓN ════════ -->
+        <div class="product-wizard-step" id="pw-step-2">
           <div class="pw-mode-banner">
             <div>Modalidad: <b id="pw-banner-arch-name">📦 Producto Simple</b></div>
-            <button type="button" class="pw-mode-change-btn" onclick="goToProductStep(0)"><i class="bi bi-arrow-left-right"></i> Cambiar tipo</button>
+            <button type="button" class="pw-mode-change-btn" onclick="goToProductStep(1)"><i class="bi bi-arrow-left-right"></i> Cambiar tipo</button>
           </div>
 
           <div class="modal-grid">
             <!-- Nombre -->
             <div class="ctrl-group" style="grid-column:1/-1;">
               <label class="ctrl-label">Nombre del producto *</label>
-              <input class="ctrl-input" id="m-name" placeholder="Ej: Sierra Circular, Coca-Cola 1.5L o Remera Algodón" oninput="validateAiFeatures(); clearPwErrors();" />
+              <input class="ctrl-input" id="m-name" placeholder="Ej: Celular Smart, Microondas, Heladera o Remera Algodón" oninput="validateAiFeatures(); clearPwErrors();" />
               <div class="pw-inline-error" id="m-name-error">El nombre del producto es obligatorio.</div>
             </div>
 
@@ -17572,11 +17601,11 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           </div>
         </div>
 
-        <!-- ════════ PASO 2: PRECIOS, INVENTARIO & MODALIDAD ════════ -->
-        <div class="product-wizard-step" id="pw-step-2">
+        <!-- ════════ PASO 3: PRECIOS, INVENTARIO & MODALIDAD ════════ -->
+        <div class="product-wizard-step" id="pw-step-3">
           <div class="pw-mode-banner">
             <div>Modalidad: <b id="pw-banner-arch-name-2">📦 Producto Simple</b></div>
-            <button type="button" class="pw-mode-change-btn" onclick="goToProductStep(0)"><i class="bi bi-arrow-left-right"></i> Cambiar</button>
+            <button type="button" class="pw-mode-change-btn" onclick="goToProductStep(1)"><i class="bi bi-arrow-left-right"></i> Cambiar</button>
           </div>
 
           <!-- Panel Específico: Al Peso / Fraccionado -->
@@ -17649,16 +17678,18 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           <div id="m-gastronomy-section" class="ctrl-group" style="margin-top:14px; border-top:1px solid var(--zinc); padding-top:14px;">
             <label style="display:flex; align-items:center; gap:8px; font-weight:600; font-size:13px; color:var(--white); margin-bottom:12px; cursor:pointer;">
               <input type="checkbox" id="m-has-variations" onchange="toggleVariationsEditor()" style="width:16px; height:16px; accent-color:var(--red); margin:0;">
-              <span id="lbl-has-variations">¿Agregar variaciones o adicionales de producto? (ej: sabores, talles, agregados)</span>
+              <span id="lbl-has-variations">¿Agregar variaciones o adicionales de producto? (ej: modelos, capacidades, sabores, talles)</span>
             </label>
 
             <!-- Panel de Editor Interactivo -->
             <div id="m-variations-editor" style="display:none; flex-direction:column; gap:16px; background:var(--steel); border:1px solid var(--zinc); border-radius:10px; padding:14px;">
               
-              <!-- Botones de Presets Rápidos para Indumentaria / Variantes -->
+              <!-- Botones de Presets Rápidos para Modelos / Indumentaria / Variantes -->
               <div id="pw-variants-presets-bar" style="display:none; flex-direction:column; gap:6px; background:var(--iron); border:1px solid var(--zinc); border-radius:8px; padding:10px;">
-                <div style="font-size:11px; font-weight:700; color:var(--white);">⚡ Plantillas Rápidas de Variantes:</div>
+                <div style="font-size:11px; font-weight:700; color:var(--white);">⚡ Plantillas Rápidas de Modelos y Opciones:</div>
                 <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                  <button type="button" class="pw-mode-change-btn" onclick="addTechPresetGroup()"><i class="bi bi-cpu"></i> + Capacidad / Modelos (128GB, 256GB, 512GB)</button>
+                  <button type="button" class="pw-mode-change-btn" onclick="addVoltagePresetGroup()"><i class="bi bi-lightning-charge"></i> + Voltaje (220V, 110V)</button>
                   <button type="button" class="pw-mode-change-btn" onclick="addSizePresetGroup()"><i class="bi bi-rulers"></i> + Talles (S, M, L, XL)</button>
                   <button type="button" class="pw-mode-change-btn" onclick="addColorPresetGroup()"><i class="bi bi-palette"></i> + Colores (Negro, Blanco, Gris)</button>
                 </div>
@@ -17667,7 +17698,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
               <!-- Sección 1: Variantes (Selección Única) -->
               <div style="border-bottom:1px solid var(--zinc); padding-bottom:14px; display:flex; flex-direction:column; gap:10px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-                  <h4 style="margin:0; font-size:12px; font-weight:700; color:var(--white);"><i class="bi bi-ui-checks-grid" style="color:var(--red); margin-right:4px;"></i> Variantes (Selección Única - ej: talle, sabor, cocción)</h4>
+                  <h4 style="margin:0; font-size:12px; font-weight:700; color:var(--white);"><i class="bi bi-ui-checks-grid" style="color:var(--red); margin-right:4px;"></i> Variantes y Modelos (Selección Única - ej: modelo, capacidad, color, talle)</h4>
                   <button type="button" onclick="addVariantGroup()" class="abm-btn-new" style="padding:4px 8px; font-size:10px;"><i class="bi bi-plus-lg"></i> Nuevo Grupo</button>
                 </div>
                 <div id="m-variants-groups" style="display:flex; flex-direction:column; gap:10px;">
@@ -17678,7 +17709,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
               <!-- Sección 2: Adicionales (Selección Múltiple) -->
               <div style="display:flex; flex-direction:column; gap:10px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-                  <h4 style="margin:0; font-size:12px; font-weight:700; color:var(--white);"><i class="bi bi-plus-circle" style="color:var(--green); margin-right:4px;"></i> Adicionales con costo (Selección Múltiple - ej: extra carne, salsa, garantía)</h4>
+                  <h4 style="margin:0; font-size:12px; font-weight:700; color:var(--white);"><i class="bi bi-plus-circle" style="color:var(--green); margin-right:4px;"></i> Adicionales con costo (Selección Múltiple - ej: garantía extendida, funda, salsa)</h4>
                   <button type="button" onclick="addModifierGroup()" class="abm-btn-new" style="padding:4px 8px; font-size:10px; background:var(--green); border-color:var(--green);"><i class="bi bi-plus-lg"></i> Nuevo Grupo</button>
                 </div>
                 <div id="m-modifiers-groups" style="display:flex; flex-direction:column; gap:10px;">
@@ -17690,8 +17721,8 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           </div>
         </div>
 
-        <!-- ════════ PASO 3: FOTOS & MULTIMEDIA ════════ -->
-        <div class="product-wizard-step" id="pw-step-3">
+        <!-- ════════ PASO 4: FOTOS & MULTIMEDIA ════════ -->
+        <div class="product-wizard-step" id="pw-step-4">
           <!-- Preview de imágenes (hasta 3) -->
           <div id="m-img-preview-wrap" style="display:none;margin-bottom:14px;gap:8px;">
             <div style="position:relative;border-radius:10px;overflow:hidden;background:var(--iron);height:140px;flex:1;">
@@ -17780,8 +17811,8 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           <div class="form-hint">Subí desde tu dispositivo (Cloudinary) o pegá URLs directas. Marca de agua aplicada automáticamente.</div>
         </div>
 
-        <!-- ════════ PASO 4: DETALLES, PROMOCIONES & RESUMEN ════════ -->
-        <div class="product-wizard-step" id="pw-step-4">
+        <!-- ════════ PASO 5: DETALLES, PROMOCIONES & RESUMEN ════════ -->
+        <div class="product-wizard-step" id="pw-step-5">
           <!-- Detalle / especificaciones -->
           <div class="ctrl-group">
             <label class="ctrl-label" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px;">

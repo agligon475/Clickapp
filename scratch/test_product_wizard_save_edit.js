@@ -9,7 +9,7 @@ async function sleep(ms) {
 }
 
 async function run() {
-  console.log('🔄 Probando ciclo completo: Creación de Pack + Guardado + Edición...');
+  console.log('🔄 Probando ciclo completo: Creación de Pack + Guardado + Edición (Pasos 1 al 5)...');
 
   const newTabRes = await fetch(`http://127.0.0.1:${PORT}/json/new?http://localhost:5500/dashboard.html?demo=1`, { method: 'PUT' });
   const tabData = await newTabRes.json();
@@ -44,17 +44,17 @@ async function run() {
 
   await sleep(1500);
 
-  // 1. Abrir Modal y seleccionar Pack
-  console.log('🎁 Creando producto tipo Pack...');
+  // 1. Abrir Modal y seleccionar Pack en Paso 1
+  console.log('🎁 Creando producto tipo Pack (Paso 1 de 5)...');
   await send('Runtime.evaluate', { expression: `openModal();` });
   await sleep(400);
 
   await send('Runtime.evaluate', {
-    expression: `selectProductArchetype('pack', false); goToProductStep(1);`
+    expression: `selectProductArchetype('pack', false); goToProductStep(2);`
   });
   await sleep(400);
 
-  // 2. Cargar Paso 1
+  // 2. Cargar Paso 2 (Básicos)
   await send('Runtime.evaluate', {
     expression: `
       document.getElementById('m-name').value = 'Caja Alfajores Marplatenses x12';
@@ -68,10 +68,10 @@ async function run() {
     `
   });
 
-  // 3. Paso 2: Pack qty y precio
+  // 3. Paso 3: Pack qty, precio y stock
   await send('Runtime.evaluate', {
     expression: `
-      goToProductStep(2);
+      goToProductStep(3);
       document.getElementById('m-pack-qty').value = '12';
       document.getElementById('m-price').value = '14400';
       document.getElementById('m-stock').value = '30';
@@ -80,29 +80,30 @@ async function run() {
   });
   await sleep(400);
 
-  // 4. Paso 3: Fotos
+  // 4. Paso 4: Fotos
   await send('Runtime.evaluate', {
     expression: `
-      goToProductStep(3);
+      goToProductStep(4);
       document.getElementById('m-img').value = 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400';
       previewImgUrl(document.getElementById('m-img').value, 0);
     `
   });
   await sleep(300);
 
-  // 5. Paso 4: Detalle y vista previa
+  // 5. Paso 5: Detalle y vista previa
   await send('Runtime.evaluate', {
     expression: `
-      goToProductStep(4);
+      goToProductStep(5);
       document.getElementById('m-detalle').value = 'Caja de 12 unidades surtidas con dulce de leche premium.';
-      document.querySelector('input[name="m-pills"][value="Nuevo ingreso"]').checked = true;
+      const pCheck = document.querySelector('input[name="m-pills"][value="Nuevo ingreso"]');
+      if (pCheck) pCheck.checked = true;
       renderProductWizardPreview();
     `
   });
   await sleep(400);
 
   // Capturar preview de Pack
-  console.log('📸 Capturando Preview de Pack...');
+  console.log('📸 Capturando Preview de Pack en Paso 5...');
   const shotPack = await send('Page.captureScreenshot', { format: 'png' });
   const pPackPath = path.join(ARTIFACTS_DIR, `product_wizard_pack_preview_${Date.now()}.png`);
   fs.writeFileSync(pPackPath, Buffer.from(shotPack.data, 'base64'));
@@ -135,7 +136,7 @@ async function run() {
   });
   console.log('✓ Producto creado:', saveTest.result.value.name, '| Tipo:', saveTest.result.value.detalle);
 
-  // 7. Probar que al abrir para editar detecta que es "pack" y va directo a Paso 1
+  // 7. Probar que al abrir para editar detecta que es "pack" y va directo a Paso 2 (Básicos)
   console.log('✏️ Probando apertura para edición...');
   await send('Runtime.evaluate', { expression: `openModal('test_pack_999');` });
   await sleep(500);
@@ -152,8 +153,8 @@ async function run() {
 
   console.log('✓ Estado al abrir edición:', editState.result.value);
 
-  if (editState.result.value.step === 1 && editState.result.value.archetype === 'pack' && editState.result.value.packQty === '12') {
-    console.log('✅ VERIFICACIÓN DE EDICIÓN: 100% EXITOSA (detectó arquetipo pack, restauró qty 12 y abrió en Paso 1)');
+  if (editState.result.value.step === 2 && editState.result.value.archetype === 'pack' && editState.result.value.packQty === '12') {
+    console.log('✅ VERIFICACIÓN DE EDICIÓN: 100% EXITOSA (detectó arquetipo pack, restauró qty 12 y abrió en Paso 2 de 5)');
   } else {
     console.error('❌ Error en detección de edición:', editState.result.value);
     process.exit(1);
