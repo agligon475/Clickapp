@@ -13,13 +13,19 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Configurar Java JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Configurar Gradle
+      - name: Configurar Gradle CLI
         uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.5'
+
+      - name: Configurar Android SDK local.properties
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > android/local.properties
 
       - name: Preparar keystore de firma
         run: |
@@ -30,7 +36,7 @@ jobs:
 
       - name: Compilar APK Release con Gradle
         working-directory: android
-        run: gradle assembleRelease --no-daemon
+        run: gradle assembleRelease --no-daemon --stacktrace
 
       - name: Subir APK generado como Artefacto descargable
         uses: actions/upload-artifact@v4
