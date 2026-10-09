@@ -12,6 +12,10 @@ on:
         required: true
         default: '1'
 
+env:
+  ANDROID_HOME: /usr/local/lib/android/sdk
+  ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+
 jobs:
   build-apk:
     name: Compilar APK Android
@@ -22,18 +26,26 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Configurar Java JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Configurar Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Configurar Node.js 20
+      - name: Configurar Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
+
+      - name: Configurar entorno Bubblewrap sin preguntas interactivas
+        run: |
+          mkdir -p ~/.bubblewrap
+          cat <<EOF > ~/.bubblewrap/config.json
+          {
+            "jdkPath": "$JAVA_HOME",
+            "androidSdkPath": "$ANDROID_HOME"
+          }
+          EOF
+          echo "Bubblewrap configurado con Java en $JAVA_HOME y Android SDK en $ANDROID_HOME"
 
       - name: Instalar Bubblewrap CLI
         run: npm install -g @bubblewrap/cli
@@ -46,15 +58,16 @@ jobs:
             -storepass "daletepido2026pass" -keypass "daletepido2026pass" \
             -dname "CN=DaleTePido, OU=Mobile, O=DaleTePido, L=Buenos Aires, S=Buenos Aires, C=AR"
 
-      - name: Generar proyecto Android con Bubblewrap
+      - name: Preparar directorio Android y manifiesto TWA
         run: |
-          npx @bubblewrap/cli init --manifest=https://daletepido.com.ar/manifest.json --directory=./android-project
-          cp twa-manifest.json ./android-project/twa-manifest.json
+          mkdir -p android-project
+          cp twa-manifest.json android-project/twa-manifest.json
 
       - name: Compilar APK Android (TWA)
         run: |
-          cd ./android-project
-          npx @bubblewrap/cli build \
+          cd android-project
+          bubblewrap build \
+            --skipPwaValidation \
             --signing.keyStore=../android-keystore/daletepido.keystore \
             --signing.keyName=daletepido \
             --signing.keyStorePassword=daletepido2026pass \
@@ -65,7 +78,7 @@ jobs:
         with:
           name: DaleTePido-Android-APK
           path: |
-            ./android-project/app-release-signed.apk
-            ./android-project/*.apk
-            ./android-project/*.aab
+            android-project/*.apk
+            android-project/*.aab
+            android-project/app/build/outputs/apk/**/*.apk
           retention-days: 30
