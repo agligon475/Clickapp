@@ -50,28 +50,25 @@ jobs:
       - name: Instalar Bubblewrap CLI
         run: npm install -g @bubblewrap/cli
 
-      - name: Preparar keystore de firma
-        run: |
-          mkdir -p android-keystore
-          keytool -genkeypair -v -keystore android-keystore/daletepido.keystore \
-            -alias daletepido -keyalg RSA -keysize 2048 -validity 10000 \
-            -storepass "daletepido2026pass" -keypass "daletepido2026pass" \
-            -dname "CN=DaleTePido, OU=Mobile, O=DaleTePido, L=Buenos Aires, S=Buenos Aires, C=AR"
-
       - name: Preparar directorio Android y manifiesto TWA
         run: |
           mkdir -p android-project
           cp twa-manifest.json android-project/twa-manifest.json
 
+      - name: Preparar keystore de firma
+        run: |
+          keytool -genkeypair -v -keystore android-project/android.keystore \
+            -alias daletepido -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass "daletepido2026pass" -keypass "daletepido2026pass" \
+            -dname "CN=DaleTePido, OU=Mobile, O=DaleTePido, L=Buenos Aires, S=Buenos Aires, C=AR"
+
       - name: Compilar APK Android (TWA)
+        env:
+          BUBBLEWRAP_KEYSTORE_PASSWORD: daletepido2026pass
+          BUBBLEWRAP_KEY_PASSWORD: daletepido2026pass
         run: |
           cd android-project
-          bubblewrap build \
-            --skipPwaValidation \
-            --signing.keyStore=../android-keystore/daletepido.keystore \
-            --signing.keyName=daletepido \
-            --signing.keyStorePassword=daletepido2026pass \
-            --signing.keyPassword=daletepido2026pass
+          bubblewrap build --skipPwaValidation
 
       - name: Subir APK generado como Artefacto descargable
         uses: actions/upload-artifact@v4

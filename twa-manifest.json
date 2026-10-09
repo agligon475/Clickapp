@@ -42,5 +42,9 @@
   },
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
-  "isMetaQuest": false
+  "isMetaQuest": false,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "daletepido"
+  }
 }
