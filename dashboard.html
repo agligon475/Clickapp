@@ -1649,6 +1649,314 @@
       margin-top: 3px;
     }
 
+    /* ═══════════════════════════════════════════ PRODUCT WIZARD (MOBILE-FIRST) */
+    .pw-stepper-wrap {
+      background: var(--iron);
+      border: 1px solid var(--zinc);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 16px;
+    }
+    .pw-stepper-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+    }
+    .pw-step-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 20px;
+      background: var(--steel);
+      border: 1px solid var(--zinc);
+      color: var(--silver);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      min-height: 32px;
+    }
+    .pw-step-pill:hover {
+      border-color: var(--silver);
+      color: var(--white);
+    }
+    .pw-step-pill.active {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(215, 38, 56, 0.35);
+    }
+    .pw-step-pill.completed {
+      background: rgba(46, 204, 113, 0.12);
+      border-color: rgba(46, 204, 113, 0.4);
+      color: var(--green);
+    }
+    .pw-pill-num {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+    }
+    .pw-step-pill.active .pw-pill-num {
+      background: #fff;
+      color: var(--red);
+    }
+    .pw-step-pill.completed .pw-pill-num {
+      background: var(--green);
+      color: #fff;
+    }
+    .pw-step-line {
+      flex: 1;
+      height: 2px;
+      background: var(--zinc);
+      border-radius: 1px;
+      min-width: 4px;
+    }
+    .pw-step-summary-banner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .pw-step-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(215, 38, 56, 0.15);
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .pw-step-title-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--fog);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .product-wizard-step {
+      display: none;
+      animation: pwFadeIn 0.22s ease-out;
+    }
+    .product-wizard-step.active {
+      display: block;
+    }
+    @keyframes pwFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Archetype Cards (Step 0) */
+    .pw-archetype-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    @media (min-width: 520px) {
+      .pw-archetype-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .pw-archetype-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 13px 14px;
+      background: var(--iron);
+      border: 1.5px solid var(--zinc);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      min-height: 58px;
+    }
+    .pw-archetype-card:hover {
+      border-color: var(--silver);
+      transform: translateY(-1px);
+    }
+    .pw-archetype-card:active {
+      transform: scale(0.98);
+    }
+    .pw-archetype-card.selected {
+      border-color: var(--red);
+      background: rgba(215, 38, 56, 0.09);
+      box-shadow: 0 0 0 1.5px var(--red);
+    }
+    .pw-arch-icon {
+      font-size: 22px;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--steel);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 1px solid var(--zinc);
+    }
+    .pw-archetype-card.selected .pw-arch-icon {
+      background: rgba(215, 38, 56, 0.2);
+      border-color: var(--red);
+    }
+    .pw-arch-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .pw-arch-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 3px;
+    }
+    .pw-arch-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .pw-arch-badge {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--silver);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .pw-archetype-card.selected .pw-arch-badge {
+      background: var(--red);
+      color: #fff;
+    }
+    .pw-arch-desc {
+      font-size: 11px;
+      color: var(--silver);
+      line-height: 1.4;
+      margin: 0;
+    }
+    .pw-arch-check {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--red);
+      color: #fff;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+    .pw-archetype-card.selected .pw-arch-check {
+      display: flex;
+    }
+    /* Mode Banner in Steps */
+    .pw-mode-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 12px;
+      background: rgba(215, 38, 56, 0.08);
+      border: 1px solid rgba(215, 38, 56, 0.28);
+      border-radius: 10px;
+      margin-bottom: 14px;
+      font-size: 12px;
+      color: var(--fog);
+    }
+    .pw-mode-banner b {
+      color: var(--white);
+    }
+    .pw-mode-change-btn {
+      background: var(--iron);
+      border: 1px solid var(--zinc);
+      border-radius: 6px;
+      padding: 4px 9px;
+      color: var(--fog);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .pw-mode-change-btn:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+    .pw-inline-error {
+      font-size: 11px;
+      color: #ff4d4f;
+      margin-top: 4px;
+      font-weight: 600;
+      display: none;
+    }
+    /* Mobile-first Modal overrides */
+    @media (max-width: 640px) {
+      .modal-overlay.open .modal {
+        width: 100vw !important;
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+        border-radius: 0 !important;
+        border: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+        margin: 0 !important;
+      }
+      .modal-overlay.open .modal .modal-head {
+        padding: 12px 16px !important;
+        flex-shrink: 0;
+      }
+      .modal-overlay.open .modal .modal-body {
+        padding: 14px 16px !important;
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .modal-overlay.open .modal .modal-footer {
+        padding: 12px 16px !important;
+        flex-shrink: 0;
+        display: flex !important;
+        gap: 8px !important;
+      }
+      .modal-overlay.open .modal .modal-footer button {
+        flex: 1 !important;
+        min-height: 46px !important;
+        font-size: 13px !important;
+        justify-content: center !important;
+      }
+      .pw-step-pill .pw-pill-label {
+        display: none !important;
+      }
+      .pw-step-pill {
+        padding: 6px 8px !important;
+      }
+      .modal-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+      }
+    }
+
+
     /* LOGO UPLOAD */
     .logo-upload-btn {
       display: flex;
@@ -10818,6 +11126,322 @@
     }
     window.addOptionRow = addOptionRow;
 
+    /* ═══════════════════════════════════════════ PRODUCT WIZARD CONTROLLER */
+    window.pwCurrentStep = 0;
+    window.pwCurrentArchetype = 'simple';
+
+    const PW_ARCHETYPES = {
+      simple: { name: '📦 Producto Simple', icon: '📦', badge: 'Estándar', placeholder: 'Ej: Sierra Circular, Coca-Cola 1.5L o Remera Algodón' },
+      weight: { name: '⚖️ Al Peso / Fraccionado', icon: '⚖️', badge: 'Granel', placeholder: 'Ej: Jamón Cocido Bocatti, Queso Gouda o Nueces Peladas' },
+      food: { name: '🍔 Gastronómico / Preparado', icon: '🍔', badge: 'Cocina', placeholder: 'Ej: Hamburguesa Doble Bacon, Pizza Especial o Ensalada César' },
+      variants: { name: '👕 Con Variantes (Talle / Color)', icon: '👕', badge: 'Moda', placeholder: 'Ej: Medias de Algodón, Remera Lisa o Zapatillas Urbanas' },
+      pack: { name: '🎁 Pack / Combo / Grupal', icon: '🎁', badge: 'Mayorista', placeholder: 'Ej: Paquete Gomitas x25 un., Pack Cervezas x6 o Caja Bombones' }
+    };
+
+    function selectProductArchetype(type, autoAdvance = true) {
+      if (!PW_ARCHETYPES[type]) type = 'simple';
+      window.pwCurrentArchetype = type;
+
+      // Actualizar tarjetas de selección en Paso 0
+      document.querySelectorAll('#pw-step-0 .pw-archetype-card').forEach(card => {
+        if (card.dataset.archetype === type) {
+          card.classList.add('selected');
+        } else {
+          card.classList.remove('selected');
+        }
+      });
+
+      // Actualizar banners de modo en Pasos 1 y 2
+      const info = PW_ARCHETYPES[type];
+      const b1 = document.getElementById('pw-banner-arch-name');
+      const b2 = document.getElementById('pw-banner-arch-name-2');
+      if (b1) b1.textContent = info.name;
+      if (b2) b2.textContent = info.name;
+
+      // Placeholder según arquetipo
+      const nameInput = document.getElementById('m-name');
+      if (nameInput && (!nameInput.value || nameInput.value.trim() === '')) {
+        nameInput.placeholder = info.placeholder;
+      }
+
+      // Adaptar Paso 2 dinámicamente
+      const weightPanel = document.getElementById('pw-weight-panel');
+      const packPanel = document.getElementById('pw-pack-panel');
+      const presetsBar = document.getElementById('pw-variants-presets-bar');
+      const stockInput = document.getElementById('m-stock');
+      const lblStock = document.getElementById('lbl-m-stock');
+      const lblPrice = document.getElementById('lbl-m-price');
+      const chkVariations = document.getElementById('m-has-variations');
+
+      if (weightPanel) weightPanel.style.display = type === 'weight' ? 'block' : 'none';
+      if (packPanel) packPanel.style.display = type === 'pack' ? 'block' : 'none';
+      if (presetsBar) presetsBar.style.display = type === 'variants' ? 'flex' : 'none';
+
+      if (type === 'weight') {
+        if (stockInput) stockInput.setAttribute('step', 'any');
+        if (lblStock) lblStock.textContent = 'Stock disponible en la unidad elegida (admite decimales)';
+        if (lblPrice) lblPrice.textContent = 'Precio por unidad completa (ej: $/Kg)';
+        updateWeightLabels();
+      } else if (type === 'pack') {
+        if (stockInput) stockInput.setAttribute('step', '1');
+        if (lblStock) lblStock.textContent = 'Stock disponible en paquetes/bultos';
+        if (lblPrice) lblPrice.textContent = 'Precio total del paquete / pack';
+        calcPackUnitPrice();
+      } else if (type === 'food') {
+        if (stockInput) stockInput.setAttribute('step', '1');
+        if (lblStock) lblStock.textContent = 'Stock o disponibilidad (unidades)';
+        if (lblPrice) lblPrice.textContent = 'Precio base del plato';
+        if (chkVariations && !chkVariations.checked) {
+          chkVariations.checked = true;
+          toggleVariationsEditor();
+        }
+      } else if (type === 'variants') {
+        if (stockInput) stockInput.setAttribute('step', '1');
+        if (lblStock) lblStock.textContent = 'Stock total de referencia (unidades)';
+        if (lblPrice) lblPrice.textContent = 'Precio base';
+        if (chkVariations && !chkVariations.checked) {
+          chkVariations.checked = true;
+          toggleVariationsEditor();
+        }
+      } else {
+        if (stockInput) stockInput.setAttribute('step', '1');
+        if (lblStock) lblStock.textContent = 'Stock disponible (unidades)';
+        if (lblPrice) lblPrice.textContent = 'Precio de venta';
+      }
+
+      if (autoAdvance) {
+        setTimeout(() => {
+          goToProductStep(1);
+        }, 220);
+      }
+    }
+    window.selectProductArchetype = selectProductArchetype;
+
+    function calcPackUnitPrice() {
+      const price = parseFloat(document.getElementById('m-price')?.value) || 0;
+      const qty = parseInt(document.getElementById('m-pack-qty')?.value) || 1;
+      const calcEl = document.getElementById('m-pack-unit-price-calc');
+      if (!calcEl) return;
+      if (price > 0 && qty > 0) {
+        const unitP = (price / qty).toFixed(2);
+        calcEl.innerHTML = `💡 Precio unitario: <b>$ ${parseFloat(unitP).toLocaleString('es-AR', {minimumFractionDigits: 2})}</b> por unidad`;
+      } else {
+        calcEl.innerHTML = `Precio unitario estimado: $ 0.00`;
+      }
+    }
+    window.calcPackUnitPrice = calcPackUnitPrice;
+
+    function updateWeightLabels() {
+      const unit = document.getElementById('m-weight-unit')?.value || 'kg';
+      const lblPrice = document.getElementById('lbl-m-price');
+      if (lblPrice) lblPrice.textContent = `Precio por 1 ${unit.toUpperCase()} completo`;
+      const minInput = document.getElementById('m-weight-min');
+      if (minInput && !minInput.value) {
+        minInput.placeholder = unit === 'kg' ? 'Ej: 0.25 kg o 250g' : (unit === 'g' ? 'Ej: 100g o 250g' : `Ej: 1 ${unit}`);
+      }
+    }
+    window.updateWeightLabels = updateWeightLabels;
+
+    function addSizePresetGroup() {
+      const chk = document.getElementById('m-has-variations');
+      if (chk && !chk.checked) {
+        chk.checked = true;
+        toggleVariationsEditor();
+      }
+      addVariantGroup('Talle', [
+        { name: 'S', priceDelta: 0 },
+        { name: 'M', priceDelta: 0 },
+        { name: 'L', priceDelta: 0 },
+        { name: 'XL', priceDelta: 0 }
+      ]);
+    }
+    window.addSizePresetGroup = addSizePresetGroup;
+
+    function addColorPresetGroup() {
+      const chk = document.getElementById('m-has-variations');
+      if (chk && !chk.checked) {
+        chk.checked = true;
+        toggleVariationsEditor();
+      }
+      addVariantGroup('Color', [
+        { name: 'Negro', priceDelta: 0 },
+        { name: 'Blanco', priceDelta: 0 },
+        { name: 'Gris', priceDelta: 0 }
+      ]);
+    }
+    window.addColorPresetGroup = addColorPresetGroup;
+
+    function clearPwErrors() {
+      const eName = document.getElementById('m-name-error');
+      const eCat = document.getElementById('m-cat-error');
+      if (eName) eName.style.display = 'none';
+      if (eCat) eCat.style.display = 'none';
+    }
+    window.clearPwErrors = clearPwErrors;
+
+    const PW_STEP_TITLES = [
+      { badge: 'Paso 0 de 4', title: '¿Qué tipo de producto querés publicar?' },
+      { badge: 'Paso 1 de 4', title: 'Información principal, categoría y código' },
+      { badge: 'Paso 2 de 4', title: 'Precios, moneda, stock y modalidad' },
+      { badge: 'Paso 3 de 4', title: 'Imágenes del producto y catálogo con IA' },
+      { badge: 'Paso 4 de 4', title: 'Detalles, promociones y vista previa' }
+    ];
+
+    function goToProductStep(stepIndex) {
+      if (stepIndex < 0) stepIndex = 0;
+      if (stepIndex > 4) stepIndex = 4;
+
+      // Validación al avanzar desde Paso 1 o superior
+      if (stepIndex > window.pwCurrentStep) {
+        if (window.pwCurrentStep === 1 || (window.pwCurrentStep === 0 && stepIndex > 1)) {
+          const nameVal = document.getElementById('m-name')?.value.trim();
+          const catVal = document.getElementById('m-cat')?.value.trim();
+          let hasErr = false;
+
+          if (!nameVal) {
+            const eName = document.getElementById('m-name-error');
+            if (eName) eName.style.display = 'block';
+            document.getElementById('m-name')?.focus();
+            hasErr = true;
+          }
+          if (!catVal) {
+            const eCat = document.getElementById('m-cat-error');
+            if (eCat) eCat.style.display = 'block';
+            if (!hasErr) document.getElementById('m-cat')?.focus();
+            hasErr = true;
+          }
+          if (hasErr) return false;
+        }
+      }
+
+      clearPwErrors();
+      window.pwCurrentStep = stepIndex;
+
+      // Mostrar únicamente el contenedor del paso actual
+      for (let i = 0; i <= 4; i++) {
+        const stepEl = document.getElementById(`pw-step-${i}`);
+        if (stepEl) {
+          if (i === stepIndex) stepEl.classList.add('active');
+          else stepEl.classList.remove('active');
+        }
+
+        const pillEl = document.getElementById(`pw-pill-${i}`);
+        if (pillEl) {
+          pillEl.classList.remove('active', 'completed');
+          if (i === stepIndex) pillEl.classList.add('active');
+          else if (i < stepIndex) pillEl.classList.add('completed');
+        }
+      }
+
+      // Actualizar el banner de resumen de paso
+      const bInfo = PW_STEP_TITLES[stepIndex] || PW_STEP_TITLES[0];
+      const badgeEl = document.getElementById('pw-step-badge');
+      const titleEl = document.getElementById('pw-step-title-text');
+      if (badgeEl) badgeEl.textContent = bInfo.badge;
+      if (titleEl) titleEl.textContent = bInfo.title;
+
+      // Actualizar botones de navegación en el footer
+      const prevBtn = document.getElementById('pw-btn-prev');
+      const nextBtn = document.getElementById('pw-btn-next');
+
+      if (prevBtn) {
+        if (stepIndex === 0) {
+          prevBtn.innerHTML = '<i class="bi bi-x-lg"></i> Cancelar';
+          prevBtn.onclick = closeModal;
+        } else {
+          prevBtn.innerHTML = '<i class="bi bi-arrow-left"></i> Anterior';
+          prevBtn.onclick = prevProductStep;
+        }
+      }
+
+      if (nextBtn) {
+        if (stepIndex === 4) {
+          nextBtn.innerHTML = '<i class="bi bi-check2-circle"></i> Guardar producto';
+          nextBtn.onclick = saveModal;
+          nextBtn.style.background = 'linear-gradient(135deg, #10B981 0%, #059669 100%)';
+          nextBtn.style.borderColor = '#059669';
+        } else {
+          nextBtn.innerHTML = 'Siguiente <i class="bi bi-arrow-right"></i>';
+          nextBtn.onclick = nextProductStep;
+          nextBtn.style.background = 'var(--red)';
+          nextBtn.style.borderColor = 'var(--red)';
+        }
+      }
+
+      if (stepIndex === 4) {
+        renderProductWizardPreview();
+      }
+
+      // Auto scroll suave hacia arriba en mobile
+      const modalBody = document.querySelector('#modal-overlay .modal-body');
+      if (modalBody) modalBody.scrollTo({ top: 0, behavior: 'smooth' });
+
+      return true;
+    }
+    window.goToProductStep = goToProductStep;
+
+    function nextProductStep() {
+      goToProductStep(window.pwCurrentStep + 1);
+    }
+    window.nextProductStep = nextProductStep;
+
+    function prevProductStep() {
+      if (window.pwCurrentStep > 0) {
+        goToProductStep(window.pwCurrentStep - 1);
+      }
+    }
+    window.prevProductStep = prevProductStep;
+
+    function renderProductWizardPreview() {
+      const name = document.getElementById('m-name')?.value.trim() || 'Nombre del producto';
+      const cat = document.getElementById('m-cat')?.selectedOptions?.[0]?.text || document.getElementById('m-cat')?.value || 'Categoría';
+      const marca = document.getElementById('m-marca')?.value.trim() || '';
+      const price = parseFloat(document.getElementById('m-price')?.value) || 0;
+      const emoji = document.getElementById('m-emoji')?.value.trim() || '📦';
+      const img = document.getElementById('m-img')?.value.trim();
+      const pills = Array.from(document.querySelectorAll('input[name="m-pills"]:checked')).map(cb => cb.value);
+
+      const target = document.getElementById('pw-live-summary-card');
+      if (!target) return;
+
+      const arch = PW_ARCHETYPES[window.pwCurrentArchetype] || PW_ARCHETYPES.simple;
+
+      let priceStr = `$ ${price.toLocaleString('es-AR')}`;
+      if (window.pwCurrentArchetype === 'weight') {
+        const u = document.getElementById('m-weight-unit')?.value || 'kg';
+        priceStr += ` / ${u.toUpperCase()}`;
+      } else if (window.pwCurrentArchetype === 'pack') {
+        const q = document.getElementById('m-pack-qty')?.value || '1';
+        priceStr += ` (Pack x${q})`;
+      }
+
+      let pillsHtml = pills.map(p => `<span style="font-size:9px;background:var(--red);color:#fff;padding:2px 7px;border-radius:10px;font-weight:700;">${p}</span>`).join(' ');
+
+      let imgHtml = img && img.startsWith('http')
+        ? `<img src="${img}" alt="${name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null;this.parentElement.innerHTML='${emoji}'" />`
+        : `<span style="font-size:26px;">${emoji}</span>`;
+
+      target.innerHTML = `
+        <div style="background:var(--steel);border:1.5px solid var(--zinc);border-radius:12px;padding:12px;display:flex;gap:12px;align-items:center;">
+          <div style="width:62px;height:62px;border-radius:10px;background:var(--iron);border:1px solid var(--zinc);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;">
+            ${imgHtml}
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:2px;">
+              <span style="font-size:9px;padding:2px 6px;border-radius:4px;background:rgba(215,38,56,0.15);color:var(--red);font-weight:700;text-transform:uppercase;">${arch.name}</span>
+              <span style="font-size:10px;color:var(--silver);">${cat}${marca ? ' • ' + marca : ''}</span>
+            </div>
+            <div style="font-weight:700;font-size:13px;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${name}</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap;">
+              <span style="font-size:15px;font-weight:800;color:var(--green);font-family:var(--font-h);">${priceStr}</span>
+              ${pillsHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    window.renderProductWizardPreview = renderProductWizardPreview;
+
     /* ═══════════════════════════════════════════ MODAL */
     function openModal(id = null) {
       if (id === null && getActivePlanLevel() === 'starter' && localProducts.length >= 12) {
@@ -10862,12 +11486,18 @@
       if (modifiersContainer) modifiersContainer.innerHTML = '';
       
       let hasOpts = false;
+      let detectedType = null;
       
       if (rawDetalle.includes('|||')) {
         const parts = rawDetalle.split('|||');
         textDetalle = parts[0].trim();
         try {
           const jsonOpts = JSON.parse(parts[1].trim());
+          if (jsonOpts.productType) detectedType = jsonOpts.productType;
+          if (jsonOpts.weightUnit && document.getElementById('m-weight-unit')) document.getElementById('m-weight-unit').value = jsonOpts.weightUnit;
+          if (jsonOpts.weightMin && document.getElementById('m-weight-min')) document.getElementById('m-weight-min').value = jsonOpts.weightMin;
+          if (jsonOpts.packQty && document.getElementById('m-pack-qty')) document.getElementById('m-pack-qty').value = jsonOpts.packQty;
+
           if (jsonOpts.variants && jsonOpts.variants.length > 0) {
             hasOpts = true;
             jsonOpts.variants.forEach(v => {
@@ -10948,6 +11578,26 @@
       if (aiPanel) aiPanel.style.display = 'none';
 
       validateAiFeatures();
+      clearPwErrors();
+
+      // Configurar Arquetipo y Paso Inicial en el Wizard
+      if (p) {
+        if (!detectedType) {
+          if (hasOpts) detectedType = isGastro ? 'food' : 'variants';
+          else if (rubro === 'kiosco' && p?.stock && !Number.isInteger(Number(p.stock))) detectedType = 'weight';
+          else detectedType = 'simple';
+        }
+        selectProductArchetype(detectedType, false);
+        goToProductStep(1); // En edición va directo a Datos Básicos
+      } else {
+        let defaultType = 'simple';
+        if (isGastro) defaultType = 'food';
+        else if (['indumentaria', 'ropa', 'calzado'].includes(normalizedRubro)) defaultType = 'variants';
+        else if (['fiambreria', 'verduleria', 'dietetica'].includes(normalizedRubro)) defaultType = 'weight';
+        selectProductArchetype(defaultType, false);
+        goToProductStep(0); // En nuevo producto va al Paso 0 (Selector de Tipo)
+      }
+
       document.getElementById('modal-overlay').classList.add('open');
     }
 
@@ -11103,8 +11753,20 @@
       const pills = Array.from(document.querySelectorAll('input[name="m-pills"]:checked'))
         .map(cb => cb.value).slice(0, 3).join(',');
 
-      if (!name) { alert('El nombre del producto es obligatorio.'); return; }
-      if (!cat) { alert('La categoría es obligatoria. Por favor seleccioná una categoría válida.'); return; }
+      if (!name) { 
+        goToProductStep(1);
+        const eName = document.getElementById('m-name-error');
+        if (eName) eName.style.display = 'block';
+        document.getElementById('m-name')?.focus();
+        return; 
+      }
+      if (!cat) { 
+        goToProductStep(1);
+        const eCat = document.getElementById('m-cat-error');
+        if (eCat) eCat.style.display = 'block';
+        document.getElementById('m-cat')?.focus();
+        return; 
+      }
 
       // Serialización de variantes/modificadores (Soportado para todos los rubros)
       const hasVariations = document.getElementById('m-has-variations')?.checked;
@@ -11170,6 +11832,15 @@
 
         if (variants.length > 0) customOpts.variants = variants;
         if (modifiers.length > 0) customOpts.modifiers = modifiers;
+      }
+
+      // Guardar arquetipo y metadata contextual de producto
+      customOpts.productType = window.pwCurrentArchetype || 'simple';
+      if (window.pwCurrentArchetype === 'weight') {
+        customOpts.weightUnit = document.getElementById('m-weight-unit')?.value || 'kg';
+        customOpts.weightMin = document.getElementById('m-weight-min')?.value || '';
+      } else if (window.pwCurrentArchetype === 'pack') {
+        customOpts.packQty = parseInt(document.getElementById('m-pack-qty')?.value) || 1;
       }
 
       if (Object.keys(customOpts).length > 0) {
@@ -16672,162 +17343,451 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
   </script>
 
   <!-- ══ MODAL ══ -->
+  <!-- ══ MODAL PRODUCT WIZARD ══ -->
   <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-text" aria-hidden="true" onclick="if(event.target===this)closeModal()">
-    <div class="modal" style="width:min(600px,95vw);">
+    <div class="modal" style="width:min(620px,96vw);">
       <div class="modal-head">
         <span class="modal-title" id="modal-title-text">Nuevo producto</span>
-        <button class="modal-close" onclick="closeModal()" aria-label="Cerrar modal"><i class="bi bi-x"></i></button>
+        <button class="modal-close" onclick="closeModal()" aria-label="Cerrar modal"><i class="bi bi-x-lg"></i></button>
       </div>
+
       <div class="modal-body">
 
-        <!-- Preview de imágenes (hasta 3) -->
-        <div id="m-img-preview-wrap" style="display:none;margin-bottom:14px;gap:8px;">
-          <div style="position:relative;border-radius:10px;overflow:hidden;background:var(--iron);height:140px;flex:1;">
-            <img id="m-img-preview" src="" alt="" style="width:100%;height:100%;object-fit:cover;" />
+        <!-- Stepper Superior Mobile-First -->
+        <div class="pw-stepper-wrap" id="pw-stepper-wrap">
+          <div class="pw-stepper-nav">
+            <button type="button" class="pw-step-pill active" onclick="goToProductStep(0)" id="pw-pill-0" title="Tipo">
+              <span class="pw-pill-num">0</span> <span class="pw-pill-label">Tipo</span>
+            </button>
+            <div class="pw-step-line"></div>
+            <button type="button" class="pw-step-pill" onclick="goToProductStep(1)" id="pw-pill-1" title="Básicos">
+              <span class="pw-pill-num">1</span> <span class="pw-pill-label">Básicos</span>
+            </button>
+            <div class="pw-step-line"></div>
+            <button type="button" class="pw-step-pill" onclick="goToProductStep(2)" id="pw-pill-2" title="Precios">
+              <span class="pw-pill-num">2</span> <span class="pw-pill-label">Precios</span>
+            </button>
+            <div class="pw-step-line"></div>
+            <button type="button" class="pw-step-pill" onclick="goToProductStep(3)" id="pw-pill-3" title="Fotos">
+              <span class="pw-pill-num">3</span> <span class="pw-pill-label">Fotos</span>
+            </button>
+            <div class="pw-step-line"></div>
+            <button type="button" class="pw-step-pill" onclick="goToProductStep(4)" id="pw-pill-4" title="Final">
+              <span class="pw-pill-num">4</span> <span class="pw-pill-label">Final</span>
+            </button>
           </div>
-          <div id="m-img2-preview-wrap"
-            style="display:none;position:relative;border-radius:10px;overflow:hidden;background:var(--iron);height:140px;flex:1;">
-            <img id="m-img2-preview" src="" alt="" style="width:100%;height:100%;object-fit:cover;" />
-          </div>
-          <div id="m-img3-preview-wrap"
-            style="display:none;position:relative;border-radius:10px;overflow:hidden;background:var(--iron);height:140px;flex:1;">
-            <img id="m-img3-preview" src="" alt="" style="width:100%;height:100%;object-fit:cover;" />
+          <div class="pw-step-summary-banner" id="pw-step-title-banner">
+            <span class="pw-step-badge" id="pw-step-badge">Paso 0 de 4</span>
+            <span class="pw-step-title-text" id="pw-step-title-text">¿Qué tipo de producto querés publicar?</span>
           </div>
         </div>
 
-        <div class="modal-grid">
-
-          <!-- Nombre -->
-          <div class="ctrl-group" style="grid-column:1/-1;">
-            <label class="ctrl-label">Nombre del producto *</label>
-            <input class="ctrl-input" id="m-name" placeholder="Ej: Sierra Circular, Coca-Cola 1.5L o Remera Algodón" oninput="validateAiFeatures()" />
+        <!-- ════════ PASO 0: ARQUETIPO / NATURALEZA DEL PRODUCTO ════════ -->
+        <div class="product-wizard-step active" id="pw-step-0">
+          <div style="font-size:12px;color:var(--fog);margin-bottom:8px;">
+            Elegí la modalidad de venta para adaptar el formulario a tu negocio:
           </div>
 
-          <!-- Categoria + Marca -->
-          <div class="ctrl-group">
-            <label class="ctrl-label">Categoría</label>
-            <select class="ctrl-input" id="m-cat" aria-label="Categoría del producto">
-              <option value="">Cargando categorías...</option>
-            </select>
-            <div style="font-size:10px;color:var(--silver);margin-top:3px;">
-              Si no aparece la que necesitás, <a href="https://supabase.com/dashboard" target="_blank"
-                style="color:var(--red);">agregála en Supabase → categories</a>.
+          <div class="pw-archetype-grid">
+            <!-- Simple -->
+            <div class="pw-archetype-card selected" data-archetype="simple" onclick="selectProductArchetype('simple')">
+              <div class="pw-arch-icon">📦</div>
+              <div class="pw-arch-info">
+                <div class="pw-arch-head">
+                  <span class="pw-arch-title">Producto Simple</span>
+                  <span class="pw-arch-badge">Estándar</span>
+                </div>
+                <p class="pw-arch-desc">Venta por unidad cerrada con precio fijo (ej: lata de gaseosa, herramienta, shampoo, libro).</p>
+              </div>
+              <div class="pw-arch-check"><i class="bi bi-check-lg"></i></div>
+            </div>
+
+            <!-- Al Peso / Fraccionado -->
+            <div class="pw-archetype-card" data-archetype="weight" onclick="selectProductArchetype('weight')">
+              <div class="pw-arch-icon">⚖️</div>
+              <div class="pw-arch-info">
+                <div class="pw-arch-head">
+                  <span class="pw-arch-title">Al Peso / Fraccionado</span>
+                  <span class="pw-arch-badge">Granel</span>
+                </div>
+                <p class="pw-arch-desc">Venta por gramos, kilos, litros o metros (ej: 250g jamón cocido, 500g queso, clavos por kg).</p>
+              </div>
+              <div class="pw-arch-check"><i class="bi bi-check-lg"></i></div>
+            </div>
+
+            <!-- Gastronómico / Preparado -->
+            <div class="pw-archetype-card" data-archetype="food" onclick="selectProductArchetype('food')">
+              <div class="pw-arch-icon">🍔</div>
+              <div class="pw-arch-info">
+                <div class="pw-arch-head">
+                  <span class="pw-arch-title">Gastronómico / Preparado</span>
+                  <span class="pw-arch-badge">Cocina</span>
+                </div>
+                <p class="pw-arch-desc">Platos con adicionales con costo, punto de cocción o dietas (ej: hamburguesas, ensaladas, celíaco).</p>
+              </div>
+              <div class="pw-arch-check"><i class="bi bi-check-lg"></i></div>
+            </div>
+
+            <!-- Variantes Talle / Color -->
+            <div class="pw-archetype-card" data-archetype="variants" onclick="selectProductArchetype('variants')">
+              <div class="pw-arch-icon">👕</div>
+              <div class="pw-arch-info">
+                <div class="pw-arch-head">
+                  <span class="pw-arch-title">Con Variantes (Talle / Color)</span>
+                  <span class="pw-arch-badge">Moda</span>
+                </div>
+                <p class="pw-arch-desc">Indumentaria o calzado con opciones obligatorias (ej: medias en 3 talles x 3 colores).</p>
+              </div>
+              <div class="pw-arch-check"><i class="bi bi-check-lg"></i></div>
+            </div>
+
+            <!-- Pack / Combo / Grupal -->
+            <div class="pw-archetype-card" data-archetype="pack" onclick="selectProductArchetype('pack')">
+              <div class="pw-arch-icon">🎁</div>
+              <div class="pw-arch-info">
+                <div class="pw-arch-head">
+                  <span class="pw-arch-title">Pack / Combo / Grupal</span>
+                  <span class="pw-arch-badge">Mayorista</span>
+                </div>
+                <p class="pw-arch-desc">Paquetes de varias unidades cerradas (ej: paquete gomitas x25 un., pack x6 cervezas, caja alfajores).</p>
+              </div>
+              <div class="pw-arch-check"><i class="bi bi-check-lg"></i></div>
             </div>
           </div>
-          <div class="ctrl-group">
-            <label class="ctrl-label">Marca</label>
-            <input class="ctrl-input" id="m-marca" placeholder="Ej: DeWalt, Coca-Cola, Nike, Arcor" oninput="validateAiFeatures()" />
+        </div>
+
+        <!-- ════════ PASO 1: INFORMACIÓN BÁSICA & CATALOGACIÓN ════════ -->
+        <div class="product-wizard-step" id="pw-step-1">
+          <div class="pw-mode-banner">
+            <div>Modalidad: <b id="pw-banner-arch-name">📦 Producto Simple</b></div>
+            <button type="button" class="pw-mode-change-btn" onclick="goToProductStep(0)"><i class="bi bi-arrow-left-right"></i> Cambiar tipo</button>
           </div>
 
-          <!-- Asistente de Inteligencia Artificial (IA) -->
-          <div class="ctrl-group" style="grid-column:1/-1; background:var(--steel); border:1px solid var(--zinc); border-radius:10px; padding:12px; margin-top:4px;">
-            <label style="display:flex; align-items:center; gap:8px; font-weight:700; font-size:13px; color:var(--white); cursor:pointer; margin:0;">
-              <input type="checkbox" id="m-use-ai-helper" onchange="toggleAiHelper()" style="width:16px; height:16px; accent-color:var(--red); margin:0;">
-              <span>✨ ¿Obtener ayuda de la Inteligencia Artificial (IA)?</span>
-            </label>
-            <div id="m-ia-hint" style="font-size:11px; color:var(--orange); margin-top:6px; font-weight:500;"></div>
-            
-            <!-- Panel desplegable de IA -->
-            <div id="m-ai-helper-panel" style="display:none; flex-direction:column; gap:12px; margin-top:12px; border-top:1px solid var(--zinc); padding-top:12px;">
-              <!-- Código de barras / SKU (Reubicado aquí) -->
-              <div class="ctrl-group" style="margin:0;">
-                <label class="ctrl-label" style="display:flex;align-items:center;justify-content:space-between;">
-                  Buscar producto por Código de barras o SKU
-                  <span style="font-size:10px;color:var(--silver);font-weight:400;">EAN, UPC, código de fabricante</span>
-                </label>
-                <div style="display:flex;gap:8px;">
-                  <input class="ctrl-input" id="m-codigo" placeholder="Ej: 7798062591234 (EAN) o SKU del fabricante"
-                    style="flex:1;font-family:monospace;"
-                    onkeydown="if(event.key==='Enter'){event.preventDefault();buscarCodigo();}" />
-                  <button onclick="buscarCodigo()" id="btn-buscar-codigo" style="flex-shrink:0;padding:8px 16px;background:var(--red);border:none;
-                         border-radius:8px;color:#fff;font-size:12px;font-weight:600;
-                         cursor:pointer;font-family:var(--font-b);white-space:nowrap;
-                         display:flex;align-items:center;gap:6px;transition:background .15s;">
-                    <i class="bi bi-upc-scan"></i> Autocompletar con IA
-                  </button>
-                </div>
-                <div id="m-codigo-status" style="font-size:11px;margin-top:5px;min-height:14px;"></div>
-                
-                <!-- Result preview card -->
-                <div id="m-codigo-result" style="display:none;margin-top:10px;background:var(--iron);
-                   border:1px solid var(--zinc);border-radius:10px;padding:12px 14px;">
-                  <div style="font-size:10px;font-weight:700;color:var(--silver);text-transform:uppercase;
-                            letter-spacing:.06em;margin-bottom:8px;">Datos encontrados — aplicar al producto:</div>
-                  <div id="m-codigo-result-body" style="font-size:12px;color:var(--fog);line-height:1.8;"></div>
-                  <div style="display:flex;gap:8px;margin-top:10px;">
-                    <button onclick="aplicarResultadoCodigo()" style="flex:1;padding:7px;background:var(--red);border:none;border-radius:7px;
-                           color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-b);">
-                      <i class="bi bi-check2-circle"></i> Aplicar todos los datos
-                    </button>
-                    <button onclick="document.getElementById('m-codigo-result').style.display='none'" style="padding:7px 12px;background:var(--iron);border:1px solid var(--zinc);
-                           border-radius:7px;color:var(--fog);font-size:12px;cursor:pointer;font-family:var(--font-b);">
-                      Descartar
+          <div class="modal-grid">
+            <!-- Nombre -->
+            <div class="ctrl-group" style="grid-column:1/-1;">
+              <label class="ctrl-label">Nombre del producto *</label>
+              <input class="ctrl-input" id="m-name" placeholder="Ej: Sierra Circular, Coca-Cola 1.5L o Remera Algodón" oninput="validateAiFeatures(); clearPwErrors();" />
+              <div class="pw-inline-error" id="m-name-error">El nombre del producto es obligatorio.</div>
+            </div>
+
+            <!-- Categoria + Marca -->
+            <div class="ctrl-group">
+              <label class="ctrl-label">Categoría *</label>
+              <select class="ctrl-input" id="m-cat" aria-label="Categoría del producto" onchange="clearPwErrors();">
+                <option value="">Cargando categorías...</option>
+              </select>
+              <div class="pw-inline-error" id="m-cat-error">Por favor seleccioná una categoría válida.</div>
+              <div style="font-size:10px;color:var(--silver);margin-top:3px;">
+                Si no aparece la que necesitás, <a href="https://supabase.com/dashboard" target="_blank"
+                  style="color:var(--red);">agregála en Supabase → categories</a>.
+              </div>
+            </div>
+            <div class="ctrl-group">
+              <label class="ctrl-label">Marca</label>
+              <input class="ctrl-input" id="m-marca" placeholder="Ej: DeWalt, Coca-Cola, Nike, Arcor" oninput="validateAiFeatures()" />
+            </div>
+
+            <!-- Asistente de Inteligencia Artificial (IA) -->
+            <div class="ctrl-group" style="grid-column:1/-1; background:var(--steel); border:1px solid var(--zinc); border-radius:10px; padding:12px; margin-top:4px;">
+              <label style="display:flex; align-items:center; gap:8px; font-weight:700; font-size:13px; color:var(--white); cursor:pointer; margin:0;">
+                <input type="checkbox" id="m-use-ai-helper" onchange="toggleAiHelper()" style="width:16px; height:16px; accent-color:var(--red); margin:0;">
+                <span>✨ ¿Obtener ayuda de la Inteligencia Artificial (IA)?</span>
+              </label>
+              <div id="m-ia-hint" style="font-size:11px; color:var(--orange); margin-top:6px; font-weight:500;"></div>
+              
+              <!-- Panel desplegable de IA -->
+              <div id="m-ai-helper-panel" style="display:none; flex-direction:column; gap:12px; margin-top:12px; border-top:1px solid var(--zinc); padding-top:12px;">
+                <!-- Código de barras / SKU -->
+                <div class="ctrl-group" style="margin:0;">
+                  <label class="ctrl-label" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px;">
+                    Buscar producto por Código de barras o SKU
+                    <span style="font-size:10px;color:var(--silver);font-weight:400;">EAN, UPC, código de fabricante</span>
+                  </label>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <input class="ctrl-input" id="m-codigo" placeholder="Ej: 7798062591234 (EAN) o SKU del fabricante"
+                      style="flex:1;min-width:180px;font-family:monospace;"
+                      onkeydown="if(event.key==='Enter'){event.preventDefault();buscarCodigo();}" />
+                    <button type="button" onclick="buscarCodigo()" id="btn-buscar-codigo" style="flex-shrink:0;padding:8px 14px;background:var(--red);border:none;
+                            border-radius:8px;color:#fff;font-size:12px;font-weight:600;
+                            cursor:pointer;font-family:var(--font-b);white-space:nowrap;
+                            display:flex;align-items:center;gap:6px;transition:background .15s;">
+                      <i class="bi bi-upc-scan"></i> Autocompletar con IA
                     </button>
                   </div>
+                  <div id="m-codigo-status" style="font-size:11px;margin-top:5px;min-height:14px;"></div>
+                  
+                  <!-- Result preview card -->
+                  <div id="m-codigo-result" style="display:none;margin-top:10px;background:var(--iron);
+                     border:1px solid var(--zinc);border-radius:10px;padding:12px 14px;">
+                    <div style="font-size:10px;font-weight:700;color:var(--silver);text-transform:uppercase;
+                              letter-spacing:.06em;margin-bottom:8px;">Datos encontrados — aplicar al producto:</div>
+                    <div id="m-codigo-result-body" style="font-size:12px;color:var(--fog);line-height:1.8;"></div>
+                    <div style="display:flex;gap:8px;margin-top:10px;">
+                      <button type="button" onclick="aplicarResultadoCodigo()" style="flex:1;padding:7px;background:var(--red);border:none;border-radius:7px;
+                              color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-b);">
+                        <i class="bi bi-check2-circle"></i> Aplicar todos los datos
+                      </button>
+                      <button type="button" onclick="document.getElementById('m-codigo-result').style.display='none'" style="padding:7px 12px;background:var(--iron);border:1px solid var(--zinc);
+                              border-radius:7px;color:var(--fog);font-size:12px;cursor:pointer;font-family:var(--font-b);">
+                        Descartar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Emoji + Origen -->
+            <div class="ctrl-group">
+              <label class="ctrl-label">Emoji / ícono</label>
+              <div style="display:flex;gap:8px;">
+                <input class="ctrl-input" id="m-emoji" placeholder="🔧" style="font-size:20px;flex:1;" />
+                <button type="button" class="btn" onclick="openEmojiPicker(this, 'm-emoji')"
+                  style="padding:0 14px;font-size:20px;background:var(--iron);border:1px solid var(--zinc);border-radius:10px;cursor:pointer;">😀</button>
+              </div>
+              <div class="form-hint">Elegí un emoji para representar el producto</div>
+            </div>
+            <div class="ctrl-group">
+              <label class="ctrl-label">País de origen</label>
+              <select class="ctrl-input" id="m-origen" aria-label="Origen del producto">
+                <option value="">Sin especificar</option>
+                <option value="AR">🇦🇷 Argentina</option>
+                <option value="CN">🇨🇳 China</option>
+                <option value="US">🇺🇸 Estados Unidos</option>
+                <option value="DE">🇩🇪 Alemania</option>
+                <option value="JP">🇯🇵 Japón</option>
+                <option value="IT">🇮🇹 Italia</option>
+                <option value="BR">🇧🇷 Brasil</option>
+                <option value="KR">🇰🇷 Corea del Sur</option>
+                <option value="TW">🇹🇼 Taiwán</option>
+                <option value="MX">🇲🇽 México</option>
+                <option value="FR">🇫🇷 Francia</option>
+                <option value="GB">🇬🇧 Reino Unido</option>
+                <option value="ES">🇪🇸 España</option>
+                <option value="SE">🇸🇪 Suecia</option>
+                <option value="CH">🇨🇭 Suiza</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════ PASO 2: PRECIOS, INVENTARIO & MODALIDAD ════════ -->
+        <div class="product-wizard-step" id="pw-step-2">
+          <div class="pw-mode-banner">
+            <div>Modalidad: <b id="pw-banner-arch-name-2">📦 Producto Simple</b></div>
+            <button type="button" class="pw-mode-change-btn" onclick="goToProductStep(0)"><i class="bi bi-arrow-left-right"></i> Cambiar</button>
+          </div>
+
+          <!-- Panel Específico: Al Peso / Fraccionado -->
+          <div id="pw-weight-panel" style="display:none; background:var(--steel); border:1px solid var(--zinc); border-radius:10px; padding:12px; margin-bottom:12px;">
+            <div style="font-size:12px; font-weight:700; color:var(--white); margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+              <i class="bi bi-speedometer2" style="color:var(--red);"></i> Configuración de Venta Fraccionada / Al Peso
+            </div>
+            <div class="modal-grid">
+              <div class="ctrl-group">
+                <label class="ctrl-label">Unidad de medida de venta</label>
+                <select class="ctrl-input" id="m-weight-unit" onchange="updateWeightLabels()">
+                  <option value="kg">Kilogramos (kg)</option>
+                  <option value="g">Gramos (g)</option>
+                  <option value="l">Litros (l)</option>
+                  <option value="m">Metros (m)</option>
+                </select>
+              </div>
+              <div class="ctrl-group">
+                <label class="ctrl-label">Fracción mínima de compra</label>
+                <input class="ctrl-input" id="m-weight-min" placeholder="Ej: 100g, 250g o 0.25 kg" />
+              </div>
+            </div>
+            <div style="font-size:11px;color:var(--silver);margin-top:6px;">
+              💡 El precio que ingreses abajo corresponde a 1 unidad completa de la medida seleccionada. El cliente podrá pedir fracciones (ej: 250 gramos).
+            </div>
+          </div>
+
+          <!-- Panel Específico: Pack / Combo -->
+          <div id="pw-pack-panel" style="display:none; background:var(--steel); border:1px solid var(--zinc); border-radius:10px; padding:12px; margin-bottom:12px;">
+            <div style="font-size:12px; font-weight:700; color:var(--white); margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+              <i class="bi bi-box-seam" style="color:var(--red);"></i> Configuración de Paquete / Bulto Cerrado
+            </div>
+            <div class="modal-grid">
+              <div class="ctrl-group">
+                <label class="ctrl-label">Cantidad de unidades por paquete</label>
+                <input type="number" min="1" step="1" class="ctrl-input" id="m-pack-qty" placeholder="Ej: 25" oninput="calcPackUnitPrice()" />
+              </div>
+              <div class="ctrl-group" style="display:flex; flex-direction:column; justify-content:center;">
+                <div id="m-pack-unit-price-calc" style="font-size:12px; font-weight:700; color:var(--green); background:rgba(46,204,113,0.1); border:1px solid rgba(46,204,113,0.25); border-radius:8px; padding:9px 12px;">
+                  Precio unitario estimado: $ 0.00
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Precio + Divisa + Stock -->
-          <div class="ctrl-group">
-            <label class="ctrl-label">Precio</label>
-            <input class="ctrl-input" id="m-price" type="number" step="any" min="0" placeholder="150000" />
-          </div>
-          <div class="ctrl-group">
-            <label class="ctrl-label">Divisa / Moneda</label>
-            <select class="ctrl-input" id="m-currency" aria-label="Divisa o moneda del producto">
-              <option value="ARS">ARS ($ - Peso Argentino)</option>
-              <option value="USD">USD (US$ - Dólar)</option>
-              <option value="EUR">EUR (€ - Euro)</option>
-              <option value="BRL">BRL (R$ - Real)</option>
-              <option value="CLP">CLP ($ - Peso Chileno)</option>
-              <option value="UYU">UYU ($ - Peso Uruguayo)</option>
-            </select>
-          </div>
-          <div class="ctrl-group" style="grid-column:1/-1;">
-            <label class="ctrl-label">Stock (unidades)</label>
-            <input class="ctrl-input" id="m-stock" type="number" min="0" placeholder="24" />
-          </div>
-
-          <!-- Emoji + Origen -->
-          <div class="ctrl-group">
-            <label class="ctrl-label">Emoji / ícono</label>
-            <div style="display:flex;gap:8px;">
-              <input class="ctrl-input" id="m-emoji" placeholder="🔧" style="font-size:20px;flex:1;" />
-              <button type="button" class="btn" onclick="openEmojiPicker(this, 'm-emoji')"
-                style="padding:0 14px;font-size:20px;background:var(--iron);border:1px solid var(--zinc);border-radius:10px;cursor:pointer;">😀</button>
+          <!-- Campos Estándar de Precios y Stock -->
+          <div class="modal-grid">
+            <div class="ctrl-group">
+              <label class="ctrl-label" id="lbl-m-price">Precio de venta</label>
+              <input class="ctrl-input" id="m-price" type="number" step="any" min="0" placeholder="150000" oninput="calcPackUnitPrice()" />
             </div>
-            <div class="form-hint">Elegí un emoji para representar el producto</div>
-          </div>
-          <div class="ctrl-group">
-            <label class="ctrl-label">País de origen</label>
-            <select class="ctrl-input" id="m-origen" aria-label="Origen del producto">
-              <option value="">Sin especificar</option>
-              <option value="AR">🇦🇷 Argentina</option>
-              <option value="CN">🇨🇳 China</option>
-              <option value="US">🇺🇸 Estados Unidos</option>
-              <option value="DE">🇩🇪 Alemania</option>
-              <option value="JP">🇯🇵 Japón</option>
-              <option value="IT">🇮🇹 Italia</option>
-              <option value="BR">🇧🇷 Brasil</option>
-              <option value="KR">🇰🇷 Corea del Sur</option>
-              <option value="TW">🇹🇼 Taiwán</option>
-              <option value="MX">🇲🇽 México</option>
-              <option value="FR">🇫🇷 Francia</option>
-              <option value="GB">🇬🇧 Reino Unido</option>
-              <option value="ES">🇪🇸 España</option>
-              <option value="SE">🇸🇪 Suecia</option>
-              <option value="CH">🇨🇭 Suiza</option>
-            </select>
+            <div class="ctrl-group">
+              <label class="ctrl-label">Divisa / Moneda</label>
+              <select class="ctrl-input" id="m-currency" aria-label="Divisa o moneda del producto" onchange="calcPackUnitPrice()">
+                <option value="ARS">ARS ($ - Peso Argentino)</option>
+                <option value="USD">USD (US$ - Dólar)</option>
+                <option value="EUR">EUR (€ - Euro)</option>
+                <option value="BRL">BRL (R$ - Real)</option>
+                <option value="CLP">CLP ($ - Peso Chileno)</option>
+                <option value="UYU">UYU ($ - Peso Uruguayo)</option>
+              </select>
+            </div>
+            <div class="ctrl-group" style="grid-column:1/-1;">
+              <label class="ctrl-label" id="lbl-m-stock">Stock disponible (unidades)</label>
+              <input class="ctrl-input" id="m-stock" type="number" min="0" placeholder="24" />
+            </div>
           </div>
 
+          <!-- Gastronomía & Variantes: Opciones avanzadas -->
+          <div id="m-gastronomy-section" class="ctrl-group" style="margin-top:14px; border-top:1px solid var(--zinc); padding-top:14px;">
+            <label style="display:flex; align-items:center; gap:8px; font-weight:600; font-size:13px; color:var(--white); margin-bottom:12px; cursor:pointer;">
+              <input type="checkbox" id="m-has-variations" onchange="toggleVariationsEditor()" style="width:16px; height:16px; accent-color:var(--red); margin:0;">
+              <span id="lbl-has-variations">¿Agregar variaciones o adicionales de producto? (ej: sabores, talles, agregados)</span>
+            </label>
+
+            <!-- Panel de Editor Interactivo -->
+            <div id="m-variations-editor" style="display:none; flex-direction:column; gap:16px; background:var(--steel); border:1px solid var(--zinc); border-radius:10px; padding:14px;">
+              
+              <!-- Botones de Presets Rápidos para Indumentaria / Variantes -->
+              <div id="pw-variants-presets-bar" style="display:none; flex-direction:column; gap:6px; background:var(--iron); border:1px solid var(--zinc); border-radius:8px; padding:10px;">
+                <div style="font-size:11px; font-weight:700; color:var(--white);">⚡ Plantillas Rápidas de Variantes:</div>
+                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                  <button type="button" class="pw-mode-change-btn" onclick="addSizePresetGroup()"><i class="bi bi-rulers"></i> + Talles (S, M, L, XL)</button>
+                  <button type="button" class="pw-mode-change-btn" onclick="addColorPresetGroup()"><i class="bi bi-palette"></i> + Colores (Negro, Blanco, Gris)</button>
+                </div>
+              </div>
+
+              <!-- Sección 1: Variantes (Selección Única) -->
+              <div style="border-bottom:1px solid var(--zinc); padding-bottom:14px; display:flex; flex-direction:column; gap:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+                  <h4 style="margin:0; font-size:12px; font-weight:700; color:var(--white);"><i class="bi bi-ui-checks-grid" style="color:var(--red); margin-right:4px;"></i> Variantes (Selección Única - ej: talle, sabor, cocción)</h4>
+                  <button type="button" onclick="addVariantGroup()" class="abm-btn-new" style="padding:4px 8px; font-size:10px;"><i class="bi bi-plus-lg"></i> Nuevo Grupo</button>
+                </div>
+                <div id="m-variants-groups" style="display:flex; flex-direction:column; gap:10px;">
+                  <!-- Dinámico -->
+                </div>
+              </div>
+
+              <!-- Sección 2: Adicionales (Selección Múltiple) -->
+              <div style="display:flex; flex-direction:column; gap:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+                  <h4 style="margin:0; font-size:12px; font-weight:700; color:var(--white);"><i class="bi bi-plus-circle" style="color:var(--green); margin-right:4px;"></i> Adicionales con costo (Selección Múltiple - ej: extra carne, salsa, garantía)</h4>
+                  <button type="button" onclick="addModifierGroup()" class="abm-btn-new" style="padding:4px 8px; font-size:10px; background:var(--green); border-color:var(--green);"><i class="bi bi-plus-lg"></i> Nuevo Grupo</button>
+                </div>
+                <div id="m-modifiers-groups" style="display:flex; flex-direction:column; gap:10px;">
+                  <!-- Dinámico -->
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════ PASO 3: FOTOS & MULTIMEDIA ════════ -->
+        <div class="product-wizard-step" id="pw-step-3">
+          <!-- Preview de imágenes (hasta 3) -->
+          <div id="m-img-preview-wrap" style="display:none;margin-bottom:14px;gap:8px;">
+            <div style="position:relative;border-radius:10px;overflow:hidden;background:var(--iron);height:140px;flex:1;">
+              <img id="m-img-preview" src="" alt="" style="width:100%;height:100%;object-fit:cover;" />
+            </div>
+            <div id="m-img2-preview-wrap"
+              style="display:none;position:relative;border-radius:10px;overflow:hidden;background:var(--iron);height:140px;flex:1;">
+              <img id="m-img2-preview" src="" alt="" style="width:100%;height:100%;object-fit:cover;" />
+            </div>
+            <div id="m-img3-preview-wrap"
+              style="display:none;position:relative;border-radius:10px;overflow:hidden;background:var(--iron);height:140px;flex:1;">
+              <img id="m-img3-preview" src="" alt="" style="width:100%;height:100%;object-fit:cover;" />
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:6px;">
+            <label class="ctrl-label" style="margin:0;">Imágenes del producto (hasta 3)</label>
+            <button type="button" id="btn-buscar-fotos-ia" onclick="buscarFotosIA()"
+              style="font-size: 11px; padding: 5px 12px; background: linear-gradient(135deg, var(--red) 0%, #A81D2A 100%); border: none; border-radius: 6px; color: #fff; cursor: pointer; font-family: var(--font-b); display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 5px rgba(215,38,56,0.2); transition: all 0.2s; margin: 0;">
+              <i class="bi bi-image"></i> Buscar con IA
+            </button>
+          </div>
+
+          <!-- Panel de Resultados de Imágenes IA -->
+          <div id="ai-images-results" style="display:none; flex-direction:column; gap:8px; margin-bottom:12px; background:var(--steel); border:1px solid var(--zinc); border-radius:8px; padding:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:11px; font-weight:600; color:var(--white);">Resultados encontrados (Hacé click para seleccionar):</span>
+              <button type="button" onclick="document.getElementById('ai-images-results').style.display='none'" style="background:transparent; border:none; color:var(--silver); cursor:pointer; font-size:14px; padding:0; display:flex; align-items:center; justify-content:center;"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div id="ai-images-list" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(70px, 1fr)); gap:8px; margin-top:6px;">
+              <!-- Miniaturas cargadas dinámicamente -->
+            </div>
+          </div>
+
+          <!-- Imagen 1 -->
+          <div style="margin-bottom:12px;">
+            <div style="font-size:11px;color:var(--silver);margin-bottom:4px;font-weight:600;">Imagen principal</div>
+            <div style="display:flex;gap:8px;align-items:flex-start;">
+              <input class="ctrl-input" id="m-img" placeholder="https://... (URL de la imagen)" style="flex:1;"
+                oninput="previewImgUrl(this.value,0)" />
+              <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;
+              padding:8px 12px;background:var(--iron);border:1px solid var(--zinc);border-radius:8px;
+              font-size:11px;font-weight:600;color:var(--fog);transition:all .15s;white-space:nowrap;"
+                title="Subir foto a Cloudinary">
+                <i class="bi bi-cloud-arrow-up"></i> Subir
+                <input type="file" accept="image/*" style="display:none;" onchange="handleModalPhotoUpload(this,0)" />
+              </label>
+            </div>
+            <div id="m-img-status" style="font-size:10px;margin-top:3px;min-height:12px;"></div>
+          </div>
+
+          <!-- Imagen 2 -->
+          <div style="margin-bottom:12px;">
+            <div style="font-size:11px;color:var(--silver);margin-bottom:4px;font-weight:600;">Imagen 2 (opcional)</div>
+            <div style="display:flex;gap:8px;align-items:flex-start;">
+              <input class="ctrl-input" id="m-img2" placeholder="https://... (URL de la imagen)" style="flex:1;"
+                oninput="previewImgUrl(this.value,1)" />
+              <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;
+              padding:8px 12px;background:var(--iron);border:1px solid var(--zinc);border-radius:8px;
+              font-size:11px;font-weight:600;color:var(--fog);transition:all .15s;white-space:nowrap;"
+                title="Subir foto a Cloudinary">
+                <i class="bi bi-cloud-arrow-up"></i> Subir
+                <input type="file" accept="image/*" style="display:none;" onchange="handleModalPhotoUpload(this,1)" />
+              </label>
+            </div>
+            <div id="m-img2-status" style="font-size:10px;margin-top:3px;min-height:12px;"></div>
+          </div>
+
+          <!-- Imagen 3 -->
+          <div style="margin-bottom:12px;">
+            <div style="font-size:11px;color:var(--silver);margin-bottom:4px;font-weight:600;">Imagen 3 (opcional)</div>
+            <div style="display:flex;gap:8px;align-items:flex-start;">
+              <input class="ctrl-input" id="m-img3" placeholder="https://... (URL de la imagen)" style="flex:1;"
+                oninput="previewImgUrl(this.value,2)" />
+              <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;
+              padding:8px 12px;background:var(--iron);border:1px solid var(--zinc);border-radius:8px;
+              font-size:11px;font-weight:600;color:var(--fog);transition:all .15s;white-space:nowrap;"
+                title="Subir foto a Cloudinary">
+                <i class="bi bi-cloud-arrow-up"></i> Subir
+                <input type="file" accept="image/*" style="display:none;" onchange="handleModalPhotoUpload(this,2)" />
+              </label>
+            </div>
+            <div id="m-img3-status" style="font-size:10px;margin-top:3px;min-height:12px;"></div>
+          </div>
+
+          <div class="form-hint">Subí desde tu dispositivo (Cloudinary) o pegá URLs directas. Marca de agua aplicada automáticamente.</div>
+        </div>
+
+        <!-- ════════ PASO 4: DETALLES, PROMOCIONES & RESUMEN ════════ -->
+        <div class="product-wizard-step" id="pw-step-4">
           <!-- Detalle / especificaciones -->
-          <div class="ctrl-group" style="grid-column:1/-1;">
-            <label class="ctrl-label" style="display:flex;align-items:center;justify-content:space-between;">
-               Detalle / Especificaciones
+          <div class="ctrl-group">
+            <label class="ctrl-label" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px;">
+              Detalle / Descripción del producto
               <button type="button" id="btn-auto-detalle" onclick="autoDetalle()"
-                style="font-size: 11px; padding: 4px 10px; background: linear-gradient(135deg, var(--red) 0%, #A81D2A 100%); border: none; border-radius: 6px; color: #white; cursor: pointer; font-family: var(--font-b); display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 5px rgba(215,38,56,0.2); transition: all 0.2s;">
+                style="font-size: 11px; padding: 4px 10px; background: linear-gradient(135deg, var(--red) 0%, #A81D2A 100%); border: none; border-radius: 6px; color: #fff; cursor: pointer; font-family: var(--font-b); display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 5px rgba(215,38,56,0.2); transition: all 0.2s;">
                 <i class="bi bi-stars"></i> Generar con IA
               </button>
             </label>
@@ -16837,151 +17797,50 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
             <div id="m-detalle-status" style="font-size:10px;color:var(--silver);margin-top:3px;min-height:12px;"></div>
           </div>
 
-          <!-- Gastronomía: Opciones y Variantes -->
-          <div id="m-gastronomy-section" class="ctrl-group" style="grid-column:1/-1; display:none; border-top:1px solid var(--zinc); padding-top:16px;">
-            <label style="display:flex; align-items:center; gap:8px; font-weight:600; font-size:13px; color:var(--white); margin-bottom:12px; cursor:pointer;">
-              <input type="checkbox" id="m-has-variations" onchange="toggleVariationsEditor()" style="width:16px; height:16px; accent-color:var(--red); margin:0;">
-              ¿Agregar variaciones o adicionales de producto? (ej: sabores, memoria, color)
-            </label>
-
-            <!-- Panel de Editor Interactivo -->
-            <div id="m-variations-editor" style="display:none; flex-direction:column; gap:18px; background:var(--steel); border:1px solid var(--zinc); border-radius:8px; padding:16px;">
-              
-              <!-- Sección 1: Variantes / Guarnición (Selección Única) -->
-              <div style="border-bottom:1px solid var(--zinc); padding-bottom:16px; display:flex; flex-direction:column; gap:10px;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <h4 style="margin:0; font-size:13px; font-weight:700; color:var(--white);"><i class="bi bi-ui-checks-grid" style="color:var(--red); margin-right:4px;"></i> Variantes (Selección Única - ej: color, memoria)</h4>
-                  <button type="button" onclick="addVariantGroup()" class="abm-btn-new" style="padding:4px 8px; font-size:10px;"><i class="bi bi-plus-lg"></i> Nuevo Grupo</button>
-                </div>
-                <div id="m-variants-groups" style="display:flex; flex-direction:column; gap:12px;">
-                  <!-- Los grupos dinámicos se cargarán aquí -->
-                </div>
-              </div>
-
-              <!-- Sección 2: Adicionales / Ingredientes / Extras (Selección Múltiple) -->
-              <div style="display:flex; flex-direction:column; gap:10px;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <h4 style="margin:0; font-size:13px; font-weight:700; color:var(--white);"><i class="bi bi-plus-circle" style="color:var(--green); margin-right:4px;"></i> Adicionales / Accesorios (Selección Múltiple - ej: garantía, funda, adicionales)</h4>
-                  <button type="button" onclick="addModifierGroup()" class="abm-btn-new" style="padding:4px 8px; font-size:10px; background:var(--green); border-color:var(--green);"><i class="bi bi-plus-lg"></i> Nuevo Grupo</button>
-                </div>
-                <div id="m-modifiers-groups" style="display:flex; flex-direction:column; gap:12px;">
-                  <!-- Los grupos dinámicos se cargarán aquí -->
-                </div>
-              </div>
-
-            </div>
-          </div>
-
           <!-- Píldoras Promocionales -->
-          <div class="ctrl-group" style="grid-column:1/-1;">
+          <div class="ctrl-group" style="margin-top:14px;">
             <label class="ctrl-label">Píldoras Promocionales (hasta 3)</label>
-            <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:4px;">
-              <label
-                style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--fog);cursor:pointer;"><input
-                  type="checkbox" name="m-pills" value="Oferta" style="accent-color:var(--red);"> Oferta</label>
-              <label
-                style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--fog);cursor:pointer;"><input
-                  type="checkbox" name="m-pills" value="30% Off" style="accent-color:var(--red);"> 30% Off</label>
-              <label
-                style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--fog);cursor:pointer;"><input
-                  type="checkbox" name="m-pills" value="25% Off" style="accent-color:var(--red);"> 25% Off</label>
-              <label
-                style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--fog);cursor:pointer;"><input
-                  type="checkbox" name="m-pills" value="Últimas unidades" style="accent-color:var(--red);"> Últimas
-                unidades</label>
-              <label
-                style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--fog);cursor:pointer;"><input
-                  type="checkbox" name="m-pills" value="Nuevo ingreso" style="accent-color:var(--red);"> Nuevo
-                ingreso</label>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">
+              <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--fog);cursor:pointer;background:var(--iron);border:1px solid var(--zinc);padding:5px 10px;border-radius:20px;">
+                <input type="checkbox" name="m-pills" value="Oferta" style="accent-color:var(--red);" onchange="renderProductWizardPreview()"> Oferta
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--fog);cursor:pointer;background:var(--iron);border:1px solid var(--zinc);padding:5px 10px;border-radius:20px;">
+                <input type="checkbox" name="m-pills" value="30% Off" style="accent-color:var(--red);" onchange="renderProductWizardPreview()"> 30% Off
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--fog);cursor:pointer;background:var(--iron);border:1px solid var(--zinc);padding:5px 10px;border-radius:20px;">
+                <input type="checkbox" name="m-pills" value="25% Off" style="accent-color:var(--red);" onchange="renderProductWizardPreview()"> 25% Off
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--fog);cursor:pointer;background:var(--iron);border:1px solid var(--zinc);padding:5px 10px;border-radius:20px;">
+                <input type="checkbox" name="m-pills" value="Últimas unidades" style="accent-color:var(--red);" onchange="renderProductWizardPreview()"> Últimas unidades
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--fog);cursor:pointer;background:var(--iron);border:1px solid var(--zinc);padding:5px 10px;border-radius:20px;">
+                <input type="checkbox" name="m-pills" value="Nuevo ingreso" style="accent-color:var(--red);" onchange="renderProductWizardPreview()"> Nuevo ingreso
+              </label>
             </div>
-            <div style="font-size:10px;color:var(--silver);margin-top:6px;">Se mostrarán sobre la imagen del producto
-              (si la tienda lo soporta). Solo se guardan hasta 3.</div>
+            <div class="form-hint">Se mostrarán como etiquetas destacadas sobre el producto.</div>
           </div>
 
-          <!-- Imágenes (hasta 3) -->
-          <div class="ctrl-group" style="grid-column:1/-1;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-              <label class="ctrl-label" style="margin:0;">Imágenes del producto (hasta 3)</label>
-              <button type="button" id="btn-buscar-fotos-ia" onclick="buscarFotosIA()"
-                style="font-size: 11px; padding: 4px 10px; background: linear-gradient(135deg, var(--red) 0%, #A81D2A 100%); border: none; border-radius: 6px; color: #fff; cursor: pointer; font-family: var(--font-b); display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 5px rgba(215,38,56,0.2); transition: all 0.2s; margin: 0;">
-                <i class="bi bi-image"></i> Buscar con IA
-              </button>
+          <!-- Vista Previa En Vivo -->
+          <div style="margin-top:16px;">
+            <div style="font-size:11px;font-weight:700;color:var(--silver);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;">
+              Vista previa para tu catálogo:
             </div>
-
-            <!-- Panel de Resultados de Imágenes IA -->
-            <div id="ai-images-results" style="display:none; flex-direction:column; gap:8px; margin-bottom:12px; background:var(--steel); border:1px solid var(--zinc); border-radius:8px; padding:12px;">
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:11px; font-weight:600; color:var(--white);">Resultados encontrados (Hacé click para seleccionar):</span>
-                <button type="button" onclick="document.getElementById('ai-images-results').style.display='none'" style="background:transparent; border:none; color:var(--silver); cursor:pointer; font-size:14px; padding:0; display:flex; align-items:center; justify-content:center;"><i class="bi bi-x-lg"></i></button>
-              </div>
-              <div id="ai-images-list" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(70px, 1fr)); gap:8px; margin-top:6px;">
-                <!-- Miniaturas cargadas dinámicamente -->
-              </div>
+            <div id="pw-live-summary-card">
+              <!-- Renderizado dinámicamente -->
             </div>
-
-            <!-- Imagen 1 -->
-            <div style="margin-bottom:10px;">
-              <div style="font-size:10px;color:var(--silver);margin-bottom:4px;font-weight:600;">Imagen principal</div>
-              <div style="display:flex;gap:8px;align-items:flex-start;">
-                <input class="ctrl-input" id="m-img" placeholder="https://... (URL de la imagen)" style="flex:1;"
-                  oninput="previewImgUrl(this.value,0)" />
-                <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;
-                padding:8px 12px;background:var(--iron);border:1px solid var(--zinc);border-radius:8px;
-                font-size:11px;font-weight:600;color:var(--fog);transition:all .15s;white-space:nowrap;"
-                  title="Subir foto a Cloudinary">
-                  <i class="bi bi-cloud-arrow-up"></i> Subir
-                  <input type="file" accept="image/*" style="display:none;" onchange="handleModalPhotoUpload(this,0)" />
-                </label>
-              </div>
-              <div id="m-img-status" style="font-size:10px;margin-top:3px;min-height:12px;"></div>
-            </div>
-
-            <!-- Imagen 2 -->
-            <div style="margin-bottom:10px;">
-              <div style="font-size:10px;color:var(--silver);margin-bottom:4px;font-weight:600;">Imagen 2 (opcional)
-              </div>
-              <div style="display:flex;gap:8px;align-items:flex-start;">
-                <input class="ctrl-input" id="m-img2" placeholder="https://... (URL de la imagen)" style="flex:1;"
-                  oninput="previewImgUrl(this.value,1)" />
-                <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;
-                padding:8px 12px;background:var(--iron);border:1px solid var(--zinc);border-radius:8px;
-                font-size:11px;font-weight:600;color:var(--fog);transition:all .15s;white-space:nowrap;"
-                  title="Subir foto a Cloudinary">
-                  <i class="bi bi-cloud-arrow-up"></i> Subir
-                  <input type="file" accept="image/*" style="display:none;" onchange="handleModalPhotoUpload(this,1)" />
-                </label>
-              </div>
-              <div id="m-img2-status" style="font-size:10px;margin-top:3px;min-height:12px;"></div>
-            </div>
-
-            <!-- Imagen 3 -->
-            <div style="margin-bottom:10px;">
-              <div style="font-size:10px;color:var(--silver);margin-bottom:4px;font-weight:600;">Imagen 3 (opcional)
-              </div>
-              <div style="display:flex;gap:8px;align-items:flex-start;">
-                <input class="ctrl-input" id="m-img3" placeholder="https://... (URL de la imagen)" style="flex:1;"
-                  oninput="previewImgUrl(this.value,2)" />
-                <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;
-                padding:8px 12px;background:var(--iron);border:1px solid var(--zinc);border-radius:8px;
-                font-size:11px;font-weight:600;color:var(--fog);transition:all .15s;white-space:nowrap;"
-                  title="Subir foto a Cloudinary">
-                  <i class="bi bi-cloud-arrow-up"></i> Subir
-                  <input type="file" accept="image/*" style="display:none;" onchange="handleModalPhotoUpload(this,2)" />
-                </label>
-              </div>
-              <div id="m-img3-status" style="font-size:10px;margin-top:3px;min-height:12px;"></div>
-            </div>
-
-            <div class="form-hint">Subí desde acá (requiere Cloudinary) o pegá URLs directas. La marca de agua se aplica
-              automáticamente.</div>
           </div>
-
         </div>
+
       </div>
-      <div class="modal-footer">
-        <button class="sb-btn" style="background:var(--iron);border:1px solid var(--zinc);"
-          onclick="closeModal()">Cancelar</button>
-        <button class="sb-btn" onclick="saveModal()"><i class="bi bi-check2-circle"></i> Guardar producto</button>
+
+      <!-- Footer de Navegación Mobile-First -->
+      <div class="modal-footer" id="pw-modal-footer">
+        <button type="button" class="sb-btn" id="pw-btn-prev" style="background:var(--iron);border:1px solid var(--zinc);" onclick="closeModal()">
+          <i class="bi bi-x-lg"></i> Cancelar
+        </button>
+        <button type="button" class="sb-btn" id="pw-btn-next" onclick="nextProductStep()">
+          Siguiente <i class="bi bi-arrow-right"></i>
+        </button>
       </div>
     </div>
   </div>
