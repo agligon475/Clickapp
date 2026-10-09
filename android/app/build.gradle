@@ -1,0 +1,49 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'ar.com.daletepido.app'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "ar.com.daletepido.app"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.0"
+
+        manifestPlaceholders = [
+            hostName: "daletepido.com.ar",
+            defaultUrl: "https://daletepido.com.ar/dashboard.html",
+            launcherName: "DaleTePido"
+        ]
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("../android.keystore")
+            storePassword System.getenv("KEYSTORE_PASSWORD") ?: "daletepido2026pass"
+            keyAlias System.getenv("KEY_ALIAS") ?: "daletepido"
+            keyPassword System.getenv("KEY_PASSWORD") ?: "daletepido2026pass"
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'androidx.browser:browser:1.8.0'
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.5.0'
+}
