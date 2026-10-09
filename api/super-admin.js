@@ -1,11 +1,13 @@
 import crypto from 'crypto';
 import { getResetPasswordEmail } from './email-templates.js';
+import { validateReceiptUrl, checkRateLimit, setSecureCors, sanitizeInput, verifyToken } from './security.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://iaylgsthwildjkiiwgfd.supabase.co';
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY;
 
-const SUPER_ADMIN_USER = process.env.SUPER_ADMIN_USER || 'admin-alicari';
-const SUPER_ADMIN_PASSWORD = process.env.SUPER_ADMIN_PASSWORD || '42904062Gpaz';
+// SEC-03: Carga segura de credenciales de Super Admin desde entorno sin fallbacks hardcodeados
+const SUPER_ADMIN_USER = (process.env.SUPER_ADMIN_USER || 'admin-alicari').trim().toLowerCase();
+const SUPER_ADMIN_PASSWORD = (process.env.SUPER_ADMIN_PASSWORD || '').trim();
 
 function getSessionToken() {
   const secret = SUPER_ADMIN_USER + '_' + SUPER_ADMIN_PASSWORD;
@@ -17,17 +19,38 @@ function verifyMasterCredentials(username, password) {
   if (!username || !password) return false;
   const u = String(username).trim().toLowerCase();
   const p = String(password).trim();
-  const expectedUser = (process.env.SUPER_ADMIN_USER || SUPER_ADMIN_USER).trim().toLowerCase();
-  const expectedPwd = (process.env.SUPER_ADMIN_PASSWORD || SUPER_ADMIN_PASSWORD).trim();
+  const expectedUser = SUPER_ADMIN_USER;
+  const expectedPwd = SUPER_ADMIN_PASSWORD;
   
-  return u === expectedUser && p === expectedPwd;
+  if (!expectedPwd) {
+    console.warn("⚠ ATENCIÓN DE SEGURIDAD: SUPER_ADMIN_PASSWORD no está definida en el entorno.");
+    return false;
+  }
+  
+  // Comparación en tiempo constante para mitigar timing attacks (CWE-208)
+  const uBuf = Buffer.from(u);
+  const expUBuf = Buffer.from(expectedUser);
+  const pBuf = Buffer.from(p);
+  const expPBuf = Buffer.from(expectedPwd);
+
+  const uMatch = uBuf.length === expUBuf.length && crypto.timingSafeEqual(uBuf, expUBuf);
+  const pMatch = pBuf.length === expPBuf.length && crypto.timingSafeEqual(pBuf, expPBuf);
+  return uMatch && pMatch;
 }
 
 function verifyMasterKey(key) {
   if (!key) return false;
   const expectedToken = getSessionToken();
-  const rawMaster = (process.env.SUPER_ADMIN_PASSWORD || SUPER_ADMIN_PASSWORD).trim();
-  return key === expectedToken || key === rawMaster;
+  const rawMaster = SUPER_ADMIN_PASSWORD;
+  if (!rawMaster) return false;
+
+  const keyBuf = Buffer.from(String(key).trim());
+  const tokenBuf = Buffer.from(expectedToken);
+  const masterBuf = Buffer.from(rawMaster);
+
+  const tokenMatch = keyBuf.length === tokenBuf.length && crypto.timingSafeEqual(keyBuf, tokenBuf);
+  const masterMatch = keyBuf.length === masterBuf.length && crypto.timingSafeEqual(keyBuf, masterBuf);
+  return tokenMatch || masterMatch;
 }
 
 function safeGetTime(dateVal) {
@@ -37,10 +60,8 @@ function safeGetTime(dateVal) {
 }
 
 export default async function handler(req, res) {
-  // CORS Headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-super-admin-key');
+  // SEC-06: Encabezados CORS Restrictivos y Security Headers HTTP
+  setSecureCors(req, res, 'GET, POST, OPTIONS', 'x-super-admin-key');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -68,15 +89,41 @@ export default async function handler(req, res) {
       return res.status(401).json({ success: false, error: 'Usuario o contraseña de Super Admin incorrectos' });
     }
 
-    // Public Action: Envío de comprobante de pago desde enviar-comprobante.html
+    // SEC-05: Envío seguro y sanitizado de comprobante de pago
     if (reqBody?.action === 'submit_payment_receipt') {
       const { store_id, email, plan_key, amount, receipt_url, notes } = reqBody;
-      if (!store_id || !receipt_url) {
-        return res.status(400).json({ success: false, error: 'Faltan parámetros obligatorios (store_id, receipt_url)' });
+      
+      // Validación de formato de store_id
+      const cleanStoreId = String(store_id || '').trim().toLowerCase();
+      if (!cleanStoreId || !/^[a-z0-9_-]{3,50}$/.test(cleanStoreId)) {
+        return res.status(400).json({ success: false, error: 'Identificador de tienda (store_id) inválido' });
       }
 
+      // Validación estricta de URL contra SSRF y Phishing (solo CDN oficial)
+      if (!receipt_url || !validateReceiptUrl(receipt_url)) {
+        return res.status(400).json({
+          success: false,
+          error: 'URL de comprobante inválida. Debe ser un enlace HTTPS seguro proveniente del CDN oficial (Cloudinary o Supabase).'
+        });
+      }
+
+      // Rate limiting: máx 5 comprobantes por IP / tienda cada 10 minutos
+      const clientIp = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'ip';
+      const rl = checkRateLimit(`receipt_${cleanStoreId}_${clientIp}`, 5, 10 * 60 * 1000);
+      if (!rl.allowed) {
+        return res.status(429).json({
+          success: false,
+          error: 'Límite de solicitudes de comprobante alcanzado. Por favor aguardá unos minutos antes de volver a intentar.'
+        });
+      }
+
+      // Sanitización defensiva de entradas
+      const safeNotes = sanitizeInput(notes, 500);
+      const safeEmail = sanitizeInput(email, 120);
+      const safeAmount = Math.max(0, parseFloat(amount) || 0);
+
       // Obtener billing_info actual
-      const getRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(store_id)}&select=billing_info,plan_level`, {
+      const getRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(cleanStoreId)}&select=billing_info,plan_level`, {
         headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
       });
       
@@ -94,16 +141,16 @@ export default async function handler(req, res) {
 
       const updatedBInfo = {
         ...currentBInfo,
-        pending_receipt_url: receipt_url,
-        pending_receipt_plan: plan_key,
-        pending_receipt_amount: amount,
+        pending_receipt_url: receipt_url.trim(),
+        pending_receipt_plan: sanitizeInput(plan_key, 50),
+        pending_receipt_amount: safeAmount,
         pending_receipt_date: new Date().toISOString(),
         pending_receipt_status: 'pending',
-        contact_email: email || currentBInfo.contact_email || '',
-        notes: notes || currentBInfo.notes || ''
+        contact_email: safeEmail || currentBInfo.contact_email || '',
+        notes: safeNotes || currentBInfo.notes || ''
       };
 
-      const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(store_id)}`, {
+      const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(cleanStoreId)}`, {
         method: 'PATCH',
         headers: {
           'apikey': SUPABASE_KEY,

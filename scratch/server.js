@@ -282,38 +282,29 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (urlPath === '/api/gemini') {
-    if (req.method !== 'POST') {
-      res.writeHead(405, { 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({ error: 'Method not allowed' }));
-    }
-    let geminiKey = req.headers['x-gemini-key'];
-    if (!geminiKey || geminiKey.trim() === '' || geminiKey === 'undefined' || geminiKey === 'null') {
-      geminiKey = process.env.GEMINI_API_KEY;
-    }
-    if (!geminiKey) {
-      res.writeHead(401, { 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({ error: 'API Key de Gemini faltante' }));
-    }
     const rawBody = await parseRequestBody(req);
+    let parsedBody = {};
+    try { parsedBody = JSON.parse(rawBody); } catch(e) {}
+    req.body = parsedBody;
     try {
-      const bodyObj = JSON.parse(rawBody);
-      const model = bodyObj.model || 'gemini-2.5-flash';
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`;
-
-      const upstream = await fetch(url, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          contents: bodyObj.contents,
-          generationConfig: bodyObj.generationConfig
-        }),
-      });
-      const data = await upstream.json();
-      res.writeHead(upstream.status, { 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify(data));
+      const geminiModule = await import('../api/gemini.js?t=' + Date.now());
+      // Adaptador para res.status().json()
+      if (!res.status) {
+        res.status = function(code) {
+          res.statusCode = code;
+          return {
+            json: function(data) {
+              res.writeHead(code, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify(data));
+            },
+            end: function() { res.end(); }
+          };
+        };
+      }
+      return geminiModule.default(req, res);
     } catch (err) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({ error: 'Error contacting Gemini API', detail: err.message }));
+      return res.end(JSON.stringify({ error: 'Error in Gemini handler', detail: err.message }));
     }
   }
 

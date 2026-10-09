@@ -1,9 +1,9 @@
 import crypto from 'node:crypto';
 import { getEmailLayout } from './email-templates.js';
-import { signToken, verifyToken } from './security.js';
+import { signToken, verifyToken, setSecureCors, checkRateLimit } from './security.js';
 
-const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://iaylgsthwildjkiiwgfd.supabase.co';
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY;
 
 function verifyPassword(password, storedPassword) {
   if (!storedPassword) return false;
@@ -23,10 +23,8 @@ function hashPassword(password) {
 }
 
 export default async function handler(req, res) {
-  // CORS Headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  // SEC-06: CORS Defensivo y Security Headers
+  setSecureCors(req, res, 'GET, POST, OPTIONS', 'Authorization');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -70,6 +68,16 @@ export default async function handler(req, res) {
 
     // Prioridad 1: Autenticación segura mediante RPC en PostgreSQL (credenciales aisladas en store_auth)
     if (action === 'login' || !action) {
+      // SEC-08: Prevención de ataques de fuerza bruta (máx 15 intentos por IP/tienda cada 15 min)
+      const clientIp = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'ip';
+      const loginRl = checkRateLimit(`login_${clientIp}_${cleanStoreId}`, 15, 15 * 60 * 1000);
+      if (!loginRl.allowed) {
+        return res.status(429).json({
+          success: false,
+          error: 'Demasiados intentos de autenticación fallidos. Por seguridad, por favor aguardá 15 minutos.'
+        });
+      }
+
       try {
         const rpcRes = await fetch(`${SUPABASE_URL}/rest/v1/rpc/verify_store_login`, {
           method: 'POST',
