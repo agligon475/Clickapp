@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import { getEmailLayout } from './email-templates.js';
+import { signToken, verifyToken } from './security.js';
 
 const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
@@ -49,6 +50,24 @@ export default async function handler(req, res) {
     const cleanStoreId = store_id.trim().toLowerCase();
     const isEmail = cleanStoreId.includes('@');
 
+    // SEC-01 DEFENSE-IN-DEPTH: Si es intento de reseteo, verificar token criptográfico tempranamente
+    if (action === 'reset_password') {
+      const { reset_token } = req.body || {};
+      if (!reset_token) {
+        return res.status(401).json({
+          success: false,
+          error: 'Acceso denegado: Se requiere un token de recuperación válido. Por favor iniciá la recuperación desde "Olvidé mi contraseña".'
+        });
+      }
+      const verifiedToken = verifyToken(reset_token, 'password_reset');
+      if (!verifiedToken) {
+        return res.status(403).json({
+          success: false,
+          error: 'El token de recuperación es inválido o ha expirado (límite 15 minutos). Por favor solicitá un nuevo enlace.'
+        });
+      }
+    }
+
     // Prioridad 1: Autenticación segura mediante RPC en PostgreSQL (credenciales aisladas en store_auth)
     if (action === 'login' || !action) {
       try {
@@ -69,13 +88,21 @@ export default async function handler(req, res) {
           const rpcData = await rpcRes.json();
           if (rpcData && rpcData.success) {
             const actualStoreId = (rpcData.store_id || cleanStoreId).toLowerCase();
-            const sessionToken = Buffer.from(`${actualStoreId}:${Date.now()}:authenticated`).toString('base64');
+            const planLevel = rpcData.plan_level || 'starter';
+            // SEC-02: Generación de token firmado criptográficamente con HMAC-SHA256 (7 días de vigencia)
+            const sessionToken = signToken({
+              store_id: actualStoreId,
+              admin_email: rpcData.admin_email || '',
+              plan_level: planLevel,
+              type: 'session'
+            }, 86400 * 7);
+
             return res.status(200).json({
               success: true,
               store_id: actualStoreId,
               admin_email: rpcData.admin_email || '',
               token: sessionToken,
-              plan_level: rpcData.plan_level || 'starter',
+              plan_level: planLevel,
               message: 'Autenticación exitosa'
             });
           } else if (rpcData && rpcData.error) {
@@ -134,8 +161,13 @@ export default async function handler(req, res) {
         return res.status(401).json({ success: false, error: 'Contraseña incorrecta' });
       }
 
-      // Generate a secure session response token
-      const sessionToken = Buffer.from(`${actualStoreId}:${Date.now()}:authenticated`).toString('base64');
+      // SEC-02: Generación de token firmado criptográficamente con HMAC-SHA256 (7 días de vigencia)
+      const sessionToken = signToken({
+        store_id: actualStoreId,
+        admin_email: adminEmail,
+        plan_level: settings.plan_level || 'starter',
+        type: 'session'
+      }, 86400 * 7);
 
       return res.status(200).json({
         success: true,
@@ -149,7 +181,14 @@ export default async function handler(req, res) {
 
     // Action: Forgot Password (Solicitud de recuperación de usuario / contraseña)
     if (action === 'forgot_password') {
-      const resetLink = `https://daletepido.com.ar/alta-usuario.html?action=login&reset_store=${encodeURIComponent(actualStoreId)}`;
+      // SEC-01: Generar token de recuperación firmado criptográficamente con vigencia estricta de 15 minutos (900s)
+      const resetToken = signToken({
+        store_id: actualStoreId,
+        admin_email: adminEmail,
+        type: 'password_reset'
+      }, 900);
+
+      const resetLink = `https://daletepido.com.ar/alta-usuario.html?action=login&reset_store=${encodeURIComponent(actualStoreId)}&reset_token=${encodeURIComponent(resetToken)}`;
 
       if (adminEmail) {
         try {
@@ -160,9 +199,9 @@ export default async function handler(req, res) {
               'Accept': 'application/json'
             },
             body: JSON.stringify({
-              _subject: `Recuperación de Datos de Acceso - DaleTePido (${settings.business_name || actualStoreId})`,
+              _subject: `Recuperación Segura de Contraseña - DaleTePido (${settings.business_name || actualStoreId})`,
               _template: 'table',
-              Mensaje: `Solicitaste la recuperación de tu cuenta en DaleTePido.`,
+              Mensaje: `Solicitaste la recuperación de tu cuenta en DaleTePido. Este enlace tiene una vigencia de 15 minutos por razones de seguridad.`,
               Tienda: actualStoreId,
               Email: adminEmail,
               Enlace_Restablecer: resetLink
@@ -177,12 +216,31 @@ export default async function handler(req, res) {
         success: true,
         store_id: actualStoreId,
         admin_email: adminEmail,
-        message: `Te hemos enviado un correo de recuperación a ${adminEmail || 'tu email registrado'}.`
+        reset_token: resetToken,
+        message: `Te hemos enviado un correo de recuperación a ${adminEmail || 'tu email registrado'} (válido por 15 minutos).`
       });
     }
 
-    // Action: Reset Password (Establecer nueva contraseña)
+    // Action: Reset Password (Establecer nueva contraseña con validación criptográfica obligatoria)
     if (action === 'reset_password') {
+      const { reset_token } = req.body || {};
+
+      // SEC-01 HARDENING: Validar obligatoriamente la existencia y firma del reset_token
+      if (!reset_token) {
+        return res.status(401).json({
+          success: false,
+          error: 'Acceso denegado: Se requiere un token de recuperación válido. Por favor iniciá la recuperación desde "Olvidé mi contraseña".'
+        });
+      }
+
+      const verifiedToken = verifyToken(reset_token, 'password_reset');
+      if (!verifiedToken || verifiedToken.store_id !== actualStoreId) {
+        return res.status(403).json({
+          success: false,
+          error: 'El token de recuperación es inválido, ha expirado (límite 15 minutos) o no corresponde a esta tienda. Por favor solicitá un nuevo enlace.'
+        });
+      }
+
       if (!new_password || new_password.trim().length < 4) {
         return res.status(400).json({ success: false, error: 'La nueva contraseña debe tener al menos 4 caracteres' });
       }

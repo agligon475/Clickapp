@@ -318,11 +318,12 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (urlPath === '/api/auth') {
+    const rawBody = await parseRequestBody(req);
     let parsedBody = {};
     try { parsedBody = JSON.parse(rawBody); } catch(e) {}
     req.body = parsedBody;
     try {
-      const authModule = await import('../api/auth.js');
+      const authModule = await import('../api/auth.js?t=' + Date.now());
       return authModule.default(req, res);
     } catch (err) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
