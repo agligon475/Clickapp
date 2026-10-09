@@ -328,7 +328,7 @@ const server = http.createServer(async (req, res) => {
     try { parsedBody = JSON.parse(rawBody); } catch(e) {}
     req.body = parsedBody;
     try {
-      const superAdminModule = await import('../api/super-admin.js');
+      const superAdminModule = await import('../api/super-admin.js?t=' + Date.now());
       return superAdminModule.default(req, res);
     } catch (err) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
