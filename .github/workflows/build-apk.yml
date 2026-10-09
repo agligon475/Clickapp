@@ -12,10 +12,6 @@ on:
         required: true
         default: '1'
 
-env:
-  ANDROID_HOME: /usr/local/lib/android/sdk
-  ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
-
 jobs:
   build-apk:
     name: Compilar APK Android
@@ -36,16 +32,22 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          api-level: 34
+          build-tools-version: 34.0.0
+
       - name: Configurar entorno Bubblewrap sin preguntas interactivas
         run: |
           mkdir -p ~/.bubblewrap
           cat <<EOF > ~/.bubblewrap/config.json
           {
             "jdkPath": "$JAVA_HOME",
-            "androidSdkPath": "$ANDROID_HOME"
+            "androidSdkPath": "$ANDROID_SDK_ROOT"
           }
           EOF
-          echo "Bubblewrap configurado con Java en $JAVA_HOME y Android SDK en $ANDROID_HOME"
+          echo "Bubblewrap configurado con Java en $JAVA_HOME y Android SDK en $ANDROID_SDK_ROOT"
 
       - name: Instalar Bubblewrap CLI
         run: npm install -g @bubblewrap/cli
