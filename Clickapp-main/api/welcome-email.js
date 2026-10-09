@@ -1,5 +1,92 @@
 import { getWelcomeEmail, getPlanPaymentInstructionsEmail, getProspectEmail } from './email-templates.js';
 
+// Notificaciones automáticas al Super Admin ante nuevas cuentas
+async function notifyAdminNewAccount({ storeId, storeName, email, wapp, planLevel, baseUrl }) {
+  const notifications = [];
+
+  // 1. Notificación Push a Móvil vía NTFY.SH (gratuito, sin registro, alta prioridad)
+  const ntfyTopic = (process.env.NTFY_TOPIC || 'daletepido-alertas-admin').trim();
+  if (ntfyTopic) {
+    notifications.push(
+      fetch(`https://ntfy.sh/${encodeURIComponent(ntfyTopic)}`, {
+        method: 'POST',
+        headers: {
+          'Title': 'Nueva Cuenta Creada - Dale! Te Pido',
+          'Priority': 'high',
+          'Tags': 'tada,shopping_bags,bell',
+          'Click': `${baseUrl}/super-admin-secret-dashboard.html`
+        },
+        body: `Comercio: ${storeName} (${storeId})\nEmail: ${email}\nWhatsApp: ${wapp || 'Sin especificar'}\nPlan: ${planLevel}\nDashboard: ${baseUrl}/dashboard.html?store=${storeId}`
+      }).catch(err => console.warn('ntfy push alert error:', err.message))
+    );
+  }
+
+  // 2. Notificación vía Telegram Bot (si está configurado)
+  const tgToken = process.env.TELEGRAM_BOT_TOKEN;
+  const tgChatId = process.env.TELEGRAM_CHAT_ID;
+  if (tgToken && tgChatId) {
+    const tgText = `🚀 *¡Nueva Tienda Creada en Dale! Te Pido!*\n\n` +
+      `🏬 *Nombre:* ${storeName}\n` +
+      `🆔 *ID:* \`${storeId}\`\n` +
+      `✉️ *Email:* ${email}\n` +
+      `📱 *WhatsApp:* ${wapp || 'No indicado'}\n` +
+      `💎 *Plan:* ${planLevel}\n\n` +
+      `🔗 [Ver en SuperAdmin](${baseUrl}/super-admin-secret-dashboard.html)`;
+
+    notifications.push(
+      fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: tgChatId,
+          text: tgText,
+          parse_mode: 'Markdown'
+        })
+      }).catch(err => console.warn('Telegram alert error:', err.message))
+    );
+  }
+
+  // 3. Notificación vía Email al Administrador
+  const adminAlertEmail = process.env.ADMIN_ALERT_EMAIL || 'panlactal@gmail.com';
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const fromEmail = process.env.RESEND_FROM_EMAIL || 'Dale! Te Pido <soporte@daletepido.com.ar>';
+
+  if (adminAlertEmail && resendApiKey) {
+    notifications.push(
+      fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${resendApiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: fromEmail,
+          to: [adminAlertEmail],
+          subject: `[Alerta SuperAdmin] 🎉 Nueva tienda registrada: ${storeName} (${storeId})`,
+          html: `
+            <div style="font-family:sans-serif;max-width:560px;margin:auto;padding:24px;border:1px solid #e2e8f0;border-radius:12px;background:#ffffff;">
+              <h2 style="color:#e11d48;margin-top:0;">🎉 ¡Nueva Cuenta Registrada!</h2>
+              <p style="color:#334155;font-size:15px;">Se ha registrado una nueva tienda en la plataforma:</p>
+              <table style="width:100%;border-collapse:collapse;margin:16px 0;font-size:14px;">
+                <tr><td style="padding:8px;border-bottom:1px solid #f1f5f9;font-weight:600;color:#64748b;">Comercio:</td><td style="padding:8px;border-bottom:1px solid #f1f5f9;font-weight:bold;color:#0f172a;">${storeName}</td></tr>
+                <tr><td style="padding:8px;border-bottom:1px solid #f1f5f9;font-weight:600;color:#64748b;">Store ID:</td><td style="padding:8px;border-bottom:1px solid #f1f5f9;color:#0f172a;">${storeId}</td></tr>
+                <tr><td style="padding:8px;border-bottom:1px solid #f1f5f9;font-weight:600;color:#64748b;">Email Admin:</td><td style="padding:8px;border-bottom:1px solid #f1f5f9;color:#0f172a;">${email}</td></tr>
+                <tr><td style="padding:8px;border-bottom:1px solid #f1f5f9;font-weight:600;color:#64748b;">WhatsApp:</td><td style="padding:8px;border-bottom:1px solid #f1f5f9;color:#0f172a;">${wapp || 'Sin indicar'}</td></tr>
+                <tr><td style="padding:8px;border-bottom:1px solid #f1f5f9;font-weight:600;color:#64748b;">Nivel / Plan:</td><td style="padding:8px;border-bottom:1px solid #f1f5f9;color:#0f172a;text-transform:uppercase;">${planLevel}</td></tr>
+              </table>
+              <div style="margin-top:20px;">
+                <a href="${baseUrl}/super-admin-secret-dashboard.html" style="background:#e11d48;color:#fff;text-decoration:none;padding:10px 18px;border-radius:8px;font-weight:600;display:inline-block;">Ir al Super Admin Dashboard</a>
+              </div>
+            </div>
+          `
+        })
+      }).catch(err => console.warn('Admin email alert error:', err.message))
+    );
+  }
+
+  await Promise.allSettled(notifications);
+}
+
 export default async function handler(req, res) {
   // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -147,9 +234,25 @@ export default async function handler(req, res) {
       }
     }
 
+    // Notificar al Super Admin por Push móvil / Email / Telegram si es una nueva cuenta
+    if (type !== 'prospect') {
+      try {
+        await notifyAdminNewAccount({
+          storeId: store_id,
+          storeName,
+          email: targetEmail,
+          wapp,
+          planLevel: effectivePlanLevel,
+          baseUrl
+        });
+      } catch (notifyErr) {
+        console.warn('Advertencia en notificación de admin:', notifyErr.message);
+      }
+    }
+
     return res.status(200).json({
       success: true,
-      message: 'Correo de bienvenida procesado exitosamente',
+      message: 'Correo de bienvenida y notificación de admin procesados exitosamente',
       dashboard_url: dashboardUrl,
       store_id: store_id
     });
