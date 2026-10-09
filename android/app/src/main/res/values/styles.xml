@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.DaleTePido" parent="android:Theme.Translucent.NoTitleBar">
+    <style name="Theme.DaleTePido" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@color/backgroundColor</item>
         <item name="android:statusBarColor">@color/statusBarColor</item>
         <item name="android:navigationBarColor">@color/navigationBarColor</item>
