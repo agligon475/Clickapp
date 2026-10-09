@@ -2,15 +2,6 @@ name: Build Android APK (Dale! Te Pido)
 
 on:
   workflow_dispatch:
-    inputs:
-      version_name:
-        description: 'Versión de la App (ej: 1.0.0)'
-        required: true
-        default: '1.0.0'
-      version_code:
-        description: 'Código de versión (ej: 1)'
-        required: true
-        default: '1'
 
 jobs:
   build-apk:
@@ -27,31 +18,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Configurar Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          api-level: 34
-          build-tools-version: 34.0.0
-
-      - name: Configurar entorno Bubblewrap sin preguntas interactivas
-        run: |
-          mkdir -p ~/.bubblewrap
-          cat <<EOF > ~/.bubblewrap/config.json
-          {
-            "jdkPath": "$JAVA_HOME",
-            "androidSdkPath": "$ANDROID_SDK_ROOT"
-          }
-          EOF
-          echo "Bubblewrap configurado con Java en $JAVA_HOME y Android SDK en $ANDROID_SDK_ROOT"
-
-      - name: Instalar Bubblewrap CLI
-        run: npm install -g @bubblewrap/cli
-
       - name: Preparar directorio Android y manifiesto TWA
         run: |
           mkdir -p android-project
@@ -64,13 +30,14 @@ jobs:
             -storepass "daletepido2026pass" -keypass "daletepido2026pass" \
             -dname "CN=DaleTePido, OU=Mobile, O=DaleTePido, L=Buenos Aires, S=Buenos Aires, C=AR"
 
-      - name: Compilar APK Android (TWA)
-        env:
-          BUBBLEWRAP_KEYSTORE_PASSWORD: daletepido2026pass
-          BUBBLEWRAP_KEY_PASSWORD: daletepido2026pass
+      - name: Compilar APK Android con contenedor oficial de Google Bubblewrap
         run: |
-          cd android-project
-          bubblewrap build --skipPwaValidation
+          docker run --rm \
+            -v ${{ github.workspace }}/android-project:/app \
+            -w /app \
+            -e BUBBLEWRAP_KEYSTORE_PASSWORD=daletepido2026pass \
+            -e BUBBLEWRAP_KEY_PASSWORD=daletepido2026pass \
+            ghcr.io/googlechromelabs/bubblewrap:latest build --skipPwaValidation
 
       - name: Subir APK generado como Artefacto descargable
         uses: actions/upload-artifact@v4
