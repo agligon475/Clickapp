@@ -47,7 +47,7 @@ async function notifyAdminNewAccount({ storeId, storeName, email, wapp, planLeve
   }
 
   // 3. Notificación vía Email al Administrador
-  const adminAlertEmail = process.env.ADMIN_ALERT_EMAIL || 'panlactal@gmail.com';
+  const adminAlertEmail = process.env.ADMIN_ALERT_EMAIL || 'daletepido@gmail.com';
   const resendApiKey = process.env.RESEND_API_KEY;
   const fromEmail = process.env.RESEND_FROM_EMAIL || 'Dale! Te Pido <soporte@daletepido.com.ar>';
 
@@ -156,16 +156,18 @@ export default async function handler(req, res) {
       htmlBody = emailObj.html;
     }
 
-
     const host = req.headers['x-forwarded-host'] || req.headers.host || 'daletepido.com.ar';
     const protocol = req.headers['x-forwarded-proto'] || 'https';
     const baseUrl = `${protocol}://${host}`;
     const dashboardUrl = `${baseUrl}/dashboard.html?store=${encodeURIComponent(store_id)}&verify=true`;
     const storeUrl = `${baseUrl}/index.html?store=${encodeURIComponent(store_id)}`;
 
-    // Send via Resend API if API Key is configured, fallback to FormSubmit
+    // Envío del correo al cliente (Resend con fallback a FormSubmit)
     const resendApiKey = process.env.RESEND_API_KEY;
     const fromEmail = process.env.RESEND_FROM_EMAIL || 'Dale! Te Pido <soporte@daletepido.com.ar>';
+    let clientEmailSent = false;
+    let clientEmailWarning = null;
+    let clientEmailId = null;
 
     if (resendApiKey) {
       try {
@@ -183,35 +185,22 @@ export default async function handler(req, res) {
           })
         });
         const resendData = await resendResp.json();
-        if (!resendResp.ok) {
-          console.error('Error enviando con Resend API:', resendData);
-          // Return success true with warning so registration UI is not broken
-          return res.status(200).json({
-            success: true,
-            warning: resendData.message || 'Error con servicio Resend',
-            dashboard_url: dashboardUrl,
-            store_id: store_id
-          });
-        } else {
+        if (resendResp.ok) {
+          clientEmailSent = true;
+          clientEmailId = resendData.id;
           console.log('Email de bienvenida enviado con Resend ID:', resendData.id);
-          return res.status(200).json({
-            success: true,
-            message: 'Correo de bienvenida enviado exitosamente vía Resend',
-            email_id: resendData.id,
-            dashboard_url: dashboardUrl,
-            store_id: store_id
-          });
+        } else {
+          console.warn('Resend API no pudo enviar correo al cliente:', resendData.message);
+          clientEmailWarning = resendData.message || 'Error con servicio Resend';
         }
       } catch (sendErr) {
-        console.warn('Advertencia al enviar email vía Resend:', sendErr);
-        return res.status(200).json({
-          success: true,
-          warning: sendErr.message,
-          dashboard_url: dashboardUrl,
-          store_id: store_id
-        });
+        console.warn('Error al conectar con Resend:', sendErr.message);
+        clientEmailWarning = sendErr.message;
       }
-    } else {
+    }
+
+    // Fallback mediante FormSubmit si Resend no está configurado o si devolvió error
+    if (!clientEmailSent) {
       try {
         await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
           method: 'POST',
@@ -229,12 +218,13 @@ export default async function handler(req, res) {
             WhatsApp: wapp || '-'
           })
         });
+        clientEmailSent = true;
       } catch (sendErr) {
-        console.warn('Advertencia al enviar email vía FormSubmit:', sendErr);
+        console.warn('Advertencia al enviar email vía FormSubmit:', sendErr.message);
       }
     }
 
-    // Notificar al Super Admin por Push móvil / Email / Telegram si es una nueva cuenta
+    // Notificar SIEMPRE al Super Admin por Push móvil (ntfy) / Email / Telegram si es una nueva cuenta
     if (type !== 'prospect') {
       try {
         await notifyAdminNewAccount({
@@ -253,6 +243,9 @@ export default async function handler(req, res) {
     return res.status(200).json({
       success: true,
       message: 'Correo de bienvenida y notificación de admin procesados exitosamente',
+      email_sent: clientEmailSent,
+      email_id: clientEmailId,
+      warning: clientEmailWarning,
       dashboard_url: dashboardUrl,
       store_id: store_id
     });
