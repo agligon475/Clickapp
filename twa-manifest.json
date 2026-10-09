@@ -1,0 +1,46 @@
+{
+  "packageId": "ar.com.daletepido.app",
+  "host": "daletepido.com.ar",
+  "name": "Dale! Te Pido - Catálogo y Pedidos",
+  "launcherName": "DaleTePido",
+  "themeColor": "#F60000",
+  "navigationColor": "#18181B",
+  "backgroundColor": "#0A0A0C",
+  "enableNotifications": true,
+  "startUrl": "/dashboard.html",
+  "iconUrl": "https://daletepido.com.ar/icon-512.png",
+  "maskableIconUrl": "https://daletepido.com.ar/icon-512-maskable.png",
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [
+    {
+      "name": "Mi Dashboard",
+      "shortName": "Dashboard",
+      "url": "https://daletepido.com.ar/dashboard.html",
+      "icon": "https://daletepido.com.ar/icon-192.png"
+    },
+    {
+      "name": "Crear Tienda",
+      "shortName": "Registro",
+      "url": "https://daletepido.com.ar/alta-usuario.html",
+      "icon": "https://daletepido.com.ar/icon-192.png"
+    }
+  ],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://daletepido.com.ar/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {
+    "locationDelegation": {
+      "enabled": false
+    },
+    "playBilling": {
+      "enabled": false
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false
+}

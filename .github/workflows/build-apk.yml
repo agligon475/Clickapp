@@ -1,0 +1,71 @@
+name: Build Android APK (Dale! Te Pido)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_name:
+        description: 'Versión de la App (ej: 1.0.0)'
+        required: true
+        default: '1.0.0'
+      version_code:
+        description: 'Código de versión (ej: 1)'
+        required: true
+        default: '1'
+
+jobs:
+  build-apk:
+    name: Compilar APK Android
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Java JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Configurar Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Configurar Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar Bubblewrap CLI
+        run: npm install -g @bubblewrap/cli
+
+      - name: Preparar keystore de firma
+        run: |
+          mkdir -p android-keystore
+          keytool -genkeypair -v -keystore android-keystore/daletepido.keystore \
+            -alias daletepido -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass "daletepido2026pass" -keypass "daletepido2026pass" \
+            -dname "CN=DaleTePido, OU=Mobile, O=DaleTePido, L=Buenos Aires, S=Buenos Aires, C=AR"
+
+      - name: Generar proyecto Android con Bubblewrap
+        run: |
+          npx @bubblewrap/cli init --manifest=https://daletepido.com.ar/manifest.json --directory=./android-project
+          cp twa-manifest.json ./android-project/twa-manifest.json
+
+      - name: Compilar APK Android (TWA)
+        run: |
+          cd ./android-project
+          npx @bubblewrap/cli build \
+            --signing.keyStore=../android-keystore/daletepido.keystore \
+            --signing.keyName=daletepido \
+            --signing.keyStorePassword=daletepido2026pass \
+            --signing.keyPassword=daletepido2026pass
+
+      - name: Subir APK generado como Artefacto descargable
+        uses: actions/upload-artifact@v4
+        with:
+          name: DaleTePido-Android-APK
+          path: |
+            ./android-project/app-release-signed.apk
+            ./android-project/*.apk
+            ./android-project/*.aab
+          retention-days: 30
