@@ -38,7 +38,7 @@ jobs:
         id: gradle_step
         working-directory: android
         run: |
-          gradle assemble --no-daemon --stacktrace 2>&1 | tee gradle-build.log
+          gradle :app:assembleRelease --no-daemon --stacktrace 2>&1 | tee gradle-build.log
 
       - name: Publicar Diagnóstico en Job Summary
         if: always()
@@ -58,6 +58,10 @@ jobs:
           find android/ -name "*.apk" -exec cp {} dist-apk/ \;
           echo "Archivos listos para subida:"
           ls -la dist-apk/
+          if [ -z "$(ls -A dist-apk/*.apk 2>/dev/null)" ]; then
+            echo "ERROR: No se encontró ningún archivo APK generado en android/"
+            exit 1
+          fi
 
       - name: Subir APK generado como Artefacto descargable
         uses: actions/upload-artifact@v4
