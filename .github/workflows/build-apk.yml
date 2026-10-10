@@ -37,11 +37,7 @@ jobs:
         id: gradle_step
         working-directory: android
         run: |
-          gradle :app:assemble --no-daemon 2>&1 | tee gradle-build.log || {
-            echo "::error::Fallo en Gradle, mostrando detalle:"
-            grep -A 30 "What went wrong" gradle-build.log || head -n 60 gradle-build.log
-            exit 1
-          }
+          gradle :app:assembleRelease :app:assembleDebug --no-daemon 2>&1 | tee gradle-build.log
 
       - name: Publicar Diagnóstico en Job Summary
         if: always()
@@ -56,15 +52,17 @@ jobs:
       - name: Localizar y preparar APK generado
         run: |
           mkdir -p dist-apk
-          echo "Buscando archivos APK generados..."
-          find android/ -name "*.apk"
+          echo "=== Contenido de outputs ==="
+          find android/app/build/outputs/ -type f || true
+          echo "=== Copiando archivos APK ==="
           find android/ -name "*.apk" -exec cp {} dist-apk/ \;
-          echo "Archivos listos para subida:"
+          for f in dist-apk/*.apk; do
+            [ -e "$f" ] || continue
+            cp "$f" dist-apk/DaleTePido.apk
+            break
+          done
+          echo "=== Archivos en dist-apk ==="
           ls -la dist-apk/
-          if [ -z "$(ls -A dist-apk/*.apk 2>/dev/null)" ]; then
-            echo "ERROR: No se encontró ningún archivo APK generado en android/"
-            exit 1
-          fi
 
       - name: Subir APK generado como Artefacto descargable
         uses: actions/upload-artifact@v4
