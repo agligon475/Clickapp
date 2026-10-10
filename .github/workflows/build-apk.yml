@@ -43,18 +43,21 @@ jobs:
         id: gradle_step
         working-directory: android
         run: |
-          echo "=== LISTANDO TAREAS DE ASSEMBLE ==="
-          gradle tasks --all | grep assemble || true
-          echo "=== COMPILANDO APK ==="
-          gradle assembleRelease assembleDebug --no-daemon 2>&1 | tee gradle-build.log
+          set -o pipefail
+          echo "=== LISTANDO TAREAS DISPONIBLES ==="
+          gradle tasks --all | grep -E "assemble" || true
+          echo "=== COMPILANDO :app:assembleRelease Y :app:assembleDebug ==="
+          gradle :app:assembleRelease :app:assembleDebug --no-daemon 2>&1 | tee gradle-build.log
 
       - name: Publicar Diagnóstico en Job Summary
         if: always()
         run: |
           if [ -f android/gradle-build.log ]; then
-            echo "### 📋 Salida de Compilación Gradle" >> $GITHUB_STEP_SUMMARY
+            echo "### 📋 Salida Completa de Gradle" >> $GITHUB_STEP_SUMMARY
             echo '```text' >> $GITHUB_STEP_SUMMARY
-            tail -n 80 android/gradle-build.log >> $GITHUB_STEP_SUMMARY
+            cat android/gradle-build.log | head -n 80 >> $GITHUB_STEP_SUMMARY
+            echo '---' >> $GITHUB_STEP_SUMMARY
+            cat android/gradle-build.log | tail -n 80 >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
           fi
 
@@ -71,8 +74,10 @@ jobs:
           done
           echo "=== ARCHIVOS EN DIST-APK ==="
           ls -la dist-apk/
-          echo "=== ARCHIVOS EN ANDROID BUILD ==="
-          find android/ -type f | grep -E "(apk|build/outputs)" || true
+          if [ -z "$(ls -A dist-apk/*.apk 2>/dev/null)" ]; then
+            echo "ERROR: No se encontró ningún archivo APK generado en el repositorio"
+            exit 1
+          fi
 
       - name: Subir APK generado como Artefacto descargable
         uses: actions/upload-artifact@v4
