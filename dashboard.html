@@ -4509,17 +4509,22 @@
 
   <!-- MODAL: SETUP ONBOARDING PASO A PASO -->
   <div id="onboarding-modal-overlay" class="onboarding-overlay" role="dialog" aria-modal="true" aria-labelledby="onb-step-title" aria-describedby="onb-step-subtitle" aria-hidden="true">
-    <div class="onboarding-card">
+    <div class="onboarding-card" style="position:relative;">
+      <!-- Botón de Cerrar / Salir accesible -->
+      <button class="onb-close-btn" onclick="skipOnboardingNow()" aria-label="Cerrar asistente de configuración" title="Cerrar asistente" style="position:absolute; top:18px; right:18px; background:transparent; border:none; color:var(--silver); font-size:18px; cursor:pointer; line-height:1; padding:6px; border-radius:8px;">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+
       <!-- Header -->
       <div class="onboarding-header">
         <div class="onboarding-badge-row">
-          <span class="onboarding-badge"><i class="bi bi-rocket-takeoff-fill"></i> Setup de Tienda</span>
+          <span class="onboarding-badge"><i class="bi bi-rocket-takeoff-fill" aria-hidden="true"></i> Setup de Tienda</span>
           <span class="onboarding-step-counter">Paso <span id="onb-step-num">1</span> de 8</span>
         </div>
-        <div class="onboarding-progress-track">
+        <div class="onboarding-progress-track" aria-hidden="true">
           <div class="onboarding-progress-fill" id="onb-progress-fill" style="width: 12.5%;"></div>
         </div>
-        <div class="onboarding-dots">
+        <div class="onboarding-dots" aria-hidden="true">
           <div class="onboarding-dot active" id="onb-dot-1"></div>
           <div class="onboarding-dot" id="onb-dot-2"></div>
           <div class="onboarding-dot" id="onb-dot-3"></div>
@@ -4539,15 +4544,15 @@
       <!-- Footer -->
       <div class="onboarding-footer">
         <div class="onb-footer-actions-left">
-          <button class="onb-btn-link" onclick="skipOnboardingNow()" title="Omitir solo por esta sesión">Omitir ahora</button>
-          <button class="onb-btn-link danger" onclick="skipOnboardingForever()" title="No volver a mostrar en futuros logins">Omitir para siempre</button>
+          <button class="onb-btn-link" onclick="skipOnboardingNow()" aria-label="Omitir configuración solo por esta sesión" title="Omitir solo por esta sesión">Omitir ahora</button>
+          <button class="onb-btn-link danger" onclick="skipOnboardingForever()" aria-label="No volver a mostrar el asistente en futuros inicios de sesión" title="No volver a mostrar en futuros logins">Omitir para siempre</button>
         </div>
         <div class="onb-footer-actions-right">
-          <button class="onb-btn-prev" id="onb-prev-btn" onclick="prevOnboardingStep()" style="display:none;">
-            <i class="bi bi-arrow-left"></i> Anterior
+          <button class="onb-btn-prev" id="onb-prev-btn" onclick="prevOnboardingStep()" aria-label="Volver al paso anterior" style="display:none;">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i> Anterior
           </button>
-          <button class="onb-btn-next" id="onb-next-btn" onclick="nextOnboardingStep()">
-            Siguiente <i class="bi bi-arrow-right"></i>
+          <button class="onb-btn-next" id="onb-next-btn" onclick="nextOnboardingStep()" aria-label="Avanzar al siguiente paso">
+            Siguiente <i class="bi bi-arrow-right" aria-hidden="true"></i>
           </button>
         </div>
       </div>
@@ -7587,9 +7592,13 @@
 
     function handleLogout() {
       sessionStorage.removeItem('storeapp_logged_in_' + STORE_ID);
+      sessionStorage.clear();
       originalLocalStorage.removeItem('storeapp_logged_in_' + STORE_ID);
       originalLocalStorage.removeItem('daletepido_session');
-      window.location.reload();
+      originalLocalStorage.removeItem('storeapp_store_id');
+      originalLocalStorage.removeItem('daletepido_store_id');
+      originalLocalStorage.removeItem('store_id');
+      window.location.replace('/alta-usuario.html?action=login');
     }
     document.handleLogout = handleLogout;
     window.handleLogout = handleLogout;
@@ -16276,9 +16285,14 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
 
       if (!window.onboardingState.currentStep) window.onboardingState.currentStep = 1;
       renderOnboardingStep();
+      modal.setAttribute('aria-hidden', 'false');
       modal.classList.add('open');
       modal.style.display = 'flex';
       document.body.style.overflow = 'hidden';
+      setTimeout(() => {
+        const titleEl = document.getElementById('onb-step-title');
+        if (titleEl) titleEl.focus();
+      }, 50);
     }
 
     function openOnboardingStep(stepNum) {
@@ -16406,10 +16420,25 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       const modal = document.getElementById('onboarding-modal-overlay');
       if (modal) {
         modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
         setTimeout(() => { modal.style.display = 'none'; }, 300);
         document.body.style.overflow = '';
       }
     }
+
+    // Soporte de accesibilidad para teclado: cerrar con tecla Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('onboarding-modal-overlay');
+        if (modal && modal.classList.contains('open')) {
+          if (typeof skipOnboardingNow === 'function') {
+            skipOnboardingNow();
+          } else {
+            closeOnboardingModal();
+          }
+        }
+      }
+    });
 
     function checkAndOpenOnboardingModal() {
       openOnboardingModal(false);
@@ -16514,21 +16543,21 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         ];
 
         html += `
-          <h2 class="onboarding-step-title">¿Cuál es el rubro de tu empresa?</h2>
-          <p class="onboarding-step-subtitle">Seleccioná la categoría principal que mejor describe la actividad de tu comercio.</p>
-          <div class="onb-grid-2col">
+          <h2 class="onboarding-step-title" id="onb-step-title" tabindex="-1">¿Cuál es el rubro de tu empresa?</h2>
+          <p class="onboarding-step-subtitle" id="onb-step-subtitle">Seleccioná la categoría principal que mejor describe la actividad de tu comercio.</p>
+          <div class="onb-grid-2col" role="radiogroup" aria-labelledby="onb-step-title">
         `;
 
         rubros.forEach(r => {
           const isSel = selected === r.id;
           html += `
-            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="radio" aria-checked="${isSel ? 'true' : 'false'}" onclick="selectOnbSingle('rubro', '${r.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); selectOnbSingle('rubro', '${r.id}'); }">
-              <div class="onb-opt-icon">${r.icon}</div>
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="radio" aria-checked="${isSel ? 'true' : 'false'}" aria-label="${r.name}: ${r.desc}" onclick="selectOnbSingle('rubro', '${r.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); selectOnbSingle('rubro', '${r.id}'); }">
+              <div class="onb-opt-icon" aria-hidden="true">${r.icon}</div>
               <div class="onb-opt-content">
-                <div class="onb-opt-title" id="onb-step-title">${r.name}</div>
-                <div class="onb-opt-desc" id="onb-step-subtitle">${r.desc}</div>
+                <div class="onb-opt-title">${r.name}</div>
+                <div class="onb-opt-desc">${r.desc}</div>
               </div>
-              <div class="onb-check-indicator"><i class="bi bi-check-lg"></i></div>
+              <div class="onb-check-indicator" aria-hidden="true"><i class="bi bi-check-lg"></i></div>
             </div>
           `;
         });
@@ -16538,8 +16567,8 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         if (selected === 'otros') {
           html += `
             <div style="margin-top: 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--zinc); border-radius: 12px; padding: 14px;">
-              <label class="ctrl-label" style="display:block; margin-bottom: 6px; font-weight: 700; color: var(--white);">Detallá tu rubro personalizado:</label>
-              <input type="text" id="onb-rubro-otros-input" class="ctrl-input" placeholder="Ej: Marroquinería, Joyería, Estética..." value="${window.onboardingState.rubroOtrosDetalle || ''}" onchange="window.onboardingState.rubroOtrosDetalle = this.value" style="width:100%; background: var(--black);" />
+              <label for="onb-rubro-otros-input" class="ctrl-label" style="display:block; margin-bottom: 6px; font-weight: 700; color: var(--white);">Detallá tu rubro personalizado:</label>
+              <input type="text" id="onb-rubro-otros-input" class="ctrl-input" placeholder="Ej: Marroquinería, Joyería, Estética..." value="${window.onboardingState.rubroOtrosDetalle || ''}" onchange="window.onboardingState.rubroOtrosDetalle = this.value" aria-label="Detallá tu rubro personalizado" style="width:100%; background: var(--black);" />
             </div>
           `;
         }
@@ -16556,21 +16585,21 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         ];
 
         html += `
-          <h2 class="onboarding-step-title">¿Qué tipos de productos vendés?</h2>
-          <p class="onboarding-step-subtitle">Podés marcar una o varias opciones según las modalidades de tu catálogo.</p>
-          <div class="onb-grid-2col">
+          <h2 class="onboarding-step-title" id="onb-step-title" tabindex="-1">¿Qué tipos de productos vendés?</h2>
+          <p class="onboarding-step-subtitle" id="onb-step-subtitle">Podés marcar una o varias opciones según las modalidades de tu catálogo.</p>
+          <div class="onb-grid-2col" role="group" aria-labelledby="onb-step-title">
         `;
 
         prods.forEach(p => {
           const isSel = types.includes(p.id);
           html += `
-            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="checkbox" aria-checked="${isSel ? 'true' : 'false'}" onclick="toggleOnbMulti('productTypes', '${p.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); toggleOnbMulti('productTypes', '${p.id}'); }">
-              <div class="onb-opt-icon">${p.icon}</div>
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="checkbox" aria-checked="${isSel ? 'true' : 'false'}" aria-label="${p.name}: ${p.desc}" onclick="toggleOnbMulti('productTypes', '${p.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); toggleOnbMulti('productTypes', '${p.id}'); }">
+              <div class="onb-opt-icon" aria-hidden="true">${p.icon}</div>
               <div class="onb-opt-content">
                 <div class="onb-opt-title">${p.name}</div>
                 <div class="onb-opt-desc">${p.desc}</div>
               </div>
-              <div class="onb-check-indicator"><i class="bi bi-check-lg"></i></div>
+              <div class="onb-check-indicator" aria-hidden="true"><i class="bi bi-check-lg"></i></div>
             </div>
           `;
         });
@@ -16586,21 +16615,21 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         ];
 
         html += `
-          <h2 class="onboarding-step-title">¿Qué tipos de pago aceptás?</h2>
-          <p class="onboarding-step-subtitle">Seleccioná todos los medios de pago habilitados para tus clientes.</p>
-          <div style="display:flex; flex-direction:column; gap:12px;">
+          <h2 class="onboarding-step-title" id="onb-step-title" tabindex="-1">¿Qué tipos de pago aceptás?</h2>
+          <p class="onboarding-step-subtitle" id="onb-step-subtitle">Seleccioná todos los medios de pago habilitados para tus clientes.</p>
+          <div style="display:flex; flex-direction:column; gap:12px;" role="group" aria-labelledby="onb-step-title">
         `;
 
         payments.forEach(p => {
           const isSel = payTypes.includes(p.id);
           html += `
-            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="checkbox" aria-checked="${isSel ? 'true' : 'false'}" onclick="toggleOnbMulti('paymentTypes', '${p.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); toggleOnbMulti('paymentTypes', '${p.id}'); }">
-              <div class="onb-opt-icon">${p.icon}</div>
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="checkbox" aria-checked="${isSel ? 'true' : 'false'}" aria-label="${p.name}: ${p.desc}" onclick="toggleOnbMulti('paymentTypes', '${p.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); toggleOnbMulti('paymentTypes', '${p.id}'); }">
+              <div class="onb-opt-icon" aria-hidden="true">${p.icon}</div>
               <div class="onb-opt-content">
                 <div class="onb-opt-title">${p.name}</div>
                 <div class="onb-opt-desc">${p.desc}</div>
               </div>
-              <div class="onb-check-indicator"><i class="bi bi-check-lg"></i></div>
+              <div class="onb-check-indicator" aria-hidden="true"><i class="bi bi-check-lg"></i></div>
             </div>
           `;
         });
@@ -16615,21 +16644,21 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         ];
 
         html += `
-          <h2 class="onboarding-step-title">¿Disponés de delivery o pick up?</h2>
-          <p class="onboarding-step-subtitle">Este punto habilitará el servicio de pickup para la carga de repartidores/entregadores.</p>
-          <div style="display:flex; flex-direction:column; gap:12px;">
+          <h2 class="onboarding-step-title" id="onb-step-title" tabindex="-1">¿Disponés de delivery o pick up?</h2>
+          <p class="onboarding-step-subtitle" id="onb-step-subtitle">Este punto habilitará el servicio de pickup para la carga de repartidores/entregadores.</p>
+          <div style="display:flex; flex-direction:column; gap:12px;" role="radiogroup" aria-labelledby="onb-step-title">
         `;
 
         opts.forEach(o => {
           const isSel = isDelivery === o.id;
           html += `
-            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="radio" aria-checked="${isSel ? 'true' : 'false'}" onclick="selectOnbSingle('hasDeliveryPickup', '${o.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); selectOnbSingle('hasDeliveryPickup', '${o.id}'); }">
-              <div class="onb-opt-icon">${o.icon}</div>
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="radio" aria-checked="${isSel ? 'true' : 'false'}" aria-label="${o.name}: ${o.desc}" onclick="selectOnbSingle('hasDeliveryPickup', '${o.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); selectOnbSingle('hasDeliveryPickup', '${o.id}'); }">
+              <div class="onb-opt-icon" aria-hidden="true">${o.icon}</div>
               <div class="onb-opt-content">
                 <div class="onb-opt-title">${o.name}</div>
                 <div class="onb-opt-desc">${o.desc}</div>
               </div>
-              <div class="onb-check-indicator"><i class="bi bi-check-lg"></i></div>
+              <div class="onb-check-indicator" aria-hidden="true"><i class="bi bi-check-lg"></i></div>
             </div>
           `;
         });
@@ -16646,21 +16675,21 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         ];
 
         html += `
-          <h2 class="onboarding-step-title">¿Qué estilo usa tu empresa?</h2>
-          <p class="onboarding-step-subtitle">Define la personalidad visual que tendrá tu tienda online.</p>
-          <div class="onb-grid-2col">
+          <h2 class="onboarding-step-title" id="onb-step-title" tabindex="-1">¿Qué estilo usa tu empresa?</h2>
+          <p class="onboarding-step-subtitle" id="onb-step-subtitle">Define la personalidad visual que tendrá tu tienda online.</p>
+          <div class="onb-grid-2col" role="radiogroup" aria-labelledby="onb-step-title">
         `;
 
         styles.forEach(s => {
           const isSel = style === s.id;
           html += `
-            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="radio" aria-checked="${isSel ? 'true' : 'false'}" onclick="selectOnbSingle('brandStyle', '${s.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); selectOnbSingle('brandStyle', '${s.id}'); }">
-              <div class="onb-opt-icon">${s.icon}</div>
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="radio" aria-checked="${isSel ? 'true' : 'false'}" aria-label="${s.name}: ${s.desc}" onclick="selectOnbSingle('brandStyle', '${s.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); selectOnbSingle('brandStyle', '${s.id}'); }">
+              <div class="onb-opt-icon" aria-hidden="true">${s.icon}</div>
               <div class="onb-opt-content">
                 <div class="onb-opt-title">${s.name}</div>
                 <div class="onb-opt-desc">${s.desc}</div>
               </div>
-              <div class="onb-check-indicator"><i class="bi bi-check-lg"></i></div>
+              <div class="onb-check-indicator" aria-hidden="true"><i class="bi bi-check-lg"></i></div>
             </div>
           `;
         });
@@ -16673,58 +16702,58 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         const c3 = window.onboardingState.color3 || '#1E2022';
 
         html += `
-          <h2 class="onboarding-step-title">¿Cuáles son los colores de tu empresa?</h2>
-          <p class="onboarding-step-subtitle">Personalizá los tonos principales o elegí una paleta sugerida.</p>
+          <h2 class="onboarding-step-title" id="onb-step-title" tabindex="-1">¿Cuáles son los colores de tu empresa?</h2>
+          <p class="onboarding-step-subtitle" id="onb-step-subtitle">Personalizá los tonos principales o elegí una paleta sugerida.</p>
 
           <div class="onb-color-picker-group">
             <div class="onb-color-row">
-              <div class="onb-color-label">
-                <div style="width:20px;height:20px;border-radius:50%;background:${c1};border:1px solid #fff;"></div>
+              <label for="onb-color-1" class="onb-color-label" style="cursor:pointer;">
+                <div style="width:20px;height:20px;border-radius:50%;background:${c1};border:1px solid #fff;" aria-hidden="true"></div>
                 <span>Color 1 (Principal)</span>
-              </div>
+              </label>
               <div class="onb-color-input-wrap">
-                <input type="color" id="onb-color-1" value="${c1}" onchange="setOnbColor(1, this.value)">
-                <input type="text" id="onb-color-text-1" value="${c1.toUpperCase()}" onchange="setOnbColor(1, this.value)">
+                <input type="color" id="onb-color-1" value="${c1}" aria-label="Selector de Color 1 Principal" onchange="setOnbColor(1, this.value)">
+                <input type="text" id="onb-color-text-1" value="${c1.toUpperCase()}" aria-label="Código hexadecimal de Color 1 Principal" onchange="setOnbColor(1, this.value)">
               </div>
             </div>
 
             <div class="onb-color-row">
-              <div class="onb-color-label">
-                <div style="width:20px;height:20px;border-radius:50%;background:${c2};border:1px solid #fff;"></div>
+              <label for="onb-color-2" class="onb-color-label" style="cursor:pointer;">
+                <div style="width:20px;height:20px;border-radius:50%;background:${c2};border:1px solid #fff;" aria-hidden="true"></div>
                 <span>Color 2 (Acento - opcional)</span>
-              </div>
+              </label>
               <div class="onb-color-input-wrap">
-                <input type="color" id="onb-color-2" value="${c2}" onchange="setOnbColor(2, this.value)">
-                <input type="text" id="onb-color-text-2" value="${c2.toUpperCase()}" onchange="setOnbColor(2, this.value)">
+                <input type="color" id="onb-color-2" value="${c2}" aria-label="Selector de Color 2 Acento" onchange="setOnbColor(2, this.value)">
+                <input type="text" id="onb-color-text-2" value="${c2.toUpperCase()}" aria-label="Código hexadecimal de Color 2 Acento" onchange="setOnbColor(2, this.value)">
               </div>
             </div>
 
             <div class="onb-color-row">
-              <div class="onb-color-label">
-                <div style="width:20px;height:20px;border-radius:50%;background:${c3};border:1px solid #fff;"></div>
+              <label for="onb-color-3" class="onb-color-label" style="cursor:pointer;">
+                <div style="width:20px;height:20px;border-radius:50%;background:${c3};border:1px solid #fff;" aria-hidden="true"></div>
                 <span>Color 3 (Base - opcional)</span>
-              </div>
+              </label>
               <div class="onb-color-input-wrap">
-                <input type="color" id="onb-color-3" value="${c3}" onchange="setOnbColor(3, this.value)">
-                <input type="text" id="onb-color-text-3" value="${c3.toUpperCase()}" onchange="setOnbColor(3, this.value)">
+                <input type="color" id="onb-color-3" value="${c3}" aria-label="Selector de Color 3 Base" onchange="setOnbColor(3, this.value)">
+                <input type="text" id="onb-color-text-3" value="${c3.toUpperCase()}" aria-label="Código hexadecimal de Color 3 Base" onchange="setOnbColor(3, this.value)">
               </div>
             </div>
           </div>
 
           <div style="margin-top: 16px;">
             <div style="font-size:12px; font-weight:700; color:var(--silver); margin-bottom:8px;">Paletas sugeridas en 1 click:</div>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <button type="button" class="onb-preset-btn" onclick="applyOnbPreset('#D72638', '#FFD166', '#1E2022')">
-                <span style="width:12px;height:12px;border-radius:50%;background:#D72638;"></span> Rojo Pasión
+            <div style="display:flex; gap:8px; flex-wrap:wrap;" role="group" aria-label="Paletas de colores predefinidas">
+              <button type="button" class="onb-preset-btn" aria-label="Aplicar paleta sugerida: Rojo Pasión" onclick="applyOnbPreset('#D72638', '#FFD166', '#1E2022')">
+                <span style="width:12px;height:12px;border-radius:50%;background:#D72638;" aria-hidden="true"></span> Rojo Pasión
               </button>
-              <button type="button" class="onb-preset-btn" onclick="applyOnbPreset('#2563EB', '#60A5FA', '#0F172A')">
-                <span style="width:12px;height:12px;border-radius:50%;background:#2563EB;"></span> Azul Tech
+              <button type="button" class="onb-preset-btn" aria-label="Aplicar paleta sugerida: Azul Tech" onclick="applyOnbPreset('#2563EB', '#60A5FA', '#0F172A')">
+                <span style="width:12px;height:12px;border-radius:50%;background:#2563EB;" aria-hidden="true"></span> Azul Tech
               </button>
-              <button type="button" class="onb-preset-btn" onclick="applyOnbPreset('#10B981', '#34D399', '#064E3B')">
-                <span style="width:12px;height:12px;border-radius:50%;background:#10B981;"></span> Verde Fresh
+              <button type="button" class="onb-preset-btn" aria-label="Aplicar paleta sugerida: Verde Fresh" onclick="applyOnbPreset('#10B981', '#34D399', '#064E3B')">
+                <span style="width:12px;height:12px;border-radius:50%;background:#10B981;" aria-hidden="true"></span> Verde Fresh
               </button>
-              <button type="button" class="onb-preset-btn" onclick="applyOnbPreset('#8B5CF6', '#F472B6', '#1E1B4B')">
-                <span style="width:12px;height:12px;border-radius:50%;background:#8B5CF6;"></span> Morado Neo
+              <button type="button" class="onb-preset-btn" aria-label="Aplicar paleta sugerida: Morado Neo" onclick="applyOnbPreset('#8B5CF6', '#F472B6', '#1E1B4B')">
+                <span style="width:12px;height:12px;border-radius:50%;background:#8B5CF6;" aria-hidden="true"></span> Morado Neo
               </button>
             </div>
           </div>
@@ -16739,21 +16768,21 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         ];
 
         html += `
-          <h2 class="onboarding-step-title">¿Cuál es el tono que utiliza tu empresa?</h2>
-          <p class="onboarding-step-subtitle">Determina el tono de respuesta del asistente virtual y los avisos automáticos.</p>
-          <div style="display:flex; flex-direction:column; gap:12px;">
+          <h2 class="onboarding-step-title" id="onb-step-title" tabindex="-1">¿Cuál es el tono que utiliza tu empresa?</h2>
+          <p class="onboarding-step-subtitle" id="onb-step-subtitle">Determina el tono de respuesta del asistente virtual y los avisos automáticos.</p>
+          <div style="display:flex; flex-direction:column; gap:12px;" role="radiogroup" aria-labelledby="onb-step-title">
         `;
 
         tones.forEach(t => {
           const isSel = tone === t.id;
           html += `
-            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="radio" aria-checked="${isSel ? 'true' : 'false'}" onclick="selectOnbSingle('brandTone', '${t.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); selectOnbSingle('brandTone', '${t.id}'); }">
-              <div class="onb-opt-icon">${t.icon}</div>
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="radio" aria-checked="${isSel ? 'true' : 'false'}" aria-label="${t.name}: ${t.desc}" onclick="selectOnbSingle('brandTone', '${t.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); selectOnbSingle('brandTone', '${t.id}'); }">
+              <div class="onb-opt-icon" aria-hidden="true">${t.icon}</div>
               <div class="onb-opt-content">
                 <div class="onb-opt-title">${t.name}</div>
                 <div class="onb-opt-desc">${t.desc}</div>
               </div>
-              <div class="onb-check-indicator"><i class="bi bi-check-lg"></i></div>
+              <div class="onb-check-indicator" aria-hidden="true"><i class="bi bi-check-lg"></i></div>
             </div>
           `;
         });
@@ -16769,21 +16798,21 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         ];
 
         html += `
-          <h2 class="onboarding-step-title">¿Cómo querés enviar avisos a tus clientes?</h2>
-          <p class="onboarding-step-subtitle">Configurá la vía de notificación preferida para enviar las confirmaciones de pedido.</p>
-          <div style="display:flex; flex-direction:column; gap:12px;">
+          <h2 class="onboarding-step-title" id="onb-step-title" tabindex="-1">¿Cómo querés enviar avisos a tus clientes?</h2>
+          <p class="onboarding-step-subtitle" id="onb-step-subtitle">Configurá la vía de notificación preferida para enviar las confirmaciones de pedido.</p>
+          <div style="display:flex; flex-direction:column; gap:12px;" role="radiogroup" aria-labelledby="onb-step-title">
         `;
 
         channels.forEach(c => {
           const isSel = channel === c.id;
           html += `
-            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="radio" aria-checked="${isSel ? 'true' : 'false'}" onclick="selectOnbSingle('notificationChannel', '${c.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); selectOnbSingle('notificationChannel', '${c.id}'); }">
-              <div class="onb-opt-icon">${c.icon}</div>
+            <div class="onb-opt-card ${isSel ? 'selected' : ''}" tabindex="0" role="radio" aria-checked="${isSel ? 'true' : 'false'}" aria-label="${c.name}: ${c.desc}" onclick="selectOnbSingle('notificationChannel', '${c.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); selectOnbSingle('notificationChannel', '${c.id}'); }">
+              <div class="onb-opt-icon" aria-hidden="true">${c.icon}</div>
               <div class="onb-opt-content">
                 <div class="onb-opt-title">${c.name}</div>
                 <div class="onb-opt-desc">${c.desc}</div>
               </div>
-              <div class="onb-check-indicator"><i class="bi bi-check-lg"></i></div>
+              <div class="onb-check-indicator" aria-hidden="true"><i class="bi bi-check-lg"></i></div>
             </div>
           `;
         });

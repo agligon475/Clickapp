@@ -18,7 +18,7 @@ android {
 
         manifestPlaceholders = [
             hostName: "daletepido.com.ar",
-            defaultUrl: "https://daletepido.com.ar/dashboard.html",
+            defaultUrl: "https://daletepido.com.ar/alta-usuario.html?action=login",
             launcherName: "DaleTePido"
         ]
     }

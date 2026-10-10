@@ -1338,6 +1338,14 @@
       switchAuthTab('register');
     } else {
       switchAuthTab('login');
+      const savedStore = localStorage.getItem('storeapp_store_id') || localStorage.getItem('daletepido_store_id');
+      const storeInp = document.getElementById('login-store-id');
+      if (storeInp && !storeInp.value && savedStore && savedStore !== 'noutacc' && savedStore !== 'ferre-now') {
+        storeInp.value = savedStore;
+      }
+      setTimeout(() => {
+        if (storeInp && !storeInp.value) storeInp.focus();
+      }, 100);
     }
 
     const resetStore = urlParams.get('reset_store');

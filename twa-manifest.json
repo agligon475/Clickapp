@@ -7,7 +7,7 @@
   "navigationColor": "#18181B",
   "backgroundColor": "#0A0A0C",
   "enableNotifications": true,
-  "startUrl": "/dashboard.html",
+  "startUrl": "/alta-usuario.html?action=login",
   "iconUrl": "https://daletepido.com.ar/icon-512.png",
   "maskableIconUrl": "https://daletepido.com.ar/icon-512-maskable.png",
   "appVersionName": "1.0.0",

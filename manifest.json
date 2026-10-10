@@ -3,7 +3,7 @@
   "name": "Dale! Te Pido - Catálogo y Pedidos",
   "short_name": "DaleTePido",
   "description": "Plataforma de gestión de pedidos y catálogo digital por WhatsApp",
-  "start_url": "/dashboard.html",
+  "start_url": "/alta-usuario.html?action=login",
   "scope": "/",
   "lang": "es",
   "dir": "ltr",
