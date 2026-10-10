@@ -29,9 +29,17 @@ jobs:
         with:
           gradle-version: '8.5'
 
-      - name: Configurar Android SDK local.properties
+      - name: Aceptar licencias y configurar Android SDK
         run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses 2>/dev/null || true
           echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+
+      - name: Generar debug keystore estándar para compilación
+        run: |
+          mkdir -p ~/.android
+          if [ ! -f ~/.android/debug.keystore ]; then
+            keytool -genkeypair -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          fi
 
       - name: Compilar APK con Gradle
         working-directory: android
@@ -42,15 +50,15 @@ jobs:
       - name: Diagnóstico en caso de error
         if: failure()
         run: |
-          echo "### ❌ Error en compilación Gradle" >> $GITHUB_STEP_SUMMARY
-          echo '```text' >> $GITHUB_STEP_SUMMARY
+          echo "### ❌ Diagnóstico de Fallo en Gradle" >> $GITHUB_STEP_SUMMARY
           if [ -f android/build.log ]; then
-            cat android/build.log | tail -n 120 >> $GITHUB_STEP_SUMMARY
+            echo '```text' >> $GITHUB_STEP_SUMMARY
+            cat android/build.log >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
-            cat android/build.log | tail -n 100
+            echo "=== DETALLE PRINCIPAL DEL ERROR ==="
+            grep -A 40 "What went wrong" android/build.log || cat android/build.log
           else
             echo "No se encontró archivo build.log" >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
           fi
 
       - name: Localizar y preparar APK generado
