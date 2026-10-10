@@ -24,6 +24,12 @@ android {
         ]
     }
 
+    signingConfigs {
+        debug {
+            // Configuración debug predeterminada
+        }
+    }
+
     buildTypes {
         release {
             signingConfig signingConfigs.debug

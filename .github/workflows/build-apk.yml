@@ -36,14 +36,36 @@ jobs:
       - name: Compilar APK con Gradle
         working-directory: android
         run: |
-          gradle assembleRelease --no-daemon
+          set -o pipefail
+          gradle :app:assembleRelease --stacktrace --no-daemon 2>&1 | tee build.log
+
+      - name: Diagnóstico en caso de error
+        if: failure()
+        run: |
+          echo "### ❌ Error en compilación Gradle" >> $GITHUB_STEP_SUMMARY
+          echo '```text' >> $GITHUB_STEP_SUMMARY
+          if [ -f android/build.log ]; then
+            cat android/build.log | tail -n 120 >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat android/build.log | tail -n 100
+          else
+            echo "No se encontró archivo build.log" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
 
       - name: Localizar y preparar APK generado
         run: |
           mkdir -p dist-apk
-          echo "=== BUSCANDO ARCHIVOS APK EN EL REPOSITORIO ==="
-          find . -name "*.apk"
-          find . -name "*.apk" -exec cp {} dist-apk/DaleTePido.apk \;
+          echo "=== BUSCANDO ARCHIVOS APK EN ANDROID/ ==="
+          find android/ -name "*.apk"
+          APK_FILE=$(find android/app/build/outputs/apk/ -name "*.apk" 2>/dev/null | head -n 1)
+          if [ -z "$APK_FILE" ]; then
+            APK_FILE=$(find android/ -name "*.apk" | head -n 1)
+          fi
+          if [ -n "$APK_FILE" ]; then
+            echo "Copiando $APK_FILE a dist-apk/DaleTePido.apk"
+            cp "$APK_FILE" dist-apk/DaleTePido.apk
+          fi
           echo "=== ARCHIVOS EN DIST-APK ==="
           ls -la dist-apk/
           if [ ! -f dist-apk/DaleTePido.apk ]; then
