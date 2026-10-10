@@ -29,17 +29,16 @@ jobs:
 
       - name: Preparar keystore de firma
         run: |
-          keytool -genkeypair -v -keystore android/android.keystore \
-            -alias daletepido -keyalg RSA -keysize 2048 -validity 10000 \
-            -storepass "daletepido2026pass" -keypass "daletepido2026pass" \
-            -dname "CN=DaleTePido, OU=Mobile, O=DaleTePido, L=Buenos Aires, S=Buenos Aires, C=AR"
+          rm -f android/android.keystore
+          keytool -genkeypair -v -keystore android/android.keystore -alias daletepido -keyalg RSA -keysize 2048 -validity 10000 -storepass daletepido2026pass -keypass daletepido2026pass -dname "CN=DaleTePido, OU=Mobile, O=DaleTePido, L=Buenos Aires, S=Buenos Aires, C=AR" -noprompt || true
+          ls -la android/
 
       - name: Compilar APK con Gradle
         id: gradle_step
         working-directory: android
         run: |
-          gradle :app:assembleRelease --no-daemon 2>&1 | tee gradle-build.log || {
-            echo "::error::Fallo en assembleRelease, mostrando causa raíz:"
+          gradle :app:assemble --no-daemon 2>&1 | tee gradle-build.log || {
+            echo "::error::Fallo en Gradle, mostrando detalle:"
             grep -A 30 "What went wrong" gradle-build.log || head -n 60 gradle-build.log
             exit 1
           }
