@@ -33,49 +33,21 @@ jobs:
         run: |
           echo "sdk.dir=$ANDROID_HOME" > android/local.properties
 
-      - name: Preparar keystore de firma
-        run: |
-          rm -f android/android.keystore
-          keytool -genkeypair -v -keystore android/android.keystore -alias daletepido -keyalg RSA -keysize 2048 -validity 10000 -storepass daletepido2026pass -keypass daletepido2026pass -dname "CN=DaleTePido, OU=Mobile, O=DaleTePido, L=Buenos Aires, S=Buenos Aires, C=AR" -noprompt || true
-          ls -la android/
-
       - name: Compilar APK con Gradle
-        id: gradle_step
         working-directory: android
         run: |
-          set -o pipefail
-          echo "=== LISTANDO TAREAS DISPONIBLES ==="
-          gradle tasks --all | grep -E "assemble" || true
-          echo "=== COMPILANDO :app:assembleRelease Y :app:assembleDebug ==="
-          gradle :app:assembleRelease :app:assembleDebug --no-daemon 2>&1 | tee gradle-build.log
-
-      - name: Publicar Diagnóstico en Job Summary
-        if: always()
-        run: |
-          if [ -f android/gradle-build.log ]; then
-            echo "### 📋 Salida Completa de Gradle" >> $GITHUB_STEP_SUMMARY
-            echo '```text' >> $GITHUB_STEP_SUMMARY
-            cat android/gradle-build.log | head -n 80 >> $GITHUB_STEP_SUMMARY
-            echo '---' >> $GITHUB_STEP_SUMMARY
-            cat android/gradle-build.log | tail -n 80 >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-          fi
+          gradle assembleRelease --no-daemon
 
       - name: Localizar y preparar APK generado
         run: |
           mkdir -p dist-apk
           echo "=== BUSCANDO ARCHIVOS APK EN EL REPOSITORIO ==="
           find . -name "*.apk"
-          find . -name "*.apk" -exec cp {} dist-apk/ \;
-          for f in dist-apk/*.apk; do
-            [ -e "$f" ] || continue
-            cp "$f" dist-apk/DaleTePido.apk
-            break
-          done
+          find . -name "*.apk" -exec cp {} dist-apk/DaleTePido.apk \;
           echo "=== ARCHIVOS EN DIST-APK ==="
           ls -la dist-apk/
-          if [ -z "$(ls -A dist-apk/*.apk 2>/dev/null)" ]; then
-            echo "ERROR: No se encontró ningún archivo APK generado en el repositorio"
+          if [ ! -f dist-apk/DaleTePido.apk ]; then
+            echo "ERROR: No se encontró ningún archivo APK generado"
             exit 1
           fi
 

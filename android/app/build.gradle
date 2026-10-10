@@ -24,26 +24,9 @@ android {
         ]
     }
 
-    signingConfigs {
-        release {
-            def kFile = file("${rootDir}/android.keystore")
-            if (kFile.exists()) {
-                storeFile kFile
-                storePassword "daletepido2026pass"
-                keyAlias "daletepido"
-                keyPassword "daletepido2026pass"
-            } else {
-                storeFile signingConfigs.debug.storeFile
-                storePassword signingConfigs.debug.storePassword
-                keyAlias signingConfigs.debug.keyAlias
-                keyPassword signingConfigs.debug.keyPassword
-            }
-        }
-    }
-
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
