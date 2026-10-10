@@ -2,6 +2,12 @@ name: Build Android APK (Dale! Te Pido)
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'android/**'
+      - '.github/workflows/build-apk.yml'
 
 jobs:
   build-apk:
@@ -63,6 +69,10 @@ jobs:
           done
           echo "=== Archivos en dist-apk ==="
           ls -la dist-apk/
+          if [ -z "$(ls -A dist-apk/*.apk 2>/dev/null)" ]; then
+            echo "ERROR: No se encontró ningún archivo APK generado en android/"
+            exit 1
+          fi
 
       - name: Subir APK generado como Artefacto descargable
         uses: actions/upload-artifact@v4
