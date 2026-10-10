@@ -38,15 +38,19 @@ jobs:
         id: gradle_step
         working-directory: android
         run: |
-          gradle :app:assembleRelease --no-daemon --stacktrace 2>&1 | tee gradle-build.log
+          gradle :app:assembleRelease --no-daemon 2>&1 | tee gradle-build.log || {
+            echo "::error::Fallo en assembleRelease, mostrando causa raíz:"
+            grep -A 30 "What went wrong" gradle-build.log || head -n 60 gradle-build.log
+            exit 1
+          }
 
       - name: Publicar Diagnóstico en Job Summary
         if: always()
         run: |
           if [ -f android/gradle-build.log ]; then
-            echo "### 📋 Log de Compilación Gradle" >> $GITHUB_STEP_SUMMARY
+            echo "### 📋 Resumen Gradle" >> $GITHUB_STEP_SUMMARY
             echo '```text' >> $GITHUB_STEP_SUMMARY
-            tail -n 120 android/gradle-build.log >> $GITHUB_STEP_SUMMARY
+            grep -A 25 "What went wrong" android/gradle-build.log || tail -n 60 android/gradle-build.log >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
           fi
 

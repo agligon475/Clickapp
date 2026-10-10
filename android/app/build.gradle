@@ -1,8 +1,14 @@
 apply plugin: 'com.android.application'
 
+repositories {
+    google()
+    mavenCentral()
+}
+
 android {
     namespace 'ar.com.daletepido.app'
     compileSdk 34
+    buildToolsVersion "34.0.0"
 
     defaultConfig {
         applicationId "ar.com.daletepido.app"
@@ -20,16 +26,22 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("../android.keystore")
-            storePassword System.getenv("KEYSTORE_PASSWORD") ?: "daletepido2026pass"
-            keyAlias System.getenv("KEY_ALIAS") ?: "daletepido"
-            keyPassword System.getenv("KEY_PASSWORD") ?: "daletepido2026pass"
+            def keystoreFile = file("../android.keystore")
+            if (keystoreFile.exists()) {
+                storeFile keystoreFile
+                storePassword "daletepido2026pass"
+                keyAlias "daletepido"
+                keyPassword "daletepido2026pass"
+            }
         }
     }
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            def keystoreFile = file("../android.keystore")
+            if (keystoreFile.exists()) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
