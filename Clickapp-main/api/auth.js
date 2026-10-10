@@ -22,6 +22,32 @@ function hashPassword(password) {
   return `${salt}:${hash}`;
 }
 
+async function recordAuditLog(storeId, eventType, details, req) {
+  try {
+    const clientIp = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || '—';
+    const userAgent = req.headers['user-agent'] || 'Navegador Web';
+    await fetch(`${SUPABASE_URL}/rest/v1/store_audit_logs`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      },
+      body: JSON.stringify({
+        store_id: storeId,
+        event_type: eventType,
+        details: details,
+        device: userAgent.slice(0, 100),
+        ip: clientIp,
+        status: 'Normal',
+        created_at: new Date().toISOString()
+      })
+    });
+  } catch (e) {
+    // Falla silenciosa si la tabla aún no existe
+  }
+}
+
 export default async function handler(req, res) {
   // SEC-06: CORS Defensivo y Security Headers
   setSecureCors(req, res, 'GET, POST, OPTIONS', 'Authorization');
@@ -105,6 +131,9 @@ export default async function handler(req, res) {
               type: 'session'
             }, 86400 * 7);
 
+            // Registrar auditoría de inicio de sesión de forma asíncrona
+            recordAuditLog(actualStoreId, 'Inicio de Sesión (Admin)', `Acceso exitoso al panel de control (${rpcData.admin_email || cleanStoreId})`, req).catch(() => {});
+
             return res.status(200).json({
               success: true,
               store_id: actualStoreId,
@@ -176,6 +205,9 @@ export default async function handler(req, res) {
         plan_level: settings.plan_level || 'starter',
         type: 'session'
       }, 86400 * 7);
+
+      // Registrar auditoría de inicio de sesión de forma asíncrona
+      recordAuditLog(actualStoreId, 'Inicio de Sesión (Admin)', `Acceso exitoso al panel de control (${adminEmail || cleanStoreId})`, req).catch(() => {});
 
       return res.status(200).json({
         success: true,
