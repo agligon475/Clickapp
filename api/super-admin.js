@@ -3,7 +3,8 @@ import { getResetPasswordEmail } from './email-templates.js';
 import { validateReceiptUrl, checkRateLimit, setSecureCors, sanitizeInput, verifyToken } from './security.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://iaylgsthwildjkiiwgfd.supabase.co';
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY;
+const DEFAULT_SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY || DEFAULT_SUPABASE_ANON;
 
 // SEC-03: Carga de credenciales de Super Admin desde variables de entorno con fallbacks seguros
 function getExpectedUser() {
