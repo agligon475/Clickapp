@@ -3303,41 +3303,410 @@
       text-overflow: ellipsis;
     }
 
-    /* SHORTCUTS */
+    /* ══ SLIM ALERTS (NOTIFICACIONES DELGADAS Y COMPACTAS) ══ */
+    .dtp-slim-alert {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      min-height: 42px;
+      animation: fadeUp .25s ease both;
+      transition: all 0.2s ease;
+    }
+    .dtp-slim-alert-info {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.9) 100%);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+    .dtp-slim-alert-trial {
+      background: linear-gradient(135deg, rgba(28, 10, 14, 0.85) 0%, rgba(59, 9, 16, 0.9) 100%);
+      border: 1px solid rgba(215, 38, 56, 0.38);
+      box-shadow: 0 2px 8px rgba(215, 38, 56, 0.12);
+    }
+    .dtp-slim-alert-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 0;
+    }
+    .dtp-slim-alert-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+      background: rgba(59, 130, 246, 0.15);
+      color: #60A5FA;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    .dtp-slim-alert-icon.trial {
+      background: rgba(215, 38, 56, 0.2);
+      color: #F87171;
+      border-color: rgba(215, 38, 56, 0.4);
+    }
+    .dtp-slim-alert-body {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      flex-wrap: wrap;
+    }
+    .dtp-slim-tag {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 12px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .dtp-slim-tag.info {
+      background: rgba(59, 130, 246, 0.2);
+      color: #93C5FD;
+      border: 1px solid rgba(147, 197, 253, 0.3);
+    }
+    .dtp-slim-tag.trial {
+      background: rgba(215, 38, 56, 0.25);
+      color: #FCA5A5;
+      border: 1px solid rgba(252, 165, 165, 0.3);
+    }
+    .dtp-slim-text {
+      font-size: 12.5px;
+      color: #E2E8F0;
+      line-height: 1.35;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    @media(max-width: 768px) {
+      .dtp-slim-alert {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 10px 12px;
+      }
+      .dtp-slim-text {
+        white-space: normal;
+      }
+      .dtp-slim-alert-right {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+    .dtp-slim-alert-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .dtp-slim-btn {
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: none;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .dtp-slim-btn.info {
+      background: #2563EB;
+      color: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+    }
+    .dtp-slim-btn.info:hover {
+      background: #1D4ED8;
+    }
+    .dtp-slim-btn.trial {
+      background: linear-gradient(135deg, #D72638 0%, #B91C1C 100%);
+      color: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(215, 38, 56, 0.3);
+    }
+    .dtp-slim-btn.trial:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(215, 38, 56, 0.4);
+    }
+    .dtp-slim-close {
+      background: transparent;
+      border: none;
+      color: #94A3B8;
+      font-size: 15px;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.15s;
+    }
+    .dtp-slim-close:hover {
+      color: #FFFFFF;
+    }
+
+    body.light-mode .dtp-slim-alert-info {
+      background: #EFF6FF;
+      border-color: #BFDBFE;
+    }
+    body.light-mode .dtp-slim-alert-info .dtp-slim-text {
+      color: #1E3A8A;
+    }
+    body.light-mode .dtp-slim-alert-trial {
+      background: #FEF2F2;
+      border-color: #FECACA;
+    }
+    body.light-mode .dtp-slim-alert-trial .dtp-slim-text {
+      color: #991B1B;
+    }
+
+    /* ══ ONBOARDING ACCORDION (GUÍA DE CONFIGURACIÓN COLAPSABLE) ══ */
+    .onboard-accordion-card {
+      background: var(--steel);
+      border: 1px solid var(--zinc);
+      border-radius: 12px;
+      margin-bottom: 22px;
+      overflow: hidden;
+      animation: fadeUp .35s ease both;
+      position: relative;
+    }
+    .onboard-accordion-accent {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2.5px;
+      background: linear-gradient(90deg, var(--red), var(--silver));
+    }
+    .onboard-accordion-header {
+      padding: 11px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s ease;
+    }
+    .onboard-accordion-header:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .onboard-accordion-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .onboard-pill-prog {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--red);
+      background: rgba(215, 38, 56, 0.12);
+      border: 1px solid rgba(215, 38, 56, 0.25);
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+    .onboard-accordion-body {
+      padding: 14px 18px 18px 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    body.light-mode .onboard-accordion-card {
+      background: #FFFFFF;
+      border-color: #E2E8F0;
+    }
+    body.light-mode .onboard-accordion-header:hover {
+      background: #F8FAFC;
+    }
+
+    /* ══ SHORTCUTS HEADER & COMPACT CATALOG SUMMARY ══ */
+    .shortcuts-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .shortcuts-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .shortcuts-title-wrap h3 {
+      font-family: var(--font-h);
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--white);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0;
+    }
+    .catalog-summary-compact {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--steel);
+      border: 1px solid var(--zinc);
+      border-radius: 10px;
+      padding: 5px 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .catalog-summary-compact:hover {
+      border-color: rgba(215, 38, 56, 0.5);
+      transform: translateY(-1px);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    }
+    .cat-compact-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--silver);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .cat-compact-stats {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cat-compact-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .cat-dot-active {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+      display: inline-block;
+    }
+    .cat-dot-inactive {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #EF4444;
+      box-shadow: 0 0 6px rgba(239, 68, 68, 0.5);
+      display: inline-block;
+    }
+    body.light-mode .catalog-summary-compact {
+      background: #FFFFFF;
+      border-color: #E2E8F0;
+    }
+
+    /* ══ REFINED SHORTCUTS GRID (GRATIFICACIÓN VISUAL Y MÁXIMA JERARQUÍA) ══ */
+    .shortcuts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+    @media(min-width: 1240px) {
+      .shortcuts-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+    @media(max-width: 640px) {
+      .shortcuts-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+    }
     .shortcut-card {
       background: var(--steel);
       border: 1px solid var(--zinc);
       border-radius: 12px;
-      padding: 20px;
+      padding: 16px;
       cursor: pointer;
-      transition: border-color .15s, transform .15s, box-shadow .15s;
+      transition: all .2s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 114px;
     }
-
     .shortcut-card:hover {
       border-color: var(--red) !important;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, .15);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
     }
-
+    .sc-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .sc-icon-wrap {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: transform 0.2s ease;
+    }
+    .shortcut-card:hover .sc-icon-wrap {
+      transform: scale(1.08);
+    }
+    .sc-arrow-icon {
+      font-size: 12px;
+      color: var(--silver);
+      opacity: 0.4;
+      transition: all 0.2s ease;
+    }
+    .shortcut-card:hover .sc-arrow-icon {
+      opacity: 1;
+      color: var(--red);
+      transform: translate(2px, -2px);
+    }
+    .sc-card-title {
+      font-family: var(--font-h);
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--white);
+      margin: 0 0 3px 0;
+      transition: color 0.15s;
+    }
+    .sc-card-desc {
+      color: var(--silver);
+      font-size: 11.5px;
+      margin: 0;
+      line-height: 1.35;
+    }
     body.light-mode .shortcut-card {
-      background: #fff;
+      background: #FFFFFF;
+      border-color: #E2E8F0;
     }
-
     body.light-mode .shortcut-card:hover {
-      box-shadow: 0 6px 16px rgba(0, 0, 0, .06);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
     }
-
-    .dash-layout {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 24px;
-      align-items: start;
+    body.light-mode .sc-icon-wrap {
+      background: #F1F5F9;
+      border-color: #E2E8F0;
     }
-
-    @media(min-width: 1024px) {
-      .dash-layout {
-        grid-template-columns: 1fr 320px;
-      }
+    body.light-mode .sc-card-title {
+      color: #0F172A;
+    }
+    body.light-mode .sc-card-desc {
+      color: #64748B;
     }
     @keyframes spin {
       from { transform: rotate(0deg); }
@@ -4773,148 +5142,145 @@
         </div>
       </div>
 
-      <!-- ══ TARJETAS DE ESTADO 50% / 50% (FACTURACIÓN Y PERÍODO DE PRUEBA) ══ -->
-      <div id="dtp-dashboard-status-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 24px;">
+      <!-- ══ NOTIFICACIONES DELGADAS Y COMPACTAS ══ -->
+      <div id="dtp-dashboard-status-cards" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
 
-        <!-- TARJETA 1: NOTIFICACIÓN DE DATOS DE FACTURACIÓN Y VERIFICACIÓN DE CUENTA (50%) -->
-        <div id="dtp-email-verification-banner" style="display:none; background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); border: 1px solid rgba(59, 130, 246, 0.35); border-radius: 12px; padding: 20px; box-shadow: 0 4px 14px rgba(0,0,0,0.3); flex-direction: column; justify-content: space-between; gap: 14px;">
-          <div style="display: flex; align-items: flex-start; gap: 12px;">
-            <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); display: flex; align-items: center; justify-content: center; color: #60A5FA; font-size: 20px; flex-shrink: 0;">
+        <!-- NOTIFICACIÓN 1: VERIFICACIÓN PENDIENTE (SLIM) -->
+        <div id="dtp-email-verification-banner" class="dtp-slim-alert dtp-slim-alert-info" style="display:none;">
+          <div class="dtp-slim-alert-left">
+            <div class="dtp-slim-alert-icon">
               <i class="bi bi-envelope-exclamation-fill"></i>
             </div>
-            <div style="flex: 1;">
-              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                <span style="background: rgba(59, 130, 246, 0.2); color: #93C5FD; border: 1px solid rgba(147, 197, 253, 0.3); padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">
-                  VERIFICACIÓN PENDIENTE
-                </span>
-                <button onclick="dismissVerificationBanner()" style="background: transparent; color: #94A3B8; border: none; font-size: 16px; cursor: pointer; padding: 0 4px;" title="Ocultar aviso">✕</button>
-              </div>
-              <h4 style="font-size: 15px; font-weight: 700; color: #F8FAFC; margin: 4px 0 4px 0;">Datos de Cuenta y Facturación</h4>
-              <p id="dtp-email-verify-text" style="color: #94A3B8; font-size: 13px; margin: 0; line-height: 1.4;">
-                Verificá tu cuenta desde tu correo electrónico para asegurar tus accesos, datos de facturación y recibir notificaciones oficiales.
-              </p>
+            <div class="dtp-slim-alert-body">
+              <span class="dtp-slim-tag info">VERIFICACIÓN PENDIENTE</span>
+              <span id="dtp-email-verify-text" class="dtp-slim-text">
+                Verificá tu cuenta desde tu email para asegurar accesos y recibir notificaciones oficiales.
+              </span>
             </div>
           </div>
-          <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
-            <button id="btn-resend-verify-email" onclick="resendVerificationEmail()" style="background: #2563EB; color: #ffffff; border: 1px solid rgba(255,255,255,0.15); padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s;">
-              <i class="bi bi-send-check-fill"></i> Reenviar Correo de Verificación
+          <div class="dtp-slim-alert-right">
+            <button id="btn-resend-verify-email" onclick="resendVerificationEmail()" class="dtp-slim-btn info" title="Reenviar correo de verificación">
+              <i class="bi bi-send-check-fill"></i> Reenviar Correo
             </button>
+            <button onclick="dismissVerificationBanner()" class="dtp-slim-close" title="Ocultar aviso">✕</button>
           </div>
         </div>
 
-        <!-- TARJETA 2: VISIBILIDAD DE PERÍODO DE PRUEBA GRATUITA (50%) -->
-        <div id="dtp-trial-banner" style="display:none; background: linear-gradient(135deg, #1C0A0E 0%, #3B0910 100%); border: 1px solid rgba(215, 38, 56, 0.4); border-radius: 12px; padding: 20px; box-shadow: 0 4px 14px rgba(215, 38, 56, 0.15); flex-direction: column; justify-content: space-between; gap: 14px;">
-          <div style="display: flex; align-items: flex-start; gap: 12px;">
-            <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(215, 38, 56, 0.2); border: 1px solid rgba(215, 38, 56, 0.4); display: flex; align-items: center; justify-content: center; color: #F87171; font-size: 20px; flex-shrink: 0;">
+        <!-- NOTIFICACIÓN 2: PRUEBA GRATUITA (SLIM) -->
+        <div id="dtp-trial-banner" class="dtp-slim-alert dtp-slim-alert-trial" style="display:none;">
+          <div class="dtp-slim-alert-left">
+            <div class="dtp-slim-alert-icon trial">
               <i class="bi bi-clock-history"></i>
             </div>
-            <div style="flex: 1;">
-              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                <span style="background: rgba(215, 38, 56, 0.25); color: #FCA5A5; border: 1px solid rgba(252, 165, 165, 0.3); padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">
-                  PRUEBA GRATUITA
-                </span>
-              </div>
-              <h4 style="font-size: 15px; font-weight: 700; color: #FFF; margin: 4px 0 4px 0;">Visibilidad de Período de Prueba</h4>
-              <p id="dtp-trial-banner-text" style="color: #E2E8F0; font-size: 13px; margin: 0; line-height: 1.4;">
-                Te quedan 15 días de prueba gratuita. ¡Aprovechá al máximo todas las funciones de tu tienda!
-              </p>
+            <div class="dtp-slim-alert-body">
+              <span class="dtp-slim-tag trial">PRUEBA GRATUITA</span>
+              <span id="dtp-trial-banner-text" class="dtp-slim-text">
+                Te quedan 15 días de prueba gratuita. ¡Aprovechá al máximo todas las funciones!
+              </span>
             </div>
           </div>
-          <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
-            <button onclick="openPlanUpgradeModal()" style="background: linear-gradient(135deg, #D72638 0%, #B91C1C 100%); color: #ffffff; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(215,38,56,0.4); transition: transform 0.15s;">
-              <i class="bi bi-rocket-takeoff-fill"></i> Actualizar Plan / Elegir Plan
+          <div class="dtp-slim-alert-right">
+            <button onclick="openPlanUpgradeModal()" class="dtp-slim-btn trial">
+              <i class="bi bi-rocket-takeoff-fill"></i> Actualizar Plan
             </button>
           </div>
         </div>
 
       </div>
 
-      <!-- Onboarding Checklist Card -->
-      <div id="onboarding-checklist-card" style="display:none; background:var(--steel); border:1px solid var(--zinc); border-radius:12px; padding:28px; margin-bottom:24px; animation:fadeUp .35s ease both; position:relative; overflow:hidden;">
-        <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, var(--red), var(--silver));"></div>
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:20px;">
-          <div>
-            <h3 style="font-family:var(--font-h); font-size:18px; font-weight:800; color:var(--white); margin:0 0 6px 0; text-transform:uppercase; letter-spacing:0.02em; display:flex; align-items:center; gap:8px;">
-              <i class="bi bi-rocket-takeoff" style="color:var(--red);"></i> Guía de Configuración Inicial
-            </h3>
-            <p style="color:var(--silver); font-size:13px; margin:0;">
-              Completá estos 5 sencillos pasos para dejar tu tienda online lista y configurada al 100%.
-            </p>
+      <!-- Onboarding Checklist Card (Acordeón Colapsado por Defecto) -->
+      <div id="onboarding-checklist-card" class="onboard-accordion-card" style="display:none;">
+        <div class="onboard-accordion-accent"></div>
+        <!-- Encabezado del Acordeón -->
+        <div class="onboard-accordion-header" onclick="toggleOnboardingAccordion()" id="onboard-accordion-header" title="Clic para expandir o contraer la guía de configuración">
+          <div class="onboard-accordion-header-left">
+            <i class="bi bi-rocket-takeoff" style="color:var(--red); font-size:16px;"></i>
+            <span style="font-family:var(--font-h); font-size:13.5px; font-weight:700; color:var(--white); letter-spacing:0.02em;">
+              Guía de Configuración Inicial
+            </span>
+            <span class="onboard-pill-prog">Progreso: <strong id="onboard-progress-text">0%</strong></span>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <div style="font-size:12px; font-weight:700; color:var(--silver); background:var(--iron); padding:6px 12px; border-radius:20px; border:1px solid var(--zinc);">
-              Progreso: <span id="onboard-progress-text" style="color:var(--red);">0%</span>
-            </div>
-            <button onclick="dismissOnboarding()" class="sb-btn" style="width:auto; margin:0; padding:6px 10px; font-size:11px; background:transparent; border:none; color:var(--silver); cursor:pointer;">
-              Ocultar guía
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:11.5px; color:var(--silver); display:inline-flex; align-items:center; gap:4px;">
+              Ver pasos <i id="onboard-accordion-arrow" class="bi bi-chevron-down" style="transition:transform 0.25s ease; font-size:11px;"></i>
+            </span>
+            <button onclick="event.stopPropagation(); dismissOnboarding();" class="sb-btn" style="width:auto; margin:0; padding:4px 8px; font-size:11px; background:transparent; border:none; color:var(--silver); cursor:pointer;" title="Ocultar guía definitivamente">
+              ✕
             </button>
           </div>
         </div>
 
-        <!-- Progress Bar -->
-        <div style="width:100%; height:6px; background:var(--iron); border-radius:3px; margin-bottom:24px; overflow:hidden;">
+        <!-- Línea Delgada de Progreso (Visible en el borde inferior del encabezado) -->
+        <div style="width:100%; height:3px; background:rgba(255,255,255,0.06); overflow:hidden;">
           <div id="onboard-progress-bar" style="width:0%; height:100%; background:var(--red); transition:width 0.4s ease;"></div>
         </div>
 
-        <!-- Checklist Items -->
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
-          <!-- Step 1 -->
-          <div class="onboard-item" id="onboard-step-1" style="background:var(--iron); border:1px solid var(--zinc); border-radius:10px; padding:16px; display:flex; gap:12px; transition:all 0.2s;">
-            <div class="onboard-check" style="font-size:20px; color:var(--silver); width:28px; height:28px; border-radius:50%; border:2px solid var(--zinc); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-              <i class="bi bi-circle"></i>
-            </div>
-            <div style="flex:1;">
-              <h4 style="margin:0 0 4px 0; font-size:14px; font-weight:700; color:var(--white);">1. Datos de tu Comercio</h4>
-              <p style="margin:0 0 10px 0; font-size:12px; color:var(--silver);">Definí el nombre comercial, eslogan y logo.</p>
-              <button onclick="openStepByStepConfig()" class="sb-btn" style="width:auto; margin:0; padding:6px 12px; font-size:11px; background:var(--zinc); border:1px solid var(--silver); color:var(--white); cursor:pointer;">Configurar</button>
-            </div>
-          </div>
+        <!-- Cuerpo del Acordeón (Colapsado por defecto) -->
+        <div id="onboard-accordion-body" class="onboard-accordion-body" style="display:none;">
+          <p style="color:var(--silver); font-size:12.5px; margin:0 0 16px 0;">
+            Completá estos 5 sencillos pasos para dejar tu tienda online lista y configurada al 100%.
+          </p>
 
-          <!-- Step 2 -->
-          <div class="onboard-item" id="onboard-step-2" style="background:var(--iron); border:1px solid var(--zinc); border-radius:10px; padding:16px; display:flex; gap:12px; transition:all 0.2s;">
-            <div class="onboard-check" style="font-size:20px; color:var(--silver); width:28px; height:28px; border-radius:50%; border:2px solid var(--zinc); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-              <i class="bi bi-circle"></i>
+          <!-- Checklist Items -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:12px;">
+            <!-- Step 1 -->
+            <div class="onboard-item" id="onboard-step-1" style="background:var(--iron); border:1px solid var(--zinc); border-radius:10px; padding:14px; display:flex; gap:12px; transition:all 0.2s;">
+              <div class="onboard-check" style="font-size:18px; color:var(--silver); width:26px; height:26px; border-radius:50%; border:2px solid var(--zinc); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <i class="bi bi-circle"></i>
+              </div>
+              <div style="flex:1;">
+                <h4 style="margin:0 0 3px 0; font-size:13.5px; font-weight:700; color:var(--white);">1. Datos de tu Comercio</h4>
+                <p style="margin:0 0 8px 0; font-size:11.5px; color:var(--silver);">Nombre comercial, eslogan y logo.</p>
+                <button onclick="openStepByStepConfig()" class="sb-btn" style="width:auto; margin:0; padding:5px 10px; font-size:11px; background:var(--zinc); border:1px solid var(--silver); color:var(--white); cursor:pointer;">Configurar</button>
+              </div>
             </div>
-            <div style="flex:1;">
-              <h4 style="margin:0 0 4px 0; font-size:14px; font-weight:700; color:var(--white);">2. Estética y Colores</h4>
-              <p style="margin:0 0 10px 0; font-size:12px; color:var(--silver);">Personalizá el tema, colores y tipografía.</p>
-              <button onclick="goToView('marca')" class="sb-btn" style="width:auto; margin:0; padding:6px 12px; font-size:11px; background:var(--zinc); border:1px solid var(--silver); color:var(--white); cursor:pointer;">Personalizar</button>
-            </div>
-          </div>
 
-          <!-- Step 3 -->
-          <div class="onboard-item" id="onboard-step-3" style="background:var(--iron); border:1px solid var(--zinc); border-radius:10px; padding:16px; display:flex; gap:12px; transition:all 0.2s;">
-            <div class="onboard-check" style="font-size:20px; color:var(--silver); width:28px; height:28px; border-radius:50%; border:2px solid var(--zinc); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-              <i class="bi bi-circle"></i>
+            <!-- Step 2 -->
+            <div class="onboard-item" id="onboard-step-2" style="background:var(--iron); border:1px solid var(--zinc); border-radius:10px; padding:14px; display:flex; gap:12px; transition:all 0.2s;">
+              <div class="onboard-check" style="font-size:18px; color:var(--silver); width:26px; height:26px; border-radius:50%; border:2px solid var(--zinc); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <i class="bi bi-circle"></i>
+              </div>
+              <div style="flex:1;">
+                <h4 style="margin:0 0 3px 0; font-size:13.5px; font-weight:700; color:var(--white);">2. Estética y Colores</h4>
+                <p style="margin:0 0 8px 0; font-size:11.5px; color:var(--silver);">Personalizá el tema, colores y tipografía.</p>
+                <button onclick="goToView('marca')" class="sb-btn" style="width:auto; margin:0; padding:5px 10px; font-size:11px; background:var(--zinc); border:1px solid var(--silver); color:var(--white); cursor:pointer;">Personalizar</button>
+              </div>
             </div>
-            <div style="flex:1;">
-              <h4 style="margin:0 0 4px 0; font-size:14px; font-weight:700; color:var(--white);">3. Categorías de Productos</h4>
-              <p style="margin:0 0 10px 0; font-size:12px; color:var(--silver);">Creá rubros/categorías para agrupar tus artículos.</p>
-              <button onclick="goToView('categories')" class="sb-btn" style="width:auto; margin:0; padding:6px 12px; font-size:11px; background:var(--zinc); border:1px solid var(--silver); color:var(--white); cursor:pointer;">Crear Categoría</button>
-            </div>
-          </div>
 
-          <!-- Step 4 -->
-          <div class="onboard-item" id="onboard-step-4" style="background:var(--iron); border:1px solid var(--zinc); border-radius:10px; padding:16px; display:flex; gap:12px; transition:all 0.2s;">
-            <div class="onboard-check" style="font-size:20px; color:var(--silver); width:28px; height:28px; border-radius:50%; border:2px solid var(--zinc); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-              <i class="bi bi-circle"></i>
+            <!-- Step 3 -->
+            <div class="onboard-item" id="onboard-step-3" style="background:var(--iron); border:1px solid var(--zinc); border-radius:10px; padding:14px; display:flex; gap:12px; transition:all 0.2s;">
+              <div class="onboard-check" style="font-size:18px; color:var(--silver); width:26px; height:26px; border-radius:50%; border:2px solid var(--zinc); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <i class="bi bi-circle"></i>
+              </div>
+              <div style="flex:1;">
+                <h4 style="margin:0 0 3px 0; font-size:13.5px; font-weight:700; color:var(--white);">3. Categorías de Productos</h4>
+                <p style="margin:0 0 8px 0; font-size:11.5px; color:var(--silver);">Creá rubros para agrupar tus artículos.</p>
+                <button onclick="goToView('categories')" class="sb-btn" style="width:auto; margin:0; padding:5px 10px; font-size:11px; background:var(--zinc); border:1px solid var(--silver); color:var(--white); cursor:pointer;">Crear Categoría</button>
+              </div>
             </div>
-            <div style="flex:1;">
-              <h4 style="margin:0 0 4px 0; font-size:14px; font-weight:700; color:var(--white);">4. Primer Producto</h4>
-              <p style="margin:0 0 10px 0; font-size:12px; color:var(--silver);">Cargá tu primer producto con precio y stock.</p>
-              <button onclick="goToView('abm')" class="sb-btn" style="width:auto; margin:0; padding:6px 12px; font-size:11px; background:var(--zinc); border:1px solid var(--silver); color:var(--white); cursor:pointer;">Cargar Producto</button>
-            </div>
-          </div>
 
-          <!-- Step 5 -->
-          <div class="onboard-item" id="onboard-step-5" style="background:var(--iron); border:1px solid var(--zinc); border-radius:10px; padding:16px; display:flex; gap:12px; transition:all 0.2s;">
-            <div class="onboard-check" style="font-size:20px; color:var(--silver); width:28px; height:28px; border-radius:50%; border:2px solid var(--zinc); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-              <i class="bi bi-circle"></i>
+            <!-- Step 4 -->
+            <div class="onboard-item" id="onboard-step-4" style="background:var(--iron); border:1px solid var(--zinc); border-radius:10px; padding:14px; display:flex; gap:12px; transition:all 0.2s;">
+              <div class="onboard-check" style="font-size:18px; color:var(--silver); width:26px; height:26px; border-radius:50%; border:2px solid var(--zinc); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <i class="bi bi-circle"></i>
+              </div>
+              <div style="flex:1;">
+                <h4 style="margin:0 0 3px 0; font-size:13.5px; font-weight:700; color:var(--white);">4. Primer Producto</h4>
+                <p style="margin:0 0 8px 0; font-size:11.5px; color:var(--silver);">Cargá tu primer producto con precio y stock.</p>
+                <button onclick="goToView('abm')" class="sb-btn" style="width:auto; margin:0; padding:5px 10px; font-size:11px; background:var(--zinc); border:1px solid var(--silver); color:var(--white); cursor:pointer;">Cargar Producto</button>
+              </div>
             </div>
-            <div style="flex:1;">
-              <h4 style="margin:0 0 4px 0; font-size:14px; font-weight:700; color:var(--white);">5. Ver Tienda Online</h4>
-              <p style="margin:0 0 10px 0; font-size:12px; color:var(--silver);">Abrí la web pública para ver cómo quedó.</p>
-              <a id="onboard-store-link" href="#" target="_blank" class="sb-btn" style="text-decoration:none; text-align:center; width:auto; margin:0; padding:6px 12px; font-size:11px; background:var(--zinc); border:1px solid var(--silver); color:var(--white); cursor:pointer;">Ver Tienda</a>
+
+            <!-- Step 5 -->
+            <div class="onboard-item" id="onboard-step-5" style="background:var(--iron); border:1px solid var(--zinc); border-radius:10px; padding:14px; display:flex; gap:12px; transition:all 0.2s;">
+              <div class="onboard-check" style="font-size:18px; color:var(--silver); width:26px; height:26px; border-radius:50%; border:2px solid var(--zinc); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <i class="bi bi-circle"></i>
+              </div>
+              <div style="flex:1;">
+                <h4 style="margin:0 0 3px 0; font-size:13.5px; font-weight:700; color:var(--white);">5. Ver Tienda Online</h4>
+                <p style="margin:0 0 8px 0; font-size:11.5px; color:var(--silver);">Abrí la web pública para ver el resultado.</p>
+                <a id="onboard-store-link" href="#" target="_blank" class="sb-btn" style="text-decoration:none; text-align:center; width:auto; margin:0; padding:5px 10px; font-size:11px; background:var(--zinc); border:1px solid var(--silver); color:var(--white); cursor:pointer;">Ver Tienda</a>
+              </div>
             </div>
           </div>
         </div>
@@ -4945,148 +5311,156 @@
         </div>
       </div>
 
-      <!-- Main Grid Layout -->
-      <div class="dash-layout">
+      <!-- ══ SECCIÓN ACCESOS RÁPIDOS CON RESUMEN DE CATÁLOGO COMPACTO ══ -->
+      <div class="shortcuts-section-header">
+        <div class="shortcuts-title-wrap">
+          <i class="bi bi-grid-fill" style="color:var(--red); font-size:14px;"></i>
+          <h3>Accesos Rápidos</h3>
+        </div>
 
-        <!-- Left side: Shortcuts -->
-        <div>
-          <h3
-            style="font-family:var(--font-h); font-size:14px; font-weight:700; margin-bottom:16px; color:var(--white); text-transform:uppercase; letter-spacing:0.05em;">
-            Acceso rápido</h3>
-          <div class="shortcuts-grid"
-            style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:16px; margin-bottom:40px;">
-            <!-- Analítica -->
-            <div class="shortcut-card" onclick="goToView('reports')">
-              <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">📊</div>
-              <h4
-                style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">
-                Analítica</h4>
-              <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Reportes, gráficos y métricas
-                de venta.</p>
-            </div>
+        <!-- Resumen de Catálogo Compacto y Estilizado -->
+        <div class="catalog-summary-compact" onclick="goToView('abm')" title="Ir a Gestión de Catálogo">
+          <span class="cat-compact-label">
+            <i class="bi bi-box-seam" style="color:var(--red);"></i> Catálogo:
+          </span>
+          <div class="cat-compact-stats">
+            <span class="cat-compact-pill" title="Artículos Activos">
+              <span class="cat-dot-active"></span>
+              <strong id="dash-active-prods" style="color:var(--white); font-family:var(--font-h); font-size:13px;">0</strong>
+              <span style="font-size:11px; color:var(--silver);">activos</span>
+            </span>
+            <span style="color:var(--zinc);">|</span>
+            <span class="cat-compact-pill" title="Artículos Inactivos / Ocultos">
+              <span class="cat-dot-inactive"></span>
+              <strong id="dash-inactive-prods" style="color:var(--red); font-family:var(--font-h); font-size:13px;">0</strong>
+              <span style="font-size:11px; color:var(--silver);">inactivos</span>
+            </span>
+          </div>
+          <i class="bi bi-chevron-right" style="font-size:10px; color:var(--silver); opacity:0.6; margin-left:2px;"></i>
+        </div>
+      </div>
 
-            <!-- Pedidos -->
-            <div class="shortcut-card" onclick="goToView('orders')">
-              <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">📦</div>
-              <h4
-                style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">
-                Pedidos</h4>
-              <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Gestionar estados de envíos y
-                pedidos.</p>
-            </div>
-
-            <!-- PickUp -->
-            <div class="shortcut-card" onclick="goToView('pickups')">
-              <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">🚚</div>
-              <h4
-                style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">
-                PickUp</h4>
-              <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Gestionar repartidores y
-                asignar envíos.</p>
-            </div>
-
-            <!-- Productos -->
-            <div class="shortcut-card" onclick="goToView('products')">
-              <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">🛍️</div>
-              <h4
-                style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">
-                Productos</h4>
-              <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Vista previa de los productos
-                cargados.</p>
-            </div>
-
-            <!-- ABM -->
-            <div class="shortcut-card" onclick="goToView('abm')">
-              <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">✏️</div>
-              <h4
-                style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">
-                ABM</h4>
-              <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Crear, editar o eliminar
-                productos en stock.</p>
-            </div>
-
-            <!-- Categorías -->
-            <div class="shortcut-card" onclick="goToView('categories')">
-              <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">🏷️</div>
-              <h4
-                style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">
-                Categorías</h4>
-              <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Administrar categorías de
-                productos.</p>
-            </div>
-
-            <!-- Diseño -->
-            <div class="shortcut-card" onclick="goToView('marca')">
-              <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">🎨</div>
-              <h4
-                style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">
-                Diseño</h4>
-              <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Personalizar logo, colores y
-                banners.</p>
-            </div>
-
-            <!-- Configuración -->
-            <div class="shortcut-card" onclick="goToView('config-basica')">
-              <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">⚙️</div>
-              <h4
-                style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">
-                Configuración</h4>
-              <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Datos generales de contacto y
-                tienda.</p>
-            </div>
-
-            <!-- Avanzado -->
-            <div class="shortcut-card" onclick="goToView('config-avanzada')">
-              <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">🔒</div>
-              <h4
-                style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">
-                Avanzado</h4>
-              <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">API keys, base de datos y
-                servicios.</p>
-            </div>
-
-            <!-- Ver tienda -->
-            <div class="shortcut-card" onclick="openStore()">
-              <div class="sc-icon" style="font-size:28px; margin-bottom:12px;">🏪</div>
-              <h4
-                style="font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--white);">
-                Ver tienda <i class="bi bi-box-arrow-up-right"
-                  style="font-size:11px; margin-left:2px; opacity:0.7;"></i></h4>
-              <p style="color:var(--silver); font-size:12px; margin:0; line-height:1.4;">Abrir la tienda en una nueva
-                pestaña.</p>
-            </div>
+      <!-- Grilla Completa de Accesos Rápidos (Full-width, 5 columnas desktop / 2 columnas móvil) -->
+      <div class="shortcuts-grid">
+        <!-- 1. Analítica -->
+        <div class="shortcut-card" onclick="goToView('reports')">
+          <div class="sc-card-head">
+            <div class="sc-icon-wrap">📊</div>
+            <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
+          </div>
+          <div>
+            <h4 class="sc-card-title">Analítica</h4>
+            <p class="sc-card-desc">Reportes, gráficos y métricas de venta.</p>
           </div>
         </div>
 
-        <!-- Right side -->
-        <div style="display:flex; flex-direction:column; gap:16px;">
-
-          <!-- Resumen de Catálogo -->
-          <div class="card" style="margin-top:0;">
-            <div class="card-title" style="margin-bottom:16px; font-size:11px;">
-              <i class="bi bi-box-seam" style="color:var(--red);"></i> Resumen de Catálogo
-            </div>
-            <div style="display:flex; justify-content:space-around; text-align:center;">
-              <div>
-                <div id="dash-active-prods"
-                  style="font-size:32px; font-weight:800; color:var(--white); font-family:var(--font-h);">0</div>
-                <div
-                  style="font-size:11px; color:var(--silver); text-transform:uppercase; letter-spacing:0.05em; font-weight:600; margin-top:4px;">
-                  Artículos Activos</div>
-              </div>
-              <div style="width:1px; background:rgba(255,255,255,0.1);"></div>
-              <div>
-                <div id="dash-inactive-prods"
-                  style="font-size:32px; font-weight:800; color:var(--red); font-family:var(--font-h);">0</div>
-                <div
-                  style="font-size:11px; color:var(--silver); text-transform:uppercase; letter-spacing:0.05em; font-weight:600; margin-top:4px;">
-                  Inactivos / Ocultos</div>
-              </div>
-            </div>
+        <!-- 2. Pedidos -->
+        <div class="shortcut-card" onclick="goToView('orders')">
+          <div class="sc-card-head">
+            <div class="sc-icon-wrap">📦</div>
+            <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
           </div>
-
+          <div>
+            <h4 class="sc-card-title">Pedidos</h4>
+            <p class="sc-card-desc">Estados de envíos y comandas.</p>
+          </div>
         </div>
 
+        <!-- 3. PickUp -->
+        <div class="shortcut-card" onclick="goToView('pickups')">
+          <div class="sc-card-head">
+            <div class="sc-icon-wrap">🚚</div>
+            <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
+          </div>
+          <div>
+            <h4 class="sc-card-title">PickUp</h4>
+            <p class="sc-card-desc">Repartidores y envíos.</p>
+          </div>
+        </div>
+
+        <!-- 4. Productos -->
+        <div class="shortcut-card" onclick="goToView('products')">
+          <div class="sc-card-head">
+            <div class="sc-icon-wrap">🛍️</div>
+            <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
+          </div>
+          <div>
+            <h4 class="sc-card-title">Productos</h4>
+            <p class="sc-card-desc">Vista previa del catálogo cargado.</p>
+          </div>
+        </div>
+
+        <!-- 5. ABM -->
+        <div class="shortcut-card" onclick="goToView('abm')">
+          <div class="sc-card-head">
+            <div class="sc-icon-wrap">✏️</div>
+            <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
+          </div>
+          <div>
+            <h4 class="sc-card-title">ABM</h4>
+            <p class="sc-card-desc">Crear, editar o eliminar stock.</p>
+          </div>
+        </div>
+
+        <!-- 6. Categorías -->
+        <div class="shortcut-card" onclick="goToView('categories')">
+          <div class="sc-card-head">
+            <div class="sc-icon-wrap">🏷️</div>
+            <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
+          </div>
+          <div>
+            <h4 class="sc-card-title">Categorías</h4>
+            <p class="sc-card-desc">Administrar rubros y filtros.</p>
+          </div>
+        </div>
+
+        <!-- 7. Diseño -->
+        <div class="shortcut-card" onclick="goToView('marca')">
+          <div class="sc-card-head">
+            <div class="sc-icon-wrap">🎨</div>
+            <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
+          </div>
+          <div>
+            <h4 class="sc-card-title">Diseño</h4>
+            <p class="sc-card-desc">Logo, banners y paleta de marca.</p>
+          </div>
+        </div>
+
+        <!-- 8. Configuración -->
+        <div class="shortcut-card" onclick="goToView('config-basica')">
+          <div class="sc-card-head">
+            <div class="sc-icon-wrap">⚙️</div>
+            <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
+          </div>
+          <div>
+            <h4 class="sc-card-title">Configuración</h4>
+            <p class="sc-card-desc">Datos de contacto y comercio.</p>
+          </div>
+        </div>
+
+        <!-- 9. Avanzado -->
+        <div class="shortcut-card" onclick="goToView('config-avanzada')">
+          <div class="sc-card-head">
+            <div class="sc-icon-wrap">🔒</div>
+            <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
+          </div>
+          <div>
+            <h4 class="sc-card-title">Avanzado</h4>
+            <p class="sc-card-desc">Integraciones, API keys y BD.</p>
+          </div>
+        </div>
+
+        <!-- 10. Ver tienda -->
+        <div class="shortcut-card" onclick="openStore()">
+          <div class="sc-card-head">
+            <div class="sc-icon-wrap">🏪</div>
+            <i class="bi bi-box-arrow-up-right sc-arrow-icon"></i>
+          </div>
+          <div>
+            <h4 class="sc-card-title">Ver tienda</h4>
+            <p class="sc-card-desc">Abrir web pública en nueva pestaña.</p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -8250,6 +8624,20 @@
       localStorage.setItem('storeapp_dismiss_onboard_' + STORE_ID, 'true');
       const onboardCard = document.getElementById('onboarding-checklist-card');
       if (onboardCard) onboardCard.style.display = 'none';
+    }
+
+    function toggleOnboardingAccordion() {
+      const body = document.getElementById('onboard-accordion-body');
+      const arrow = document.getElementById('onboard-accordion-arrow');
+      if (!body) return;
+      const isCollapsed = body.style.display === 'none' || !body.style.display;
+      if (isCollapsed) {
+        body.style.display = 'block';
+        if (arrow) arrow.style.transform = 'rotate(180deg)';
+      } else {
+        body.style.display = 'none';
+        if (arrow) arrow.style.transform = 'rotate(0deg)';
+      }
     }
 
     let dbStatusState = 'checking'; // 'checking', 'ok', 'err'
