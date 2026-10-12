@@ -3717,6 +3717,203 @@
       animation: spin 0.8s linear infinite;
     }
 
+    /* ══ LISTADO DE CATEGORÍAS CON ACCIONES RÁPIDAS ══ */
+    .cat-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .cat-list-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px;
+      background: var(--steel);
+      border: 1px solid var(--zinc);
+      border-radius: 10px;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .cat-list-row:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateX(2px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    }
+    .cat-reorder-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+    .cat-reorder-btn {
+      background: var(--iron);
+      border: 1px solid var(--zinc);
+      border-radius: 4px;
+      color: var(--silver);
+      cursor: pointer;
+      width: 22px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      line-height: 1;
+      transition: all 0.15s ease;
+      padding: 0;
+    }
+    .cat-reorder-btn:hover {
+      color: var(--white);
+      border-color: var(--silver);
+      background: var(--zinc);
+    }
+    .cat-row-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      flex: 1;
+    }
+    .cat-row-emoji {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--iron);
+      border: 1px solid var(--zinc);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .cat-row-info {
+      min-width: 0;
+      flex: 1;
+    }
+    .cat-row-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .cat-row-title {
+      font-family: var(--font-h);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cat-row-count {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--silver);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1px 7px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      white-space: nowrap;
+    }
+    .cat-row-status {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .cat-status-pill {
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      user-select: none;
+      background: none;
+    }
+    .cat-status-pill.active {
+      color: #34D399;
+      background: rgba(16, 185, 129, 0.12);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+    .cat-status-pill.active:hover {
+      background: rgba(16, 185, 129, 0.22);
+    }
+    .cat-status-pill.inactive {
+      color: #94A3B8;
+      background: rgba(148, 163, 184, 0.1);
+      border-color: rgba(148, 163, 184, 0.25);
+    }
+    .cat-status-pill.inactive:hover {
+      background: rgba(148, 163, 184, 0.2);
+    }
+    .cat-row-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .cat-quick-btn {
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid var(--zinc);
+      background: var(--iron);
+      color: var(--fog);
+      transition: all 0.15s ease;
+    }
+    .cat-quick-btn:hover {
+      background: var(--zinc);
+      color: var(--white);
+    }
+    .cat-quick-btn.danger {
+      background: rgba(215, 38, 56, 0.1);
+      border-color: rgba(215, 38, 56, 0.25);
+      color: var(--red);
+    }
+    .cat-quick-btn.danger:hover {
+      background: rgba(215, 38, 56, 0.25);
+      color: #fff;
+    }
+    .color-swatch-mini {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 1px solid var(--zinc);
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+      padding: 0;
+    }
+    .color-swatch-mini:hover {
+      transform: scale(1.15);
+      border-color: var(--white);
+    }
+    body.light-mode .cat-list-row {
+      background: #FFFFFF;
+      border-color: #E2E8F0;
+    }
+    body.light-mode .cat-row-title {
+      color: #0F172A;
+    }
+    body.light-mode .cat-row-emoji {
+      background: #F8FAFC;
+      border-color: #E2E8F0;
+    }
+    body.light-mode .cat-quick-btn {
+      background: #F1F5F9;
+      border-color: #CBD5E1;
+      color: #334155;
+    }
+
     /* ══ MOBILE BOTTOM NAV & BOTTOM SHEET (DESKTOP HIDDEN BY DEFAULT) ══ */
     .mobile-bottom-nav,
     .mobile-nav-overlay,
@@ -5854,46 +6051,17 @@
                     onclick="pickColor(this,'#E91E63', 1)"></button>
                 </div>
 
-                <div
-                  style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:12px;">
-                  <div style="background:var(--iron);padding:10px;border-radius:8px;border:1px solid var(--zinc);">
-                    <label style="font-size:10px;color:var(--silver);display:block;margin-bottom:6px;">Color
-                      Principal</label>
-                    <div style="display:flex;align-items:center;gap:6px;">
+                <div style="margin-top:14px;">
+                  <div style="background:var(--iron);padding:12px 16px;border-radius:10px;border:1px solid var(--zinc);display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                    <div>
+                      <label style="font-size:11px;font-weight:700;color:var(--white);display:block;margin-bottom:2px;">Color Principal de Marca</label>
+                      <span style="font-size:11.5px;color:var(--silver);">Se aplica en botones, acentos, badges y elementos destacados</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;">
                       <input type="color" id="cfg-color" value="#D72638"
-                        style="width:32px;height:24px;border:1px solid var(--zinc);border-radius:4px;padding:0;cursor:pointer;background:none;"
+                        style="width:36px;height:28px;border:1px solid var(--zinc);border-radius:6px;padding:0;cursor:pointer;background:none;"
                         oninput="pickColorCustom(this.value, 1)" />
-                      <span id="color-hex" style="font-size:10px;font-family:monospace;color:var(--fog);">#D72638</span>
-                    </div>
-                  </div>
-                  <div
-                    style="background:var(--iron);padding:10px;border-radius:8px;border:1px solid var(--zinc);opacity:0.45;pointer-events:none;"
-                    title="Esta función estará disponible próximamente">
-                    <label
-                      style="font-size:10px;color:var(--silver);display:flex;align-items:center;margin-bottom:6px;">
-                      Color Secundario
-                      <span class="badge-soon">Próximamente</span>
-                    </label>
-                    <div style="display:flex;align-items:center;gap:6px;">
-                      <input type="color" id="cfg-color2" value="#1A73E8" disabled
-                        style="width:32px;height:24px;border:1px solid var(--zinc);border-radius:4px;padding:0;cursor:not-allowed;background:none;" />
-                      <span id="color2-hex"
-                        style="font-size:10px;font-family:monospace;color:var(--fog);">#1A73E8</span>
-                    </div>
-                  </div>
-                  <div
-                    style="background:var(--iron);padding:10px;border-radius:8px;border:1px solid var(--zinc);opacity:0.45;pointer-events:none;"
-                    title="Esta función estará disponible próximamente">
-                    <label
-                      style="font-size:10px;color:var(--silver);display:flex;align-items:center;margin-bottom:6px;">
-                      Color Terciario
-                      <span class="badge-soon">Próximamente</span>
-                    </label>
-                    <div style="display:flex;align-items:center;gap:6px;">
-                      <input type="color" id="cfg-color3" value="#F4B400" disabled
-                        style="width:32px;height:24px;border:1px solid var(--zinc);border-radius:4px;padding:0;cursor:not-allowed;background:none;" />
-                      <span id="color3-hex"
-                        style="font-size:10px;font-family:monospace;color:var(--fog);">#F4B400</span>
+                      <span id="color-hex" style="font-size:11px;font-family:monospace;color:var(--fog);font-weight:700;">#D72638</span>
                     </div>
                   </div>
                 </div>
@@ -6007,30 +6175,66 @@
       <div class="design-wrap">
         <!-- LEFT: controls -->
         <div class="design-controls">
-          <!-- ACCORDION 1: Imagen de fondo del banner -->
+          <!-- ACCORDION 1: Imagen y fondo del catálogo -->
           <div class="card config-section collapsed" style="margin-bottom:14px;">
             <div class="card-title config-section-title" onclick="toggleAccordionCard(this, event)">
-              <span>IMAGEN DE FONDO DEL BANNER</span>
+              <span>FONDO Y ESTÉTICA DEL CATÁLOGO</span>
             </div>
             <div class="card-content config-section-content">
-              <div id="hero-img-preview-wrap"
-                style="display:none;margin-bottom:10px;position:relative;border-radius:8px;overflow:hidden;">
-                <img id="hero-img-preview" style="width:100%;height:100px;object-fit:cover;display:block;" />
-                <div style="position:absolute;inset:0;background:rgba(0,0,0,.48);border-radius:8px;"></div>
-                <button onclick="removeHeroImg()" class="remove-hero-btn">✕
-                  Quitar</button>
+              <!-- COLOR DE FONDO DEL CATÁLOGO -->
+              <div class="ctrl-group">
+                <label class="ctrl-label ctrl-label-between">
+                  <span><i class="bi bi-palette-fill" style="color:var(--red);"></i> Color de Fondo del Catálogo</span>
+                  <span class="ctrl-label-sub" id="hero-bg-color-hex">#0E0E0E</span>
+                </label>
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                  <input type="color" id="cfg-hero-bg-color" value="#0E0E0E"
+                    style="width:40px;height:32px;border-radius:6px;border:1px solid var(--zinc);cursor:pointer;background:none;padding:2px;"
+                    oninput="updateHeroBgColor(this.value)" />
+                  <span style="font-size:11.5px;color:var(--silver);">Color base que se muestra detrás y se mezcla con la imagen</span>
+                </div>
+                <div class="color-swatches" style="display:flex;gap:6px;flex-wrap:wrap;">
+                  <button type="button" class="color-swatch-mini" style="background:#0E0E0E;" onclick="updateHeroBgColor('#0E0E0E')" title="Negro Profundo"></button>
+                  <button type="button" class="color-swatch-mini" style="background:#18181B;" onclick="updateHeroBgColor('#18181B')" title="Zinc Oscuro"></button>
+                  <button type="button" class="color-swatch-mini" style="background:#0F172A;" onclick="updateHeroBgColor('#0F172A')" title="Azul Noche"></button>
+                  <button type="button" class="color-swatch-mini" style="background:#1C1917;" onclick="updateHeroBgColor('#1C1917')" title="Piedra Oscura"></button>
+                  <button type="button" class="color-swatch-mini" style="background:#260C1A;" onclick="updateHeroBgColor('#260C1A')" title="Vino Tinto"></button>
+                  <button type="button" class="color-swatch-mini" style="background:#062C30;" onclick="updateHeroBgColor('#062C30')" title="Petróleo"></button>
+                  <button type="button" class="color-swatch-mini" style="background:#F5F5F0;" onclick="updateHeroBgColor('#F5F5F0')" title="Claro / Marfil"></button>
+                </div>
               </div>
 
+              <!-- PREVIEW DE IMAGEN Y MEZCLA -->
+              <div id="hero-img-preview-wrap"
+                style="display:none;margin-bottom:12px;position:relative;border-radius:10px;overflow:hidden;background:#0E0E0E;border:1px solid var(--zinc);">
+                <img id="hero-img-preview" style="width:100%;height:110px;object-fit:cover;display:block;opacity:1;transition:opacity 0.2s;" />
+                <div id="hero-img-preview-overlay" style="position:absolute;inset:0;background:rgba(0,0,0,.48);border-radius:10px;pointer-events:none;"></div>
+                <button onclick="removeHeroImg()" class="remove-hero-btn">✕ Quitar</button>
+              </div>
+
+              <!-- SUBIDA DE IMAGEN -->
               <label class="logo-upload-btn" for="hero-img-input">
                 <i class="bi bi-image"></i> Subir imagen de fondo (JPG, PNG, WEBP)
                 <input type="file" id="hero-img-input" accept="image/*" style="display:none;"
                   onchange="uploadHeroImg(this)" />
               </label>
-              <p class="section-help-text">Recomendado: 1400×400px mínimo. Se
-                aplica un overlay oscuro automáticamente.</p>
+              <p class="section-help-text">Recomendado: 1400×400px mínimo. Podés mezclarla con el color de fondo regulando la opacidad.</p>
+
+              <!-- OPACIDAD DE LA IMAGEN (MEZCLA CON EL COLOR DE FONDO) -->
+              <div class="ctrl-group" style="margin-top:14px;background:var(--iron);padding:12px;border-radius:8px;border:1px solid var(--zinc);">
+                <label class="ctrl-label ctrl-label-between">
+                  <span><i class="bi bi-circle-half" style="color:var(--red);"></i> Opacidad de la imagen (Mezcla con fondo)</span>
+                  <span id="hero-img-opacity-val" style="font-weight:700;color:var(--white);">100%</span>
+                </label>
+                <input type="range" id="cfg-hero-img-opacity" min="0" max="100" value="100" step="5"
+                  class="range-slider" oninput="updateHeroImgOpacity(this.value)" />
+                <p class="section-help-text" style="margin-top:4px;margin-bottom:0;color:var(--silver);">
+                  Al reducir la opacidad, la imagen se hace semi-transparente y se fusiona directamente con el color de fondo seleccionado arriba.
+                </p>
+              </div>
 
               <!-- GALERIA DE FONDOS PREDETERMINADOS -->
-              <div class="ctrl-group">
+              <div class="ctrl-group" style="margin-top:16px;">
                 <label class="ctrl-label ctrl-label-between">
                   <span><i class="bi bi-grid-fill" style="color:var(--red);"></i> Fondos Predeterminados</span>
                   <span class="ctrl-label-sub">12 variaciones</span>
@@ -6087,15 +6291,16 @@
                 </div>
               </div>
 
+              <!-- OVERLAY OSCURO -->
               <div class="ctrl-group">
-                <label class="ctrl-label">Intensidad del overlay <span id="overlay-val">48%</span></label>
+                <label class="ctrl-label">Intensidad del overlay oscuro <span id="overlay-val">48%</span></label>
                 <input type="range" id="cfg-overlay" min="0" max="90" value="48" step="2"
                   class="range-slider" oninput="updateOverlay(this.value)" />
               </div>
 
               <div class="section-footer-save">
                 <button class="abm-btn-new abm-btn-full" onclick="saveBannersConfigWithStatus('design-bg-status')">
-                  <i class="bi bi-floppy2"></i> Guardar imagen de fondo
+                  <i class="bi bi-floppy2"></i> Guardar fondo y estética
                 </button>
                 <div id="design-bg-status" class="status-msg-text"></div>
               </div>
@@ -7333,9 +7538,17 @@
     <!-- ══ CATEGORIES ══ -->
     <div class="view" id="view-categories">
       <div class="card" style="margin-bottom:16px;">
-        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-          <span><i class="bi bi-tags" style="color:var(--red);"></i> Gestión de Categorías</span>
-          <div style="display:flex;align-items:center;gap:8px;">
+        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span><i class="bi bi-tags" style="color:var(--red);"></i> Gestión de Categorías</span>
+            <span id="cats-total-count" style="font-size:11px;font-weight:700;color:var(--silver);background:var(--iron);padding:2px 8px;border-radius:12px;border:1px solid var(--zinc);">0 categorías</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <div style="position:relative;">
+              <input type="text" id="cats-search-input" placeholder="Buscar categoría..." oninput="filterCategoriesList(this.value)"
+                style="background:var(--iron);border:1px solid var(--zinc);border-radius:6px;padding:6px 10px 6px 28px;color:var(--white);font-size:12px;width:160px;outline:none;" />
+              <i class="bi bi-search" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--silver);font-size:11px;pointer-events:none;"></i>
+            </div>
             <button class="sb-btn" onclick="refreshCategories(this)" style="background:transparent;border:1px solid var(--zinc);color:var(--white);padding:7px 14px;font-size:12px;display:flex;align-items:center;gap:6px;cursor:pointer;border-radius:6px;transition:all .2s ease;">
               <i class="bi bi-arrow-clockwise"></i> Actualizar
             </button>
@@ -7344,10 +7557,9 @@
             </button>
           </div>
         </div>
-        <div id="categories-list"
-          style="display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px;">
-          <!-- Categories load dynamically -->
-          <div style="text-align:center;padding:40px;color:var(--silver);font-size:13px;grid-column:1/-1;">
+        <div id="categories-list" class="cat-list-container">
+          <!-- Categories load dynamically as a list with quick actions -->
+          <div style="text-align:center;padding:40px;color:var(--silver);font-size:13px;">
             <i class="bi bi-tags" style="font-size:32px;display:block;margin-bottom:10px;opacity:.3;"></i>
             Cargando categorías...
           </div>
@@ -9688,37 +9900,22 @@
     }
 
     function pickColor(btn, color, index) {
-      if (index === 1) {
-        cfg.color = color;
-        document.querySelectorAll('.color-swatch').forEach(b => b.classList.remove('active'));
-        if (btn) btn.classList.add('active');
-        document.getElementById('cfg-color').value = color;
-        document.getElementById('color-hex').textContent = color;
-        flashSpotlight();
-      } else if (index === 2) {
-        cfg.color2 = color;
-        document.getElementById('cfg-color2').value = color;
-        document.getElementById('color2-hex').textContent = color;
-      } else if (index === 3) {
-        cfg.color3 = color;
-        document.getElementById('cfg-color3').value = color;
-        document.getElementById('color3-hex').textContent = color;
-      }
+      cfg.color = color;
+      document.querySelectorAll('.color-swatch').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      const cInput = document.getElementById('cfg-color');
+      if (cInput) cInput.value = color;
+      const cHex = document.getElementById('color-hex');
+      if (cHex) cHex.textContent = color;
+      flashSpotlight();
       previewUpdate();
     }
     function pickColorCustom(color, index) {
-      if (index === 1) {
-        cfg.color = color;
-        document.querySelectorAll('.color-swatch').forEach(b => b.classList.remove('active'));
-        document.getElementById('color-hex').textContent = color;
-        flashSpotlight();
-      } else if (index === 2) {
-        cfg.color2 = color;
-        document.getElementById('color2-hex').textContent = color;
-      } else if (index === 3) {
-        cfg.color3 = color;
-        document.getElementById('color3-hex').textContent = color;
-      }
+      cfg.color = color;
+      document.querySelectorAll('.color-swatch').forEach(b => b.classList.remove('active'));
+      const cHex = document.getElementById('color-hex');
+      if (cHex) cHex.textContent = color;
+      flashSpotlight();
       previewUpdate();
     }
 
@@ -9852,6 +10049,8 @@
           parsedEmail.password = finalPassword;
 
           parsedEmail.bg = cfgObj.bg !== undefined ? cfgObj.bg : parsedEmail.bg || '';
+          parsedEmail.heroBgColor = cfgObj.heroBgColor !== undefined ? cfgObj.heroBgColor : (parsedEmail.heroBgColor || '#0E0E0E');
+          parsedEmail.heroImgOpacity = cfgObj.heroImgOpacity !== undefined ? cfgObj.heroImgOpacity : (parsedEmail.heroImgOpacity != null ? parsedEmail.heroImgOpacity : 100);
           parsedEmail.subrubro = cfgObj.subrubro !== undefined ? cfgObj.subrubro : parsedEmail.subrubro || '';
           parsedEmail.payment_methods = cfgObj.payment_methods !== undefined ? cfgObj.payment_methods : parsedEmail.payment_methods || { efectivo: true, transferencia: true, convenir: true };
           parsedEmail.gerente = cfgObj.gerente !== undefined ? cfgObj.gerente : parsedEmail.gerente || { nombre: '', email: '', frecuencia: 'mensual' };
@@ -10123,10 +10322,10 @@
       setVal('cfg-wapp', cfg.wapp);
       setVal('cfg-color', cfg.color);
       setTxt('color-hex', cfg.color);
-      setVal('cfg-color2', cfg.color2 || '#1A73E8');
-      setTxt('color2-hex', cfg.color2 || '#1A73E8');
-      setVal('cfg-color3', cfg.color3 || '#F4B400');
-      setTxt('color3-hex', cfg.color3 || '#F4B400');
+      setVal('cfg-hero-bg-color', cfg.heroBgColor || '#0E0E0E');
+      setTxt('hero-bg-color-hex', cfg.heroBgColor || '#0E0E0E');
+      setVal('cfg-hero-img-opacity', cfg.heroImgOpacity != null ? cfg.heroImgOpacity : 100);
+      setTxt('hero-img-opacity-val', (cfg.heroImgOpacity != null ? cfg.heroImgOpacity : 100) + '%');
 
       // Mark active color swatch
       document.querySelectorAll('.color-swatch').forEach(b => {
@@ -10233,18 +10432,64 @@
     }
     window.removeHeroImg = removeHeroImg;
 
+    function updateHeroBgColor(color) {
+      cfg.heroBgColor = color;
+      const hexEl = document.getElementById('hero-bg-color-hex');
+      if (hexEl) hexEl.textContent = color;
+      const inputEl = document.getElementById('cfg-hero-bg-color');
+      if (inputEl) inputEl.value = color;
+      const wrap = document.getElementById('hero-img-preview-wrap');
+      if (wrap) wrap.style.backgroundColor = color;
+      if (typeof previewUpdate === 'function') previewUpdate();
+    }
+    window.updateHeroBgColor = updateHeroBgColor;
+
+    function updateHeroImgOpacity(val) {
+      cfg.heroImgOpacity = parseInt(val, 10);
+      const txt = document.getElementById('hero-img-opacity-val');
+      if (txt) txt.textContent = val + '%';
+      const rangeEl = document.getElementById('cfg-hero-img-opacity');
+      if (rangeEl) rangeEl.value = val;
+      const prev = document.getElementById('hero-img-preview');
+      if (prev) prev.style.opacity = (val / 100).toString();
+      if (typeof previewUpdate === 'function') previewUpdate();
+    }
+    window.updateHeroImgOpacity = updateHeroImgOpacity;
+
     function updateOverlay(val) {
       document.getElementById('overlay-val').textContent = val + '%';
       // Save to cfg
       cfg.heroOverlay = `rgba(0,0,0,${val / 100})`;
+      const prevOverlay = document.getElementById('hero-img-preview-overlay');
+      if (prevOverlay) prevOverlay.style.background = cfg.heroOverlay;
       previewUpdate();
     }
 
     function initHeroImgPreview() {
+      const bgColor = cfg.heroBgColor || '#0E0E0E';
+      const opacity = cfg.heroImgOpacity != null ? cfg.heroImgOpacity : 100;
+
+      const inputBg = document.getElementById('cfg-hero-bg-color');
+      if (inputBg) inputBg.value = bgColor;
+      const hexEl = document.getElementById('hero-bg-color-hex');
+      if (hexEl) hexEl.textContent = bgColor;
+
+      const inputOp = document.getElementById('cfg-hero-img-opacity');
+      if (inputOp) inputOp.value = opacity;
+      const valOp = document.getElementById('hero-img-opacity-val');
+      if (valOp) valOp.textContent = opacity + '%';
+
+      const wrap = document.getElementById('hero-img-preview-wrap');
+      if (wrap) wrap.style.backgroundColor = bgColor;
+
+      const prev = document.getElementById('hero-img-preview');
+      if (prev) prev.style.opacity = (opacity / 100).toString();
+
+      const prevOverlay = document.getElementById('hero-img-preview-overlay');
+      if (prevOverlay && cfg.heroOverlay) prevOverlay.style.background = cfg.heroOverlay;
+
       const saved = cfg.bg || localStorage.getItem('storeapp_hero_img_' + STORE_ID) || localStorage.getItem('storeapp_hero_img');
       if (saved) {
-        const prev = document.getElementById('hero-img-preview');
-        const wrap = document.getElementById('hero-img-preview-wrap');
         if (prev) prev.src = saved;
         if (wrap) wrap.style.display = 'block';
 
@@ -10395,6 +10640,15 @@
             if (document.getElementById('banner2-bg')) document.getElementById('banner2-bg').value = parsedEmail.banner2_bg || r.banner2_bg || '#1C1C1E';
             if (document.getElementById('banner2-active')) document.getElementById('banner2-active').checked = parsedEmail.banner2_active !== false;
 
+            if (parsedEmail.heroBgColor || r.heroBgColor) {
+              cfg.heroBgColor = parsedEmail.heroBgColor || r.heroBgColor;
+              updateHeroBgColor(cfg.heroBgColor);
+            }
+            if (parsedEmail.heroImgOpacity != null) {
+              cfg.heroImgOpacity = parsedEmail.heroImgOpacity;
+              updateHeroImgOpacity(cfg.heroImgOpacity);
+            }
+
             previewBanner('banner1');
             previewBanner('banner2');
           }
@@ -10424,10 +10678,17 @@
       const h2Val = document.getElementById('cfg-h2')?.value || cfg.h2;
       const descVal = document.getElementById('cfg-desc')?.value || cfg.desc;
       const heroBgVal = cfg.bg || localStorage.getItem(`storeapp_hero_img_${STORE_ID}`) || localStorage.getItem('storeapp_hero_img') || '';
+      const heroBgColorVal = document.getElementById('cfg-hero-bg-color')?.value || cfg.heroBgColor || '#0E0E0E';
+      const heroImgOpacityVal = document.getElementById('cfg-hero-img-opacity')?.value != null 
+        ? parseInt(document.getElementById('cfg-hero-img-opacity').value, 10) 
+        : (cfg.heroImgOpacity != null ? cfg.heroImgOpacity : 100);
+
       cfg.h1 = h1Val;
       cfg.h2 = h2Val;
       cfg.desc = descVal;
       cfg.bg = heroBgVal;
+      cfg.heroBgColor = heroBgColorVal;
+      cfg.heroImgOpacity = heroImgOpacityVal;
 
       localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
       localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
@@ -10472,6 +10733,8 @@
             parsedEmail.h2 = h2Val;
             parsedEmail.desc = descVal;
             parsedEmail.bg = heroBgVal;
+            parsedEmail.heroBgColor = heroBgColorVal;
+            parsedEmail.heroImgOpacity = heroImgOpacityVal;
             parsedEmail.heroOverlay = cfg.heroOverlay || 'rgba(0,0,0,0.48)';
             parsedEmail.banner_mode = bannerData.mode;
             parsedEmail.banner1_bg = bannerData.banner1.bg;
@@ -14338,7 +14601,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const viewListEl = document.getElementById('categories-list');
 
       if (advListEl) advListEl.innerHTML = '<div style="color:var(--silver);">Cargando categorías...</div>';
-      if (viewListEl) viewListEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--silver);font-size:13px;grid-column:1/-1;"><span style="display:inline-block;width:16px;height:16px;border:2px solid var(--red);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin-right:8px;vertical-align:middle;"></span> Cargando categorías...</div>';
+      if (viewListEl) viewListEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--silver);font-size:13px;"><span style="display:inline-block;width:16px;height:16px;border:2px solid var(--red);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin-right:8px;vertical-align:middle;"></span> Cargando categorías...</div>';
 
       try {
         let categories = await fetchFromSupabase('categories', { filter: 'order=display_order.asc' });
@@ -14360,59 +14623,181 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         }
 
         window.currentCategories = Array.isArray(categories) ? categories : [];
+        renderCategoriesListUI(document.getElementById('cats-search-input')?.value || '');
+      } catch (e) {
+        if (advListEl) advListEl.innerHTML = `<div style="color:var(--red);">Error: ${e.message}</div>`;
+        if (viewListEl) viewListEl.innerHTML = `<div style="text-align:center;color:var(--red);padding:24px;">Error al cargar categorías: ${e.message}</div>`;
+      }
+    }
 
-        if (!window.currentCategories.length) {
-          const emptyMsg = `
-            <div style="text-align:center;padding:40px 20px;color:var(--silver);font-size:13px;grid-column:1/-1;background:var(--steel);border:1px solid var(--zinc);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-              <i class="bi bi-tags" style="font-size:42px;display:block;margin-bottom:12px;color:var(--red);opacity:.8;"></i>
-              <div style="font-weight:700;color:var(--white);font-size:16px;margin-bottom:6px;">No hay categorías cargadas aún</div>
-              <p style="margin:0 0 18px 0;color:var(--silver);font-size:13px;max-width:440px;line-height:1.5;">Podés crear tus propias categorías o generar automáticamente las categorías estándar para comenzar.</p>
-              <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-                <button onclick="openCategoryModal()" class="abm-btn-new" style="padding:10px 20px;font-size:13px;"><i class="bi bi-plus-lg"></i> Crear Categoría</button>
-                <button onclick="seedDefaultCategories()" class="sb-btn" style="background:var(--iron);border:1px solid var(--zinc);color:var(--white);padding:10px 20px;font-size:13px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;"><i class="bi bi-lightning-charge-fill" style="color:var(--gold);"></i> Generar Categorías Iniciales</button>
-              </div>
+    function renderCategoriesListUI(query = '') {
+      const advListEl = document.getElementById('adv-categories-list');
+      const viewListEl = document.getElementById('categories-list');
+      const totalCountEl = document.getElementById('cats-total-count');
+
+      const allCats = window.currentCategories || [];
+      if (totalCountEl) totalCountEl.textContent = `${allCats.length} categoría${allCats.length !== 1 ? 's' : ''}`;
+
+      if (!allCats.length) {
+        const emptyMsg = `
+          <div style="text-align:center;padding:40px 20px;color:var(--silver);font-size:13px;background:var(--steel);border:1px solid var(--zinc);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+            <i class="bi bi-tags" style="font-size:42px;display:block;margin-bottom:12px;color:var(--red);opacity:.8;"></i>
+            <div style="font-weight:700;color:var(--white);font-size:16px;margin-bottom:6px;">No hay categorías cargadas aún</div>
+            <p style="margin:0 0 18px 0;color:var(--silver);font-size:13px;max-width:440px;line-height:1.5;">Podés crear tus propias categorías o generar automáticamente las categorías estándar para comenzar.</p>
+            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+              <button onclick="openCategoryModal()" class="abm-btn-new" style="padding:10px 20px;font-size:13px;"><i class="bi bi-plus-lg"></i> Crear Categoría</button>
+              <button onclick="seedDefaultCategories()" class="sb-btn" style="background:var(--iron);border:1px solid var(--zinc);color:var(--white);padding:10px 20px;font-size:13px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;"><i class="bi bi-lightning-charge-fill" style="color:var(--gold);"></i> Generar Categorías Iniciales</button>
+            </div>
+          </div>`;
+        if (advListEl) advListEl.innerHTML = '<div style="color:var(--silver);">No hay categorías aún.</div>';
+        if (viewListEl) viewListEl.innerHTML = emptyMsg;
+        return;
+      }
+
+      // Filter by query if supplied
+      const q = (query || '').trim().toLowerCase();
+      const filtered = q ? allCats.filter(c => (c.name || '').toLowerCase().includes(q)) : allCats;
+
+      // Render in Advanced View
+      if (advListEl) {
+        advListEl.innerHTML = allCats.map(c => `
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--zinc);">
+            <span style="font-size:16px;min-width:20px;">${c.emoji || '📦'}</span>
+            <span style="flex:1;color:var(--fog);">${c.name}</span>
+            <span style="font-size:10px;color:var(--silver);">${c.active ? '✓ activa' : '○ inactiva'}</span>
+          </div>
+        `).join('');
+      }
+
+      // Render in Categories View as a sleek list with quick actions
+      if (viewListEl) {
+        if (filtered.length === 0) {
+          viewListEl.innerHTML = `
+            <div style="text-align:center;padding:30px;color:var(--silver);font-size:13px;background:var(--steel);border:1px solid var(--zinc);border-radius:10px;">
+              <i class="bi bi-search" style="font-size:24px;display:block;margin-bottom:8px;opacity:0.4;"></i>
+              No se encontraron categorías que coincidan con "<strong>${escapeHtml(query)}</strong>".
             </div>`;
-          if (advListEl) advListEl.innerHTML = '<div style="color:var(--silver);">No hay categorías aún.</div>';
-          if (viewListEl) viewListEl.innerHTML = emptyMsg;
           return;
         }
 
-        // Render in Advanced View
-        if (advListEl) {
-          advListEl.innerHTML = window.currentCategories.map(c => `
-        <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--zinc);">
-          <span style="font-size:16px;min-width:20px;">${c.emoji || '📦'}</span>
-          <span style="flex:1;color:var(--fog);">${c.name}</span>
-          <span style="font-size:10px;color:var(--silver);">${c.active ? '✓ activa' : '○ inactiva'}</span>
-        </div>
-      `).join('');
-        }
+        viewListEl.innerHTML = filtered.map((c, index) => {
+          const prodCount = (typeof localProducts !== 'undefined' && Array.isArray(localProducts)) 
+            ? localProducts.filter(p => (p.cat || p.categoria) === c.name).length 
+            : 0;
+          const isActive = c.active !== false;
 
-        // Render in Categories View
-        if (viewListEl) {
-          viewListEl.innerHTML = window.currentCategories.map(c => `
-        <div style="background:var(--steel);border:1px solid var(--zinc);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden;">
-          <div style="position:absolute;top:0;left:0;width:4px;height:100%;background:${c.active ? 'var(--green)' : 'var(--silver)'};"></div>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:40px;height:40px;border-radius:8px;background:var(--iron);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">
-              ${c.emoji || '🏷️'}
+          return `
+            <div class="cat-list-row" id="cat-row-${c.id}">
+              <!-- Izquierda: Reordenar + Emoji + Título + Conteo -->
+              <div class="cat-row-left">
+                <div class="cat-reorder-group" title="Reordenar prioridad">
+                  <button type="button" onclick="moveCategoryOrder('${c.id}', 'up')" class="cat-reorder-btn" title="Subir">
+                    <i class="bi bi-chevron-up"></i>
+                  </button>
+                  <button type="button" onclick="moveCategoryOrder('${c.id}', 'down')" class="cat-reorder-btn" title="Bajar">
+                    <i class="bi bi-chevron-down"></i>
+                  </button>
+                </div>
+                <div class="cat-row-emoji">
+                  ${c.emoji || '🏷️'}
+                </div>
+                <div class="cat-row-info">
+                  <div class="cat-row-title-wrap">
+                    <h4 class="cat-row-title" title="${c.name}">${c.name}</h4>
+                    <span class="cat-row-count" title="${prodCount} productos en catálogo">
+                      <i class="bi bi-box-seam" style="font-size:10px;opacity:0.7;"></i> ${prodCount} artículo${prodCount !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Centro: Estado Activa / Oculta con clic rápido -->
+              <div class="cat-row-status">
+                <button type="button" onclick="toggleCategoryActive('${c.id}', ${isActive})" 
+                  class="cat-status-pill ${isActive ? 'active' : 'inactive'}" 
+                  title="Clic para ${isActive ? 'ocultar' : 'activar'} categoría">
+                  <i class="bi ${isActive ? 'bi-check-circle-fill' : 'bi-eye-slash-fill'}"></i>
+                  <span>${isActive ? 'Visible' : 'Oculta'}</span>
+                </button>
+              </div>
+
+              <!-- Derecha: Acciones Rápidas -->
+              <div class="cat-row-actions">
+                <button type="button" onclick="filterAbmByCat('${encodeURIComponent(c.name)}')" class="cat-quick-btn" title="Ver artículos de esta categoría en ABM">
+                  <i class="bi bi-arrow-right-circle"></i> <span style="font-size:11px;">Artículos</span>
+                </button>
+                <button type="button" onclick="openCategoryModal('${c.id}')" class="cat-quick-btn" title="Editar datos">
+                  <i class="bi bi-pencil"></i> <span style="font-size:11px;">Editar</span>
+                </button>
+                <button type="button" onclick="deleteCategory('${c.id}')" class="cat-quick-btn danger" title="Eliminar categoría">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
             </div>
-            <div style="flex:1;overflow:hidden;">
-              <h4 style="margin:0;font-family:var(--font-h);font-size:18px;font-weight:700;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.name}</h4>
-              <div style="font-size:11px;color:var(--silver);margin-top:2px;">${c.active ? 'Activa y visible' : 'Oculta'}</div>
-            </div>
-          </div>
-          <div style="display:flex;gap:6px;margin-top:auto;padding-top:4px;">
-            <button onclick="openCategoryModal('${c.id}')" style="flex:1;padding:6px;background:var(--iron);border:1px solid var(--zinc);border-radius:6px;color:var(--fog);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;"><i class="bi bi-pencil"></i> Editar</button>
-            <button onclick="deleteCategory('${c.id}')" style="padding:6px 10px;background:rgba(215,38,56,.1);border:1px solid rgba(215,38,56,.2);border-radius:6px;color:var(--red);font-size:11px;cursor:pointer;transition:all .15s;"><i class="bi bi-trash"></i></button>
-          </div>
-        </div>
-      `).join('');
+          `;
+        }).join('');
+      }
+    }
+
+    async function toggleCategoryActive(id, currentActive) {
+      try {
+        const newActive = !currentActive;
+        const cat = (window.currentCategories || []).find(c => c.id === id);
+        if (cat) cat.active = newActive;
+        renderCategoriesListUI(document.getElementById('cats-search-input')?.value || '');
+
+        if (!id.startsWith('local_cat_')) {
+          await updateInSupabase('categories', id, { active: newActive });
+        }
+        if (typeof checkOnboardingStatus === 'function') checkOnboardingStatus();
+        showToastDash(newActive ? '✓ Categoría visible en la tienda' : '✓ Categoría ocultada de la tienda');
+      } catch (e) {
+        showToastDash('Error al actualizar estado: ' + e.message);
+      }
+    }
+
+    async function moveCategoryOrder(id, direction) {
+      if (!window.currentCategories || window.currentCategories.length < 2) return;
+      const idx = window.currentCategories.findIndex(c => c.id === id);
+      if (idx === -1) return;
+      const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+      if (targetIdx < 0 || targetIdx >= window.currentCategories.length) return;
+      
+      const currentCat = window.currentCategories[idx];
+      const targetCat = window.currentCategories[targetIdx];
+      
+      const tempOrder = currentCat.display_order || (idx + 1) * 10;
+      const targetOrder = targetCat.display_order || (targetIdx + 1) * 10;
+
+      currentCat.display_order = targetOrder;
+      targetCat.display_order = tempOrder;
+      window.currentCategories[idx] = targetCat;
+      window.currentCategories[targetIdx] = currentCat;
+      renderCategoriesListUI(document.getElementById('cats-search-input')?.value || '');
+
+      try {
+        if (!currentCat.id.startsWith('local_cat_') && !targetCat.id.startsWith('local_cat_')) {
+          await updateInSupabase('categories', currentCat.id, { display_order: targetOrder });
+          await updateInSupabase('categories', targetCat.id, { display_order: tempOrder });
         }
       } catch (e) {
-        if (advListEl) advListEl.innerHTML = `<div style="color:var(--red);">Error: ${e.message}</div>`;
-        if (viewListEl) viewListEl.innerHTML = `<div style="text-align:center;color:var(--red);grid-column:1/-1;">Error al cargar categorías: ${e.message}</div>`;
+        console.warn('Error al persistir orden en Supabase:', e);
       }
+    }
+
+    function filterAbmByCat(catNameEncoded) {
+      const catName = decodeURIComponent(catNameEncoded);
+      goToView('abm');
+      const searchInput = document.getElementById('abm-search');
+      if (searchInput) {
+        searchInput.value = catName;
+        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+        if (typeof renderABMTable === 'function') renderABMTable();
+      }
+    }
+
+    function filterCategoriesList(query) {
+      renderCategoriesListUI(query);
     }
 
     async function refreshProducts(btn) {

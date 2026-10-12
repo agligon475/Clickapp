@@ -1198,6 +1198,7 @@ const CFG_DEFAULTS = {
   h1:'Tu ferretería', h2:'sin filas.',
   desc:'Elegí tus productos, armá tu pedido y coordiná por WhatsApp. Fácil, rápido y sin vueltas.',
   wapp:'5491141819344', logo:'',
+  heroBgColor:'#0E0E0E', heroImgOpacity:100,
 };
 let CFG = {...CFG_DEFAULTS};
 try {
@@ -1578,6 +1579,8 @@ async function loadSheet() {
       CFG.fontBody = cfg.font_body != null ? cfg.font_body : (parsedDesign.font_body || parsedDesign.fontBody || CFG.fontBody || '');
       CFG.bg = cfg.bg != null ? cfg.bg : (parsedDesign.bg || CFG.bg || '');
       CFG.logo = cfg.logo_url || parsedDesign.logo || CFG.logo || '';
+      CFG.heroBgColor = parsedDesign.heroBgColor || CFG.heroBgColor || '#0E0E0E';
+      CFG.heroImgOpacity = parsedDesign.heroImgOpacity != null ? Number(parsedDesign.heroImgOpacity) : (CFG.heroImgOpacity != null ? Number(CFG.heroImgOpacity) : 100);
       
       bannerData = {
         mode: cfg.banner_mode || parsedDesign.banner_mode || (localBannerData && localBannerData.mode) || 'double',
@@ -2827,11 +2830,19 @@ function applyStoredConfig() {
   const heroBadge = document.querySelector('.hero-badge');
   if (heroBadge && cfg.name) heroBadge.textContent = cfg.name.split(' ')[0].toUpperCase();
 
-  // Hero background image
+  // Hero background image & background color blending
+  const heroEl = document.getElementById('hero');
   const heroBg = document.getElementById('hero-img-bg');
   const heroOverlay = document.getElementById('hero-overlay');
   const heroStripes = document.getElementById('hero-stripes');
   const heroImgUrl = (localStorage.getItem(`storeapp_hero_img_${STORE_ID}`) || localStorage.getItem('storeapp_hero_img') || cfg.bg || '').trim();
+  const heroBgColor = cfg.heroBgColor || CFG.heroBgColor || '#0E0E0E';
+  const heroImgOpacity = (cfg.heroImgOpacity != null ? Number(cfg.heroImgOpacity) : (CFG.heroImgOpacity != null ? Number(CFG.heroImgOpacity) : 100)) / 100;
+
+  if (heroEl) {
+    heroEl.style.backgroundColor = heroBgColor;
+  }
+
   if (heroImgUrl && heroBg) {
     // Dynamic LCP preload optimization for PageSpeed
     const link = document.createElement('link');
@@ -2843,11 +2854,15 @@ function applyStoredConfig() {
     document.head.appendChild(link);
 
     heroBg.style.backgroundImage = `url('${optimizeImg(heroImgUrl, 1200)}')`;
-    heroBg.style.opacity = '1';
+    heroBg.style.opacity = heroImgOpacity.toString();
     if (heroStripes) heroStripes.style.display = 'none';
     if (heroOverlay) heroOverlay.style.background = cfg.heroOverlay || 'rgba(0,0,0,.48)';
   } else {
-    if (heroBg) heroBg.style.backgroundImage = 'none';
+    if (heroBg) {
+      heroBg.style.backgroundImage = 'none';
+      heroBg.style.opacity = '0';
+    }
+    if (heroStripes) heroStripes.style.display = 'none';
     if (heroOverlay) heroOverlay.style.background = 'transparent';
   }
 
