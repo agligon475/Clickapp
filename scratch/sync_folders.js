@@ -4,6 +4,8 @@ import path from 'path';
 const filesToSync = [
   'dashboard.html',
   'tienda.html',
+  'kit-imprimible.html',
+  'api/qr.js',
   // index.html is intentionally NOT synced to root — Vercel serves it as
   // a static file for "/" which overrides the api/store rewrite.
   // Store template lives in submodule subdirectories only.

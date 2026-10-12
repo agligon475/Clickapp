@@ -8,19 +8,18 @@
   <!-- Google Fonts & Bootstrap Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
 
   <style>
     :root {
-      --brand-main: #F60000;
-      --brand-dark: #D60000;
+      --brand-main: #D72638;
+      --brand-dark: #B51D2C;
       --brand-secondary: #0F172A;
       --brand-muted: #64748B;
-      --bg-page: #F6F6F6;
+      --bg-page: #0B0E14;
       --font-title: 'Josefin Sans', sans-serif;
       --font-body: 'Poppins', sans-serif;
-      --font-main: 'Poppins', sans-serif;
     }
 
     * {
@@ -30,24 +29,34 @@
     }
 
     body {
-      font-family: var(--font-main);
-      background: var(--bg-page);
-      color: var(--brand-secondary);
-      padding: 20px;
+      font-family: var(--font-body);
+      background: #0B0E14;
+      color: #0F172A;
+      padding: 24px 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
 
-    /* Print settings overrides */
+    /* ═══════════════════════════════════════════
+       PRINT RULES — OPTIMIZADO PARA HOJA A4 EXACTA
+       ═══════════════════════════════════════════ */
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+
     @media print {
       body {
         background: #ffffff !important;
         padding: 0 !important;
         margin: 0 !important;
+        width: 210mm !important;
+        height: 297mm !important;
+        overflow: hidden !important;
       }
       .no-print {
         display: none !important;
@@ -57,30 +66,53 @@
         border: none !important;
         margin: 0 !important;
         padding: 0 !important;
-        width: 100% !important;
+        width: 210mm !important;
+        height: 297mm !important;
         max-width: none !important;
+        border-radius: 0 !important;
+        background: #ffffff !important;
+      }
+      .preview-body {
+        padding: 0 !important;
+        background: #ffffff !important;
+        width: 210mm !important;
+        height: 297mm !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
       }
       .tab-content {
         display: none !important;
+        width: 210mm !important;
+        height: 297mm !important;
       }
       .tab-content.active {
-        display: block !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 210mm !important;
+        height: 297mm !important;
+        page-break-after: avoid !important;
+        page-break-before: avoid !important;
+        page-break-inside: avoid !important;
       }
       .page-card {
         box-shadow: none !important;
         margin: 0 auto !important;
-        page-break-inside: avoid;
+        page-break-inside: avoid !important;
+        page-break-after: avoid !important;
+        page-break-before: avoid !important;
       }
     }
 
-    /* MODAL CONTAINER UI */
+    /* MODAL CONTAINER UI (EN PANTALLA) */
     .modal-wrapper {
       background: #ffffff;
       width: 100%;
-      max-width: 860px;
+      max-width: 900px;
       border-radius: 20px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.1);
-      border: 1px solid #E2E8F0;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.45);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -88,11 +120,12 @@
 
     /* MODAL HEADER */
     .modal-header {
-      padding: 20px 24px 16px 24px;
+      padding: 18px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid #F1F5F9;
+      border-bottom: 1px solid #E2E8F0;
+      background: #ffffff;
     }
 
     .modal-title-group {
@@ -104,7 +137,7 @@
     .modal-icon-badge {
       width: 44px;
       height: 44px;
-      background: #FFF0F0;
+      background: #FFF1F2;
       border: 1px solid #FECDD3;
       border-radius: 12px;
       display: flex;
@@ -120,10 +153,11 @@
       font-weight: 800;
       color: #0F172A;
       line-height: 1.2;
+      font-family: var(--font-title);
     }
 
     .modal-title-text p {
-      font-size: 12.5px;
+      font-size: 12px;
       color: #64748B;
       margin-top: 2px;
       font-weight: 500;
@@ -145,30 +179,30 @@
       color: #0F172A;
     }
 
-    /* TABS NAV BAR */
+    /* TABS BAR */
     .tabs-bar-container {
-      padding: 16px 24px;
-      background: #FAFAFA;
-      border-bottom: 1px solid #F1F5F9;
+      padding: 14px 24px;
+      background: #F8FAFC;
+      border-bottom: 1px solid #E2E8F0;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
 
     .tabs-pills {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       overflow-x: auto;
-      padding-bottom: 4px;
+      padding-bottom: 2px;
     }
 
     .tab-pill {
       background: #ffffff;
-      border: 1.5px solid #E2E8F0;
-      color: #475569;
-      padding: 10px 18px;
+      border: 1.5px solid #CBD5E1;
+      color: #334155;
+      padding: 9px 16px;
       border-radius: 50px;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
@@ -176,10 +210,11 @@
       gap: 8px;
       white-space: nowrap;
       transition: all 0.2s;
+      font-family: var(--font-body);
     }
 
     .tab-pill:hover {
-      border-color: #CBD5E1;
+      border-color: #94A3B8;
       color: #0F172A;
     }
 
@@ -187,25 +222,41 @@
       background: var(--brand-main);
       border-color: var(--brand-main);
       color: #ffffff;
-      box-shadow: 0 4px 14px rgba(215, 38, 56, 0.3);
+      box-shadow: 0 4px 12px rgba(215, 38, 56, 0.3);
+    }
+
+    .print-actions-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .print-tip {
+      font-size: 11.5px;
+      color: #64748B;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
     }
 
     .btn-print-main {
-      width: 100%;
       background: var(--brand-main);
       color: #ffffff;
       border: none;
-      padding: 14px;
-      border-radius: 12px;
-      font-size: 15px;
+      padding: 10px 22px;
+      border-radius: 10px;
+      font-size: 13.5px;
       font-weight: 800;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 10px;
-      box-shadow: 0 6px 20px rgba(215, 38, 56, 0.35);
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(215, 38, 56, 0.35);
       transition: all 0.2s;
+      font-family: var(--font-body);
     }
 
     .btn-print-main:hover {
@@ -213,14 +264,14 @@
       transform: translateY(-1px);
     }
 
-    /* PREVIEW BODY STYLES */
+    /* PREVIEW BODY (EN PANTALLA) */
     .preview-body {
-      padding: 32px 24px;
-      background: #E2E8F0;
+      padding: 28px 16px;
+      background: #1E293B;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 520px;
+      min-height: 540px;
       overflow-x: auto;
     }
 
@@ -234,129 +285,188 @@
       justify-content: center;
     }
 
-    /* ============================================================
-       DESIGN 1: STAND MOSTRADOR (A5)
-       ============================================================ */
-    .a5-card {
+    /* ═══════════════════════════════════════════
+       BRAND FOOTER CENTRADO — DALETEPIDO
+       ═══════════════════════════════════════════ */
+    .dtp-center-footer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      text-align: center;
+      margin-top: 6px;
+    }
+
+    .dtp-center-tag {
+      font-size: 8.5px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: #64748B;
+      text-transform: uppercase;
+    }
+
+    .dtp-logo-pill {
+      background: #D72638;
+      padding: 5px 16px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(215, 38, 56, 0.25);
+    }
+
+    .dtp-logo-img {
+      height: 20px;
+      width: auto;
+      display: block;
+    }
+
+    .dtp-center-url {
+      font-size: 10px;
+      font-weight: 700;
+      color: #334155;
+      letter-spacing: 0.02em;
+    }
+
+    /* ═══════════════════════════════════════════
+       PIEZA 1: STAND MOSTRADOR (A4 HOJA COMPLETA)
+       ═══════════════════════════════════════════ */
+    .a4-mostrador-card {
       background: #ffffff;
-      width: 148mm;
-      min-height: 210mm;
+      width: 196mm;
+      height: 278mm;
+      max-height: 278mm;
       border: 4px solid var(--brand-main);
-      border-radius: 24px;
-      padding: 24px;
+      border-radius: 22px;
+      padding: 14mm 14mm 10mm 14mm;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.08);
       box-sizing: border-box;
       position: relative;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.18);
     }
 
-    .a5-header {
+    .mostrador-header {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 16px;
+      border-bottom: 2px solid #F1F5F9;
+      padding-bottom: 10mm;
     }
 
-    .a5-logo-img {
-      width: 60px;
-      height: 60px;
+    .mostrador-logo-img {
+      width: 65px;
+      height: 65px;
       border-radius: 14px;
       object-fit: cover;
-      border: 1px solid #E2E8F0;
+      border: 1px solid #CBD5E1;
       background: #fff;
+      flex-shrink: 0;
     }
 
-    .a5-title-wrap h1 {
-      font-size: 24px;
+    .mostrador-title-wrap h1 {
+      font-family: var(--font-title);
+      font-size: 28px;
       font-weight: 900;
       color: #0F172A;
       line-height: 1.1;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.01em;
     }
 
-    .a5-title-wrap p {
-      font-size: 13px;
+    .mostrador-title-wrap p {
+      font-size: 13.5px;
       color: #64748B;
-      font-weight: 500;
+      font-weight: 600;
       margin-top: 3px;
     }
 
-    .a5-center-box {
+    .mostrador-center-box {
       background: #F8FAFC;
-      border: 1px solid #E2E8F0;
+      border: 2px solid #E2E8F0;
       border-radius: 20px;
-      padding: 24px 18px;
+      padding: 14px 18px;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin: 18px 0;
+      margin: 4mm 0;
     }
 
-    .a5-center-title {
-      font-size: 22px;
+    .mostrador-center-title {
+      font-family: var(--font-title);
+      font-size: 26px;
       font-weight: 900;
       color: var(--brand-main);
-      margin-bottom: 6px;
-      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
     }
 
-    .a5-center-sub {
-      font-size: 13px;
-      color: #64748B;
-      font-weight: 500;
-      margin-bottom: 20px;
+    .mostrador-center-sub {
+      font-size: 13.5px;
+      color: #475569;
+      font-weight: 600;
+      margin-bottom: 12px;
     }
 
-    .a5-qr-img {
-      width: 190px;
-      height: 190px;
-      border-radius: 12px;
-      background: #fff;
+    /* QR GRANDE DE MOSTRADOR */
+    .mostrador-qr-img {
+      width: 88mm;
+      height: 88mm;
+      max-width: 330px;
+      max-height: 330px;
+      border-radius: 16px;
+      background: #ffffff;
       padding: 10px;
-      border: 1px solid #E2E8F0;
+      border: 2px solid #0F172A;
       display: block;
-      margin-bottom: 20px;
+      margin: 4px 0 14px 0;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
     }
 
-    .a5-pill-url {
+    .mostrador-pill-url {
       background: var(--brand-main);
       color: #ffffff;
-      padding: 10px 28px;
+      padding: 9px 26px;
       border-radius: 50px;
       font-size: 14px;
       font-weight: 800;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       letter-spacing: 0.02em;
       box-shadow: 0 4px 12px rgba(215, 38, 56, 0.25);
     }
 
-    .a5-footer {
-      border-top: 1px solid #E2E8F0;
-      padding-top: 14px;
+    .mostrador-footer-info {
+      border-top: 1.5px solid #E2E8F0;
+      padding-top: 8px;
       display: flex;
       justify-content: space-between;
-      font-size: 11px;
-      font-weight: 600;
-      color: #475569;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #334155;
     }
 
-    /* ============================================================
-       DESIGN 2: AFICHE VIDRIERA (A4)
-       ============================================================ */
+    /* ═══════════════════════════════════════════
+       PIEZA 2: AFICHE VIDRIERA (A4 - QR GIGANTE)
+       ═══════════════════════════════════════════ */
     .a4-afiche-card {
       background: #ffffff;
-      width: 210mm;
-      min-height: 297mm;
+      width: 196mm;
+      height: 278mm;
+      max-height: 278mm;
       border: 5px solid var(--brand-main);
-      border-radius: 28px;
-      padding: 32px;
+      border-radius: 22px;
+      padding: 12mm 14mm 8mm 14mm;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.08);
       box-sizing: border-box;
+      position: relative;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.18);
     }
 
     .a4-afiche-header {
@@ -366,212 +476,274 @@
     }
 
     .a4-afiche-logo {
-      width: 70px;
-      height: 70px;
-      border-radius: 16px;
+      width: 60px;
+      height: 60px;
+      border-radius: 14px;
       object-fit: cover;
-      border: 1px solid #E2E8F0;
+      border: 1px solid #CBD5E1;
+      flex-shrink: 0;
     }
 
     .a4-banner-top {
-      background: #FFF0F0;
-      border: 1.5px solid #FECDD3;
-      border-radius: 14px;
-      padding: 14px;
+      background: var(--brand-main);
+      color: #ffffff;
+      border-radius: 12px;
+      padding: 10px 14px;
       text-align: center;
-      font-size: 20px;
+      font-size: 17px;
       font-weight: 900;
-      color: var(--brand-main);
-      letter-spacing: 0.03em;
+      letter-spacing: 0.04em;
       text-transform: uppercase;
-      margin: 20px 0;
+      margin: 3mm 0;
+      box-shadow: 0 4px 12px rgba(215, 38, 56, 0.25);
+      font-family: var(--font-title);
     }
 
     .a4-afiche-center {
       background: #F8FAFC;
-      border: 1px solid #E2E8F0;
-      border-radius: 22px;
-      padding: 32px;
+      border: 2px solid #E2E8F0;
+      border-radius: 20px;
+      padding: 12px 14px;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
+    /* QR GIGANTE DE VIDRIERA — PROTAGONISTA ABSOLUTO */
     .a4-afiche-qr {
-      width: 230px;
-      height: 230px;
-      border-radius: 16px;
+      width: 112mm;
+      height: 112mm;
+      max-width: 420px;
+      max-height: 420px;
+      border-radius: 20px;
       background: #fff;
       padding: 12px;
-      border: 1px solid #CBD5E1;
+      border: 3px solid #0F172A;
       display: block;
-      margin-bottom: 20px;
+      margin: 2px 0 10px 0;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    .a4-scan-tip {
+      font-size: 12px;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 6px;
     }
 
     .a4-link-badge {
       background: #ffffff;
-      border: 1px solid #CBD5E1;
-      border-radius: 10px;
-      padding: 10px 24px;
-      font-size: 15px;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 50px;
+      padding: 6px 20px;
+      font-size: 13px;
       font-weight: 800;
       color: #0F172A;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .a4-steps-grid {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
-      margin: 20px 0;
+      gap: 10px;
+      margin: 3mm 0;
     }
 
     .a4-step-card {
       background: #F8FAFC;
       border: 1px solid #E2E8F0;
       border-radius: 12px;
-      padding: 14px 10px;
+      padding: 10px 8px;
       text-align: center;
     }
 
     .a4-step-num {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 900;
       color: var(--brand-main);
       display: block;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
+      font-family: var(--font-title);
     }
 
     .a4-step-txt {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       color: #1E293B;
-    }
-
-    .a4-dark-footer {
-      background: #0F172A;
-      color: #ffffff;
-      border-radius: 14px;
-      padding: 14px 24px;
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    /* ============================================================
-       DESIGN 3: TARJETITAS (8 POR HOJA A4)
-       ============================================================ */
-    .a4-tarjetas-page {
-      background: #ffffff;
-      width: 210mm;
-      min-height: 297mm;
-      padding: 12mm 10mm;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-      box-sizing: border-box;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: repeat(4, 1fr);
-      gap: 10mm;
-    }
-
-    .tarjeta-item {
-      border: 2px dashed #334155;
-      border-radius: 16px;
-      padding: 14px;
-      background: #ffffff;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      box-sizing: border-box;
-    }
-
-    .tarjeta-qr {
-      width: 68px;
-      height: 68px;
-      border-radius: 8px;
-      flex-shrink: 0;
-      border: 1px solid #E2E8F0;
-    }
-
-    .tarjeta-info h3 {
-      font-size: 15px;
-      font-weight: 800;
-      color: #0F172A;
       line-height: 1.2;
     }
 
-    .tarjeta-info p {
-      font-size: 12px;
-      font-weight: 700;
+    .a4-contact-footer {
+      background: #0F172A;
+      color: #ffffff;
+      border-radius: 10px;
+      padding: 8px 18px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* ═══════════════════════════════════════════
+       PIEZA 3: TARJETAS PERSONALES (10 POR HOJA A4)
+       ═══════════════════════════════════════════ */
+    .a4-tarjetas-page {
+      background: #ffffff;
+      width: 196mm;
+      height: 278mm;
+      max-height: 278mm;
+      padding: 7mm 6mm;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.18);
+      box-sizing: border-box;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(5, 1fr);
+      gap: 3.5mm 5mm;
+      overflow: hidden;
+    }
+
+    .tarjeta-item {
+      border: 1.2px dashed #64748B;
+      border-radius: 12px;
+      padding: 8px 12px;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .tarjeta-qr {
+      width: 38mm;
+      height: 38mm;
+      max-width: 140px;
+      max-height: 140px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      border: 1.5px solid #0F172A;
+      background: #fff;
+      padding: 2px;
+    }
+
+    .tarjeta-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .tarjeta-info h3 {
+      font-family: var(--font-title);
+      font-size: 13.5px;
+      font-weight: 900;
+      color: #0F172A;
+      line-height: 1.15;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tarjeta-info-tag {
+      font-size: 10px;
+      font-weight: 800;
       color: var(--brand-main);
-      margin: 3px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
     }
 
-    .tarjeta-info span {
-      font-size: 10.5px;
+    .tarjeta-info-url {
+      font-size: 9px;
+      color: #334155;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+
+    .tarjeta-info-wapp {
+      font-size: 8.5px;
       color: #64748B;
-      font-weight: 500;
-      word-break: break-all;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    /* ============================================================
-       DESIGN 4: STAND TRIANGULAR CON COLGANTES (EXISTENTE)
-       ============================================================ */
+    .tarjeta-brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+      background: #F1F5F9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      width: fit-content;
+    }
+
+    .tarjeta-brand-badge span {
+      font-size: 7.5px;
+      font-weight: 700;
+      color: #475569;
+      letter-spacing: 0.02em;
+    }
+
+    /* ═══════════════════════════════════════════
+       PIEZA 4: STAND TRIANGULAR PLEGABLE (A4)
+       ═══════════════════════════════════════════ */
     .a4-triangular-page {
       background: #fff;
-      width: 210mm;
-      height: 297mm;
-      padding: 12mm 8mm;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-      border: 1px solid #e2e8f0;
+      width: 196mm;
+      height: 278mm;
+      max-height: 278mm;
+      padding: 5mm 5mm;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.18);
+      border: 1px solid #E2E8F0;
       display: grid;
-      grid-template-columns: 110mm 1fr;
-      gap: 8mm;
+      grid-template-columns: 106mm 1fr;
+      gap: 6mm;
       overflow: hidden;
       box-sizing: border-box;
     }
 
     .stand-container {
-      border: 0.8px solid #000;
-      height: 272mm;
-      width: 102mm;
+      border: 1px solid #000;
+      height: 268mm;
+      width: 106mm;
       display: flex;
       flex-direction: column;
       position: relative;
       background: #fff;
+      border-radius: 4px;
+      overflow: hidden;
     }
 
     .fold-line-dashed {
-      border-top: 1.2px dashed #000;
+      border-top: 1.5px dashed #000;
       width: 100%;
       position: relative;
     }
 
-    .fold-label {
-      position: absolute;
-      font-size: 10px;
-      font-weight: 700;
-      color: #000;
-      text-transform: uppercase;
-    }
-
     .stand-top-flap {
-      height: 48mm;
+      height: 44mm;
       background: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
-      padding: 10px;
+      padding: 6px;
     }
 
     .stand-body-top {
-      height: 98mm;
-      padding: 8mm 6mm;
+      height: 94mm;
+      padding: 6mm;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -582,11 +754,13 @@
     }
 
     .stand-body-bottom {
-      height: 86mm;
+      height: 90mm;
       display: flex;
       flex-direction: column;
       align-items: center;
       position: relative;
+      padding: 4mm 6mm;
+      justify-content: space-between;
     }
 
     .stand-bottom-flap {
@@ -596,7 +770,7 @@
       align-items: center;
       justify-content: center;
       position: relative;
-      padding: 10px;
+      padding: 6px;
     }
 
     .right-column {
@@ -604,13 +778,13 @@
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      height: 272mm;
+      height: 268mm;
     }
 
     .circle-hanger {
-      width: 78mm;
-      height: 78mm;
-      border: 0.8px solid #000;
+      width: 76mm;
+      height: 76mm;
+      border: 1.2px solid #000;
       border-radius: 50%;
       background: #fff;
       display: flex;
@@ -621,7 +795,7 @@
 
     .circle-red-header {
       width: 100%;
-      height: 24mm;
+      height: 22mm;
       background: var(--brand-main);
       color: #fff;
       display: flex;
@@ -634,12 +808,13 @@
       width: 32mm;
       height: 32mm;
       background: #fff;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
+      border: 1px solid #CBD5E1;
+      border-radius: 10px;
       padding: 2mm;
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-top: 2mm;
     }
   </style>
 </head>
@@ -656,7 +831,7 @@
         </div>
         <div class="modal-title-text">
           <h2>Kit Imprimible de Difusión & Código QR</h2>
-          <p>Imprimí carteles para tu mostrador, vidriera o tarjetas con el QR de tu tienda</p>
+          <p>Piezas gráficas de alto impacto listas para imprimir en formato A4 estándar</p>
         </div>
       </div>
       <button class="btn-close-modal" onclick="window.close()" title="Cerrar"><i class="bi bi-x-lg"></i></button>
@@ -665,84 +840,113 @@
     <!-- TABS BAR & PRINT BUTTON -->
     <div class="tabs-bar-container no-print">
       <div class="tabs-pills">
-        <button class="tab-pill active" onclick="switchTab('stand-a5')">
-          <i class="bi bi-display"></i> Stand Mostrador (A5)
+        <button class="tab-pill active" onclick="switchTab('mostrador-a4')">
+          <i class="bi bi-display"></i> Stand Mostrador (A4)
         </button>
         <button class="tab-pill" onclick="switchTab('afiche-a4')">
           <i class="bi bi-image"></i> Afiche Vidriera (A4)
         </button>
         <button class="tab-pill" onclick="switchTab('tarjetas')">
-          <i class="bi bi-credit-card-2-front"></i> Tarjetitas (8/Hoja)
+          <i class="bi bi-credit-card-2-front"></i> Tarjetas Personales (10/Hoja)
         </button>
         <button class="tab-pill" onclick="switchTab('triangular-a4')">
           <i class="bi bi-box-seam"></i> Stand Triangular (A4)
         </button>
       </div>
 
-      <button class="btn-print-main" onclick="window.print()">
-        <i class="bi bi-printer-fill"></i> Imprimir este Diseño
-      </button>
+      <div class="print-actions-bar">
+        <div class="print-tip">
+          <i class="bi bi-info-circle-fill" style="color:var(--brand-main);"></i>
+          <span>En la vista previa de impresión, seleccioná <strong>Tamaño A4</strong> y <strong>Márgenes: Ninguno</strong> para cubrir la hoja.</span>
+        </div>
+        <button class="btn-print-main" onclick="window.print()">
+          <i class="bi bi-printer-fill"></i> Imprimir este Diseño (A4)
+        </button>
+      </div>
     </div>
 
     <!-- PREVIEW AREA -->
     <div class="preview-body">
       
-      <!-- TAB 1: STAND MOSTRADOR A5 -->
-      <div id="tab-stand-a5" class="tab-content active">
-        <div class="a5-card page-card">
-          <div class="a5-header">
-            <img class="a5-logo-img dyn-logo" src="/dashboard-icon.png" alt="Logo" />
-            <div class="a5-title-wrap">
+      <!-- TAB 1: STAND MOSTRADOR A4 (PREPARADO PARA A4) -->
+      <div id="tab-mostrador-a4" class="tab-content active">
+        <div class="a4-mostrador-card page-card">
+          <!-- Header -->
+          <div class="mostrador-header">
+            <img class="mostrador-logo-img dyn-logo" src="/dashboard-icon.png" alt="Logo" />
+            <div class="mostrador-title-wrap">
               <h1 class="dyn-name">Cargando...</h1>
               <p class="dyn-tagline">Catálogo & Pedidos Online</p>
             </div>
           </div>
 
-          <div class="a5-center-box">
-            <div class="a5-center-title">¡Hacé tu pedido online!</div>
-            <div class="a5-center-sub">Escaneá el código QR con la cámara de tu celular</div>
-            <img class="a5-qr-img dyn-qr" src="" alt="Código QR" />
-            <div class="a5-pill-url dyn-url">cargando.daletepido.com.ar</div>
+          <!-- Centro con QR Grande -->
+          <div class="mostrador-center-box">
+            <div class="mostrador-center-title">¡Hacé tu pedido online!</div>
+            <div class="mostrador-center-sub">Escaneá el código QR con la cámara de tu celular</div>
+            <img class="mostrador-qr-img dyn-qr" src="" alt="Código QR" />
+            <div class="mostrador-pill-url dyn-url-badge">
+              <i class="bi bi-phone"></i> <span class="dyn-url">cargando.daletepido.com.ar</span>
+            </div>
           </div>
 
-          <div class="a5-footer">
-            <div>📍 <span class="dyn-address">Consultar Dirección</span></div>
+          <!-- Contacto inferior -->
+          <div class="mostrador-footer-info">
+            <div>📍 <span class="dyn-address">Atención en mostrador y envíos</span></div>
             <div>📲 WhatsApp: <span class="dyn-wapp">Consultar</span></div>
+          </div>
+
+          <!-- LOGO DE DALETEPIDO EN EL CENTRO ABAJO -->
+          <div class="dtp-center-footer">
+            <span class="dtp-center-tag">PLATAFORMA OFICIAL DE PEDIDOS</span>
+            <div class="dtp-logo-pill">
+              <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png"
+                   onerror="this.src='/img-default/daletepido-logo-white-hq.png'"
+                   alt="Dale! Te Pido" class="dtp-logo-img" />
+            </div>
+            <span class="dtp-center-url">www.daletepido.com.ar</span>
           </div>
         </div>
       </div>
 
-      <!-- TAB 2: AFICHE VIDRIERA A4 -->
+      <!-- TAB 2: AFICHE VIDRIERA A4 (QR GIGANTE DESTACADO) -->
       <div id="tab-afiche-a4" class="tab-content">
         <div class="a4-afiche-card page-card">
+          <!-- Header -->
           <div class="a4-afiche-header">
             <img class="a4-afiche-logo dyn-logo" src="/dashboard-icon.png" alt="Logo" />
-            <div class="a5-title-wrap">
-              <h1 class="dyn-name" style="font-size:28px;">Cargando...</h1>
-              <p class="dyn-tagline" style="font-size:14px;">Catálogo & Pedidos Online</p>
+            <div class="mostrador-title-wrap">
+              <h1 class="dyn-name" style="font-size:26px;">Cargando...</h1>
+              <p class="dyn-tagline" style="font-size:13px;">Catálogo & Pedidos Online</p>
             </div>
           </div>
 
+          <!-- Banner Impacto -->
           <div class="a4-banner-top">
-            ⚡ HACÉ TU PEDIDO EN SEGUNDOS
+            ⚡ ¡ESCANEÁ DESDE LA VEREDA Y PEDÍ EN SEGUNDOS!
           </div>
 
+          <!-- Centro con QR GIGANTE -->
           <div class="a4-afiche-center">
             <img class="a4-afiche-qr dyn-qr" src="" alt="Código QR" />
+            <div class="a4-scan-tip">
+              <i class="bi bi-camera-fill" style="color:var(--brand-main);"></i> Apuntá tu cámara • No necesitás bajar ninguna app
+            </div>
             <div class="a4-link-badge">
-              <i class="bi bi-link-45deg" style="color:var(--brand-main); font-size:18px;"></i>
+              <i class="bi bi-link-45deg" style="color:var(--brand-main); font-size:16px;"></i>
               <span class="dyn-url">cargando.daletepido.com.ar</span>
             </div>
           </div>
 
+          <!-- Pasos 1, 2, 3 -->
           <div class="a4-steps-grid">
             <div class="a4-step-card">
               <span class="a4-step-num">1</span>
-              <span class="a4-step-txt">Escaneá el QR</span>
+              <span class="a4-step-txt">Escaneá el QR con tu celular</span>
             </div>
             <div class="a4-step-card">
               <span class="a4-step-num">2</span>
-              <span class="a4-step-txt">Elegí Productos</span>
+              <span class="a4-step-txt">Mirá catálogo y precios</span>
             </div>
             <div class="a4-step-card">
               <span class="a4-step-num">3</span>
@@ -750,26 +954,43 @@
             </div>
           </div>
 
-          <div class="a4-dark-footer">
-            <div>📍 <span class="dyn-address">Consultar Dirección</span></div>
+          <!-- Contacto -->
+          <div class="a4-contact-footer">
+            <div>📍 <span class="dyn-address">Atención al público</span></div>
             <div>📲 WhatsApp: <span class="dyn-wapp">Consultar</span></div>
+          </div>
+
+          <!-- LOGO DE DALETEPIDO EN EL CENTRO ABAJO DE LA HOJA -->
+          <div class="dtp-center-footer">
+            <span class="dtp-center-tag">POTENCIADO POR</span>
+            <div class="dtp-logo-pill">
+              <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png"
+                   onerror="this.src='/img-default/daletepido-logo-white-hq.png'"
+                   alt="Dale! Te Pido" class="dtp-logo-img" />
+            </div>
+            <span class="dtp-center-url">www.daletepido.com.ar</span>
           </div>
         </div>
       </div>
 
-      <!-- TAB 3: TARJETITAS (8 POR HOJA A4) -->
+      <!-- TAB 3: TARJETAS PERSONALES (EXACTAMENTE 10 POR HOJA A4: 2x5) -->
       <div id="tab-tarjetas" class="tab-content">
         <div class="a4-tarjetas-page page-card">
-          <!-- 8 Mini Cards -->
+          <!-- 10 Mini Cards (2 cols x 5 rows) -->
           <script>
-            for (let i = 0; i < 8; i++) {
+            for (let i = 0; i < 10; i++) {
               document.write(`
                 <div class="tarjeta-item">
                   <img class="tarjeta-qr dyn-qr" src="" alt="QR" />
                   <div class="tarjeta-info">
                     <h3 class="dyn-name">Cargando...</h3>
-                    <p>¡Hacé tu pedido online!</p>
-                    <span class="dyn-url">cargando.daletepido.com.ar</span>
+                    <div class="tarjeta-info-tag">¡Hacé tu pedido online!</div>
+                    <div class="tarjeta-info-url"><i class="bi bi-link-45deg"></i> <span class="dyn-url">cargando.daletepido.com.ar</span></div>
+                    <div class="tarjeta-info-wapp"><i class="bi bi-whatsapp"></i> <span class="dyn-wapp">WhatsApp</span></div>
+                    <div class="tarjeta-brand-badge">
+                      <i class="bi bi-lightning-charge-fill" style="color:var(--brand-main); font-size:8px;"></i>
+                      <span>Dale! Te Pido</span>
+                    </div>
                   </div>
                 </div>
               `);
@@ -784,41 +1005,41 @@
           <!-- Left: Expositor -->
           <div class="stand-container">
             <div class="stand-top-flap">
-              <div style="transform: rotate(180deg); font-size: 9px; color: #666; text-align: center; font-weight: 600;">
+              <div style="transform: rotate(180deg); font-size: 8.5px; color: #666; text-align: center; font-weight: 700;">
                 ↑ SOLAPA DE SOPORTE TRASERO ↑
               </div>
               <div class="fold-line-dashed" style="position: absolute; bottom: 0; left: 0; right: 0;"></div>
             </div>
 
             <div class="stand-body-top">
-              <div style="font-size: 10px; font-weight: 700; color: #666;" class="dyn-url">daletepido.com.ar</div>
-              <div style="background: var(--brand-main); padding: 8px 24px; border-radius: 10px; margin: 4px 0;">
-                <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" onerror="this.src='/img-default/daletepido-logo-white-hq.png'" alt="Logo" style="height: 32px;" />
+              <div style="font-size: 9.5px; font-weight: 700; color: #475569;" class="dyn-url">daletepido.com.ar</div>
+              <div style="background: var(--brand-main); padding: 5px 20px; border-radius: 8px; margin: 3px 0;">
+                <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" onerror="this.src='/img-default/daletepido-logo-white-hq.png'" alt="Logo" style="height: 22px;" />
               </div>
-              <h4 class="dyn-name" style="font-size: 15px; font-weight: 800;">Cargando...</h4>
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; width: 100%; font-size: 10px; text-align: left;">
-                <strong style="color:var(--brand-main); display:block; margin-bottom:4px;">¿Cómo realizar tu pedido?</strong>
-                1. Escaneá el QR<br/>2. Armá tu carrito<br/>3. Enviá por WhatsApp
+              <h4 class="dyn-name" style="font-size: 14px; font-weight: 900;">Cargando...</h4>
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 8px; width: 100%; font-size: 9px; text-align: left;">
+                <strong style="color:var(--brand-main); display:block; margin-bottom:2px;">¿Cómo realizar tu pedido?</strong>
+                1. Escaneá el QR &nbsp;•&nbsp; 2. Armá tu carrito &nbsp;•&nbsp; 3. Enviá por WhatsApp
               </div>
             </div>
 
             <div class="stand-body-bottom">
               <div class="fold-line-dashed" style="position: absolute; top: 0; left: 0; right: 0;"></div>
-              <div style="background: var(--brand-main); width: 100%; height: 12mm; display: flex; align-items: center; justify-content: center; color: #fff;">
-                <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" onerror="this.src='/img-default/daletepido-logo-white-hq.png'" alt="Logo" style="height: 28px;" />
+              <div style="background: var(--brand-main); width: 100%; padding: 4px; display: flex; align-items: center; justify-content: center; border-radius: 6px;">
+                <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" onerror="this.src='/img-default/daletepido-logo-white-hq.png'" alt="Logo" style="height: 20px;" />
               </div>
               <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1;">
-                <div style="background:#fff; border: 1px solid #000; border-radius: 12px; padding: 2mm; width: 40mm; height: 40mm;">
+                <div style="background:#fff; border: 1.5px solid #000; border-radius: 10px; padding: 2mm; width: 38mm; height: 38mm;">
                   <img class="dyn-qr" src="" alt="QR" style="width:100%; height:100%; border-radius:6px;" />
                 </div>
-                <div class="dyn-name" style="font-size: 14px; font-weight: 800; margin-top: 2mm;">Cargando...</div>
-                <div class="dyn-url" style="font-size: 9px; color: #666;">...</div>
+                <div class="dyn-name" style="font-size: 13px; font-weight: 900; margin-top: 2mm;">Cargando...</div>
+                <div class="dyn-url" style="font-size: 8.5px; color: #64748B;">...</div>
               </div>
             </div>
 
             <div class="stand-bottom-flap">
               <div class="fold-line-dashed" style="position: absolute; top: 0; left: 0; right: 0;"></div>
-              <div style="font-size: 9px; color: #666; text-align: center;">↑ SOLAPA DE CIERRE ↑</div>
+              <div style="font-size: 8.5px; color: #666; text-align: center; font-weight: 700;">↑ SOLAPA DE CIERRE ↑</div>
             </div>
           </div>
 
@@ -826,32 +1047,35 @@
           <div class="right-column">
             <div class="circle-hanger">
               <div class="circle-red-header">
-                <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" onerror="this.src='/img-default/daletepido-logo-white-hq.png'" alt="Logo" style="height: 26px;" />
-                <span style="font-size: 7px; font-weight: 700; text-transform:uppercase;">Escaneá y Pedí</span>
+                <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" onerror="this.src='/img-default/daletepido-logo-white-hq.png'" alt="Logo" style="height: 18px;" />
+                <span style="font-size: 7px; font-weight: 800; text-transform:uppercase; margin-top:1px;">Escaneá y Pedí</span>
               </div>
-              <div style="margin-top: 3mm; display:flex; flex-direction:column; align-items:center;">
+              <div style="margin-top: 2mm; display:flex; flex-direction:column; align-items:center;">
                 <div class="circle-qr-box">
                   <img class="dyn-qr" src="" alt="QR" style="width:100%; height:100%;" />
                 </div>
-                <div class="dyn-name" style="font-size: 10px; font-weight: 800; margin-top: 1mm;">Cargando...</div>
+                <div class="dyn-name" style="font-size: 9.5px; font-weight: 900; margin-top: 1mm; max-width:65mm; text-align:center; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Cargando...</div>
               </div>
             </div>
 
             <div class="circle-hanger">
               <div class="circle-red-header">
-                <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" onerror="this.src='/img-default/daletepido-logo-white-hq.png'" alt="Logo" style="height: 28px;" />
+                <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" onerror="this.src='/img-default/daletepido-logo-white-hq.png'" alt="Logo" style="height: 18px;" />
+                <span style="font-size: 7px; font-weight: 800; text-transform:uppercase; margin-top:1px;">Catálogo Online</span>
               </div>
-              <div style="margin-top: 3mm; display:flex; flex-direction:column; align-items:center;">
+              <div style="margin-top: 2mm; display:flex; flex-direction:column; align-items:center;">
                 <div class="circle-qr-box">
                   <img class="dyn-qr" src="" alt="QR" style="width:100%; height:100%;" />
                 </div>
-                <div class="dyn-name" style="font-size: 10px; font-weight: 800; margin-top: 1mm;">Cargando...</div>
+                <div class="dyn-name" style="font-size: 9.5px; font-weight: 900; margin-top: 1mm; max-width:65mm; text-align:center; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Cargando...</div>
               </div>
             </div>
 
-            <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; font-size: 9.5px; color: #334155; background: #f8fafc;">
-              <strong style="color:var(--brand-main); font-size:10px; display:block; margin-bottom:4px;">GUÍA DE ARMADO</strong>
-              Recortá por el borde. Doblá por las líneas de puntos para armar el stand de mesa.
+            <div style="border: 1px solid #E2E8F0; border-radius: 10px; padding: 10px; font-size: 9.5px; color: #334155; background: #F8FAFC; width: 100%;">
+              <strong style="color:var(--brand-main); font-size:10px; display:block; margin-bottom:4px;">✂️ GUÍA DE ARMADO</strong>
+              1. Recortá por el borde exterior.<br/>
+              2. Doblá por las líneas punteadas.<br/>
+              3. Uní las solapas para armar el stand triangular de mostrador.
             </div>
           </div>
         </div>
@@ -861,12 +1085,12 @@
   </div>
 
   <script>
-    // Tab Switcher Function
+    // Tab Switcher
     function switchTab(tabId) {
       document.querySelectorAll('.tab-pill').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
       
-      const selectedPill = Array.from(document.querySelectorAll('.tab-pill')).find(btn => btn.getAttribute('onclick').includes(tabId));
+      const selectedPill = Array.from(document.querySelectorAll('.tab-pill')).find(btn => btn.getAttribute('onclick')?.includes(tabId));
       if (selectedPill) selectedPill.classList.add('active');
       
       const targetContent = document.getElementById('tab-' + tabId);
@@ -879,17 +1103,17 @@
 
     if (!storeId) {
       document.body.innerHTML = `
-        <div style="padding: 40px; text-align: center; font-family: sans-serif;">
+        <div style="padding: 40px; text-align: center; font-family: sans-serif; color: #fff;">
           <h2>Error: Falta especificar el parámetro "store"</h2>
-          <p>Ejemplo: <code>kit-imprimible.html?store=ferreteria-demo</code></p>
+          <p style="margin-top: 10px; color: #94A3B8;">Ejemplo: <code>kit-imprimible.html?store=ferreteria-demo</code></p>
         </div>
       `;
     } else {
-      // Set QR Images
-      const qrUrl = `/api/qr?store=${encodeURIComponent(storeId)}`;
+      // Set QR Images con alta resolución HD para impresión A4 (size 1024)
+      const qrUrl = `/api/qr?store=${encodeURIComponent(storeId)}&size=1024`;
       document.querySelectorAll('.dyn-qr').forEach(img => img.src = qrUrl);
 
-      // Default URL
+      // Default URL limpia
       const formattedUrl = `${storeId}.daletepido.com.ar`;
       document.querySelectorAll('.dyn-url').forEach(el => el.textContent = formattedUrl);
 
@@ -899,7 +1123,6 @@
 
       async function loadStoreDetails() {
         try {
-          // Fetch settings & store data
           const [resSettings, resStore] = await Promise.all([
             fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}&apikey=${encodeURIComponent(SUPABASE_KEY)}`, {
               headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
@@ -909,13 +1132,13 @@
             }).then(r => r.ok ? r.json() : []).catch(() => [])
           ]);
 
-          const settings = resSettings && resSettings.length > 0 ? resSettings[0] : {};
-          const store = resStore && resStore.length > 0 ? resStore[0] : {};
+          const settings = (resSettings && resSettings.length > 0) ? resSettings[0] : {};
+          const store = (resStore && resStore.length > 0) ? resStore[0] : {};
 
           const bizName = settings.business_name || store.name || storeId;
           const tagline = settings.tagline || settings.subrubro || settings.rubro || 'Catálogo & Pedidos Online';
           const logoUrl = settings.logo_url || '/dashboard-icon.png';
-          const address = settings.direccion || 'Atención y Envíos a Domicilio';
+          const address = settings.direccion || 'Atención en mostrador y envíos';
           const wapp = settings.wapp || store.whatsapp_phone || 'Consultar por WhatsApp';
           const primaryColor = settings.primary_color || '#D72638';
 
@@ -942,7 +1165,7 @@
 
       function fallbackStoreDetails() {
         document.querySelectorAll('.dyn-name').forEach(el => el.textContent = storeId);
-        document.querySelectorAll('.dyn-address').forEach(el => el.textContent = 'Atención y Envíos');
+        document.querySelectorAll('.dyn-address').forEach(el => el.textContent = 'Atención en mostrador y envíos');
         document.querySelectorAll('.dyn-wapp').forEach(el => el.textContent = 'Consultar');
       }
 

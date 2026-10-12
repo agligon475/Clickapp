@@ -17,11 +17,12 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Generar el QR como buffer de imagen PNG
+    // Generar el QR como buffer de imagen PNG en alta resolución para impresión
+    const qrSize = parseInt(req.query.size, 10) || 1024;
     const qrBuffer = await QRCode.toBuffer(targetUrl, {
       type: 'png',
-      width: 512,
-      margin: 2,
+      width: qrSize,
+      margin: 1,
       color: {
         dark: '#000000',  // Negro
         light: '#ffffff'  // Blanco
