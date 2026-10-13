@@ -1,0 +1,527 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: 'Josefin Sans';
+          font-style: normal;
+          font-weight: 400 700;
+          src: local('Josefin Sans'), url('https://fonts.gstatic.com/s/josefinsans/v32/Qw3aZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhKg.woff2') format('woff2');
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          background: #010101;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Josefin Sans', sans-serif;
+          color: #FFFFFF;
+          padding: 60px 40px;
+        }
+
+        .dashboard-container {
+          position: relative;
+          z-index: 5;
+          width: 980px;
+          height: 1720px;
+          background: #0D0D0D;
+          border: 2px solid rgba(255, 255, 255, 0.1);
+          border-radius: 48px;
+          padding: 44px 40px;
+          box-shadow: 0 32px 80px rgba(0, 0, 0, 0.85), 0 0 60px rgba(246, 0, 0, 0.08);
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+        }
+
+        /* App Bar */
+        .dash-nav {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-bottom: 28px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          margin-bottom: 32px;
+        }
+
+        .dash-brand {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+        }
+
+        .dash-brand-icon {
+          width: 44px;
+          height: 44px;
+          border-radius: 12px;
+          background: #F60000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 700;
+          font-size: 24px;
+          color: white;
+          box-shadow: 0 4px 16px rgba(246, 0, 0, 0.4);
+        }
+
+        .dash-brand-text {
+          font-size: 32px;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+        }
+
+        .dash-brand-text span {
+          color: #F60000;
+        }
+
+        .dash-status-pill {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 10px 22px;
+          border-radius: 999px;
+          background: rgba(16, 185, 129, 0.12);
+          border: 1px solid rgba(16, 185, 129, 0.3);
+          color: #34D399;
+          font-size: 18px;
+          font-weight: 600;
+          letter-spacing: 0.04em;
+        }
+
+        .status-pulse {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background-color: #10B981;
+          box-shadow: 0 0 10px #10B981;
+        }
+
+        /* Step Header */
+        .dash-step-header {
+          margin-bottom: 28px;
+        }
+
+        .step-tag {
+          display: inline-block;
+          padding: 8px 18px;
+          border-radius: 8px;
+          background: rgba(246, 0, 0, 0.14);
+          color: #F60000;
+          font-size: 20px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          margin-bottom: 12px;
+        }
+
+        .step-title {
+          font-size: 42px;
+          font-weight: 700;
+          letter-spacing: -0.01em;
+          text-transform: uppercase;
+          color: #FFFFFF;
+        }
+
+        /* Selectable Chips Container */
+        .chips-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 18px;
+          margin-bottom: 36px;
+        }
+
+        .chip-card {
+          background: #181818;
+          border: 2px solid rgba(255, 255, 255, 0.08);
+          border-radius: 22px;
+          padding: 26px 14px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          position: relative;
+        }
+
+        .chip-icon {
+          font-size: 38px;
+        }
+
+        .chip-label {
+          font-size: 22px;
+          font-weight: 600;
+          color: #E2E8F0;
+          letter-spacing: -0.01em;
+          text-align: center;
+        }
+
+        /* Active Selected Chip State */
+        .chip-card.active-selected {
+          background: #240808;
+          border-color: #F60000;
+          box-shadow: 0 12px 30px rgba(246, 0, 0, 0.35);
+        }
+
+        .chip-card.active-selected .chip-label {
+          color: #FFFFFF;
+          font-weight: 700;
+        }
+
+        /* Categories Section */
+        .categories-section {
+          position: relative;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .category-row {
+          background: #F6F6F6;
+          border-radius: 20px;
+          padding: 22px 26px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          color: #0F172A;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        }
+
+        .cat-left {
+          display: flex;
+          align-items: center;
+          gap: 18px;
+        }
+
+        .cat-icon-box {
+          width: 54px;
+          height: 54px;
+          border-radius: 14px;
+          background: #E2E8F0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 28px;
+        }
+
+        .cat-info {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .cat-name {
+          font-size: 26px;
+          font-weight: 700;
+          color: #0F172A;
+          letter-spacing: -0.01em;
+        }
+
+        .cat-items {
+          font-size: 18px;
+          font-weight: 600;
+          color: #64748B;
+        }
+
+        .cat-badge-check {
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          background: #10B981;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          box-shadow: 0 4px 14px rgba(16, 185, 129, 0.45);
+        }
+
+        .cat-badge-check svg {
+          width: 24px;
+          height: 24px;
+          stroke-width: 3.5;
+          stroke: white;
+          fill: none;
+        }
+
+        /* Pointer Cursor */
+        .pointer-cursor {
+          position: absolute;
+          z-index: 100;
+          width: 64px;
+          height: 64px;
+          pointer-events: none;
+          filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.8));
+        }
+
+        /* Overlay Pill Tag */
+        .overlay-pill-container {
+          position: absolute;
+          bottom: 70px;
+          left: 0;
+          right: 0;
+          display: flex;
+          justify-content: center;
+          z-index: 80;
+          pointer-events: none;
+        }
+
+        .overlay-pill {
+          background: #F60000;
+          color: #FFFFFF;
+          padding: 22px 40px;
+          border-radius: 999px;
+          font-size: 25px;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          box-shadow: 0 16px 48px rgba(246, 0, 0, 0.55), 0 0 24px rgba(246, 0, 0, 0.4);
+          text-align: center;
+          border: 2px solid rgba(255, 255, 255, 0.25);
+        }
+      </style>
+
+      <div id="root" data-composition-id="scene-onboarding" data-width="1080" data-height="1920">
+        <div id="dash-box" class="dashboard-container">
+          <!-- App Header -->
+          <div class="dash-nav">
+            <div class="dash-brand">
+              <div class="dash-brand-icon">D!</div>
+              <div class="dash-brand-text">Dale!<span>TePido</span></div>
+            </div>
+            <div class="dash-status-pill">
+              <span class="status-pulse"></span>
+              <span>Onboarding Express</span>
+            </div>
+          </div>
+
+          <!-- Step Header -->
+          <div class="dash-step-header">
+            <div id="step-tag-text" class="step-tag">Paso 1 de 2</div>
+            <div id="step-title-text" class="step-title">1. SELECCIONÁ TU RUBRO</div>
+          </div>
+
+          <!-- Step 1 Chips -->
+          <div id="chips-container" class="chips-grid">
+            <div id="chip-kiosco" class="chip-card">
+              <div class="chip-icon">🏪</div>
+              <div class="chip-label">Kiosco</div>
+            </div>
+            <div id="chip-cafe" class="chip-card">
+              <div class="chip-icon">☕</div>
+              <div class="chip-label">Café & Deli</div>
+            </div>
+            <div id="chip-almacen" class="chip-card">
+              <div class="chip-icon">🛒</div>
+              <div class="chip-label">Almacén</div>
+            </div>
+          </div>
+
+          <!-- Step 2 Categories List -->
+          <div id="categories-list" class="categories-section">
+            <div id="cat-card-1" class="category-row">
+              <div class="cat-left">
+                <div class="cat-icon-box">🥤</div>
+                <div class="cat-info">
+                  <div class="cat-name">Bebidas & Almacén</div>
+                  <div class="cat-items">120 productos cargados</div>
+                </div>
+              </div>
+              <div id="check-icon-1" class="cat-badge-check">
+                <svg viewBox="0 0 24 24">
+                  <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+            </div>
+
+            <div id="cat-card-2" class="category-row">
+              <div class="cat-left">
+                <div class="cat-icon-box">🥐</div>
+                <div class="cat-info">
+                  <div class="cat-name">Panadería & Galletitas</div>
+                  <div class="cat-items">65 productos cargados</div>
+                </div>
+              </div>
+              <div id="check-icon-2" class="cat-badge-check">
+                <svg viewBox="0 0 24 24">
+                  <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+            </div>
+
+            <div id="cat-card-3" class="category-row">
+              <div class="cat-left">
+                <div class="cat-icon-box">🧀</div>
+                <div class="cat-info">
+                  <div class="cat-name">Lácteos & Frescos</div>
+                  <div class="cat-items">48 productos cargados</div>
+                </div>
+              </div>
+              <div id="check-icon-3" class="cat-badge-check">
+                <svg viewBox="0 0 24 24">
+                  <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+            </div>
+
+            <div id="cat-card-4" class="category-row">
+              <div class="cat-left">
+                <div class="cat-icon-box">🧼</div>
+                <div class="cat-info">
+                  <div class="cat-name">Limpieza & Hogar</div>
+                  <div class="cat-items">82 productos cargados</div>
+                </div>
+              </div>
+              <div id="check-icon-4" class="cat-badge-check">
+                <svg viewBox="0 0 24 24">
+                  <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+            </div>
+
+            <div id="cat-card-5" class="category-row">
+              <div class="cat-left">
+                <div class="cat-icon-box">🍫</div>
+                <div class="cat-info">
+                  <div class="cat-name">Golosinas & Snacks</div>
+                  <div class="cat-items">110 productos cargados</div>
+                </div>
+              </div>
+              <div id="check-icon-5" class="cat-badge-check">
+                <svg viewBox="0 0 24 24">
+                  <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Animated Pointer Cursor -->
+          <svg id="pointer-cursor" class="pointer-cursor" viewBox="0 0 40 40" fill="none">
+            <path
+              d="M8 4L28 20L18 22L24 34L19 36L13 24L8 28V4Z"
+              fill="#FFFFFF"
+              stroke="#000000"
+              stroke-width="2.5"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+          <!-- Overlay Pill Tag -->
+          <div id="overlay-pill-wrap" class="overlay-pill-container">
+            <div class="overlay-pill">CHAU AL SÍNDROME DE LA PANTALLA EN BLANCO</div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        const tl = gsap.timeline({ paused: true });
+
+        // Dashboard container enters with smooth scale and slide (0.0s - 0.6s)
+        tl.fromTo(
+          "#dash-box",
+          { opacity: 0, y: 120, scale: 0.9 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" },
+          0
+        );
+
+        // Chips stagger entry (0.3s - 0.7s)
+        tl.fromTo(
+          ["#chip-kiosco", "#chip-cafe", "#chip-almacen"],
+          { opacity: 0, y: 40, scale: 0.92 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.1, ease: "back.out(1.4)" },
+          0.3
+        );
+
+        // Initial hidden states for Step 2 elements
+        tl.set("#categories-list", { opacity: 0, y: 30 }, 0);
+        tl.set("#overlay-pill-wrap", { opacity: 0, y: 50, scale: 0.8 }, 0);
+
+        // Pointer Cursor slides in from bottom right (0.6s - 1.2s)
+        tl.fromTo(
+          "#pointer-cursor",
+          { opacity: 0, x: 780, y: 640 },
+          { opacity: 1, x: 670, y: 380, duration: 0.65, ease: "power2.out" },
+          0.6
+        );
+
+        // Click action on "Almacén" (1.3s - 1.6s)
+        // 1. Cursor scales down (scale: 0.95)
+        tl.to("#pointer-cursor", { scale: 0.95, duration: 0.12, ease: "power1.in" }, 1.3);
+        // 2. "Almacén" chip scale depression (scale: 0.94)
+        tl.to("#chip-almacen", { scale: 0.94, duration: 0.12, ease: "power1.in" }, 1.3);
+
+        // 3. Chip switches to active-selected state
+        tl.set("#chip-almacen", { className: "chip-card active-selected" }, 1.42);
+
+        // 4. Spring release with no overlap
+        tl.to("#chip-almacen", { scale: 1.04, duration: 0.18, ease: "power2.out" }, 1.44);
+        tl.to("#chip-almacen", { scale: 1.0, duration: 0.18, ease: "power2.inOut" }, 1.63);
+        tl.to("#pointer-cursor", { scale: 1.0, duration: 0.15, ease: "power1.out" }, 1.44);
+
+        // Cursor floats aside and fades (1.8s - 2.3s)
+        tl.to(
+          "#pointer-cursor",
+          { opacity: 0, x: 800, y: 340, duration: 0.45, ease: "power2.in" },
+          1.8
+        );
+
+        // ========================================================
+        // STEP 2: REACTIVE EXPANSION (2.3s - 6.0s)
+        // ========================================================
+
+        // Step title updates
+        tl.to("#step-title-text", { opacity: 0, y: -15, duration: 0.2 }, 2.3);
+        tl.set("#step-tag-text", { textContent: "Paso 2 de 2" }, 2.5);
+        tl.set("#step-title-text", { textContent: "2. CATEGORÍAS PRE-CARGADAS" }, 2.5);
+        tl.to("#step-title-text", { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, 2.5);
+
+        // Chips shrink slightly
+        tl.to("#chips-container", { scale: 0.92, opacity: 0.75, duration: 0.4, ease: "power2.out" }, 2.4);
+
+        // Categories container appears
+        tl.to("#categories-list", { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 2.55);
+
+        // Cascade of 5 Category Cards
+        tl.fromTo(
+          ["#cat-card-1", "#cat-card-2", "#cat-card-3", "#cat-card-4", "#cat-card-5"],
+          { opacity: 0, y: 50, scale: 0.94 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.12, ease: "back.out(1.4)" },
+          2.65
+        );
+
+        // Pop in Green Checkmarks
+        tl.fromTo(
+          ["#check-icon-1", "#check-icon-2", "#check-icon-3", "#check-icon-4", "#check-icon-5"],
+          { opacity: 0, scale: 0.2, rotate: -30 },
+          { opacity: 1, scale: 1, rotate: 0, duration: 0.35, stagger: 0.12, ease: "back.out(2)" },
+          3.1
+        );
+
+        // Overlay Pill Tag Enters (4.0s - 6.0s)
+        tl.fromTo(
+          "#overlay-pill-wrap",
+          { opacity: 0, y: 60, scale: 0.8 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.6)" },
+          4.0
+        );
+
+        // Pulse on Overlay Pill
+        tl.to("#overlay-pill-wrap", { scale: 1.05, duration: 0.25, ease: "power1.out" }, 4.6);
+        tl.to("#overlay-pill-wrap", { scale: 1.0, duration: 0.25, ease: "power1.in" }, 4.85);
+
+        // Outro transition at 5.7s
+        tl.to("#dash-box", { opacity: 0, scale: 0.92, y: -40, duration: 0.3, ease: "power2.in" }, 5.7);
+
+        window.__timelines["scene-onboarding"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

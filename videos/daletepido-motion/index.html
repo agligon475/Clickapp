@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Dale!TePido - Motion Graphics</title>
+    <!-- Google Fonts: Josefin Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: 'Josefin Sans';
+        font-style: normal;
+        font-weight: 400 700;
+        src: local('Josefin Sans'), url('https://fonts.gstatic.com/s/josefinsans/v32/Qw3aZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhKg.woff2') format('woff2');
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background-color: #010101;
+        font-family: 'Josefin Sans', sans-serif;
+        color: #FFFFFF;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background-color: #010101;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="15"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- Scene 1: The Hook (0.0s - 4.0s) -->
+      <div
+        id="scene-hook"
+        class="clip"
+        data-composition-id="scene-hook"
+        data-composition-src="compositions/scene-1-hook.html"
+        data-start="0"
+        data-duration="4"
+        data-track-index="0"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <!-- Scene 2: Interactive UI Onboarding Simulation (4.0s - 10.0s) -->
+      <div
+        id="scene-onboarding"
+        class="clip"
+        data-composition-id="scene-onboarding"
+        data-composition-src="compositions/scene-2-onboarding.html"
+        data-start="4"
+        data-duration="6"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <!-- Scene 3: WhatsApp Conversion & CTA (10.0s - 15.0s) -->
+      <div
+        id="scene-conversion"
+        class="clip"
+        data-composition-id="scene-conversion"
+        data-composition-src="compositions/scene-3-conversion.html"
+        data-start="10"
+        data-duration="5"
+        data-track-index="2"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

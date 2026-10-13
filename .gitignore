@@ -8,3 +8,7 @@ scratch/lighthouse*
 .env.local
 Clickapp/
 Clickapp-main/
+agent/
+.claude/
+.hyperframes/
+videos/**/.hyperframes/
