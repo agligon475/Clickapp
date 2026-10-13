@@ -25,49 +25,49 @@
           width: 1080px;
           height: 1920px;
           overflow: hidden;
-          background: #010101;
+          background: #F6F6F6;
           display: flex;
           align-items: center;
           justify-content: center;
           font-family: 'Josefin Sans', sans-serif;
-          color: #F6F6F6;
-          padding: 60px 40px;
+          color: #010101;
+          padding: 60px 48px;
         }
 
-        .ambient-glow {
+        .ambient-light {
           position: absolute;
-          width: 850px;
-          height: 850px;
+          width: 900px;
+          height: 900px;
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(246, 0, 0, 0.2) 0%, rgba(246, 0, 0, 0.04) 45%, rgba(0, 0, 0, 0) 70%);
+          background: radial-gradient(circle, rgba(246, 0, 0, 0.08) 0%, rgba(246, 0, 0, 0.02) 40%, rgba(246, 246, 246, 0) 70%);
           pointer-events: none;
           z-index: 1;
         }
 
-        /* Stylized Mobile Bento Grid Container */
         .bento-container {
           position: relative;
           z-index: 5;
           width: 980px;
-          height: 1680px;
-          background: #0D0F12;
-          border: 2px solid rgba(255, 255, 255, 0.12);
+          height: 1720px;
+          background: #FFFFFF;
+          border: 2px solid rgba(0, 0, 0, 0.08);
           border-radius: 44px;
-          padding: 40px;
+          padding: 48px 40px;
           display: flex;
           flex-direction: column;
-          box-shadow: 0 32px 80px rgba(0, 0, 0, 0.85), 0 0 50px rgba(246, 0, 0, 0.08);
+          box-shadow: 0 28px 70px rgba(0, 0, 0, 0.08), 0 2px 12px rgba(0, 0, 0, 0.04);
           overflow: hidden;
+          opacity: 0;
+          transform: scale(0.94) translateY(30px);
         }
 
-        /* Top Header */
         .bento-header {
           display: flex;
           align-items: center;
           justify-content: space-between;
           padding-bottom: 24px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-          margin-bottom: 28px;
+          border-bottom: 2px solid #F0F0F0;
+          margin-bottom: 32px;
         }
 
         .bento-tag {
@@ -78,240 +78,214 @@
           border-radius: 999px;
           background: #F60000;
           color: #FFFFFF;
-          font-size: 22px;
+          font-size: 20px;
           font-weight: 800;
-          letter-spacing: 0.08em;
+          letter-spacing: 0.1em;
           text-transform: uppercase;
         }
 
-        .stopwatch-badge {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding: 10px 22px;
-          border-radius: 999px;
-          background: rgba(16, 185, 129, 0.12);
-          border: 1px solid rgba(16, 185, 129, 0.35);
-          color: #34D399;
-          font-size: 20px;
+        .bento-step {
+          font-size: 22px;
           font-weight: 700;
+          color: #888888;
         }
 
-        /* Title */
-        .scene-title {
-          font-size: 42px;
+        .bento-title {
+          font-size: 68px;
           font-weight: 800;
-          line-height: 1.15;
-          letter-spacing: -0.01em;
+          line-height: 1.05;
+          color: #010101;
+          letter-spacing: -0.02em;
           text-transform: uppercase;
           margin-bottom: 24px;
         }
 
-        /* Chip Selection */
-        .chips-row {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 12px;
-          margin-bottom: 28px;
+        .bento-title span {
+          color: #F60000;
         }
 
-        .rubro-chip {
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-          padding: 14px 26px;
-          border-radius: 999px;
-          background: #181A20;
-          border: 1.5px solid rgba(255, 255, 255, 0.12);
-          font-size: 22px;
+        /* Chips Grid */
+        .chips-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 16px;
+          position: relative;
+        }
+
+        .chip-item {
+          padding: 22px 24px;
+          border-radius: 20px;
+          background: #F9F9F9;
+          border: 2px solid #E5E5E5;
+          font-size: 26px;
           font-weight: 700;
-          color: #CCCCCC;
-        }
-
-        .rubro-chip.active {
-          background: #F60000;
-          border-color: #F60000;
-          color: #FFFFFF;
-          box-shadow: 0 4px 20px rgba(246, 0, 0, 0.5);
-        }
-
-        /* Pill Badge: Chau al síndrome de la pantalla en blanco */
-        .chau-pantalla-pill {
-          display: inline-flex;
+          color: #444444;
+          display: flex;
           align-items: center;
           justify-content: center;
           gap: 12px;
-          padding: 14px 28px;
-          border-radius: 999px;
-          background: rgba(246, 0, 0, 0.12);
-          border: 1.5px solid rgba(246, 0, 0, 0.4);
-          color: #F60000;
-          font-size: 20px;
-          font-weight: 800;
-          letter-spacing: 0.04em;
-          text-align: center;
-          margin-bottom: 28px;
         }
 
-        /* 5 Category Cards */
-        .categories-grid {
+        .target-chip {
+          border-color: #E5E5E5;
+          color: #111111;
+        }
+
+        .tap-cursor {
+          position: absolute;
+          width: 56px;
+          height: 56px;
+          border-radius: 50%;
+          background: rgba(246, 0, 0, 0.4);
+          border: 3px solid #F60000;
+          pointer-events: none;
+          z-index: 10;
+          opacity: 0;
+          transform: scale(0.5);
+        }
+
+        /* Red Badge Pill Drop */
+        .chau-badge {
+          align-self: flex-start;
+          margin-top: 36px;
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 28px;
+          border-radius: 999px;
+          background: #F60000;
+          color: #FFFFFF;
+          font-size: 22px;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          box-shadow: 0 8px 24px rgba(246, 0, 0, 0.35);
+          opacity: 0;
+          transform: translateY(20px);
+        }
+
+        /* Cascading Categories */
+        .categories-stack {
+          margin-top: 24px;
           display: flex;
           flex-direction: column;
-          gap: 14px;
+          gap: 16px;
         }
 
-        .category-card {
+        .cat-item {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 20px 26px;
-          background: #14171C;
-          border: 1.5px solid rgba(255, 255, 255, 0.08);
+          padding: 20px 28px;
           border-radius: 20px;
+          background: #F8F9FA;
+          border: 1.5px solid #EBECEF;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+          opacity: 0;
+          transform: translateX(-40px);
         }
 
-        .cat-main {
+        .cat-name {
           display: flex;
           align-items: center;
-          gap: 18px;
+          gap: 16px;
+          font-size: 26px;
+          font-weight: 700;
+          color: #111111;
         }
 
         .cat-icon {
-          font-size: 32px;
-          width: 52px;
-          height: 52px;
-          border-radius: 14px;
-          background: rgba(255, 255, 255, 0.05);
+          width: 48px;
+          height: 48px;
+          border-radius: 12px;
+          background: #FFFFFF;
           display: flex;
           align-items: center;
           justify-content: center;
-        }
-
-        .cat-title {
           font-size: 24px;
-          font-weight: 700;
-          color: #FFFFFF;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
 
-        .cat-desc {
-          font-size: 18px;
-          color: #9E9E9E;
-          margin-top: 4px;
-        }
-
-        .cat-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 8px 18px;
-          border-radius: 999px;
-          background: rgba(16, 185, 129, 0.14);
-          color: #34D399;
-          font-size: 17px;
-          font-weight: 800;
-        }
-
-        /* Footer live note */
-        .bento-footer {
-          margin-top: auto;
+        .cat-status {
           display: flex;
           align-items: center;
-          justify-content: center;
-          gap: 12px;
-          padding: 16px 28px;
-          border-radius: 20px;
-          background: rgba(255, 255, 255, 0.04);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          color: #D1D5DB;
+          gap: 8px;
+          color: #10B981;
           font-size: 20px;
           font-weight: 700;
-          text-transform: uppercase;
+          background: rgba(16, 185, 129, 0.1);
+          padding: 6px 14px;
+          border-radius: 999px;
         }
       </style>
 
       <div id="root" data-composition-id="scene-3-tienda-rapida" data-width="1080" data-height="1920">
-        <div class="ambient-glow" id="ambient-glow"></div>
+        <div class="ambient-light"></div>
 
         <div class="bento-container" id="bento-container">
           <div class="bento-header">
-            <div class="bento-tag">2. TU TIENDA EN 5 MINUTOS</div>
-            <div class="stopwatch-badge">⏱️ 05:00 MIN</div>
+            <div class="bento-tag">⚡ DALE!TEPIDO</div>
+            <div class="bento-step">TIENDA LISTA EN 5 MIN</div>
           </div>
 
-          <h2 class="scene-title">CONFIGURACIÓN AUTOMÁTICA</h2>
+          <h2 class="bento-title">2. TU TIENDA<br /><span>EN 5 MINUTOS</span></h2>
 
-          <!-- Chip selection simulation -->
-          <div class="chips-row" id="chips-row">
-            <div class="rubro-chip active" id="chip-gastro">ALMACÉN / GASTRONOMÍA ✓</div>
-            <div class="rubro-chip">KIOSCO & SNACKS</div>
-            <div class="rubro-chip">TIENDA & RETAIL</div>
+          <div class="chips-grid">
+            <div class="tap-cursor" id="tap-cursor"></div>
+            <div class="chip-item target-chip" id="chip-almacen">
+              <span>🏪</span> ALMACÉN / GASTRONOMÍA
+            </div>
+            <div class="chip-item">
+              <span>🥖</span> PANADERÍA
+            </div>
+            <div class="chip-item">
+              <span>🥩</span> CARNICERÍA
+            </div>
+            <div class="chip-item">
+              <span>💊</span> FARMACIA
+            </div>
           </div>
 
-          <!-- Pill Badge Drops -->
-          <div class="chau-pantalla-pill" id="chau-pantalla-pill">
-            ⚡ CHAU AL SÍNDROME DE LA PANTALLA EN BLANCO
+          <div class="chau-badge" id="chau-badge">
+            ✨ CHAU AL SÍNDROME DE LA PANTALLA EN BLANCO
           </div>
 
-          <!-- 5 Category Cards Cascading In -->
-          <div class="categories-grid" id="categories-grid">
-            <div class="category-card" id="cat-1">
-              <div class="cat-main">
-                <div class="cat-icon">🥤</div>
-                <div>
-                  <div class="cat-title">Bebidas & Cervezas</div>
-                  <div class="cat-desc">45 productos con control de stock</div>
-                </div>
+          <div class="categories-stack">
+            <div class="cat-item" id="cat-1">
+              <div class="cat-name">
+                <div class="cat-icon">🍺</div>
+                <span>Bebidas & Cervezas</span>
               </div>
-              <div class="cat-badge">LISTO ✓</div>
+              <div class="cat-status">✓ Precargado</div>
             </div>
-
-            <div class="category-card" id="cat-2">
-              <div class="cat-main">
-                <div class="cat-icon">🥩</div>
-                <div>
-                  <div class="cat-title">Frescos & Carnes</div>
-                  <div class="cat-desc">32 productos con peso y corte</div>
-                </div>
+            <div class="cat-item" id="cat-2">
+              <div class="cat-name">
+                <div class="cat-icon">🧀</div>
+                <span>Frescos & Lácteos</span>
               </div>
-              <div class="cat-badge">LISTO ✓</div>
+              <div class="cat-status">✓ Precargado</div>
             </div>
-
-            <div class="category-card" id="cat-3">
-              <div class="cat-main">
-                <div class="cat-icon">🥖</div>
-                <div>
-                  <div class="cat-title">Panadería & Confitería</div>
-                  <div class="cat-desc">28 productos frescos listos</div>
-                </div>
+            <div class="cat-item" id="cat-3">
+              <div class="cat-name">
+                <div class="cat-icon">🥐</div>
+                <span>Panadería & Facturas</span>
               </div>
-              <div class="cat-badge">LISTO ✓</div>
+              <div class="cat-status">✓ Precargado</div>
             </div>
-
-            <div class="category-card" id="cat-4">
-              <div class="cat-main">
+            <div class="cat-item" id="cat-4">
+              <div class="cat-name">
                 <div class="cat-icon">🥫</div>
-                <div>
-                  <div class="cat-title">Despensa & Almacén</div>
-                  <div class="cat-desc">60 productos precargados</div>
-                </div>
+                <span>Despensa & Almacén</span>
               </div>
-              <div class="cat-badge">LISTO ✓</div>
+              <div class="cat-status">✓ Precargado</div>
             </div>
-
-            <div class="category-card" id="cat-5">
-              <div class="cat-main">
+            <div class="cat-item" id="cat-5">
+              <div class="cat-name">
                 <div class="cat-icon">🧼</div>
-                <div>
-                  <div class="cat-title">Limpieza & Perfumería</div>
-                  <div class="cat-desc">40 productos configurados</div>
-                </div>
+                <span>Limpieza & Hogar</span>
               </div>
-              <div class="cat-badge">LISTO ✓</div>
+              <div class="cat-status">✓ Precargado</div>
             </div>
-          </div>
-
-          <div class="bento-footer">
-            CATÁLOGO INTELIGENTE PRECARGADO PARA TU RUBRO
           </div>
         </div>
       </div>
@@ -319,60 +293,77 @@
       <script>
         const tl = gsap.timeline({ paused: true });
 
-        // Initial states
-        gsap.set("#bento-container", { scale: 0.9, opacity: 0 });
-        gsap.set(".rubro-chip", { opacity: 0, y: 20 });
-        gsap.set("#chau-pantalla-pill", { scale: 0.85, opacity: 0 });
-        gsap.set(".category-card", { opacity: 0, x: -30 });
+        // Initial setup
+        gsap.set("#bento-container", { autoAlpha: 0, scale: 0.94, y: 30 });
+        gsap.set("#tap-cursor", { x: 180, y: 35, opacity: 0 });
 
-        // 0.0s - 0.7s: Fast zoom into Bento Grid Container
-        tl.fromTo("#bento-container",
-          { scale: 0.88, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.4)" },
-          0.05
-        );
-
-        tl.fromTo("#ambient-glow",
-          { scale: 0.7, opacity: 0.2 },
-          { scale: 1.15, opacity: 0.6, duration: 1.0, ease: "power2.out" },
-          0.1
-        );
-
-        // Chip tap selection
-        tl.fromTo(".rubro-chip",
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, stagger: 0.08, duration: 0.35, ease: "power3.out" },
-          0.35
-        );
-
-        tl.fromTo("#chip-gastro",
-          { scale: 0.92 },
-          { scale: 1.06, duration: 0.2, repeat: 1, yoyo: true, ease: "back.out(2)" },
-          0.7
-        );
-
-        // Pill badge drops
-        tl.fromTo("#chau-pantalla-pill",
-          { scale: 0.85, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.8)" },
-          1.0
-        );
-
-        // 5 Category cards cascade in with staggered spring physics
-        tl.fromTo(".category-card",
-          { opacity: 0, x: -30 },
-          { opacity: 1, x: 0, stagger: 0.12, duration: 0.45, ease: "power3.out" },
-          1.25
-        );
-
-        // 4.25s: Punchy Exit Snap
+        // 0.0s - 0.5s: Entrance of Bento Container
         tl.to("#bento-container", {
-          scale: 1.08,
-          opacity: 0,
-          duration: 0.22,
-          ease: "power2.in"
-        }, 4.25);
+          autoAlpha: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.5,
+          ease: "power3.out"
+        }, 0.1);
 
+        // 0.6s - 1.2s: Tap simulation on rubro chip
+        tl.to("#tap-cursor", {
+          opacity: 1,
+          scale: 1,
+          duration: 0.25,
+          ease: "power2.out"
+        }, 0.6);
+
+        tl.to("#tap-cursor", {
+          scale: 0.6,
+          duration: 0.15,
+          ease: "power1.in"
+        }, 0.85);
+
+        // Chip turns solid #F60000 with white text
+        tl.to("#chip-almacen", {
+          backgroundColor: "#F60000",
+          color: "#FFFFFF",
+          borderColor: "#F60000",
+          scale: 1.04,
+          boxShadow: "0 10px 25px rgba(246, 0, 0, 0.35)",
+          duration: 0.25,
+          ease: "back.out(2)"
+        }, 0.95);
+
+        tl.to("#tap-cursor", {
+          opacity: 0,
+          scale: 1.4,
+          duration: 0.2
+        }, 1.1);
+
+        // 1.3s: Red badge drops
+        tl.to("#chau-badge", {
+          opacity: 1,
+          y: 0,
+          duration: 0.35,
+          ease: "back.out(1.8)"
+        }, 1.3);
+
+        // 1.6s - 2.8s: 5 category cards cascade in
+        const cats = ["#cat-1", "#cat-2", "#cat-3", "#cat-4", "#cat-5"];
+        tl.to(cats, {
+          opacity: 1,
+          x: 0,
+          duration: 0.35,
+          stagger: 0.12,
+          ease: "back.out(1.5)"
+        }, 1.6);
+
+        // Exit transition
+        tl.to("#bento-container", {
+          autoAlpha: 0.2,
+          scale: 0.95,
+          duration: 0.25,
+          ease: "power2.in"
+        }, 4.2);
+
+        window.__timelines = window.__timelines || {};
         window.__timelines["scene-3-tienda-rapida"] = tl;
       </script>
     </template>

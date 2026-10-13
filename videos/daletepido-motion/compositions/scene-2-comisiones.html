@@ -25,189 +25,146 @@
           width: 1080px;
           height: 1920px;
           overflow: hidden;
-          background: #010101;
+          background: #F6F6F6;
           display: flex;
           align-items: center;
           justify-content: center;
           font-family: 'Josefin Sans', sans-serif;
-          color: #F6F6F6;
-          padding: 60px 40px;
+          color: #010101;
+          padding: 60px 48px;
         }
 
-        .ambient-glow {
+        .ambient-light {
           position: absolute;
           width: 900px;
           height: 900px;
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(246, 0, 0, 0.24) 0%, rgba(246, 0, 0, 0.05) 45%, rgba(0, 0, 0, 0) 70%);
+          background: radial-gradient(circle, rgba(246, 0, 0, 0.08) 0%, rgba(246, 0, 0, 0.02) 40%, rgba(246, 246, 246, 0) 70%);
           pointer-events: none;
           z-index: 1;
         }
 
-        .scene-wrap {
+        .main-card {
           position: relative;
           z-index: 5;
+          width: 960px;
+          background: #FFFFFF;
+          border: 3.5px solid #F60000;
+          border-radius: 40px;
+          padding: 60px 48px;
           display: flex;
           flex-direction: column;
           align-items: center;
-          justify-content: center;
           text-align: center;
-          width: 100%;
-          max-width: 960px;
-          gap: 28px;
+          gap: 36px;
+          box-shadow: 0 30px 80px rgba(0, 0, 0, 0.08), 0 0 50px rgba(246, 0, 0, 0.08);
+          opacity: 0;
+          transform: scale(0.92) translateY(30px);
         }
 
-        /* Large glowing red badge */
-        .advantage-badge {
+        .badge-step {
           display: inline-flex;
           align-items: center;
           gap: 12px;
           padding: 14px 34px;
           border-radius: 999px;
-          background: #F60000;
-          color: #FFFFFF;
+          background: rgba(246, 0, 0, 0.08);
+          border: 1.5px solid rgba(246, 0, 0, 0.3);
+          color: #F60000;
           font-size: 26px;
           font-weight: 800;
           letter-spacing: 0.1em;
           text-transform: uppercase;
-          box-shadow: 0 8px 30px rgba(246, 0, 0, 0.6);
         }
 
-        /* Giant Hero Counter */
-        .counter-box {
+        .commission-hero {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 8px;
-          position: relative;
+          gap: 10px;
         }
 
-        .giant-number {
-          font-size: 190px;
-          line-height: 0.9;
+        .stat-zero {
+          font-size: 150px;
+          line-height: 0.95;
           font-weight: 800;
           color: #F60000;
-          letter-spacing: -0.04em;
-          text-shadow: 0 0 70px rgba(246, 0, 0, 0.8);
+          letter-spacing: -0.03em;
         }
 
-        .counter-sub {
-          font-size: 38px;
+        .stat-label {
+          font-size: 50px;
           font-weight: 800;
-          letter-spacing: 0.06em;
-          color: #F60000;
+          color: #010101;
+          line-height: 1.1;
           text-transform: uppercase;
+          letter-spacing: -0.01em;
         }
 
-        /* Split Comparison & Caja Badge */
-        .caja-badge {
+        .crossed-card {
           display: inline-flex;
           align-items: center;
-          justify-content: center;
           gap: 14px;
-          padding: 18px 40px;
-          border-radius: 24px;
-          background: rgba(16, 185, 129, 0.12);
-          border: 2px solid rgba(16, 185, 129, 0.45);
-          color: #34D399;
-          font-size: 36px;
-          font-weight: 800;
-          letter-spacing: 0.04em;
-          width: 100%;
-          max-width: 860px;
-        }
-
-        .comparison-cards {
-          display: flex;
-          flex-direction: column;
-          gap: 14px;
-          width: 100%;
-          max-width: 860px;
-        }
-
-        .comp-card {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 20px 32px;
-          border-radius: 20px;
-          background: #0D0F12;
-          border: 1.5px solid rgba(255, 255, 255, 0.1);
-          font-size: 26px;
-          font-weight: 700;
-        }
-
-        .comp-card.strike {
-          opacity: 0.75;
-          text-decoration: line-through;
-          color: #EF4444;
-          border-color: rgba(239, 68, 68, 0.3);
-        }
-
-        .comp-card.highlight {
-          border-color: rgba(246, 0, 0, 0.5);
-          background: #141414;
-          color: #FFFFFF;
-        }
-
-        .val-pill-green {
-          padding: 6px 18px;
-          border-radius: 999px;
-          background: rgba(16, 185, 129, 0.15);
-          color: #34D399;
-          font-weight: 800;
-        }
-
-        /* Floating Note Card */
-        .floating-note {
-          display: inline-flex;
-          align-items: center;
-          gap: 12px;
           padding: 14px 28px;
-          border-radius: 18px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.15);
+          border-radius: 20px;
+          background: #F4F4F5;
+          border: 1.5px solid #E4E4E7;
+          color: #71717A;
+          font-size: 24px;
+          font-weight: 700;
+          text-decoration: line-through;
+          text-decoration-thickness: 3px;
+        }
+
+        .sub-badge-card {
+          padding: 22px 36px;
+          border-radius: 24px;
+          background: #0D0F12;
+          color: #FFFFFF;
+          font-size: 28px;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          width: 100%;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .pill-note {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 10px 24px;
+          border-radius: 999px;
+          background: rgba(16, 185, 129, 0.1);
+          color: #10B981;
           font-size: 22px;
           font-weight: 700;
-          color: #D1D5DB;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
         }
       </style>
 
       <div id="root" data-composition-id="scene-2-comisiones" data-width="1080" data-height="1920">
-        <div class="ambient-glow" id="ambient-glow"></div>
+        <div class="ambient-light"></div>
 
-        <div class="scene-wrap" id="scene-wrap">
-          <!-- Advantage 1 Badge -->
-          <div class="advantage-badge" id="adv-badge">
-            1. CERO COMISIONES
+        <div class="main-card" id="main-card">
+          <div class="badge-step">⚡ 1. CERO COMISIONES</div>
+
+          <div class="crossed-card">
+            <span>❌</span> -30% EN COMISIONES TRADICIONALES
           </div>
 
-          <!-- Giant 0% Counter -->
-          <div class="counter-box" id="counter-box">
-            <div class="giant-number" id="giant-num">0%</div>
-            <div class="counter-sub">COMISIÓN POR VENTA</div>
+          <div class="commission-hero">
+            <div class="stat-zero">0%</div>
+            <div class="stat-label">COMISIÓN POR VENTA<br /><span style="color:#10B981;">100% EN TU CAJA</span></div>
           </div>
 
-          <!-- 100% en tu caja -->
-          <div class="caja-badge" id="caja-badge">
-            <span>✓ 100% DE LA GANANCIA EN TU CAJA</span>
+          <div class="sub-badge-card">
+            Sin retenciones complejas ni pasarelas obligatorias
           </div>
 
-          <!-- Split Comparison Cards -->
-          <div class="comparison-cards" id="comp-cards">
-            <div class="comp-card strike" id="comp-left">
-              <span>Otras Apps de Delivery</span>
-              <span>-30% EN COMISIONES</span>
-            </div>
-            <div class="comp-card highlight" id="comp-right">
-              <span>Con Dale!TePido</span>
-              <span class="val-pill-green">$0 Comisión x Venta</span>
-            </div>
-          </div>
-
-          <!-- Floating Note Card -->
-          <div class="floating-note" id="floating-note">
-            💳 Sin pasarelas ni retenciones complejas
+          <div class="pill-note">
+            ✓ Tu dinero disponible en el acto
           </div>
         </div>
       </div>
@@ -215,72 +172,34 @@
       <script>
         const tl = gsap.timeline({ paused: true });
 
-        // Initial states
-        gsap.set("#scene-wrap", { opacity: 1, scale: 1 });
-        gsap.set("#adv-badge", { scale: 0.8, opacity: 0 });
-        gsap.set("#counter-box", { scale: 0.7, opacity: 0 });
-        gsap.set("#caja-badge", { y: 30, opacity: 0 });
-        gsap.set("#comp-cards", { y: 30, opacity: 0 });
-        gsap.set("#floating-note", { y: 20, opacity: 0 });
+        // Initial state
+        gsap.set("#main-card", { autoAlpha: 0, scale: 0.9, y: 40 });
 
-        // 0.0s - 0.6s: Large Glowing Red Badge Emerges
-        tl.fromTo("#adv-badge",
-          { scale: 0.75, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(2)" },
-          0.05
-        );
+        // 0.0s - 0.6s: Smooth wipe in to clean white card
+        tl.to("#main-card", {
+          autoAlpha: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "back.out(1.8)"
+        }, 0.1);
 
-        tl.fromTo("#ambient-glow",
-          { scale: 0.7, opacity: 0.3 },
-          { scale: 1.2, opacity: 0.8, duration: 1.2, ease: "power2.out" },
-          0.1
-        );
-
-        // 0.4s - 1.0s: Giant 0% Counter Impact
-        tl.fromTo("#counter-box",
-          { scale: 0.65, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2.2)" },
-          0.35
-        );
-
-        // 0.8s: 100% en tu caja badge
-        tl.fromTo("#caja-badge",
-          { y: 35, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.45, ease: "back.out(1.6)" },
+        // Counter bounce
+        tl.fromTo(".stat-zero",
+          { scale: 0.8 },
+          { scale: 1.06, duration: 0.4, yoyo: true, repeat: 1, ease: "power2.out" },
           0.8
         );
 
-        // 1.2s: Comparison Cards Slide-in
-        tl.fromTo("#comp-cards",
-          { y: 30, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" },
-          1.2
-        );
-
-        // 1.6s: Floating note card
-        tl.fromTo("#floating-note",
-          { y: 20, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
-          1.6
-        );
-
-        // Attention bounce at 2.6s
-        tl.to("#giant-num", {
-          scale: 1.05,
-          duration: 0.22,
-          repeat: 1,
-          yoyo: true,
-          ease: "sine.inOut"
-        }, 2.6);
-
-        // 4.25s: Punchy Exit Snap
-        tl.to("#scene-wrap", {
-          scale: 1.08,
-          opacity: 0,
-          duration: 0.22,
+        // Exit transition
+        tl.to("#main-card", {
+          autoAlpha: 0.2,
+          scale: 0.95,
+          duration: 0.3,
           ease: "power2.in"
-        }, 4.25);
+        }, 4.15);
 
+        window.__timelines = window.__timelines || {};
         window.__timelines["scene-2-comisiones"] = tl;
       </script>
     </template>

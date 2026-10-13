@@ -39,12 +39,12 @@
           width: 950px;
           height: 950px;
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(246, 0, 0, 0.24) 0%, rgba(246, 0, 0, 0.05) 45%, rgba(0, 0, 0, 0) 70%);
+          background: radial-gradient(circle, rgba(246, 0, 0, 0.25) 0%, rgba(246, 0, 0, 0.05) 45%, rgba(0, 0, 0, 0) 70%);
           pointer-events: none;
           z-index: 1;
         }
 
-        /* Scene 1 - Step 1: Official Logo Entrance (0.0s - 1.5s) */
+        /* 0.0s - 2.0s: Official Vector Logo Reveal */
         .logo-wrap {
           position: absolute;
           z-index: 5;
@@ -59,7 +59,7 @@
           visibility: hidden;
         }
 
-        .logo-vector-box {
+        .logo-box {
           width: 720px;
           height: 296px;
           display: flex;
@@ -67,15 +67,15 @@
           justify-content: center;
         }
 
-        .logo-vector-img {
+        .logo-img {
           width: 100%;
           height: 100%;
           object-fit: contain;
           display: block;
         }
 
-        .logo-sub-tag {
-          margin-top: 32px;
+        .logo-badge {
+          margin-top: 36px;
           font-size: 26px;
           font-weight: 700;
           letter-spacing: 0.16em;
@@ -87,8 +87,8 @@
           border-radius: 999px;
         }
 
-        /* Scene 1 - Step 2: Kinetic Text Cut (1.5s - 4.5s) */
-        .hook-cut-wrap {
+        /* 2.0s - 4.5s: Kinetic Typography Entrance */
+        .hook-text-wrap {
           position: absolute;
           z-index: 6;
           display: flex;
@@ -118,74 +118,74 @@
         }
 
         .hook-headline {
-          font-size: 86px;
-          line-height: 1.05;
+          font-size: 92px;
+          line-height: 1.04;
           font-weight: 800;
           letter-spacing: -0.02em;
           text-transform: uppercase;
           color: #F6F6F6;
         }
 
-        .commission-cut {
+        .hook-q-mark {
           color: #F60000;
-          text-decoration: line-through;
-          text-decoration-thickness: 6px;
           display: inline-block;
-          text-shadow: 0 0 35px rgba(246, 0, 0, 0.6);
+          text-shadow: 0 0 50px rgba(246, 0, 0, 0.85);
         }
 
-        .punchline-card {
+        .hook-subtitle-card {
           width: 100%;
-          padding: 26px 36px;
+          padding: 24px 36px;
           background: #0D0F12;
           border: 2px solid rgba(246, 0, 0, 0.45);
           border-radius: 28px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(246, 0, 0, 0.12);
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(246, 0, 0, 0.15);
         }
 
-        .punchline-text {
+        .hook-subtitle {
           font-size: 32px;
           font-weight: 800;
-          letter-spacing: 0.04em;
+          letter-spacing: 0.05em;
           text-transform: uppercase;
-          color: #F6F6F6;
-          line-height: 1.3;
+          color: #FFFFFF;
         }
 
-        .highlight-zero {
-          color: #F60000;
-          display: inline-block;
-          background: rgba(246, 0, 0, 0.12);
-          padding: 4px 14px;
-          border-radius: 12px;
-          border: 1px solid rgba(246, 0, 0, 0.35);
+        .hook-metric-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 14px;
+          padding: 10px 28px;
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          border-radius: 999px;
+          color: #10B981;
+          font-size: 22px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          margin-top: 10px;
         }
       </style>
 
       <div id="root" data-composition-id="scene-1-hook" data-width="1080" data-height="1920">
         <div class="ambient-glow" id="ambient-glow"></div>
 
-        <!-- Step 1: Official Logo Vector Asset Entrance -->
+        <!-- 0.0s - 2.0s: Official Logo Reveal -->
         <div class="logo-wrap" id="logo-wrap">
-          <div class="logo-vector-box" id="logo-vector-box">
-            <img src="./assets/logo-dtp-vector-04.svg" class="logo-vector-img" alt="Dale!TePido" id="logo-img" />
+          <div class="logo-box">
+            <img src="./assets/logo-dtp-vector-04.svg" class="logo-img" alt="Dale!TePido" id="logo-img-01" />
           </div>
-          <div class="logo-sub-tag" id="logo-sub-tag">TU CATÁLOGO DIGITAL SIN INTERMEDIARIOS</div>
+          <div class="logo-badge">CATÁLOGO DIGITAL SIN INTERMEDIARIOS</div>
         </div>
 
-        <!-- Step 2: Kinetic Text Cut -->
-        <div class="hook-cut-wrap" id="hook-cut-wrap">
+        <!-- 2.0s - 4.5s: Kinetic Typography Entrance -->
+        <div class="hook-text-wrap" id="hook-text-wrap">
           <div class="hook-badge">● EL PROBLEMA DE LAS APPS</div>
           <h1 class="hook-headline">
-            ¿CANSADO DE REGALAR HASTA EL <span class="commission-cut">30%</span> EN COMISIONES?
+            ¿CANSADO DE REGALAR TU GANANCIA<span class="hook-q-mark" id="hook-q-mark">?</span>
           </h1>
-          <div class="punchline-card">
-            <div class="punchline-text">
-              <span class="highlight-zero">0% COMISIONES</span> · SIN CHECKOUT COMPLEJO · 100% EN TU CAJA
-            </div>
+          <div class="hook-subtitle-card">
+            <div class="hook-subtitle">TU CATÁLOGO DIGITAL SIN INTERMEDIARIOS</div>
+            <div class="hook-metric-pill">0% COMISIONES · 100% EN TU CAJA</div>
           </div>
         </div>
       </div>
@@ -194,59 +194,53 @@
         const tl = gsap.timeline({ paused: true });
 
         // Initial setup
-        gsap.set("#logo-wrap", { autoAlpha: 0, scale: 0.85, transformOrigin: "center center" });
-        gsap.set("#hook-cut-wrap", { autoAlpha: 0, scale: 0.88, transformOrigin: "center center" });
+        gsap.set("#logo-wrap", { autoAlpha: 0, scale: 0.8, transformOrigin: "center center" });
+        gsap.set("#hook-text-wrap", { autoAlpha: 0, scale: 0.88, transformOrigin: "center center" });
 
-        // 0.0s - 1.5s: Official Vector Logo Smooth Spring Scale Animation
+        // 0.0s - 2.0s: Logo scale-in with spring pop
         tl.to("#logo-wrap", {
           autoAlpha: 1,
           scale: 1.0,
-          duration: 0.8,
-          ease: "back.out(1.8)"
+          duration: 0.85,
+          ease: "back.out(2)"
         }, 0.1);
 
-        tl.fromTo("#ambient-glow", 
-          { scale: 0.65, opacity: 0.2 }, 
-          { scale: 1.15, opacity: 0.85, duration: 1.2, ease: "power2.out" }, 
+        tl.fromTo("#ambient-glow",
+          { scale: 0.65, opacity: 0.2 },
+          { scale: 1.15, opacity: 0.85, duration: 1.2, ease: "power2.out" },
           0.1
         );
 
-        // 1.5s: Logo transition cut out
+        // 1.8s: Logo transition out
         tl.to("#logo-wrap", {
           autoAlpha: 0,
-          scale: 1.08,
+          scale: 1.06,
           duration: 0.25,
           ease: "power2.in"
-        }, 1.45);
+        }, 1.8);
 
-        // 1.5s - 4.5s: Kinetic Text Cut & Punchline Wipe
-        tl.to("#hook-cut-wrap", {
+        // 2.0s - 4.5s: Kinetic typography reveal
+        tl.to("#hook-text-wrap", {
           autoAlpha: 1,
           scale: 1.0,
-          duration: 0.5,
-          ease: "back.out(2)"
-        }, 1.55);
+          duration: 0.55,
+          ease: "back.out(1.8)"
+        }, 2.0);
 
-        // Subtile pulse on 30% cut and badge
-        tl.fromTo(".commission-cut", 
-          { scale: 1 }, 
-          { scale: 1.12, duration: 0.28, yoyo: true, repeat: 3, ease: "power1.inOut" }, 
-          2.0
+        // Pulsing red ?
+        tl.fromTo("#hook-q-mark",
+          { scale: 1 },
+          { scale: 1.25, duration: 0.35, yoyo: true, repeat: 3, ease: "power1.inOut" },
+          2.3
         );
 
-        tl.fromTo(".punchline-card", 
-          { y: 30, opacity: 0 }, 
-          { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, 
-          2.2
-        );
-
-        // Smooth exit preparing for Light Theme wipe
-        tl.to("#hook-cut-wrap", {
+        // Exit transition to light theme
+        tl.to("#hook-text-wrap", {
           scale: 0.94,
           opacity: 0.2,
-          duration: 0.3,
+          duration: 0.25,
           ease: "power2.in"
-        }, 4.2);
+        }, 4.25);
 
         window.__timelines = window.__timelines || {};
         window.__timelines["scene-1-hook"] = tl;

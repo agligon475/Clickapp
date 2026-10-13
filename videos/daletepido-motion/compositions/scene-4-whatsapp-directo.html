@@ -25,21 +25,21 @@
           width: 1080px;
           height: 1920px;
           overflow: hidden;
-          background: #010101;
+          background: #F6F6F6;
           display: flex;
           align-items: center;
           justify-content: center;
           font-family: 'Josefin Sans', sans-serif;
-          color: #F6F6F6;
-          padding: 60px 40px;
+          color: #010101;
+          padding: 60px 48px;
         }
 
-        .ambient-glow {
+        .ambient-light {
           position: absolute;
           width: 900px;
           height: 900px;
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(37, 211, 102, 0.16) 0%, rgba(246, 0, 0, 0.08) 40%, rgba(0, 0, 0, 0) 70%);
+          background: radial-gradient(circle, rgba(37, 211, 102, 0.1) 0%, rgba(246, 0, 0, 0.04) 40%, rgba(246, 246, 246, 0) 70%);
           pointer-events: none;
           z-index: 1;
         }
@@ -68,201 +68,182 @@
           font-weight: 800;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          box-shadow: 0 8px 30px rgba(246, 0, 0, 0.5);
+          box-shadow: 0 8px 24px rgba(246, 0, 0, 0.35);
         }
 
-        /* Punch text: Chau audios eternos */
-        .audio-strike-pill {
-          display: inline-flex;
-          align-items: center;
-          gap: 12px;
-          padding: 14px 28px;
-          border-radius: 999px;
-          background: rgba(239, 68, 68, 0.12);
-          border: 1.5px solid rgba(239, 68, 68, 0.4);
-          color: #EF4444;
-          font-size: 24px;
+        .scene-title {
+          font-size: 72px;
+          line-height: 1.05;
           font-weight: 800;
+          color: #010101;
+          text-align: center;
+          text-transform: uppercase;
+          letter-spacing: -0.02em;
         }
 
-        .strike-text {
-          text-decoration: line-through;
+        .scene-title span {
+          color: #25D366;
         }
 
-        /* Clean Incoming WhatsApp Comanda Card */
-        .comanda-card {
-          width: 100%;
-          max-width: 920px;
-          background: #111B21;
-          border: 2px solid rgba(37, 211, 102, 0.4);
+        /* High-contrast WhatsApp Comanda Card */
+        .wp-order-card {
+          width: 920px;
+          background: #FFFFFF;
+          border: 2px solid #E4E4E7;
           border-radius: 36px;
-          padding: 36px 40px;
+          padding: 38px 40px;
+          box-shadow: 0 24px 60px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
           display: flex;
           flex-direction: column;
           gap: 24px;
-          box-shadow: 0 32px 80px rgba(0, 0, 0, 0.9), 0 0 50px rgba(37, 211, 102, 0.2);
+          opacity: 0;
+          transform: translateY(-50px) scale(0.94);
         }
 
-        .comanda-top {
+        .wp-card-header {
           display: flex;
           align-items: center;
           justify-content: space-between;
           padding-bottom: 20px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          border-bottom: 2px solid #F0F0F0;
         }
 
-        .wa-brand {
-          display: flex;
+        .wp-tag {
+          display: inline-flex;
           align-items: center;
-          gap: 14px;
-        }
-
-        .wa-icon {
-          width: 44px;
-          height: 44px;
-          border-radius: 12px;
-          background: #25D366;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 4px 14px rgba(37, 211, 102, 0.4);
-        }
-
-        .wa-icon svg {
-          width: 26px;
-          height: 26px;
-          fill: white;
-        }
-
-        .wa-name {
-          font-size: 26px;
-          font-weight: 800;
-          color: #E9EDEF;
-        }
-
-        .wa-badge {
+          gap: 10px;
           padding: 8px 18px;
           border-radius: 999px;
           background: rgba(37, 211, 102, 0.15);
-          color: #25D366;
-          font-size: 18px;
-          font-weight: 800;
+          color: #128C7E;
+          font-size: 20px;
+          font-weight: 700;
         }
 
-        .comanda-order-title {
-          font-size: 32px;
+        .wp-order-num {
+          font-size: 26px;
           font-weight: 800;
-          color: #FFFFFF;
+          color: #010101;
         }
 
-        .comanda-items {
+        .order-subtitle {
+          font-size: 30px;
+          font-weight: 800;
+          color: #010101;
+          text-transform: uppercase;
+        }
+
+        /* Items list */
+        .items-list {
           display: flex;
           flex-direction: column;
-          gap: 12px;
-          font-size: 24px;
-          color: #D1D5DB;
+          gap: 14px;
         }
 
         .item-row {
           display: flex;
-          justify-content: space-between;
           align-items: center;
-        }
-
-        .total-row {
-          display: flex;
           justify-content: space-between;
-          align-items: center;
-          padding-top: 16px;
-          border-top: 2px dashed rgba(255, 255, 255, 0.15);
-          font-size: 32px;
-          font-weight: 800;
-          color: #34D399;
-        }
-
-        .comanda-callout {
-          padding: 16px 24px;
-          border-radius: 18px;
-          background: rgba(246, 0, 0, 0.12);
-          border: 1.5px solid rgba(246, 0, 0, 0.4);
-          color: #F60000;
-          font-size: 22px;
+          padding: 14px 20px;
+          background: #F8F9FA;
+          border-radius: 16px;
+          font-size: 24px;
           font-weight: 700;
-          text-align: center;
+          color: #222222;
         }
 
-        .bottom-pill {
+        .item-row .price {
+          color: #010101;
+          font-weight: 800;
+        }
+
+        .order-footer-bar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-top: 18px;
+          border-top: 2px dashed #E5E7EB;
+        }
+
+        .total-label {
+          font-size: 24px;
+          font-weight: 700;
+          color: #666666;
+        }
+
+        .total-price {
+          font-size: 34px;
+          font-weight: 800;
+          color: #128C7E;
+        }
+
+        /* Punch tag below */
+        .audio-strike-card {
           display: inline-flex;
           align-items: center;
-          gap: 12px;
-          padding: 14px 32px;
+          gap: 14px;
+          padding: 16px 36px;
           border-radius: 999px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1.5px solid rgba(255, 255, 255, 0.15);
+          background: #0D0F12;
           color: #FFFFFF;
-          font-size: 22px;
+          font-size: 24px;
           font-weight: 700;
-          letter-spacing: 0.06em;
+          letter-spacing: 0.05em;
           text-transform: uppercase;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+          opacity: 0;
+          transform: translateY(20px);
+        }
+
+        .strike-sub {
+          color: #F60000;
+          text-decoration: line-through;
+          text-decoration-thickness: 3px;
         }
       </style>
 
       <div id="root" data-composition-id="scene-4-whatsapp-directo" data-width="1080" data-height="1920">
-        <div class="ambient-glow" id="ambient-glow"></div>
+        <div class="ambient-light"></div>
 
-        <div class="scene-wrap" id="scene-wrap">
-          <!-- Headline Badge -->
-          <div class="scene-badge" id="scene-badge">
-            3. PEDIDOS DIRECTOS A WHATSAPP
-          </div>
+        <div class="scene-wrap">
+          <div class="scene-badge">⚡ 3. WHATSAPP DIRECTO</div>
+          <h2 class="scene-title">PEDIDOS DIRECTOS<br /><span>A WHATSAPP</span></h2>
 
-          <!-- Punch text: Chau audios -->
-          <div class="audio-strike-pill" id="audio-pill">
-            <span>✕</span>
-            <span class="strike-text">¡Chau a los audios eternos de 3 minutos!</span>
-          </div>
-
-          <!-- Incoming Comanda Card -->
-          <div class="comanda-card" id="comanda-card">
-            <div class="comanda-top">
-              <div class="wa-brand">
-                <div class="wa-icon">
-                  <svg viewBox="0 0 24 24">
-                    <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 6.46 17.5 2 12.04 2M12.05 3.67C16.58 3.67 20.28 7.37 20.28 11.92C20.28 16.46 16.58 20.17 12.05 20.17C10.57 20.17 9.15 19.77 7.91 19.03L7.61 18.85L4.5 19.67L5.33 16.63L5.13 16.32C4.32 15.03 3.8 13.5 3.8 11.91C3.8 7.37 7.51 3.67 12.05 3.67Z"/>
-                  </svg>
-                </div>
-                <div class="wa-name">WhatsApp Business</div>
-              </div>
-              <div class="wa-badge">COMANDA CONFIRMADA</div>
+          <!-- Incoming Floating Message Card -->
+          <div class="wp-order-card" id="wp-order-card">
+            <div class="wp-card-header">
+              <div class="wp-tag">🟢 COMANDA DIGITAL</div>
+              <div class="wp-order-num">Pedido #1084</div>
             </div>
 
-            <div class="comanda-order-title">
-              Pedido #1084 - Retiro Take Away / Envíos Propios
+            <div class="order-subtitle">
+              Retiro Take Away / Envíos Propios
             </div>
 
-            <div class="comanda-items">
+            <div class="items-list">
               <div class="item-row">
-                <span>1x Promo Burger Doble Cheddar + Papas</span>
-                <span style="font-weight: 700;">$8.500</span>
+                <span>🍕 2x Pizza Especial Jamón y Morrones</span>
+                <span class="price">$18.000</span>
               </div>
               <div class="item-row">
-                <span>1x Bebida Línea Cola 500ml</span>
-                <span style="font-weight: 700;">$1.500</span>
+                <span>🥟 1x Docena Empanadas de Carne</span>
+                <span class="price">$14.500</span>
               </div>
-              <div class="total-row">
-                <span>Total a cobrar:</span>
-                <span>$10.000</span>
+              <div class="item-row">
+                <span>🥤 2x Gaseosa 1.5L</span>
+                <span class="price">$5.000</span>
               </div>
             </div>
 
-            <div class="comanda-callout">
-              💬 Sin intermediarios: coordinás el pago directo por tu chat
+            <div class="order-footer-bar">
+              <div class="total-label">Exacto & Auto-sumado</div>
+              <div class="total-price">Total: $37.500</div>
             </div>
           </div>
 
-          <!-- Bottom Pill -->
-          <div class="bottom-pill" id="bottom-pill">
-            PEDIDOS CLAROS, AUTOMÁTICOS Y SIN ERRORES
+          <!-- Punch text tag -->
+          <div class="audio-strike-card" id="audio-strike-card">
+            <span>🚫</span> ¡Chau a los <span class="strike-sub">audios eternos de 3 minutos</span>!
           </div>
         </div>
       </div>
@@ -270,57 +251,48 @@
       <script>
         const tl = gsap.timeline({ paused: true });
 
-        // Initial states
-        gsap.set("#scene-wrap", { opacity: 1, scale: 1 });
-        gsap.set("#scene-badge", { scale: 0.8, opacity: 0 });
-        gsap.set("#audio-pill", { y: -20, opacity: 0 });
-        gsap.set("#comanda-card", { y: -80, opacity: 0, scale: 0.92 });
-        gsap.set("#bottom-pill", { y: 20, opacity: 0 });
+        // Initial setup
+        gsap.set(".scene-badge", { autoAlpha: 0, scale: 0.9 });
+        gsap.set(".scene-title", { autoAlpha: 0, y: -20 });
+        gsap.set("#wp-order-card", { autoAlpha: 0, scale: 0.92, y: -40 });
+        gsap.set("#audio-strike-card", { autoAlpha: 0, y: 20 });
 
-        // 0.0s - 0.5s: Badge & Audio Strike
-        tl.fromTo("#scene-badge",
-          { scale: 0.75, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)" },
-          0.05
-        );
+        // 0.0s - 0.5s: Title entrance
+        tl.to([".scene-badge", ".scene-title"], {
+          autoAlpha: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.45,
+          stagger: 0.1,
+          ease: "power3.out"
+        }, 0.1);
 
-        tl.fromTo("#audio-pill",
-          { y: -20, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.35, ease: "power2.out" },
-          0.35
-        );
+        // 0.6s - 1.2s: WhatsApp message card drops smoothly
+        tl.to("#wp-order-card", {
+          autoAlpha: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.55,
+          ease: "bounce.out"
+        }, 0.6);
 
-        // 0.7s: Clean Comanda Card drops from top edge with spring bounce
-        tl.fromTo("#comanda-card",
-          { y: -80, opacity: 0, scale: 0.92 },
-          { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" },
-          0.7
-        );
+        // 1.4s: Audio strike punch text enters
+        tl.to("#audio-strike-card", {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.4,
+          ease: "back.out(1.8)"
+        }, 1.4);
 
-        // Comanda attention bounce
-        tl.to("#comanda-card", {
-          scale: 1.02,
-          duration: 0.18,
-          repeat: 1,
-          yoyo: true,
-          ease: "power2.inOut"
-        }, 1.6);
-
-        // Bottom pill appears
-        tl.fromTo("#bottom-pill",
-          { y: 20, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
-          1.8
-        );
-
-        // 4.25s: Punchy Exit Snap
-        tl.to("#scene-wrap", {
-          scale: 1.08,
-          opacity: 0,
-          duration: 0.22,
+        // Exit transition preparing for dark theme
+        tl.to([".scene-wrap"], {
+          autoAlpha: 0.2,
+          scale: 0.95,
+          duration: 0.25,
           ease: "power2.in"
-        }, 4.25);
+        }, 4.2);
 
+        window.__timelines = window.__timelines || {};
         window.__timelines["scene-4-whatsapp-directo"] = tl;
       </script>
     </template>

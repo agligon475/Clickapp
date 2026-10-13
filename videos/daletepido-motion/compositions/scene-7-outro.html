@@ -31,7 +31,7 @@
           justify-content: center;
           font-family: 'Josefin Sans', sans-serif;
           color: #F6F6F6;
-          padding: 60px 40px;
+          padding: 60px 48px;
         }
 
         .ambient-glow {
@@ -55,32 +55,34 @@
           width: 100%;
           max-width: 960px;
           gap: 36px;
+          opacity: 0;
+          transform: scale(0.9);
         }
 
         .outro-logo-box {
-          width: 640px;
-          height: 260px;
+          width: 720px;
+          height: 296px;
           display: flex;
           align-items: center;
           justify-content: center;
         }
 
-        .outro-logo-svg {
+        .outro-logo-img {
           width: 100%;
           height: 100%;
-          overflow: visible;
+          object-fit: contain;
+          display: block;
         }
 
         .outro-statement {
-          font-size: 68px;
+          font-size: 76px;
           font-weight: 800;
-          line-height: 1.08;
+          line-height: 1.05;
           letter-spacing: -0.02em;
           text-transform: uppercase;
           color: #FFFFFF;
         }
 
-        /* High-contrast CTA pill button */
         .cta-button {
           display: inline-flex;
           align-items: center;
@@ -88,7 +90,7 @@
           gap: 20px;
           width: 100%;
           max-width: 780px;
-          padding: 30px 48px;
+          padding: 28px 48px;
           border-radius: 999px;
           background: #F60000;
           color: #FFFFFF;
@@ -97,51 +99,22 @@
           letter-spacing: 0.04em;
           box-shadow: 0 20px 60px rgba(246, 0, 0, 0.65), 0 0 40px rgba(246, 0, 0, 0.35);
           border: 2px solid rgba(255, 255, 255, 0.25);
+          text-transform: lowercase;
         }
 
-        .cta-arrow-circle {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 58px;
-          height: 58px;
-          border-radius: 50%;
-          background: #FFFFFF;
-          color: #F60000;
-          font-size: 34px;
-          font-weight: 800;
-        }
-
-        /* Footer Badge */
-        .footer-badge {
+        .outro-footer-badge {
           display: inline-flex;
           align-items: center;
           gap: 12px;
-          padding: 16px 36px;
+          padding: 14px 34px;
           border-radius: 999px;
           background: rgba(255, 255, 255, 0.05);
           border: 1.5px solid rgba(255, 255, 255, 0.15);
-          color: #E2E8F0;
-          font-size: 24px;
+          color: #10B981;
+          font-size: 22px;
           font-weight: 700;
-          letter-spacing: 0.06em;
+          letter-spacing: 0.1em;
           text-transform: uppercase;
-        }
-
-        .trust-chips-row {
-          display: flex;
-          gap: 16px;
-          margin-top: 4px;
-        }
-
-        .trust-pill {
-          padding: 12px 24px;
-          border-radius: 999px;
-          background: #101216;
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          color: #CCCCCC;
-          font-size: 20px;
-          font-weight: 700;
         }
       </style>
 
@@ -149,25 +122,9 @@
         <div class="ambient-glow" id="ambient-glow"></div>
 
         <div class="outro-wrap" id="outro-wrap">
-          <!-- Official Dale!TePido Logo Centered at Top -->
-          <div class="outro-logo-box" id="outro-logo-box">
-            <svg class="outro-logo-svg" viewBox="0 0 600 250" xmlns="http://www.w3.org/2000/svg">
-              <!-- DALE! -->
-              <text x="300" y="85" text-anchor="middle" font-family="'Josefin Sans', sans-serif" font-weight="800" font-size="84" fill="#F6F6F6" letter-spacing="8">DALE!</text>
-              
-              <!-- TEP i D O -->
-              <text x="135" y="192" font-family="'Josefin Sans', sans-serif" font-weight="800" font-size="84" fill="#F6F6F6" letter-spacing="8">TEP</text>
-              <rect x="278" y="185" width="22" height="7" fill="#F6F6F6" rx="2" />
-              <text x="312" y="192" font-family="'Josefin Sans', sans-serif" font-weight="800" font-size="84" fill="#F6F6F6">i</text>
-              <circle cx="320" cy="128" r="6.5" fill="#F6F6F6" />
-              <text x="354" y="192" font-family="'Josefin Sans', sans-serif" font-weight="800" font-size="84" fill="#F6F6F6" letter-spacing="8">D</text>
-              <text x="432" y="192" font-family="'Josefin Sans', sans-serif" font-weight="800" font-size="84" fill="#F6F6F6">O</text>
-              
-              <!-- Signature Curved Red Hairline Arc from 'i' dot to over 'O' -->
-              <path d="M 320 126 C 352 74, 424 74, 460 124" fill="none" stroke="#F60000" stroke-width="4" stroke-linecap="round" />
-              <!-- Downward Red Arrowhead -->
-              <path d="M 460 134 L 451 119 L 469 119 Z" fill="#F60000" />
-            </svg>
+          <!-- Vector Logo Asset Prominently Centered -->
+          <div class="outro-logo-box">
+            <img src="./assets/logo-dtp-vector-04.svg" class="outro-logo-img" alt="Dale!TePido" id="outro-logo-asset" />
           </div>
 
           <!-- Bold Statement -->
@@ -177,20 +134,12 @@
 
           <!-- High-Contrast CTA Pill Button -->
           <div class="cta-button" id="cta-button">
-            <span>daletepido.com.ar</span>
-            <div class="cta-arrow-circle">→</div>
+            <span>daletepido.com.ar &rarr;</span>
           </div>
 
           <!-- Footer Badge -->
-          <div class="footer-badge" id="footer-badge">
-            15 DÍAS DE PRUEBA GRATIS · ACTIVÁ TU TIENDA HOY
-          </div>
-
-          <!-- Trust Chips -->
-          <div class="trust-chips-row" id="trust-chips">
-            <div class="trust-pill">0% Comisiones</div>
-            <div class="trust-pill">Sin App Obligatoria</div>
-            <div class="trust-pill">100% en tu Caja</div>
+          <div class="outro-footer-badge" id="footer-badge">
+            ✓ 15 DÍAS DE PRUEBA GRATIS · ACTIVÁ TU TIENDA HOY
           </div>
         </div>
       </div>
@@ -198,62 +147,25 @@
       <script>
         const tl = gsap.timeline({ paused: true });
 
-        // Initial states
-        gsap.set("#outro-wrap", { opacity: 1 });
-        gsap.set("#outro-logo-box", { scale: 0.8, opacity: 0 });
-        gsap.set("#outro-statement", { y: 25, opacity: 0 });
-        gsap.set("#cta-button", { scale: 0.82, opacity: 0 });
-        gsap.set("#footer-badge", { y: 20, opacity: 0 });
-        gsap.set("#trust-chips", { y: 20, opacity: 0 });
+        // Initial state
+        gsap.set("#outro-wrap", { autoAlpha: 0, scale: 0.88 });
 
-        // 0.0s - 0.5s: Logo & Statement
-        tl.fromTo("#outro-logo-box",
-          { scale: 0.78, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(2)" },
-          0.05
-        );
+        // 0.0s - 0.7s: Outro lockup entrance
+        tl.to("#outro-wrap", {
+          autoAlpha: 1,
+          scale: 1,
+          duration: 0.65,
+          ease: "back.out(2)"
+        }, 0.05);
 
-        tl.fromTo("#ambient-glow",
-          { scale: 0.7, opacity: 0.3 },
-          { scale: 1.2, opacity: 0.85, duration: 1.2, ease: "power2.out" },
-          0.1
-        );
-
-        tl.fromTo("#outro-statement",
-          { y: 25, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" },
-          0.25
-        );
-
-        // 0.5s: CTA Button Pop-in
+        // CTA Button pulse
         tl.fromTo("#cta-button",
-          { scale: 0.8, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2.2)" },
-          0.45
-        );
-
-        // CTA Subtle Pulse
-        tl.to("#cta-button", {
-          scale: 1.04,
-          duration: 0.35,
-          repeat: 2,
-          yoyo: true,
-          ease: "power2.inOut"
-        }, 1.0);
-
-        // Footer & Trust chips
-        tl.fromTo("#footer-badge",
-          { y: 20, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.35, ease: "power2.out" },
+          { scale: 1 },
+          { scale: 1.06, duration: 0.35, yoyo: true, repeat: 3, ease: "power1.inOut" },
           0.7
         );
 
-        tl.fromTo("#trust-chips",
-          { y: 20, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.35, ease: "power2.out" },
-          0.9
-        );
-
+        window.__timelines = window.__timelines || {};
         window.__timelines["scene-7-outro"] = tl;
       </script>
     </template>
