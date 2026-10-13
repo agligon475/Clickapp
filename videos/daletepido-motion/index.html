@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1080, height=1920" />
-    <title>Dale!TePido - 30s High-Impact Kinetic Promo</title>
+    <title>Dale!TePido - 15s High-Impact Kinetic Motion</title>
     <!-- Google Fonts: Josefin Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -53,11 +53,11 @@
       id="root"
       data-composition-id="main"
       data-start="0"
-      data-duration="30"
+      data-duration="15"
       data-width="1080"
       data-height="1920"
     >
-      <!-- Scene 1: The Hook & Brand Identity (0.0s - 4.5s) -->
+      <!-- Scene 1: The Problem & Brand Hook [DARK THEME] (0.0s - 4.5s) -->
       <div
         id="scene-1-hook"
         class="clip"
@@ -70,80 +70,28 @@
         data-height="1920"
       ></div>
 
-      <!-- Scene 2: Ventaja 1 — Cero Comisiones (4.5s - 9.0s) -->
+      <!-- Scene 2: 5-Minute Catalog Setup & Order Flow [LIGHT THEME] (4.5s - 10.0s) -->
       <div
-        id="scene-2-comisiones"
+        id="scene-2-onboarding"
         class="clip"
-        data-composition-id="scene-2-comisiones"
-        data-composition-src="compositions/scene-2-comisiones.html"
+        data-composition-id="scene-2-onboarding"
+        data-composition-src="compositions/scene-2-onboarding.html"
         data-start="4.5"
-        data-duration="4.5"
+        data-duration="5.5"
         data-track-index="1"
         data-width="1080"
         data-height="1920"
       ></div>
 
-      <!-- Scene 3: Ventaja 2 — Tienda Lista en 5 Minutos (9.0s - 13.5s) -->
+      <!-- Scene 3: Mostrador, Kit QR & Outro [DARK THEME] (10.0s - 15.0s) -->
       <div
-        id="scene-3-tienda-rapida"
+        id="scene-3-conversion"
         class="clip"
-        data-composition-id="scene-3-tienda-rapida"
-        data-composition-src="compositions/scene-3-tienda-rapida.html"
-        data-start="9"
-        data-duration="4.5"
-        data-track-index="2"
-        data-width="1080"
-        data-height="1920"
-      ></div>
-
-      <!-- Scene 4: Ventaja 3 — WhatsApp Directo & Cero Errores (13.5s - 18.0s) -->
-      <div
-        id="scene-4-whatsapp-directo"
-        class="clip"
-        data-composition-id="scene-4-whatsapp-directo"
-        data-composition-src="compositions/scene-4-whatsapp-directo.html"
-        data-start="13.5"
-        data-duration="4.5"
-        data-track-index="3"
-        data-width="1080"
-        data-height="1920"
-      ></div>
-
-      <!-- Scene 5: Ventaja 4 — Adelanto de Pedidos & Logística Propia (18.0s - 23.0s) -->
-      <div
-        id="scene-5-logistica-adelanto"
-        class="clip"
-        data-composition-id="scene-5-logistica-adelanto"
-        data-composition-src="compositions/scene-5-logistica-adelanto.html"
-        data-start="18"
+        data-composition-id="scene-3-conversion"
+        data-composition-src="compositions/scene-3-conversion.html"
+        data-start="10"
         data-duration="5"
-        data-track-index="4"
-        data-width="1080"
-        data-height="1920"
-      ></div>
-
-      <!-- Scene 6: Ventaja 5 — Kit QR de Mostrador & Tráfico Local (23.0s - 27.5s) -->
-      <div
-        id="scene-6-kit-qr"
-        class="clip"
-        data-composition-id="scene-6-kit-qr"
-        data-composition-src="compositions/scene-6-kit-qr.html"
-        data-start="23"
-        data-duration="4.5"
-        data-track-index="5"
-        data-width="1080"
-        data-height="1920"
-      ></div>
-
-      <!-- Scene 7: Outro & Call to Action (27.5s - 30.0s) -->
-      <div
-        id="scene-7-outro"
-        class="clip"
-        data-composition-id="scene-7-outro"
-        data-composition-src="compositions/scene-7-outro.html"
-        data-start="27.5"
-        data-duration="2.5"
-        data-track-index="6"
+        data-track-index="2"
         data-width="1080"
         data-height="1920"
       ></div>
@@ -151,6 +99,7 @@
 
     <script>
       const tl = gsap.timeline({ paused: true });
+      window.__timelines = window.__timelines || {};
       window.__timelines["main"] = tl;
       tl.seek(0);
     </script>

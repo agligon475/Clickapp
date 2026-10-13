@@ -25,496 +25,370 @@
           width: 1080px;
           height: 1920px;
           overflow: hidden;
-          background: #010101;
+          background: #F6F6F6;
           display: flex;
           align-items: center;
           justify-content: center;
           font-family: 'Josefin Sans', sans-serif;
-          color: #F6F6F6;
-          padding: 60px 40px;
+          color: #0D0F12;
+          padding: 60px 48px;
         }
 
-        .ambient-glow {
+        /* Ambient light warmth */
+        .ambient-light {
           position: absolute;
-          width: 850px;
-          height: 850px;
+          width: 900px;
+          height: 900px;
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(246, 0, 0, 0.18) 0%, rgba(246, 0, 0, 0.04) 45%, rgba(0, 0, 0, 0) 70%);
+          background: radial-gradient(circle, rgba(246, 0, 0, 0.08) 0%, rgba(246, 0, 0, 0.02) 40%, rgba(246, 246, 246, 0) 70%);
           pointer-events: none;
           z-index: 1;
         }
 
-        /* Bento Grid Main Container */
-        .bento-container {
+        /* Bento Grid Wrapper */
+        .bento-wrap {
           position: relative;
           z-index: 5;
           width: 980px;
-          height: 1680px;
-          background: #0D0D0D;
-          border: 2px solid rgba(255, 255, 255, 0.12);
+          height: 1720px;
+          background: #FFFFFF;
+          border: 2px solid rgba(0, 0, 0, 0.08);
           border-radius: 44px;
-          padding: 40px;
+          padding: 48px 40px;
           display: flex;
           flex-direction: column;
-          box-shadow: 0 32px 80px rgba(0, 0, 0, 0.85), 0 0 50px rgba(246, 0, 0, 0.08);
+          box-shadow: 0 28px 70px rgba(0, 0, 0, 0.08), 0 2px 12px rgba(0, 0, 0, 0.04);
           overflow: hidden;
         }
 
-        /* App Header Bar */
-        .app-bar {
+        /* Header */
+        .bento-header {
           display: flex;
           align-items: center;
           justify-content: space-between;
           padding-bottom: 24px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-          margin-bottom: 28px;
-        }
-
-        .app-brand {
-          display: flex;
-          align-items: center;
-          gap: 14px;
-        }
-
-        .app-brand-icon {
-          width: 44px;
-          height: 44px;
-          border-radius: 12px;
-          background: #F60000;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 800;
-          font-size: 22px;
-          color: white;
-          box-shadow: 0 4px 16px rgba(246, 0, 0, 0.5);
-        }
-
-        .app-brand-title {
-          font-size: 28px;
-          font-weight: 800;
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-        }
-
-        .app-status-badge {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding: 10px 20px;
-          border-radius: 999px;
-          background: rgba(16, 185, 129, 0.12);
-          border: 1px solid rgba(16, 185, 129, 0.35);
-          color: #34D399;
-          font-size: 18px;
-          font-weight: 700;
-          letter-spacing: 0.04em;
-        }
-
-        .status-dot {
-          width: 10px;
-          height: 10px;
-          border-radius: 50%;
-          background: #10B981;
-          box-shadow: 0 0 10px #10B981;
-        }
-
-        /* Section Header: Step A Rubros */
-        .step-header {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-          margin-bottom: 24px;
-        }
-
-        .step-label {
-          font-size: 20px;
-          font-weight: 700;
-          color: #F60000;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-        }
-
-        .step-title {
-          font-size: 38px;
-          font-weight: 800;
-          line-height: 1.15;
-          letter-spacing: -0.01em;
-        }
-
-        /* Rubro Chip Selection */
-        .chips-container {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 12px;
+          border-bottom: 2px solid #F0F0F0;
           margin-bottom: 32px;
         }
 
-        .rubro-chip {
+        .bento-badge {
           display: inline-flex;
           align-items: center;
           gap: 10px;
-          padding: 14px 26px;
+          padding: 10px 22px;
           border-radius: 999px;
-          background: #181818;
-          border: 1.5px solid rgba(255, 255, 255, 0.12);
+          background: rgba(246, 0, 0, 0.08);
+          border: 1.5px solid rgba(246, 0, 0, 0.3);
+          color: #F60000;
+          font-size: 20px;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+        }
+
+        .bento-step-num {
           font-size: 22px;
           font-weight: 700;
-          color: #CCCCCC;
+          color: #888888;
         }
 
-        .rubro-chip.active {
-          background: #F60000;
-          border-color: #F60000;
+        /* Step A: Headline & Rubros (4.5s - 6.5s) */
+        .step-a-section {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+        }
+
+        .step-a-title {
+          font-size: 64px;
+          font-weight: 800;
+          line-height: 1.08;
+          color: #0D0F12;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+        }
+
+        .step-a-title span {
+          color: #F60000;
+        }
+
+        .rubros-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 16px;
+          margin-top: 8px;
+        }
+
+        .rubro-chip {
+          padding: 22px 24px;
+          border-radius: 20px;
+          background: #F9F9F9;
+          border: 2px solid #E5E5E5;
+          font-size: 26px;
+          font-weight: 700;
+          color: #444444;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          position: relative;
+        }
+
+        .rubro-chip.target-chip {
+          border-color: #E5E5E5;
+          color: #111111;
+        }
+
+        /* Virtual tap cursor indicator */
+        .tap-cursor {
+          position: absolute;
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          background: rgba(246, 0, 0, 0.4);
+          border: 3px solid #F60000;
+          pointer-events: none;
+          z-index: 10;
+          opacity: 0;
+          transform: scale(0.5);
+        }
+
+        /* Step B: Cascading Categories (6.5s - 8.0s) */
+        .step-b-section {
+          margin-top: 36px;
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+        }
+
+        .blank-screen-pill {
+          align-self: flex-start;
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px 24px;
+          border-radius: 999px;
+          background: #0D0F12;
           color: #FFFFFF;
-          box-shadow: 0 4px 20px rgba(246, 0, 0, 0.5);
+          font-size: 20px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          opacity: 0;
+          transform: translateY(15px);
         }
 
-        /* Step B: 5 Pre-loaded Categories */
         .categories-list {
           display: flex;
           flex-direction: column;
           gap: 14px;
-          margin-bottom: 24px;
         }
 
-        .category-card {
+        .cat-card {
           display: flex;
           align-items: center;
           justify-content: space-between;
           padding: 18px 24px;
-          background: #161616;
-          border: 1.5px solid rgba(255, 255, 255, 0.08);
-          border-radius: 20px;
-        }
-
-        .category-info {
-          display: flex;
-          align-items: center;
-          gap: 18px;
-        }
-
-        .category-icon {
-          font-size: 32px;
-          width: 52px;
-          height: 52px;
-          border-radius: 14px;
-          background: rgba(255, 255, 255, 0.05);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .category-name {
-          font-size: 24px;
-          font-weight: 700;
-          color: #FFFFFF;
-        }
-
-        .category-count {
-          font-size: 18px;
-          color: #9E9E9E;
-          margin-top: 4px;
-        }
-
-        .category-status-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 8px 16px;
-          border-radius: 999px;
-          background: rgba(16, 185, 129, 0.12);
-          color: #34D399;
-          font-size: 16px;
-          font-weight: 800;
-        }
-
-        .chau-blanco-pill {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 10px;
-          padding: 10px 24px;
-          border-radius: 999px;
-          background: rgba(246, 0, 0, 0.1);
-          border: 1px solid rgba(246, 0, 0, 0.3);
-          color: #F60000;
-          font-size: 18px;
-          font-weight: 700;
-          text-align: center;
-          align-self: center;
-          margin-bottom: 16px;
-        }
-
-        /* Step C: Dropping WhatsApp Comanda Card */
-        .whatsapp-order-card {
-          position: absolute;
-          left: 40px;
-          right: 40px;
-          bottom: 120px;
-          background: #111B21;
-          border: 2px solid rgba(37, 211, 102, 0.4);
-          border-radius: 28px;
-          padding: 28px 32px;
-          box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(37, 211, 102, 0.2);
-          display: flex;
-          flex-direction: column;
-          gap: 18px;
-          z-index: 10;
+          border-radius: 18px;
+          background: #F8F9FA;
+          border: 1.5px solid #EBECEF;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
           opacity: 0;
-          visibility: hidden;
+          transform: translateX(-40px);
         }
 
-        .wa-header {
+        .cat-info {
           display: flex;
           align-items: center;
-          justify-content: space-between;
-          padding-bottom: 14px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          gap: 16px;
+          font-size: 26px;
+          font-weight: 700;
+          color: #1A1A1A;
         }
 
-        .wa-brand {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-
-        .wa-icon-box {
-          width: 36px;
-          height: 36px;
-          border-radius: 10px;
-          background: #25D366;
+        .cat-icon {
+          width: 48px;
+          height: 48px;
+          border-radius: 12px;
+          background: #FFFFFF;
           display: flex;
           align-items: center;
           justify-content: center;
+          font-size: 24px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
 
-        .wa-icon-box svg {
-          width: 22px;
-          height: 22px;
-          fill: white;
-        }
-
-        .wa-app-name {
+        .cat-check {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #10B981;
           font-size: 20px;
           font-weight: 700;
-          color: #E9EDEF;
-        }
-
-        .wa-badge {
+          background: rgba(16, 185, 129, 0.1);
           padding: 6px 14px;
           border-radius: 999px;
-          background: rgba(37, 211, 102, 0.15);
-          color: #25D366;
-          font-size: 16px;
-          font-weight: 700;
         }
 
-        .wa-order-title {
-          font-size: 26px;
-          font-weight: 800;
+        /* Step C: Incoming Order Card (8.0s - 10.0s) */
+        .order-notification-card {
+          margin-top: 32px;
+          padding: 28px 30px;
+          border-radius: 26px;
+          background: #0D0F12;
           color: #FFFFFF;
-        }
-
-        .wa-items-list {
+          border: 2px solid rgba(246, 0, 0, 0.5);
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25), 0 0 40px rgba(246, 0, 0, 0.12);
           display: flex;
           flex-direction: column;
+          gap: 16px;
+          opacity: 0;
+          transform: translateY(-80px) scale(0.92);
+        }
+
+        .order-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .order-badge-wp {
+          display: inline-flex;
+          align-items: center;
           gap: 8px;
-          font-size: 20px;
-          color: #D1D5DB;
-        }
-
-        .wa-item-row {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .wa-total-row {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding-top: 10px;
-          border-top: 1px dashed rgba(255, 255, 255, 0.15);
-          font-size: 24px;
-          font-weight: 800;
-          color: #34D399;
-        }
-
-        .wa-callout {
-          padding: 12px 18px;
-          border-radius: 14px;
-          background: rgba(246, 0, 0, 0.12);
-          border: 1px solid rgba(246, 0, 0, 0.35);
-          color: #F60000;
-          font-size: 19px;
+          padding: 8px 18px;
+          background: rgba(16, 185, 129, 0.2);
+          border: 1px solid #10B981;
+          border-radius: 999px;
+          color: #10B981;
+          font-size: 18px;
           font-weight: 700;
-          text-align: center;
-        }
-
-        /* Floating Badge Tag Pinned at Bottom */
-        .bottom-floating-badge {
-          margin-top: auto;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 12px;
-          padding: 16px 28px;
-          border-radius: 20px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1.5px solid rgba(255, 255, 255, 0.12);
-          color: #FFFFFF;
-          font-size: 20px;
-          font-weight: 700;
-          letter-spacing: 0.05em;
           text-transform: uppercase;
         }
 
-        .badge-live-pulse {
-          width: 12px;
-          height: 12px;
-          border-radius: 50%;
-          background: #10B981;
-          box-shadow: 0 0 14px #10B981;
+        .order-id {
+          font-size: 24px;
+          font-weight: 800;
+          color: #FFFFFF;
+        }
+
+        .order-title {
+          font-size: 32px;
+          font-weight: 800;
+          color: #FFFFFF;
+        }
+
+        .order-meta {
+          font-size: 22px;
+          font-weight: 600;
+          color: #A0A0A0;
+          line-height: 1.35;
+        }
+
+        .order-total-bar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-top: 14px;
+          border-top: 1px solid rgba(255, 255, 255, 0.12);
+          font-size: 24px;
+          font-weight: 800;
+        }
+
+        .order-total-bar .amount {
+          color: #10B981;
+          font-size: 28px;
         }
       </style>
 
       <div id="root" data-composition-id="scene-2-onboarding" data-width="1080" data-height="1920">
-        <div class="ambient-glow" id="ambient-glow"></div>
+        <div class="ambient-light"></div>
 
-        <div class="bento-container" id="bento-container">
-          <!-- App Bar -->
-          <div class="app-bar">
-            <div class="app-brand">
-              <div class="app-brand-icon">D!</div>
-              <div class="app-brand-title">DALE! TEPIDO</div>
-            </div>
-            <div class="app-status-badge">
-              <span class="status-dot"></span>
-              <span>ONLINE · 5 MIN</span>
+        <div class="bento-wrap" id="bento-wrap">
+          <div class="bento-header">
+            <div class="bento-badge">⚡ DALE!TEPIDO ONBOARDING</div>
+            <div class="bento-step-num">LISTO EN 5 MIN</div>
+          </div>
+
+          <!-- Step A: Headline & Rubro Selection -->
+          <div class="step-a-section">
+            <h2 class="step-a-title">TU TIENDA DIGITAL<br /><span>EN 5 MINUTOS</span></h2>
+            <div class="rubros-grid" style="position: relative;">
+              <div class="tap-cursor" id="tap-cursor"></div>
+              <div class="rubro-chip target-chip" id="chip-almacen">
+                <span>🏪</span> ALMACÉN / GASTRONOMÍA
+              </div>
+              <div class="rubro-chip">
+                <span>🥖</span> PANADERÍA
+              </div>
+              <div class="rubro-chip">
+                <span>🥩</span> CARNICERÍA
+              </div>
+              <div class="rubro-chip">
+                <span>💊</span> FARMACIA
+              </div>
             </div>
           </div>
 
-          <!-- Step A: Rubro Selection -->
-          <div class="step-header">
-            <div class="step-label">PASO 1 · ELECCIÓN DE RUBRO</div>
-            <div class="step-title">TU NEGOCIO LISTO EN 5 MINUTOS</div>
-          </div>
-
-          <div class="chips-container" id="chips-container">
-            <div class="rubro-chip" id="chip-almacen">Almacén & Bebidas</div>
-            <div class="rubro-chip active" id="chip-gastro">Gastronomía ✓</div>
-            <div class="rubro-chip">Kiosco & Snacks</div>
-            <div class="rubro-chip">Tienda & Retail</div>
-          </div>
-
-          <!-- Step B: Pre-loaded Categories -->
-          <div class="chau-blanco-pill" id="chau-blanco">
-            ⚡ 5 CATEGORÍAS PRE-CARGADAS · CHAU PANTALLA EN BLANCO
-          </div>
-
-          <div class="categories-list" id="categories-list">
-            <!-- Cat 1 -->
-            <div class="category-card" id="cat-1">
-              <div class="category-info">
-                <div class="category-icon">🍔</div>
-                <div>
-                  <div class="category-name">Hamburguesas & Promos</div>
-                  <div class="category-count">45 productos con fotos y opciones</div>
-                </div>
-              </div>
-              <div class="category-status-badge">LISTO ✓</div>
+          <!-- Step B: Cascading Category Cards -->
+          <div class="step-b-section">
+            <div class="blank-screen-pill" id="blank-screen-pill">
+              ✨ CHAU AL SÍNDROME DE LA PANTALLA EN BLANCO
             </div>
 
-            <!-- Cat 2 -->
-            <div class="category-card" id="cat-2">
-              <div class="category-info">
-                <div class="category-icon">🍕</div>
-                <div>
-                  <div class="category-name">Pizzas & Empanadas</div>
-                  <div class="category-count">32 variedades cargadas</div>
+            <div class="categories-list">
+              <div class="cat-card" id="cat-1">
+                <div class="cat-info">
+                  <div class="cat-icon">🍺</div>
+                  <span>Bebidas & Cervezas</span>
                 </div>
+                <div class="cat-check">✓ Precargado</div>
               </div>
-              <div class="category-status-badge">LISTO ✓</div>
-            </div>
-
-            <!-- Cat 3 -->
-            <div class="category-card" id="cat-3">
-              <div class="category-info">
-                <div class="category-icon">🥤</div>
-                <div>
-                  <div class="category-name">Bebidas & Cervezas</div>
-                  <div class="category-count">28 productos con control de stock</div>
+              <div class="cat-card" id="cat-2">
+                <div class="cat-info">
+                  <div class="cat-icon">🧀</div>
+                  <span>Frescos & Lácteos</span>
                 </div>
+                <div class="cat-check">✓ Precargado</div>
               </div>
-              <div class="category-status-badge">LISTO ✓</div>
-            </div>
-
-            <!-- Cat 4 -->
-            <div class="category-card" id="cat-4">
-              <div class="category-info">
-                <div class="category-icon">🍟</div>
-                <div>
-                  <div class="category-name">Acompañamientos & Salsas</div>
-                  <div class="category-count">16 extras configurados</div>
+              <div class="cat-card" id="cat-3">
+                <div class="cat-info">
+                  <div class="cat-icon">🥐</div>
+                  <span>Panadería & Facturas</span>
                 </div>
+                <div class="cat-check">✓ Precargado</div>
               </div>
-              <div class="category-status-badge">LISTO ✓</div>
-            </div>
-
-            <!-- Cat 5 -->
-            <div class="category-card" id="cat-5">
-              <div class="category-info">
-                <div class="category-icon">🍰</div>
-                <div>
-                  <div class="category-name">Postres & Cafetería</div>
-                  <div class="category-count">20 ítems dulces</div>
+              <div class="cat-card" id="cat-4">
+                <div class="cat-info">
+                  <div class="cat-icon">🥫</div>
+                  <span>Almacén & Despensa</span>
                 </div>
+                <div class="cat-check">✓ Precargado</div>
               </div>
-              <div class="category-status-badge">LISTO ✓</div>
+              <div class="cat-card" id="cat-5">
+                <div class="cat-info">
+                  <div class="cat-icon">🧼</div>
+                  <span>Limpieza & Hogar</span>
+                </div>
+                <div class="cat-check">✓ Precargado</div>
+              </div>
             </div>
           </div>
 
-          <!-- Step C: WhatsApp Comanda Card Notification -->
-          <div class="whatsapp-order-card" id="wa-order-card">
-            <div class="wa-header">
-              <div class="wa-brand">
-                <div class="wa-icon-box">
-                  <svg viewBox="0 0 24 24">
-                    <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 6.46 17.5 2 12.04 2M12.05 3.67C16.58 3.67 20.28 7.37 20.28 11.92C20.28 16.46 16.58 20.17 12.05 20.17C10.57 20.17 9.15 19.77 7.91 19.03L7.61 18.85L4.5 19.67L5.33 16.63L5.13 16.32C4.32 15.03 3.8 13.5 3.8 11.91C3.8 7.37 7.51 3.67 12.05 3.67Z"/>
-                  </svg>
-                </div>
-                <div class="wa-app-name">WhatsApp Business</div>
-              </div>
-              <div class="wa-badge">NUEVO PEDIDO</div>
+          <!-- Step C: Incoming Order Card -->
+          <div class="order-notification-card" id="order-card">
+            <div class="order-header">
+              <div class="order-badge-wp">● WHATSAPP DIRECTO</div>
+              <div class="order-id">Pedido #1084</div>
             </div>
-
-            <div class="wa-order-title">Pedido #1084 - Retiro en Local / Take Away</div>
-
-            <div class="wa-items-list">
-              <div class="wa-item-row">
-                <span>1x Promo Burger Doble Cheddar + Papas</span>
-                <span style="font-weight: 700;">$8.500</span>
-              </div>
-              <div class="wa-item-row">
-                <span>1x Bebida Línea Cola 500ml</span>
-                <span style="font-weight: 700;">$1.500</span>
-              </div>
-              <div class="wa-total-row">
-                <span>Total a cobrar:</span>
-                <span>$10.000</span>
-              </div>
+            <div class="order-title">Retiro en Mostrador / Take Away</div>
+            <div class="order-meta">
+              Directo a tu WhatsApp · Gestión de stock y repartidores propios sin intermediarios
             </div>
-
-            <div class="wa-callout">
-              💬 Sin intermediarios: coordinás el pago directo por tu chat
+            <div class="order-total-bar">
+              <span>3 productos seleccionados</span>
+              <span class="amount">$14.850 (Efectivo / Transferencia)</span>
             </div>
-          </div>
-
-          <!-- Pinned Floating Badge Tag -->
-          <div class="bottom-floating-badge" id="bottom-badge">
-            <span class="badge-live-pulse"></span>
-            <span>GESTIÓN DE STOCK + REPARTIDORES PROPIOS EN VIVO</span>
           </div>
         </div>
       </div>
@@ -522,83 +396,92 @@
       <script>
         const tl = gsap.timeline({ paused: true });
 
-        // Initial States
-        gsap.set("#bento-container", { opacity: 0, scale: 0.92 });
-        gsap.set(".rubro-chip", { opacity: 0, y: 20 });
-        gsap.set("#chau-blanco", { opacity: 0, scale: 0.85 });
-        gsap.set(".category-card", { opacity: 0, x: -30 });
-        gsap.set("#wa-order-card", { autoAlpha: 0, y: -80, scale: 0.92 });
-        gsap.set("#bottom-badge", { opacity: 0, y: 20 });
+        // Initial setup
+        gsap.set("#bento-wrap", { scale: 0.94, opacity: 0, y: 30 });
+        gsap.set("#tap-cursor", { x: 180, y: 35, opacity: 0 });
 
-        // 0.0s - 0.7s: Smooth Camera Zoom into Bento Container
-        tl.fromTo("#bento-container",
-          { scale: 0.92, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.65, ease: "back.out(1.4)" },
-          0.05
-        );
+        // 0.0s - 0.5s: Fast slide entrance to Light Theme Bento Grid
+        tl.to("#bento-wrap", {
+          scale: 1,
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          ease: "power3.out"
+        }, 0.05);
 
-        tl.fromTo("#ambient-glow",
-          { scale: 0.7, opacity: 0.2 },
-          { scale: 1.1, opacity: 0.6, duration: 1.0, ease: "power2.out" },
-          0.1
-        );
+        // 0.6s - 1.4s: Tap simulation on rubro chip
+        tl.to("#tap-cursor", {
+          opacity: 1,
+          scale: 1,
+          duration: 0.25,
+          ease: "power2.out"
+        }, 0.6);
 
-        // Step A: Rubro Chip Selection
-        tl.fromTo(".rubro-chip",
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, stagger: 0.08, duration: 0.4, ease: "power3.out" },
-          0.35
-        );
+        tl.to("#tap-cursor", {
+          scale: 0.6,
+          duration: 0.15,
+          ease: "power1.in"
+        }, 0.85);
 
-        tl.fromTo("#chip-gastro",
-          { scale: 0.9 },
-          { scale: 1.08, duration: 0.25, repeat: 1, yoyo: true, ease: "back.out(2)" },
-          0.75
-        );
+        // Chip turns solid red #F60000 with white text!
+        tl.to("#chip-almacen", {
+          backgroundColor: "#F60000",
+          color: "#FFFFFF",
+          borderColor: "#F60000",
+          scale: 1.04,
+          boxShadow: "0 10px 25px rgba(246, 0, 0, 0.35)",
+          duration: 0.25,
+          ease: "back.out(2)"
+        }, 0.95);
 
-        // Step B: Chau pantalla en blanco & 5 categories slide in
-        tl.fromTo("#chau-blanco",
-          { opacity: 0, scale: 0.85 },
-          { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.8)" },
-          1.1
-        );
-
-        tl.fromTo(".category-card",
-          { opacity: 0, x: -30 },
-          { opacity: 1, x: 0, stagger: 0.12, duration: 0.45, ease: "power3.out" },
-          1.3
-        );
-
-        tl.fromTo("#bottom-badge",
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" },
-          2.2
-        );
-
-        // Step C: Incoming Order Alert Triggers (2.9s relative)
-        tl.fromTo("#wa-order-card",
-          { autoAlpha: 0, y: -80, scale: 0.92 },
-          { autoAlpha: 1, y: 0, scale: 1, duration: 0.55, ease: "back.out(1.7)" },
-          2.9
-        );
-
-        // WhatsApp card subtle haptic bounce
-        tl.to("#wa-order-card", {
-          scale: 1.02,
-          duration: 0.18,
-          repeat: 1,
-          yoyo: true,
-          ease: "power2.inOut"
-        }, 3.5);
-
-        // 5.2s - 5.5s: Recede transition towards Scene 3
-        tl.to("#bento-container", {
-          scale: 0.86,
+        tl.to("#tap-cursor", {
           opacity: 0,
-          duration: 0.28,
+          scale: 1.4,
+          duration: 0.25
+        }, 1.1);
+
+        // 1.5s - 2.8s: Blank screen pill drops & 5 category cards cascade
+        tl.to("#blank-screen-pill", {
+          opacity: 1,
+          y: 0,
+          duration: 0.35,
+          ease: "back.out(1.6)"
+        }, 1.4);
+
+        const cats = ["#cat-1", "#cat-2", "#cat-3", "#cat-4", "#cat-5"];
+        tl.to(cats, {
+          opacity: 1,
+          x: 0,
+          duration: 0.4,
+          stagger: 0.12,
+          ease: "back.out(1.5)"
+        }, 1.7);
+
+        // 3.0s - 5.2s: Incoming order notification drops from the top
+        tl.to("#order-card", {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.55,
+          ease: "bounce.out"
+        }, 3.0);
+
+        // Subtle glow pulse on the order card
+        tl.fromTo("#order-card",
+          { boxShadow: "0 20px 50px rgba(0, 0, 0, 0.25), 0 0 20px rgba(246, 0, 0, 0.1)" },
+          { boxShadow: "0 20px 60px rgba(0, 0, 0, 0.35), 0 0 50px rgba(246, 0, 0, 0.35)", duration: 0.4, yoyo: true, repeat: 2 },
+          3.6
+        );
+
+        // 5.2s: Outro fade preparing for Scene 3 snap back to Dark theme
+        tl.to("#bento-wrap", {
+          opacity: 0.2,
+          scale: 0.95,
+          duration: 0.25,
           ease: "power2.in"
         }, 5.2);
 
+        window.__timelines = window.__timelines || {};
         window.__timelines["scene-2-onboarding"] = tl;
       </script>
     </template>
