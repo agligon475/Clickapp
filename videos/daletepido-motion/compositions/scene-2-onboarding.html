@@ -9,57 +9,74 @@
         @font-face {
           font-family: 'Josefin Sans';
           font-style: normal;
-          font-weight: 400 700;
+          font-weight: 400 800;
           src: local('Josefin Sans'), url('https://fonts.gstatic.com/s/josefinsans/v32/Qw3aZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhKg.woff2') format('woff2');
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
         }
 
         #root {
           position: absolute;
           inset: 0;
-          width: 100%;
-          height: 100%;
+          width: 1080px;
+          height: 1920px;
           overflow: hidden;
           background: #010101;
           display: flex;
           align-items: center;
           justify-content: center;
           font-family: 'Josefin Sans', sans-serif;
-          color: #FFFFFF;
+          color: #F6F6F6;
           padding: 60px 40px;
         }
 
-        .dashboard-container {
+        .ambient-glow {
+          position: absolute;
+          width: 850px;
+          height: 850px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(246, 0, 0, 0.18) 0%, rgba(246, 0, 0, 0.04) 45%, rgba(0, 0, 0, 0) 70%);
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        /* Bento Grid Main Container */
+        .bento-container {
           position: relative;
           z-index: 5;
           width: 980px;
-          height: 1720px;
+          height: 1680px;
           background: #0D0D0D;
-          border: 2px solid rgba(255, 255, 255, 0.1);
-          border-radius: 48px;
-          padding: 44px 40px;
-          box-shadow: 0 32px 80px rgba(0, 0, 0, 0.85), 0 0 60px rgba(246, 0, 0, 0.08);
+          border: 2px solid rgba(255, 255, 255, 0.12);
+          border-radius: 44px;
+          padding: 40px;
           display: flex;
           flex-direction: column;
+          box-shadow: 0 32px 80px rgba(0, 0, 0, 0.85), 0 0 50px rgba(246, 0, 0, 0.08);
           overflow: hidden;
         }
 
-        /* App Bar */
-        .dash-nav {
+        /* App Header Bar */
+        .app-bar {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding-bottom: 28px;
+          padding-bottom: 24px;
           border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-          margin-bottom: 32px;
+          margin-bottom: 28px;
         }
 
-        .dash-brand {
+        .app-brand {
           display: flex;
           align-items: center;
           gap: 14px;
         }
 
-        .dash-brand-icon {
+        .app-brand-icon {
           width: 44px;
           height: 44px;
           border-radius: 12px;
@@ -67,356 +84,437 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          font-weight: 700;
-          font-size: 24px;
+          font-weight: 800;
+          font-size: 22px;
           color: white;
-          box-shadow: 0 4px 16px rgba(246, 0, 0, 0.4);
+          box-shadow: 0 4px 16px rgba(246, 0, 0, 0.5);
         }
 
-        .dash-brand-text {
-          font-size: 32px;
-          font-weight: 700;
-          letter-spacing: -0.02em;
+        .app-brand-title {
+          font-size: 28px;
+          font-weight: 800;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
         }
 
-        .dash-brand-text span {
-          color: #F60000;
-        }
-
-        .dash-status-pill {
+        .app-status-badge {
           display: flex;
           align-items: center;
           gap: 10px;
-          padding: 10px 22px;
+          padding: 10px 20px;
           border-radius: 999px;
           background: rgba(16, 185, 129, 0.12);
-          border: 1px solid rgba(16, 185, 129, 0.3);
+          border: 1px solid rgba(16, 185, 129, 0.35);
           color: #34D399;
           font-size: 18px;
-          font-weight: 600;
+          font-weight: 700;
           letter-spacing: 0.04em;
         }
 
-        .status-pulse {
-          width: 8px;
-          height: 8px;
+        .status-dot {
+          width: 10px;
+          height: 10px;
           border-radius: 50%;
-          background-color: #10B981;
+          background: #10B981;
           box-shadow: 0 0 10px #10B981;
         }
 
-        /* Step Header */
-        .dash-step-header {
-          margin-bottom: 28px;
+        /* Section Header: Step A Rubros */
+        .step-header {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          margin-bottom: 24px;
         }
 
-        .step-tag {
-          display: inline-block;
-          padding: 8px 18px;
-          border-radius: 8px;
-          background: rgba(246, 0, 0, 0.14);
-          color: #F60000;
+        .step-label {
           font-size: 20px;
           font-weight: 700;
-          letter-spacing: 0.08em;
+          color: #F60000;
+          letter-spacing: 0.1em;
           text-transform: uppercase;
-          margin-bottom: 12px;
         }
 
         .step-title {
-          font-size: 42px;
-          font-weight: 700;
-          letter-spacing: -0.01em;
-          text-transform: uppercase;
-          color: #FFFFFF;
-        }
-
-        /* Selectable Chips Container */
-        .chips-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 18px;
-          margin-bottom: 36px;
-        }
-
-        .chip-card {
-          background: #181818;
-          border: 2px solid rgba(255, 255, 255, 0.08);
-          border-radius: 22px;
-          padding: 26px 14px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 12px;
-          position: relative;
-        }
-
-        .chip-icon {
           font-size: 38px;
-        }
-
-        .chip-label {
-          font-size: 22px;
-          font-weight: 600;
-          color: #E2E8F0;
+          font-weight: 800;
+          line-height: 1.15;
           letter-spacing: -0.01em;
-          text-align: center;
         }
 
-        /* Active Selected Chip State */
-        .chip-card.active-selected {
-          background: #240808;
-          border-color: #F60000;
-          box-shadow: 0 12px 30px rgba(246, 0, 0, 0.35);
+        /* Rubro Chip Selection */
+        .chips-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin-bottom: 32px;
         }
 
-        .chip-card.active-selected .chip-label {
-          color: #FFFFFF;
+        .rubro-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 14px 26px;
+          border-radius: 999px;
+          background: #181818;
+          border: 1.5px solid rgba(255, 255, 255, 0.12);
+          font-size: 22px;
           font-weight: 700;
+          color: #CCCCCC;
         }
 
-        /* Categories Section */
-        .categories-section {
-          position: relative;
-          flex: 1;
+        .rubro-chip.active {
+          background: #F60000;
+          border-color: #F60000;
+          color: #FFFFFF;
+          box-shadow: 0 4px 20px rgba(246, 0, 0, 0.5);
+        }
+
+        /* Step B: 5 Pre-loaded Categories */
+        .categories-list {
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 14px;
+          margin-bottom: 24px;
         }
 
-        .category-row {
-          background: #F6F6F6;
-          border-radius: 20px;
-          padding: 22px 26px;
+        .category-card {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          color: #0F172A;
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+          padding: 18px 24px;
+          background: #161616;
+          border: 1.5px solid rgba(255, 255, 255, 0.08);
+          border-radius: 20px;
         }
 
-        .cat-left {
+        .category-info {
           display: flex;
           align-items: center;
           gap: 18px;
         }
 
-        .cat-icon-box {
-          width: 54px;
-          height: 54px;
+        .category-icon {
+          font-size: 32px;
+          width: 52px;
+          height: 52px;
           border-radius: 14px;
-          background: #E2E8F0;
+          background: rgba(255, 255, 255, 0.05);
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 28px;
         }
 
-        .cat-info {
+        .category-name {
+          font-size: 24px;
+          font-weight: 700;
+          color: #FFFFFF;
+        }
+
+        .category-count {
+          font-size: 18px;
+          color: #9E9E9E;
+          margin-top: 4px;
+        }
+
+        .category-status-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 8px 16px;
+          border-radius: 999px;
+          background: rgba(16, 185, 129, 0.12);
+          color: #34D399;
+          font-size: 16px;
+          font-weight: 800;
+        }
+
+        .chau-blanco-pill {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          padding: 10px 24px;
+          border-radius: 999px;
+          background: rgba(246, 0, 0, 0.1);
+          border: 1px solid rgba(246, 0, 0, 0.3);
+          color: #F60000;
+          font-size: 18px;
+          font-weight: 700;
+          text-align: center;
+          align-self: center;
+          margin-bottom: 16px;
+        }
+
+        /* Step C: Dropping WhatsApp Comanda Card */
+        .whatsapp-order-card {
+          position: absolute;
+          left: 40px;
+          right: 40px;
+          bottom: 120px;
+          background: #111B21;
+          border: 2px solid rgba(37, 211, 102, 0.4);
+          border-radius: 28px;
+          padding: 28px 32px;
+          box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(37, 211, 102, 0.2);
           display: flex;
           flex-direction: column;
-          gap: 4px;
+          gap: 18px;
+          z-index: 10;
+          opacity: 0;
+          visibility: hidden;
         }
 
-        .cat-name {
-          font-size: 26px;
-          font-weight: 700;
-          color: #0F172A;
-          letter-spacing: -0.01em;
+        .wa-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-bottom: 14px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .cat-items {
-          font-size: 18px;
-          font-weight: 600;
-          color: #64748B;
+        .wa-brand {
+          display: flex;
+          align-items: center;
+          gap: 12px;
         }
 
-        .cat-badge-check {
-          width: 44px;
-          height: 44px;
-          border-radius: 50%;
-          background: #10B981;
+        .wa-icon-box {
+          width: 36px;
+          height: 36px;
+          border-radius: 10px;
+          background: #25D366;
           display: flex;
           align-items: center;
           justify-content: center;
-          color: white;
-          box-shadow: 0 4px 14px rgba(16, 185, 129, 0.45);
         }
 
-        .cat-badge-check svg {
-          width: 24px;
-          height: 24px;
-          stroke-width: 3.5;
-          stroke: white;
-          fill: none;
+        .wa-icon-box svg {
+          width: 22px;
+          height: 22px;
+          fill: white;
         }
 
-        /* Pointer Cursor */
-        .pointer-cursor {
-          position: absolute;
-          z-index: 100;
-          width: 64px;
-          height: 64px;
-          pointer-events: none;
-          filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.8));
+        .wa-app-name {
+          font-size: 20px;
+          font-weight: 700;
+          color: #E9EDEF;
         }
 
-        /* Overlay Pill Tag */
-        .overlay-pill-container {
-          position: absolute;
-          bottom: 70px;
-          left: 0;
-          right: 0;
-          display: flex;
-          justify-content: center;
-          z-index: 80;
-          pointer-events: none;
-        }
-
-        .overlay-pill {
-          background: #F60000;
-          color: #FFFFFF;
-          padding: 22px 40px;
+        .wa-badge {
+          padding: 6px 14px;
           border-radius: 999px;
-          font-size: 25px;
+          background: rgba(37, 211, 102, 0.15);
+          color: #25D366;
+          font-size: 16px;
+          font-weight: 700;
+        }
+
+        .wa-order-title {
+          font-size: 26px;
+          font-weight: 800;
+          color: #FFFFFF;
+        }
+
+        .wa-items-list {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          font-size: 20px;
+          color: #D1D5DB;
+        }
+
+        .wa-item-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .wa-total-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-top: 10px;
+          border-top: 1px dashed rgba(255, 255, 255, 0.15);
+          font-size: 24px;
+          font-weight: 800;
+          color: #34D399;
+        }
+
+        .wa-callout {
+          padding: 12px 18px;
+          border-radius: 14px;
+          background: rgba(246, 0, 0, 0.12);
+          border: 1px solid rgba(246, 0, 0, 0.35);
+          color: #F60000;
+          font-size: 19px;
+          font-weight: 700;
+          text-align: center;
+        }
+
+        /* Floating Badge Tag Pinned at Bottom */
+        .bottom-floating-badge {
+          margin-top: auto;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          padding: 16px 28px;
+          border-radius: 20px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1.5px solid rgba(255, 255, 255, 0.12);
+          color: #FFFFFF;
+          font-size: 20px;
           font-weight: 700;
           letter-spacing: 0.05em;
           text-transform: uppercase;
-          box-shadow: 0 16px 48px rgba(246, 0, 0, 0.55), 0 0 24px rgba(246, 0, 0, 0.4);
-          text-align: center;
-          border: 2px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .badge-live-pulse {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: #10B981;
+          box-shadow: 0 0 14px #10B981;
         }
       </style>
 
-      <div id="root" data-composition-id="scene-onboarding" data-width="1080" data-height="1920">
-        <div id="dash-box" class="dashboard-container">
-          <!-- App Header -->
-          <div class="dash-nav">
-            <div class="dash-brand">
-              <div class="dash-brand-icon">D!</div>
-              <div class="dash-brand-text">Dale!<span>TePido</span></div>
+      <div id="root" data-composition-id="scene-2-onboarding" data-width="1080" data-height="1920">
+        <div class="ambient-glow" id="ambient-glow"></div>
+
+        <div class="bento-container" id="bento-container">
+          <!-- App Bar -->
+          <div class="app-bar">
+            <div class="app-brand">
+              <div class="app-brand-icon">D!</div>
+              <div class="app-brand-title">DALE! TEPIDO</div>
             </div>
-            <div class="dash-status-pill">
-              <span class="status-pulse"></span>
-              <span>Onboarding Express</span>
+            <div class="app-status-badge">
+              <span class="status-dot"></span>
+              <span>ONLINE · 5 MIN</span>
             </div>
           </div>
 
-          <!-- Step Header -->
-          <div class="dash-step-header">
-            <div id="step-tag-text" class="step-tag">Paso 1 de 2</div>
-            <div id="step-title-text" class="step-title">1. SELECCIONÁ TU RUBRO</div>
+          <!-- Step A: Rubro Selection -->
+          <div class="step-header">
+            <div class="step-label">PASO 1 · ELECCIÓN DE RUBRO</div>
+            <div class="step-title">TU NEGOCIO LISTO EN 5 MINUTOS</div>
           </div>
 
-          <!-- Step 1 Chips -->
-          <div id="chips-container" class="chips-grid">
-            <div id="chip-kiosco" class="chip-card">
-              <div class="chip-icon">🏪</div>
-              <div class="chip-label">Kiosco</div>
-            </div>
-            <div id="chip-cafe" class="chip-card">
-              <div class="chip-icon">☕</div>
-              <div class="chip-label">Café & Deli</div>
-            </div>
-            <div id="chip-almacen" class="chip-card">
-              <div class="chip-icon">🛒</div>
-              <div class="chip-label">Almacén</div>
-            </div>
+          <div class="chips-container" id="chips-container">
+            <div class="rubro-chip" id="chip-almacen">Almacén & Bebidas</div>
+            <div class="rubro-chip active" id="chip-gastro">Gastronomía ✓</div>
+            <div class="rubro-chip">Kiosco & Snacks</div>
+            <div class="rubro-chip">Tienda & Retail</div>
           </div>
 
-          <!-- Step 2 Categories List -->
-          <div id="categories-list" class="categories-section">
-            <div id="cat-card-1" class="category-row">
-              <div class="cat-left">
-                <div class="cat-icon-box">🥤</div>
-                <div class="cat-info">
-                  <div class="cat-name">Bebidas & Almacén</div>
-                  <div class="cat-items">120 productos cargados</div>
+          <!-- Step B: Pre-loaded Categories -->
+          <div class="chau-blanco-pill" id="chau-blanco">
+            ⚡ 5 CATEGORÍAS PRE-CARGADAS · CHAU PANTALLA EN BLANCO
+          </div>
+
+          <div class="categories-list" id="categories-list">
+            <!-- Cat 1 -->
+            <div class="category-card" id="cat-1">
+              <div class="category-info">
+                <div class="category-icon">🍔</div>
+                <div>
+                  <div class="category-name">Hamburguesas & Promos</div>
+                  <div class="category-count">45 productos con fotos y opciones</div>
                 </div>
               </div>
-              <div id="check-icon-1" class="cat-badge-check">
-                <svg viewBox="0 0 24 24">
-                  <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </div>
+              <div class="category-status-badge">LISTO ✓</div>
             </div>
 
-            <div id="cat-card-2" class="category-row">
-              <div class="cat-left">
-                <div class="cat-icon-box">🥐</div>
-                <div class="cat-info">
-                  <div class="cat-name">Panadería & Galletitas</div>
-                  <div class="cat-items">65 productos cargados</div>
+            <!-- Cat 2 -->
+            <div class="category-card" id="cat-2">
+              <div class="category-info">
+                <div class="category-icon">🍕</div>
+                <div>
+                  <div class="category-name">Pizzas & Empanadas</div>
+                  <div class="category-count">32 variedades cargadas</div>
                 </div>
               </div>
-              <div id="check-icon-2" class="cat-badge-check">
-                <svg viewBox="0 0 24 24">
-                  <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </div>
+              <div class="category-status-badge">LISTO ✓</div>
             </div>
 
-            <div id="cat-card-3" class="category-row">
-              <div class="cat-left">
-                <div class="cat-icon-box">🧀</div>
-                <div class="cat-info">
-                  <div class="cat-name">Lácteos & Frescos</div>
-                  <div class="cat-items">48 productos cargados</div>
+            <!-- Cat 3 -->
+            <div class="category-card" id="cat-3">
+              <div class="category-info">
+                <div class="category-icon">🥤</div>
+                <div>
+                  <div class="category-name">Bebidas & Cervezas</div>
+                  <div class="category-count">28 productos con control de stock</div>
                 </div>
               </div>
-              <div id="check-icon-3" class="cat-badge-check">
-                <svg viewBox="0 0 24 24">
-                  <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </div>
+              <div class="category-status-badge">LISTO ✓</div>
             </div>
 
-            <div id="cat-card-4" class="category-row">
-              <div class="cat-left">
-                <div class="cat-icon-box">🧼</div>
-                <div class="cat-info">
-                  <div class="cat-name">Limpieza & Hogar</div>
-                  <div class="cat-items">82 productos cargados</div>
+            <!-- Cat 4 -->
+            <div class="category-card" id="cat-4">
+              <div class="category-info">
+                <div class="category-icon">🍟</div>
+                <div>
+                  <div class="category-name">Acompañamientos & Salsas</div>
+                  <div class="category-count">16 extras configurados</div>
                 </div>
               </div>
-              <div id="check-icon-4" class="cat-badge-check">
-                <svg viewBox="0 0 24 24">
-                  <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </div>
+              <div class="category-status-badge">LISTO ✓</div>
             </div>
 
-            <div id="cat-card-5" class="category-row">
-              <div class="cat-left">
-                <div class="cat-icon-box">🍫</div>
-                <div class="cat-info">
-                  <div class="cat-name">Golosinas & Snacks</div>
-                  <div class="cat-items">110 productos cargados</div>
+            <!-- Cat 5 -->
+            <div class="category-card" id="cat-5">
+              <div class="category-info">
+                <div class="category-icon">🍰</div>
+                <div>
+                  <div class="category-name">Postres & Cafetería</div>
+                  <div class="category-count">20 ítems dulces</div>
                 </div>
               </div>
-              <div id="check-icon-5" class="cat-badge-check">
-                <svg viewBox="0 0 24 24">
-                  <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </div>
+              <div class="category-status-badge">LISTO ✓</div>
             </div>
           </div>
 
-          <!-- Animated Pointer Cursor -->
-          <svg id="pointer-cursor" class="pointer-cursor" viewBox="0 0 40 40" fill="none">
-            <path
-              d="M8 4L28 20L18 22L24 34L19 36L13 24L8 28V4Z"
-              fill="#FFFFFF"
-              stroke="#000000"
-              stroke-width="2.5"
-              stroke-linejoin="round"
-            />
-          </svg>
+          <!-- Step C: WhatsApp Comanda Card Notification -->
+          <div class="whatsapp-order-card" id="wa-order-card">
+            <div class="wa-header">
+              <div class="wa-brand">
+                <div class="wa-icon-box">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 6.46 17.5 2 12.04 2M12.05 3.67C16.58 3.67 20.28 7.37 20.28 11.92C20.28 16.46 16.58 20.17 12.05 20.17C10.57 20.17 9.15 19.77 7.91 19.03L7.61 18.85L4.5 19.67L5.33 16.63L5.13 16.32C4.32 15.03 3.8 13.5 3.8 11.91C3.8 7.37 7.51 3.67 12.05 3.67Z"/>
+                  </svg>
+                </div>
+                <div class="wa-app-name">WhatsApp Business</div>
+              </div>
+              <div class="wa-badge">NUEVO PEDIDO</div>
+            </div>
 
-          <!-- Overlay Pill Tag -->
-          <div id="overlay-pill-wrap" class="overlay-pill-container">
-            <div class="overlay-pill">CHAU AL SÍNDROME DE LA PANTALLA EN BLANCO</div>
+            <div class="wa-order-title">Pedido #1084 - Retiro en Local / Take Away</div>
+
+            <div class="wa-items-list">
+              <div class="wa-item-row">
+                <span>1x Promo Burger Doble Cheddar + Papas</span>
+                <span style="font-weight: 700;">$8.500</span>
+              </div>
+              <div class="wa-item-row">
+                <span>1x Bebida Línea Cola 500ml</span>
+                <span style="font-weight: 700;">$1.500</span>
+              </div>
+              <div class="wa-total-row">
+                <span>Total a cobrar:</span>
+                <span>$10.000</span>
+              </div>
+            </div>
+
+            <div class="wa-callout">
+              💬 Sin intermediarios: coordinás el pago directo por tu chat
+            </div>
+          </div>
+
+          <!-- Pinned Floating Badge Tag -->
+          <div class="bottom-floating-badge" id="bottom-badge">
+            <span class="badge-live-pulse"></span>
+            <span>GESTIÓN DE STOCK + REPARTIDORES PROPIOS EN VIVO</span>
           </div>
         </div>
       </div>
@@ -424,103 +522,84 @@
       <script>
         const tl = gsap.timeline({ paused: true });
 
-        // Dashboard container enters with smooth scale and slide (0.0s - 0.6s)
-        tl.fromTo(
-          "#dash-box",
-          { opacity: 0, y: 120, scale: 0.9 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" },
-          0
+        // Initial States
+        gsap.set("#bento-container", { opacity: 0, scale: 0.92 });
+        gsap.set(".rubro-chip", { opacity: 0, y: 20 });
+        gsap.set("#chau-blanco", { opacity: 0, scale: 0.85 });
+        gsap.set(".category-card", { opacity: 0, x: -30 });
+        gsap.set("#wa-order-card", { autoAlpha: 0, y: -80, scale: 0.92 });
+        gsap.set("#bottom-badge", { opacity: 0, y: 20 });
+
+        // 0.0s - 0.7s: Smooth Camera Zoom into Bento Container
+        tl.fromTo("#bento-container",
+          { scale: 0.92, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.65, ease: "back.out(1.4)" },
+          0.05
         );
 
-        // Chips stagger entry (0.3s - 0.7s)
-        tl.fromTo(
-          ["#chip-kiosco", "#chip-cafe", "#chip-almacen"],
-          { opacity: 0, y: 40, scale: 0.92 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.1, ease: "back.out(1.4)" },
-          0.3
+        tl.fromTo("#ambient-glow",
+          { scale: 0.7, opacity: 0.2 },
+          { scale: 1.1, opacity: 0.6, duration: 1.0, ease: "power2.out" },
+          0.1
         );
 
-        // Initial hidden states for Step 2 elements
-        tl.set("#categories-list", { opacity: 0, y: 30 }, 0);
-        tl.set("#overlay-pill-wrap", { opacity: 0, y: 50, scale: 0.8 }, 0);
-
-        // Pointer Cursor slides in from bottom right (0.6s - 1.2s)
-        tl.fromTo(
-          "#pointer-cursor",
-          { opacity: 0, x: 780, y: 640 },
-          { opacity: 1, x: 670, y: 380, duration: 0.65, ease: "power2.out" },
-          0.6
+        // Step A: Rubro Chip Selection
+        tl.fromTo(".rubro-chip",
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, stagger: 0.08, duration: 0.4, ease: "power3.out" },
+          0.35
         );
 
-        // Click action on "Almacén" (1.3s - 1.6s)
-        // 1. Cursor scales down (scale: 0.95)
-        tl.to("#pointer-cursor", { scale: 0.95, duration: 0.12, ease: "power1.in" }, 1.3);
-        // 2. "Almacén" chip scale depression (scale: 0.94)
-        tl.to("#chip-almacen", { scale: 0.94, duration: 0.12, ease: "power1.in" }, 1.3);
-
-        // 3. Chip switches to active-selected state
-        tl.set("#chip-almacen", { className: "chip-card active-selected" }, 1.42);
-
-        // 4. Spring release with no overlap
-        tl.to("#chip-almacen", { scale: 1.04, duration: 0.18, ease: "power2.out" }, 1.44);
-        tl.to("#chip-almacen", { scale: 1.0, duration: 0.18, ease: "power2.inOut" }, 1.63);
-        tl.to("#pointer-cursor", { scale: 1.0, duration: 0.15, ease: "power1.out" }, 1.44);
-
-        // Cursor floats aside and fades (1.8s - 2.3s)
-        tl.to(
-          "#pointer-cursor",
-          { opacity: 0, x: 800, y: 340, duration: 0.45, ease: "power2.in" },
-          1.8
+        tl.fromTo("#chip-gastro",
+          { scale: 0.9 },
+          { scale: 1.08, duration: 0.25, repeat: 1, yoyo: true, ease: "back.out(2)" },
+          0.75
         );
 
-        // ========================================================
-        // STEP 2: REACTIVE EXPANSION (2.3s - 6.0s)
-        // ========================================================
-
-        // Step title updates
-        tl.to("#step-title-text", { opacity: 0, y: -15, duration: 0.2 }, 2.3);
-        tl.set("#step-tag-text", { textContent: "Paso 2 de 2" }, 2.5);
-        tl.set("#step-title-text", { textContent: "2. CATEGORÍAS PRE-CARGADAS" }, 2.5);
-        tl.to("#step-title-text", { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, 2.5);
-
-        // Chips shrink slightly
-        tl.to("#chips-container", { scale: 0.92, opacity: 0.75, duration: 0.4, ease: "power2.out" }, 2.4);
-
-        // Categories container appears
-        tl.to("#categories-list", { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 2.55);
-
-        // Cascade of 5 Category Cards
-        tl.fromTo(
-          ["#cat-card-1", "#cat-card-2", "#cat-card-3", "#cat-card-4", "#cat-card-5"],
-          { opacity: 0, y: 50, scale: 0.94 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.12, ease: "back.out(1.4)" },
-          2.65
+        // Step B: Chau pantalla en blanco & 5 categories slide in
+        tl.fromTo("#chau-blanco",
+          { opacity: 0, scale: 0.85 },
+          { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.8)" },
+          1.1
         );
 
-        // Pop in Green Checkmarks
-        tl.fromTo(
-          ["#check-icon-1", "#check-icon-2", "#check-icon-3", "#check-icon-4", "#check-icon-5"],
-          { opacity: 0, scale: 0.2, rotate: -30 },
-          { opacity: 1, scale: 1, rotate: 0, duration: 0.35, stagger: 0.12, ease: "back.out(2)" },
-          3.1
+        tl.fromTo(".category-card",
+          { opacity: 0, x: -30 },
+          { opacity: 1, x: 0, stagger: 0.12, duration: 0.45, ease: "power3.out" },
+          1.3
         );
 
-        // Overlay Pill Tag Enters (4.0s - 6.0s)
-        tl.fromTo(
-          "#overlay-pill-wrap",
-          { opacity: 0, y: 60, scale: 0.8 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.6)" },
-          4.0
+        tl.fromTo("#bottom-badge",
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" },
+          2.2
         );
 
-        // Pulse on Overlay Pill
-        tl.to("#overlay-pill-wrap", { scale: 1.05, duration: 0.25, ease: "power1.out" }, 4.6);
-        tl.to("#overlay-pill-wrap", { scale: 1.0, duration: 0.25, ease: "power1.in" }, 4.85);
+        // Step C: Incoming Order Alert Triggers (2.9s relative)
+        tl.fromTo("#wa-order-card",
+          { autoAlpha: 0, y: -80, scale: 0.92 },
+          { autoAlpha: 1, y: 0, scale: 1, duration: 0.55, ease: "back.out(1.7)" },
+          2.9
+        );
 
-        // Outro transition at 5.7s
-        tl.to("#dash-box", { opacity: 0, scale: 0.92, y: -40, duration: 0.3, ease: "power2.in" }, 5.7);
+        // WhatsApp card subtle haptic bounce
+        tl.to("#wa-order-card", {
+          scale: 1.02,
+          duration: 0.18,
+          repeat: 1,
+          yoyo: true,
+          ease: "power2.inOut"
+        }, 3.5);
 
-        window.__timelines["scene-onboarding"] = tl;
+        // 5.2s - 5.5s: Recede transition towards Scene 3
+        tl.to("#bento-container", {
+          scale: 0.86,
+          opacity: 0,
+          duration: 0.28,
+          ease: "power2.in"
+        }, 5.2);
+
+        window.__timelines["scene-2-onboarding"] = tl;
       </script>
     </template>
   </body>
