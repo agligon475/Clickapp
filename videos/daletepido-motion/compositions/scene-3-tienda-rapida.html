@@ -1,0 +1,307 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: 'Josefin Sans';
+          font-style: normal;
+          font-weight: 400 700;
+          src: local('Josefin Sans'), url('https://fonts.gstatic.com/s/josefinsans/v32/Qw3aZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhKg.woff2') format('woff2');
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          background: #010101;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Josefin Sans', sans-serif;
+          color: #F6F6F6;
+          padding: 80px 40px;
+        }
+
+        .ambient-glow-t {
+          position: absolute;
+          width: 900px;
+          height: 900px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(246, 0, 0, 0.22) 0%, rgba(246, 0, 0, 0) 70%);
+          pointer-events: none;
+        }
+
+        .scene-wrap-3 {
+          position: relative;
+          z-index: 2;
+          width: 980px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 28px;
+        }
+
+        .step-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 14px 34px;
+          border-radius: 999px;
+          background: rgba(246, 0, 0, 0.14);
+          border: 1.5px solid #F60000;
+          font-size: 26px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #FFFFFF;
+        }
+
+        .step-pill-num {
+          background: #F60000;
+          color: #FFFFFF;
+          padding: 4px 14px;
+          border-radius: 999px;
+          font-size: 22px;
+        }
+
+        /* Speed Clock Widget */
+        .clock-widget {
+          display: flex;
+          align-items: center;
+          gap: 24px;
+          padding: 24px 44px;
+          border-radius: 28px;
+          background: #111827;
+          border: 2px solid rgba(255, 255, 255, 0.12);
+          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .clock-svg {
+          width: 72px;
+          height: 72px;
+        }
+
+        .clock-time {
+          font-size: 64px;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          color: #FFFFFF;
+        }
+
+        .clock-time span {
+          color: #F60000;
+        }
+
+        /* Categories Cascade */
+        .categories-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          width: 100%;
+          max-width: 880px;
+        }
+
+        .cat-card-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 22px 28px;
+          border-radius: 20px;
+          background: #F6F6F6;
+          color: #0F172A;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        }
+
+        .cat-item-left {
+          display: flex;
+          align-items: center;
+          gap: 18px;
+        }
+
+        .cat-item-icon {
+          width: 52px;
+          height: 52px;
+          border-radius: 14px;
+          background: #E2E8F0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 28px;
+        }
+
+        .cat-item-info {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .cat-item-title {
+          font-size: 26px;
+          font-weight: 700;
+          color: #0F172A;
+        }
+
+        .cat-item-sub {
+          font-size: 18px;
+          font-weight: 600;
+          color: #64748B;
+        }
+
+        .cat-badge-done {
+          padding: 8px 18px;
+          border-radius: 999px;
+          background: rgba(16, 185, 129, 0.15);
+          border: 1px solid rgba(16, 185, 129, 0.4);
+          color: #10B981;
+          font-size: 18px;
+          font-weight: 700;
+          text-transform: uppercase;
+        }
+
+        .cat-bottom-tag {
+          padding: 14px 32px;
+          border-radius: 999px;
+          background: #F60000;
+          color: #FFFFFF;
+          font-size: 22px;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          box-shadow: 0 8px 24px rgba(246, 0, 0, 0.4);
+        }
+      </style>
+
+      <div id="root" data-composition-id="scene-3-tienda-rapida" data-width="1080" data-height="1920">
+        <div id="ambient-t" class="ambient-glow-t"></div>
+
+        <div id="scene-3-wrap" class="scene-wrap-3">
+          <div id="t-pill" class="step-pill">
+            <span class="step-pill-num">02</span>
+            <span>Tienda Lista en 5 Min</span>
+          </div>
+
+          <div id="clock-card" class="clock-widget">
+            <svg class="clock-svg" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9" stroke="#F60000" stroke-width="2.5" />
+              <path id="clock-hand" d="M12 12L12 6" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" />
+              <path d="M12 12L16 14" stroke="#F60000" stroke-width="2.5" stroke-linecap="round" />
+            </svg>
+            <div class="clock-time">05:00 <span>MIN</span></div>
+          </div>
+
+          <div class="categories-grid">
+            <div id="c-card-1" class="cat-card-item">
+              <div class="cat-item-left">
+                <div class="cat-item-icon">🍕</div>
+                <div class="cat-item-info">
+                  <div class="cat-item-title">Comidas & Restaurantes</div>
+                  <div class="cat-item-sub">80 productos listos</div>
+                </div>
+              </div>
+              <div class="cat-badge-done">Listo ✓</div>
+            </div>
+
+            <div id="c-card-2" class="cat-card-item">
+              <div class="cat-item-left">
+                <div class="cat-item-icon">🛒</div>
+                <div class="cat-item-info">
+                  <div class="cat-item-title">Almacén & Bebidas</div>
+                  <div class="cat-item-sub">120 productos listos</div>
+                </div>
+              </div>
+              <div class="cat-badge-done">Listo ✓</div>
+            </div>
+
+            <div id="c-card-3" class="cat-card-item">
+              <div class="cat-item-left">
+                <div class="cat-item-icon">🥐</div>
+                <div class="cat-item-info">
+                  <div class="cat-item-title">Panadería & Deli</div>
+                  <div class="cat-item-sub">65 productos listos</div>
+                </div>
+              </div>
+              <div class="cat-badge-done">Listo ✓</div>
+            </div>
+
+            <div id="c-card-4" class="cat-card-item">
+              <div class="cat-item-left">
+                <div class="cat-item-icon">🧼</div>
+                <div class="cat-item-info">
+                  <div class="cat-item-title">Limpieza & Hogar</div>
+                  <div class="cat-item-sub">90 productos listos</div>
+                </div>
+              </div>
+              <div class="cat-badge-done">Listo ✓</div>
+            </div>
+          </div>
+
+          <div id="cat-tag" class="cat-bottom-tag">
+            Catálogo Inteligente Pre-Cargado
+          </div>
+        </div>
+      </div>
+
+      <script>
+        const tl = gsap.timeline({ paused: true });
+
+        // Background pulse
+        tl.fromTo(
+          "#ambient-t",
+          { scale: 0.9, opacity: 0.5 },
+          { scale: 1.25, opacity: 0.85, duration: 5.0, ease: "none" },
+          0
+        );
+
+        // Pill enter
+        tl.fromTo(
+          "#t-pill",
+          { opacity: 0, y: -40, scale: 0.9 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(2)" },
+          0.1
+        );
+
+        // Clock widget enter
+        tl.fromTo(
+          "#clock-card",
+          { opacity: 0, scale: 0.8, y: 30 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: "back.out(2)" },
+          0.35
+        );
+
+        // Clock hand spin
+        tl.to("#clock-hand", { rotation: 360, transformOrigin: "bottom center", duration: 2.5, ease: "power1.inOut" }, 0.5);
+
+        // Cascade categories
+        tl.fromTo(
+          ["#c-card-1", "#c-card-2", "#c-card-3", "#c-card-4"],
+          { opacity: 0, y: 50, scale: 0.92 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.4, stagger: 0.12, ease: "back.out(1.5)" },
+          0.85
+        );
+
+        // Bottom tag pops
+        tl.fromTo(
+          "#cat-tag",
+          { opacity: 0, y: 30, scale: 0.85 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.8)" },
+          1.7
+        );
+
+        // Kinetic exit snap (4.7s - 5.0s)
+        tl.to(
+          "#scene-3-wrap",
+          { opacity: 0, scale: 0.9, y: -60, duration: 0.28, ease: "power2.in" },
+          4.72
+        );
+
+        window.__timelines["scene-3-tienda-rapida"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

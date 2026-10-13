@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1080, height=1920" />
-    <title>Dale!TePido - Motion Graphics</title>
+    <title>Dale!TePido - 30s Kinetic Promo</title>
     <!-- Google Fonts: Josefin Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -35,7 +35,7 @@
         overflow: hidden;
         background-color: #010101;
         font-family: 'Josefin Sans', sans-serif;
-        color: #FFFFFF;
+        color: #F6F6F6;
         -webkit-font-smoothing: antialiased;
       }
 
@@ -53,15 +53,15 @@
       id="root"
       data-composition-id="main"
       data-start="0"
-      data-duration="15"
+      data-duration="30"
       data-width="1080"
       data-height="1920"
     >
-      <!-- Scene 1: The Hook (0.0s - 4.0s) -->
+      <!-- Scene 1: Hook (0s - 4s) -->
       <div
-        id="scene-hook"
+        id="scene-1-hook"
         class="clip"
-        data-composition-id="scene-hook"
+        data-composition-id="scene-1-hook"
         data-composition-src="compositions/scene-1-hook.html"
         data-start="0"
         data-duration="4"
@@ -70,28 +70,80 @@
         data-height="1920"
       ></div>
 
-      <!-- Scene 2: Interactive UI Onboarding Simulation (4.0s - 10.0s) -->
+      <!-- Scene 2: 1. Cero Comisiones (4s - 9s) -->
       <div
-        id="scene-onboarding"
+        id="scene-2-comisiones"
         class="clip"
-        data-composition-id="scene-onboarding"
-        data-composition-src="compositions/scene-2-onboarding.html"
+        data-composition-id="scene-2-comisiones"
+        data-composition-src="compositions/scene-2-comisiones.html"
         data-start="4"
-        data-duration="6"
+        data-duration="5"
         data-track-index="1"
         data-width="1080"
         data-height="1920"
       ></div>
 
-      <!-- Scene 3: WhatsApp Conversion & CTA (10.0s - 15.0s) -->
+      <!-- Scene 3: 2. Tienda Lista en 5 Min (9s - 14s) -->
       <div
-        id="scene-conversion"
+        id="scene-3-tienda-rapida"
         class="clip"
-        data-composition-id="scene-conversion"
-        data-composition-src="compositions/scene-3-conversion.html"
-        data-start="10"
+        data-composition-id="scene-3-tienda-rapida"
+        data-composition-src="compositions/scene-3-tienda-rapida.html"
+        data-start="9"
         data-duration="5"
         data-track-index="2"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <!-- Scene 4: 3. WhatsApp Directo (14s - 19s) -->
+      <div
+        id="scene-4-whatsapp-directo"
+        class="clip"
+        data-composition-id="scene-4-whatsapp-directo"
+        data-composition-src="compositions/scene-4-whatsapp-directo.html"
+        data-start="14"
+        data-duration="5"
+        data-track-index="3"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <!-- Scene 5: 4. Visibilidad Local (19s - 24s) -->
+      <div
+        id="scene-5-visibilidad-local"
+        class="clip"
+        data-composition-id="scene-5-visibilidad-local"
+        data-composition-src="compositions/scene-5-visibilidad-local.html"
+        data-start="19"
+        data-duration="5"
+        data-track-index="4"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <!-- Scene 6: 5. Kit QR Mostrador (24s - 28s) -->
+      <div
+        id="scene-6-kit-qr"
+        class="clip"
+        data-composition-id="scene-6-kit-qr"
+        data-composition-src="compositions/scene-6-kit-qr.html"
+        data-start="24"
+        data-duration="4"
+        data-track-index="5"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <!-- Scene 7: Outro & CTA (28s - 30s) -->
+      <div
+        id="scene-7-outro"
+        class="clip"
+        data-composition-id="scene-7-outro"
+        data-composition-src="compositions/scene-7-outro.html"
+        data-start="28"
+        data-duration="2"
+        data-track-index="6"
         data-width="1080"
         data-height="1920"
       ></div>

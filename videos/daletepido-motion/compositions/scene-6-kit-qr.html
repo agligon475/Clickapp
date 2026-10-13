@@ -1,0 +1,317 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: 'Josefin Sans';
+          font-style: normal;
+          font-weight: 400 700;
+          src: local('Josefin Sans'), url('https://fonts.gstatic.com/s/josefinsans/v32/Qw3aZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhKg.woff2') format('woff2');
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          background: #010101;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Josefin Sans', sans-serif;
+          color: #F6F6F6;
+          padding: 80px 40px;
+        }
+
+        .ambient-glow-q {
+          position: absolute;
+          width: 900px;
+          height: 900px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(246, 0, 0, 0.28) 0%, rgba(246, 0, 0, 0) 70%);
+          pointer-events: none;
+        }
+
+        .scene-wrap-6 {
+          position: relative;
+          z-index: 2;
+          width: 980px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 28px;
+        }
+
+        .step-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 14px 34px;
+          border-radius: 999px;
+          background: rgba(246, 0, 0, 0.14);
+          border: 1.5px solid #F60000;
+          font-size: 26px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #FFFFFF;
+        }
+
+        .step-pill-num {
+          background: #F60000;
+          color: #FFFFFF;
+          padding: 4px 14px;
+          border-radius: 999px;
+          font-size: 22px;
+        }
+
+        /* 3D Acrylic Stand Mockup */
+        .stand-perspective-stage {
+          perspective: 1200px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .acrylic-card {
+          width: 480px;
+          background: rgba(255, 255, 255, 0.08);
+          backdrop-filter: blur(20px);
+          border: 3px solid rgba(255, 255, 255, 0.25);
+          border-radius: 36px;
+          padding: 40px 36px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 22px;
+          box-shadow: 
+            0 30px 80px rgba(0, 0, 0, 0.9),
+            0 0 40px rgba(246, 0, 0, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .acrylic-brand {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .acrylic-logo-icon {
+          width: 42px;
+          height: 42px;
+          border-radius: 12px;
+          background: #F60000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 22px;
+          font-weight: 700;
+          color: white;
+        }
+
+        .acrylic-brand-name {
+          font-size: 32px;
+          font-weight: 700;
+          color: #FFFFFF;
+        }
+
+        .acrylic-brand-name span {
+          color: #F60000;
+        }
+
+        /* QR Code Container */
+        .qr-white-box {
+          background: #FFFFFF;
+          padding: 24px;
+          border-radius: 28px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+        }
+
+        .qr-svg {
+          width: 240px;
+          height: 240px;
+        }
+
+        .acrylic-cta-text {
+          font-size: 26px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          color: #FFFFFF;
+          text-transform: uppercase;
+        }
+
+        .acrylic-cta-sub {
+          font-size: 20px;
+          font-weight: 600;
+          color: #D1D5DB;
+        }
+
+        /* Acrylic Stand Base */
+        .acrylic-base-foot {
+          width: 540px;
+          height: 36px;
+          border-radius: 18px;
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.05) 100%);
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          box-shadow: 0 16px 32px rgba(0, 0, 0, 0.8), 0 0 20px rgba(246, 0, 0, 0.3);
+          margin-top: -12px;
+        }
+
+        .bottom-pill-qr {
+          padding: 16px 36px;
+          border-radius: 999px;
+          background: #111827;
+          border: 2px solid #F60000;
+          color: #FFFFFF;
+          font-size: 22px;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          box-shadow: 0 8px 30px rgba(246, 0, 0, 0.35);
+        }
+      </style>
+
+      <div id="root" data-composition-id="scene-6-kit-qr" data-width="1080" data-height="1920">
+        <div id="ambient-q" class="ambient-glow-q"></div>
+
+        <div id="scene-6-wrap" class="scene-wrap-6">
+          <div id="q-pill" class="step-pill">
+            <span class="step-pill-num">05</span>
+            <span>Kit QR Mostrador</span>
+          </div>
+
+          <div class="stand-perspective-stage">
+            <div id="acrylic-stand" class="acrylic-card">
+              <div class="acrylic-brand">
+                <div class="acrylic-logo-icon">D!</div>
+                <div class="acrylic-brand-name">Dale!<span>TePido</span></div>
+              </div>
+
+              <!-- Styled Vector QR Code -->
+              <div class="qr-white-box">
+                <svg class="qr-svg" viewBox="0 0 100 100" fill="none">
+                  <!-- QR Corner Markers -->
+                  <rect x="5" y="5" width="26" height="26" rx="4" fill="#010101" />
+                  <rect x="9" y="9" width="18" height="18" rx="2" fill="#FFFFFF" />
+                  <rect x="13" y="13" width="10" height="10" rx="2" fill="#F60000" />
+
+                  <rect x="69" y="5" width="26" height="26" rx="4" fill="#010101" />
+                  <rect x="73" y="9" width="18" height="18" rx="2" fill="#FFFFFF" />
+                  <rect x="77" y="13" width="10" height="10" rx="2" fill="#F60000" />
+
+                  <rect x="5" y="69" width="26" height="26" rx="4" fill="#010101" />
+                  <rect x="9" y="73" width="18" height="18" rx="2" fill="#FFFFFF" />
+                  <rect x="13" y="77" width="10" height="10" rx="2" fill="#F60000" />
+
+                  <!-- Stylized Data Matrix Dots -->
+                  <rect x="36" y="8" width="6" height="6" rx="1.5" fill="#010101" />
+                  <rect x="46" y="8" width="6" height="6" rx="1.5" fill="#010101" />
+                  <rect x="56" y="8" width="6" height="6" rx="1.5" fill="#010101" />
+                  <rect x="36" y="18" width="6" height="6" rx="1.5" fill="#010101" />
+                  <rect x="56" y="18" width="6" height="6" rx="1.5" fill="#010101" />
+                  <rect x="46" y="28" width="6" height="6" rx="1.5" fill="#010101" />
+
+                  <rect x="8" y="38" width="6" height="6" rx="1.5" fill="#010101" />
+                  <rect x="18" y="48" width="6" height="6" rx="1.5" fill="#010101" />
+                  <rect x="28" y="38" width="6" height="6" rx="1.5" fill="#010101" />
+                  <rect x="28" y="58" width="6" height="6" rx="1.5" fill="#010101" />
+
+                  <rect x="40" y="40" width="20" height="20" rx="6" fill="#F60000" />
+                  <text x="50" y="55" font-family="'Josefin Sans', sans-serif" font-weight="700" font-size="14" fill="#FFFFFF" text-anchor="middle">D!</text>
+
+                  <rect x="68" y="38" width="6" height="6" rx="1.5" fill="#010101" />
+                  <rect x="78" y="48" width="6" height="6" rx="1.5" fill="#010101" />
+                  <rect x="88" y="38" width="6" height="6" rx="1.5" fill="#010101" />
+
+                  <rect x="38" y="68" width="6" height="6" rx="1.5" fill="#010101" />
+                  <rect x="48" y="78" width="6" height="6" rx="1.5" fill="#010101" />
+                  <rect x="58" y="68" width="6" height="6" rx="1.5" fill="#010101" />
+                  <rect x="68" y="78" width="6" height="6" rx="1.5" fill="#010101" />
+                  <rect x="78" y="68" width="6" height="6" rx="1.5" fill="#010101" />
+                  <rect x="88" y="78" width="6" height="6" rx="1.5" fill="#010101" />
+                </svg>
+              </div>
+
+              <div class="acrylic-cta-text">ESCANEA · PEDÍ · PAGÁ</div>
+              <div class="acrylic-cta-sub">Tu menú o catálogo en el celular</div>
+            </div>
+
+            <div id="acrylic-foot" class="acrylic-base-foot"></div>
+          </div>
+
+          <div id="q-bottom-tag" class="bottom-pill-qr">
+            Listo Para Imprimir y Poner en Tu Mostrador
+          </div>
+        </div>
+      </div>
+
+      <script>
+        const tl = gsap.timeline({ paused: true });
+
+        // Background pulse
+        tl.fromTo(
+          "#ambient-q",
+          { scale: 0.9, opacity: 0.5 },
+          { scale: 1.25, opacity: 0.85, duration: 4.0, ease: "none" },
+          0
+        );
+
+        // Step pill
+        tl.fromTo(
+          "#q-pill",
+          { opacity: 0, y: -40, scale: 0.9 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(2)" },
+          0.1
+        );
+
+        // 3D Stand pops into frame with perspective angle
+        tl.fromTo(
+          "#acrylic-stand",
+          { opacity: 0, scale: 0.5, rotationY: 25, rotationX: 15, y: 100 },
+          { opacity: 1, scale: 1, rotationY: -6, rotationX: 4, y: 0, duration: 0.65, ease: "back.out(1.8)" },
+          0.35
+        );
+
+        // Foot pops beneath
+        tl.fromTo(
+          "#acrylic-foot",
+          { opacity: 0, scaleX: 0.4 },
+          { opacity: 1, scaleX: 1, duration: 0.4, ease: "back.out(1.6)" },
+          0.65
+        );
+
+        // Smooth subtle 3D float
+        tl.to(
+          "#acrylic-stand",
+          { rotationY: 4, rotationX: -2, duration: 2.2, ease: "sine.inOut" },
+          1.1
+        );
+
+        // Bottom pill tag
+        tl.fromTo(
+          "#q-bottom-tag",
+          { opacity: 0, y: 30, scale: 0.85 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.8)" },
+          1.3
+        );
+
+        // Kinetic exit snap (3.7s - 4.0s)
+        tl.to(
+          "#scene-6-wrap",
+          { opacity: 0, scale: 0.9, y: -60, duration: 0.28, ease: "power2.in" },
+          3.72
+        );
+
+        window.__timelines["scene-6-kit-qr"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

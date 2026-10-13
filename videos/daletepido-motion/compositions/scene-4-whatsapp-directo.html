@@ -1,0 +1,321 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: 'Josefin Sans';
+          font-style: normal;
+          font-weight: 400 700;
+          src: local('Josefin Sans'), url('https://fonts.gstatic.com/s/josefinsans/v32/Qw3aZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhKg.woff2') format('woff2');
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          background: #010101;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Josefin Sans', sans-serif;
+          color: #F6F6F6;
+          padding: 80px 40px;
+        }
+
+        .ambient-glow-w {
+          position: absolute;
+          width: 900px;
+          height: 900px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(37, 211, 102, 0.16) 0%, rgba(246, 0, 0, 0.15) 40%, rgba(0, 0, 0, 0) 70%);
+          pointer-events: none;
+        }
+
+        .scene-wrap-4 {
+          position: relative;
+          z-index: 2;
+          width: 980px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 26px;
+        }
+
+        .step-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 14px 34px;
+          border-radius: 999px;
+          background: rgba(37, 211, 102, 0.12);
+          border: 1.5px solid #25D366;
+          font-size: 26px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #FFFFFF;
+        }
+
+        .step-pill-num {
+          background: #25D366;
+          color: #FFFFFF;
+          padding: 4px 14px;
+          border-radius: 999px;
+          font-size: 22px;
+        }
+
+        .voice-note-pill {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          padding: 14px 28px;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .voice-note-cross {
+          color: #94A3B8;
+          font-size: 22px;
+          font-weight: 600;
+          text-decoration: line-through;
+          text-decoration-color: #F60000;
+          text-decoration-thickness: 3px;
+        }
+
+        /* Structured WhatsApp Order Card */
+        .order-card {
+          width: 100%;
+          max-width: 860px;
+          background: #1E293B;
+          border: 2px solid rgba(255, 255, 255, 0.12);
+          border-radius: 36px;
+          padding: 36px 38px;
+          box-shadow: 0 32px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(37, 211, 102, 0.15);
+          display: flex;
+          flex-direction: column;
+          gap: 22px;
+        }
+
+        .order-card-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-bottom: 18px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .order-app-info {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+        }
+
+        .order-wa-icon {
+          width: 46px;
+          height: 46px;
+          border-radius: 12px;
+          background: #25D366;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .order-wa-icon svg {
+          width: 26px;
+          height: 26px;
+          fill: white;
+        }
+
+        .order-app-title {
+          font-size: 26px;
+          font-weight: 700;
+          color: #FFFFFF;
+        }
+
+        .order-tag-status {
+          padding: 6px 16px;
+          border-radius: 8px;
+          background: rgba(37, 211, 102, 0.18);
+          color: #4ADE80;
+          font-size: 18px;
+          font-weight: 700;
+          text-transform: uppercase;
+        }
+
+        .order-title-num {
+          font-size: 36px;
+          font-weight: 700;
+          color: #FFFFFF;
+        }
+
+        .order-items-box {
+          background: rgba(15, 23, 42, 0.6);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 20px;
+          padding: 22px 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .order-item-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-size: 24px;
+          font-weight: 600;
+          color: #E2E8F0;
+        }
+
+        .order-footer-total {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-top: 14px;
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .order-total-lbl {
+          font-size: 22px;
+          color: #94A3B8;
+        }
+
+        .order-total-val {
+          font-size: 38px;
+          font-weight: 700;
+          color: #4ADE80;
+        }
+
+        .bottom-pill-tag {
+          padding: 14px 34px;
+          border-radius: 999px;
+          background: #111827;
+          border: 1.5px solid #25D366;
+          color: #FFFFFF;
+          font-size: 22px;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+        }
+      </style>
+
+      <div id="root" data-composition-id="scene-4-whatsapp-directo" data-width="1080" data-height="1920">
+        <div id="ambient-w" class="ambient-glow-w"></div>
+
+        <div id="scene-4-wrap" class="scene-wrap-4">
+          <div id="w-pill" class="step-pill">
+            <span class="step-pill-num">03</span>
+            <span>WhatsApp Directo</span>
+          </div>
+
+          <div id="w-voice-tag" class="voice-note-pill">
+            <span style="font-size: 22px;">❌</span>
+            <span class="voice-note-cross">Audios interminables y pedidos mal anotados</span>
+          </div>
+
+          <div id="w-card" class="order-card">
+            <div class="order-card-top">
+              <div class="order-app-info">
+                <div class="order-wa-icon">
+                  <svg viewBox="0 0 24 24">
+                    <path
+                      d="M17.472 14.382c-.301-.15-1.78-.878-2.056-.978-.276-.1-.476-.15-.677.15-.2.301-.777.978-.953 1.179-.175.2-.35.226-.652.075-.301-.15-1.272-.469-2.423-1.496-.895-.798-1.5-1.784-1.675-2.085-.176-.301-.019-.464.132-.614.136-.135.301-.35.452-.526.15-.175.2-.301.301-.501.1-.2.05-.376-.025-.526-.075-.15-.677-1.631-.928-2.233-.244-.587-.492-.507-.677-.516l-.577-.01c-.2 0-.526.075-.802.376-.276.301-1.053 1.028-1.053 2.508 0 1.48 1.078 2.909 1.229 3.11.15.2 2.122 3.24 5.141 4.544.718.31 1.279.495 1.716.634.721.229 1.377.197 1.896.119.579-.087 1.78-.727 2.031-1.429.25-.702.25-1.304.175-1.429-.075-.125-.276-.2-.577-.35zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.176L2 22l4.981-1.408A9.953 9.953 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"
+                    />
+                  </svg>
+                </div>
+                <div class="order-app-title">WhatsApp Negocios</div>
+              </div>
+              <div class="order-tag-status">Comanda Lista</div>
+            </div>
+
+            <div class="order-title-num">Pedido Confirmado #1089</div>
+
+            <div class="order-items-box">
+              <div class="order-item-row">
+                <span>1x Promo Burger Doble Cheddar</span>
+                <span>$8.200</span>
+              </div>
+              <div class="order-item-row">
+                <span>1x Papas Rústicas con Panceta</span>
+                <span>$3.100</span>
+              </div>
+              <div class="order-item-row">
+                <span>1x Bebida Línea Cola 500ml</span>
+                <span>$1.500</span>
+              </div>
+            </div>
+
+            <div class="order-footer-total">
+              <div class="order-total-lbl">Envío a Domicilio</div>
+              <div class="order-total-val">$12.800</div>
+            </div>
+          </div>
+
+          <div id="w-bottom-pill" class="bottom-pill-tag">
+            Pedidos Claros, Automáticos y Sin Errores
+          </div>
+        </div>
+      </div>
+
+      <script>
+        const tl = gsap.timeline({ paused: true });
+
+        // Background pulse
+        tl.fromTo(
+          "#ambient-w",
+          { scale: 0.9, opacity: 0.5 },
+          { scale: 1.25, opacity: 0.85, duration: 5.0, ease: "none" },
+          0
+        );
+
+        // Pill enter
+        tl.fromTo(
+          "#w-pill",
+          { opacity: 0, y: -40, scale: 0.9 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(2)" },
+          0.1
+        );
+
+        // Voice tag cross enter
+        tl.fromTo(
+          "#w-voice-tag",
+          { opacity: 0, y: 30, scale: 0.9 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "power2.out" },
+          0.35
+        );
+
+        // Order card slides down with spring
+        tl.fromTo(
+          "#w-card",
+          { opacity: 0, y: 70, scale: 0.92 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "back.out(1.6)" },
+          0.7
+        );
+
+        // Bottom tag
+        tl.fromTo(
+          "#w-bottom-pill",
+          { opacity: 0, y: 30, scale: 0.85 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.8)" },
+          1.5
+        );
+
+        // Kinetic exit snap (4.7s - 5.0s)
+        tl.to(
+          "#scene-4-wrap",
+          { opacity: 0, scale: 0.9, y: -60, duration: 0.28, ease: "power2.in" },
+          4.72
+        );
+
+        window.__timelines["scene-4-whatsapp-directo"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

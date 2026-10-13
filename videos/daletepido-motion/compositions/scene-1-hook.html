@@ -24,19 +24,20 @@
           align-items: center;
           justify-content: center;
           font-family: 'Josefin Sans', sans-serif;
-          color: #FFFFFF;
+          color: #F6F6F6;
+          padding: 80px 50px;
         }
 
-        .ambient-glow-hook {
+        .ambient-glow-h {
           position: absolute;
-          width: 800px;
-          height: 800px;
+          width: 850px;
+          height: 850px;
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(246, 0, 0, 0.22) 0%, rgba(246, 0, 0, 0) 70%);
+          background: radial-gradient(circle, rgba(246, 0, 0, 0.25) 0%, rgba(246, 0, 0, 0) 70%);
           pointer-events: none;
         }
 
-        .hook-container {
+        .hook-content {
           position: relative;
           z-index: 2;
           width: 960px;
@@ -44,36 +45,25 @@
           flex-direction: column;
           align-items: center;
           text-align: center;
+          gap: 24px;
         }
 
-        /* Phase 1 */
-        .hook-phase-1 {
-          position: absolute;
-          inset: 0;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 16px;
-        }
-
-        .hook-badge {
+        .hook-pre-badge {
           display: inline-flex;
           align-items: center;
           gap: 12px;
-          padding: 12px 28px;
+          padding: 14px 32px;
           border-radius: 999px;
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid rgba(255, 255, 255, 0.14);
+          background: rgba(246, 0, 0, 0.12);
+          border: 1.5px solid rgba(246, 0, 0, 0.4);
           font-size: 24px;
-          font-weight: 600;
+          font-weight: 700;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-          color: #E2E8F0;
-          margin-bottom: 24px;
+          color: #F60000;
         }
 
-        .hook-badge-dot {
+        .hook-pre-badge-dot {
           width: 12px;
           height: 12px;
           border-radius: 50%;
@@ -81,86 +71,92 @@
           box-shadow: 0 0 14px #F60000;
         }
 
+        .hook-headline {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+        }
+
         .hook-line {
-          font-size: 82px;
+          font-size: 88px;
           line-height: 1.05;
           font-weight: 700;
           letter-spacing: -0.02em;
           text-transform: uppercase;
-          color: #FFFFFF;
+          color: #F6F6F6;
         }
 
-        .hook-line-question {
-          color: #F60000;
-        }
-
-        /* Phase 2 */
-        .hook-phase-2 {
-          position: absolute;
-          inset: 0;
+        .hook-line-row {
           display: flex;
-          flex-direction: column;
           align-items: center;
-          justify-content: center;
-          gap: 24px;
+          gap: 14px;
         }
 
-        .hook-p2-pre {
-          font-size: 58px;
-          font-weight: 600;
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-          color: #D1D5DB;
-        }
-
-        .hook-p2-hero {
+        .blinking-question {
           display: inline-block;
-          padding: 18px 52px;
-          background: #F60000;
-          color: #FFFFFF;
           font-size: 96px;
           font-weight: 700;
-          letter-spacing: -0.01em;
-          border-radius: 28px;
-          box-shadow: 0 16px 50px rgba(246, 0, 0, 0.5);
-          text-transform: uppercase;
-        }
-
-        .hook-p2-post {
-          font-size: 56px;
-          font-weight: 700;
-          letter-spacing: -0.01em;
-          text-transform: uppercase;
-          color: #FFFFFF;
-        }
-
-        .hook-brand-accent {
           color: #F60000;
+          text-shadow: 0 0 30px rgba(246, 0, 0, 0.8);
+        }
+
+        .hook-alert-banner {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 16px;
+          width: 100%;
+          max-width: 880px;
+          padding: 22px 36px;
+          border-radius: 20px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          margin-top: 24px;
+        }
+
+        .alert-cross-text {
+          font-size: 26px;
+          font-weight: 600;
+          color: #A1A1AA;
+          text-decoration: line-through;
+          text-decoration-color: #F60000;
+          text-decoration-thickness: 3px;
+        }
+
+        .alert-pill {
+          padding: 6px 18px;
+          border-radius: 999px;
+          background: #F60000;
+          color: #FFFFFF;
+          font-size: 20px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
         }
       </style>
 
-      <div id="root" data-composition-id="scene-hook" data-width="1080" data-height="1920">
-        <div id="hook-ambient" class="ambient-glow-hook"></div>
+      <div id="root" data-composition-id="scene-1-hook" data-width="1080" data-height="1920">
+        <div id="hook-ambient" class="ambient-glow-h"></div>
 
-        <div class="hook-container">
-          <!-- Hook Phase 1 (0.0s - 2.5s) -->
-          <div id="hook-p1" class="hook-phase-1">
-            <div id="hook-badge" class="hook-badge">
-              <span class="hook-badge-dot"></span>
-              <span>Comercios & Negocios</span>
-            </div>
-            <div id="hook-line-1" class="hook-line hook-line-question">¿SEMANAS</div>
-            <div id="hook-line-2" class="hook-line">PARA DIGITALIZAR</div>
-            <div id="hook-line-3" class="hook-line">TU TIENDA?</div>
+        <div id="hook-wrap" class="hook-content">
+          <div id="hook-badge" class="hook-pre-badge">
+            <span class="hook-pre-badge-dot"></span>
+            <span>Atención Dueños de Negocios</span>
           </div>
 
-          <!-- Hook Phase 2 (2.5s - 4.0s) -->
-          <div id="hook-p2" class="hook-phase-2">
-            <div id="hook-p2-pre" class="hook-p2-pre">HACELO EN</div>
-            <div id="hook-p2-hero" class="hook-p2-hero">5 MINUTOS</div>
-            <div id="hook-p2-post" class="hook-p2-post">
-              CON <span class="hook-brand-accent">DALE!TEPIDO</span>
+          <div class="hook-headline">
+            <div id="h-line-1" class="hook-line">¿CANSADO DE</div>
+            <div id="h-line-2" class="hook-line">REGALAR TU</div>
+            <div id="h-line-3" class="hook-line hook-line-row">
+              <span>GANANCIA</span>
+              <span id="question-mark" class="blinking-question">?</span>
             </div>
+          </div>
+
+          <div id="hook-banner" class="hook-alert-banner">
+            <span class="alert-pill">Apps de Envíos</span>
+            <span class="alert-cross-text">Comisiones del 25% al 35% por venta</span>
           </div>
         </div>
       </div>
@@ -168,81 +164,78 @@
       <script>
         const tl = gsap.timeline({ paused: true });
 
-        // Ambient glow subtle float
+        // Ambient glow breathing
         tl.fromTo(
           "#hook-ambient",
-          { x: 0, y: -50, scale: 0.9, opacity: 0.6 },
-          { x: 30, y: 50, scale: 1.15, opacity: 0.9, duration: 4.0, ease: "none" },
+          { scale: 0.85, opacity: 0.5 },
+          { scale: 1.25, opacity: 0.9, duration: 4.0, ease: "none" },
           0
         );
 
-        // Badge entry with spring
+        // Pre-badge snap entry
         tl.fromTo(
           "#hook-badge",
-          { opacity: 0, y: -40, scale: 0.9 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.7)" },
-          0.15
+          { opacity: 0, y: -40, scale: 0.88 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "back.out(2)" },
+          0.1
         );
 
-        // Staggered crisp slide-up for questions
+        // Kinetic Text Snaps
         tl.fromTo(
-          "#hook-line-1",
-          { opacity: 0, y: 70 },
-          { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" },
-          0.35
-        );
-
-        tl.fromTo(
-          "#hook-line-2",
-          { opacity: 0, y: 70 },
-          { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" },
-          0.55
+          "#h-line-1",
+          { opacity: 0, y: 70, scale: 0.94 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "power3.out" },
+          0.3
         );
 
         tl.fromTo(
-          "#hook-line-3",
-          { opacity: 0, y: 70 },
-          { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" },
-          0.75
+          "#h-line-2",
+          { opacity: 0, y: 70, scale: 0.94 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "power3.out" },
+          0.5
         );
 
-        // Phase 1 exit (2.2s - 2.5s)
         tl.fromTo(
-          "#hook-p1",
-          { opacity: 1, y: 0, scale: 1 },
-          { opacity: 0, y: -80, scale: 0.95, duration: 0.35, ease: "power2.in" },
-          2.2
+          "#h-line-3",
+          { opacity: 0, y: 70, scale: 0.94 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "power3.out" },
+          0.7
         );
 
-        // Phase 2 entry at 2.5s
+        // Pulsing question mark impacts
         tl.fromTo(
-          "#hook-p2",
-          { opacity: 0, y: 90, scale: 0.92 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.5)" },
-          2.5
+          "#question-mark",
+          { scale: 0.3, opacity: 0 },
+          { scale: 1.35, opacity: 1, duration: 0.3, ease: "back.out(3)" },
+          0.85
+        );
+        tl.to("#question-mark", { scale: 1.0, duration: 0.2, ease: "power2.out" }, 1.15);
+
+        // Blinks at 1.8s, 2.4s, 3.0s
+        tl.to("#question-mark", { opacity: 0.2, duration: 0.12 }, 1.8);
+        tl.to("#question-mark", { opacity: 1.0, scale: 1.2, duration: 0.15 }, 1.95);
+        tl.to("#question-mark", { scale: 1.0, duration: 0.15 }, 2.1);
+
+        tl.to("#question-mark", { opacity: 0.2, duration: 0.12 }, 2.7);
+        tl.to("#question-mark", { opacity: 1.0, scale: 1.25, duration: 0.15 }, 2.85);
+        tl.to("#question-mark", { scale: 1.0, duration: 0.15 }, 3.0);
+
+        // Banner entrance
+        tl.fromTo(
+          "#hook-banner",
+          { opacity: 0, y: 50, scale: 0.9 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "back.out(1.6)" },
+          1.1
         );
 
-        // Highlight "5 MINUTOS" pop
-        tl.fromTo(
-          "#hook-p2-hero",
-          { scale: 0.84 },
-          { scale: 1.05, duration: 0.35, ease: "back.out(2)" },
-          2.65
-        );
+        // Fast kinetic exit wipe into Scene 2 (3.7s - 4.0s)
         tl.to(
-          "#hook-p2-hero",
-          { scale: 1.0, duration: 0.25, ease: "power2.out" },
-          3.0
+          "#hook-wrap",
+          { opacity: 0, scale: 1.15, duration: 0.28, ease: "power2.in" },
+          3.72
         );
 
-        // Outro transition at 3.7s
-        tl.to(
-          "#hook-p2",
-          { opacity: 0, scale: 1.1, duration: 0.3, ease: "power2.in" },
-          3.7
-        );
-
-        window.__timelines["scene-hook"] = tl;
+        window.__timelines["scene-1-hook"] = tl;
       </script>
     </template>
   </body>
