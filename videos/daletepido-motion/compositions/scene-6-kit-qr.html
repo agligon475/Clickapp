@@ -9,15 +9,21 @@
         @font-face {
           font-family: 'Josefin Sans';
           font-style: normal;
-          font-weight: 400 700;
+          font-weight: 400 800;
           src: local('Josefin Sans'), url('https://fonts.gstatic.com/s/josefinsans/v32/Qw3aZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhKg.woff2') format('woff2');
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
         }
 
         #root {
           position: absolute;
           inset: 0;
-          width: 100%;
-          height: 100%;
+          width: 1080px;
+          height: 1920px;
           overflow: hidden;
           background: #010101;
           display: flex;
@@ -25,230 +31,281 @@
           justify-content: center;
           font-family: 'Josefin Sans', sans-serif;
           color: #F6F6F6;
-          padding: 80px 40px;
+          padding: 60px 40px;
         }
 
-        .ambient-glow-q {
+        .ambient-glow {
           position: absolute;
           width: 900px;
           height: 900px;
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(246, 0, 0, 0.28) 0%, rgba(246, 0, 0, 0) 70%);
+          background: radial-gradient(circle, rgba(246, 0, 0, 0.22) 0%, rgba(246, 0, 0, 0.04) 45%, rgba(0, 0, 0, 0) 70%);
           pointer-events: none;
+          z-index: 1;
         }
 
-        .scene-wrap-6 {
+        .scene-wrap {
           position: relative;
-          z-index: 2;
-          width: 980px;
+          z-index: 5;
           display: flex;
           flex-direction: column;
           align-items: center;
+          justify-content: center;
+          width: 100%;
+          max-width: 960px;
           gap: 28px;
         }
 
-        .step-pill {
+        .scene-badge {
           display: inline-flex;
           align-items: center;
           gap: 12px;
-          padding: 14px 34px;
+          padding: 12px 32px;
           border-radius: 999px;
-          background: rgba(246, 0, 0, 0.14);
-          border: 1.5px solid #F60000;
-          font-size: 26px;
-          font-weight: 700;
-          letter-spacing: 0.1em;
+          background: #F60000;
+          color: #FFFFFF;
+          font-size: 24px;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          box-shadow: 0 8px 30px rgba(246, 0, 0, 0.5);
+        }
+
+        .scene-headline {
+          font-size: 46px;
+          font-weight: 800;
+          line-height: 1.15;
+          letter-spacing: -0.01em;
+          text-align: center;
           text-transform: uppercase;
           color: #FFFFFF;
         }
 
-        .step-pill-num {
-          background: #F60000;
-          color: #FFFFFF;
-          padding: 4px 14px;
-          border-radius: 999px;
-          font-size: 22px;
+        .scene-headline span {
+          color: #F60000;
         }
 
-        /* 3D Acrylic Stand Mockup */
-        .stand-perspective-stage {
+        /* 3D Acrylic Counter Tent Stand */
+        .stand-container {
+          position: relative;
+          width: 540px;
+          height: 720px;
           perspective: 1200px;
           display: flex;
           flex-direction: column;
           align-items: center;
         }
 
-        .acrylic-card {
-          width: 480px;
-          background: rgba(255, 255, 255, 0.08);
-          backdrop-filter: blur(20px);
-          border: 3px solid rgba(255, 255, 255, 0.25);
+        .acrylic-tent {
+          width: 500px;
+          height: 660px;
+          background: linear-gradient(150deg, rgba(255, 255, 255, 0.12) 0%, rgba(18, 20, 24, 0.9) 35%, rgba(10, 12, 15, 0.98) 100%);
+          border: 2px solid rgba(255, 255, 255, 0.22);
           border-radius: 36px;
-          padding: 40px 36px;
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 22px;
-          box-shadow: 
-            0 30px 80px rgba(0, 0, 0, 0.9),
-            0 0 40px rgba(246, 0, 0, 0.25),
-            inset 0 1px 0 rgba(255, 255, 255, 0.4);
+          overflow: hidden;
+          box-shadow: 0 40px 90px rgba(0, 0, 0, 0.95), 0 0 50px rgba(246, 0, 0, 0.14), inset 0 2px 14px rgba(255, 255, 255, 0.2);
+          transform: rotateX(8deg) rotateY(-3deg);
+          transform-style: preserve-3d;
         }
 
-        .acrylic-brand {
+        /* Solid Red Header Banner with Official Logo */
+        .tent-red-header {
+          width: 100%;
+          background: #F60000;
+          padding: 24px 20px 20px 20px;
           display: flex;
           align-items: center;
-          gap: 10px;
+          justify-content: center;
+          box-shadow: 0 6px 20px rgba(246, 0, 0, 0.5);
         }
 
-        .acrylic-logo-icon {
-          width: 42px;
-          height: 42px;
+        .tent-logo-svg {
+          width: 280px;
+          height: 95px;
+        }
+
+        /* Stand Body */
+        .tent-body {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-evenly;
+          padding: 24px 28px;
+          width: 100%;
+        }
+
+        .qr-card-box {
+          width: 270px;
+          height: 270px;
+          background: #FFFFFF;
+          border-radius: 26px;
+          padding: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+          position: relative;
+        }
+
+        .qr-card-svg {
+          width: 100%;
+          height: 100%;
+        }
+
+        .qr-badge-center {
+          position: absolute;
+          width: 50px;
+          height: 50px;
           border-radius: 12px;
           background: #F60000;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 22px;
-          font-weight: 700;
           color: white;
-        }
-
-        .acrylic-brand-name {
-          font-size: 32px;
-          font-weight: 700;
-          color: #FFFFFF;
-        }
-
-        .acrylic-brand-name span {
-          color: #F60000;
-        }
-
-        /* QR Code Container */
-        .qr-white-box {
-          background: #FFFFFF;
-          padding: 24px;
-          border-radius: 28px;
+          font-weight: 800;
+          font-size: 22px;
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+          border: 3px solid #FFFFFF;
+          box-shadow: 0 4px 12px rgba(246, 0, 0, 0.5);
         }
 
-        .qr-svg {
-          width: 240px;
-          height: 240px;
+        .tent-action-tags {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 6px;
+          text-align: center;
         }
 
-        .acrylic-cta-text {
-          font-size: 26px;
-          font-weight: 700;
-          letter-spacing: 0.08em;
+        .action-main {
+          font-size: 24px;
+          font-weight: 800;
+          letter-spacing: 0.12em;
           color: #FFFFFF;
-          text-transform: uppercase;
         }
 
-        .acrylic-cta-sub {
-          font-size: 20px;
-          font-weight: 600;
+        .action-sub {
+          font-size: 17px;
+          color: #A3A3A3;
+        }
+
+        /* Acrylic Tent Base */
+        .tent-base {
+          width: 460px;
+          height: 24px;
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(60, 60, 60, 0.8) 50%, rgba(15, 15, 15, 0.95) 100%);
+          border-radius: 14px;
+          margin-top: -10px;
+          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(246, 0, 0, 0.25);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Subtext Pill & Traffic Note */
+        .traffic-subtext {
+          max-width: 820px;
+          font-size: 24px;
+          font-weight: 700;
+          line-height: 1.35;
+          text-align: center;
           color: #D1D5DB;
         }
 
-        /* Acrylic Stand Base */
-        .acrylic-base-foot {
-          width: 540px;
-          height: 36px;
-          border-radius: 18px;
-          background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.05) 100%);
-          border: 2px solid rgba(255, 255, 255, 0.3);
-          box-shadow: 0 16px 32px rgba(0, 0, 0, 0.8), 0 0 20px rgba(246, 0, 0, 0.3);
-          margin-top: -12px;
+        .traffic-subtext span {
+          color: #34D399;
         }
 
-        .bottom-pill-qr {
-          padding: 16px 36px;
+        .ready-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 12px 28px;
           border-radius: 999px;
-          background: #111827;
-          border: 2px solid #F60000;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.15);
           color: #FFFFFF;
-          font-size: 22px;
+          font-size: 19px;
           font-weight: 700;
-          letter-spacing: 0.05em;
           text-transform: uppercase;
-          box-shadow: 0 8px 30px rgba(246, 0, 0, 0.35);
         }
       </style>
 
       <div id="root" data-composition-id="scene-6-kit-qr" data-width="1080" data-height="1920">
-        <div id="ambient-q" class="ambient-glow-q"></div>
+        <div class="ambient-glow" id="ambient-glow"></div>
 
-        <div id="scene-6-wrap" class="scene-wrap-6">
-          <div id="q-pill" class="step-pill">
-            <span class="step-pill-num">05</span>
-            <span>Kit QR Mostrador</span>
+        <div class="scene-wrap" id="scene-wrap">
+          <div class="scene-badge" id="scene-badge">
+            5. KIT QR PARA TU MOSTRADOR
           </div>
 
-          <div class="stand-perspective-stage">
-            <div id="acrylic-stand" class="acrylic-card">
-              <div class="acrylic-brand">
-                <div class="acrylic-logo-icon">D!</div>
-                <div class="acrylic-brand-name">Dale!<span>TePido</span></div>
-              </div>
+          <h2 class="scene-headline">
+            TU MENÚ <span>EN EL CELULAR DEL CLIENTE</span>
+          </h2>
 
-              <!-- Styled Vector QR Code -->
-              <div class="qr-white-box">
-                <svg class="qr-svg" viewBox="0 0 100 100" fill="none">
-                  <!-- QR Corner Markers -->
-                  <rect x="5" y="5" width="26" height="26" rx="4" fill="#010101" />
-                  <rect x="9" y="9" width="18" height="18" rx="2" fill="#FFFFFF" />
-                  <rect x="13" y="13" width="10" height="10" rx="2" fill="#F60000" />
-
-                  <rect x="69" y="5" width="26" height="26" rx="4" fill="#010101" />
-                  <rect x="73" y="9" width="18" height="18" rx="2" fill="#FFFFFF" />
-                  <rect x="77" y="13" width="10" height="10" rx="2" fill="#F60000" />
-
-                  <rect x="5" y="69" width="26" height="26" rx="4" fill="#010101" />
-                  <rect x="9" y="73" width="18" height="18" rx="2" fill="#FFFFFF" />
-                  <rect x="13" y="77" width="10" height="10" rx="2" fill="#F60000" />
-
-                  <!-- Stylized Data Matrix Dots -->
-                  <rect x="36" y="8" width="6" height="6" rx="1.5" fill="#010101" />
-                  <rect x="46" y="8" width="6" height="6" rx="1.5" fill="#010101" />
-                  <rect x="56" y="8" width="6" height="6" rx="1.5" fill="#010101" />
-                  <rect x="36" y="18" width="6" height="6" rx="1.5" fill="#010101" />
-                  <rect x="56" y="18" width="6" height="6" rx="1.5" fill="#010101" />
-                  <rect x="46" y="28" width="6" height="6" rx="1.5" fill="#010101" />
-
-                  <rect x="8" y="38" width="6" height="6" rx="1.5" fill="#010101" />
-                  <rect x="18" y="48" width="6" height="6" rx="1.5" fill="#010101" />
-                  <rect x="28" y="38" width="6" height="6" rx="1.5" fill="#010101" />
-                  <rect x="28" y="58" width="6" height="6" rx="1.5" fill="#010101" />
-
-                  <rect x="40" y="40" width="20" height="20" rx="6" fill="#F60000" />
-                  <text x="50" y="55" font-family="'Josefin Sans', sans-serif" font-weight="700" font-size="14" fill="#FFFFFF" text-anchor="middle">D!</text>
-
-                  <rect x="68" y="38" width="6" height="6" rx="1.5" fill="#010101" />
-                  <rect x="78" y="48" width="6" height="6" rx="1.5" fill="#010101" />
-                  <rect x="88" y="38" width="6" height="6" rx="1.5" fill="#010101" />
-
-                  <rect x="38" y="68" width="6" height="6" rx="1.5" fill="#010101" />
-                  <rect x="48" y="78" width="6" height="6" rx="1.5" fill="#010101" />
-                  <rect x="58" y="68" width="6" height="6" rx="1.5" fill="#010101" />
-                  <rect x="68" y="78" width="6" height="6" rx="1.5" fill="#010101" />
-                  <rect x="78" y="68" width="6" height="6" rx="1.5" fill="#010101" />
-                  <rect x="88" y="78" width="6" height="6" rx="1.5" fill="#010101" />
+          <!-- 3D Acrylic Counter Tent Stand -->
+          <div class="stand-container" id="stand-container">
+            <div class="acrylic-tent">
+              <!-- Solid Red Header with Official Logo -->
+              <div class="tent-red-header">
+                <svg class="tent-logo-svg" viewBox="0 0 600 240" xmlns="http://www.w3.org/2000/svg">
+                  <!-- DALE! -->
+                  <text x="300" y="85" text-anchor="middle" font-family="'Josefin Sans', sans-serif" font-weight="800" font-size="82" fill="#FFFFFF" letter-spacing="8">DALE!</text>
+                  <!-- TEP i D O -->
+                  <text x="135" y="190" font-family="'Josefin Sans', sans-serif" font-weight="800" font-size="82" fill="#FFFFFF" letter-spacing="8">TEP</text>
+                  <rect x="278" y="183" width="22" height="7" fill="#FFFFFF" rx="2" />
+                  <text x="312" y="190" font-family="'Josefin Sans', sans-serif" font-weight="800" font-size="82" fill="#FFFFFF">i</text>
+                  <circle cx="320" cy="126" r="6.5" fill="#FFFFFF" />
+                  <text x="354" y="190" font-family="'Josefin Sans', sans-serif" font-weight="800" font-size="82" fill="#FFFFFF" letter-spacing="8">D</text>
+                  <text x="432" y="190" font-family="'Josefin Sans', sans-serif" font-weight="800" font-size="82" fill="#FFFFFF">O</text>
+                  <!-- Red Accent Arc & Arrow (on white background) -->
+                  <path d="M 320 124 C 352 72, 424 72, 460 122" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" />
+                  <path d="M 460 132 L 451 117 L 469 117 Z" fill="#FFFFFF" />
                 </svg>
               </div>
 
-              <div class="acrylic-cta-text">ESCANEA · PEDÍ · PAGÁ</div>
-              <div class="acrylic-cta-sub">Tu menú o catálogo en el celular</div>
-            </div>
+              <!-- Body with QR Code -->
+              <div class="tent-body">
+                <div class="qr-card-box">
+                  <svg class="qr-card-svg" viewBox="0 0 100 100">
+                    <path fill="#010101" d="M0,0 h36 v36 h-36 z M6,6 h24 v24 h-24 z M12,12 h12 v12 h-12 z" />
+                    <path fill="#010101" d="M64,0 h36 v36 h-36 z M70,6 h24 v24 h-24 z M76,12 h12 v12 h-12 z" />
+                    <path fill="#010101" d="M0,64 h36 v36 h-36 z M6,70 h24 v24 h-24 z M12,76 h12 v12 h-12 z" />
+                    <rect fill="#010101" x="42" y="6" width="16" height="6" />
+                    <rect fill="#010101" x="42" y="18" width="8" height="18" />
+                    <rect fill="#010101" x="54" y="24" width="6" height="12" />
+                    <rect fill="#010101" x="6" y="42" width="12" height="6" />
+                    <rect fill="#010101" x="24" y="42" width="18" height="6" />
+                    <rect fill="#010101" x="18" y="52" width="12" height="6" />
+                    <rect fill="#010101" x="64" y="42" width="16" height="8" />
+                    <rect fill="#010101" x="84" y="42" width="10" height="16" />
+                    <rect fill="#010101" x="42" y="64" width="8" height="16" />
+                    <rect fill="#010101" x="56" y="64" width="16" height="8" />
+                    <rect fill="#010101" x="78" y="68" width="16" height="8" />
+                    <rect fill="#010101" x="64" y="82" width="12" height="12" />
+                    <rect fill="#010101" x="82" y="82" width="12" height="12" />
+                    <rect fill="#010101" x="42" y="86" width="16" height="8" />
+                  </svg>
+                  <div class="qr-badge-center">D!</div>
+                </div>
 
-            <div id="acrylic-foot" class="acrylic-base-foot"></div>
+                <div class="tent-action-tags">
+                  <div class="action-main">ESCANEA · PEDÍ · PAGÁ</div>
+                  <div class="action-sub">Sin descargar aplicaciones extras</div>
+                </div>
+              </div>
+            </div>
+            <div class="tent-base"></div>
           </div>
 
-          <div id="q-bottom-tag" class="bottom-pill-qr">
-            Listo Para Imprimir y Poner en Tu Mostrador
+          <!-- Subtext: Convertí visitas de mostrador + SEO local -->
+          <p class="traffic-subtext">
+            Convertí visitas de mostrador en clientes recurrentes + <span>SEO Local en Google</span>
+          </p>
+
+          <div class="ready-pill">
+            LISTO PARA IMPRIMIR Y PONER EN TU MOSTRADOR
           </div>
         </div>
       </div>
@@ -256,59 +313,63 @@
       <script>
         const tl = gsap.timeline({ paused: true });
 
-        // Background pulse
-        tl.fromTo(
-          "#ambient-q",
-          { scale: 0.9, opacity: 0.5 },
-          { scale: 1.25, opacity: 0.85, duration: 4.0, ease: "none" },
-          0
+        // Initial states
+        gsap.set("#scene-wrap", { opacity: 1, scale: 1 });
+        gsap.set("#scene-badge", { scale: 0.8, opacity: 0 });
+        gsap.set(".scene-headline", { y: -20, opacity: 0 });
+        gsap.set("#stand-container", { scale: 0.82, y: 80, opacity: 0 });
+        gsap.set(".traffic-subtext", { opacity: 0, y: 20 });
+        gsap.set(".ready-pill", { opacity: 0, y: 15 });
+
+        // 0.0s - 0.4s: Badge & Headline
+        tl.fromTo("#scene-badge",
+          { scale: 0.75, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)" },
+          0.05
         );
 
-        // Step pill
-        tl.fromTo(
-          "#q-pill",
-          { opacity: 0, y: -40, scale: 0.9 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(2)" },
-          0.1
+        tl.fromTo(".scene-headline",
+          { y: -20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
+          0.2
         );
 
-        // 3D Stand pops into frame with perspective angle
-        tl.fromTo(
-          "#acrylic-stand",
-          { opacity: 0, scale: 0.5, rotationY: 25, rotationX: 15, y: 100 },
-          { opacity: 1, scale: 1, rotationY: -6, rotationX: 4, y: 0, duration: 0.65, ease: "back.out(1.8)" },
+        // 0.4s: Isometric 3D card pop-in
+        tl.fromTo("#stand-container",
+          { scale: 0.8, y: 80, opacity: 0 },
+          { scale: 1, y: 0, opacity: 1, duration: 0.65, ease: "back.out(1.6)" },
           0.35
         );
 
-        // Foot pops beneath
-        tl.fromTo(
-          "#acrylic-foot",
-          { opacity: 0, scaleX: 0.4 },
-          { opacity: 1, scaleX: 1, duration: 0.4, ease: "back.out(1.6)" },
-          0.65
+        // Stand subtle float
+        tl.to("#stand-container", {
+          y: -14,
+          duration: 1.0,
+          yoyo: true,
+          repeat: 1,
+          ease: "sine.inOut"
+        }, 1.0);
+
+        // Subtext & Ready pill
+        tl.fromTo(".traffic-subtext",
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" },
+          1.2
         );
 
-        // Smooth subtle 3D float
-        tl.to(
-          "#acrylic-stand",
-          { rotationY: 4, rotationX: -2, duration: 2.2, ease: "sine.inOut" },
-          1.1
+        tl.fromTo(".ready-pill",
+          { opacity: 0, y: 15 },
+          { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" },
+          1.4
         );
 
-        // Bottom pill tag
-        tl.fromTo(
-          "#q-bottom-tag",
-          { opacity: 0, y: 30, scale: 0.85 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.8)" },
-          1.3
-        );
-
-        // Kinetic exit snap (3.7s - 4.0s)
-        tl.to(
-          "#scene-6-wrap",
-          { opacity: 0, scale: 0.9, y: -60, duration: 0.28, ease: "power2.in" },
-          3.72
-        );
+        // 4.25s: Punchy Exit Snap
+        tl.to("#scene-wrap", {
+          scale: 1.08,
+          opacity: 0,
+          duration: 0.22,
+          ease: "power2.in"
+        }, 4.25);
 
         window.__timelines["scene-6-kit-qr"] = tl;
       </script>

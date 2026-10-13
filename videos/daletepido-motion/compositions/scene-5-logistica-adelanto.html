@@ -1,0 +1,328 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: 'Josefin Sans';
+          font-style: normal;
+          font-weight: 400 800;
+          src: local('Josefin Sans'), url('https://fonts.gstatic.com/s/josefinsans/v32/Qw3aZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhKg.woff2') format('woff2');
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: #010101;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Josefin Sans', sans-serif;
+          color: #F6F6F6;
+          padding: 60px 40px;
+        }
+
+        .ambient-glow {
+          position: absolute;
+          width: 900px;
+          height: 900px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(246, 0, 0, 0.22) 0%, rgba(246, 0, 0, 0.04) 45%, rgba(0, 0, 0, 0) 70%);
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        .scene-wrap {
+          position: relative;
+          z-index: 5;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          max-width: 960px;
+          gap: 32px;
+        }
+
+        .scene-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 32px;
+          border-radius: 999px;
+          background: #F60000;
+          color: #FFFFFF;
+          font-size: 24px;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          box-shadow: 0 8px 30px rgba(246, 0, 0, 0.5);
+        }
+
+        .scene-title {
+          font-size: 48px;
+          font-weight: 800;
+          line-height: 1.15;
+          letter-spacing: -0.01em;
+          text-align: center;
+          text-transform: uppercase;
+          color: #FFFFFF;
+        }
+
+        .scene-title span {
+          color: #F60000;
+        }
+
+        /* Dual-Card Layout */
+        .dual-cards-container {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+          width: 100%;
+          max-width: 920px;
+        }
+
+        .ops-card {
+          background: #0D0F12;
+          border: 2px solid rgba(255, 255, 255, 0.12);
+          border-radius: 32px;
+          padding: 36px 36px;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .ops-card.accent {
+          border-color: rgba(246, 0, 0, 0.45);
+          box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(246, 0, 0, 0.12);
+        }
+
+        .ops-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .ops-brand {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+
+        .ops-icon {
+          width: 56px;
+          height: 56px;
+          border-radius: 16px;
+          background: rgba(255, 255, 255, 0.06);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 28px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ops-card.accent .ops-icon {
+          background: rgba(246, 0, 0, 0.15);
+          border-color: rgba(246, 0, 0, 0.4);
+        }
+
+        .ops-title {
+          font-size: 32px;
+          font-weight: 800;
+          color: #FFFFFF;
+          letter-spacing: -0.01em;
+        }
+
+        .ops-pill {
+          padding: 8px 18px;
+          border-radius: 999px;
+          background: rgba(16, 185, 129, 0.14);
+          color: #34D399;
+          font-size: 18px;
+          font-weight: 800;
+        }
+
+        .ops-desc {
+          font-size: 26px;
+          line-height: 1.35;
+          font-weight: 600;
+          color: #E2E8F0;
+        }
+
+        .ops-subtag {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 10px 20px;
+          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.04);
+          color: #94A3B8;
+          font-size: 20px;
+          font-weight: 700;
+          align-self: flex-start;
+        }
+
+        /* Floating Bottom Tag */
+        .bottom-live-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 16px 32px;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1.5px solid rgba(255, 255, 255, 0.15);
+          color: #FFFFFF;
+          font-size: 20px;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+
+        .live-dot {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: #10B981;
+          box-shadow: 0 0 14px #10B981;
+        }
+      </style>
+
+      <div id="root" data-composition-id="scene-5-logistica-adelanto" data-width="1080" data-height="1920">
+        <div class="ambient-glow" id="ambient-glow"></div>
+
+        <div class="scene-wrap" id="scene-wrap">
+          <!-- Headline Badge -->
+          <div class="scene-badge" id="scene-badge">
+            4. ADELANTÁ PEDIDOS & TUS REPARTIDORES
+          </div>
+
+          <h2 class="scene-title">
+            MÁXIMA VELOCIDAD <span>SIN INTERMEDIARIOS</span>
+          </h2>
+
+          <!-- Dual Cards Container -->
+          <div class="dual-cards-container" id="dual-cards">
+            <!-- Card A: Adelanto de Pedidos -->
+            <div class="ops-card" id="card-a">
+              <div class="ops-header">
+                <div class="ops-brand">
+                  <div class="ops-icon">⏱️</div>
+                  <div class="ops-title">Take Away Sin Esperas</div>
+                </div>
+                <div class="ops-pill">CERO FILAS</div>
+              </div>
+              <p class="ops-desc">
+                El cliente pide desde su casa y retira sin hacer filas en el mostrador.
+              </p>
+              <div class="ops-subtag">
+                ⚡ Chau cuellos de botella en horas pico
+              </div>
+            </div>
+
+            <!-- Card B: Repartidores Propios -->
+            <div class="ops-card accent" id="card-b">
+              <div class="ops-header">
+                <div class="ops-brand">
+                  <div class="ops-icon">🛵</div>
+                  <div class="ops-title">Repartidores Propios</div>
+                </div>
+                <div class="ops-pill">100% TUYO</div>
+              </div>
+              <p class="ops-desc">
+                Módulo de repartidores propios: asignás tus envíos sin intermediarios ni retenciones por viaje.
+              </p>
+              <div class="ops-subtag" style="color: #F87171;">
+                🚀 Tus cadetes, tus tarifas, tu negocio
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Live Badge -->
+          <div class="bottom-live-badge" id="bottom-badge">
+            <span class="live-dot"></span>
+            <span>OPERACIÓN 100% AUTÓNOMA EN TIEMPO REAL</span>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        const tl = gsap.timeline({ paused: true });
+
+        // Initial states
+        gsap.set("#scene-wrap", { opacity: 1, scale: 1 });
+        gsap.set("#scene-badge", { scale: 0.8, opacity: 0 });
+        gsap.set(".scene-title", { y: -20, opacity: 0 });
+        gsap.set("#card-a", { x: -40, opacity: 0 });
+        gsap.set("#card-b", { x: 40, opacity: 0 });
+        gsap.set("#bottom-badge", { y: 20, opacity: 0 });
+
+        // 0.0s - 0.5s: Badge & Title
+        tl.fromTo("#scene-badge",
+          { scale: 0.75, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)" },
+          0.05
+        );
+
+        tl.fromTo(".scene-title",
+          { y: -20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
+          0.25
+        );
+
+        // 0.6s - 1.2s: Staggered Dual Cards Slide-In
+        tl.fromTo("#card-a",
+          { x: -50, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.5, ease: "back.out(1.5)" },
+          0.55
+        );
+
+        tl.fromTo("#card-b",
+          { x: 50, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.5, ease: "back.out(1.5)" },
+          0.85
+        );
+
+        // 1.4s: Bottom badge
+        tl.fromTo("#bottom-badge",
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
+          1.3
+        );
+
+        // Subtle accent bounce
+        tl.to("#card-b", {
+          scale: 1.02,
+          duration: 0.25,
+          repeat: 1,
+          yoyo: true,
+          ease: "sine.inOut"
+        }, 2.5);
+
+        // 4.75s: Punchy Exit Snap
+        tl.to("#scene-wrap", {
+          scale: 1.08,
+          opacity: 0,
+          duration: 0.22,
+          ease: "power2.in"
+        }, 4.75);
+
+        window.__timelines["scene-5-logistica-adelanto"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

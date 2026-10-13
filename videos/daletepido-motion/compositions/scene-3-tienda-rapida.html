@@ -9,15 +9,21 @@
         @font-face {
           font-family: 'Josefin Sans';
           font-style: normal;
-          font-weight: 400 700;
+          font-weight: 400 800;
           src: local('Josefin Sans'), url('https://fonts.gstatic.com/s/josefinsans/v32/Qw3aZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhKg.woff2') format('woff2');
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
         }
 
         #root {
           position: absolute;
           inset: 0;
-          width: 100%;
-          height: 100%;
+          width: 1080px;
+          height: 1920px;
           overflow: hidden;
           background: #010101;
           display: flex;
@@ -25,224 +31,287 @@
           justify-content: center;
           font-family: 'Josefin Sans', sans-serif;
           color: #F6F6F6;
-          padding: 80px 40px;
+          padding: 60px 40px;
         }
 
-        .ambient-glow-t {
+        .ambient-glow {
           position: absolute;
-          width: 900px;
-          height: 900px;
+          width: 850px;
+          height: 850px;
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(246, 0, 0, 0.22) 0%, rgba(246, 0, 0, 0) 70%);
+          background: radial-gradient(circle, rgba(246, 0, 0, 0.2) 0%, rgba(246, 0, 0, 0.04) 45%, rgba(0, 0, 0, 0) 70%);
           pointer-events: none;
+          z-index: 1;
         }
 
-        .scene-wrap-3 {
+        /* Stylized Mobile Bento Grid Container */
+        .bento-container {
           position: relative;
-          z-index: 2;
+          z-index: 5;
           width: 980px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 28px;
-        }
-
-        .step-pill {
-          display: inline-flex;
-          align-items: center;
-          gap: 12px;
-          padding: 14px 34px;
-          border-radius: 999px;
-          background: rgba(246, 0, 0, 0.14);
-          border: 1.5px solid #F60000;
-          font-size: 26px;
-          font-weight: 700;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: #FFFFFF;
-        }
-
-        .step-pill-num {
-          background: #F60000;
-          color: #FFFFFF;
-          padding: 4px 14px;
-          border-radius: 999px;
-          font-size: 22px;
-        }
-
-        /* Speed Clock Widget */
-        .clock-widget {
-          display: flex;
-          align-items: center;
-          gap: 24px;
-          padding: 24px 44px;
-          border-radius: 28px;
-          background: #111827;
+          height: 1680px;
+          background: #0D0F12;
           border: 2px solid rgba(255, 255, 255, 0.12);
-          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
-        }
-
-        .clock-svg {
-          width: 72px;
-          height: 72px;
-        }
-
-        .clock-time {
-          font-size: 64px;
-          font-weight: 700;
-          letter-spacing: -0.02em;
-          color: #FFFFFF;
-        }
-
-        .clock-time span {
-          color: #F60000;
-        }
-
-        /* Categories Cascade */
-        .categories-grid {
+          border-radius: 44px;
+          padding: 40px;
           display: flex;
           flex-direction: column;
-          gap: 16px;
-          width: 100%;
-          max-width: 880px;
+          box-shadow: 0 32px 80px rgba(0, 0, 0, 0.85), 0 0 50px rgba(246, 0, 0, 0.08);
+          overflow: hidden;
         }
 
-        .cat-card-item {
+        /* Top Header */
+        .bento-header {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 22px 28px;
-          border-radius: 20px;
-          background: #F6F6F6;
-          color: #0F172A;
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+          padding-bottom: 24px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          margin-bottom: 28px;
         }
 
-        .cat-item-left {
+        .bento-tag {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px 24px;
+          border-radius: 999px;
+          background: #F60000;
+          color: #FFFFFF;
+          font-size: 22px;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+
+        .stopwatch-badge {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 10px 22px;
+          border-radius: 999px;
+          background: rgba(16, 185, 129, 0.12);
+          border: 1px solid rgba(16, 185, 129, 0.35);
+          color: #34D399;
+          font-size: 20px;
+          font-weight: 700;
+        }
+
+        /* Title */
+        .scene-title {
+          font-size: 42px;
+          font-weight: 800;
+          line-height: 1.15;
+          letter-spacing: -0.01em;
+          text-transform: uppercase;
+          margin-bottom: 24px;
+        }
+
+        /* Chip Selection */
+        .chips-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin-bottom: 28px;
+        }
+
+        .rubro-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 14px 26px;
+          border-radius: 999px;
+          background: #181A20;
+          border: 1.5px solid rgba(255, 255, 255, 0.12);
+          font-size: 22px;
+          font-weight: 700;
+          color: #CCCCCC;
+        }
+
+        .rubro-chip.active {
+          background: #F60000;
+          border-color: #F60000;
+          color: #FFFFFF;
+          box-shadow: 0 4px 20px rgba(246, 0, 0, 0.5);
+        }
+
+        /* Pill Badge: Chau al síndrome de la pantalla en blanco */
+        .chau-pantalla-pill {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          padding: 14px 28px;
+          border-radius: 999px;
+          background: rgba(246, 0, 0, 0.12);
+          border: 1.5px solid rgba(246, 0, 0, 0.4);
+          color: #F60000;
+          font-size: 20px;
+          font-weight: 800;
+          letter-spacing: 0.04em;
+          text-align: center;
+          margin-bottom: 28px;
+        }
+
+        /* 5 Category Cards */
+        .categories-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+        }
+
+        .category-card {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 20px 26px;
+          background: #14171C;
+          border: 1.5px solid rgba(255, 255, 255, 0.08);
+          border-radius: 20px;
+        }
+
+        .cat-main {
           display: flex;
           align-items: center;
           gap: 18px;
         }
 
-        .cat-item-icon {
+        .cat-icon {
+          font-size: 32px;
           width: 52px;
           height: 52px;
           border-radius: 14px;
-          background: #E2E8F0;
+          background: rgba(255, 255, 255, 0.05);
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 28px;
         }
 
-        .cat-item-info {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-
-        .cat-item-title {
-          font-size: 26px;
+        .cat-title {
+          font-size: 24px;
           font-weight: 700;
-          color: #0F172A;
+          color: #FFFFFF;
         }
 
-        .cat-item-sub {
+        .cat-desc {
           font-size: 18px;
-          font-weight: 600;
-          color: #64748B;
+          color: #9E9E9E;
+          margin-top: 4px;
         }
 
-        .cat-badge-done {
+        .cat-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
           padding: 8px 18px;
           border-radius: 999px;
-          background: rgba(16, 185, 129, 0.15);
-          border: 1px solid rgba(16, 185, 129, 0.4);
-          color: #10B981;
-          font-size: 18px;
-          font-weight: 700;
-          text-transform: uppercase;
+          background: rgba(16, 185, 129, 0.14);
+          color: #34D399;
+          font-size: 17px;
+          font-weight: 800;
         }
 
-        .cat-bottom-tag {
-          padding: 14px 32px;
-          border-radius: 999px;
-          background: #F60000;
-          color: #FFFFFF;
-          font-size: 22px;
+        /* Footer live note */
+        .bento-footer {
+          margin-top: auto;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          padding: 16px 28px;
+          border-radius: 20px;
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: #D1D5DB;
+          font-size: 20px;
           font-weight: 700;
-          letter-spacing: 0.05em;
           text-transform: uppercase;
-          box-shadow: 0 8px 24px rgba(246, 0, 0, 0.4);
         }
       </style>
 
       <div id="root" data-composition-id="scene-3-tienda-rapida" data-width="1080" data-height="1920">
-        <div id="ambient-t" class="ambient-glow-t"></div>
+        <div class="ambient-glow" id="ambient-glow"></div>
 
-        <div id="scene-3-wrap" class="scene-wrap-3">
-          <div id="t-pill" class="step-pill">
-            <span class="step-pill-num">02</span>
-            <span>Tienda Lista en 5 Min</span>
+        <div class="bento-container" id="bento-container">
+          <div class="bento-header">
+            <div class="bento-tag">2. TU TIENDA EN 5 MINUTOS</div>
+            <div class="stopwatch-badge">⏱️ 05:00 MIN</div>
           </div>
 
-          <div id="clock-card" class="clock-widget">
-            <svg class="clock-svg" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="9" stroke="#F60000" stroke-width="2.5" />
-              <path id="clock-hand" d="M12 12L12 6" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" />
-              <path d="M12 12L16 14" stroke="#F60000" stroke-width="2.5" stroke-linecap="round" />
-            </svg>
-            <div class="clock-time">05:00 <span>MIN</span></div>
+          <h2 class="scene-title">CONFIGURACIÓN AUTOMÁTICA</h2>
+
+          <!-- Chip selection simulation -->
+          <div class="chips-row" id="chips-row">
+            <div class="rubro-chip active" id="chip-gastro">ALMACÉN / GASTRONOMÍA ✓</div>
+            <div class="rubro-chip">KIOSCO & SNACKS</div>
+            <div class="rubro-chip">TIENDA & RETAIL</div>
           </div>
 
-          <div class="categories-grid">
-            <div id="c-card-1" class="cat-card-item">
-              <div class="cat-item-left">
-                <div class="cat-item-icon">🍕</div>
-                <div class="cat-item-info">
-                  <div class="cat-item-title">Comidas & Restaurantes</div>
-                  <div class="cat-item-sub">80 productos listos</div>
+          <!-- Pill Badge Drops -->
+          <div class="chau-pantalla-pill" id="chau-pantalla-pill">
+            ⚡ CHAU AL SÍNDROME DE LA PANTALLA EN BLANCO
+          </div>
+
+          <!-- 5 Category Cards Cascading In -->
+          <div class="categories-grid" id="categories-grid">
+            <div class="category-card" id="cat-1">
+              <div class="cat-main">
+                <div class="cat-icon">🥤</div>
+                <div>
+                  <div class="cat-title">Bebidas & Cervezas</div>
+                  <div class="cat-desc">45 productos con control de stock</div>
                 </div>
               </div>
-              <div class="cat-badge-done">Listo ✓</div>
+              <div class="cat-badge">LISTO ✓</div>
             </div>
 
-            <div id="c-card-2" class="cat-card-item">
-              <div class="cat-item-left">
-                <div class="cat-item-icon">🛒</div>
-                <div class="cat-item-info">
-                  <div class="cat-item-title">Almacén & Bebidas</div>
-                  <div class="cat-item-sub">120 productos listos</div>
+            <div class="category-card" id="cat-2">
+              <div class="cat-main">
+                <div class="cat-icon">🥩</div>
+                <div>
+                  <div class="cat-title">Frescos & Carnes</div>
+                  <div class="cat-desc">32 productos con peso y corte</div>
                 </div>
               </div>
-              <div class="cat-badge-done">Listo ✓</div>
+              <div class="cat-badge">LISTO ✓</div>
             </div>
 
-            <div id="c-card-3" class="cat-card-item">
-              <div class="cat-item-left">
-                <div class="cat-item-icon">🥐</div>
-                <div class="cat-item-info">
-                  <div class="cat-item-title">Panadería & Deli</div>
-                  <div class="cat-item-sub">65 productos listos</div>
+            <div class="category-card" id="cat-3">
+              <div class="cat-main">
+                <div class="cat-icon">🥖</div>
+                <div>
+                  <div class="cat-title">Panadería & Confitería</div>
+                  <div class="cat-desc">28 productos frescos listos</div>
                 </div>
               </div>
-              <div class="cat-badge-done">Listo ✓</div>
+              <div class="cat-badge">LISTO ✓</div>
             </div>
 
-            <div id="c-card-4" class="cat-card-item">
-              <div class="cat-item-left">
-                <div class="cat-item-icon">🧼</div>
-                <div class="cat-item-info">
-                  <div class="cat-item-title">Limpieza & Hogar</div>
-                  <div class="cat-item-sub">90 productos listos</div>
+            <div class="category-card" id="cat-4">
+              <div class="cat-main">
+                <div class="cat-icon">🥫</div>
+                <div>
+                  <div class="cat-title">Despensa & Almacén</div>
+                  <div class="cat-desc">60 productos precargados</div>
                 </div>
               </div>
-              <div class="cat-badge-done">Listo ✓</div>
+              <div class="cat-badge">LISTO ✓</div>
+            </div>
+
+            <div class="category-card" id="cat-5">
+              <div class="cat-main">
+                <div class="cat-icon">🧼</div>
+                <div>
+                  <div class="cat-title">Limpieza & Perfumería</div>
+                  <div class="cat-desc">40 productos configurados</div>
+                </div>
+              </div>
+              <div class="cat-badge">LISTO ✓</div>
             </div>
           </div>
 
-          <div id="cat-tag" class="cat-bottom-tag">
-            Catálogo Inteligente Pre-Cargado
+          <div class="bento-footer">
+            CATÁLOGO INTELIGENTE PRECARGADO PARA TU RUBRO
           </div>
         </div>
       </div>
@@ -250,55 +319,59 @@
       <script>
         const tl = gsap.timeline({ paused: true });
 
-        // Background pulse
-        tl.fromTo(
-          "#ambient-t",
-          { scale: 0.9, opacity: 0.5 },
-          { scale: 1.25, opacity: 0.85, duration: 5.0, ease: "none" },
-          0
+        // Initial states
+        gsap.set("#bento-container", { scale: 0.9, opacity: 0 });
+        gsap.set(".rubro-chip", { opacity: 0, y: 20 });
+        gsap.set("#chau-pantalla-pill", { scale: 0.85, opacity: 0 });
+        gsap.set(".category-card", { opacity: 0, x: -30 });
+
+        // 0.0s - 0.7s: Fast zoom into Bento Grid Container
+        tl.fromTo("#bento-container",
+          { scale: 0.88, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.4)" },
+          0.05
         );
 
-        // Pill enter
-        tl.fromTo(
-          "#t-pill",
-          { opacity: 0, y: -40, scale: 0.9 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(2)" },
+        tl.fromTo("#ambient-glow",
+          { scale: 0.7, opacity: 0.2 },
+          { scale: 1.15, opacity: 0.6, duration: 1.0, ease: "power2.out" },
           0.1
         );
 
-        // Clock widget enter
-        tl.fromTo(
-          "#clock-card",
-          { opacity: 0, scale: 0.8, y: 30 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: "back.out(2)" },
+        // Chip tap selection
+        tl.fromTo(".rubro-chip",
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, stagger: 0.08, duration: 0.35, ease: "power3.out" },
           0.35
         );
 
-        // Clock hand spin
-        tl.to("#clock-hand", { rotation: 360, transformOrigin: "bottom center", duration: 2.5, ease: "power1.inOut" }, 0.5);
-
-        // Cascade categories
-        tl.fromTo(
-          ["#c-card-1", "#c-card-2", "#c-card-3", "#c-card-4"],
-          { opacity: 0, y: 50, scale: 0.92 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.4, stagger: 0.12, ease: "back.out(1.5)" },
-          0.85
+        tl.fromTo("#chip-gastro",
+          { scale: 0.92 },
+          { scale: 1.06, duration: 0.2, repeat: 1, yoyo: true, ease: "back.out(2)" },
+          0.7
         );
 
-        // Bottom tag pops
-        tl.fromTo(
-          "#cat-tag",
-          { opacity: 0, y: 30, scale: 0.85 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.8)" },
-          1.7
+        // Pill badge drops
+        tl.fromTo("#chau-pantalla-pill",
+          { scale: 0.85, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.8)" },
+          1.0
         );
 
-        // Kinetic exit snap (4.7s - 5.0s)
-        tl.to(
-          "#scene-3-wrap",
-          { opacity: 0, scale: 0.9, y: -60, duration: 0.28, ease: "power2.in" },
-          4.72
+        // 5 Category cards cascade in with staggered spring physics
+        tl.fromTo(".category-card",
+          { opacity: 0, x: -30 },
+          { opacity: 1, x: 0, stagger: 0.12, duration: 0.45, ease: "power3.out" },
+          1.25
         );
+
+        // 4.25s: Punchy Exit Snap
+        tl.to("#bento-container", {
+          scale: 1.08,
+          opacity: 0,
+          duration: 0.22,
+          ease: "power2.in"
+        }, 4.25);
 
         window.__timelines["scene-3-tienda-rapida"] = tl;
       </script>

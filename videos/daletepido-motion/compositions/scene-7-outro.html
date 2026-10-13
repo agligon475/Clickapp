@@ -9,15 +9,21 @@
         @font-face {
           font-family: 'Josefin Sans';
           font-style: normal;
-          font-weight: 400 700;
+          font-weight: 400 800;
           src: local('Josefin Sans'), url('https://fonts.gstatic.com/s/josefinsans/v32/Qw3aZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhKg.woff2') format('woff2');
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
         }
 
         #root {
           position: absolute;
           inset: 0;
-          width: 100%;
-          height: 100%;
+          width: 1080px;
+          height: 1920px;
           overflow: hidden;
           background: #010101;
           display: flex;
@@ -25,143 +31,166 @@
           justify-content: center;
           font-family: 'Josefin Sans', sans-serif;
           color: #F6F6F6;
-          padding: 80px 50px;
+          padding: 60px 40px;
         }
 
-        .ambient-glow-o {
+        .ambient-glow {
           position: absolute;
           width: 950px;
           height: 950px;
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(246, 0, 0, 0.35) 0%, rgba(246, 0, 0, 0) 70%);
+          background: radial-gradient(circle, rgba(246, 0, 0, 0.26) 0%, rgba(246, 0, 0, 0.05) 45%, rgba(0, 0, 0, 0) 70%);
           pointer-events: none;
+          z-index: 1;
         }
 
-        .outro-content {
+        .outro-wrap {
           position: relative;
-          z-index: 2;
-          width: 960px;
+          z-index: 5;
           display: flex;
           flex-direction: column;
           align-items: center;
+          justify-content: center;
           text-align: center;
-          gap: 32px;
+          width: 100%;
+          max-width: 960px;
+          gap: 36px;
         }
 
-        .outro-logo-wrap {
-          display: flex;
-          align-items: center;
-          gap: 20px;
-        }
-
-        .outro-logo-badge {
-          width: 84px;
-          height: 84px;
-          border-radius: 24px;
-          background: #F60000;
+        .outro-logo-box {
+          width: 640px;
+          height: 260px;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 44px;
-          font-weight: 700;
-          color: white;
-          box-shadow: 0 16px 44px rgba(246, 0, 0, 0.6);
         }
 
-        .outro-logo-text {
-          font-size: 88px;
-          font-weight: 700;
-          letter-spacing: -0.03em;
-          color: #FFFFFF;
+        .outro-logo-svg {
+          width: 100%;
+          height: 100%;
+          overflow: visible;
         }
 
-        .outro-logo-text span {
-          color: #F60000;
-        }
-
-        .outro-headline {
-          font-size: 64px;
-          font-weight: 700;
-          line-height: 1.1;
+        .outro-statement {
+          font-size: 68px;
+          font-weight: 800;
+          line-height: 1.08;
           letter-spacing: -0.02em;
           text-transform: uppercase;
           color: #FFFFFF;
-          max-width: 860px;
         }
 
-        .outro-cta-btn {
+        /* High-contrast CTA pill button */
+        .cta-button {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          gap: 16px;
+          gap: 20px;
           width: 100%;
-          max-width: 820px;
-          padding: 34px 44px;
+          max-width: 780px;
+          padding: 30px 48px;
           border-radius: 999px;
           background: #F60000;
           color: #FFFFFF;
-          font-size: 38px;
-          font-weight: 700;
-          letter-spacing: 0.02em;
-          box-shadow: 0 24px 64px rgba(246, 0, 0, 0.6), 0 0 40px rgba(246, 0, 0, 0.4);
-          text-transform: uppercase;
-          margin-top: 10px;
+          font-size: 44px;
+          font-weight: 800;
+          letter-spacing: 0.04em;
+          box-shadow: 0 20px 60px rgba(246, 0, 0, 0.65), 0 0 40px rgba(246, 0, 0, 0.35);
+          border: 2px solid rgba(255, 255, 255, 0.25);
         }
 
-        .outro-cta-btn svg {
-          width: 36px;
-          height: 36px;
-          stroke: currentColor;
-          stroke-width: 3.5;
-          fill: none;
-        }
-
-        .outro-pills-row {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 18px;
-          margin-top: 12px;
-        }
-
-        .outro-pill-chip {
+        .cta-arrow-circle {
           display: inline-flex;
           align-items: center;
-          gap: 8px;
+          justify-content: center;
+          width: 58px;
+          height: 58px;
+          border-radius: 50%;
+          background: #FFFFFF;
+          color: #F60000;
+          font-size: 34px;
+          font-weight: 800;
+        }
+
+        /* Footer Badge */
+        .footer-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 16px 36px;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1.5px solid rgba(255, 255, 255, 0.15);
+          color: #E2E8F0;
+          font-size: 24px;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+
+        .trust-chips-row {
+          display: flex;
+          gap: 16px;
+          margin-top: 4px;
+        }
+
+        .trust-pill {
           padding: 12px 24px;
           border-radius: 999px;
-          background: rgba(255, 255, 255, 0.06);
+          background: #101216;
           border: 1px solid rgba(255, 255, 255, 0.12);
-          font-size: 22px;
-          font-weight: 600;
-          color: #E2E8F0;
+          color: #CCCCCC;
+          font-size: 20px;
+          font-weight: 700;
         }
       </style>
 
       <div id="root" data-composition-id="scene-7-outro" data-width="1080" data-height="1920">
-        <div id="ambient-o" class="ambient-glow-o"></div>
+        <div class="ambient-glow" id="ambient-glow"></div>
 
-        <div id="outro-wrap" class="outro-content">
-          <div id="o-brand" class="outro-logo-wrap">
-            <div class="outro-logo-badge">D!</div>
-            <div class="outro-logo-text">Dale!<span>TePido</span></div>
-          </div>
-
-          <div id="o-headline" class="outro-headline">
-            TU COMERCIO, TUS REGLAS.
-          </div>
-
-          <div id="o-btn" class="outro-cta-btn">
-            <span>daletepido.com.ar | 15 DÍAS GRATIS</span>
-            <svg viewBox="0 0 24 24">
-              <path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+        <div class="outro-wrap" id="outro-wrap">
+          <!-- Official Dale!TePido Logo Centered at Top -->
+          <div class="outro-logo-box" id="outro-logo-box">
+            <svg class="outro-logo-svg" viewBox="0 0 600 250" xmlns="http://www.w3.org/2000/svg">
+              <!-- DALE! -->
+              <text x="300" y="85" text-anchor="middle" font-family="'Josefin Sans', sans-serif" font-weight="800" font-size="84" fill="#F6F6F6" letter-spacing="8">DALE!</text>
+              
+              <!-- TEP i D O -->
+              <text x="135" y="192" font-family="'Josefin Sans', sans-serif" font-weight="800" font-size="84" fill="#F6F6F6" letter-spacing="8">TEP</text>
+              <rect x="278" y="185" width="22" height="7" fill="#F6F6F6" rx="2" />
+              <text x="312" y="192" font-family="'Josefin Sans', sans-serif" font-weight="800" font-size="84" fill="#F6F6F6">i</text>
+              <circle cx="320" cy="128" r="6.5" fill="#F6F6F6" />
+              <text x="354" y="192" font-family="'Josefin Sans', sans-serif" font-weight="800" font-size="84" fill="#F6F6F6" letter-spacing="8">D</text>
+              <text x="432" y="192" font-family="'Josefin Sans', sans-serif" font-weight="800" font-size="84" fill="#F6F6F6">O</text>
+              
+              <!-- Signature Curved Red Hairline Arc from 'i' dot to over 'O' -->
+              <path d="M 320 126 C 352 74, 424 74, 460 124" fill="none" stroke="#F60000" stroke-width="4" stroke-linecap="round" />
+              <!-- Downward Red Arrowhead -->
+              <path d="M 460 134 L 451 119 L 469 119 Z" fill="#F60000" />
             </svg>
           </div>
 
-          <div id="o-pills" class="outro-pills-row">
-            <div class="outro-pill-chip">⚡ 0% Comisiones</div>
-            <div class="outro-pill-chip">📱 Catálogo WhatsApp</div>
-            <div class="outro-pill-chip">🚀 Listo en 5 min</div>
+          <!-- Bold Statement -->
+          <h2 class="outro-statement" id="outro-statement">
+            TU COMERCIO, TUS REGLAS.
+          </h2>
+
+          <!-- High-Contrast CTA Pill Button -->
+          <div class="cta-button" id="cta-button">
+            <span>daletepido.com.ar</span>
+            <div class="cta-arrow-circle">→</div>
+          </div>
+
+          <!-- Footer Badge -->
+          <div class="footer-badge" id="footer-badge">
+            15 DÍAS DE PRUEBA GRATIS · ACTIVÁ TU TIENDA HOY
+          </div>
+
+          <!-- Trust Chips -->
+          <div class="trust-chips-row" id="trust-chips">
+            <div class="trust-pill">0% Comisiones</div>
+            <div class="trust-pill">Sin App Obligatoria</div>
+            <div class="trust-pill">100% en tu Caja</div>
           </div>
         </div>
       </div>
@@ -169,49 +198,61 @@
       <script>
         const tl = gsap.timeline({ paused: true });
 
-        // Background pulse
-        tl.fromTo(
-          "#ambient-o",
-          { scale: 0.9, opacity: 0.6 },
-          { scale: 1.3, opacity: 0.95, duration: 2.0, ease: "none" },
-          0
-        );
+        // Initial states
+        gsap.set("#outro-wrap", { opacity: 1 });
+        gsap.set("#outro-logo-box", { scale: 0.8, opacity: 0 });
+        gsap.set("#outro-statement", { y: 25, opacity: 0 });
+        gsap.set("#cta-button", { scale: 0.82, opacity: 0 });
+        gsap.set("#footer-badge", { y: 20, opacity: 0 });
+        gsap.set("#trust-chips", { y: 20, opacity: 0 });
 
-        // Brand logo snaps in
-        tl.fromTo(
-          "#o-brand",
-          { opacity: 0, y: -40, scale: 0.88 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(2)" },
+        // 0.0s - 0.5s: Logo & Statement
+        tl.fromTo("#outro-logo-box",
+          { scale: 0.78, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(2)" },
           0.05
         );
 
-        // Huge headline punch
-        tl.fromTo(
-          "#o-headline",
-          { opacity: 0, scale: 0.85, y: 30 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: "back.out(2)" },
-          0.2
+        tl.fromTo("#ambient-glow",
+          { scale: 0.7, opacity: 0.3 },
+          { scale: 1.2, opacity: 0.85, duration: 1.2, ease: "power2.out" },
+          0.1
         );
 
-        // CTA Button Pop with massive spring impact
-        tl.fromTo(
-          "#o-btn",
-          { opacity: 0, scale: 0.75, y: 40 },
-          { opacity: 1, scale: 1.05, y: 0, duration: 0.35, ease: "back.out(2.5)" },
+        tl.fromTo("#outro-statement",
+          { y: 25, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" },
+          0.25
+        );
+
+        // 0.5s: CTA Button Pop-in
+        tl.fromTo("#cta-button",
+          { scale: 0.8, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2.2)" },
           0.45
         );
-        tl.to("#o-btn", { scale: 1.0, duration: 0.2, ease: "power2.out" }, 0.82);
 
-        // Trust badges stagger in
-        tl.fromTo(
-          ".outro-pill-chip",
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.3, stagger: 0.08, ease: "power2.out" },
-          0.8
+        // CTA Subtle Pulse
+        tl.to("#cta-button", {
+          scale: 1.04,
+          duration: 0.35,
+          repeat: 2,
+          yoyo: true,
+          ease: "power2.inOut"
+        }, 1.0);
+
+        // Footer & Trust chips
+        tl.fromTo("#footer-badge",
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.35, ease: "power2.out" },
+          0.7
         );
 
-        // Hold steady until frame 900 (2.0s)
-        tl.to("#outro-wrap", { y: -4, duration: 0.8, ease: "sine.inOut" }, 1.2);
+        tl.fromTo("#trust-chips",
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.35, ease: "power2.out" },
+          0.9
+        );
 
         window.__timelines["scene-7-outro"] = tl;
       </script>
