@@ -447,7 +447,10 @@
           <label for="login-password">Contraseña *</label>
           <div class="input-wrapper">
             <i class="bi bi-key-fill"></i>
-            <input type="password" id="login-password" required placeholder="••••••••" />
+            <input type="password" id="login-password" required placeholder="••••••••" style="padding-right:42px;" />
+            <button type="button" onclick="togglePasswordVisibility('login-password', this)" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer; padding:4px 6px; display:inline-flex; align-items:center; z-index:2;" title="Mostrar u ocultar contraseña">
+              <i class="bi bi-eye" style="position:static; pointer-events:auto; color:inherit; font-size:inherit;"></i>
+            </button>
           </div>
         </div>
 
@@ -495,7 +498,10 @@
             <label for="reset-new-pass">Nueva Contraseña *</label>
             <div class="input-wrapper">
               <i class="bi bi-shield-lock-fill"></i>
-              <input type="password" id="reset-new-pass" required placeholder="Mínimo 4 caracteres" minlength="4" />
+              <input type="password" id="reset-new-pass" required placeholder="Mínimo 4 caracteres" minlength="4" style="padding-right:42px;" />
+              <button type="button" onclick="togglePasswordVisibility('reset-new-pass', this)" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer; padding:4px 6px; display:inline-flex; align-items:center; z-index:2;" title="Mostrar u ocultar contraseña">
+                <i class="bi bi-eye" style="position:static; pointer-events:auto; color:inherit; font-size:inherit;"></i>
+              </button>
             </div>
           </div>
           <button type="submit" id="reset-submit-btn" class="btn btn-primary" style="width:100%;">
@@ -560,7 +566,10 @@
             <label for="store-password">Contraseña de Administración *</label>
             <div class="input-wrapper">
               <i class="bi bi-key-fill"></i>
-              <input type="password" id="store-password" placeholder="Mínimo 6 caracteres" />
+              <input type="password" id="store-password" placeholder="Mínimo 6 caracteres" style="padding-right:42px;" />
+              <button type="button" onclick="togglePasswordVisibility('store-password', this)" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer; padding:4px 6px; display:inline-flex; align-items:center; z-index:2;" title="Mostrar u ocultar contraseña">
+                <i class="bi bi-eye" style="position:static; pointer-events:auto; color:inherit; font-size:inherit;"></i>
+              </button>
             </div>
           </div>
           <div class="form-group full-width" style="grid-column: 1 / -1; margin-top: 10px;">
@@ -718,6 +727,30 @@
 </main>
 
 <script>
+  function togglePasswordVisibility(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    const icon = btn ? btn.querySelector('i') : null;
+    if (icon) {
+      if (isPassword) {
+        icon.className = 'bi bi-eye-slash-fill';
+        btn.setAttribute('title', 'Ocultar contraseña');
+        btn.style.color = 'var(--primary)';
+      } else {
+        icon.className = 'bi bi-eye';
+        btn.setAttribute('title', 'Mostrar contraseña');
+        btn.style.color = '';
+      }
+    }
+    try {
+      input.focus();
+      const len = input.value.length;
+      input.setSelectionRange(len, len);
+    } catch (e) {}
+  }
+
   const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
 

@@ -4742,7 +4742,12 @@
       
       <div class="ctrl-group" style="margin-bottom: 18px;">
         <label class="ctrl-label">Contraseña</label>
-        <input class="ctrl-input" type="password" id="login-password" placeholder="Ingresá tu contraseña" style="background: var(--black);" />
+        <div style="position:relative; display:flex; align-items:center;">
+          <input class="ctrl-input" type="password" id="login-password" placeholder="Ingresá tu contraseña" style="background: var(--black); padding-right:42px;" />
+          <button type="button" onclick="togglePasswordVisibility('login-password', this)" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); background:transparent; border:none; color:var(--silver); font-size:16px; cursor:pointer; padding:6px 8px; display:inline-flex; align-items:center; justify-content:center; border-radius:6px; transition:color .15s;" title="Mostrar u ocultar contraseña" aria-label="Mostrar u ocultar contraseña">
+            <i class="bi bi-eye"></i>
+          </button>
+        </div>
         <div id="login-info-msg" style="font-size: 10px; color: var(--silver); margin-top: 6px;">Si es tu primera vez o no tiene contraseña, dejalo en blanco.</div>
       </div>
       
@@ -6999,7 +7004,15 @@
               <!-- 9. Contraseña del panel -->
               <div class="ctrl-group" style="grid-column:1/-1;">
                 <label class="ctrl-label">Contraseña del Panel</label>
-                <input class="ctrl-input" type="password" id="cfg-store-password" placeholder="Clave para proteger el acceso a este panel" />
+                <div style="position:relative; display:flex; align-items:center;">
+                  <input class="ctrl-input" type="password" id="cfg-store-password" placeholder="Clave para proteger el acceso a este panel" style="padding-right:42px;" />
+                  <button type="button" onclick="togglePasswordVisibility('cfg-store-password', this)" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); background:transparent; border:none; color:var(--silver); font-size:16px; cursor:pointer; padding:6px 8px; display:inline-flex; align-items:center; justify-content:center; border-radius:6px; transition:color .15s;" title="Mostrar u ocultar contraseña" aria-label="Mostrar u ocultar contraseña">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
+                <div style="font-size:11px; color:var(--fog); margin-top:5px; display:flex; align-items:center; gap:5px;">
+                  <i class="bi bi-info-circle" style="color:var(--red);"></i> Hacé clic en el ojo para ver lo que escribís al definir o cambiar tu clave.
+                </div>
               </div>
 
               <div style="grid-column:1/-1; margin-top:16px; border-top:1px solid rgba(255,255,255,0.06); padding-top:14px;">
@@ -7116,7 +7129,12 @@
         <h3 style="font-family: var(--font-h); color: var(--white); font-size: 22px; font-weight: 700; margin-bottom: 12px;">Acceso Restringido</h3>
         <p style="color: var(--silver); font-size: 13px; line-height: 1.6; margin-bottom: 24px; max-width: 380px;">Esta sección contiene datos críticos de conexión a la base de datos, APIs de IA y Cloudinary. Ingrese la clave de soporte para desbloquear.</p>
         <div style="width: 100%; display: flex; flex-direction: column; gap: 12px; align-items: stretch;">
-          <input type="password" id="adv-unlock-password" class="ctrl-input" placeholder="Clave Super Admin" style="text-align: center; height: 44px; font-size: 14px; letter-spacing: 0.1em;" onkeydown="if(event.key === 'Enter') unlockAdvanced()" />
+          <div style="position:relative; display:flex; align-items:center; width:100%;">
+            <input type="password" id="adv-unlock-password" class="ctrl-input" placeholder="Clave Super Admin" style="text-align: center; height: 44px; font-size: 14px; letter-spacing: 0.1em; padding-right: 42px;" onkeydown="if(event.key === 'Enter') unlockAdvanced()" />
+            <button type="button" onclick="togglePasswordVisibility('adv-unlock-password', this)" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:transparent; border:none; color:var(--silver); font-size:16px; cursor:pointer; padding:6px 8px; display:inline-flex; align-items:center; justify-content:center; border-radius:6px; transition:color .15s;" title="Mostrar u ocultar contraseña" aria-label="Mostrar u ocultar contraseña">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
           <button onclick="unlockAdvanced()" class="sb-btn" style="background: var(--red); color: white; border: none; height: 44px; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; margin: 0; width: 100%;">
             <i class="bi bi-shield-lock-fill"></i> Desbloquear Sección
           </button>
@@ -10535,6 +10553,31 @@
       }
     }
     window.toggleAccordionCard = toggleAccordionCard;
+
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      const icon = btn ? btn.querySelector('i') : null;
+      if (icon) {
+        if (isPassword) {
+          icon.className = 'bi bi-eye-slash-fill';
+          btn.setAttribute('title', 'Ocultar contraseña');
+          btn.style.color = 'var(--red)';
+        } else {
+          icon.className = 'bi bi-eye';
+          btn.setAttribute('title', 'Mostrar contraseña');
+          btn.style.color = 'var(--silver)';
+        }
+      }
+      try {
+        input.focus();
+        const len = input.value.length;
+        input.setSelectionRange(len, len);
+      } catch (e) {}
+    }
+    window.togglePasswordVisibility = togglePasswordVisibility;
 
     window.BANNER_LAYOUT_MODE = 'double';
 
