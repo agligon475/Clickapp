@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evolución Dale! Te Pido / Clickapp — Del Momento Cero a Hoy</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #07090E;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --bg-card-hover: rgba(30, 41, 59, 0.9);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(245, 158, 11, 0.35);
+      
+      --brand-red: #F60000;
+      --brand-amber: #F59E0B;
+      --brand-amber-glow: rgba(245, 158, 11, 0.25);
+      --brand-teal: #0D9488;
+      --brand-indigo: #6366F1;
+      --brand-purple: #8B5CF6;
+      --brand-green: #10B981;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 0%, #151D30 0%, var(--bg-dark) 70%);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    /* Deck Viewport */
+    .deck-viewport {
+      flex: 1;
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .slide-deck {
+      position: relative;
+      width: 100%;
+      max-width: 1540px;
+      aspect-ratio: 16 / 9;
+      max-height: 92vh;
+      background: rgba(11, 16, 28, 0.94);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.8), 0 0 45px rgba(245, 158, 11, 0.08);
+      backdrop-filter: blur(25px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Topbar */
+    .deck-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.7);
+      z-index: 20;
+    }
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .topbar-logo {
+      height: 26px;
+      filter: brightness(1);
+    }
+    .topbar-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: var(--brand-amber);
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+    .nav-btn.primary {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(246, 0, 0, 0.2));
+      border-color: rgba(245, 158, 11, 0.4);
+      color: #fff;
+    }
+    .nav-btn.primary:hover {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.35), rgba(246, 0, 0, 0.35));
+    }
+
+    /* Slides Container */
+    .slides-container {
+      flex: 1;
+      position: relative;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 30px 42px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: scale(0.985);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1);
+      z-index: 10;
+    }
+
+    /* Slide Headers */
+    .slide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--brand-amber);
+      margin-bottom: 6px;
+    }
+    .slide-title {
+      font-family: var(--font-heading);
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #FFFFFF;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .slide-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      max-width: 900px;
+      line-height: 1.45;
+    }
+
+    /* Cards & Grids */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-bottom: 16px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 18px 20px;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+    .card:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+    .card-accent-amber {
+      border-left: 3px solid var(--brand-amber);
+    }
+    .card-accent-teal {
+      border-left: 3px solid var(--brand-teal);
+    }
+    .card-accent-indigo {
+      border-left: 3px solid var(--brand-indigo);
+    }
+    .card-accent-green {
+      border-left: 3px solid var(--brand-green);
+    }
+    .card-accent-red {
+      border-left: 3px solid var(--brand-red);
+    }
+
+    .card-title {
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-text {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .pill {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #E2E8F0;
+    }
+
+    /* Metric Box */
+    .metric-hero {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .metric-num {
+      font-family: var(--font-heading);
+      font-size: 34px;
+      font-weight: 800;
+      color: #FFFFFF;
+      line-height: 1;
+    }
+    .metric-sub {
+      font-size: 12px;
+      color: var(--brand-amber);
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+
+    /* Bottom Bar & Progress */
+    .deck-bottombar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 24px;
+      border-top: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.7);
+      font-size: 12px;
+      color: var(--text-muted);
+      z-index: 20;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      margin: 0 20px;
+      overflow: hidden;
+      position: relative;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--brand-amber), var(--brand-red));
+      width: 10%;
+      transition: width 0.3s ease;
+    }
+
+    /* Timeline Component */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      padding-left: 20px;
+      border-left: 2px solid rgba(255, 255, 255, 0.1);
+    }
+    .timeline-item {
+      position: relative;
+    }
+    .timeline-dot {
+      position: absolute;
+      left: -27px;
+      top: 4px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--brand-amber);
+      box-shadow: 0 0 10px var(--brand-amber-glow);
+    }
+    .timeline-time {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--brand-amber);
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .timeline-content {
+      font-size: 12.5px;
+      color: #E2E8F0;
+    }
+
+    /* Custom Scrollbar */
+    .slide::-webkit-scrollbar {
+      width: 6px;
+    }
+    .slide::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .deck-viewport { padding: 0; }
+      .slide-deck {
+        aspect-ratio: auto;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+        border: none;
+      }
+      .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .slide { padding: 20px; }
+      .slide-title { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="deck-viewport">
+  <div class="slide-deck" id="slide-deck">
+    
+    <!-- TOPBAR -->
+    <header class="deck-topbar">
+      <div class="topbar-brand">
+        <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" onerror="this.src='/img-default/daletepido-logo-white-hq.png'" alt="Dale! Te Pido" class="topbar-logo" />
+        <span class="topbar-tag"><i class="bi bi-clock-history"></i> RETROSPECTIVA HISTÓRICA</span>
+      </div>
+      <div class="topbar-actions">
+        <a href="super-admin-secret-dashboard.html" class="nav-btn" title="Regresar al panel general">
+          <i class="bi bi-arrow-left"></i> <span class="hide-mobile">Volver al Superdashboard</span>
+        </a>
+        <button class="nav-btn" onclick="prevSlide()" title="Diapositiva Anterior (←)">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <span id="slide-indicator" style="font-family: var(--font-mono); font-size: 12px; font-weight:700; color: #FFFFFF; min-width: 48px; text-align: center;">1 / 10</span>
+        <button class="nav-btn primary" onclick="nextSlide()" title="Siguiente Diapositiva (→ o Espacio)">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+        <button class="nav-btn" onclick="toggleFullScreen()" title="Pantalla Completa (F)">
+          <i class="bi bi-arrows-fullscreen"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- SLIDES CONTAINER -->
+    <main class="slides-container">
+
+      <!-- SLIDE 1: PORTADA EJECUTIVA -->
+      <section class="slide active" id="slide-1">
+        <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding: 20px 0;">
+          <div style="display:inline-flex; align-items:center; gap:8px; padding:6px 16px; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3); border-radius:999px; margin-bottom:18px;">
+            <i class="bi bi-rocket-takeoff-fill" style="color:var(--brand-amber); font-size:14px;"></i>
+            <span style="font-family:var(--font-mono); font-size:12px; font-weight:700; color:var(--brand-amber); letter-spacing:0.06em;">MEMORIA DE DESARROLLO INTEGRAL</span>
+          </div>
+          
+          <h1 style="font-family:var(--font-heading); font-size:clamp(30px, 4vw, 50px); font-weight:800; line-height:1.15; max-width:980px; margin-bottom:14px; background:linear-gradient(135deg, #FFFFFF 30%, #F59E0B 75%, #F60000 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
+            De un Catálogo por WhatsApp a una Plataforma SaaS Multi-tenant
+          </h1>
+          
+          <p style="font-size:clamp(14px, 1.4vw, 17px); color:var(--text-muted); max-width:820px; line-height:1.6; margin-bottom:34px;">
+            Recorrido cronológico y técnico de todo lo construido en <strong style="color:#FFFFFF;">Dale! Te Pido / Clickapp</strong> desde el día cero hasta hoy: arquitectura cloud, seguridad de grado bancario, suite de comercio, Android TWA y automatizaciones de venta.
+          </p>
+
+          <!-- Metrics Row -->
+          <div class="grid-4" style="width:100%; max-width:1050px;">
+            <div class="card card-accent-amber" style="text-align:left;">
+              <div class="metric-hero">
+                <span class="metric-num">+760</span>
+                <span class="metric-sub">Commits</span>
+              </div>
+              <div class="card-text">Evolución continua, resiliencia y sincronización automática.</div>
+            </div>
+            <div class="card card-accent-teal" style="text-align:left;">
+              <div class="metric-hero">
+                <span class="metric-num">94/100</span>
+                <span class="metric-sub">Seguridad</span>
+              </div>
+              <div class="card-text">Auditoría bancaria SEC-01 a SEC-08 mitigada con HMAC & RLS.</div>
+            </div>
+            <div class="card card-accent-indigo" style="text-align:left;">
+              <div class="metric-hero">
+                <span class="metric-num">100%</span>
+                <span class="metric-sub">Vanilla JS</span>
+              </div>
+              <div class="card-text">Velocidad extrema en móvil sin pesados frameworks JS.</div>
+            </div>
+            <div class="card card-accent-green" style="text-align:left;">
+              <div class="metric-hero">
+                <span class="metric-num">360°</span>
+                <span class="metric-sub">Suite</span>
+              </div>
+              <div class="card-text">Tienda, Dashboard, Superadmin, APK, PWA y Campañas.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: MOMENTO CERO & EL MVP -->
+      <section class="slide" id="slide-2">
+        <span class="slide-badge"><i class="bi bi-1-circle-fill"></i> Etapa 0 · Génesis del Proyecto</span>
+        <h2 class="slide-title">El Momento Cero: El Catálogo Ágil y sin Comisiones</h2>
+        <p class="slide-desc">El proyecto nació para resolver un problema crítico del comercio barrial: crear una tienda digital en 5 minutos sin pagar comisiones abusivas ni requerir servidores complejos.</p>
+
+        <div class="grid-3">
+          <div class="card card-accent-amber">
+            <div class="card-title"><i class="bi bi-file-earmark-spreadsheet" style="color:var(--brand-amber);"></i> Google Sheets como Base</div>
+            <div class="card-text">
+              La versión 1.0 operaba leyendo datos tabulares exportados en formato CSV directo desde una hoja de cálculo pública de Google Sheets.
+            </div>
+            <div class="pill-list">
+              <span class="pill">CSV Export</span>
+              <span class="pill">Parseo Frontend</span>
+              <span class="pill">Fácil para el usuario</span>
+            </div>
+          </div>
+
+          <div class="card card-accent-teal">
+            <div class="card-title"><i class="bi bi-whatsapp" style="color:var(--brand-teal);"></i> Cierre por WhatsApp</div>
+            <div class="card-text">
+              El cliente armaba su pedido en el navegador y el checkout generaba un mensaje preformateado hacia la cuenta de WhatsApp del comercio.
+            </div>
+            <div class="pill-list">
+              <span class="pill">wa.me DeepLink</span>
+              <span class="pill">Sin pasarelas obligatorias</span>
+              <span class="pill">Trato humano</span>
+            </div>
+          </div>
+
+          <div class="card card-accent-red">
+            <div class="card-title"><i class="bi bi-exclamation-triangle" style="color:var(--brand-red);"></i> Limitaciones que Exigieron Escalar</div>
+            <div class="card-text">
+              Sheets sufría demoras de caché (5 min para cambios), falta de autenticación por comercio, riesgos de permisos y concurrencia limitada.
+            </div>
+            <div class="pill-list">
+              <span class="pill">Caché rígido</span>
+              <span class="pill">1 sola imagen</span>
+              <span class="pill">Sin multi-tenant</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="background:rgba(245,158,11,0.05); border:1px solid rgba(245,158,11,0.2);">
+          <div class="card-title" style="color:var(--brand-amber);"><i class="bi bi-lightbulb-fill"></i> La Decisión Clave</div>
+          <div class="card-text">
+            Conservar la sencillez de uso para el comerciante, pero reemplazar los cimientos técnicos por una arquitectura escalable, segura y multi-tenant en la nube sin perder la velocidad instantánea de carga.
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: ETAPA 2 - CATÁLOGO MULTIMEDIA & WATERMARK -->
+      <section class="slide" id="slide-3">
+        <span class="slide-badge"><i class="bi bi-2-circle-fill"></i> Etapa 2 · Enriquecimiento Visual</span>
+        <h2 class="slide-title">Multi-imagen, Banners y Marca de Agua Automática</h2>
+        <p class="slide-desc">Se transformó la vitrina comercial en una experiencia de compra atractiva, protegiendo las fotos de los comercios y guiando la conversión con banners interactivos.</p>
+
+        <div class="grid-3">
+          <div class="card card-accent-teal">
+            <div class="card-title"><i class="bi bi-images" style="color:var(--brand-teal);"></i> Hasta 3 Imágenes por Producto</div>
+            <div class="card-text">
+              Ampliación del modal ABM para cargar <code>img</code>, <code>img2</code> y <code>img3</code> con previews interactivos y carrusel de navegación táctil en la ficha de producto.
+            </div>
+            <div class="pill-list">
+              <span class="pill">Miniaturas</span>
+              <span class="pill">Carrusel Swipe</span>
+              <span class="pill">Cloudinary f_webp</span>
+            </div>
+          </div>
+
+          <div class="card card-accent-indigo">
+            <div class="card-title"><i class="bi bi-shield-check" style="color:var(--brand-indigo);"></i> Watermark con Canvas HTML5</div>
+            <div class="card-text">
+              Procesamiento directo en el navegador: al subir una foto, un algoritmo de Canvas superpone el logo oficial del comercio en la esquina inferior con fondo protector de legibilidad.
+            </div>
+            <div class="pill-list">
+              <span class="pill">Canvas 2D</span>
+              <span class="pill">Anti-copia</span>
+              <span class="pill">Automático 15% ratio</span>
+            </div>
+          </div>
+
+          <div class="card card-accent-amber">
+            <div class="card-title"><i class="bi bi-layout-split" style="color:var(--brand-amber);"></i> Banners Promocionales 50/50</div>
+            <div class="card-text">
+              Módulo de banners configurables (modo single o doble) con vinculación a categorías y scroll suave interactivo directo a los productos promocionados.
+            </div>
+            <div class="pill-list">
+              <span class="pill">Desktop 50/50</span>
+              <span class="pill">Mobile apilado</span>
+              <span class="pill">Filtro por Click</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title"><i class="bi bi-palette-fill" style="color:var(--brand-purple);"></i> Personalización de Identidad</div>
+            <div class="card-text">Inyección dinámica de variables CSS <code>:root</code>: paletas de color con cálculo de luminancia y contraste WCAG 2.1, Google Fonts tipográficas y hero personalizable.</div>
+          </div>
+          <div class="card">
+            <div class="card-title"><i class="bi bi-cloud-arrow-up-fill" style="color:var(--brand-green);"></i> Optimización Cloudinary</div>
+            <div class="card-text">Transformaciones automáticas de imágenes en la nube con formato WebP progresivo y redimensionamiento inteligente para asegurar velocidad óptima en redes móviles.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: SUPABASE & ARQUITECTURA CLOUD -->
+      <section class="slide" id="slide-4">
+        <span class="slide-badge"><i class="bi bi-3-circle-fill"></i> Etapa 3 · Arquitectura Cloud</span>
+        <h2 class="slide-title">La Gran Migración a Supabase & Multi-Tenancy</h2>
+        <p class="slide-desc">Desconexión definitiva de las limitaciones de Google Sheets y adopción de PostgreSQL relacional con soporte para cientos de tiendas independientes en tiempo real.</p>
+
+        <div class="grid-3">
+          <div class="card card-accent-teal">
+            <div class="card-title"><i class="bi bi-database-fill-gear" style="color:var(--brand-teal);"></i> Multi-tenant por store_id</div>
+            <div class="card-text">
+              Detección inteligente de la tienda vía subdominio (ej: <code>mitienda.daletepido.com.ar</code>), path de URL o parámetro <code>?store=</code>. Todas las consultas filtran rígidamente por comercio.
+            </div>
+            <div class="pill-list">
+              <span class="pill">store_id indexado</span>
+              <span class="pill">Aislamiento de datos</span>
+            </div>
+          </div>
+
+          <div class="card card-accent-indigo">
+            <div class="card-title"><i class="bi bi-shield-lock-fill" style="color:var(--brand-indigo);"></i> Autenticación & RLS</div>
+            <div class="card-text">
+              Credenciales cifradas con hash, políticas RLS (Row Level Security) y control de roles que aseguran que ningún comercio pueda visualizar o mutar datos de otro.
+            </div>
+            <div class="pill-list">
+              <span class="pill">Bcrypt / Hash</span>
+              <span class="pill">RLS Policies</span>
+            </div>
+          </div>
+
+          <div class="card card-accent-green">
+            <div class="card-title"><i class="bi bi-arrow-repeat" style="color:var(--brand-green);"></i> Resiliencia & Auto-Recovery</div>
+            <div class="card-text">
+              Helper <code>fetchSupabase()</code> con reintentos exponenciales automáticos, bypass de 401 por credenciales locales obsoletas y fallback automático a modo local offline.
+            </div>
+            <div class="pill-list">
+              <span class="pill">3 Retries</span>
+              <span class="pill">Auto-recuperación</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="display:flex; align-items:center; justify-content:space-between; gap:20px; background:rgba(15,23,42,0.6);">
+          <div>
+            <div class="card-title" style="margin-bottom:2px;"><i class="bi bi-table"></i> Esquema de Entidades Principales</div>
+            <div class="card-text"><code>company_settings</code> · <code>products</code> · <code>store_credentials</code> · <code>store_activity_logs</code> · <code>faqs</code> · <code>email_templates</code></div>
+          </div>
+          <div style="font-family:var(--font-mono); font-size:12px; color:var(--brand-teal); font-weight:700; background:rgba(13,148,136,0.15); padding:6px 14px; border-radius:8px; border:1px solid rgba(13,148,136,0.3); white-space:nowrap;">
+            PostgreSQL Realtime
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: EL DASHBOARD DEL GESTOR -->
+      <section class="slide" id="slide-5">
+        <span class="slide-badge"><i class="bi bi-4-circle-fill"></i> Etapa 4 · Suite del Comerciante</span>
+        <h2 class="slide-title">Dashboard Operativo: Métricas, Kanban y Catálogo</h2>
+        <p class="slide-desc">El comerciante cuenta con una herramienta integral para controlar su stock, despachar pedidos y analizar su negocio desde su computadora o celular.</p>
+
+        <div class="grid-4">
+          <div class="card card-accent-amber">
+            <div class="card-title"><i class="bi bi-kanban-fill" style="color:var(--brand-amber);"></i> Tablero Kanban</div>
+            <div class="card-text">Gestión de pedidos por columnas: A Confirmar, En Preparación, Despachado y Entregado con persistencia de estado.</div>
+          </div>
+
+          <div class="card card-accent-teal">
+            <div class="card-title"><i class="bi bi-ticket-perforated-fill" style="color:var(--brand-teal);"></i> Motor de Cupones</div>
+            <div class="card-text">Creación de cupones con porcentaje, límite de usos y alcance general o restringido a productos específicos.</div>
+          </div>
+
+          <div class="card card-accent-indigo">
+            <div class="card-title"><i class="bi bi-magic" style="color:var(--brand-indigo);"></i> Wizard de Productos</div>
+            <div class="card-text">Asistente en 5 pasos con Selector de Arquetipos (Indumentaria, Gastronomía, Ferretería, Opciones/Modelos).</div>
+          </div>
+
+          <div class="card card-accent-green">
+            <div class="card-title"><i class="bi bi-graph-up-arrow" style="color:var(--brand-green);"></i> Métricas en Vivo</div>
+            <div class="card-text">Facturación total, ticket promedio, cantidad de órdenes y gráfico evolutivo de ventas del comercio.</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card card-accent-purple">
+            <div class="card-title"><i class="bi bi-sliders" style="color:var(--brand-purple);"></i> Configuración de Diseño Visual</div>
+            <div class="card-text">
+              Editor en tiempo real de logo, colores de marca, tipografías, fondo de tienda con control de opacidad, textos de encabezados y canales de redes sociales vinculadas.
+            </div>
+          </div>
+          <div class="card card-accent-red">
+            <div class="card-title"><i class="bi bi-shield-lock" style="color:var(--brand-red);"></i> Seguridad de Acceso al Comercio</div>
+            <div class="card-text">
+              Gestor de contraseñas con botón interactivo para alternar visibilidad (ojo mostrar/ocultar) y sincronización protegida de credenciales.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: PWA, IMPRIMIBLES & ANDROID NATIVO -->
+      <section class="slide" id="slide-6">
+        <span class="slide-badge"><i class="bi bi-5-circle-fill"></i> Etapa 5 · Omnicanalidad & Mobile</span>
+        <h2 class="slide-title">Del Mostrador al Bolsillo: Kit QR y Android APK</h2>
+        <p class="slide-desc">Integración entre el espacio físico del comercio y los smartphones de los usuarios a través de material gráfico y una app nativa Android compilada en CI/CD.</p>
+
+        <div class="grid-3">
+          <div class="card card-accent-red">
+            <div class="card-title"><i class="bi bi-qr-code-scan" style="color:var(--brand-red);"></i> Kit Imprimible A4 & Tarjetas</div>
+            <div class="card-text">
+              Módulo <code>kit-imprimible.html</code> que genera cartelería de alta calidad para mostrador con código QR vectorial, logo centrado Dale! Te Pido y grilla de 10 tarjetas comerciales listas para recortar.
+            </div>
+            <div class="pill-list">
+              <span class="pill">Listo para imprimir</span>
+              <span class="pill">QR Vectorial</span>
+              <span class="pill">10 Tarjetas</span>
+            </div>
+          </div>
+
+          <div class="card card-accent-teal">
+            <div class="card-title"><i class="bi bi-phone-fill" style="color:var(--brand-teal);"></i> PWA Offline & Instalable</div>
+            <div class="card-text">
+              Service Worker <code>sw.js</code>, Web Manifest completo con iconos 192/512 maskables y capturas de pantalla para instalación directa desde Chrome / Safari sin pasar por tienda.
+            </div>
+            <div class="pill-list">
+              <span class="pill">Offline Cache</span>
+              <span class="pill">App Icon</span>
+              <span class="pill">Fast Boot</span>
+            </div>
+          </div>
+
+          <div class="card card-accent-green">
+            <div class="card-title"><i class="bi bi-android2" style="color:var(--brand-green);"></i> Android TWA en GitHub Actions</div>
+            <div class="card-text">
+              Pipeline de CI/CD automatizado en GitHub Actions con Gradle 8.5 y Java 17 que compila, firma y genera el instalable <code>app-release.apk</code> de forma 100% headless.
+            </div>
+            <div class="pill-list">
+              <span class="pill">Google TWA</span>
+              <span class="pill">GitHub CI/CD</span>
+              <span class="pill">Auto-firmado</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.25);">
+          <div class="card-title" style="color:var(--brand-green);"><i class="bi bi-check-circle-fill"></i> Hito de Distribución</div>
+          <div class="card-text">
+            Los comerciantes pueden imprimir su código QR en su local físico o descargar e instalar directamente la APK en sus dispositivos móviles para administrar sus ventas sin depender de laptops.
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: HARDENING & SEGURIDAD BANCARIA -->
+      <section class="slide" id="slide-7">
+        <span class="slide-badge"><i class="bi bi-6-circle-fill"></i> Etapa 6 · Seguridad & Auditoría</span>
+        <h2 class="slide-title">Hardening Integral: Score 94/100 en Seguridad</h2>
+        <p class="slide-desc">Ejecución de auditoría exhaustiva sobre vectores de ataque en frontend y backend, mitigando vulnerabilidades críticas mediante tokens criptográficos y RLS.</p>
+
+        <div class="grid-3">
+          <div class="card card-accent-red">
+            <div class="card-title"><i class="bi bi-key-fill" style="color:var(--brand-red);"></i> Tokens HMAC-SHA256</div>
+            <div class="card-text">
+              Reemplazo total de OTPs predecibles y enlaces inseguros por tokens criptográficos firmados con HMAC-SHA256 con ventana de validez estricta de 15 minutos.
+            </div>
+            <div class="pill-list">
+              <span class="pill">SEC-01 Mitigado</span>
+              <span class="pill">Expiración 15m</span>
+              <span class="pill">Anti-bruteforce</span>
+            </div>
+          </div>
+
+          <div class="card card-accent-amber">
+            <div class="card-title"><i class="bi bi-shield-slash-fill" style="color:var(--brand-amber);"></i> Aislamiento RLS en Supabase</div>
+            <div class="card-text">
+              Políticas de Row Level Security a nivel base de datos que bloquean la lectura o modificación de datos entre tiendas aunque se alteren parámetros en cliente.
+            </div>
+            <div class="pill-list">
+              <span class="pill">SEC-03 Mitigado</span>
+              <span class="pill">Zero-Trust</span>
+              <span class="pill">Multi-tenant seguro</span>
+            </div>
+          </div>
+
+          <div class="card card-accent-teal">
+            <div class="card-title"><i class="bi bi-code-slash" style="color:var(--brand-teal);"></i> Eliminación de Secretos Expuestos</div>
+            <div class="card-text">
+              Erradicación de claves maestras en el código frontend. Uso de clave pública anónima restringida y validación en API Serverless con variables de entorno protegidas.
+            </div>
+            <div class="pill-list">
+              <span class="pill">SEC-02 Mitigado</span>
+              <span class="pill">Sin Hardcoding</span>
+              <span class="pill">Auditoría 11/11 tests</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="display:flex; align-items:center; justify-content:space-between; background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.25);">
+          <div>
+            <div class="card-title" style="color:#EF4444;"><i class="bi bi-shield-shaded"></i> Presentación Ejecutiva de Hardening</div>
+            <div class="card-text">Disponible en el repositorio y accesible desde el Superdashboard: <code>informe-vulnerabilidades-clickapp.html</code>.</div>
+          </div>
+          <a href="informe-vulnerabilidades-clickapp.html" target="_blank" class="nav-btn primary">
+            <i class="bi bi-box-arrow-up-right"></i> Ver Informe de Seguridad
+          </a>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: SUPERADMIN DASHBOARD & MARKETING -->
+      <section class="slide" id="slide-8">
+        <span class="slide-badge"><i class="bi bi-7-circle-fill"></i> Etapa 7 · Super Admin & Nutrición</span>
+        <h2 class="slide-title">Superdashboard, Cuentas DEMO y Nutrición Automatizada</h2>
+        <p class="slide-desc">Módulo secreto de administración global para supervisar la salud de la red, auditar eventos en vivo y nutrir a los nuevos prospectos con correos programados.</p>
+
+        <div class="grid-3">
+          <div class="card card-accent-indigo">
+            <div class="card-title"><i class="bi bi-speedometer2" style="color:var(--brand-indigo);"></i> Super Admin Dashboard</div>
+            <div class="card-text">
+              Panel maestro (<code>super-admin-secret-dashboard.html</code>) con monitoreo en vivo de todas las tiendas, auditoría de eventos de altas y accesos, y diagnóstico de APIs (DB, Gemini, Claude, Cloudinary).
+            </div>
+            <div class="pill-list">
+              <span class="pill">Salud de Red</span>
+              <span class="pill">Logs en Vivo</span>
+              <span class="pill">Diagnóstico DB</span>
+            </div>
+          </div>
+
+          <div class="card card-accent-amber">
+            <div class="card-title"><i class="bi bi-tag-fill" style="color:var(--brand-amber);"></i> Gestión de Cuentas DEMO</div>
+            <div class="card-text">
+              Identificador visual con badge ámbar, filtros dedicados y exclusión de métricas de facturación para cuentas de prueba, evitando distorsionar los datos de negocios reales.
+            </div>
+            <div class="pill-list">
+              <span class="pill">Badge DEMO</span>
+              <span class="pill">Toggle instantáneo</span>
+              <span class="pill">Métricas limpias</span>
+            </div>
+          </div>
+
+          <div class="card card-accent-teal">
+            <div class="card-title"><i class="bi bi-envelope-paper-heart-fill" style="color:var(--brand-teal);"></i> CMS de Correos & Notificaciones</div>
+            <div class="card-text">
+              Editor visual de plantillas y cronograma de seguimiento automatizado (Día 2 redes sociales, Día 3 kit imprimible, Día 4 logística) con alertas de altas por Telegram, ntfy y email.
+            </div>
+            <div class="pill-list">
+              <span class="pill">Día 2, 3 y 4</span>
+              <span class="pill">Telegram / ntfy</span>
+              <span class="pill">Editor Visual</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title"><i class="bi bi-camera-reels-fill" style="color:var(--brand-purple);"></i> Motion Graphics & Video Promos</div>
+            <div class="card-text">Generación de videos cinéticos de 15s y 30s con HyperFrames y el asset oficial de marca para pauta publicitaria en TikTok e Instagram Reels.</div>
+          </div>
+          <div class="card">
+            <div class="card-title"><i class="bi bi-people-fill" style="color:var(--brand-green);"></i> Enviador de Prospectos</div>
+            <div class="card-text">Herramienta <code>super-admin-prospectos.html</code> para contactar negocios fríos y enviar invitaciones personalizadas con previsualización del catálogo.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: LAS INNOVACIONES DE HOY: MODO SERENO & SEO -->
+      <section class="slide" id="slide-9">
+        <span class="slide-badge"><i class="bi bi-8-circle-fill"></i> Etapa Actual · Últimas Funcionalidades</span>
+        <h2 class="slide-title">Modo Sereno / Vigilador y SEO Dinámico en WhatsApp</h2>
+        <p class="slide-desc">Las funcionalidades más recientes implementadas hoy: gestión de pedidos fuera de horario y tarjetas de producto con preview visual de alta conversión.</p>
+
+        <div class="grid-2">
+          <div class="card card-accent-indigo">
+            <div class="card-title"><i class="bi bi-moon-stars-fill" style="color:var(--brand-indigo);"></i> Modo Sereno: Pedidos 24/7 sin Perder Ventas</div>
+            <div class="card-text">
+              Permite a los clientes armar pedidos cuando el comercio está cerrado. En lugar de bloquear la compra, despliega el <strong>Modal del Sereno</strong> informando la reapertura y deja la orden en espera con el distintivo <code>🌙 Sereno</code>.
+            </div>
+            <div class="pill-list" style="margin-top:14px;">
+              <span class="pill">Soporte medianoche</span>
+              <span class="pill">Banner "Tienda en reposo"</span>
+              <span class="pill">Aviso en Carrito</span>
+              <span class="pill">Header WhatsApp Sereno</span>
+              <span class="pill">Previsualizador en Dashboard</span>
+            </div>
+          </div>
+
+          <div class="card card-accent-teal">
+            <div class="card-title"><i class="bi bi-share-fill" style="color:var(--brand-teal);"></i> Compartir con Previews Inteligentes (SEO)</div>
+            <div class="card-text">
+              Al hacer click en compartir producto para WhatsApp o redes sociales, el sistema construye una vista previa atractiva con jerarquía estricta de imagen: Foto destacada del producto > Logo del comercio > Favicon.
+            </div>
+            <div class="pill-list" style="margin-top:14px;">
+              <span class="pill">Título + Nombre Tienda</span>
+              <span class="pill">Descripción limpia</span>
+              <span class="pill">Precio formateado</span>
+              <span class="pill">Sin marcas genéricas</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-accent-amber">
+          <div class="card-title"><i class="bi bi-palette" style="color:var(--brand-amber);"></i> Colores de Banner por Defecto & Personalización</div>
+          <div class="card-text">
+            Los textos de los banners promocionales ahora heredan armónicamente el color asignado por el comercio, manteniendo contraste de texto y permitiendo al gestor ajustarlo libremente.
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: CONCLUSIÓN & HOJA DE RUTA -->
+      <section class="slide" id="slide-10">
+        <span class="slide-badge"><i class="bi bi-9-circle-fill"></i> Balance & Futuro</span>
+        <h2 class="slide-title">Estado de la Plataforma: Un SaaS Robusto y Listo para Crecer</h2>
+        <p class="slide-desc">Resumen comparativo del salto cuantitativo y cualitativo logrado entre el momento cero y el estado actual de Dale! Te Pido / Clickapp.</p>
+
+        <div class="grid-2">
+          <div class="card" style="background:rgba(255,255,255,0.02);">
+            <div class="card-title" style="color:var(--text-muted);"><i class="bi bi-arrow-down-circle"></i> Momento Cero (Inicio)</div>
+            <div class="timeline" style="margin-top:12px;">
+              <div class="timeline-item">
+                <div class="timeline-dot" style="background:var(--text-muted);"></div>
+                <div class="timeline-time">Google Sheets CSV</div>
+                <div class="timeline-content">Datos en hojas de cálculo públicas sin multi-tenant.</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot" style="background:var(--text-muted);"></div>
+                <div class="timeline-time">Solo Web Estática</div>
+                <div class="timeline-content">1 sola foto por producto y sin marca de agua.</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot" style="background:var(--text-muted);"></div>
+                <div class="timeline-time">Ventas Bloqueadas</div>
+                <div class="timeline-content">Sin soporte de pedidos fuera de horario ni seguimiento.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card-accent-amber" style="background:rgba(245,158,11,0.04);">
+            <div class="card-title" style="color:var(--brand-amber);"><i class="bi bi-arrow-up-circle-fill"></i> Estado Actual (Hoy)</div>
+            <div class="timeline" style="margin-top:12px;">
+              <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-time">PostgreSQL Supabase Multi-Tenant</div>
+                <div class="timeline-content">Aislamiento por store_id, RLS, logs de auditoría y 94/100 seguridad.</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-time">Omnicanal Web, PWA & Android APK</div>
+                <div class="timeline-content">Compilación CI/CD en GitHub Actions, Kit imprimible A4 y 10 tarjetas.</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-time">Modo Sereno & Super Admin CMS</div>
+                <div class="timeline-content">Retención de ventas 24/7, cuentas DEMO y nutrición automatizada.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Call to action buttons -->
+        <div style="display:flex; justify-content:center; gap:16px; margin-top:10px;">
+          <a href="super-admin-secret-dashboard.html" class="nav-btn primary" style="padding:10px 22px; font-size:13px;">
+            <i class="bi bi-speedometer2"></i> Abrir Super Admin Dashboard
+          </a>
+          <a href="tienda.html" target="_blank" class="nav-btn" style="padding:10px 22px; font-size:13px;">
+            <i class="bi bi-shop"></i> Ver Tienda Demo
+          </a>
+          <a href="dashboard.html" target="_blank" class="nav-btn" style="padding:10px 22px; font-size:13px;">
+            <i class="bi bi-sliders"></i> Ver Dashboard de Comercio
+          </a>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- BOTTOMBAR -->
+    <footer class="deck-bottombar">
+      <div>
+        <i class="bi bi-keyboard"></i> Podés navegar con las <strong>Flechas (← / →)</strong> o la barra espaciadora
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div>
+        Dale! Te Pido © 2026 · Versión 3.2 SaaS
+      </div>
+    </footer>
+
+  </div>
+</div>
+
+<script>
+  let currentSlide = 1;
+  const totalSlides = 10;
+
+  function showSlide(index) {
+    if (index < 1) index = 1;
+    if (index > totalSlides) index = totalSlides;
+    currentSlide = index;
+
+    document.querySelectorAll('.slide').forEach((s, idx) => {
+      s.classList.toggle('active', (idx + 1) === currentSlide);
+    });
+
+    // Update indicator
+    const ind = document.getElementById('slide-indicator');
+    if (ind) ind.textContent = `${currentSlide} / ${totalSlides}`;
+
+    // Update progress bar
+    const progress = (currentSlide / totalSlides) * 100;
+    const fill = document.getElementById('progress-fill');
+    if (fill) fill.style.width = `${progress}%`;
+  }
+
+  function nextSlide() {
+    if (currentSlide < totalSlides) {
+      showSlide(currentSlide + 1);
+    }
+  }
+
+  function prevSlide() {
+    if (currentSlide > 1) {
+      showSlide(currentSlide - 1);
+    }
+  }
+
+  function toggleFullScreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      nextSlide();
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      prevSlide();
+    } else if (e.key === 'f' || e.key === 'F') {
+      toggleFullScreen();
+    } else if (e.key === 'Home') {
+      showSlide(1);
+    } else if (e.key === 'End') {
+      showSlide(totalSlides);
+    }
+  });
+
+  // Touch Swipe for mobile
+  let touchStartX = 0;
+  let touchEndX = 0;
+  document.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, false);
+  document.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    if (touchEndX < touchStartX - 50) nextSlide();
+    if (touchEndX > touchStartX + 50) prevSlide();
+  }, false);
+
+  showSlide(1);
+</script>
+
+</body>
+</html>
