@@ -1199,7 +1199,7 @@ const CFG_DEFAULTS = {
   desc:'Elegí tus productos, armá tu pedido y coordiná por WhatsApp. Fácil, rápido y sin vueltas.',
   wapp:'5491141819344', logo:'',
   heroBgColor:'#0E0E0E', heroImgOpacity:100,
-  h1Color:'#FFFFFF', h2Color:'#D72638', descColor:'#E0E0E0',
+  h1Color:'#FFFFFF', h2Color:'', descColor:'#E0E0E0',
 };
 let CFG = {...CFG_DEFAULTS};
 try {
@@ -1367,7 +1367,8 @@ function applyConfig() {
   }
   if (h2) {
     h2.textContent = CFG.h2 || '';
-    if (CFG.h2Color) h2.style.setProperty('color', CFG.h2Color, 'important');
+    const h2Col = CFG.h2Color || CFG.color || c;
+    h2.style.setProperty('color', h2Col, 'important');
   }
   if (hd) {
     hd.textContent = CFG.desc || '';
@@ -2643,10 +2644,11 @@ function shareProduct(id) {
   const url = new URL(window.location.href);
   url.searchParams.set('p', p.id);
   const shareUrl = url.toString();
-  const title = p.name;
+  const storeName = CFG.name || 'Dale! Te Pido';
+  const title = `${p.name} — ${storeName}`;
   const curr = getCurrencySymbol(p.currency || p.divisa);
-  const priceStr = `${curr}${p.price.toLocaleString('es-AR')}`;
-  const text = `${p.name} - ${priceStr} en ${CFG.name || 'nuestra tienda'}`;
+  const priceStr = p.price ? `${curr}${p.price.toLocaleString('es-AR')}` : '';
+  const text = `${p.name}${priceStr ? ' (' + priceStr + ')' : ''} — ${storeName}`;
 
   if (navigator.share && (!navigator.canShare || navigator.canShare({ title, text, url: shareUrl }))) {
     navigator.share({

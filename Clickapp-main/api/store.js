@@ -2,11 +2,36 @@ import fs from 'fs';
 import path from 'path';
 
 const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
+const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+
+function escapeAttr(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function toAbsoluteUrl(imgUrl) {
+  if (!imgUrl) return 'https://www.daletepido.com.ar/dashboard-icon.png';
+  if (imgUrl.startsWith('http://') || imgUrl.startsWith('https://')) return imgUrl;
+  if (imgUrl.startsWith('//')) return `https:${imgUrl}`;
+  if (imgUrl.startsWith('/')) return `https://www.daletepido.com.ar${imgUrl}`;
+  return `https://www.daletepido.com.ar/${imgUrl}`;
+}
 
 export default async function handler(req, res) {
   const host = req.headers.host || '';
   const hostname = host.split(':')[0].toLowerCase();
-  const rawPath = (req.url || '/').split('?')[0].toLowerCase().replace(/\/$/, '') || '/';
+  const parsedUrl = new URL(req.url || '/', `http://${host || 'localhost'}`);
+  const rawPath = parsedUrl.pathname.toLowerCase().replace(/\/$/, '') || '/';
+  
+  const query = {
+    ...Object.fromEntries(parsedUrl.searchParams.entries()),
+    ...(req.query || {})
+  };
   
   // Static HTML pages map
   const routeMap = {
@@ -74,7 +99,10 @@ export default async function handler(req, res) {
     }
   }
 
-  // 2. Serve landing.html directly for main domains root '/'
+  // 2. Determine store ID
+  let storeId = query.store || req.query?.store;
+
+  // Serve landing.html directly for main domains root '/' without store query param
   const mainDomainsToRedirect = [
     'daletepido.com.ar',
     'www.daletepido.com.ar',
@@ -82,7 +110,7 @@ export default async function handler(req, res) {
     'www.clickapp.com'
   ];
   
-  if (mainDomainsToRedirect.includes(hostname) && !req.query.store && (rawPath === '/' || rawPath === '')) {
+  if (mainDomainsToRedirect.includes(hostname) && !storeId && (rawPath === '/' || rawPath === '')) {
     try {
       const filePath = path.join(process.cwd(), 'landing.html');
       const html = fs.readFileSync(filePath, 'utf8');
@@ -93,9 +121,6 @@ export default async function handler(req, res) {
       return res.end();
     }
   }
-
-  // 2. Determine store ID
-  let storeId = req.query.store;
   
   if (!storeId) {
     // Try to extract from subdomain
@@ -137,9 +162,9 @@ export default async function handler(req, res) {
     const filePath = path.join(process.cwd(), 'tienda.html');
     let html = fs.readFileSync(filePath, 'utf8');
 
-    // Extract the Supabase key from the HTML itself
-    const keyMatch = html.match(/const SUPABASE_KEY\s*=\s*['"]([^'"]+)['"]/);
-    const SUPABASE_KEY = keyMatch ? keyMatch[1] : '';
+    // Extract the Supabase key from the HTML itself or fallback to DEFAULT_SUPABASE_KEY
+    const keyMatch = html.match(/(?:const|let)\s+(?:DEFAULT_)?SUPABASE_KEY\s*=\s*['"]([^'"]+)['"]/);
+    const SUPABASE_KEY = (keyMatch && keyMatch[1]) ? keyMatch[1] : (process.env.SUPABASE_ANON_KEY || DEFAULT_SUPABASE_KEY);
 
     if (SUPABASE_KEY) {
       // Fetch store data with retries and apikey parameter
@@ -162,51 +187,101 @@ export default async function handler(req, res) {
         const data = await configRes.json().catch(() => []);
         if (data && data.length > 0) {
           const cfg = data[0];
+          const storeName = cfg.business_name || 'Dale! Te Pido';
           
-          let title = cfg.business_name ? `${cfg.business_name} — Tu tienda online` : 'Dale! Te Pido';
-          let desc = cfg.desc || 'Elegí tus productos, armá tu pedido y coordiná por WhatsApp.';
-          let logo = cfg.logo_url || cfg.logo || 'https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png';
+          let title = `${storeName} — Catálogo Online`;
+          let desc = cfg.tagline || cfg.desc || 'Elegí tus productos, armá tu pedido y coordiná por WhatsApp.';
+          
+          // Image priority:
+          // 1. Featured product image
+          // 2. Company logo
+          // 3. DaleTePido favicon / dashboard icon
+          let selectedImg = cfg.logo_url || cfg.logo || '';
           let url = `https://${storeId}.daletepido.com.ar/`;
 
-          const productId = req.query.p || req.query.producto || req.query.product;
+          const productId = query.p || query.producto || query.product || query.id;
           if (productId) {
             try {
+              let p = null;
+              // 1. Query by store_id and id
               const prodUrl = `${SUPABASE_URL}/rest/v1/products?store_id=eq.${encodeURIComponent(storeId)}&id=eq.${encodeURIComponent(productId)}&apikey=${encodeURIComponent(SUPABASE_KEY)}`;
               const prodRes = await fetch(prodUrl, {
                 headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
               });
               if (prodRes.ok) {
                 const prods = await prodRes.json().catch(() => []);
-                if (prods && prods.length > 0) {
-                  const p = prods[0];
-                  if (p.nombre) {
-                    const symbol = p.divisa === 'USD' ? 'US$' : '$';
-                    const priceFormatted = p.precio ? `${symbol}${parseFloat(p.precio).toLocaleString('es-AR')}` : '';
-                    title = `${p.nombre} ${priceFormatted ? '— ' + priceFormatted : ''} | ${cfg.business_name || 'Tienda'}`;
-                    desc = p.detalles || p.detalle || desc;
-                    if (p.img) logo = p.img;
-                    url = `https://${storeId}.daletepido.com.ar/?p=${encodeURIComponent(p.id)}`;
-                  }
+                if (prods && prods.length > 0) p = prods[0];
+              }
+
+              // Fallback: If not found, try query by id alone
+              if (!p) {
+                const fallbackProdUrl = `${SUPABASE_URL}/rest/v1/products?id=eq.${encodeURIComponent(productId)}&apikey=${encodeURIComponent(SUPABASE_KEY)}`;
+                const fallbackRes = await fetch(fallbackProdUrl, {
+                  headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                if (fallbackRes.ok) {
+                  const prods = await fallbackRes.json().catch(() => []);
+                  if (prods && prods.length > 0) p = prods[0];
                 }
+              }
+
+              if (p) {
+                const prodName = (p.nombre || p.name || '').trim();
+                const symbol = (p.divisa || p.currency) === 'USD' ? 'US$' : '$';
+                const priceVal = parseFloat(p.precio != null ? p.precio : p.price);
+                const priceFormatted = !isNaN(priceVal) && priceVal > 0 ? `${symbol}${priceVal.toLocaleString('es-AR')}` : '';
+                const prodDesc = (p.detalles || p.detalle || p.desc || p.descripcion || '').trim();
+
+                // "Lo ideal sería que tome el nombre del articulo seguido del nombre de la tienda"
+                if (prodName) {
+                  title = `${prodName} — ${storeName}`;
+                }
+
+                // "en la descripcion que aparezca la descripcion del producto, y si es posible, el precio"
+                if (prodDesc && priceFormatted) {
+                  desc = `${priceFormatted} • ${prodDesc}`;
+                } else if (prodDesc) {
+                  desc = prodDesc;
+                } else if (priceFormatted) {
+                  desc = `Precio: ${priceFormatted} • Pedilo directo por WhatsApp en ${storeName}.`;
+                }
+
+                // "El orden de importancia para uso de imagen deberia ser Imagen destacada del producto, o logo de la empresa, o como ultimo recurso, el favicon de DaleTePido"
+                const prodImg = p.img || p.img2 || p.img3 || '';
+                if (prodImg) {
+                  selectedImg = prodImg;
+                }
+
+                url = `https://${storeId}.daletepido.com.ar/?p=${encodeURIComponent(p.id)}`;
               }
             } catch(e) {
               console.warn('Error fetching product for OG tags:', e.message);
             }
           }
 
-          // Replace title
-          html = html.replace(/<title>.*?<\/title>/, `<title>${title}</title>`);
-          
-          // Inject OG tags right after <title>
+          const finalImage = toAbsoluteUrl(selectedImg);
+
+          // Build complete meta tags for WhatsApp, Facebook, Twitter and search engines
           const ogTags = `
-<meta property="og:title" content="${title}" />
-<meta property="og:description" content="${desc}" />
-<meta property="og:image" content="${logo}" />
-<meta property="og:url" content="${url}" />
-<meta property="og:type" content="website" />
-<link rel="icon" type="image/png" href="${logo}" />
+<title>${escapeAttr(title)}</title>
+<meta name="description" content="${escapeAttr(desc)}" />
+<meta property="og:title" content="${escapeAttr(title)}" />
+<meta property="og:description" content="${escapeAttr(desc)}" />
+<meta property="og:image" content="${escapeAttr(finalImage)}" />
+<meta property="og:image:secure_url" content="${escapeAttr(finalImage)}" />
+<meta property="og:image:alt" content="${escapeAttr(title)}" />
+<meta property="og:url" content="${escapeAttr(url)}" />
+<meta property="og:type" content="${productId ? 'product' : 'website'}" />
+<meta property="og:site_name" content="${escapeAttr(storeName)}" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="${escapeAttr(title)}" />
+<meta name="twitter:description" content="${escapeAttr(desc)}" />
+<meta name="twitter:image" content="${escapeAttr(finalImage)}" />
+<link rel="canonical" href="${escapeAttr(url)}" />
+<link rel="icon" type="image/png" href="${escapeAttr(finalImage)}" />
 `;
-          html = html.replace(/<\/title>/, `</title>\n${ogTags}`);
+          // Replace default title with complete metadata tags
+          html = html.replace(/<title>.*?<\/title>/, ogTags);
         }
       }
     }

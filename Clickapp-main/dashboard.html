@@ -6352,7 +6352,7 @@
                     <span style="font-size:11px; color:var(--silver); font-weight:600;"><i class="bi bi-palette-fill" style="color:var(--red); margin-right:2px;"></i> Color:</span>
                     <input type="color" id="cfg-h2-color" value="#D72638"
                       style="width:26px; height:22px; border:1px solid var(--zinc); border-radius:4px; padding:1px; cursor:pointer; background:none;"
-                      oninput="updateBannerTextColor('h2', this.value)" title="Elegir color para Título (Línea 2)" />
+                      oninput="cfg.h2ColorManual=true; updateBannerTextColor('h2', this.value)" title="Elegir color para Título (Línea 2)" />
                     <span id="cfg-h2-color-hex" style="font-size:11px; font-family:monospace; color:var(--fog); font-weight:700;">#D72638</span>
                   </div>
                 </div>
@@ -9158,7 +9158,7 @@
               h2: dbCfg.h2 !== null ? dbCfg.h2 : (parsedDesign.h2 || cfg.h2 || ''),
               desc: dbCfg.desc !== null ? dbCfg.desc : (parsedDesign.desc || cfg.desc || ''),
               h1Color: parsedDesign.h1Color || cfg.h1Color || '#FFFFFF',
-              h2Color: parsedDesign.h2Color || cfg.h2Color || '',
+              h2Color: parsedDesign.h2Color || cfg.h2Color || dbCfg.primary_color || cfg.color || '#D72638',
               descColor: parsedDesign.descColor || cfg.descColor || '#E0E0E0',
               emoji: dbCfg.emoji !== null ? dbCfg.emoji : (parsedDesign.emoji || cfg.emoji || '🏪'),
               theme: dbCfg.theme !== null ? dbCfg.theme : (parsedDesign.theme || cfg.theme || 'dark'),
@@ -9978,6 +9978,7 @@
     }
 
     function pickColor(btn, color, index) {
+      const oldColor = cfg.color;
       cfg.color = color;
       document.querySelectorAll('.color-swatch').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
@@ -9985,14 +9986,27 @@
       if (cInput) cInput.value = color;
       const cHex = document.getElementById('color-hex');
       if (cHex) cHex.textContent = color;
+
+      // Si el gestor no fijó un color manual independiente para la línea 2, mantenerlo sincronizado con el color de su sitio
+      if (!cfg.h2ColorManual && (!cfg.h2Color || cfg.h2Color.toLowerCase() === (oldColor || '').toLowerCase() || cfg.h2Color === '#D72638')) {
+        updateBannerTextColor('h2', color);
+      }
+
       flashSpotlight();
       previewUpdate();
     }
     function pickColorCustom(color, index) {
+      const oldColor = cfg.color;
       cfg.color = color;
       document.querySelectorAll('.color-swatch').forEach(b => b.classList.remove('active'));
       const cHex = document.getElementById('color-hex');
       if (cHex) cHex.textContent = color;
+
+      // Si el gestor no fijó un color manual independiente para la línea 2, mantenerlo sincronizado con el color de su sitio
+      if (!cfg.h2ColorManual && (!cfg.h2Color || cfg.h2Color.toLowerCase() === (oldColor || '').toLowerCase() || cfg.h2Color === '#D72638')) {
+        updateBannerTextColor('h2', color);
+      }
+
       flashSpotlight();
       previewUpdate();
     }
@@ -10402,8 +10416,9 @@
       setVal('cfg-desc', cfg.desc);
       setVal('cfg-h1-color', cfg.h1Color || '#FFFFFF');
       setTxt('cfg-h1-color-hex', (cfg.h1Color || '#FFFFFF').toUpperCase());
-      setVal('cfg-h2-color', cfg.h2Color || '#D72638');
-      setTxt('cfg-h2-color-hex', (cfg.h2Color || '#D72638').toUpperCase());
+      const effectiveH2Color = cfg.h2Color || cfg.color || '#D72638';
+      setVal('cfg-h2-color', effectiveH2Color);
+      setTxt('cfg-h2-color-hex', effectiveH2Color.toUpperCase());
       setVal('cfg-desc-color', cfg.descColor || '#E0E0E0');
       setTxt('cfg-desc-color-hex', (cfg.descColor || '#E0E0E0').toUpperCase());
       setVal('cfg-wapp', cfg.wapp);

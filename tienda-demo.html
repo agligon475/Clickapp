@@ -2352,10 +2352,11 @@ function shareProduct(id) {
   const url = new URL(window.location.href);
   url.searchParams.set('p', p.id);
   const shareUrl = url.toString();
-  const title = p.name;
+  const storeName = CFG.name || 'Dale! Te Pido';
+  const title = `${p.name} — ${storeName}`;
   const curr = getCurrencySymbol ? getCurrencySymbol(p.currency || p.divisa) : '$';
-  const priceStr = `${curr}${p.price.toLocaleString('es-AR')}`;
-  const text = `${p.name} - ${priceStr} en ${CFG.name || 'nuestra tienda'}`;
+  const priceStr = p.price ? `${curr}${p.price.toLocaleString('es-AR')}` : '';
+  const text = `${p.name}${priceStr ? ' (' + priceStr + ')' : ''} — ${storeName}`;
 
   if (navigator.share && (!navigator.canShare || navigator.canShare({ title, text, url: shareUrl }))) {
     navigator.share({
