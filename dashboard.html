@@ -5988,8 +5988,14 @@
                   <input type="file" id="logo-input" accept="image/*" style="display:none;"
                     onchange="uploadLogo(this)" />
                 </label>
-                <p style="font-size:10px;color:var(--silver);margin-top:5px;">Se guarda localmente. Recomendado: fondo
-                  transparente, mínimo 200px.</p>
+                <div class="image-upload-specs-box" style="margin-top:8px;padding:8px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--zinc);border-radius:8px;font-size:11px;color:var(--fog);display:flex;flex-direction:column;gap:3px;line-height:1.45;">
+                  <div style="display:flex;align-items:center;gap:6px;color:var(--white);font-weight:700;">
+                    <i class="bi bi-aspect-ratio" style="color:var(--red);"></i> Especificaciones recomendadas para el Logo:
+                  </div>
+                  <div>📐 <strong>Dimensiones ideales:</strong> 500 × 500 px (cuadrado 1:1) o 400 × 120 px (horizontal). Mínimo 200 px.</div>
+                  <div>📁 <strong>Formatos permitidos:</strong> PNG (fondo transparente recomendado), SVG, WEBP o JPG.</div>
+                  <div>⚖️ <strong>Peso máximo:</strong> Hasta 2 MB para carga ultrarrápida en móviles.</div>
+                </div>
               </div>
               <div class="ctrl-group">
                 <label class="ctrl-label">Nombre de la tienda</label>
@@ -6218,7 +6224,14 @@
                 <input type="file" id="hero-img-input" accept="image/*" style="display:none;"
                   onchange="uploadHeroImg(this)" />
               </label>
-              <p class="section-help-text">Recomendado: 1400×400px mínimo. Podés mezclarla con el color de fondo regulando la opacidad.</p>
+              <div class="image-upload-specs-box" style="margin-top:8px;padding:8px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--zinc);border-radius:8px;font-size:11px;color:var(--fog);display:flex;flex-direction:column;gap:3px;line-height:1.45;">
+                <div style="display:flex;align-items:center;gap:6px;color:var(--white);font-weight:700;">
+                  <i class="bi bi-aspect-ratio" style="color:var(--red);"></i> Especificaciones de Imagen de Portada:
+                </div>
+                <div>📐 <strong>Dimensiones ideales:</strong> 1400 × 400 px o 1920 × 600 px (panorámica horizontal). Mínimo 1200 px de ancho.</div>
+                <div>📁 <strong>Formatos permitidos:</strong> JPG, WEBP o PNG (alta resolución).</div>
+                <div>⚖️ <strong>Peso recomendado:</strong> Menor a 3 MB. Podés mezclarla con el color de fondo regulando la opacidad abajo.</div>
+              </div>
 
               <!-- OPACIDAD DE LA IMAGEN (MEZCLA CON EL COLOR DE FONDO) -->
               <div class="ctrl-group" style="margin-top:14px;background:var(--iron);padding:12px;border-radius:8px;border:1px solid var(--zinc);">
@@ -6394,6 +6407,10 @@
                           onchange="handleBannerUpload(this,'banner1')" />
                       </label>
                     </div>
+                    <div class="image-upload-specs-box" style="margin-top:6px;padding:6px 10px;background:rgba(255,255,255,0.03);border:1px solid var(--zinc);border-radius:6px;font-size:10.5px;color:var(--fog);display:flex;flex-direction:column;gap:2px;line-height:1.4;">
+                      <div>📐 <strong>Dimensiones ideales:</strong> 1200 × 400 px (panorámica 3:1). Mínimo 800 × 270 px.</div>
+                      <div>📁 <strong>Formatos permitidos:</strong> JPG, PNG o WEBP · ⚖️ <strong>Peso máx:</strong> Hasta 2 MB.</div>
+                    </div>
                   </div>
                   <div class="ctrl-group" style="grid-column:1/-1;">
                     <label class="ctrl-label">Color de fondo <span
@@ -6446,6 +6463,10 @@
                         <input type="file" accept="image/*" style="display:none;"
                           onchange="handleBannerUpload(this,'banner2')" />
                       </label>
+                    </div>
+                    <div class="image-upload-specs-box" style="margin-top:6px;padding:6px 10px;background:rgba(255,255,255,0.03);border:1px solid var(--zinc);border-radius:6px;font-size:10.5px;color:var(--fog);display:flex;flex-direction:column;gap:2px;line-height:1.4;">
+                      <div>📐 <strong>Dimensiones ideales:</strong> 1200 × 400 px (panorámica 3:1). Mínimo 800 × 270 px.</div>
+                      <div>📁 <strong>Formatos permitidos:</strong> JPG, PNG o WEBP · ⚖️ <strong>Peso máx:</strong> Hasta 2 MB.</div>
                     </div>
                   </div>
                   <div class="ctrl-group" style="grid-column:1/-1;">
@@ -7294,6 +7315,7 @@
                 onclick="this.querySelector('input').click()">
                 <i class="bi bi-cloud-arrow-up" style="font-size:24px;display:block;margin-bottom:6px;opacity:.5;"></i>
                 Hacé clic para seleccionar una imagen de prueba
+                <div style="font-size:10px; color:var(--fog); margin-top:4px;">Formatos: JPG, PNG, WEBP, GIF (máx. 5 MB)</div>
                 <input type="file" accept="image/*" style="display:none;" onchange="testCloudinaryUpload(this)" />
               </div>
               <span id="cfg-upload-result" style="font-size:11px;display:block;margin-top:6px;"></span>
@@ -18540,12 +18562,23 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
             </div>
           </div>
 
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:6px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:6px;">
             <label class="ctrl-label" style="margin:0;">Imágenes del producto (hasta 3)</label>
             <button type="button" id="btn-buscar-fotos-ia" onclick="buscarFotosIA()"
               style="font-size: 11px; padding: 5px 12px; background: linear-gradient(135deg, var(--red) 0%, #A81D2A 100%); border: none; border-radius: 6px; color: #fff; cursor: pointer; font-family: var(--font-b); display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 5px rgba(215,38,56,0.2); transition: all 0.2s; margin: 0;">
               <i class="bi bi-image"></i> Buscar con IA
             </button>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.02); border:1px solid var(--zinc); border-radius:8px; padding:10px 12px; margin-bottom:14px; font-size:11px; color:var(--silver); line-height:1.5;">
+            <div style="display:flex; align-items:center; gap:6px; color:var(--white); font-weight:600; margin-bottom:4px;">
+              <i class="bi bi-info-circle" style="color:var(--red);"></i> Especificaciones recomendadas para fotos de producto:
+            </div>
+            <ul style="margin:0; padding-left:16px; color:var(--fog);">
+              <li><strong>Dimensiones recomendadas:</strong> 800×800 px o 1000×1000 px (proporción cuadrada 1:1 para catálogo homogéneo).</li>
+              <li><strong>Formatos permitidos:</strong> JPG, PNG, WEBP (se recomienda fondo limpio o blanco).</li>
+              <li><strong>Peso máximo sugerido:</strong> hasta 5 MB por archivo.</li>
+            </ul>
           </div>
 
           <!-- Panel de Resultados de Imágenes IA -->
@@ -18866,6 +18899,9 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
               <i class="bi bi-image"></i> Subir imagen de logo
               <input type="file" id="wiz-logo-input" accept="image/*" style="display:none;" onchange="uploadWizLogo(this)" />
             </label>
+            <div style="font-size:11px;color:var(--silver);margin-top:5px;line-height:1.4;">
+              <i class="bi bi-info-circle"></i> <strong>Ideal:</strong> 500×500 px (1:1) o 400×120 px (horizontal). <strong>Formatos:</strong> PNG transparente, SVG, WEBP o JPG (máx. 2 MB).
+            </div>
           </div>
           <div style="margin-top:14px;padding:10px;background:var(--zinc);border-radius:6px;font-size:11px;color:var(--silver);border:1px solid var(--iron);">
             <i class="bi bi-info-circle"></i> Tu tienda estará disponible en: <strong id="wiz-subdomain-preview" style="color:var(--white);">...</strong>
