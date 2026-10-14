@@ -933,6 +933,23 @@ a.logo{
   </button>
 </nav>
 
+<!-- ── BANNERS DE HORARIO / MODO SERENO ── -->
+<div id="night-guard-store-banner" style="display:none; background: linear-gradient(90deg, #1e1b4b, #0f172a); border-bottom: 1px solid rgba(129, 140, 248, 0.35); color: #e0e7ff; padding: 10px 16px; font-size: 13px; font-weight: 500; text-align: center; position: sticky; top: 62px; z-index: 95; backdrop-filter: blur(10px); box-shadow: 0 4px 14px rgba(0,0,0,0.25);">
+  <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;">
+    <span style="display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; background:rgba(99,102,241,0.25); border-radius:50%; font-size:13px;">🌙</span>
+    <span><strong>Tienda en reposo:</strong> Tu pedido quedará registrado para cuando abramos.</span>
+    <span id="night-guard-banner-reopening" style="background: rgba(99,102,241,0.3); border: 1px solid rgba(165,180,252,0.35); padding: 2px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600; color: #ffffff;"></span>
+  </div>
+</div>
+
+<div id="store-closed-banner" style="display:none; background: linear-gradient(90deg, #450a0a, #18181b); border-bottom: 1px solid rgba(239, 68, 68, 0.35); color: #fecaca; padding: 10px 16px; font-size: 13px; font-weight: 500; text-align: center; position: sticky; top: 62px; z-index: 95; backdrop-filter: blur(10px);">
+  <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;">
+    <span style="display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; background:rgba(239,68,68,0.25); border-radius:50%; font-size:12px;">🔴</span>
+    <span><strong>Tienda cerrada en este momento.</strong> Actualmente no estamos recibiendo pedidos.</span>
+    <span id="store-closed-banner-reopening" style="background: rgba(239,68,68,0.25); border: 1px solid rgba(252,165,165,0.35); padding: 2px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600; color: #ffffff;"></span>
+  </div>
+</div>
+
 <!-- ── HERO ── -->
 <main role="main">
 <div class="hero" id="hero">
@@ -1046,6 +1063,33 @@ a.logo{
   </div>
 
   <div class="drawer-footer">
+    <!-- Aviso Modo Sereno / Tienda Cerrada en Carrito -->
+    <div id="night-guard-cart-notice" style="display:none; margin-bottom:12px; padding:12px; border-radius:10px; font-size:12.5px; line-height:1.45; border:1px solid rgba(129,140,248,0.3); background:linear-gradient(135deg, rgba(30,27,75,0.7), rgba(15,23,42,0.85)); color:#e0e7ff;">
+      <div style="display:flex; align-items:flex-start; gap:8px;">
+        <span style="font-size:18px; line-height:1;">🌙</span>
+        <div>
+          <div style="font-weight:700; color:#ffffff; margin-bottom:2px;">Tienda en horario de descanso</div>
+          <div id="night-guard-cart-notice-text">Podés armar y confirmar tu pedido. Quedará en espera y el comercio lo preparará ni bien abra.</div>
+          <div id="night-guard-cart-notice-reopening" style="margin-top:6px; display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; background:rgba(99,102,241,0.25); border:1px solid rgba(165,180,252,0.3); padding:2px 8px; border-radius:6px; color:#c7d2fe;">
+            <i class="bi bi-clock-history"></i> <span id="night-guard-cart-reopening-val">Abre pronto</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="store-closed-cart-notice" style="display:none; margin-bottom:12px; padding:12px; border-radius:10px; font-size:12.5px; line-height:1.45; border:1px solid rgba(239,68,68,0.3); background:rgba(69,10,10,0.4); color:#fecaca;">
+      <div style="display:flex; align-items:flex-start; gap:8px;">
+        <span style="font-size:18px; line-height:1;">🔴</span>
+        <div>
+          <div style="font-weight:700; color:#ffffff; margin-bottom:2px;">Tienda cerrada</div>
+          <div>En este momento el comercio no recibe pedidos. Por favor volvé a ingresar en nuestro horario de atención.</div>
+          <div id="store-closed-cart-reopening" style="margin-top:6px; display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; background:rgba(239,68,68,0.25); border:1px solid rgba(252,165,165,0.3); padding:2px 8px; border-radius:6px; color:#fee2e2;">
+            <i class="bi bi-clock-history"></i> <span id="store-closed-cart-reopening-val">Cerrado</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Summary -->
     <!-- Coupon Section -->
     <div id="coupon-section" style="margin-bottom:12px; padding:10px; background:rgba(255,255,255,0.03); border:1px dashed var(--border); border-radius:8px;">
@@ -1200,12 +1244,17 @@ const CFG_DEFAULTS = {
   wapp:'5491141819344', logo:'',
   heroBgColor:'#0E0E0E', heroImgOpacity:100,
   h1Color:'#FFFFFF', h2Color:'', descColor:'#E0E0E0',
+  night_guard_enabled: false,
+  night_guard_message: '',
+  horarios_data: null,
 };
 let CFG = {...CFG_DEFAULTS};
 try {
   const saved = localStorage.getItem(`storeapp_cfg_${STORE_ID}`);
   if (saved) CFG = {...CFG_DEFAULTS, ...JSON.parse(saved)};
 } catch(e) {}
+
+window.SERENO_ORDER_CONFIRMED = false;
 
 let storeNosotros = '';
 let storeFaqs = [];
@@ -1534,7 +1583,7 @@ async function loadSheet() {
     if ((!storeFaqs || storeFaqs.length === 0) && configData && configData.length > 0 && configData[0].horarios_data) {
       try {
         const parsedFaqs = typeof configData[0].horarios_data === 'string' ? JSON.parse(configData[0].horarios_data) : configData[0].horarios_data;
-        if (Array.isArray(parsedFaqs) && parsedFaqs.length > 0) {
+        if (Array.isArray(parsedFaqs) && parsedFaqs.length > 0 && parsedFaqs[0].day === undefined) {
           storeFaqs = parsedFaqs;
         }
       } catch (e) {}
@@ -1596,6 +1645,32 @@ async function loadSheet() {
       CFG.logo = cfg.logo_url || parsedDesign.logo || CFG.logo || '';
       CFG.heroBgColor = parsedDesign.heroBgColor || CFG.heroBgColor || '#0E0E0E';
       CFG.heroImgOpacity = parsedDesign.heroImgOpacity != null ? Number(parsedDesign.heroImgOpacity) : (CFG.heroImgOpacity != null ? Number(CFG.heroImgOpacity) : 100);
+
+      // Modo Sereno / Horarios
+      if (cfg.night_guard_enabled != null) {
+        CFG.night_guard_enabled = (cfg.night_guard_enabled === true || cfg.night_guard_enabled === 'true');
+      } else if (parsedDesign.night_guard_enabled != null) {
+        CFG.night_guard_enabled = (parsedDesign.night_guard_enabled === true || parsedDesign.night_guard_enabled === 'true');
+      }
+
+      if (cfg.night_guard_message != null && cfg.night_guard_message !== '') {
+        CFG.night_guard_message = cfg.night_guard_message;
+      } else if (parsedDesign.night_guard_message != null) {
+        CFG.night_guard_message = parsedDesign.night_guard_message;
+      }
+
+      let rawHorarios = cfg.horarios_data || parsedDesign.horarios_data;
+      if (!rawHorarios) {
+        try {
+          rawHorarios = JSON.parse(localStorage.getItem(`storeapp_horarios_${STORE_ID}`) || localStorage.getItem('storeapp_horarios') || 'null');
+        } catch(e) {}
+      }
+      if (typeof rawHorarios === 'string') {
+        try { rawHorarios = JSON.parse(rawHorarios); } catch(e) {}
+      }
+      if (Array.isArray(rawHorarios) && rawHorarios.length > 0 && rawHorarios[0].day !== undefined) {
+        CFG.horarios_data = rawHorarios;
+      }
       
       bannerData = {
         mode: cfg.banner_mode || parsedDesign.banner_mode || (localBannerData && localBannerData.mode) || 'double',
@@ -1622,6 +1697,7 @@ async function loadSheet() {
     localStorage.setItem('storeapp_cfg', JSON.stringify(CFG));
     localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(CFG));
     applyStoredConfig();
+    updateStoreScheduleUI();
 
     // Convertir datos de Supabase al formato esperado
     products = supabaseProducts
@@ -2120,6 +2196,11 @@ function closeCart() {
 
 function showCheckout() {
   if (!cartQty()) { showToast('Tu carrito está vacío'); return; }
+  const sched = getStoreScheduleStatus(CFG);
+  if (sched.strictlyClosed) {
+    showToast('❌ La tienda se encuentra cerrada en este momento.');
+    return;
+  }
   document.getElementById('cart-summary').style.display = 'none';
   document.getElementById('checkout-form').classList.add('show');
 }
@@ -2131,6 +2212,236 @@ function toggleDireccion(val) {
   document.getElementById('f-dir-wrap').style.display = val==='Envío a domicilio' ? 'block' : 'none';
 }
 
+/* ═══════════════════════════════════════════ MODO SERENO / HORARIOS */
+function getStoreScheduleStatus(storeCfg) {
+  const defaultStatus = {
+    isOpen: true,
+    hasSchedule: false,
+    nextOpening: null,
+    serenoActive: false,
+    strictlyClosed: false,
+    message: ''
+  };
+
+  const schedules = storeCfg?.horarios_data;
+  if (!Array.isArray(schedules) || schedules.length === 0 || schedules[0]?.day === undefined) {
+    return defaultStatus;
+  }
+
+  // Check if at least one day is enabled
+  const hasAnyDayEnabled = schedules.some(s => s.enabled);
+  if (!hasAnyDayEnabled) {
+    return defaultStatus;
+  }
+
+  const DAY_KEYS = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
+  const DAY_NAMES = {
+    'Dom': 'Domingo', 'Lun': 'Lunes', 'Mar': 'Martes', 'Mie': 'Miércoles',
+    'Jue': 'Jueves', 'Vie': 'Viernes', 'Sab': 'Sábado'
+  };
+
+  const parseTime = (t) => {
+    if (!t) return 0;
+    const parts = t.split(':').map(Number);
+    return (parts[0] || 0) * 60 + (parts[1] || 0);
+  };
+
+  const now = new Date();
+  const currentDayIdx = now.getDay(); // 0 = Dom, 1 = Lun, etc.
+  const todayKey = DAY_KEYS[currentDayIdx];
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+  let isOpen = false;
+
+  // 1. Check current shift for today
+  const todaySched = schedules.find(s => s.day === todayKey);
+  if (todaySched && todaySched.enabled && todaySched.from && todaySched.to) {
+    const fromMins = parseTime(todaySched.from);
+    const toMins = parseTime(todaySched.to);
+    if (toMins <= fromMins) {
+      // Cross-midnight (e.g. 20:00 to 02:00) -> Open if now >= 20:00 or now < 02:00
+      if (currentMinutes >= fromMins) {
+        isOpen = true;
+      }
+    } else {
+      if (currentMinutes >= fromMins && currentMinutes < toMins) {
+        isOpen = true;
+      }
+    }
+  }
+
+  // 2. Check spillover from yesterday's cross-midnight shift
+  if (!isOpen) {
+    const yestIdx = (currentDayIdx + 6) % 7;
+    const yestKey = DAY_KEYS[yestIdx];
+    const yestSched = schedules.find(s => s.day === yestKey);
+    if (yestSched && yestSched.enabled && yestSched.from && yestSched.to) {
+      const yFrom = parseTime(yestSched.from);
+      const yTo = parseTime(yestSched.to);
+      if (yTo <= yFrom && currentMinutes < yTo) {
+        isOpen = true;
+      }
+    }
+  }
+
+  let nextOpening = null;
+  if (!isOpen) {
+    // Check if store opens later today
+    if (todaySched && todaySched.enabled && todaySched.from) {
+      const tFrom = parseTime(todaySched.from);
+      if (currentMinutes < tFrom) {
+        nextOpening = {
+          dayKey: todayKey,
+          dayLabel: 'Hoy',
+          time: todaySched.from,
+          fullText: `Hoy a las ${todaySched.from} hs`
+        };
+      }
+    }
+
+    // If not today, check the next 7 days in order
+    if (!nextOpening) {
+      for (let offset = 1; offset <= 7; offset++) {
+        const checkIdx = (currentDayIdx + offset) % 7;
+        const checkKey = DAY_KEYS[checkIdx];
+        const s = schedules.find(h => h.day === checkKey);
+        if (s && s.enabled && s.from) {
+          const dayLabel = (offset === 1) ? 'Mañana' : DAY_NAMES[checkKey];
+          nextOpening = {
+            dayKey: checkKey,
+            dayLabel,
+            time: s.from,
+            fullText: `${dayLabel} a las ${s.from} hs`
+          };
+          break;
+        }
+      }
+    }
+  }
+
+  const isSerenoEnabled = !!storeCfg?.night_guard_enabled;
+  const serenoActive = !isOpen && isSerenoEnabled;
+  const strictlyClosed = !isOpen && !isSerenoEnabled;
+  const customMessage = (storeCfg?.night_guard_message || '').trim() ||
+    'Nuestro local se encuentra descansando en este momento. Podés armar tu pedido y confirmarlo; quedará registrado en el sistema y el comercio lo preparará ni bien abra.';
+
+  return {
+    isOpen,
+    hasSchedule: true,
+    nextOpening,
+    serenoActive,
+    strictlyClosed,
+    message: customMessage
+  };
+}
+
+function updateStoreScheduleUI() {
+  const sched = getStoreScheduleStatus(CFG);
+  const ngBanner = document.getElementById('night-guard-store-banner');
+  const scBanner = document.getElementById('store-closed-banner');
+  const ngCartNotice = document.getElementById('night-guard-cart-notice');
+  const scCartNotice = document.getElementById('store-closed-cart-notice');
+  const checkoutBtns = document.querySelectorAll('.btn-checkout');
+
+  const reopeningText = sched.nextOpening ? `Abre ${sched.nextOpening.fullText}` : '';
+  const ngBannerReopening = document.getElementById('night-guard-banner-reopening');
+  if (ngBannerReopening) {
+    ngBannerReopening.textContent = reopeningText;
+    ngBannerReopening.style.display = reopeningText ? 'inline-block' : 'none';
+  }
+  const scBannerReopening = document.getElementById('store-closed-banner-reopening');
+  if (scBannerReopening) {
+    scBannerReopening.textContent = reopeningText;
+    scBannerReopening.style.display = reopeningText ? 'inline-block' : 'none';
+  }
+  const ngCartReopen = document.getElementById('night-guard-cart-reopening-val');
+  if (ngCartReopen) ngCartReopen.textContent = reopeningText || 'Próxima reapertura';
+  const scCartReopen = document.getElementById('store-closed-cart-reopening-val');
+  if (scCartReopen) scCartReopen.textContent = reopeningText || 'Cerrado';
+
+  if (!sched.isOpen) {
+    if (sched.serenoActive) {
+      if (ngBanner) ngBanner.style.display = 'block';
+      if (scBanner) scBanner.style.display = 'none';
+      if (ngCartNotice) ngCartNotice.style.display = 'block';
+      if (scCartNotice) scCartNotice.style.display = 'none';
+      checkoutBtns.forEach(btn => {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        btn.style.pointerEvents = 'auto';
+      });
+    } else if (sched.strictlyClosed) {
+      if (ngBanner) ngBanner.style.display = 'none';
+      if (scBanner) scBanner.style.display = 'block';
+      if (ngCartNotice) ngCartNotice.style.display = 'none';
+      if (scCartNotice) scCartNotice.style.display = 'block';
+      checkoutBtns.forEach(btn => {
+        btn.disabled = true;
+        btn.style.opacity = '0.55';
+        btn.style.pointerEvents = 'none';
+      });
+    }
+  } else {
+    if (ngBanner) ngBanner.style.display = 'none';
+    if (scBanner) scBanner.style.display = 'none';
+    if (ngCartNotice) ngCartNotice.style.display = 'none';
+    if (scCartNotice) scCartNotice.style.display = 'none';
+    checkoutBtns.forEach(btn => {
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.style.pointerEvents = 'auto';
+    });
+  }
+}
+
+function openNightGuardModal(sched) {
+  const overlay = document.getElementById('night-guard-modal-overlay');
+  const modal = document.getElementById('night-guard-modal');
+  if (!modal || !overlay) return;
+
+  const nextOpenEl = document.getElementById('ng-modal-next-open');
+  if (nextOpenEl) {
+    nextOpenEl.textContent = sched?.nextOpening?.fullText ? `Próxima apertura: ${sched.nextOpening.fullText}` : 'Horario fuera de servicio';
+  }
+
+  const customMsgEl = document.getElementById('ng-modal-custom-msg');
+  if (customMsgEl) {
+    customMsgEl.textContent = sched?.message || (CFG.night_guard_message || 'Nuestro local se encuentra cerrado en este momento. Tu pedido quedará registrado y será atendido apenas reabramos.');
+  }
+
+  overlay.style.display = 'block';
+  modal.style.display = 'block';
+  setTimeout(() => {
+    modal.style.transform = 'translate(-50%, -50%) scale(1)';
+    modal.style.opacity = '1';
+  }, 10);
+  document.body.style.overflow = 'hidden';
+}
+
+function closeNightGuardModal() {
+  const overlay = document.getElementById('night-guard-modal-overlay');
+  const modal = document.getElementById('night-guard-modal');
+  if (!modal || !overlay) return;
+
+  modal.style.transform = 'translate(-50%, -50%) scale(0.95)';
+  modal.style.opacity = '0';
+  setTimeout(() => {
+    modal.style.display = 'none';
+    overlay.style.display = 'none';
+    if (!document.getElementById('drawer')?.classList.contains('open')) {
+      document.body.style.overflow = '';
+    }
+  }, 200);
+}
+
+function confirmNightGuardOrder() {
+  window.SERENO_ORDER_CONFIRMED = true;
+  closeNightGuardModal();
+  setTimeout(() => {
+    enviarWhatsApp();
+  }, 250);
+}
+
 function enviarWhatsApp() {
   const nombre = document.getElementById('f-nombre').value.trim();
   const dni    = document.getElementById('f-dni').value.trim();
@@ -2140,6 +2451,21 @@ function enviarWhatsApp() {
 
   if (!nombre||!dni||!pago||!logis) { showToast('⚠ Completá todos los campos'); return; }
   if (logis==='Envío a domicilio'&&!dir) { showToast('⚠ Ingresá la dirección de envío'); return; }
+
+  // Check store schedule status
+  const sched = getStoreScheduleStatus(CFG);
+  if (!sched.isOpen) {
+    if (sched.strictlyClosed) {
+      showToast('❌ La tienda se encuentra cerrada en este momento.');
+      return;
+    }
+    if (sched.serenoActive && !window.SERENO_ORDER_CONFIRMED) {
+      openNightGuardModal(sched);
+      return;
+    }
+  }
+
+  const isNightGuardOrder = !sched.isOpen && sched.serenoActive;
 
   // Build order items
   const items = Object.entries(cart).map(([id,q])=>{
@@ -2163,8 +2489,12 @@ function enviarWhatsApp() {
   const pedidoId = 'PED-' + Date.now().toString(36).toUpperCase();
 
   // ── 1. Mensaje al dueño por WhatsApp ─────────────
+  const serenoHeader = isNightGuardOrder
+    ? `🌙 *[PEDIDO FUERA DE HORARIO - MODO SERENO]*\n_Este pedido fue generado fuera del horario comercial y queda en espera para su confirmación al abrir._\n\n`
+    : '';
+
   const lines = items.map(i => `  • ${i.nombre} ×${i.cantidad}  →  ${getCurrencySymbol(i.currency)}${i.subtotal.toLocaleString('es-AR')}`);
-  const msg = [
+  const msg = serenoHeader + [
     `🛒 *Nuevo pedido ${pedidoId}*`,
     ``,
     ...lines,
@@ -2196,14 +2526,15 @@ function enviarWhatsApp() {
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
 
   // ── 2. Registrar pedido ──────────────────────────
-  registrarPedido({ id: pedidoId, nombre, dni, pago, logistica: logis, direccion: dir, items, total });
+  registrarPedido({ id: pedidoId, nombre, dni, pago, logistica: logis, direccion: dir, items, total: totalFormatted, is_night_guard: isNightGuardOrder });
 
   // ── 3. Limpiar carrito ───────────────────────────
+  window.SERENO_ORDER_CONFIRMED = false;
   cart = {};
   cartDetails = {};
   updateCartUI();
   closeCart();
-  showToast(`✓ Pedido ${pedidoId} enviado por WhatsApp`);
+  showToast(isNightGuardOrder ? `✓ Pedido ${pedidoId} registrado (Modo Sereno)` : `✓ Pedido ${pedidoId} enviado por WhatsApp`);
 }
 
 async function registrarPedido(pedido) {
@@ -2225,6 +2556,7 @@ async function registrarPedido(pedido) {
     direccion: pedido.direccion || '',
     total:     pedido.total,
     estado:    'confirmar',
+    is_night_guard: !!pedido.is_night_guard
   };
 
   // ── 1. Guardar en localStorage (misma key que usa el dashboard) ──
@@ -2934,6 +3266,24 @@ function applyStoredConfig() {
   }
 
   if (cfg.wapp) window.WHATSAPP_NUMBER = cfg.wapp;
+
+  if (cfg.night_guard_enabled !== undefined) {
+    CFG.night_guard_enabled = (cfg.night_guard_enabled === true || cfg.night_guard_enabled === 'true');
+  }
+  if (cfg.night_guard_message !== undefined) {
+    CFG.night_guard_message = cfg.night_guard_message;
+  }
+  if (cfg.horarios_data) {
+    CFG.horarios_data = cfg.horarios_data;
+  } else {
+    try {
+      const hData = JSON.parse(localStorage.getItem(`storeapp_horarios_${STORE_ID}`) || localStorage.getItem('storeapp_horarios') || 'null');
+      if (Array.isArray(hData) && hData.length > 0 && hData[0].day !== undefined) {
+        CFG.horarios_data = hData;
+      }
+    } catch(e) {}
+  }
+  if (typeof updateStoreScheduleUI === 'function') updateStoreScheduleUI();
 }
 
 applyStoredConfig();
@@ -2966,6 +3316,46 @@ loadSheet();
   </div>
   <div class="drawer-items" id="pages-drawer-body" style="padding: 24px; overflow-y: auto; height: calc(100% - 60px);">
     <!-- Contenido dinámico -->
+  </div>
+<!-- ── MODAL DEL SERENO (MODAL INFORMATIVO FUERA DE HORARIO) ── -->
+<div class="drawer-overlay" id="night-guard-modal-overlay" style="z-index: 9998; backdrop-filter: blur(4px);" onclick="closeNightGuardModal()"></div>
+<div id="night-guard-modal" role="dialog" aria-modal="true" aria-labelledby="ng-modal-title" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%) scale(0.95); opacity:0; z-index:9999; width:92%; max-width:440px; background:linear-gradient(145deg, #18181b, #0f172a); border:1px solid rgba(129, 140, 248, 0.35); border-radius:18px; box-shadow:0 25px 60px rgba(0,0,0,0.6), 0 0 30px rgba(99,102,241,0.2); padding:26px 22px; color:#f1f5f9; transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);">
+  <div style="text-align:center; margin-bottom:16px;">
+    <div style="width:60px; height:60px; margin:0 auto 12px; background:linear-gradient(135deg, rgba(99,102,241,0.25), rgba(168,85,247,0.2)); border:1px solid rgba(165,180,252,0.4); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; box-shadow:0 0 20px rgba(99,102,241,0.3);">
+      🌙
+    </div>
+    <h3 id="ng-modal-title" style="margin:0 0 6px; font-size:20px; font-weight:800; color:#ffffff; letter-spacing:-0.02em;">¡Estamos descansando!</h3>
+    <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(99,102,241,0.2); border:1px solid rgba(165,180,252,0.3); padding:4px 12px; border-radius:999px; font-size:12px; font-weight:600; color:#c7d2fe;">
+      <i class="bi bi-clock"></i> <span id="ng-modal-next-open">Abre pronto</span>
+    </div>
+  </div>
+
+  <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:14px; margin-bottom:16px; font-size:13.5px; line-height:1.5; color:#cbd5e1; text-align:center;" id="ng-modal-custom-msg">
+    Nuestro local se encuentra cerrado en este momento. Tu pedido quedará registrado y será atendido apenas reabramos.
+  </div>
+
+  <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:18px; font-size:12.5px; color:#94a3b8;">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <i class="bi bi-check-circle-fill" style="color:#4ade80;"></i>
+      <span>Tu orden quedará reservada en el sistema.</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <i class="bi bi-check-circle-fill" style="color:#4ade80;"></i>
+      <span>El comercio la preparará ni bien inicie la jornada.</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <i class="bi bi-whatsapp" style="color:#25d366;"></i>
+      <span>Se notificará por WhatsApp con el aviso de fuera de horario.</span>
+    </div>
+  </div>
+
+  <div style="display:flex; flex-direction:column; gap:9px;">
+    <button type="button" onclick="confirmNightGuardOrder()" style="width:100%; padding:13px; background:linear-gradient(135deg, #6366f1, #4f46e5); color:#ffffff; border:none; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 15px rgba(99,102,241,0.4); transition:all 0.2s;">
+      <i class="bi bi-send-check-fill"></i> Confirmar y Dejar Pedido
+    </button>
+    <button type="button" onclick="closeNightGuardModal()" style="width:100%; padding:11px; background:transparent; color:#94a3b8; border:1px solid rgba(255,255,255,0.1); border-radius:10px; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s;">
+      Seguir viendo la tienda
+    </button>
   </div>
 </div>
 
