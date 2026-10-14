@@ -237,6 +237,7 @@ export default async function handler(req, res) {
           upgrade_requested: s.upgrade_requested || null,
           billing_cycle: s.billing_cycle || 'mensual',
           billing_info: bInfo,
+          is_demo: bInfo.is_demo !== undefined ? bInfo.is_demo : null,
           latest_invoice_url: s.latest_invoice_url || null,
           latest_invoice_date: s.latest_invoice_date || null,
           admin_email: s.admin_email || '',
@@ -257,7 +258,7 @@ export default async function handler(req, res) {
 
     // 2. Update Store Status, Membership, Billing Cycle and Details
     if (action === 'update_status' || action === 'update_membership' || action === 'update_store') {
-      const { store_id, status, plan_level, payment_status, upgrade_requested, billing_cycle, billing_info } = reqBody;
+      const { store_id, status, plan_level, payment_status, upgrade_requested, billing_cycle, billing_info, is_demo } = reqBody;
       if (!store_id) {
         return res.status(400).json({ success: false, error: 'Falta store_id' });
       }
@@ -269,6 +270,29 @@ export default async function handler(req, res) {
       if (upgrade_requested !== undefined) payload.upgrade_requested = upgrade_requested;
       if (billing_cycle !== undefined) payload.billing_cycle = billing_cycle;
       if (billing_info !== undefined) payload.billing_info = billing_info;
+
+      if (is_demo !== undefined) {
+        let currentBInfo = payload.billing_info;
+        if (!currentBInfo) {
+          try {
+            const getRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(store_id)}&select=billing_info`, {
+              headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+            });
+            if (getRes.ok) {
+              const rows = await getRes.json();
+              if (rows && rows[0]) {
+                currentBInfo = rows[0].billing_info || {};
+                if (typeof currentBInfo === 'string') {
+                  try { currentBInfo = JSON.parse(currentBInfo); } catch(e) { currentBInfo = {}; }
+                }
+              }
+            }
+          } catch(e) {}
+        }
+        currentBInfo = currentBInfo || {};
+        currentBInfo.is_demo = Boolean(is_demo);
+        payload.billing_info = currentBInfo;
+      }
 
       const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(store_id)}`, {
         method: 'PATCH',
