@@ -2483,9 +2483,15 @@ function applyStoredConfig() {
   if (cfg.tagline) { const el=document.querySelector('.tagline'); if(el) el.textContent=cfg.tagline; }
 
   const heroTitle = document.querySelector('.hero-title');
-  if (heroTitle && cfg.h1) heroTitle.innerHTML = `${cfg.h1}<br/><span id="hero-title-span">${cfg.h2||''}</span>`;
+  if (heroTitle) {
+    if (cfg.h1) heroTitle.innerHTML = `${cfg.h1}<br/><span id="hero-title-span">${cfg.h2||''}</span>`;
+    if (cfg.h1Color) heroTitle.style.setProperty('color', cfg.h1Color, 'important');
+  }
   const heroSub = document.querySelector('.hero-sub');
-  if (heroSub && cfg.desc) heroSub.textContent = cfg.desc;
+  if (heroSub) {
+    if (cfg.desc) heroSub.textContent = cfg.desc;
+    if (cfg.descColor) heroSub.style.setProperty('color', cfg.descColor, 'important');
+  }
   const heroBadge = document.querySelector('.hero-badge');
   if (heroBadge && cfg.name) heroBadge.textContent = cfg.name.split(' ')[0].toUpperCase();
 
@@ -2513,9 +2519,12 @@ function applyStoredConfig() {
     if (heroOverlay) heroOverlay.style.background = 'transparent';
   }
 
-  // Update hero title span color (always accent)
+  // Update hero title span color (custom h2Color or accent)
   const span = document.getElementById('hero-title-span');
-  if (span) span.style.color = accent;
+  if (span) {
+    const h2Col = cfg.h2Color || accent;
+    span.style.setProperty('color', h2Col, 'important');
+  }
 
   // Update pills background to accent color
   document.querySelectorAll('.hero-pill').forEach(p => { p.style.background = accent; });

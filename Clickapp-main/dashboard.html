@@ -6332,15 +6332,44 @@
             </div>
             <div class="card-content config-section-content">
               <div class="ctrl-group">
-                <label class="ctrl-label">TÍTULO (LÍNEA 1)</label>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; flex-wrap:wrap; gap:6px;">
+                  <label class="ctrl-label" style="margin:0;">TÍTULO (LÍNEA 1)</label>
+                  <div style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.04); border:1px solid var(--zinc); padding:2px 8px; border-radius:6px;">
+                    <span style="font-size:11px; color:var(--silver); font-weight:600;"><i class="bi bi-palette-fill" style="color:var(--red); margin-right:2px;"></i> Color:</span>
+                    <input type="color" id="cfg-h1-color" value="#FFFFFF"
+                      style="width:26px; height:22px; border:1px solid var(--zinc); border-radius:4px; padding:1px; cursor:pointer; background:none;"
+                      oninput="updateBannerTextColor('h1', this.value)" title="Elegir color para Título (Línea 1)" />
+                    <span id="cfg-h1-color-hex" style="font-size:11px; font-family:monospace; color:var(--fog); font-weight:700;">#FFFFFF</span>
+                  </div>
+                </div>
                 <input class="ctrl-input" id="cfg-h1" value="Tu ferretería" oninput="previewUpdate()" />
               </div>
+
               <div class="ctrl-group">
-                <label class="ctrl-label">TÍTULO (LÍNEA 2 — COLOR ACENTO)</label>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; flex-wrap:wrap; gap:6px;">
+                  <label class="ctrl-label" style="margin:0;">TÍTULO (LÍNEA 2 — COLOR ACENTO)</label>
+                  <div style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.04); border:1px solid var(--zinc); padding:2px 8px; border-radius:6px;">
+                    <span style="font-size:11px; color:var(--silver); font-weight:600;"><i class="bi bi-palette-fill" style="color:var(--red); margin-right:2px;"></i> Color:</span>
+                    <input type="color" id="cfg-h2-color" value="#D72638"
+                      style="width:26px; height:22px; border:1px solid var(--zinc); border-radius:4px; padding:1px; cursor:pointer; background:none;"
+                      oninput="updateBannerTextColor('h2', this.value)" title="Elegir color para Título (Línea 2)" />
+                    <span id="cfg-h2-color-hex" style="font-size:11px; font-family:monospace; color:var(--fog); font-weight:700;">#D72638</span>
+                  </div>
+                </div>
                 <input class="ctrl-input" id="cfg-h2" value="sin demoras." oninput="previewUpdate()" />
               </div>
+
               <div class="ctrl-group">
-                <label class="ctrl-label">DESCRIPCIÓN</label>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; flex-wrap:wrap; gap:6px;">
+                  <label class="ctrl-label" style="margin:0;">DESCRIPCIÓN</label>
+                  <div style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.04); border:1px solid var(--zinc); padding:2px 8px; border-radius:6px;">
+                    <span style="font-size:11px; color:var(--silver); font-weight:600;"><i class="bi bi-palette-fill" style="color:var(--red); margin-right:2px;"></i> Color:</span>
+                    <input type="color" id="cfg-desc-color" value="#E0E0E0"
+                      style="width:26px; height:22px; border:1px solid var(--zinc); border-radius:4px; padding:1px; cursor:pointer; background:none;"
+                      oninput="updateBannerTextColor('desc', this.value)" title="Elegir color para Descripción" />
+                    <span id="cfg-desc-color-hex" style="font-size:11px; font-family:monospace; color:var(--fog); font-weight:700;">#E0E0E0</span>
+                  </div>
+                </div>
                 <textarea class="ctrl-input" id="cfg-desc" rows="2" oninput="previewUpdate()"
                   class="textarea-ctrl">Elegí tus productos, armá tu pedido y coordiná por WhatsApp.</textarea>
               </div>
@@ -9128,6 +9157,9 @@
               h1: dbCfg.h1 !== null ? dbCfg.h1 : (parsedDesign.h1 || cfg.h1 || ''),
               h2: dbCfg.h2 !== null ? dbCfg.h2 : (parsedDesign.h2 || cfg.h2 || ''),
               desc: dbCfg.desc !== null ? dbCfg.desc : (parsedDesign.desc || cfg.desc || ''),
+              h1Color: parsedDesign.h1Color || cfg.h1Color || '#FFFFFF',
+              h2Color: parsedDesign.h2Color || cfg.h2Color || '',
+              descColor: parsedDesign.descColor || cfg.descColor || '#E0E0E0',
               emoji: dbCfg.emoji !== null ? dbCfg.emoji : (parsedDesign.emoji || cfg.emoji || '🏪'),
               theme: dbCfg.theme !== null ? dbCfg.theme : (parsedDesign.theme || cfg.theme || 'dark'),
               font: dbCfg.font !== null ? dbCfg.font : (parsedDesign.font || cfg.font || ''),
@@ -9815,6 +9847,12 @@
       if (elH2) cfg.h2 = elH2.value;
       const elDesc = document.getElementById('cfg-desc');
       if (elDesc) cfg.desc = elDesc.value;
+      const elH1Col = document.getElementById('cfg-h1-color');
+      if (elH1Col) cfg.h1Color = elH1Col.value;
+      const elH2Col = document.getElementById('cfg-h2-color');
+      if (elH2Col) cfg.h2Color = elH2Col.value;
+      const elDescCol = document.getElementById('cfg-desc-color');
+      if (elDescCol) cfg.descColor = elDescCol.value;
       const elWapp = document.getElementById('cfg-wapp');
       if (elWapp) cfg.wapp = elWapp.value;
 
@@ -9856,17 +9894,17 @@
       const prevH1 = document.getElementById('prev-h1');
       if (prevH1) {
         prevH1.textContent = cfg.h1 || 'Tu ferretería';
-        prevH1.style.color = '#fff';
+        prevH1.style.color = cfg.h1Color || '#fff';
       }
       const prevH2 = document.getElementById('prev-h2');
       if (prevH2) {
         prevH2.textContent = cfg.h2 || 'sin demoras.';
-        prevH2.style.color = c;
+        prevH2.style.color = cfg.h2Color || c;
       }
       const prevDesc = document.getElementById('prev-desc');
       if (prevDesc) {
         prevDesc.textContent = cfg.desc || '';
-        prevDesc.style.color = 'rgba(255,255,255,.8)';
+        prevDesc.style.color = cfg.descColor || 'rgba(255,255,255,.8)';
       }
 
       // Pills — always accent color, white text
@@ -10066,6 +10104,9 @@
           parsedEmail.h1 = cfgObj.h1 !== undefined ? cfgObj.h1 : parsedEmail.h1 || '';
           parsedEmail.h2 = cfgObj.h2 !== undefined ? cfgObj.h2 : parsedEmail.h2 || '';
           parsedEmail.desc = cfgObj.desc !== undefined ? cfgObj.desc : parsedEmail.desc || '';
+          parsedEmail.h1Color = cfgObj.h1Color !== undefined ? cfgObj.h1Color : (parsedEmail.h1Color || '#FFFFFF');
+          parsedEmail.h2Color = cfgObj.h2Color !== undefined ? cfgObj.h2Color : (parsedEmail.h2Color || '#D72638');
+          parsedEmail.descColor = cfgObj.descColor !== undefined ? cfgObj.descColor : (parsedEmail.descColor || '#E0E0E0');
           parsedEmail.emoji = cfgObj.emoji !== undefined ? cfgObj.emoji : parsedEmail.emoji || '🏪';
           parsedEmail.theme = cfgObj.theme !== undefined ? cfgObj.theme : parsedEmail.theme || 'dark';
           parsedEmail.font = cfgObj.font !== undefined ? cfgObj.font : parsedEmail.font || '';
@@ -10359,6 +10400,12 @@
       setVal('cfg-h1', cfg.h1);
       setVal('cfg-h2', cfg.h2);
       setVal('cfg-desc', cfg.desc);
+      setVal('cfg-h1-color', cfg.h1Color || '#FFFFFF');
+      setTxt('cfg-h1-color-hex', (cfg.h1Color || '#FFFFFF').toUpperCase());
+      setVal('cfg-h2-color', cfg.h2Color || '#D72638');
+      setTxt('cfg-h2-color-hex', (cfg.h2Color || '#D72638').toUpperCase());
+      setVal('cfg-desc-color', cfg.descColor || '#E0E0E0');
+      setTxt('cfg-desc-color-hex', (cfg.descColor || '#E0E0E0').toUpperCase());
       setVal('cfg-wapp', cfg.wapp);
       setVal('cfg-color', cfg.color);
       setTxt('color-hex', cfg.color);
@@ -10495,6 +10542,30 @@
       if (typeof previewUpdate === 'function') previewUpdate();
     }
     window.updateHeroImgOpacity = updateHeroImgOpacity;
+
+    function updateBannerTextColor(type, color) {
+      if (type === 'h1') {
+        cfg.h1Color = color;
+        const hexEl = document.getElementById('cfg-h1-color-hex');
+        if (hexEl) hexEl.textContent = (color || '#FFFFFF').toUpperCase();
+        const inputEl = document.getElementById('cfg-h1-color');
+        if (inputEl) inputEl.value = color;
+      } else if (type === 'h2') {
+        cfg.h2Color = color;
+        const hexEl = document.getElementById('cfg-h2-color-hex');
+        if (hexEl) hexEl.textContent = (color || '#D72638').toUpperCase();
+        const inputEl = document.getElementById('cfg-h2-color');
+        if (inputEl) inputEl.value = color;
+      } else if (type === 'desc') {
+        cfg.descColor = color;
+        const hexEl = document.getElementById('cfg-desc-color-hex');
+        if (hexEl) hexEl.textContent = (color || '#E0E0E0').toUpperCase();
+        const inputEl = document.getElementById('cfg-desc-color');
+        if (inputEl) inputEl.value = color;
+      }
+      if (typeof previewUpdate === 'function') previewUpdate();
+    }
+    window.updateBannerTextColor = updateBannerTextColor;
 
     function updateOverlay(val) {
       document.getElementById('overlay-val').textContent = val + '%';
@@ -10713,6 +10784,18 @@
               cfg.heroImgOpacity = parsedEmail.heroImgOpacity;
               updateHeroImgOpacity(cfg.heroImgOpacity);
             }
+            if (parsedEmail.h1Color) {
+              cfg.h1Color = parsedEmail.h1Color;
+              updateBannerTextColor('h1', cfg.h1Color);
+            }
+            if (parsedEmail.h2Color) {
+              cfg.h2Color = parsedEmail.h2Color;
+              updateBannerTextColor('h2', cfg.h2Color);
+            }
+            if (parsedEmail.descColor) {
+              cfg.descColor = parsedEmail.descColor;
+              updateBannerTextColor('desc', cfg.descColor);
+            }
 
             previewBanner('banner1');
             previewBanner('banner2');
@@ -10742,6 +10825,9 @@
       const h1Val = document.getElementById('cfg-h1')?.value || cfg.h1;
       const h2Val = document.getElementById('cfg-h2')?.value || cfg.h2;
       const descVal = document.getElementById('cfg-desc')?.value || cfg.desc;
+      const h1ColorVal = document.getElementById('cfg-h1-color')?.value || cfg.h1Color || '#FFFFFF';
+      const h2ColorVal = document.getElementById('cfg-h2-color')?.value || cfg.h2Color || '#D72638';
+      const descColorVal = document.getElementById('cfg-desc-color')?.value || cfg.descColor || '#E0E0E0';
       const heroBgVal = cfg.bg || localStorage.getItem(`storeapp_hero_img_${STORE_ID}`) || localStorage.getItem('storeapp_hero_img') || '';
       const heroBgColorVal = document.getElementById('cfg-hero-bg-color')?.value || cfg.heroBgColor || '#0E0E0E';
       const heroImgOpacityVal = document.getElementById('cfg-hero-img-opacity')?.value != null 
@@ -10751,6 +10837,9 @@
       cfg.h1 = h1Val;
       cfg.h2 = h2Val;
       cfg.desc = descVal;
+      cfg.h1Color = h1ColorVal;
+      cfg.h2Color = h2ColorVal;
+      cfg.descColor = descColorVal;
       cfg.bg = heroBgVal;
       cfg.heroBgColor = heroBgColorVal;
       cfg.heroImgOpacity = heroImgOpacityVal;
@@ -10797,6 +10886,9 @@
             parsedEmail.h1 = h1Val;
             parsedEmail.h2 = h2Val;
             parsedEmail.desc = descVal;
+            parsedEmail.h1Color = h1ColorVal;
+            parsedEmail.h2Color = h2ColorVal;
+            parsedEmail.descColor = descColorVal;
             parsedEmail.bg = heroBgVal;
             parsedEmail.heroBgColor = heroBgColorVal;
             parsedEmail.heroImgOpacity = heroImgOpacityVal;

@@ -212,7 +212,7 @@ a.logo{
 }
 .hero-title span{
   background:transparent !important;
-  color:var(--red) !important;
+  color:var(--red);
   padding:0;
   display:inline-block;
 }
@@ -1199,6 +1199,7 @@ const CFG_DEFAULTS = {
   desc:'Elegí tus productos, armá tu pedido y coordiná por WhatsApp. Fácil, rápido y sin vueltas.',
   wapp:'5491141819344', logo:'',
   heroBgColor:'#0E0E0E', heroImgOpacity:100,
+  h1Color:'#FFFFFF', h2Color:'#D72638', descColor:'#E0E0E0',
 };
 let CFG = {...CFG_DEFAULTS};
 try {
@@ -1356,12 +1357,22 @@ function applyConfig() {
   if (tl) tl.textContent = CFG.tagline || '';
 
   // Hero
-  const h1 = document.getElementById('hero-h1');
-  const h2 = document.getElementById('hero-h2');
-  const hd = document.getElementById('hero-desc');
-  if (h1) { const parts = (CFG.h1||'').split('|'); h1.innerHTML = parts[0]+(parts[1]?`<br/>${parts[1]}`:''); }
-  if (h2) h2.textContent = CFG.h2 || '';
-  if (hd) hd.textContent = CFG.desc || '';
+  const h1 = document.getElementById('hero-h1') || document.getElementById('hero-title');
+  const h2 = document.getElementById('hero-h2') || document.getElementById('hero-title-span');
+  const hd = document.getElementById('hero-desc') || document.getElementById('hero-sub');
+  if (h1) {
+    const parts = (CFG.h1||'').split('|');
+    h1.innerHTML = parts[0]+(parts[1]?`<br/>${parts[1]}`:'');
+    if (CFG.h1Color) h1.style.setProperty('color', CFG.h1Color, 'important');
+  }
+  if (h2) {
+    h2.textContent = CFG.h2 || '';
+    if (CFG.h2Color) h2.style.setProperty('color', CFG.h2Color, 'important');
+  }
+  if (hd) {
+    hd.textContent = CFG.desc || '';
+    if (CFG.descColor) hd.style.setProperty('color', CFG.descColor, 'important');
+  }
 
   // Page title
   document.title = (CFG.name||'Mi Tienda') + ' — ' + (CFG.tagline||'Tu tienda online');
@@ -1573,6 +1584,9 @@ async function loadSheet() {
       CFG.h1 = cfg.h1 != null ? cfg.h1 : (parsedDesign.h1 || CFG.h1 || '');
       CFG.h2 = cfg.h2 != null ? cfg.h2 : (parsedDesign.h2 || CFG.h2 || '');
       CFG.desc = cfg.desc != null ? cfg.desc : (parsedDesign.desc || CFG.desc || '');
+      CFG.h1Color = parsedDesign.h1Color || CFG.h1Color || '#FFFFFF';
+      CFG.h2Color = parsedDesign.h2Color || CFG.h2Color || '';
+      CFG.descColor = parsedDesign.descColor || CFG.descColor || '#E0E0E0';
       CFG.emoji = cfg.emoji != null ? cfg.emoji : (parsedDesign.emoji || CFG.emoji || '🏪');
       CFG.theme = cfg.theme != null ? cfg.theme : (parsedDesign.theme || CFG.theme || 'dark');
       CFG.font = cfg.font != null ? cfg.font : (parsedDesign.font || CFG.font || '');
@@ -2824,9 +2838,17 @@ function applyStoredConfig() {
   if (cfg.tagline) { const el=document.querySelector('.tagline'); if(el) el.textContent=cfg.tagline; }
 
   const heroTitle = document.querySelector('.hero-title');
-  if (heroTitle && cfg.h1) heroTitle.innerHTML = `${cfg.h1}<br/><span id="hero-title-span">${cfg.h2||''}</span>`;
+  if (heroTitle) {
+    if (cfg.h1) heroTitle.innerHTML = `${cfg.h1}<br/><span id="hero-title-span">${cfg.h2||''}</span>`;
+    const h1Col = cfg.h1Color || CFG.h1Color;
+    if (h1Col) heroTitle.style.setProperty('color', h1Col, 'important');
+  }
   const heroSub = document.querySelector('.hero-sub');
-  if (heroSub && cfg.desc) heroSub.textContent = cfg.desc;
+  if (heroSub) {
+    if (cfg.desc) heroSub.textContent = cfg.desc;
+    const descCol = cfg.descColor || CFG.descColor;
+    if (descCol) heroSub.style.setProperty('color', descCol, 'important');
+  }
   const heroBadge = document.querySelector('.hero-badge');
   if (heroBadge && cfg.name) heroBadge.textContent = cfg.name.split(' ')[0].toUpperCase();
 
@@ -2866,9 +2888,12 @@ function applyStoredConfig() {
     if (heroOverlay) heroOverlay.style.background = 'transparent';
   }
 
-  // Update hero title span color (always accent)
+  // Update hero title span color (custom h2Color or accent)
   const span = document.getElementById('hero-title-span');
-  if (span) span.style.color = accent;
+  if (span) {
+    const h2Col = cfg.h2Color || CFG.h2Color || accent;
+    span.style.setProperty('color', h2Col, 'important');
+  }
 
   // Update Footer Details
   const fnContainer = document.getElementById('footer-store-name-container');
