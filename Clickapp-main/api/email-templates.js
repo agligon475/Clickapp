@@ -516,3 +516,139 @@ export function getProspectEmail({
   return { subject: title, html: getEmailLayout({ title, bodyContent }) };
 }
 
+/**
+ * 9. Correo de Seguimiento Día 2: Redes Sociales y Enlace de Catálogo en Bio
+ */
+export function getFollowUpDay2Email({ storeName, storeId }) {
+  const dashboardUrl = `${BASE_URL}/dashboard.html?store=${encodeURIComponent(storeId)}`;
+  const storeUrl = `${BASE_URL}/index.html?store=${encodeURIComponent(storeId)}`;
+  const title = `📲 Sumá tu catálogo a tus Redes Sociales y multiplicá tus pedidos - Dale! Te Pido`;
+
+  const bodyContent = `
+    <div class="greeting">¡Hola, ${storeName || storeId}! 🚀</div>
+    <div class="badge badge-purple">📱 Seguimiento Día 2 · Redes Sociales</div>
+    <div class="text">
+      Ya diste los primeros pasos configurando tu catálogo digital en <strong>Dale! Te Pido</strong>. Ahora llega el momento clave: <strong>hacerlo visible para todos tus clientes y seguidores</strong>.
+      <br/><br/>
+      Desde tu panel de control podés conectar tus redes oficiales (<strong>Instagram, Facebook, TikTok y tu ubicación en Google Maps</strong>). De este modo, quienes visiten tu catálogo podrán seguirte y encontrarte al instante.
+    </div>
+
+    <div class="box" style="border-left: 4px solid #A855F7; background: rgba(168,85,247,0.05);">
+      <div class="box-title" style="color: #c084fc;">💡 El paso más importante: Publicar el enlace de tu tienda</div>
+      <div style="font-size: 14px; color: #dddddd; line-height: 1.6;">
+        Tu enlace oficial es:<br/>
+        <div style="margin: 8px 0; background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 8px; font-family: monospace; font-size: 14px; color: #22D3EE; word-break: break-all;">
+          <a href="${storeUrl}" target="_blank" style="color: #22D3EE; text-decoration: none;">${storeUrl}</a>
+        </div>
+        <strong>¿Dónde compartirlo hoy mismo?</strong>
+        <ul style="margin: 8px 0 0 0; padding-left: 20px; color: #cccccc;">
+          <li><strong>Biografía de Instagram:</strong> En "Editar perfil" &gt; "Enlaces", colocá tu link para que cualquier seguidor compre con 1 toque.</li>
+          <li><strong>Historias y Estados de WhatsApp:</strong> Subí fotos de tus productos destacados y agregá el sticker de enlace a tu catálogo.</li>
+          <li><strong>Mensaje de bienvenida de WhatsApp Business:</strong> Respondé automáticamente con tu enlace para que miren el catálogo mientras les contestás.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="btn-container">
+      <a href="${dashboardUrl}" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, #A855F7 0%, #7E22CE 100%); box-shadow: 0 8px 24px rgba(168,85,247,0.4);">🔗 Cargar mis Redes en el Panel de Control</a>
+    </div>
+
+    <div class="text" style="font-size: 13.5px; color: #aaaaaa; text-align: center;">
+      Recordá que todos los pedidos llegan directamente a tu WhatsApp, listos con el detalle de productos y sin intermediarios.
+    </div>
+  `;
+
+  return { subject: title, html: getEmailLayout({ title, bodyContent }) };
+}
+
+/**
+ * 10. Correo de Seguimiento Día 3: Kit QR Imprimible para Mostrador y Mesas
+ */
+export function getFollowUpDay3Email({ storeName, storeId }) {
+  const dashboardUrl = `${BASE_URL}/dashboard.html?store=${encodeURIComponent(storeId)}`;
+  const storeUrl = `${BASE_URL}/index.html?store=${encodeURIComponent(storeId)}`;
+  const qrUrl = `${BASE_URL}/api/qr?store=${encodeURIComponent(storeId)}`;
+  const printKitUrl = `${BASE_URL}/kit-imprimible.html?store=${encodeURIComponent(storeId)}`;
+  const title = `🖨️ ¿Ya imprimiste tu Kit QR para tu mostrador? - Dale! Te Pido`;
+
+  const bodyContent = `
+    <div class="greeting">¡Hola, ${storeName || storeId}! 🖨️</div>
+    <div class="badge badge-blue">⚡ Seguimiento Día 3 · Pedidos Sin Esperas</div>
+    <div class="text">
+      ¿Sabías que podés agilizar la atención en tu local y evitar que los clientes hagan filas o se vayan sin comprar?
+      <br/><br/>
+      Con tu <strong>Kit QR Comercial</strong>, cualquier cliente que visite tu comercio puede escanear tu código con la cámara de su teléfono y ver tu catálogo al instante, armar su pedido y coordinar el pago o retiro sin demoras ni folletos de papel desactualizados.
+    </div>
+
+    <div class="qr-card">
+      <div style="font-size: 14px; font-weight: 700; color: #ffffff; text-transform: uppercase;">Código QR Oficial de tu Tienda:</div>
+      <div style="font-size: 13px; color: #22D3EE; margin-top: 4px;"><a href="${storeUrl}" target="_blank" style="color: #22D3EE;">${storeUrl}</a></div>
+      <img src="${qrUrl}" alt="Código QR de la Tienda" />
+      <div style="font-size: 12px; color: #aaaaaa; margin-top: 4px;">Listo para descargar en alta resolución o imprimir en tu folletería.</div>
+    </div>
+
+    <div class="box" style="border-left: 4px solid #22D3EE; background: rgba(34,211,238,0.05);">
+      <div class="box-title" style="color: #67e8f9;">📍 3 lugares estratégicos donde poner tu QR:</div>
+      <div style="font-size: 14px; color: #dddddd; line-height: 1.6;">
+        <div style="margin-bottom: 8px;"><strong>1. En el mostrador o caja:</strong> Mientras esperan a ser atendidos, los clientes exploran todos tus productos y suelen sumar más ítems a su compra.</div>
+        <div style="margin-bottom: 8px;"><strong>2. En las bolsas y paquetes de despacho:</strong> Quien ya te compró una vez, tiene el QR a mano pegado en la bolsa para pedirte de nuevo sin dudar.</div>
+        <div><strong>3. En la vidriera exterior o puerta:</strong> Clientes que pasan cuando tu local está cerrado pueden escanearlo, conocer tus precios y encargarte con anticipación.</div>
+      </div>
+    </div>
+
+    <div class="btn-container">
+      <a href="${printKitUrl}" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%); box-shadow: 0 8px 24px rgba(2,132,199,0.4);">📄 Abrir Kit Imprimible Listo para Imprimir</a>
+      <br/>
+      <a href="${dashboardUrl}" target="_blank" class="btn-secondary">Ir a mi Panel de Control</a>
+    </div>
+  `;
+
+  return { subject: title, html: getEmailLayout({ title, bodyContent }) };
+}
+
+/**
+ * 11. Correo de Seguimiento Día 4: Gestión de Repartidores & Envíos
+ */
+export function getFollowUpDay4Email({ storeName, storeId }) {
+  const dashboardUrl = `${BASE_URL}/dashboard.html?store=${encodeURIComponent(storeId)}`;
+  const title = `🛵 ¿Sabías que podés gestionar tus repartidores en tiempo real? - Dale! Te Pido`;
+
+  const bodyContent = `
+    <div class="greeting">¡Hola, ${storeName || storeId}! 🛵💨</div>
+    <div class="badge badge-amber">🛵 Seguimiento Día 4 · Logística & Envíos</div>
+    <div class="text">
+      ¿Hacés envíos a domicilio en tu negocio? Coordinar cadetes por mensajes sueltos de WhatsApp suele generar confusiones, demoras y pérdidas de tiempo.
+      <br/><br/>
+      En <strong>Dale! Te Pido</strong> incluimos un módulo completo de <strong>Gestión de Repartidores</strong> diseñado para que tus entregas funcionen como un reloj suizo, sin costo extra.
+    </div>
+
+    <div class="box" style="border-left: 4px solid #F59E0B; background: rgba(245,158,11,0.05);">
+      <div class="box-title" style="color: #fbbf24;">⚡ Todo lo que podés hacer desde la sección Repartidores:</div>
+      <div style="font-size: 14px; color: #dddddd; line-height: 1.6;">
+        <div style="margin-bottom: 10px;">
+          <strong>👤 Alta de tu equipo de cadetes:</strong> Registrá a tus repartidores con su nombre y número de WhatsApp.
+        </div>
+        <div style="margin-bottom: 10px;">
+          <strong>📦 Asignación con 1 clic:</strong> Al tener un pedido listo, seleccionás qué cadete lo lleva. El repartidor recibe los datos exactos del envío en su teléfono.
+        </div>
+        <div style="margin-bottom: 10px;">
+          <strong>📍 Remito Digital y GPS:</strong> El cadete cuenta con un enlace para abrir la dirección del cliente directamente en Google Maps y llamarlo si es necesario.
+        </div>
+        <div>
+          <strong>💵 Control de cobros y rendiciones:</strong> Sabrás con precisión qué pedidos están pagados por transferencia y cuáles deben cobrarse en efectivo contra entrega.
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-container">
+      <a href="${dashboardUrl}" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); box-shadow: 0 8px 24px rgba(245,158,11,0.4);">🛵 Explorar Módulo de Repartidores en mi Panel</a>
+    </div>
+
+    <div class="text" style="font-size: 13.5px; color: #aaaaaa; text-align: center;">
+      ¿Tenés dudas sobre cómo configurar tus zonas de envío o cadetes? Responde este correo y te asesoramos paso a paso.
+    </div>
+  `;
+
+  return { subject: title, html: getEmailLayout({ title, bodyContent }) };
+}
+

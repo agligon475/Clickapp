@@ -1,5 +1,10 @@
 import crypto from 'crypto';
-import { getResetPasswordEmail } from './email-templates.js';
+import {
+  getResetPasswordEmail,
+  getFollowUpDay2Email,
+  getFollowUpDay3Email,
+  getFollowUpDay4Email
+} from './email-templates.js';
 import { validateReceiptUrl, checkRateLimit, setSecureCors, sanitizeInput, verifyToken } from './security.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://iaylgsthwildjkiiwgfd.supabase.co';
@@ -776,6 +781,105 @@ export default async function handler(req, res) {
         store_id,
         recipient_email: emailTarget,
         message: `Correo de activación enviado exitosamente a ${emailTarget}.`
+      });
+    }
+
+    // Action: Enviar correo de seguimiento automatizado (Día 2, Día 3, Día 4)
+    if (action === 'send_followup_email') {
+      const store_id = reqBody.store_id;
+      const followType = (reqBody.type || reqBody.template || 'day2').toLowerCase();
+      const recipient_email = reqBody.recipient_email;
+
+      if (!store_id) {
+        return res.status(400).json({ success: false, error: 'Falta store_id' });
+      }
+
+      // Fetch company settings
+      const getRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(store_id)}&select=*`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
+      
+      let storeData = {};
+      if (getRes.ok) {
+        const rows = await getRes.json();
+        if (rows && rows[0]) storeData = rows[0];
+      }
+
+      const emailTarget = recipient_email || storeData.admin_email || storeData.billing_info?.contact_email;
+      const storeName = storeData.business_name || storeData.store_name || store_id;
+
+      if (!emailTarget) {
+        return res.status(400).json({ success: false, error: 'No se encontró un email de contacto para esta cuenta.' });
+      }
+
+      let emailObj;
+      let typeLabel = '';
+      if (followType === 'day2' || followType === 'social') {
+        emailObj = getFollowUpDay2Email({ storeName, storeId: store_id });
+        typeLabel = 'Día 2 (Redes Sociales & Enlace de Catálogo)';
+      } else if (followType === 'day3' || followType === 'qr') {
+        emailObj = getFollowUpDay3Email({ storeName, storeId: store_id });
+        typeLabel = 'Día 3 (Kit QR para Mostrador y Mesas)';
+      } else if (followType === 'day4' || followType === 'delivery') {
+        emailObj = getFollowUpDay4Email({ storeName, storeId: store_id });
+        typeLabel = 'Día 4 (Gestión de Repartidores & Envíos)';
+      } else {
+        return res.status(400).json({ success: false, error: `Tipo de seguimiento "${followType}" no reconocido (use: day2, day3 o day4).` });
+      }
+
+      const resendApiKey = process.env.RESEND_API_KEY;
+      const fromEmail = process.env.RESEND_FROM_EMAIL || 'Dale! Te Pido <soporte@daletepido.com.ar>';
+      let sentSuccess = false;
+
+      if (resendApiKey) {
+        try {
+          const rResp = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${resendApiKey}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              from: fromEmail,
+              to: [emailTarget],
+              subject: emailObj.subject,
+              html: emailObj.html
+            })
+          });
+          if (rResp.ok) sentSuccess = true;
+        } catch (e) {
+          console.warn('Advertencia al enviar email de seguimiento vía Resend:', e.message);
+        }
+      }
+
+      if (!sentSuccess) {
+        try {
+          await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(emailTarget)}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              _subject: emailObj.subject,
+              _template: 'table',
+              Mensaje: `Seguimiento automatizado ${typeLabel} para ${storeName}.`,
+              Tienda: store_id,
+              Email: emailTarget
+            })
+          });
+          sentSuccess = true;
+        } catch (e) {
+          console.warn('Advertencia al enviar seguimiento vía FormSubmit:', e.message);
+        }
+      }
+
+      return res.status(200).json({
+        success: true,
+        store_id,
+        type: followType,
+        recipient_email: emailTarget,
+        message: `Correo de seguimiento ${typeLabel} enviado con éxito a ${emailTarget}.`
       });
     }
 

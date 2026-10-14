@@ -1,4 +1,11 @@
-import { getWelcomeEmail, getPlanPaymentInstructionsEmail, getProspectEmail } from './email-templates.js';
+import {
+  getWelcomeEmail,
+  getPlanPaymentInstructionsEmail,
+  getProspectEmail,
+  getFollowUpDay2Email,
+  getFollowUpDay3Email,
+  getFollowUpDay4Email
+} from './email-templates.js';
 
 // Notificaciones automáticas al Super Admin ante nuevas cuentas
 async function notifyAdminNewAccount({ storeId, storeName, email, wapp, planLevel, baseUrl }) {
@@ -144,6 +151,18 @@ export default async function handler(req, res) {
         ctaUrl: btn_url,
         extraNotes: extra_notes
       });
+      emailSubject = emailObj.subject;
+      htmlBody = emailObj.html;
+    } else if (type === 'day2' || type === 'followup_day2') {
+      const emailObj = getFollowUpDay2Email({ storeName, storeId: store_id });
+      emailSubject = emailObj.subject;
+      htmlBody = emailObj.html;
+    } else if (type === 'day3' || type === 'followup_day3') {
+      const emailObj = getFollowUpDay3Email({ storeName, storeId: store_id });
+      emailSubject = emailObj.subject;
+      htmlBody = emailObj.html;
+    } else if (type === 'day4' || type === 'followup_day4') {
+      const emailObj = getFollowUpDay4Email({ storeName, storeId: store_id });
       emailSubject = emailObj.subject;
       htmlBody = emailObj.html;
     } else if (type === 'plan_instructions' || plan_key) {
