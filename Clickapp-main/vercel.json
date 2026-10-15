@@ -41,6 +41,14 @@
       "destination": "/api/$1"
     },
     {
+      "source": "/desarrollo",
+      "destination": "/desarrollo.html"
+    },
+    {
+      "source": "/desarrollo.html",
+      "destination": "/desarrollo.html"
+    },
+    {
       "source": "/enviar-comprobante",
       "destination": "/enviar-comprobante.html"
     },

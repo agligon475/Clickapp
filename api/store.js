@@ -62,6 +62,12 @@ export default async function handler(req, res) {
     '/informe-vulnerabilidades-clickapp': 'informe-vulnerabilidades-clickapp.html',
     '/informe-vulnerabilidades-clickapp.html': 'informe-vulnerabilidades-clickapp.html',
     '/security-report': 'informe-vulnerabilidades-clickapp.html',
+    '/desarrollo': 'desarrollo.html',
+    '/desarrollo.html': 'desarrollo.html',
+    '/evolucion': 'desarrollo.html',
+    '/evolucion.html': 'desarrollo.html',
+    '/historia': 'desarrollo.html',
+    '/historia.html': 'desarrollo.html',
     '/robots.txt': { file: 'robots.txt', type: 'text/plain; charset=utf-8' },
     '/sitemap.xml': { file: 'sitemap.xml', type: 'application/xml; charset=utf-8' },
     '/llms.txt': { file: 'llms.txt', type: 'text/plain; charset=utf-8' }
