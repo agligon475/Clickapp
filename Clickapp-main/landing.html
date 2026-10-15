@@ -727,6 +727,154 @@
             line-height: 1.55;
         }
 
+        /* NOVEDADES RÁPIDAS (RADAR DE PLATAFORMA) */
+        .novedades-section {
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-subtle);
+            position: relative;
+        }
+        .novedades-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 22px;
+            margin-top: 40px;
+        }
+        .novedad-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            padding: 26px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .novedad-card:hover {
+            background: #FFFFFF;
+            border-color: var(--border-subtle-hover);
+            box-shadow: var(--shadow-card-hover);
+            transform: translateY(-2px);
+        }
+        .novedad-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .novedad-tag-pill {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .novedad-tag-pill.live {
+            background: rgba(16, 185, 129, 0.12);
+            color: #047857;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+        .novedad-tag-pill.featured {
+            background: var(--brand-accent-light);
+            color: var(--brand-accent);
+            border: 1px solid rgba(246, 0, 0, 0.2);
+        }
+        .novedad-tag-pill.security {
+            background: rgba(139, 92, 246, 0.12);
+            color: #7C3AED;
+            border: 1px solid rgba(139, 92, 246, 0.25);
+        }
+        .novedad-date {
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .novedad-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .novedad-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        .novedad-desc {
+            font-size: 13.5px;
+            color: var(--text-body);
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+        .novedad-footer-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 12px;
+        }
+        .novedad-footer-badge i {
+            color: var(--brand-accent);
+        }
+        .novedades-chronicle-box {
+            margin-top: 42px;
+            background: linear-gradient(135deg, rgba(246, 0, 0, 0.04) 0%, rgba(246, 246, 246, 0.7) 100%);
+            border: 1px solid rgba(246, 0, 0, 0.15);
+            border-radius: var(--radius-card);
+            padding: 24px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+        .novedades-chronicle-info h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin-bottom: 4px;
+        }
+        .novedades-chronicle-info p {
+            font-size: 13px;
+            color: var(--text-body);
+            margin: 0;
+        }
+        .novedades-chronicle-btn {
+            font-family: var(--font-display);
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #FFFFFF !important;
+            background: linear-gradient(135deg, #D60000 0%, #7A0000 100%);
+            padding: 10px 22px;
+            border-radius: var(--radius-pill);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(214, 0, 0, 0.25);
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .novedades-chronicle-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(214, 0, 0, 0.4);
+        }
+
         /* PRINTABLE KIT SECTION */
         .kit-section {
             background: var(--bg-primary);
@@ -1265,7 +1413,6 @@
             <a href="#how-section" class="nav-link">Cómo Funciona</a>
             <a href="#features-section" class="nav-link">Ventajas</a>
             <a href="#pricing-section" class="nav-link">Planes</a>
-            <a href="/desarrollo" class="nav-link">Desarrollo</a>
             <a href="#jaime-showcase-section" class="nav-link">Asistente IA</a>
             <a href="#faq-section" class="nav-link">Preguntas</a>
             <a href="javascript:void(0)" onclick="openContactModal()" class="nav-link">Contacto</a>
@@ -1288,7 +1435,6 @@
             <a href="#how-section" onclick="closeMobileMenu()" class="mobile-nav-link">Cómo Funciona</a>
             <a href="#features-section" onclick="closeMobileMenu()" class="mobile-nav-link">Ventajas Clave</a>
             <a href="#pricing-section" onclick="closeMobileMenu()" class="mobile-nav-link">Planes y Precios</a>
-            <a href="/desarrollo" onclick="closeMobileMenu()" class="mobile-nav-link">Historia y Desarrollo</a>
             <a href="#jaime-showcase-section" onclick="closeMobileMenu()" class="mobile-nav-link">Asistente jAIme</a>
             <a href="#faq-section" onclick="closeMobileMenu()" class="mobile-nav-link">Preguntas Frecuentes</a>
             <a href="javascript:void(0)" onclick="closeMobileMenu(); openContactModal();" class="mobile-nav-link">Contacto & Soporte</a>
@@ -1593,6 +1739,151 @@
                         <h4>Asistente con Inteligencia Artificial</h4>
                         <p>jAIme responde tus consultas sobre catálogo y configuración 24/7.</p>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NOVEDADES RÁPIDAS SECTION (Radar de Plataforma) -->
+        <section class="novedades-section" id="novedades-rapidas">
+            <div class="container">
+                <div style="text-align:center;">
+                    <div class="section-tag">✨ Novedades Rápidas · Radar de Plataforma</div>
+                    <h2 class="section-title">Evolución Continua para tu Negocio</h2>
+                    <p class="section-sub">Mejoras de producto, nuevas herramientas y actualizaciones técnicas diseñadas para maximizar tus pedidos y simplificar tu día a día.</p>
+                </div>
+
+                <div class="novedades-grid">
+                    <!-- Novedad 1: Modo Sereno -->
+                    <div class="novedad-card">
+                        <div>
+                            <div class="novedad-card-top">
+                                <span class="novedad-tag-pill live">🌙 En Vivo</span>
+                                <span class="novedad-date">Actualización 2026</span>
+                            </div>
+                            <div class="novedad-icon-box" style="background:#EEF2FF; color:#4F46E5;">
+                                🌙
+                            </div>
+                            <h3 class="novedad-title">Modo Sereno: Pedidos 24/7 sin Fricción</h3>
+                            <p class="novedad-desc">
+                                Tu comercio no vuelve a perder una venta fuera de horario. Cuando tu local cierra, el catálogo explica el horario de reapertura con empatía y permite armar pedidos para la mañana siguiente con el distintivo <strong>🌙 Sereno</strong>.
+                            </p>
+                        </div>
+                        <div class="novedad-footer-badge">
+                            <i class="bi bi-check-circle-fill"></i> Cero carritos abandonados de noche
+                        </div>
+                    </div>
+
+                    <!-- Novedad 2: SEO Social & WhatsApp Rich Cards -->
+                    <div class="novedad-card">
+                        <div>
+                            <div class="novedad-card-top">
+                                <span class="novedad-tag-pill featured">⚡ Conversión</span>
+                                <span class="novedad-date">OpenGraph Dinámico</span>
+                            </div>
+                            <div class="novedad-icon-box" style="background:#ECFDF5; color:#059669;">
+                                🔗
+                            </div>
+                            <h3 class="novedad-title">Tarjetas SEO Inteligentes en WhatsApp</h3>
+                            <p class="novedad-desc">
+                                Al compartir el link de cualquier producto en WhatsApp o redes sociales, el sistema construye una tarjeta atractiva con foto nítida, título, precio actualizado y nombre de tu comercio sin logos genéricos.
+                            </p>
+                        </div>
+                        <div class="novedad-footer-badge">
+                            <i class="bi bi-whatsapp"></i> Generación automática de preview
+                        </div>
+                    </div>
+
+                    <!-- Novedad 3: Canvas Watermark 2D -->
+                    <div class="novedad-card">
+                        <div>
+                            <div class="novedad-card-top">
+                                <span class="novedad-tag-pill featured">🛡️ Protección</span>
+                                <span class="novedad-date">Browser Engine</span>
+                            </div>
+                            <div class="novedad-icon-box" style="background:#FFF1F1; color:#D60000;">
+                                🎨
+                            </div>
+                            <h3 class="novedad-title">Marca de Agua Automática en Canvas 2D</h3>
+                            <p class="novedad-desc">
+                                Procesamiento gráfico directo en el navegador: al cargar fotos de productos, un algoritmo HTML5 Canvas estampa tu logo en la esquina con protección de legibilidad antes de guardarla en la nube en formato WebP.
+                            </p>
+                        </div>
+                        <div class="novedad-footer-badge">
+                            <i class="bi bi-shield-check"></i> Protección anti-copia sin demora
+                        </div>
+                    </div>
+
+                    <!-- Novedad 4: Multi-Tenant Supabase Cloud -->
+                    <div class="novedad-card">
+                        <div>
+                            <div class="novedad-card-top">
+                                <span class="novedad-tag-pill live">⚡ Cloud</span>
+                                <span class="novedad-date">PostgreSQL Realtime</span>
+                            </div>
+                            <div class="novedad-icon-box" style="background:#F0FDF4; color:#16A34A;">
+                                🗄️
+                            </div>
+                            <h3 class="novedad-title">Arquitectura Supabase & Auto-Recovery</h3>
+                            <p class="novedad-desc">
+                                Base de datos relacional de alta velocidad con reintentos exponenciales automáticos, sincronización en vivo y aislamiento rígido de datos entre tiendas mediante políticas de seguridad por fila (RLS).
+                            </p>
+                        </div>
+                        <div class="novedad-footer-badge">
+                            <i class="bi bi-lightning-charge"></i> Carga ultra-rápida en milisegundos
+                        </div>
+                    </div>
+
+                    <!-- Novedad 5: Android APK Nativo (TWA) -->
+                    <div class="novedad-card">
+                        <div>
+                            <div class="novedad-card-top">
+                                <span class="novedad-tag-pill live">📱 Mobile First</span>
+                                <span class="novedad-date">CI/CD Gradle 8.5</span>
+                            </div>
+                            <div class="novedad-icon-box" style="background:#F3F4F6; color:#1F2937;">
+                                🤖
+                            </div>
+                            <h3 class="novedad-title">App Android Nativa Compilada en GitHub</h3>
+                            <p class="novedad-desc">
+                                Pipeline automatizado en GitHub Actions con Java 17 que compila y firma el archivo instalable <code>app-release.apk</code>, permitiendo a los comerciantes operar su catálogo desde el celular como app nativa.
+                            </p>
+                        </div>
+                        <div class="novedad-footer-badge">
+                            <i class="bi bi-google-play"></i> Trusted Web Activity (TWA)
+                        </div>
+                    </div>
+
+                    <!-- Novedad 6: Blindaje Bancario SEC-01 a SEC-08 -->
+                    <div class="novedad-card">
+                        <div>
+                            <div class="novedad-card-top">
+                                <span class="novedad-tag-pill security">🔒 Auditoría 94/100</span>
+                                <span class="novedad-date">Criptografía HMAC</span>
+                            </div>
+                            <div class="novedad-icon-box" style="background:#FAF5FF; color:#7C3AED;">
+                                🛡️
+                            </div>
+                            <h3 class="novedad-title">Hardening y Seguridad de Grado Bancario</h3>
+                            <p class="novedad-desc">
+                                Erradicación de enlaces inseguros con tokens criptográficos HMAC-SHA256 con expiración estricta de 15 minutos, eliminación de claves maestras en frontend y políticas Zero-Trust entre tiendas.
+                            </p>
+                        </div>
+                        <div class="novedad-footer-badge">
+                            <i class="bi bi-patch-check-fill"></i> Score 94/100 certificado
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Banner Conector a la Crónica Técnica -->
+                <div class="novedades-chronicle-box">
+                    <div class="novedades-chronicle-info">
+                        <h4>📖 ¿Querés conocer cómo construimos toda esta arquitectura?</h4>
+                        <p>Descubrí el detrás de escena técnico: de una hoja de Google Sheets al SaaS multi-tenant actual con 0% de comisiones.</p>
+                    </div>
+                    <a href="/desarrollo" class="novedades-chronicle-btn">
+                        <span>Ver Historia y Evolución</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
                 </div>
             </div>
         </section>
