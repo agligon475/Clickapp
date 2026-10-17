@@ -1032,29 +1032,93 @@
             color: var(--text-heading);
         }
         .price-amount small { font-size: 0.95rem; font-weight: 500; color: var(--text-muted); }
-        .price-period { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; min-height: 40px; display: flex; flex-direction: column; justify-content: center; }
+        .price-period { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; min-height: 40px; display: flex; flex-direction: column; justify-content: center; }
         .price-features {
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-bottom: 28px;
+            gap: 10px;
+            margin-bottom: 24px;
             text-align: left;
             flex: 1;
         }
         .price-features li {
-            font-size: 13.5px;
+            font-size: 13px;
             display: flex;
             align-items: flex-start;
-            gap: 10px;
+            gap: 9px;
             color: var(--text-body);
-            line-height: 1.45;
+            line-height: 1.4;
         }
         .price-features li span:first-child {
             color: var(--green);
             font-weight: 700;
-            font-size: 15px;
+            font-size: 14px;
+            line-height: 1.2;
+            flex-shrink: 0;
+        }
+
+        /* RESUMEN HERRAMIENTAS GESTOR */
+        .pricing-manager-callout {
+            margin-top: 36px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            padding: 24px 28px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .pricing-manager-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .pricing-manager-icon {
+            font-size: 26px;
             line-height: 1;
+            flex-shrink: 0;
+        }
+        .pricing-manager-header h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin: 0 0 4px 0;
+            line-height: 1.3;
+        }
+        .pricing-manager-header p {
+            font-size: 13px;
+            color: var(--text-body);
+            margin: 0;
+            line-height: 1.5;
+        }
+        .pricing-manager-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .manager-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            padding: 6px 14px;
+            border-radius: var(--radius-pill);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-heading);
+            transition: all 0.15s ease;
+        }
+        .manager-tag:hover {
+            border-color: var(--border-subtle-hover);
+            background: #FFFFFF;
+            transform: translateY(-1px);
+        }
+        .manager-tag i {
+            color: var(--brand-accent);
+            font-size: 13px;
         }
         .price-cta {
             width: 100%;
@@ -1971,10 +2035,13 @@
                             <div class="price-amount" id="price-starter-amount">$19.900 <small>/ mes</small></div>
                             <div class="price-period" id="price-starter-period">Para empezar sin riesgos</div>
                             <ul class="price-features">
-                                <li><span>✓</span> <span>Hasta 12 productos</span></li>
-                                <li><span>✓</span> <span>Código QR para tu local</span></li>
-                                <li><span>✓</span> <span>Pedidos ilimitados a WhatsApp</span></li>
-                                <li><span>✓</span> <span>Subdominio personalizado</span></li>
+                                <li><span>✓</span> <span>Hasta 12 productos activos con fotos</span></li>
+                                <li><span>✓</span> <span><strong>Retiro en Local (Pick-up)</strong> y Delivery propio</span></li>
+                                <li><span>✓</span> <span><strong>Personalización básica:</strong> Logo, colores e info</span></li>
+                                <li><span>✓</span> <span>Pedidos directos a WhatsApp sin comisiones</span></li>
+                                <li><span>✓</span> <span>Código QR para tu mostrador y mesas</span></li>
+                                <li><span>✓</span> <span>Panel gestor ágil para celular y PC</span></li>
+                                <li><span>✓</span> <span>Subdominio propio (daletepido.com.ar/tutienda)</span></li>
                             </ul>
                         </div>
                         <button class="price-cta" onclick="openRegisterModal('Starter')">Elegir Starter</button>
@@ -1989,10 +2056,14 @@
                             <div class="price-period" id="price-pro-period">Para comercios que crecen</div>
                             <ul class="price-features">
                                 <li><span>✓</span> <span><strong>Productos e imágenes ilimitadas</strong></span></li>
-                                <li><span>✓</span> <span>Posicionamiento local (SEO/GEO)</span></li>
-                                <li><span>✓</span> <span>Kit Imprimible completo en HD</span></li>
-                                <li><span>✓</span> <span>Pedidos ilimitados a WhatsApp</span></li>
-                                <li><span>✓</span> <span>Soporte prioritario 24/7</span></li>
+                                <li><span>✓</span> <span><strong>Motor de Cupones:</strong> Descuentos % o monto fijo</span></li>
+                                <li><span>✓</span> <span><strong>Pick-up & Delivery avanzado:</strong> Tarifas por zona</span></li>
+                                <li><span>✓</span> <span><strong>Personalización Total:</strong> Logo, portada, fuentes y fondos</span></li>
+                                <li><span>✓</span> <span><strong>Variantes y adicionales:</strong> Talles, sabores y opciones</span></li>
+                                <li><span>✓</span> <span>Control de stock y productos pausados en 1 clic</span></li>
+                                <li><span>✓</span> <span>Kit Imprimible completo en HD (afiches y tarjetas QR)</span></li>
+                                <li><span>✓</span> <span>Posicionamiento local en Google (SEO/GEO)</span></li>
+                                <li><span>✓</span> <span>Soporte prioritario por WhatsApp 24/7</span></li>
                             </ul>
                         </div>
                         <button class="price-cta" onclick="openRegisterModal('PRO')">Elegir Plan PRO</button>
@@ -2005,13 +2076,35 @@
                             <div class="price-amount" id="price-enterprise-amount">$59.900 <small>/ mes</small></div>
                             <div class="price-period" id="price-enterprise-period">Para negocios a gran escala</div>
                             <ul class="price-features">
-                                <li><span>✓</span> <span>Todo lo del Plan PRO</span></li>
-                                <li><span>✓</span> <span>Carga completa de tu catálogo</span></li>
-                                <li><span>✓</span> <span>Múltiples sucursales y números</span></li>
-                                <li><span>✓</span> <span>Asistencia personalizada</span></li>
+                                <li><span>✓</span> <span><strong>Todo lo del Plan PRO</strong></span></li>
+                                <li><span>✓</span> <span><strong>Múltiples sucursales y puntos de Pick-up</strong></span></li>
+                                <li><span>✓</span> <span><strong>Campañas de cupones masivos</strong> a medida</span></li>
+                                <li><span>✓</span> <span><strong>Personalización visual exclusiva</strong> asistida</span></li>
+                                <li><span>✓</span> <span>Carga completa de tu catálogo por nuestro equipo</span></li>
+                                <li><span>✓</span> <span>Múltiples números de WhatsApp y derivación</span></li>
+                                <li><span>✓</span> <span>Asesoría comercial 1 a 1 y onboarding VIP</span></li>
                             </ul>
                         </div>
                         <button class="price-cta" onclick="openRegisterModal('Enterprise')">Elegir Enterprise</button>
+                    </div>
+                </div>
+
+                <!-- RESUMEN HERRAMIENTAS GESTOR -->
+                <div class="pricing-manager-callout">
+                    <div class="pricing-manager-header">
+                        <span class="pricing-manager-icon">💼</span>
+                        <div>
+                            <h4>Herramientas incluidas en el Panel Gestor para potenciar tu venta:</h4>
+                            <p>0% comisiones sobre tus ventas · Cobro directo a tu cuenta o alias · Administrá precios, pedidos y catálogo en tiempo real desde tu celular o computadora.</p>
+                        </div>
+                    </div>
+                    <div class="pricing-manager-tags">
+                        <span class="manager-tag"><i class="bi bi-tag-fill"></i> Cupones de Descuento</span>
+                        <span class="manager-tag"><i class="bi bi-shop"></i> Retiro en Local (Pick-up)</span>
+                        <span class="manager-tag"><i class="bi bi-bicycle"></i> Envíos y Delivery por Zonas</span>
+                        <span class="manager-tag"><i class="bi bi-palette-fill"></i> Personalización de Marca</span>
+                        <span class="manager-tag"><i class="bi bi-sliders"></i> Variantes y Adicionales</span>
+                        <span class="manager-tag"><i class="bi bi-clock-history"></i> Pedidos Fuera de Horario 24/7</span>
                     </div>
                 </div>
             </div>
