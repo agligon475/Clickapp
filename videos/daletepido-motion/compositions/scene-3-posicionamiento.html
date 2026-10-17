@@ -1,0 +1,551 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: 'Josefin Sans';
+          font-style: normal;
+          font-weight: 400 800;
+          src: local('Josefin Sans'), url('https://fonts.gstatic.com/s/josefinsans/v32/Qw3aZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhKg.woff2') format('woff2');
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        #scene-3-posicionamiento {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background-color: #FFFFFF;
+          font-family: 'Josefin Sans', sans-serif;
+          color: #010101;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-start;
+          padding: 80px 48px;
+        }
+
+        /* Red geometric accent lines */
+        .s3-geo-accent-1 {
+          position: absolute;
+          top: -120px;
+          right: -120px;
+          width: 420px;
+          height: 420px;
+          border-radius: 50%;
+          border: 40px solid rgba(246, 0, 0, 0.05);
+          pointer-events: none;
+        }
+
+        .s3-geo-accent-2 {
+          position: absolute;
+          bottom: 100px;
+          left: -80px;
+          width: 300px;
+          height: 300px;
+          background: radial-gradient(circle, rgba(246, 0, 0, 0.08) 0%, transparent 70%);
+          pointer-events: none;
+        }
+
+        /* Top Bar */
+        .s3-top-bar {
+          position: relative;
+          z-index: 10;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          margin-bottom: 24px;
+        }
+
+        .s3-brand-badge {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          background: #010101;
+          border: 2px solid #27272A;
+          border-radius: 999px;
+          padding: 8px 22px;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+        }
+
+        .s3-brand-logo {
+          height: 26px;
+          width: auto;
+          display: block;
+        }
+
+        .s3-pill-badge {
+          background: #010101;
+          color: #FFFFFF;
+          font-size: 16px;
+          font-weight: 700;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          padding: 10px 22px;
+          border-radius: 999px;
+        }
+
+        /* Headline */
+        .s3-hero-intro {
+          position: relative;
+          z-index: 10;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          width: 100%;
+          margin-top: 10px;
+        }
+
+        .s3-tag {
+          display: inline-block;
+          font-size: 20px;
+          font-weight: 700;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: #991B1B;
+          background: rgba(246, 0, 0, 0.08);
+          border: 1.5px solid rgba(246, 0, 0, 0.25);
+          padding: 8px 24px;
+          border-radius: 999px;
+          margin-bottom: 16px;
+        }
+
+        .s3-headline {
+          font-size: 68px;
+          line-height: 1.05;
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          color: #010101;
+        }
+
+        .s3-subheadline {
+          font-size: 24px;
+          font-weight: 700;
+          color: #27272A;
+          margin-top: 10px;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+
+        /* Comparison Cards */
+        .s3-cards-container {
+          position: relative;
+          z-index: 10;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 22px;
+          margin-top: 36px;
+        }
+
+        .s3-card {
+          position: relative;
+          background: #FAFAFA;
+          border: 2px solid #E4E4E7;
+          border-radius: 28px;
+          padding: 24px 30px;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+          overflow: hidden;
+        }
+
+        .s3-card-a {
+          border-color: #FCA5A5;
+          background: linear-gradient(135deg, #FFFFFF 60%, #FEF2F2 100%);
+        }
+
+        .s3-card-b {
+          border-color: #E4E4E7;
+          background: linear-gradient(135deg, #FFFFFF 60%, #F4F4F5 100%);
+          opacity: 0.85;
+        }
+
+        .s3-card-c {
+          border-color: #DC2626;
+          border-width: 3px;
+          background: linear-gradient(135deg, #FFFFFF 50%, #FFF5F5 100%);
+          box-shadow: 0 16px 40px rgba(220, 38, 38, 0.12);
+        }
+
+        .s3-card-body {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 20px;
+        }
+
+        .s3-card-left {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+        }
+
+        .s3-icon-box {
+          width: 86px;
+          height: 86px;
+          border-radius: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+
+        .s3-box-a {
+          background: #FEF3C7;
+          border: 2px solid #D97706;
+        }
+
+        .s3-box-b {
+          background: #F4F4F5;
+          border: 2px solid #71717A;
+        }
+
+        .s3-box-c {
+          background: #FEE2E2;
+          border: 2px solid #DC2626;
+        }
+
+        .s3-card-info {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .s3-card-tag {
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          padding: 4px 14px;
+          border-radius: 999px;
+          width: fit-content;
+        }
+
+        .s3-tag-a {
+          background: #010101;
+          color: #F87171;
+        }
+
+        .s3-tag-b {
+          background: #010101;
+          color: #D4D4D8;
+        }
+
+        .s3-tag-c {
+          background: #010101;
+          color: #FFFFFF;
+        }
+
+        .s3-card-title {
+          font-size: 24px;
+          font-weight: 800;
+          color: #010101;
+        }
+
+        .s3-card-desc {
+          font-size: 17px;
+          font-weight: 600;
+          color: #27272A;
+        }
+
+        .s3-card-right {
+          text-align: right;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 8px;
+        }
+
+        .s3-pill-impact {
+          display: inline-block;
+          font-size: 16px;
+          font-weight: 800;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          padding: 8px 16px;
+          border-radius: 12px;
+        }
+
+        .s3-impact-a {
+          background: #010101;
+          color: #F87171;
+          border: 1px solid #7F1D1D;
+        }
+
+        .s3-impact-b {
+          background: #010101;
+          color: #D4D4D8;
+          border: 1px solid #52525B;
+        }
+
+        .s3-impact-c {
+          background: #010101;
+          color: #34D399;
+          border: 1.5px solid #059669;
+        }
+
+        /* Floating badges for Store C */
+        .s3-store-c-badges {
+          margin-top: 14px;
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+
+        .s3-qr-pill {
+          background: #010101;
+          color: #FFFFFF;
+          padding: 8px 18px;
+          border-radius: 12px;
+          font-size: 15px;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .s3-google-pill {
+          background: #FFFFFF;
+          color: #1E3A8A;
+          border: 1.5px solid #60A5FA;
+          padding: 8px 18px;
+          border-radius: 12px;
+          font-size: 15px;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        /* Big Punch Headline Banner */
+        .s3-punch-banner {
+          margin-top: 28px;
+          width: 100%;
+          background: #010101;
+          border: 3px solid #DC2626;
+          color: #FFFFFF;
+          border-radius: 24px;
+          padding: 24px 36px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .s3-punch-text {
+          font-size: 26px;
+          font-weight: 800;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+
+        .s3-punch-subtext {
+          font-size: 18px;
+          font-weight: 600;
+          color: #34D399;
+          display: block;
+          margin-top: 4px;
+        }
+
+        .s3-punch-pill {
+          background: #DC2626;
+          color: #FFFFFF;
+          padding: 12px 24px;
+          border-radius: 999px;
+          font-size: 18px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+
+        /* Diagonal Wipe for transition */
+        .s3-diagonal-wipe {
+          position: absolute;
+          inset: -50%;
+          width: 200%;
+          height: 200%;
+          background: #010101;
+          transform: rotate(-35deg) translateY(-120%);
+          z-index: 100;
+          pointer-events: none;
+        }
+      </style>
+
+      <div data-hf-id="hf-9u13" id="scene-3-posicionamiento" data-composition-id="scene-3-posicionamiento" data-width="1080" data-height="1920">
+        <div data-hf-id="hf-6r5q" class="s3-geo-accent-1" data-layout-allow-overflow="true"></div>
+        <div data-hf-id="hf-b8np" class="s3-geo-accent-2" data-layout-allow-overflow="true"></div>
+
+        <!-- Top Bar -->
+        <div data-hf-id="hf-6wmq" class="s3-top-bar" id="s3-top-bar">
+          <div data-hf-id="hf-9lew" class="s3-brand-badge">
+            <img data-hf-id="hf-nnbb" src="./assets/logo-dtp-vector-04.svg" class="s3-brand-logo" alt="Dale!TePido" id="s3-top-logo" />
+          </div>
+          <div data-hf-id="hf-qc7y" class="s3-pill-badge">ATRACCIÓN DE CLIENTES</div>
+        </div>
+
+        <!-- Headline -->
+        <div data-hf-id="hf-p8sy" class="s3-hero-intro" id="s3-hero-intro">
+          <div data-hf-id="hf-0mzb" class="s3-tag">● VISIBILIDAD & CANALES</div>
+          <h2 data-hf-id="hf-5pmj" class="s3-headline">CLIENTES REALES</h2>
+          <div data-hf-id="hf-ru01" class="s3-subheadline">¿De quién es el cliente que te compra?</div>
+        </div>
+
+        <!-- Comparison Cards -->
+        <div data-hf-id="hf-v102" class="s3-cards-container" id="s3-cards-container">
+          <!-- Card A: App Marketplace -->
+          <div data-hf-id="hf-6evv" class="s3-card s3-card-a" id="s3-card-a">
+            <div data-hf-id="hf-vdci" class="s3-card-body">
+              <div data-hf-id="hf-75d9" class="s3-card-left">
+                <div data-hf-id="hf-9dyk" class="s3-icon-box s3-box-a">
+                  <!-- App Feed Smartphone SVG -->
+                  <svg data-hf-id="hf-1h41" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect data-hf-id="hf-fk15" x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                    <line data-hf-id="hf-ol8j" x1="12" y1="18" x2="12.01" y2="18"></line>
+                  </svg>
+                </div>
+                <div data-hf-id="hf-2ye6" class="s3-card-info">
+                  <span data-hf-id="hf-c0by" class="s3-card-tag s3-tag-a">APP DE DELIVERY</span>
+                  <span data-hf-id="hf-m1s3" class="s3-card-title">ALGORITMO CANÍBAL</span>
+                  <span data-hf-id="hf-xnqp" class="s3-card-desc">Tu marca tapada por promociones rivales</span>
+                </div>
+              </div>
+              <div data-hf-id="hf-ia1c" class="s3-card-right">
+                <span data-hf-id="hf-07n7" class="s3-pill-impact s3-impact-a">PAGO EXTRA POR VERTE</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card B: Traditional Flyers -->
+          <div data-hf-id="hf-jjf5" class="s3-card s3-card-b" id="s3-card-b">
+            <div data-hf-id="hf-j1cm" class="s3-card-body">
+              <div data-hf-id="hf-2bvl" class="s3-card-left">
+                <div data-hf-id="hf-i1uf" class="s3-icon-box s3-box-b">
+                  <!-- Paper Flyer SVG -->
+                  <svg data-hf-id="hf-vyub" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#52525B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path data-hf-id="hf-e4lr" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline data-hf-id="hf-5bqq" points="14 2 14 8 20 8"></polyline>
+                    <line data-hf-id="hf-x9lb" x1="16" y1="13" x2="8" y2="13"></line>
+                    <line data-hf-id="hf-msun" x1="16" y1="17" x2="8" y2="17"></line>
+                  </svg>
+                </div>
+                <div data-hf-id="hf-7pfm" class="s3-card-info">
+                  <span data-hf-id="hf-or0v" class="s3-card-tag s3-tag-b">TRADICIONAL</span>
+                  <span data-hf-id="hf-tgcn" class="s3-card-title">FOLLETOS IMPRESOS</span>
+                  <span data-hf-id="hf-fpg4" class="s3-card-desc">Gasto en papel que termina en la basura</span>
+                </div>
+              </div>
+              <div data-hf-id="hf-21pk" class="s3-card-right">
+                <span data-hf-id="hf-t4vd" class="s3-pill-impact s3-impact-b">$0 RETORNO</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card C: Dale!TePido -->
+          <div data-hf-id="hf-y5xr" class="s3-card s3-card-c" id="s3-card-c">
+            <div data-hf-id="hf-jfnn" class="s3-card-body">
+              <div data-hf-id="hf-3iso" class="s3-card-left">
+                <div data-hf-id="hf-e3qe" class="s3-icon-box s3-box-c">
+                  <!-- 3D Acrylic QR Stand SVG -->
+                  <svg data-hf-id="hf-dnvw" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect data-hf-id="hf-07hc" x="3" y="3" width="7" height="7"></rect>
+                    <rect data-hf-id="hf-ec1g" x="14" y="3" width="7" height="7"></rect>
+                    <rect data-hf-id="hf-0ice" x="14" y="14" width="7" height="7"></rect>
+                    <rect data-hf-id="hf-vza2" x="3" y="14" width="7" height="7"></rect>
+                  </svg>
+                </div>
+                <div data-hf-id="hf-83qn" class="s3-card-info">
+                  <span data-hf-id="hf-o7ie" class="s3-card-tag s3-tag-c">DALE! TEPIDO</span>
+                  <span data-hf-id="hf-h9yx" class="s3-card-title">KIT QR + GOOGLE SEO</span>
+                  <span data-hf-id="hf-6emh" class="s3-card-desc">Acrílico en mesa + Tráfico local directo</span>
+                </div>
+              </div>
+              <div data-hf-id="hf-0ush" class="s3-card-right">
+                <span data-hf-id="hf-cysg" class="s3-pill-impact s3-impact-c">CLIENTES 100% TUYOS</span>
+              </div>
+            </div>
+            <!-- Floating Badges for Dale!TePido -->
+            <div data-hf-id="hf-18ir" class="s3-store-c-badges">
+              <div data-hf-id="hf-hmay" class="s3-qr-pill">
+                <span data-hf-id="hf-p8of">📱 QR EN TU LOCAL</span>
+              </div>
+              <div data-hf-id="hf-acs6" class="s3-google-pill">
+                <span data-hf-id="hf-cgbc">📍 GOOGLE LOCAL SEO ACTIVO</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Punch Headline Banner -->
+        <div data-hf-id="hf-axcy" class="s3-punch-banner" id="s3-punch-banner">
+          <div data-hf-id="hf-yeow">
+            <span data-hf-id="hf-hxmh" class="s3-punch-text">TRÁFICO EN GOOGLE + QR EN TU LOCAL</span>
+            <span data-hf-id="hf-58tu" class="s3-punch-subtext">Cada cliente que pide se guarda en tu propia base</span>
+          </div>
+          <div data-hf-id="hf-9omh" class="s3-punch-pill">ACTIVO 24/7</div>
+        </div>
+
+        <!-- Diagonal Wipe -->
+        <div data-hf-id="hf-n753" class="s3-diagonal-wipe" id="s3-diagonal-wipe" data-layout-allow-overflow="true"></div>
+      </div>
+
+      <script>
+        const tl = gsap.timeline({ paused: true });
+
+        // Initial setup
+        gsap.set("#s3-top-bar", { opacity: 0, y: -20 });
+        gsap.set("#s3-hero-intro", { opacity: 0, scale: 0.94 });
+        gsap.set("#s3-card-a", { opacity: 0, x: -50 });
+        gsap.set("#s3-card-b", { opacity: 0, x: -50 });
+        gsap.set("#s3-card-c", { opacity: 0, x: -50, scale: 0.95 });
+        gsap.set("#s3-punch-banner", { opacity: 0, y: 40 });
+        gsap.set("#s3-diagonal-wipe", { yPercent: -120 });
+
+        // 0.0s - 1.2s: Header entrance
+        tl.to("#s3-top-bar", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.2);
+        tl.to("#s3-hero-intro", { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.6)" }, 0.4);
+
+        // 2.0s - 4.2s: Staggered reveal of comparison cards
+        tl.to("#s3-card-a", { opacity: 1, x: 0, duration: 0.6, ease: "power2.out" }, 1.8);
+        tl.to("#s3-card-b", { opacity: 0.85, x: 0, duration: 0.6, ease: "power2.out" }, 2.4);
+        tl.to("#s3-card-c", { opacity: 1, x: 0, scale: 1, duration: 0.7, ease: "back.out(1.5)" }, 3.0);
+
+        // 5.0s: Punch banner entrance
+        tl.to("#s3-punch-banner", {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: "elastic.out(1, 0.75)"
+        }, 5.0);
+
+        // Subtle highlight pulse on Store C
+        tl.fromTo("#s3-card-c",
+          { boxShadow: "0 16px 40px rgba(220, 38, 38, 0.12)" },
+          { boxShadow: "0 20px 50px rgba(220, 38, 38, 0.28)", duration: 0.8, repeat: 3, yoyo: true, ease: "sine.inOut" },
+          6.0
+        );
+
+        // 11.5s - 12.0s: Staggered diagonal wipe transition
+        tl.to("#s3-diagonal-wipe", {
+          yPercent: 20,
+          duration: 0.45,
+          ease: "power3.in"
+        }, 11.55);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["scene-3-posicionamiento"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

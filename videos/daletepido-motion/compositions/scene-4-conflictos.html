@@ -1,0 +1,518 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: 'Josefin Sans';
+          font-style: normal;
+          font-weight: 400 800;
+          src: local('Josefin Sans'), url('https://fonts.gstatic.com/s/josefinsans/v32/Qw3aZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhKg.woff2') format('woff2');
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        #scene-4-conflictos {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background-color: #F6F6F6;
+          font-family: 'Josefin Sans', sans-serif;
+          color: #010101;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-start;
+          padding: 80px 48px;
+        }
+
+        /* Subtle red alert ambient pulse */
+        .s4-alert-pulse {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle, rgba(246, 0, 0, 0.12) 0%, transparent 75%);
+          opacity: 0;
+          pointer-events: none;
+        }
+
+        .s4-bg-grid {
+          position: absolute;
+          inset: 0;
+          background-image: radial-gradient(#D4D4D8 1.5px, transparent 1.5px);
+          background-size: 40px 40px;
+          opacity: 0.5;
+          pointer-events: none;
+        }
+
+        /* Top Bar */
+        .s4-top-bar {
+          position: relative;
+          z-index: 10;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          margin-bottom: 24px;
+        }
+
+        .s4-brand-badge {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          background: #010101;
+          border: 2px solid #27272A;
+          border-radius: 999px;
+          padding: 8px 22px;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+        }
+
+        .s4-brand-logo {
+          height: 26px;
+          width: auto;
+          display: block;
+        }
+
+        .s4-pill-badge {
+          background: #991B1B;
+          color: #FFFFFF;
+          font-size: 16px;
+          font-weight: 700;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          padding: 10px 22px;
+          border-radius: 999px;
+        }
+
+        /* Headline Section */
+        .s4-hero-intro {
+          position: relative;
+          z-index: 10;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          width: 100%;
+          margin-top: 10px;
+        }
+
+        .s4-tag {
+          display: inline-block;
+          font-size: 20px;
+          font-weight: 700;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: #991B1B;
+          background: rgba(246, 0, 0, 0.08);
+          border: 1.5px solid rgba(246, 0, 0, 0.25);
+          padding: 8px 24px;
+          border-radius: 999px;
+          margin-bottom: 16px;
+        }
+
+        .s4-headline {
+          font-size: 68px;
+          line-height: 1.05;
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          color: #010101;
+        }
+
+        .s4-subheadline {
+          font-size: 24px;
+          font-weight: 700;
+          color: #27272A;
+          margin-top: 10px;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+
+        /* Cards Container */
+        .s4-cards-container {
+          position: relative;
+          z-index: 10;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 22px;
+          margin-top: 36px;
+        }
+
+        .s4-card {
+          position: relative;
+          background: #FFFFFF;
+          border: 2px solid #E4E4E7;
+          border-radius: 28px;
+          padding: 24px 30px;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+          overflow: hidden;
+        }
+
+        .s4-card-a {
+          border-color: #FCA5A5;
+          background: linear-gradient(135deg, #FFFFFF 60%, #FEF2F2 100%);
+        }
+
+        .s4-card-b {
+          border-color: #E4E4E7;
+          background: linear-gradient(135deg, #FFFFFF 60%, #F4F4F5 100%);
+          opacity: 0.85;
+        }
+
+        .s4-card-c {
+          border-color: #DC2626;
+          border-width: 3px;
+          background: linear-gradient(135deg, #FFFFFF 50%, #FFF5F5 100%);
+          box-shadow: 0 16px 40px rgba(220, 38, 38, 0.12);
+        }
+
+        .s4-card-body {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 20px;
+        }
+
+        .s4-card-left {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+        }
+
+        .s4-icon-box {
+          width: 86px;
+          height: 86px;
+          border-radius: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+
+        .s4-box-a {
+          background: #FEE2E2;
+          border: 2px solid #EF4444;
+        }
+
+        .s4-box-b {
+          background: #F4F4F5;
+          border: 2px solid #71717A;
+        }
+
+        .s4-box-c {
+          background: #FEE2E2;
+          border: 2px solid #DC2626;
+        }
+
+        .s4-card-info {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .s4-card-tag {
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          padding: 4px 14px;
+          border-radius: 999px;
+          width: fit-content;
+        }
+
+        .s4-tag-a {
+          background: #010101;
+          color: #F87171;
+        }
+
+        .s4-tag-b {
+          background: #010101;
+          color: #D4D4D8;
+        }
+
+        .s4-tag-c {
+          background: #010101;
+          color: #FFFFFF;
+        }
+
+        .s4-card-title {
+          font-size: 24px;
+          font-weight: 800;
+          color: #010101;
+        }
+
+        .s4-card-desc {
+          font-size: 17px;
+          font-weight: 600;
+          color: #27272A;
+        }
+
+        .s4-card-right {
+          text-align: right;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 8px;
+        }
+
+        .s4-pill-impact {
+          display: inline-block;
+          font-size: 16px;
+          font-weight: 800;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          padding: 8px 16px;
+          border-radius: 12px;
+        }
+
+        .s4-impact-a {
+          background: #010101;
+          color: #F87171;
+          border: 1px solid #7F1D1D;
+        }
+
+        .s4-impact-b {
+          background: #010101;
+          color: #D4D4D8;
+          border: 1px solid #52525B;
+        }
+
+        .s4-impact-c {
+          background: #010101;
+          color: #34D399;
+          border: 1.5px solid #059669;
+        }
+
+        /* Coupon Tag for Store C */
+        .s4-coupon-banner {
+          margin-top: 14px;
+          background: #ECFDF5;
+          border: 2px dashed #059669;
+          padding: 12px 20px;
+          border-radius: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          color: #065F46;
+        }
+
+        .s4-coupon-code {
+          font-size: 17px;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+
+        .s4-coupon-status {
+          font-size: 15px;
+          font-weight: 700;
+        }
+
+        /* Key Banner */
+        .s4-key-banner {
+          margin-top: 28px;
+          width: 100%;
+          background: #010101;
+          border: 3px solid #DC2626;
+          color: #FFFFFF;
+          border-radius: 24px;
+          padding: 24px 36px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .s4-key-text {
+          font-size: 26px;
+          font-weight: 800;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+
+        .s4-key-subtext {
+          font-size: 18px;
+          font-weight: 600;
+          color: #34D399;
+          display: block;
+          margin-top: 4px;
+        }
+
+        .s4-key-pill {
+          background: #DC2626;
+          color: #FFFFFF;
+          padding: 12px 24px;
+          border-radius: 999px;
+          font-size: 18px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+      </style>
+
+      <div data-hf-id="hf-ixm7" id="scene-4-conflictos" data-composition-id="scene-4-conflictos" data-width="1080" data-height="1920">
+        <div data-hf-id="hf-kkuk" class="s4-bg-grid"></div>
+        <div data-hf-id="hf-ozqi" class="s4-alert-pulse" id="s4-alert-pulse"></div>
+
+        <!-- Top Bar -->
+        <div data-hf-id="hf-tgnu" class="s4-top-bar" id="s4-top-bar">
+          <div data-hf-id="hf-m6cj" class="s4-brand-badge">
+            <img data-hf-id="hf-gneh" src="./assets/logo-dtp-vector-04.svg" class="s4-brand-logo" alt="Dale!TePido" id="s4-top-logo" />
+          </div>
+          <div data-hf-id="hf-kwhw" class="s4-pill-badge">FIDELIZACIÓN DIRECTA</div>
+        </div>
+
+        <!-- Headline -->
+        <div data-hf-id="hf-ofmg" class="s4-hero-intro" id="s4-hero-intro">
+          <div data-hf-id="hf-x8aj" class="s4-tag">● RESOLUCIÓN & RETENCIÓN</div>
+          <h2 data-hf-id="hf-4h27" class="s4-headline">GESTIÓN DE ERRORES</h2>
+          <div data-hf-id="hf-42oy" class="s4-subheadline">Cuando algo falla en un pedido...</div>
+        </div>
+
+        <!-- Cards -->
+        <div data-hf-id="hf-eyqq" class="s4-cards-container" id="s4-cards-container">
+          <!-- Card A: App Penalty -->
+          <div data-hf-id="hf-83pi" class="s4-card s4-card-a" id="s4-card-a">
+            <div data-hf-id="hf-ago1" class="s4-card-body">
+              <div data-hf-id="hf-023y" class="s4-card-left">
+                <div data-hf-id="hf-mk5w" class="s4-icon-box s4-box-a">
+                  <!-- Siren SVG -->
+                  <svg data-hf-id="hf-mcxp" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path data-hf-id="hf-sl8x" d="M12 2a6 6 0 0 0-6 6v3c0 2-1 3-2 4h16c-1-1-2-2-2-4V8a6 6 0 0 0-6-6z"></path>
+                    <path data-hf-id="hf-5r6b" d="M10 21h4"></path>
+                  </svg>
+                </div>
+                <div data-hf-id="hf-ken9" class="s4-card-info">
+                  <span data-hf-id="hf-r6wu" class="s4-card-tag s4-tag-a">APP DE DELIVERY</span>
+                  <span data-hf-id="hf-wlnh" class="s4-card-title">SANCIÓN AUTOMÁTICA</span>
+                  <span data-hf-id="hf-e81z" class="s4-card-desc">El soporte de la app siempre culpa al local</span>
+                </div>
+              </div>
+              <div data-hf-id="hf-ugyt" class="s4-card-right">
+                <span data-hf-id="hf-if4b" class="s4-pill-impact s4-impact-a">-15% MULTA Y BAJA RANKING</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card B: Traditional Notebook & Endless Audio -->
+          <div data-hf-id="hf-cyic" class="s4-card s4-card-b" id="s4-card-b">
+            <div data-hf-id="hf-h5v9" class="s4-card-body">
+              <div data-hf-id="hf-7po2" class="s4-card-left">
+                <div data-hf-id="hf-xfnj" class="s4-icon-box s4-box-b">
+                  <!-- Notebook & audio SVG -->
+                  <svg data-hf-id="hf-vyub" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#52525B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path data-hf-id="hf-3kxu" d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path data-hf-id="hf-tacu" d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                  </svg>
+                </div>
+                <div data-hf-id="hf-2m49" class="s4-card-info">
+                  <span data-hf-id="hf-x8hr" class="s4-card-tag s4-tag-b">TRADICIONAL</span>
+                  <span data-hf-id="hf-pv2v" class="s4-card-title">LIBRETA Y AUDIOS</span>
+                  <span data-hf-id="hf-kj2x" class="s4-card-desc">Audio de 3:45 min · Libreta tachada · Confusión</span>
+                </div>
+              </div>
+              <div data-hf-id="hf-2cvt" class="s4-card-right">
+                <span data-hf-id="hf-9iyw" class="s4-pill-impact s4-impact-b">CAOS POR MENSAJE</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card C: Dale!TePido VIP Care -->
+          <div data-hf-id="hf-skni" class="s4-card s4-card-c" id="s4-card-c">
+            <div data-hf-id="hf-icsc" class="s4-card-body">
+              <div data-hf-id="hf-83z3" class="s4-card-left">
+                <div data-hf-id="hf-thji" class="s4-icon-box s4-box-c">
+                  <!-- VIP Star / Check SVG -->
+                  <svg data-hf-id="hf-dnvw" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon data-hf-id="hf-9m10" points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                </div>
+                <div data-hf-id="hf-3t1c" class="s4-card-info">
+                  <span data-hf-id="hf-495i" class="s4-card-tag s4-tag-c">DALE! TEPIDO</span>
+                  <span data-hf-id="hf-r9z8" class="s4-card-title">RESOLUCIÓN VIP DIRECTA</span>
+                  <span data-hf-id="hf-yahp" class="s4-card-desc">Respuesta humana e inmediata por WhatsApp</span>
+                </div>
+              </div>
+              <div data-hf-id="hf-3jsw" class="s4-card-right">
+                <span data-hf-id="hf-ws9s" class="s4-pill-impact s4-impact-c">CLIENTE FIDELIZADO</span>
+              </div>
+            </div>
+            <!-- Floating Coupon Tag -->
+            <div data-hf-id="hf-5wy2" class="s4-coupon-banner" id="s4-coupon-banner">
+              <span data-hf-id="hf-r1ay" class="s4-coupon-code">🎟 [CUPÓN VIP -20% PRÓXIMA COMPRA]</span>
+              <span data-hf-id="hf-hrwj" class="s4-coupon-status">✓ CLIENTE ENAMORADO</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Key Banner -->
+        <div data-hf-id="hf-9oia" class="s4-key-banner" id="s4-key-banner">
+          <div data-hf-id="hf-yeow">
+            <span data-hf-id="hf-bvph" class="s4-key-text">CLIENTES 100% TUYOS</span>
+            <span data-hf-id="hf-rztj" class="s4-key-subtext">Tu base de datos, tu canal, tu relación con el cliente</span>
+          </div>
+          <div data-hf-id="hf-zzpi" class="s4-key-pill">SIN INTERMEDIARIOS</div>
+        </div>
+      </div>
+
+      <script>
+        const tl = gsap.timeline({ paused: true });
+
+        // Initial setup
+        gsap.set("#s4-top-bar", { opacity: 0, y: -20 });
+        gsap.set("#s4-hero-intro", { opacity: 0, scale: 0.94 });
+        gsap.set("#s4-card-a", { opacity: 0, x: -50 });
+        gsap.set("#s4-card-b", { opacity: 0, x: -50 });
+        gsap.set("#s4-card-c", { opacity: 0, x: -50, scale: 0.95 });
+        gsap.set("#s4-coupon-banner", { opacity: 0, scale: 0.85, transformOrigin: "center center" });
+        gsap.set("#s4-key-banner", { opacity: 0, y: 40 });
+
+        // 0.0s - 1.2s: Header entrance & alert flash
+        tl.to("#s4-alert-pulse", { opacity: 0.8, duration: 0.35, yoyo: true, repeat: 1, ease: "power2.out" }, 0.1);
+        tl.to("#s4-top-bar", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.2);
+        tl.to("#s4-hero-intro", { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.6)" }, 0.4);
+
+        // 1.8s - 3.8s: Staggered reveal
+        tl.to("#s4-card-a", { opacity: 1, x: 0, duration: 0.6, ease: "power2.out" }, 1.8);
+        tl.to("#s4-card-b", { opacity: 0.85, x: 0, duration: 0.6, ease: "power2.out" }, 2.4);
+        tl.to("#s4-card-c", { opacity: 1, x: 0, scale: 1, duration: 0.7, ease: "back.out(1.5)" }, 3.0);
+
+        // 4.2s: Coupon pop
+        tl.to("#s4-coupon-banner", {
+          opacity: 1,
+          scale: 1,
+          duration: 0.5,
+          ease: "elastic.out(1, 0.75)"
+        }, 4.2);
+
+        // 5.5s: Key Banner entrance
+        tl.to("#s4-key-banner", {
+          opacity: 1,
+          y: 0,
+          duration: 0.65,
+          ease: "back.out(1.5)"
+        }, 5.5);
+
+        // 11.5s - 12.0s: Zoom in transition
+        tl.to("#scene-4-conflictos", {
+          scale: 1.08,
+          opacity: 0.1,
+          duration: 0.45,
+          ease: "power2.in"
+        }, 11.55);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["scene-4-conflictos"] = tl;
+      </script>
+    </template>
+  </body>
+</html>
