@@ -4908,6 +4908,15 @@
       </div>
     </div>
 
+    <!-- 📱 APP MÓVIL DALE! TE PIDO -->
+    <div style="padding: 10px 12px 2px 12px;">
+      <button class="sb-btn" onclick="openAppDownloadModal()" style="background: linear-gradient(135deg, #D60000 0%, #990000 100%); color: white; border: none; height: 38px; font-size: 12px; font-weight: 700; border-radius: 8px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px rgba(214,0,0,0.35); transition: transform .2s ease;">
+        <i class="bi bi-phone-fill" style="font-size: 15px;"></i>
+        <span>Descargar App Móvil</span>
+        <span style="background: rgba(255,255,255,0.22); font-size: 9px; padding: 2px 6px; border-radius: 12px; font-weight: 800; letter-spacing: 0.5px;">APK</span>
+      </button>
+    </div>
+
     <!-- Botón de jAIme en la parte inferior del Sidebar -->
     <div class="sb-jaime-container" style="padding: 14px 12px; margin-top: 10px;">
       <div style="height: 1px; background: rgba(255,255,255,0.08); margin-bottom: 14px;"></div>
@@ -4915,6 +4924,100 @@
         <img src="/img/jaime/jaime-mobile-buenaonda.png" alt="jAIme" class="sb-jaime-avatar" />
         <span class="sb-jaime-label">Consultar a jAIme</span>
       </button>
+    </div>
+  </div>
+
+  <!-- MODAL: DESCARGAR APP MÓVIL (DALE! TE PIDO) -->
+  <div id="app-download-modal" role="dialog" aria-modal="true" aria-labelledby="app-download-modal-title" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);align-items:center;justify-content:center;">
+    <div style="background:var(--iron, #171313);border:1px solid var(--zinc, rgba(255,255,255,0.12));border-radius:18px;width:min(560px,94vw);max-height:92vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.6);color:#fff;font-family:var(--font-body, system-ui);">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.08);background:linear-gradient(135deg, rgba(214,0,0,0.15) 0%, transparent 100%);">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg, #D60000 0%, #800000 100%);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(214,0,0,0.4);">
+            <i class="bi bi-phone-fill" style="color:#ffffff;font-size:22px;"></i>
+          </div>
+          <div>
+            <div id="app-download-modal-title" style="font-weight:800;font-size:16px;color:#ffffff;letter-spacing:-0.3px;">Instalá Dale! Te Pido en tu Celular</div>
+            <div style="font-size:11.5px;color:#aaaaaa;">Gestioná tu negocio a pantalla completa y sin barras de navegador</div>
+          </div>
+        </div>
+        <button onclick="closeAppDownloadModal()" aria-label="Cerrar modal" style="background:none;border:none;cursor:pointer;color:#aaaaaa;font-size:24px;line-height:1;padding:4px;display:flex;align-items:center;justify-content:center;">&times;</button>
+      </div>
+
+      <div style="padding:24px;display:flex;flex-direction:column;gap:20px;">
+        
+        <!-- PESTAÑA / TARJETA PRINCIPAL CON QR + DESCARGA DIRECTA -->
+        <div style="display:grid;grid-template-columns:140px 1fr;gap:20px;align-items:center;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;">
+          <div style="text-align:center;">
+            <div style="background:#ffffff;padding:8px;border-radius:12px;display:inline-block;box-shadow:0 4px 14px rgba(0,0,0,0.3);">
+              <img id="app-download-qr-img" src="/api/qr?url=https%3A%2F%2Fdaletepido.com.ar%2Fdescargar-app" alt="QR Descarga App" style="width:120px;height:120px;display:block;" />
+            </div>
+            <div style="font-size:10px;color:#888;margin-top:6px;font-weight:600;">Escanear con la cámara</div>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:6px;">📸 ¿Estás desde tu computadora?</div>
+            <div style="font-size:12px;color:#bbb;line-height:1.5;margin-bottom:12px;">
+              Abrí la cámara de tu celular, apuntá a este código QR y descargará la App al instante en 2 segundos.
+            </div>
+            <a href="/descargar-app" target="_blank" class="sb-btn" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:11px;font-weight:600;padding:6px 12px;border-radius:6px;text-decoration:none;">
+              <i class="bi bi-download"></i> Descargar directo (.APK)
+            </a>
+          </div>
+        </div>
+
+        <!-- ACCIÓN 1: ENVIARME ENLACE POR EMAIL -->
+        <div style="background:rgba(214,0,0,0.04);border:1px solid rgba(214,0,0,0.2);border-radius:14px;padding:18px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <i class="bi bi-envelope-check-fill" style="color:#ff4d4d;font-size:16px;"></i>
+            <div style="font-size:13.5px;font-weight:700;color:#fff;">Enviarme el enlace por Correo Electrónico</div>
+          </div>
+          <div style="font-size:11.5px;color:#aaa;line-height:1.5;margin-bottom:12px;">
+            Te enviamos un correo con el botón de descarga y la guía rápida paso a paso para abrirlo desde tu móvil.
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <input type="email" id="app-download-email-input" class="ctrl-input" placeholder="tu-correo@ejemplo.com" style="flex:1;min-width:220px;height:38px;padding:0 12px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#fff;font-size:13px;" />
+            <button id="app-download-send-email-btn" onclick="sendAppDownloadEmail()" style="height:38px;padding:0 18px;background:linear-gradient(135deg, #D60000 0%, #A00000 100%);border:none;border-radius:8px;color:#fff;font-size:12.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(214,0,0,0.3);">
+              <i class="bi bi-send-fill"></i>
+              <span>Enviarme Enlace</span>
+            </button>
+          </div>
+          <div id="app-download-email-status" style="display:none;margin-top:10px;font-size:12px;line-height:1.4;"></div>
+        </div>
+
+        <!-- ACCIÓN 2: ENVIAR A MI WHATSAPP -->
+        <div style="background:rgba(46,204,113,0.05);border:1px solid rgba(46,204,113,0.2);border-radius:14px;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#2ecc71;display:flex;align-items:center;gap:6px;">
+              <i class="bi bi-whatsapp"></i> Enviar a mi propio WhatsApp
+            </div>
+            <div style="font-size:11.5px;color:#aaa;margin-top:2px;">
+              Abrí un chat con el enlace listo para auto-enviártelo a tu número.
+            </div>
+          </div>
+          <button onclick="shareAppOnWhatsApp()" style="height:36px;padding:0 16px;background:#25D366;border:none;border-radius:8px;color:#000;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+            <i class="bi bi-whatsapp"></i> Auto-enviar por WhatsApp
+          </button>
+        </div>
+
+        <!-- GUÍA RÁPIDA DE 3 PASOS -->
+        <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:16px;">
+          <div style="font-size:12px;font-weight:700;color:#ddd;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">⚡ Pasos para instalar en Android:</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+            <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px;font-size:11px;color:#aaa;line-height:1.4;">
+              <strong style="color:#fff;display:block;margin-bottom:4px;">1. Descargá el APK</strong>
+              Pulsá el botón de descarga en tu teléfono.
+            </div>
+            <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px;font-size:11px;color:#aaa;line-height:1.4;">
+              <strong style="color:#fff;display:block;margin-bottom:4px;">2. Permitir origen</strong>
+              Si Android consulta, activá "Permitir desde esta fuente".
+            </div>
+            <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px;font-size:11px;color:#aaa;line-height:1.4;">
+              <strong style="color:#fff;display:block;margin-bottom:4px;">3. ¡A operar!</strong>
+              Tocá Instalar y abrí Dale! Te Pido en pantalla completa.
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
 
@@ -8315,10 +8418,113 @@
       const m = document.getElementById('ticket-modal');
       if (m) { m.style.display = 'none'; document.body.style.overflow = ''; }
     }
+    function openAppDownloadModal() {
+      const m = document.getElementById('app-download-modal');
+      if (m) {
+        m.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+      const emailInput = document.getElementById('app-download-email-input');
+      if (emailInput && !emailInput.value) {
+        try {
+          const sess = JSON.parse(localStorage.getItem('daletepido_session') || '{}');
+          if (sess && sess.email) {
+            emailInput.value = sess.email;
+          } else if (window.companySettings && window.companySettings.admin_email) {
+            emailInput.value = window.companySettings.admin_email;
+          }
+        } catch(e) {}
+      }
+    }
+    function closeAppDownloadModal() {
+      const m = document.getElementById('app-download-modal');
+      if (m) {
+        m.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+    }
+    function shareAppOnWhatsApp() {
+      const downloadUrl = 'https://daletepido.com.ar/descargar-app';
+      const text = encodeURIComponent(`Hola! Descargá acá la aplicación oficial de Dale! Te Pido para Android: ${downloadUrl}`);
+      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    }
+    async function sendAppDownloadEmail() {
+      const emailInput = document.getElementById('app-download-email-input');
+      const btn = document.getElementById('app-download-send-email-btn');
+      const statusEl = document.getElementById('app-download-email-status');
+      if (!emailInput || !btn) return;
+
+      const email = (emailInput.value || '').trim();
+      if (!email || !email.includes('@')) {
+        if (statusEl) {
+          statusEl.style.display = 'block';
+          statusEl.style.color = '#ff6b6b';
+          statusEl.innerHTML = '⚠️ Por favor ingresá un correo electrónico válido.';
+        }
+        return;
+      }
+
+      let storeId = 'comercio';
+      try {
+        const sess = JSON.parse(localStorage.getItem('daletepido_session') || '{}');
+        if (sess && sess.store_id) storeId = sess.store_id;
+        else if (window.companySettings && window.companySettings.store_id) storeId = window.companySettings.store_id;
+      } catch(e) {}
+
+      btn.disabled = true;
+      const originalBtnHtml = btn.innerHTML;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm" style="width:13px;height:13px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;display:inline-block;animation:spin 0.8s linear infinite;"></span> Enviando...';
+
+      if (statusEl) {
+        statusEl.style.display = 'block';
+        statusEl.style.color = '#aaa';
+        statusEl.innerHTML = 'Enviando enlace de descarga a tu correo...';
+      }
+
+      try {
+        const resp = await fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'send_app_download_email',
+            store_id: storeId,
+            email: email
+          })
+        });
+        const data = await resp.json();
+
+        if (resp.ok && data.success) {
+          if (statusEl) {
+            statusEl.style.color = '#2ecc71';
+            statusEl.innerHTML = `✅ ${data.message || '¡Correo enviado con éxito! Revisá tu bandeja de entrada o spam.'}`;
+          }
+        } else {
+          if (statusEl) {
+            statusEl.style.color = '#ff6b6b';
+            statusEl.innerHTML = `❌ ${data.error || 'No se pudo enviar el correo en este momento.'}`;
+          }
+        }
+      } catch(err) {
+        if (statusEl) {
+          statusEl.style.color = '#ff6b6b';
+          statusEl.innerHTML = '❌ Error de conexión al intentar enviar el correo.';
+        }
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalBtnHtml;
+      }
+    }
+    window.openAppDownloadModal = openAppDownloadModal;
+    window.closeAppDownloadModal = closeAppDownloadModal;
+    window.shareAppOnWhatsApp = shareAppOnWhatsApp;
+    window.sendAppDownloadEmail = sendAppDownloadEmail;
+
     // Close on backdrop click
     document.addEventListener('click', function(e) {
       const m = document.getElementById('ticket-modal');
       if (m && e.target === m) closeTicketModal();
+      const mApp = document.getElementById('app-download-modal');
+      if (mApp && e.target === mApp) closeAppDownloadModal();
     });
 
     function submitTicket() {

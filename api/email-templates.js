@@ -652,3 +652,56 @@ export function getFollowUpDay4Email({ storeName, storeId }) {
   return { subject: title, html: getEmailLayout({ title, bodyContent }) };
 }
 
+/**
+ * Plantilla: Enlace de Descarga de App Android para Gestores
+ */
+export function getAppDownloadEmailTemplate({ storeName = 'Comerciante', downloadUrl = 'https://daletepido.com.ar/descargar-app' } = {}) {
+  const title = `📲 Descargá la App de Dale! Te Pido en tu Celular`;
+  const qrUrl = `https://daletepido.com.ar/api/qr?url=${encodeURIComponent(downloadUrl)}`;
+
+  const bodyContent = `
+    <div style="text-align: center; margin-bottom: 24px;">
+      <span class="badge badge-red">📱 APLICACIÓN OFICIAL ANDROID</span>
+      <div class="greeting">¡Hola, ${storeName}! 👋</div>
+      <div class="text">
+        Pediste el enlace para instalar la aplicación oficial de <strong>Dale! Te Pido</strong> en tu teléfono celular o tablet.
+        <br/><br/>
+        Con la App instalada, vas a poder gestionar tus pedidos, actualizar precios, revisar comprobantes y atender a tus clientes <strong>en pantalla completa, sin barras de navegador y con máxima rapidez</strong>.
+      </div>
+    </div>
+
+    <div class="btn-container">
+      <a href="${downloadUrl}" target="_blank" class="btn-primary" style="font-size: 17px; padding: 18px 40px; box-shadow: 0 10px 28px rgba(214,0,0,0.5);">
+        ⬇️ Descargar App para Android (.APK)
+      </a>
+    </div>
+
+    <div class="box" style="border-left: 4px solid #D60000; background: rgba(214,0,0,0.04); margin-top: 30px;">
+      <div class="box-title" style="color: #ff6666;">📝 3 Pasos Simples para Instalarla:</div>
+      <div style="font-size: 14px; color: #dddddd; line-height: 1.6;">
+        <div style="margin-bottom: 12px; display: flex; align-items: flex-start;">
+          <span style="background: #D60000; color: #fff; font-size: 12px; font-weight: 900; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; flex-shrink: 0;">1</span>
+          <div>Tocá el botón rojo de arriba desde tu celular para iniciar la descarga del archivo <strong>DaleTePido.apk</strong>.</div>
+        </div>
+        <div style="margin-bottom: 12px; display: flex; align-items: flex-start;">
+          <span style="background: #D60000; color: #fff; font-size: 12px; font-weight: 900; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; flex-shrink: 0;">2</span>
+          <div>Al terminar la descarga, abrí el archivo. Si tu teléfono te muestra un aviso de seguridad por ser descarga directa, activá la casilla <strong>"Permitir instalar aplicaciones de esta fuente"</strong> (Chrome / Archivos).</div>
+        </div>
+        <div style="display: flex; align-items: flex-start;">
+          <span style="background: #D60000; color: #fff; font-size: 12px; font-weight: 900; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; flex-shrink: 0;">3</span>
+          <div>Presioná <strong>"Instalar"</strong>. ¡Y listo! Ya vas a tener el ícono de Dale! Te Pido en la pantalla de inicio de tu celular listo para usar.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qr-card" style="margin-top: 24px;">
+      <div style="font-size: 13px; color: #aaaaaa; margin-bottom: 6px;">¿Abriste este correo desde una computadora?</div>
+      <div style="font-size: 14px; color: #ffffff; font-weight: 700;">Escaneá este código QR con la cámara de tu celular:</div>
+      <img src="${qrUrl}" alt="Código QR Descarga App" style="width: 150px; height: 150px; display: block; margin: 12px auto; background: white; padding: 8px; border-radius: 12px;" />
+      <div style="font-size: 12px; color: #888888;">Enlace directo: <a href="${downloadUrl}" style="color: #ff6666;">${downloadUrl}</a></div>
+    </div>
+  `;
+
+  return { subject: title, html: getEmailLayout({ title, bodyContent }) };
+}
+

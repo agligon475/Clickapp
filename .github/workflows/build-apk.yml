@@ -13,6 +13,8 @@ jobs:
   build-apk:
     name: Compilar APK Android
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout del repositorio
@@ -90,3 +92,20 @@ jobs:
           name: DaleTePido-Android-APK
           path: dist-apk/*.apk
           retention-days: 30
+
+      - name: Publicar APK en GitHub Release Oficial
+        uses: softprops/action-gh-release@v2
+        if: success() && github.ref == 'refs/heads/main'
+        with:
+          tag_name: latest
+          name: "Dale! Te Pido Android App (Última versión)"
+          body: |
+            ### 📱 Dale! Te Pido - APK Oficial para Android
+            Aplicación oficial para comerciantes y gestores de tiendas en Dale! Te Pido.
+            - **Modo:** Standalone Pantalla Completa (Sin barra de navegación)
+            - **Descarga directa:** `DaleTePido.apk`
+          files: dist-apk/DaleTePido.apk
+          prerelease: false
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

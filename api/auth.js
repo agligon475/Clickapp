@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { getEmailLayout } from './email-templates.js';
+import { getEmailLayout, getAppDownloadEmailTemplate } from './email-templates.js';
 import { signToken, verifyToken, setSecureCors, checkRateLimit } from './security.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://iaylgsthwildjkiiwgfd.supabase.co';
@@ -442,6 +442,66 @@ export default async function handler(req, res) {
         store_id: actualStoreId,
         message: 'Solicitud de membresía enviada exitosamente. Nos pondremos en contacto a la brevedad.'
       });
+    }
+
+    // Action: Send App Download Email (Envío de enlace de descarga de APK al comerciante)
+    if (action === 'send_app_download_email') {
+      const targetEmail = (req.body.email || adminEmail || '').trim();
+      const businessName = settings.business_name || actualStoreId;
+
+      if (!targetEmail || !targetEmail.includes('@')) {
+        return res.status(400).json({ success: false, error: 'Por favor proporcioná un correo electrónico válido' });
+      }
+
+      // SEC-08: Prevención de abuso de envío (máx 5 correos por hora por IP/tienda)
+      const clientIp = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'ip';
+      const emailRl = checkRateLimit(`apk_email_${clientIp}_${actualStoreId}`, 5, 60 * 60 * 1000);
+      if (!emailRl.allowed) {
+        return res.status(429).json({
+          success: false,
+          error: 'Demasiadas solicitudes de descarga por correo. Por favor revisá tu bandeja de entrada o spam.'
+        });
+      }
+
+      const downloadUrl = 'https://daletepido.com.ar/descargar-app';
+      const template = getAppDownloadEmailTemplate({ storeName: businessName, downloadUrl });
+      const resendApiKey = process.env.RESEND_API_KEY;
+
+      if (resendApiKey) {
+        try {
+          const sendRes = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${resendApiKey}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              from: process.env.RESEND_FROM_EMAIL || 'Dale! Te Pido <soporte@daletepido.com.ar>',
+              to: [targetEmail],
+              subject: template.subject,
+              html: template.html
+            })
+          });
+
+          if (!sendRes.ok) {
+            const errData = await sendRes.json().catch(() => ({}));
+            console.warn('Fallo en Resend al enviar email de APK:', errData);
+            return res.status(502).json({ success: false, error: 'No se pudo enviar el correo en este momento. Podés usar la descarga directa o el código QR.' });
+          }
+
+          await recordAuditLog(actualStoreId, 'apk_download_email_sent', `Enviado a ${targetEmail}`, req);
+
+          return res.status(200).json({
+            success: true,
+            message: `¡Enlace de descarga enviado exitosamente a ${targetEmail}! Revisá tu bandeja de entrada (y la carpeta de spam si no lo ves).`
+          });
+        } catch (errResend) {
+          console.error('Error enviando email APK vía Resend:', errResend);
+          return res.status(500).json({ success: false, error: 'Error al conectar con el servidor de correo' });
+        }
+      } else {
+        return res.status(503).json({ success: false, error: 'Servicio de correo temporalmente no disponible' });
+      }
     }
 
     return res.status(400).json({ success: false, error: 'Acción no válida' });

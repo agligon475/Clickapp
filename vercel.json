@@ -52,6 +52,18 @@
       "includeFiles": "api/email-templates.js"
     }
   },
+  "redirects": [
+    {
+      "source": "/descargar-app",
+      "destination": "https://github.com/agligon475/Clickapp/releases/latest/download/DaleTePido.apk",
+      "permanent": false
+    },
+    {
+      "source": "/app",
+      "destination": "https://github.com/agligon475/Clickapp/releases/latest/download/DaleTePido.apk",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
