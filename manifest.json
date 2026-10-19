@@ -9,10 +9,7 @@
   "dir": "ltr",
   "display": "standalone",
   "display_override": [
-    "window-controls-overlay",
-    "tabbed",
-    "standalone",
-    "minimal-ui"
+    "standalone"
   ],
   "background_color": "#F6F6F6",
   "theme_color": "#F60000",

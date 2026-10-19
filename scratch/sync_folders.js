@@ -35,6 +35,7 @@ const filesToSync = [
   'api/email-templates.js',
   'manifest.json',
   'twa-manifest.json',
+  '.well-known/assetlinks.json',
   'sw.js',
   'icon-192.png',
   'icon-192-maskable.png',

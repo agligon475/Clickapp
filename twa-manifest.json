@@ -44,7 +44,7 @@
   "isChromeOSOnly": false,
   "isMetaQuest": false,
   "signingKey": {
-    "path": "./android.keystore",
+    "path": "./daletepido.keystore",
     "alias": "daletepido"
   }
 }

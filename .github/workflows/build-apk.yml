@@ -34,11 +34,14 @@ jobs:
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses 2>/dev/null || true
           echo "sdk.dir=$ANDROID_HOME" > android/local.properties
 
-      - name: Generar debug keystore estándar para compilación
+      - name: Verificar Keystore y Huella SHA-256
         run: |
-          mkdir -p ~/.android
-          if [ ! -f ~/.android/debug.keystore ]; then
-            keytool -genkeypair -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          echo "### 🔐 Verificación de Certificado y Keystore" >> $GITHUB_STEP_SUMMARY
+          if [ -f android/app/daletepido.keystore ]; then
+            echo "Keystore permanente localizada en android/app/daletepido.keystore"
+            echo '```text' >> $GITHUB_STEP_SUMMARY
+            keytool -list -v -keystore android/app/daletepido.keystore -storepass daletepido2026 -alias daletepido | grep -E "SHA256|Alias name|Valid" >> $GITHUB_STEP_SUMMARY || true
+            echo '```' >> $GITHUB_STEP_SUMMARY
           fi
 
       - name: Compilar APK con Gradle

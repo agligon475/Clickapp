@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "ar.com.daletepido.app",
+      "sha256_cert_fingerprints": [
+        "67:F0:FC:62:EC:86:E6:B0:3C:63:B2:B8:2F:E2:A1:91:A1:C1:2E:94:55:CF:47:45:83:5E:E3:E3:3E:B7:B7:3E"
+      ]
+    }
+  }
+]
