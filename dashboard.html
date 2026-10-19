@@ -6334,11 +6334,44 @@
               </label>
               <div class="image-upload-specs-box" style="margin-top:8px;padding:8px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--zinc);border-radius:8px;font-size:11px;color:var(--fog);display:flex;flex-direction:column;gap:3px;line-height:1.45;">
                 <div style="display:flex;align-items:center;gap:6px;color:var(--white);font-weight:700;">
-                  <i class="bi bi-aspect-ratio" style="color:var(--red);"></i> Especificaciones de Imagen de Portada:
+                  <i class="bi bi-aspect-ratio" style="color:var(--red);"></i> Especificaciones de Portada (Desktop / PC):
                 </div>
                 <div>📐 <strong>Dimensiones ideales:</strong> 1400 × 400 px o 1920 × 600 px (panorámica horizontal). Mínimo 1200 px de ancho.</div>
                 <div>📁 <strong>Formatos permitidos:</strong> JPG, WEBP o PNG (alta resolución).</div>
                 <div>⚖️ <strong>Peso recomendado:</strong> Menor a 3 MB. Podés mezclarla con el color de fondo regulando la opacidad abajo.</div>
+              </div>
+
+              <!-- APARTADO BANNER MOBILE -->
+              <div style="margin-top:16px;padding:14px;background:rgba(255,255,255,0.02);border:1px solid var(--zinc);border-radius:10px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <i class="bi bi-phone" style="color:var(--red);font-size:16px;"></i>
+                    <span style="font-weight:700;font-size:12px;color:var(--white);text-transform:uppercase;">Banner para Celulares / Mobile</span>
+                  </div>
+                  <span style="font-size:10px;background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:12px;color:var(--silver);">Opcional</span>
+                </div>
+
+                <!-- PREVIEW DE IMAGEN MOBILE -->
+                <div id="hero-mobile-img-preview-wrap"
+                  style="display:none;margin-bottom:12px;position:relative;border-radius:10px;overflow:hidden;background:#0E0E0E;border:1px solid var(--zinc);max-width:200px;margin-left:auto;margin-right:auto;">
+                  <img id="hero-mobile-img-preview" style="width:100%;height:150px;object-fit:cover;display:block;" />
+                  <button onclick="removeHeroMobileImg()" class="remove-hero-btn">✕ Quitar</button>
+                </div>
+
+                <label class="logo-upload-btn" for="hero-mobile-img-input" style="margin-bottom:0;">
+                  <i class="bi bi-phone"></i> Subir imagen para Celulares (JPG, PNG, WEBP)
+                  <input type="file" id="hero-mobile-img-input" accept="image/*" style="display:none;"
+                    onchange="uploadHeroMobileImg(this)" />
+                </label>
+
+                <div class="image-upload-specs-box" style="margin-top:10px;padding:10px 12px;background:rgba(215,38,56,0.04);border:1px solid rgba(215,38,56,0.18);border-radius:8px;font-size:11px;color:var(--fog);display:flex;flex-direction:column;gap:4px;line-height:1.45;">
+                  <div style="display:flex;align-items:center;gap:6px;color:var(--white);font-weight:700;">
+                    <i class="bi bi-aspect-ratio" style="color:var(--red);"></i> Medidas requeridas para el Banner Mobile:
+                  </div>
+                  <div>📐 <strong>Medidas recomendadas:</strong> <strong>800 × 800 px (cuadrada 1:1)</strong> o <strong>1080 × 1350 px (vertical 4:5)</strong>. Mínimo 600 px de ancho.</div>
+                  <div>📱 <strong>Comportamiento inteligente:</strong> Se mostrará de manera automática a los clientes que naveguen desde celulares (pantallas de hasta 768px), impidiendo que el banner horizontal se recorte o deforme.</div>
+                  <div>📁 <strong>Formatos:</strong> JPG, WEBP o PNG (máx 3 MB).</div>
+                </div>
               </div>
 
               <!-- OPACIDAD DE LA IMAGEN (MEZCLA CON EL COLOR DE FONDO) -->
@@ -9355,6 +9388,14 @@
               // Fallback a la columna email vieja (string JSON)
               try { parsedDesign = JSON.parse(dbCfg.email); } catch (e) {}
             }
+            if (dbCfg.billing_info) {
+              try {
+                const bi = typeof dbCfg.billing_info === 'string' ? JSON.parse(dbCfg.billing_info) : dbCfg.billing_info;
+                if (bi && bi.design) {
+                  parsedDesign = { ...parsedDesign, ...bi.design };
+                }
+              } catch (e) {}
+            }
 
             let parsedSocials = {};
             // Intentar leer de socials primero
@@ -9424,6 +9465,7 @@
               h1Color: parsedDesign.h1Color || cfg.h1Color || '#FFFFFF',
               h2Color: parsedDesign.h2Color || cfg.h2Color || dbCfg.primary_color || cfg.color || '#D72638',
               descColor: parsedDesign.descColor || cfg.descColor || '#E0E0E0',
+              banner_mobile_img: parsedDesign.banner_mobile_img || cfg.banner_mobile_img || '',
               emoji: dbCfg.emoji !== null ? dbCfg.emoji : (parsedDesign.emoji || cfg.emoji || '🏪'),
               theme: dbCfg.theme !== null ? dbCfg.theme : (parsedDesign.theme || cfg.theme || 'dark'),
               font: dbCfg.font !== null ? dbCfg.font : (parsedDesign.font || cfg.font || ''),
@@ -9920,7 +9962,10 @@
       tbody.innerHTML = recent.map(o => `
     <tr>
       <td style="font-size:10px;font-family:monospace;color:var(--silver);">${o.id}${o.is_night_guard ? ' <span title="Pedido fuera de horario (Modo Sereno)" style="background:rgba(129,140,248,0.2);color:#A5B4FC;border:1px solid rgba(129,140,248,0.4);padding:1px 5px;border-radius:4px;font-size:9px;font-weight:600;display:inline-block;">🌙 Sereno</span>' : ''}</td>
-      <td><strong>${o.cliente}</strong></td>
+      <td>
+        <strong>${o.cliente}</strong>
+        ${o.opt_in_whatsapp ? '<br/><span title="Aceptó recibir novedades por WhatsApp" style="background:rgba(37,211,102,0.15);color:#25D366;border:1px solid rgba(37,211,102,0.3);padding:1px 5px;border-radius:4px;font-size:9px;font-weight:700;display:inline-flex;align-items:center;gap:3px;margin-top:2px;"><i class="bi bi-whatsapp"></i> Novedades</span>' : ''}
+      </td>
       <td style="color:var(--silver);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${o.productos}</td>
       <td>${o.pago}</td>
       <td>${o.logistica}</td>
@@ -10798,12 +10843,58 @@
       if (wrap) wrap.style.display = 'none';
       const prev = document.getElementById('hero-img-preview');
       if (prev) prev.src = '';
-      const input = document.getElementById('hero-img-input');
-      if (input) input.value = '';
-      document.querySelectorAll('.bg-sample-card').forEach(card => card.classList.remove('active'));
-      if (typeof previewUpdate === 'function') previewUpdate();
+      previewUpdate();
     }
     window.removeHeroImg = removeHeroImg;
+
+    async function uploadHeroMobileImg(input) {
+      const file = input.files[0];
+      if (!file) return;
+
+      const wrap = document.getElementById('hero-mobile-img-preview-wrap');
+      const prev = document.getElementById('hero-mobile-img-preview');
+
+      const cloud = getCloudinaryCfg();
+      let url = null;
+
+      if (cloud.name && cloud.preset) {
+        try {
+          url = await uploadToCloudinary(file);
+        } catch (e) {
+          console.warn('Cloudinary falló, usando base64:', e.message);
+        }
+      }
+
+      if (!url) {
+        url = await new Promise((res, rej) => {
+          if (file.size > 2 * 1024 * 1024) { rej(new Error('Imagen muy grande para base64 (máx 2MB). Configurá Cloudinary.')); return; }
+          const r = new FileReader();
+          r.onload = e => res(e.target.result);
+          r.onerror = () => rej(new Error('Error leyendo archivo'));
+          r.readAsDataURL(file);
+        });
+      }
+
+      localStorage.setItem('storeapp_hero_mobile_img', url);
+      localStorage.setItem('storeapp_hero_mobile_img_' + STORE_ID, url);
+      cfg.banner_mobile_img = url;
+      if (prev) prev.src = url;
+      if (wrap) wrap.style.display = 'block';
+    }
+    window.uploadHeroMobileImg = uploadHeroMobileImg;
+
+    function removeHeroMobileImg() {
+      localStorage.removeItem('storeapp_hero_mobile_img');
+      localStorage.removeItem('storeapp_hero_mobile_img_' + STORE_ID);
+      cfg.banner_mobile_img = '';
+      const wrap = document.getElementById('hero-mobile-img-preview-wrap');
+      if (wrap) wrap.style.display = 'none';
+      const prev = document.getElementById('hero-mobile-img-preview');
+      if (prev) prev.src = '';
+      const input = document.getElementById('hero-mobile-img-input');
+      if (input) input.value = '';
+    }
+    window.removeHeroMobileImg = removeHeroMobileImg;
 
     function updateHeroBgColor(color) {
       cfg.heroBgColor = color;
@@ -10899,6 +10990,14 @@
             card.classList.remove('active');
           }
         });
+      }
+
+      const savedMobile = cfg.banner_mobile_img || localStorage.getItem('storeapp_hero_mobile_img_' + STORE_ID) || localStorage.getItem('storeapp_hero_mobile_img');
+      const mobileWrap = document.getElementById('hero-mobile-img-preview-wrap');
+      const mobilePrev = document.getElementById('hero-mobile-img-preview');
+      if (savedMobile && mobilePrev && mobileWrap) {
+        mobilePrev.src = savedMobile;
+        mobileWrap.style.display = 'block';
       }
     }
 
@@ -11044,6 +11143,14 @@
             const r = rows[0];
             let parsedEmail = {};
             try { if (r.email) parsedEmail = JSON.parse(r.email); } catch(e) {}
+            if (r.billing_info) {
+              try {
+                const bi = typeof r.billing_info === 'string' ? JSON.parse(r.billing_info) : r.billing_info;
+                if (bi && bi.design) {
+                  parsedEmail = { ...parsedEmail, ...bi.design };
+                }
+              } catch(e) {}
+            }
 
             const mode = r.banner_mode || parsedEmail.banner_mode || 'double';
             setBannerLayoutMode(mode);
@@ -11083,6 +11190,18 @@
               updateBannerTextColor('desc', cfg.descColor);
             }
 
+            if (parsedEmail.banner_mobile_img) {
+              cfg.banner_mobile_img = parsedEmail.banner_mobile_img;
+              localStorage.setItem('storeapp_hero_mobile_img_' + STORE_ID, cfg.banner_mobile_img);
+              localStorage.setItem('storeapp_hero_mobile_img', cfg.banner_mobile_img);
+              const mWrap = document.getElementById('hero-mobile-img-preview-wrap');
+              const mPrev = document.getElementById('hero-mobile-img-preview');
+              if (mWrap && mPrev) {
+                mPrev.src = cfg.banner_mobile_img;
+                mWrap.style.display = 'block';
+              }
+            }
+
             previewBanner('banner1');
             previewBanner('banner2');
           }
@@ -11115,6 +11234,7 @@
       const h2ColorVal = document.getElementById('cfg-h2-color')?.value || cfg.h2Color || '#D72638';
       const descColorVal = document.getElementById('cfg-desc-color')?.value || cfg.descColor || '#E0E0E0';
       const heroBgVal = cfg.bg || localStorage.getItem(`storeapp_hero_img_${STORE_ID}`) || localStorage.getItem('storeapp_hero_img') || '';
+      const heroMobileImgVal = cfg.banner_mobile_img || localStorage.getItem(`storeapp_hero_mobile_img_${STORE_ID}`) || localStorage.getItem('storeapp_hero_mobile_img') || '';
       const heroBgColorVal = document.getElementById('cfg-hero-bg-color')?.value || cfg.heroBgColor || '#0E0E0E';
       const heroImgOpacityVal = document.getElementById('cfg-hero-img-opacity')?.value != null 
         ? parseInt(document.getElementById('cfg-hero-img-opacity').value, 10) 
@@ -11127,6 +11247,7 @@
       cfg.h2Color = h2ColorVal;
       cfg.descColor = descColorVal;
       cfg.bg = heroBgVal;
+      cfg.banner_mobile_img = heroMobileImgVal;
       cfg.heroBgColor = heroBgColorVal;
       cfg.heroImgOpacity = heroImgOpacityVal;
 
@@ -11185,12 +11306,28 @@
             parsedEmail.banner2_bg = bannerData.banner2.bg;
             parsedEmail.banner2_active = bannerData.banner2.active;
 
+            const currentBillingInfo = (typeof dbRow.billing_info === 'object' && dbRow.billing_info !== null) ? dbRow.billing_info : {};
+            const updatedBillingInfo = {
+              ...currentBillingInfo,
+              design: {
+                ...(currentBillingInfo.design || {}),
+                h1Color: h1ColorVal,
+                h2Color: h2ColorVal,
+                descColor: descColorVal,
+                heroBgColor: heroBgColorVal,
+                heroImgOpacity: heroImgOpacityVal,
+                banner_mobile_img: heroMobileImgVal,
+                banner_mode: bannerData.mode
+              }
+            };
+
             const patchPayload = {
               h1: h1Val,
               h2: h2Val,
               desc: descVal,
               bg: heroBgVal,
               email: JSON.stringify(parsedEmail),
+              billing_info: updatedBillingInfo,
               banner1_label: bannerData.banner1.label,
               banner1_title: bannerData.banner1.title,
               banner1_img: bannerData.banner1.img,
@@ -13766,6 +13903,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       <td>
         <strong style="color:var(--white);">${o.cliente}</strong><br/>
         <span style="color:var(--silver);font-size:10px;">DNI: ${o.dni || '—'}</span>
+        ${o.opt_in_whatsapp ? '<br/><span title="Aceptó recibir novedades por WhatsApp" style="background:rgba(37,211,102,0.15);color:#25D366;border:1px solid rgba(37,211,102,0.3);padding:1px 5px;border-radius:4px;font-size:9px;font-weight:700;display:inline-flex;align-items:center;gap:3px;margin-top:2px;"><i class="bi bi-whatsapp"></i> Recibe novedades</span>' : ''}
       </td>
       <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
                  color:var(--fog);font-size:11px;" title="${o.productos}">${o.productos}</td>

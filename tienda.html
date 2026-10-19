@@ -184,6 +184,11 @@ a.logo{
   background-repeat:no-repeat;
   transition:opacity .3s;
 }
+@media (max-width: 768px) {
+  .hero-img-bg.has-mobile-bg {
+    background-image: var(--hero-bg-mobile) !important;
+  }
+}
 /* Overlay for image */
 .hero-overlay{
   position:absolute;inset:0;
@@ -1162,6 +1167,12 @@ a.logo{
         <label class="form-label">Dirección de envío</label>
         <input class="form-control" id="f-direccion" placeholder="Calle 123, CABA"/>
       </div>
+      <div class="form-group" style="margin-top:14px;margin-bottom:8px;background:rgba(255,255,255,0.03);padding:10px 12px;border-radius:8px;border:1px solid var(--zinc);">
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:var(--text);line-height:1.4;user-select:none;margin:0;">
+          <input type="checkbox" id="f-optin-wapp" checked style="width:18px;height:18px;margin-top:1px;accent-color:var(--red);cursor:pointer;flex-shrink:0;" />
+          <span>Aceptar recibir novedades, ofertas y promociones vía WhatsApp</span>
+        </label>
+      </div>
       <div class="total-row" style="padding:10px 0;margin-bottom:10px;">
         <span class="total-label">Total</span>
         <span class="total-val" id="total-val-2">$0</span>
@@ -1407,17 +1418,17 @@ function applyConfig() {
 
   // Hero
   const h1 = document.getElementById('hero-h1') || document.getElementById('hero-title');
-  const h2 = document.getElementById('hero-h2') || document.getElementById('hero-title-span');
   const hd = document.getElementById('hero-desc') || document.getElementById('hero-sub');
   if (h1) {
-    const parts = (CFG.h1||'').split('|');
-    h1.innerHTML = parts[0]+(parts[1]?`<br/>${parts[1]}`:'');
+    const h1Text = CFG.h1 || 'Bienvenidos a';
+    const h2Text = CFG.h2 || '';
+    h1.innerHTML = `${h1Text}${h2Text ? `<br/><span id="hero-title-span">${h2Text}</span>` : ''}`;
     if (CFG.h1Color) h1.style.setProperty('color', CFG.h1Color, 'important');
-  }
-  if (h2) {
-    h2.textContent = CFG.h2 || '';
-    const h2Col = CFG.h2Color || CFG.color || c;
-    h2.style.setProperty('color', h2Col, 'important');
+    const span = document.getElementById('hero-title-span');
+    if (span) {
+      const h2Col = CFG.h2Color || CFG.color || '#D72638';
+      span.style.setProperty('color', h2Col, 'important');
+    }
   }
   if (hd) {
     hd.textContent = CFG.desc || '';
@@ -1624,6 +1635,14 @@ async function loadSheet() {
           parsedDesign = { ...fromEmail, ...parsedDesign };
         } catch (e) {}
       }
+      if (cfg.billing_info) {
+        try {
+          const bi = typeof cfg.billing_info === 'string' ? JSON.parse(cfg.billing_info) : cfg.billing_info;
+          if (bi && bi.design) {
+            parsedDesign = { ...parsedDesign, ...bi.design };
+          }
+        } catch (e) {}
+      }
 
       let localBannerData = null;
       try {
@@ -1637,6 +1656,7 @@ async function loadSheet() {
       CFG.h1Color = parsedDesign.h1Color || CFG.h1Color || '#FFFFFF';
       CFG.h2Color = parsedDesign.h2Color || CFG.h2Color || '';
       CFG.descColor = parsedDesign.descColor || CFG.descColor || '#E0E0E0';
+      CFG.bannerMobileImg = parsedDesign.banner_mobile_img || parsedDesign.bannerMobileImg || CFG.bannerMobileImg || '';
       CFG.emoji = cfg.emoji != null ? cfg.emoji : (parsedDesign.emoji || CFG.emoji || '🏪');
       CFG.theme = cfg.theme != null ? cfg.theme : (parsedDesign.theme || CFG.theme || 'dark');
       CFG.font = cfg.font != null ? cfg.font : (parsedDesign.font || CFG.font || '');
@@ -2507,6 +2527,7 @@ function enviarWhatsApp() {
     ``,
     `👤 *Cliente:* ${nombre}`,
     `🪪 *DNI:* ${dni}`,
+    `📢 *Novedades por WhatsApp:* ${optInWapp ? '✅ Sí (Aceptó recibir novedades)' : '❌ No'}`,
   ].filter(l=>l!==undefined).join('\n');
 
   if (window.APPLIED_COUPON && window.STORE_COUPONS) {
@@ -2526,7 +2547,7 @@ function enviarWhatsApp() {
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
 
   // ── 2. Registrar pedido ──────────────────────────
-  registrarPedido({ id: pedidoId, nombre, dni, pago, logistica: logis, direccion: dir, items, total: totalFormatted, is_night_guard: isNightGuardOrder });
+  registrarPedido({ id: pedidoId, nombre, dni, pago, logistica: logis, direccion: dir, items, total: totalFormatted, is_night_guard: isNightGuardOrder, opt_in_whatsapp: optInWapp });
 
   // ── 3. Limpiar carrito ───────────────────────────
   window.SERENO_ORDER_CONFIRMED = false;
@@ -2556,7 +2577,8 @@ async function registrarPedido(pedido) {
     direccion: pedido.direccion || '',
     total:     pedido.total,
     estado:    'confirmar',
-    is_night_guard: !!pedido.is_night_guard
+    is_night_guard: !!pedido.is_night_guard,
+    opt_in_whatsapp: !!pedido.opt_in_whatsapp
   };
 
   // ── 1. Guardar en localStorage (misma key que usa el dashboard) ──
@@ -3173,13 +3195,20 @@ function applyStoredConfig() {
 
   const heroTitle = document.querySelector('.hero-title');
   if (heroTitle) {
-    if (cfg.h1) heroTitle.innerHTML = `${cfg.h1}<br/><span id="hero-title-span">${cfg.h2||''}</span>`;
+    const h1Text = cfg.h1 || CFG.h1 || 'Bienvenidos a';
+    const h2Text = cfg.h2 || CFG.h2 || '';
+    heroTitle.innerHTML = `${h1Text}${h2Text ? `<br/><span id="hero-title-span">${h2Text}</span>` : ''}`;
     const h1Col = cfg.h1Color || CFG.h1Color;
     if (h1Col) heroTitle.style.setProperty('color', h1Col, 'important');
+    const span = document.getElementById('hero-title-span');
+    if (span) {
+      const h2Col = cfg.h2Color || CFG.h2Color || accent;
+      span.style.setProperty('color', h2Col, 'important');
+    }
   }
   const heroSub = document.querySelector('.hero-sub');
   if (heroSub) {
-    if (cfg.desc) heroSub.textContent = cfg.desc;
+    if (cfg.desc || CFG.desc) heroSub.textContent = cfg.desc || CFG.desc;
     const descCol = cfg.descColor || CFG.descColor;
     if (descCol) heroSub.style.setProperty('color', descCol, 'important');
   }
@@ -3191,12 +3220,20 @@ function applyStoredConfig() {
   const heroBg = document.getElementById('hero-img-bg');
   const heroOverlay = document.getElementById('hero-overlay');
   const heroStripes = document.getElementById('hero-stripes');
-  const heroImgUrl = (localStorage.getItem(`storeapp_hero_img_${STORE_ID}`) || localStorage.getItem('storeapp_hero_img') || cfg.bg || '').trim();
+  const heroImgUrl = (localStorage.getItem(`storeapp_hero_img_${STORE_ID}`) || localStorage.getItem('storeapp_hero_img') || cfg.bg || CFG.bg || '').trim();
+  const heroMobileImgUrl = (localStorage.getItem(`storeapp_hero_mobile_img_${STORE_ID}`) || localStorage.getItem('storeapp_hero_mobile_img') || cfg.banner_mobile_img || CFG.bannerMobileImg || '').trim();
   const heroBgColor = cfg.heroBgColor || CFG.heroBgColor || '#0E0E0E';
   const heroImgOpacity = (cfg.heroImgOpacity != null ? Number(cfg.heroImgOpacity) : (CFG.heroImgOpacity != null ? Number(CFG.heroImgOpacity) : 100)) / 100;
 
   if (heroEl) {
     heroEl.style.backgroundColor = heroBgColor;
+  }
+
+  if (heroMobileImgUrl) {
+    document.documentElement.style.setProperty('--hero-bg-mobile', `url('${optimizeImg(heroMobileImgUrl, 800)}')`);
+    if (heroBg) heroBg.classList.add('has-mobile-bg');
+  } else {
+    if (heroBg) heroBg.classList.remove('has-mobile-bg');
   }
 
   if (heroImgUrl && heroBg) {
@@ -3214,7 +3251,7 @@ function applyStoredConfig() {
     if (heroStripes) heroStripes.style.display = 'none';
     if (heroOverlay) heroOverlay.style.background = cfg.heroOverlay || 'rgba(0,0,0,.48)';
   } else {
-    if (heroBg) {
+    if (heroBg && !heroMobileImgUrl) {
       heroBg.style.backgroundImage = 'none';
       heroBg.style.opacity = '0';
     }
