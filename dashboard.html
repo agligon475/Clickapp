@@ -8259,7 +8259,7 @@
         let res = await originalFetch(url, options);
 
         // Si devuelve 401 Unauthorized, limpiar la clave local corrupta y reintentar con la clave anónima por defecto
-        if (res.status === 401) {
+        if (res.status === 401 && !urlStr.includes('store_credentials')) {
           console.warn('Supabase 401 detectado en fetch. Auto-restaurando clave anónima por defecto...');
           window.localStorage.removeItem('storeapp_supabase_key');
           SUPABASE_KEY = VALID_ANON_KEY;
@@ -8702,7 +8702,7 @@
 
       let response = await fetch(url, options);
 
-      if (response.status === 401) {
+      if (response.status === 401 && !url.includes('store_credentials')) {
         console.warn('Supabase HTTP 401 detectado. Auto-restaurando clave anónima oficial...');
         window.localStorage.removeItem('storeapp_supabase_key');
         SUPABASE_KEY = VALID_ANON_KEY;
@@ -8807,12 +8807,22 @@
       }
     }
 
+    /** IDs de fila en Supabase (products.id) son UUID. */
+    const UUID_ROW_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    function isSupabaseRowId(id) {
+      return UUID_ROW_RE.test(String(id || ''));
+    }
+
     function supabaseIdFilter(id) {
       return `id=eq.${encodeURIComponent(String(id))}`;
     }
 
     async function updateInSupabase(tabla, id, data) {
       try {
+        if (tabla === 'products' && !isSupabaseRowId(id)) {
+          console.warn(`[updateInSupabase] Se ignoró actualización en Supabase: el ID '${id}' no es un UUID válido.`);
+          return false;
+        }
         let url = `${SUPABASE_URL}/rest/v1/${tabla}?${supabaseIdFilter(id)}`;
         const tenantTables = ['products', 'company_settings', 'categories', 'pickups'];
         if (tenantTables.includes(tabla)) {
@@ -8861,6 +8871,10 @@
 
     async function deleteFromSupabase(tabla, id) {
       try {
+        if (tabla === 'products' && !isSupabaseRowId(id)) {
+          console.warn(`[deleteFromSupabase] Se ignoró eliminación en Supabase: el ID '${id}' no es un UUID válido.`);
+          return false;
+        }
         let url = `${SUPABASE_URL}/rest/v1/${tabla}?${supabaseIdFilter(id)}`;
         const tenantTables = ['products', 'company_settings', 'categories', 'pickups'];
         if (tenantTables.includes(tabla)) {
@@ -9469,10 +9483,12 @@
                     const globalCreds = credsData.find(c => c.store_id === 'global') || {};
                     storeCreds = { ...globalCreds, ...specific };
                   }
-                } else if (credsRes.status === 404) {
+                } else if (credsRes.status === 404 || credsRes.status === 401 || credsRes.status === 403) {
                   sessionStorage.setItem('storeapp_has_store_credentials', 'false');
                 }
-              } catch (e) {}
+              } catch (e) {
+                sessionStorage.setItem('storeapp_has_store_credentials', 'false');
+              }
             }
 
             // Sincronizar y proteger credenciales críticas contra sobreescrituras accidentales
@@ -12975,11 +12991,26 @@
         const p = localProducts.find(x => String(x.id) === String(editingId));
         if (p) {
           Object.assign(p, { name, codigo, cat, marca, price, currency, divisa, stock, emoji, origen, detalle: textDetalle, img, img2, img3, pills });
-          try {
-            await updateInSupabase('products', editingId, mapLocalProductToSupabaseRow(p));
-          } catch (e) {
-            alert('No se pudo actualizar el producto en Supabase: ' + (e.message || e));
-            return;
+          if (isSupabaseRowId(editingId)) {
+            try {
+              await updateInSupabase('products', editingId, mapLocalProductToSupabaseRow(p));
+            } catch (e) {
+              alert('No se pudo actualizar el producto en Supabase: ' + (e.message || e));
+              return;
+            }
+          } else {
+            // Es un producto DEMO (ej: id="p1", "p2") modificado por primera vez.
+            // Se inserta en Supabase para que la tienda tenga su propio UUID real persistente.
+            try {
+              const inserted = await postToSupabase('products', mapLocalProductToSupabaseRow(p));
+              const row0 = Array.isArray(inserted) ? inserted[0] : inserted;
+              if (row0 && row0.id) {
+                p.id = String(row0.id);
+                editingId = String(row0.id);
+              }
+            } catch (postErr) {
+              console.warn('Advertencia al persistir producto demo modificado en Supabase, se mantiene localmente:', postErr);
+            }
           }
         }
       } else {
