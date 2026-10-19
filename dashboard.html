@@ -9465,13 +9465,12 @@
             localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
             localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
 
-            // Intentar cargar credenciales desde la tabla dedicada store_credentials (específica o global)
+            // Intentar cargar credenciales desde la tabla dedicada store_credentials sólo si está explícitamente habilitado
             let storeCreds = null;
-            if (sessionStorage.getItem('storeapp_has_store_credentials') !== 'false') {
+            if (localStorage.getItem('storeapp_has_store_credentials') === 'true') {
               try {
                 const credsRes = await safeFetchSupabase(`${SUPABASE_URL}/rest/v1/store_credentials?store_id=in.(${encodeURIComponent(STORE_ID)},global)`);
                 if (credsRes.ok) {
-                  sessionStorage.setItem('storeapp_has_store_credentials', 'true');
                   const credsData = await credsRes.json();
                   if (credsData && credsData.length > 0) {
                     const specific = credsData.find(c => c.store_id === STORE_ID) || {};
@@ -9479,10 +9478,10 @@
                     storeCreds = { ...globalCreds, ...specific };
                   }
                 } else if (credsRes.status === 404 || credsRes.status === 401 || credsRes.status === 403) {
-                  sessionStorage.setItem('storeapp_has_store_credentials', 'false');
+                  localStorage.setItem('storeapp_has_store_credentials', 'false');
                 }
               } catch (e) {
-                sessionStorage.setItem('storeapp_has_store_credentials', 'false');
+                localStorage.setItem('storeapp_has_store_credentials', 'false');
               }
             }
 
@@ -10480,8 +10479,8 @@
             if (res && res.length > 0) id = res[0].id;
           }
 
-          // Sincronizar también a la tabla dedicada store_credentials si está disponible
-          if (sessionStorage.getItem('storeapp_has_store_credentials') !== 'false') {
+          // Sincronizar también a la tabla dedicada store_credentials sólo si está habilitada
+          if (localStorage.getItem('storeapp_has_store_credentials') === 'true') {
             const credsPayload = {
               store_id: activeStore,
               cloudinary_name: dataToSave.cloudinary_name,
@@ -10502,7 +10501,7 @@
               },
               body: JSON.stringify(credsPayload)
             }).then(r => {
-              if (r.status === 404) sessionStorage.setItem('storeapp_has_store_credentials', 'false');
+              if (r.status === 404 || r.status === 401 || r.status === 403) localStorage.setItem('storeapp_has_store_credentials', 'false');
             }).catch(() => {});
           }
 
