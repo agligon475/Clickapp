@@ -1661,6 +1661,16 @@ async function loadSheet() {
       CFG.theme = cfg.theme != null ? cfg.theme : (parsedDesign.theme || CFG.theme || 'dark');
       CFG.font = cfg.font != null ? cfg.font : (parsedDesign.font || CFG.font || '');
       CFG.fontBody = cfg.font_body != null ? cfg.font_body : (parsedDesign.font_body || parsedDesign.fontBody || CFG.fontBody || '');
+      const bStyle = parsedDesign.brand_style || cfg.brand_style;
+      if (bStyle) {
+        CFG.brandStyle = bStyle;
+        if (!parsedDesign.font && !cfg.font) {
+          if (bStyle === 'clasico') { CFG.font = 'Playfair Display'; CFG.fontBody = 'Lato'; }
+          else if (bStyle === 'vibrante') { CFG.font = 'Barlow Condensed'; CFG.fontBody = 'Barlow'; }
+          else if (bStyle === 'relajado') { CFG.font = 'Space Grotesk'; CFG.fontBody = 'DM Sans'; }
+          else if (bStyle === 'minimalista') { CFG.font = 'Inter'; CFG.fontBody = 'Inter'; }
+        }
+      }
       CFG.bg = cfg.bg != null ? cfg.bg : (parsedDesign.bg || CFG.bg || '');
       CFG.logo = cfg.logo_url || parsedDesign.logo || CFG.logo || '';
       CFG.heroBgColor = parsedDesign.heroBgColor || CFG.heroBgColor || '#0E0E0E';

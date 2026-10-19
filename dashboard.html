@@ -4720,9 +4720,109 @@
       outline-offset: 2px !important;
       border-color: var(--red, #D72638) !important;
     }
-    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-      outline: 2px solid var(--red, #D72638) !important;
-      outline-offset: 2px !important;
+    /* ── DISEÑO DE CATÁLOGO & PREVIEW EN VIVO ── */
+    .design-wrap {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 1080px) {
+      .design-wrap {
+        grid-template-columns: 1fr;
+      }
+    }
+    .design-preview-wrap {
+      position: sticky;
+      top: 70px;
+      z-index: 10;
+    }
+    .preview-topbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: var(--steel);
+      border: 1px solid var(--zinc);
+      border-bottom: none;
+      border-radius: 12px 12px 0 0;
+    }
+    .prev-size-btn {
+      width: 32px;
+      height: 30px;
+      background: var(--iron);
+      border: 1px solid transparent;
+      border-radius: 6px;
+      color: var(--silver);
+      cursor: pointer;
+      transition: all .15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+    .prev-size-btn:hover {
+      background: var(--zinc);
+      color: var(--white);
+    }
+    .prev-size-btn.active {
+      background: var(--zinc);
+      color: var(--red);
+      border-color: var(--zinc);
+    }
+    .preview-frame-wrap {
+      background: var(--steel);
+      border: 1px solid var(--zinc);
+      border-radius: 0 0 12px 12px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      min-height: 520px;
+      padding: 16px;
+      transition: all .3s;
+    }
+    .preview-frame-wrap.mobile {
+      padding: 16px 20px;
+    }
+    .preview-frame {
+      width: 100%;
+      max-width: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, .5);
+      transition: all .3s;
+      margin: 0 auto;
+      background: #0E0E0E;
+    }
+    .preview-frame-wrap.mobile .preview-frame {
+      max-width: 320px;
+      border-radius: 28px;
+      border: 6px solid #27272a;
+    }
+    .prev-spotlight-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(.9);
+      background: rgba(10, 10, 10, .85);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 20px;
+      padding: 3px 8px;
+      font-size: 7px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: #fff;
+      pointer-events: none;
+      z-index: 20;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity .2s, transform .2s;
+    }
+    .prev-spotlight-label.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
     }
   </style>
 
@@ -6289,10 +6389,105 @@
       <div class="design-wrap">
         <!-- LEFT: controls -->
         <div class="design-controls">
+          <!-- TARJETA: Estética y Personalidad Visual (Opciones del Setup Inicial) -->
+          <div class="card config-section" style="margin-bottom:14px;">
+            <div class="card-title config-section-title" onclick="toggleAccordionCard(this, event)">
+              <span style="display:flex;align-items:center;gap:6px;">
+                <i class="bi bi-palette" style="color:var(--red);"></i> ESTÉTICA Y PERSONALIDAD DE LA TIENDA
+              </span>
+            </div>
+            <div class="card-content config-section-content">
+              <div style="font-size:12px;color:var(--silver);margin-bottom:14px;line-height:1.5;">
+                Elegí el estilo visual que mejor defina la personalidad de tu catálogo. Las opciones son exactamente las mismas del configurador inicial. Podés ver el resultado en vivo en el panel de la derecha.
+              </div>
+
+              <!-- Grid de 4 Estilos -->
+              <div class="onb-grid-2col" style="margin-bottom:16px;">
+                <div class="onb-opt-card" id="style-card-clasico" onclick="selectCatalogStyle('clasico')">
+                  <div class="onb-opt-icon">🏛️</div>
+                  <div class="onb-opt-content">
+                    <div class="onb-opt-title">Clásico y profesional</div>
+                    <div class="onb-opt-desc">Líneas limpias, tipografías estructuradas e imagen sobria</div>
+                  </div>
+                  <div class="onb-check-indicator"><i class="bi bi-check-lg"></i></div>
+                </div>
+
+                <div class="onb-opt-card" id="style-card-vibrante" onclick="selectCatalogStyle('vibrante')">
+                  <div class="onb-opt-icon">⚡</div>
+                  <div class="onb-opt-content">
+                    <div class="onb-opt-title">Vibrante y con energías</div>
+                    <div class="onb-opt-desc">Colores llamativos, alto contraste y estética dinámica</div>
+                  </div>
+                  <div class="onb-check-indicator"><i class="bi bi-check-lg"></i></div>
+                </div>
+
+                <div class="onb-opt-card" id="style-card-relajado" onclick="selectCatalogStyle('relajado')">
+                  <div class="onb-opt-icon">🌿</div>
+                  <div class="onb-opt-content">
+                    <div class="onb-opt-title">Relajado y natural</div>
+                    <div class="onb-opt-desc">Tonos cálidos, bordes redondeados y aspecto amigable</div>
+                  </div>
+                  <div class="onb-check-indicator"><i class="bi bi-check-lg"></i></div>
+                </div>
+
+                <div class="onb-opt-card" id="style-card-minimalista" onclick="selectCatalogStyle('minimalista')">
+                  <div class="onb-opt-icon">✨</div>
+                  <div class="onb-opt-content">
+                    <div class="onb-opt-title">Minimalista</div>
+                    <div class="onb-opt-desc">Espacios despejados, máxima simplicidad y elegancia</div>
+                  </div>
+                  <div class="onb-check-indicator"><i class="bi bi-check-lg"></i></div>
+                </div>
+              </div>
+
+              <!-- Paletas sugeridas de 1 click -->
+              <div style="margin-top: 14px; margin-bottom:16px;">
+                <div style="font-size:11px; font-weight:700; color:var(--silver); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
+                  Paletas sugeridas en 1 click:
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <button type="button" class="onb-preset-btn" onclick="applyCatalogPreset('#D72638', '#FFD166', '#1E2022')">
+                    <span style="width:12px;height:12px;border-radius:50%;background:#D72638;"></span> Rojo Pasión
+                  </button>
+                  <button type="button" class="onb-preset-btn" onclick="applyCatalogPreset('#2563EB', '#60A5FA', '#0F172A')">
+                    <span style="width:12px;height:12px;border-radius:50%;background:#2563EB;"></span> Azul Tech
+                  </button>
+                  <button type="button" class="onb-preset-btn" onclick="applyCatalogPreset('#10B981', '#34D399', '#064E3B')">
+                    <span style="width:12px;height:12px;border-radius:50%;background:#10B981;"></span> Verde Fresh
+                  </button>
+                  <button type="button" class="onb-preset-btn" onclick="applyCatalogPreset('#8B5CF6', '#F472B6', '#1E1B4B')">
+                    <span style="width:12px;height:12px;border-radius:50%;background:#8B5CF6;"></span> Morado Neo
+                  </button>
+                </div>
+              </div>
+
+              <!-- Color principal y tema rápido -->
+              <div style="background:var(--iron);padding:12px 14px;border-radius:10px;border:1px solid var(--zinc);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+                <div>
+                  <label style="font-size:11px;font-weight:700;color:var(--white);display:block;margin-bottom:2px;">Color Primario de Acento</label>
+                  <span style="font-size:11px;color:var(--silver);">Se aplica en botones, carrito, títulos de acento y badges</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <input type="color" id="catalog-brand-color-picker" value="#D72638"
+                    style="width:36px;height:28px;border:1px solid var(--zinc);border-radius:6px;padding:0;cursor:pointer;background:none;"
+                    oninput="pickColorCustom(this.value, 1)" />
+                  <span id="catalog-brand-color-hex" style="font-size:11px;font-family:monospace;color:var(--fog);font-weight:700;">#D72638</span>
+                </div>
+              </div>
+
+              <div class="section-footer-save">
+                <button class="abm-btn-new abm-btn-full" onclick="saveCatalogStyleWithStatus('design-style-status')">
+                  <i class="bi bi-floppy2"></i> Guardar estética elegida
+                </button>
+                <div id="design-style-status" class="status-msg-text"></div>
+              </div>
+            </div>
+          </div>
+
           <!-- ACCORDION 1: Imagen y fondo del catálogo -->
           <div class="card config-section collapsed" style="margin-bottom:14px;">
             <div class="card-title config-section-title" onclick="toggleAccordionCard(this, event)">
-              <span>FONDO Y ESTÉTICA DEL CATÁLOGO</span>
+              <span>FONDO Y PORTADA DEL CATÁLOGO</span>
             </div>
             <div class="card-content config-section-content">
               <!-- COLOR DE FONDO DEL CATÁLOGO -->
@@ -6668,6 +6863,191 @@
             </div>
           </div>
         </div><!-- /design-controls -->
+
+        <!-- RIGHT: live preview -->
+        <div class="design-preview-wrap">
+          <div class="preview-topbar">
+            <span style="font-size:11px;font-weight:700;color:var(--white);text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:6px;">
+              <i class="bi bi-eye" style="color:var(--red);"></i> Vista previa en tiempo real
+            </span>
+            <div style="display:flex;gap:6px;margin-left:auto;">
+              <button class="prev-size-btn active" id="btn-prev-desktop" onclick="setPreviewSize(this,'desktop')" title="Vista Desktop / Computadora"><i class="bi bi-laptop"></i></button>
+              <button class="prev-size-btn" id="btn-prev-mobile" onclick="setPreviewSize(this,'mobile')" title="Vista Mobile / Celular"><i class="bi bi-phone"></i></button>
+            </div>
+          </div>
+          <div class="preview-frame-wrap" id="preview-wrap">
+            <div class="preview-frame" id="preview-frame">
+
+              <!-- Mini store preview -->
+              <div id="prev-store" style="font-family:'Barlow Condensed',sans-serif;font-size:11px;overflow:hidden;border-radius:8px;min-height:500px;transition:background .3s;position:relative;background:#0E0E0E;">
+
+                <!-- prev topbar -->
+                <div id="prev-nav" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);">
+                  <div style="position:relative;display:inline-flex;">
+                    <div id="prev-icon" style="width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;background:#D72638;">🔧</div>
+                    <div class="prev-spotlight-label" id="spl-nav-icon">Ícono nav</div>
+                  </div>
+                  <span id="prev-name" style="font-weight:800;font-size:14px;color:#F5F5F0;">FerreApp</span>
+                  <div style="position:relative;margin-left:auto;display:inline-flex;">
+                    <div style="display:flex;align-items:center;gap:6px;background:#D72638;border-radius:5px;padding:3px 8px;color:#fff;font-size:10px;font-weight:600;" id="prev-cart-btn">
+                      <i class="bi bi-bag"></i> 0
+                    </div>
+                    <div class="prev-spotlight-label" id="spl-cart">Carrito</div>
+                  </div>
+                </div>
+
+                <!-- prev hero -->
+                <div id="prev-hero" style="padding:16px 14px 12px;position:relative;overflow:hidden;min-height:115px;display:flex;align-items:center;background:#0E0E0E;">
+                  <!-- bg image layer -->
+                  <div id="prev-hero-img" style="position:absolute;inset:0;background-size:cover;background-position:center;transition:all .3s;"></div>
+                  <!-- overlay -->
+                  <div id="prev-hero-overlay" style="position:absolute;inset:0;background:rgba(0,0,0,.48);"></div>
+                  <!-- stripe fallback -->
+                  <div id="prev-hero-stripes" style="position:absolute;inset:0;background:repeating-linear-gradient(-55deg,transparent,transparent 10px,rgba(255,255,255,.02) 10px,rgba(255,255,255,.02) 11px);"></div>
+                  <div style="position:relative;z-index:1;width:100%;">
+                    <div id="prev-h1" style="font-size:19px;font-weight:800;line-height:.95;text-transform:uppercase;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.4);">Tu ferretería</div>
+                    <div style="position:relative;display:inline-block;">
+                      <div id="prev-h2" style="font-size:19px;font-weight:800;line-height:.95;text-transform:uppercase;color:#D72638;text-shadow:0 1px 6px rgba(0,0,0,.4);">sin demoras.</div>
+                      <div class="prev-spotlight-label" id="spl-h2">Título acento</div>
+                    </div>
+                    <div id="prev-desc" style="font-size:9px;color:rgba(255,255,255,.8);margin-top:5px;line-height:1.4;font-family:'Barlow',sans-serif;font-weight:400;text-shadow:0 1px 4px rgba(0,0,0,.4);">
+                      Elegí tus productos, armá tu pedido y coordiná por WhatsApp.
+                    </div>
+                    <div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;">
+                      <div style="position:relative;display:inline-flex;">
+                        <span id="prev-pill1" style="background:#D72638;border:none;border-radius:20px;padding:3px 8px;font-size:8px;color:#fff;font-weight:600;font-family:'Barlow',sans-serif;display:flex;align-items:center;gap:3px;">
+                          <i class="bi bi-whatsapp"></i> WhatsApp
+                        </span>
+                        <div class="prev-spotlight-label" id="spl-pill1">Pill</div>
+                      </div>
+                      <div style="position:relative;display:inline-flex;">
+                        <span id="prev-pill2" style="background:#D72638;border:none;border-radius:20px;padding:3px 8px;font-size:8px;color:#fff;font-weight:600;font-family:'Barlow',sans-serif;display:flex;align-items:center;gap:3px;">
+                          <i class="bi bi-cash-coin"></i> Pagos
+                        </span>
+                        <div class="prev-spotlight-label" id="spl-pill2">Pill</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- prev products -->
+                <div style="padding:12px 14px;">
+                  <!-- Categories -->
+                  <div style="display:flex;gap:6px;margin-bottom:10px;overflow:hidden;">
+                    <div style="position:relative;display:inline-flex;">
+                      <div id="prev-cat-all" style="border-radius:5px;padding:4px 9px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:#D72638;color:#fff;border:1px solid #D72638;">
+                        Todos
+                      </div>
+                      <div class="prev-spotlight-label" id="spl-cat-active">Categoría activa</div>
+                    </div>
+                    <div style="border-radius:5px;padding:4px 9px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:rgba(255,255,255,.05);color:#8A8A90;border:1px solid rgba(255,255,255,.08);">
+                      Herramientas
+                    </div>
+                    <div style="border-radius:5px;padding:4px 9px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:rgba(255,255,255,.05);color:#8A8A90;border:1px solid rgba(255,255,255,.08);">
+                      Eléctrica
+                    </div>
+                  </div>
+
+                  <!-- Product cards -->
+                  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">
+                    <!-- Card 1 -->
+                    <div id="prev-card-1" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;transition:all .2s;">
+                      <div style="position:relative;aspect-ratio:1;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:24px;">
+                        🔧
+                        <div style="position:absolute;top:4px;right:4px;background:rgba(14,14,14,.7);backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.1);border-radius:9999px;padding:1px 5px;font-size:6px;font-weight:600;color:#fff;">
+                          Stock: 12
+                        </div>
+                      </div>
+                      <div style="padding:6px 7px;">
+                        <div style="position:relative;display:inline-block;width:100%;">
+                          <div class="prev-cat-label" style="font-size:6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">
+                            Herramientas
+                          </div>
+                          <div class="prev-spotlight-label" id="spl-cat-label" style="font-size:6px;">Etiqueta categoría</div>
+                        </div>
+                        <div style="font-size:8px;font-weight:700;color:#F0F0EC;line-height:1.2;margin-bottom:3px;">
+                          Llave inglesa
+                        </div>
+                        <div style="font-size:10px;font-weight:800;color:#F0F0EC;margin-bottom:4px;">$15.900</div>
+                        <div style="position:relative;">
+                          <div class="prev-add-btn" style="border-radius:9999px;padding:3px 5px;font-size:6px;font-weight:600;text-align:center;border:1px solid rgba(255,255,255,.15);color:#B0B0B8;display:flex;align-items:center;justify-content:space-between;gap:2px;">
+                            <span style="width:12px;height:12px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">−</span>
+                            <span>+ Agregar</span>
+                            <span style="width:12px;height:12px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">+</span>
+                          </div>
+                          <div class="prev-spotlight-label" id="spl-add-btn">Botón agregar</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div id="prev-card-2" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;transition:all .2s;">
+                      <div style="position:relative;aspect-ratio:1;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:24px;">
+                        ⚡
+                        <div style="position:absolute;top:4px;right:4px;background:rgba(14,14,14,.7);backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.1);border-radius:9999px;padding:1px 5px;font-size:6px;font-weight:600;color:#fff;">
+                          Stock: 8
+                        </div>
+                      </div>
+                      <div style="padding:6px 7px;">
+                        <div class="prev-cat-label" style="font-size:6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">
+                          Electricidad
+                        </div>
+                        <div style="font-size:8px;font-weight:700;color:#F0F0EC;line-height:1.2;margin-bottom:3px;">
+                          Cinta aisladora
+                        </div>
+                        <div style="font-size:10px;font-weight:800;color:#F0F0EC;margin-bottom:4px;">$4.200</div>
+                        <div class="prev-add-btn" style="border-radius:9999px;padding:3px 5px;font-size:6px;font-weight:600;text-align:center;border:1px solid rgba(255,255,255,.15);color:#B0B0B8;display:flex;align-items:center;justify-content:space-between;gap:2px;">
+                          <span style="width:12px;height:12px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">−</span>
+                          <span>+ Agregar</span>
+                          <span style="width:12px;height:12px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">+</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div id="prev-card-3" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;transition:all .2s;">
+                      <div style="position:relative;aspect-ratio:1;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:24px;">
+                        🔌
+                        <div style="position:absolute;top:4px;right:4px;background:rgba(215,38,56,.8);backdrop-filter:blur(3px);border:1px solid rgba(215,38,56,.4);border-radius:9999px;padding:1px 5px;font-size:6px;font-weight:600;color:#fff;">
+                          Sin stock
+                        </div>
+                      </div>
+                      <div style="padding:6px 7px;">
+                        <div class="prev-cat-label" style="font-size:6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">
+                          Electricidad
+                        </div>
+                        <div style="font-size:8px;font-weight:700;color:#F0F0EC;line-height:1.2;margin-bottom:3px;">
+                          Disyuntor 20A
+                        </div>
+                        <div style="font-size:10px;font-weight:800;color:#F0F0EC;margin-bottom:4px;">$28.000</div>
+                        <div style="padding:3px;text-align:center;font-size:6px;color:#8A8A90;border:1px solid rgba(255,255,255,.08);border-radius:5px;opacity:.6;">
+                          Sin stock
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- prev footer -->
+                <div id="prev-footer" style="padding:10px 14px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
+                  <span id="prev-footer-name" style="font-size:8px;font-weight:700;color:#8A8A90;">© FerreApp</span>
+                  <div style="display:flex;gap:5px;align-items:center;">
+                    <div style="position:relative;display:inline-flex;">
+                      <div id="prev-wapp-btn" style="width:18px;height:18px;border-radius:50%;background:#D72638;display:flex;align-items:center;justify-content:center;">
+                        <i class="bi bi-whatsapp" style="font-size:8px;color:#fff;"></i>
+                      </div>
+                      <div class="prev-spotlight-label" id="spl-footer">WhatsApp</div>
+                    </div>
+                    <div style="width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;">
+                      <i class="bi bi-instagram" style="font-size:8px;color:#8A8A90;"></i>
+                    </div>
+                  </div>
+                </div>
+
+              </div><!-- /prev-store -->
+            </div><!-- /preview-frame -->
+          </div><!-- /preview-frame-wrap -->
+        </div><!-- /design-preview-wrap -->
       </div><!-- /design-wrap -->
     </div><!-- /view-design-catalogo -->
 
@@ -10179,7 +10559,7 @@
       // Store background
       const s = document.getElementById('prev-store');
       if (s) {
-        s.style.background = cfg.bg || t.bg;
+        s.style.background = cfg.heroBgColor || cfg.bg || t.bg;
         s.style.fontFamily = `'${cfg.font || 'Barlow Condensed'}', sans-serif`;
       }
 
@@ -10203,6 +10583,9 @@
       if (cartBtn) cartBtn.style.background = c;
 
       // Hero
+      const prevHero = document.getElementById('prev-hero');
+      if (prevHero) prevHero.style.background = cfg.heroBgColor || '#0E0E0E';
+
       const prevH1 = document.getElementById('prev-h1');
       if (prevH1) {
         prevH1.textContent = cfg.h1 || 'Tu ferretería';
@@ -10229,18 +10612,26 @@
         }
       });
 
-      // Hero image preview
-      const heroImgUrl = cfg.bg || localStorage.getItem('storeapp_hero_img');
+      // Hero image preview (detects mobile frame vs desktop)
+      const isMobileFrame = document.getElementById('preview-wrap')?.classList.contains('mobile');
+      const heroImgUrl = (isMobileFrame && cfg.banner_mobile_img)
+        ? cfg.banner_mobile_img
+        : (cfg.bg || localStorage.getItem('storeapp_hero_img'));
       const prevHeroImg = document.getElementById('prev-hero-img');
       const prevHeroOverlay = document.getElementById('prev-hero-overlay');
       const prevHeroStripes = document.getElementById('prev-hero-stripes');
       if (heroImgUrl && prevHeroImg) {
         prevHeroImg.style.backgroundImage = `url('${heroImgUrl}')`;
+        const opacityVal = cfg.heroImgOpacity != null ? cfg.heroImgOpacity : 100;
+        prevHeroImg.style.opacity = opacityVal / 100;
         if (prevHeroStripes) prevHeroStripes.style.display = 'none';
         const overlayVal = document.getElementById('cfg-overlay')?.value || 48;
         if (prevHeroOverlay) prevHeroOverlay.style.background = `rgba(0,0,0,${overlayVal / 100})`;
       } else {
-        if (prevHeroImg) prevHeroImg.style.backgroundImage = 'none';
+        if (prevHeroImg) {
+          prevHeroImg.style.backgroundImage = 'none';
+          prevHeroImg.style.opacity = '1';
+        }
         if (prevHeroStripes) prevHeroStripes.style.display = 'block';
         if (prevHeroOverlay) prevHeroOverlay.style.background = 'rgba(0,0,0,.48)';
       }
@@ -10299,6 +10690,11 @@
       const cHex = document.getElementById('color-hex');
       if (cHex) cHex.textContent = color;
 
+      const cCat = document.getElementById('catalog-brand-color-picker');
+      if (cCat) cCat.value = color;
+      const cCatHex = document.getElementById('catalog-brand-color-hex');
+      if (cCatHex) cCatHex.textContent = color;
+
       // Si el gestor no fijó un color manual independiente para la línea 2, mantenerlo sincronizado con el color de su sitio
       if (!cfg.h2ColorManual && (!cfg.h2Color || cfg.h2Color.toLowerCase() === (oldColor || '').toLowerCase() || cfg.h2Color === '#D72638')) {
         updateBannerTextColor('h2', color);
@@ -10313,6 +10709,13 @@
       document.querySelectorAll('.color-swatch').forEach(b => b.classList.remove('active'));
       const cHex = document.getElementById('color-hex');
       if (cHex) cHex.textContent = color;
+
+      const cInput = document.getElementById('cfg-color');
+      if (cInput) cInput.value = color;
+      const cCat = document.getElementById('catalog-brand-color-picker');
+      if (cCat) cCat.value = color;
+      const cCatHex = document.getElementById('catalog-brand-color-hex');
+      if (cCatHex) cCatHex.textContent = color;
 
       // Si el gestor no fijó un color manual independiente para la línea 2, mantenerlo sincronizado con el color de su sitio
       if (!cfg.h2ColorManual && (!cfg.h2Color || cfg.h2Color.toLowerCase() === (oldColor || '').toLowerCase() || cfg.h2Color === '#D72638')) {
@@ -10374,8 +10777,117 @@
       document.querySelectorAll('.prev-size-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       const wrap = document.getElementById('preview-wrap');
-      wrap.classList.toggle('mobile', size === 'mobile');
+      if (wrap) wrap.classList.toggle('mobile', size === 'mobile');
+      previewUpdate();
     }
+
+    /* ── CONTROLADORES DE ESTÉTICA DEL CATÁLOGO ── */
+    function selectCatalogStyle(styleId) {
+      cfg.brand_style = styleId;
+      if (typeof CONFIG !== 'undefined') CONFIG.brand_style = styleId;
+
+      document.querySelectorAll('[id^="style-card-"]').forEach(card => card.classList.remove('selected'));
+      const card = document.getElementById('style-card-' + styleId);
+      if (card) card.classList.add('selected');
+
+      // Mapear presets tipográficos e identidad para cada estética del setup
+      if (styleId === 'clasico') {
+        cfg.font = 'Playfair Display';
+        cfg.fontBody = 'Lato';
+      } else if (styleId === 'vibrante') {
+        cfg.font = 'Barlow Condensed';
+        cfg.fontBody = 'Barlow';
+      } else if (styleId === 'relajado') {
+        cfg.font = 'Space Grotesk';
+        cfg.fontBody = 'DM Sans';
+      } else if (styleId === 'minimalista') {
+        cfg.font = 'Inter';
+        cfg.fontBody = 'Inter';
+      }
+
+      localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
+      localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
+
+      flashSpotlight();
+      previewUpdate();
+    }
+    window.selectCatalogStyle = selectCatalogStyle;
+
+    function applyCatalogPreset(c1, c2, c3) {
+      pickColor(null, c1, 1);
+      cfg.color_accent = c2;
+      cfg.color_base = c3;
+      if (typeof CONFIG !== 'undefined') {
+        CONFIG.color = c1;
+        CONFIG.color_accent = c2;
+        CONFIG.color_base = c3;
+      }
+      localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
+      localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
+      previewUpdate();
+    }
+    window.applyCatalogPreset = applyCatalogPreset;
+
+    async function saveCatalogStyleWithStatus(statusElId) {
+      const statusEl = document.getElementById(statusElId);
+      if (statusEl) {
+        statusEl.className = 'status-msg-text';
+        statusEl.textContent = 'Guardando estética y colores...';
+      }
+
+      try {
+        localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
+        localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
+
+        // Sync to Supabase
+        const resSettings = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        if (resSettings.ok) {
+          const rows = await resSettings.json();
+          if (rows && rows.length > 0) {
+            const dbRow = rows[0];
+            const currentBillingInfo = (typeof dbRow.billing_info === 'object' && dbRow.billing_info !== null) ? dbRow.billing_info : {};
+            const updatedBillingInfo = {
+              ...currentBillingInfo,
+              design: {
+                ...(currentBillingInfo.design || {}),
+                brand_style: cfg.brand_style || 'vibrante',
+                font: cfg.font,
+                font_body: cfg.fontBody,
+                color: cfg.color
+              }
+            };
+
+            await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
+              method: 'PATCH',
+              headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+              },
+              body: JSON.stringify({
+                primary_color: cfg.color,
+                billing_info: updatedBillingInfo
+              })
+            });
+          }
+        }
+
+        if (statusEl) {
+          statusEl.className = 'status-msg-text ok';
+          statusEl.textContent = '✓ Estética y colores guardados con éxito';
+          setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 3500);
+        }
+      } catch (e) {
+        if (statusEl) {
+          statusEl.className = 'status-msg-text err';
+          statusEl.textContent = 'Error al guardar: ' + e.message;
+        }
+      }
+    }
+    window.saveCatalogStyleWithStatus = saveCatalogStyleWithStatus;
 
     async function syncStoreConfigToSupabase(cfgObj) {
       try {
@@ -10743,13 +11255,20 @@
       setVal('cfg-hero-bg-color', cfg.heroBgColor || '#0E0E0E');
       setTxt('hero-bg-color-hex', cfg.heroBgColor || '#0E0E0E');
       setVal('cfg-hero-img-opacity', cfg.heroImgOpacity != null ? cfg.heroImgOpacity : 100);
-      setTxt('hero-img-opacity-val', (cfg.heroImgOpacity != null ? cfg.heroImgOpacity : 100) + '%');
+      setVal('catalog-brand-color-picker', cfg.color || '#D72638');
+      setTxt('catalog-brand-color-hex', (cfg.color || '#D72638').toUpperCase());
 
       // Mark active color swatch
       document.querySelectorAll('.color-swatch').forEach(b => {
         if (b.dataset.color === cfg.color) b.classList.add('active');
         else b.classList.remove('active');
       });
+
+      // Sincronizar estilo visual del catálogo (opciones del setup inicial)
+      const currentStyle = cfg.brand_style || (typeof CONFIG !== 'undefined' && CONFIG.brand_style) || 'vibrante';
+      document.querySelectorAll('[id^="style-card-"]').forEach(card => card.classList.remove('selected'));
+      const activeStyleCard = document.getElementById('style-card-' + currentStyle);
+      if (activeStyleCard) activeStyleCard.classList.add('selected');
 
       // Theme
       document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
@@ -11202,8 +11721,17 @@
               }
             }
 
+            if (parsedEmail.brand_style || r.brand_style) {
+              const bStyle = parsedEmail.brand_style || r.brand_style;
+              cfg.brand_style = bStyle;
+              document.querySelectorAll('[id^="style-card-"]').forEach(card => card.classList.remove('selected'));
+              const sCard = document.getElementById('style-card-' + bStyle);
+              if (sCard) sCard.classList.add('selected');
+            }
+
             previewBanner('banner1');
             previewBanner('banner2');
+            if (typeof previewUpdate === 'function') previewUpdate();
           }
         }
         if (statusEl) {
