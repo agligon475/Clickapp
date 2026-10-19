@@ -8897,11 +8897,6 @@
       }
     }
 
-    /** IDs de fila en Supabase (products.id) son UUID. */
-    const UUID_ROW_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    function isSupabaseRowId(id) {
-      return UUID_ROW_RE.test(String(id || ''));
-    }
 
     const CURRENCY_SYMBOLS = {
       ARS: '$',
