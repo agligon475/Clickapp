@@ -342,8 +342,8 @@
         }
         @media (min-width: 992px) {
             .hero-container {
-                grid-template-columns: 1.15fr 0.85fr;
-                gap: 56px;
+                grid-template-columns: 1.05fr 0.95fr;
+                gap: 52px;
             }
         }
         .hero-left-col { text-align: left; }
@@ -401,54 +401,509 @@
         }
         .hero-btns { display: flex; gap: 14px; justify-content: flex-start; flex-wrap: wrap; }
 
-        /* RIGHT HERO BENTO CARD */
-        .tldr-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-card);
-            padding: 28px;
-            box-shadow: var(--shadow-card);
-            transition: all 0.2s ease;
-        }
-        .tldr-card:hover {
-            box-shadow: var(--shadow-card-hover);
-            border-color: var(--border-subtle-hover);
-        }
-        .tldr-header {
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--text-heading);
-            margin-bottom: 16px;
+        .hero-social-proof {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 14px;
+            margin-top: 30px;
+            padding-top: 22px;
+            border-top: 1px solid var(--border-subtle);
         }
-        .tldr-list {
-            list-style: none;
+        .proof-avatars {
+            display: flex;
+            align-items: center;
+        }
+        .avatar-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-surface);
+            border: 2px solid var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            margin-left: -8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+        .avatar-circle:first-child { margin-left: 0; }
+        .proof-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+        .proof-stars {
+            color: #F59E0B;
+            font-size: 13px;
+        }
+        .proof-stars strong {
+            color: var(--text-heading);
+            margin-left: 4px;
+        }
+
+        /* ── INTERACTIVE LIVE MOCKUP STAGE ── */
+        .hero-mockup-stage {
+            position: relative;
+            width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 14px;
-            margin: 0;
-            padding: 0;
-            font-size: 13.5px;
-            color: var(--text-body);
-            line-height: 1.5;
+            align-items: center;
+            justify-content: center;
+            perspective: 1200px;
         }
-        .tldr-list li { display: flex; align-items: flex-start; gap: 12px; }
-        .tldr-icon-dot {
-            width: 20px;
-            height: 20px;
-            background: var(--bg-primary);
+
+        .hero-mockup-glow {
+            position: absolute;
+            top: 42%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 380px;
+            height: 380px;
+            background: radial-gradient(circle, rgba(246, 0, 0, 0.16) 0%, rgba(245, 158, 11, 0.1) 45%, transparent 70%);
+            filter: blur(55px);
+            pointer-events: none;
+            z-index: 1;
+            animation: heroAuraPulse 7s ease-in-out infinite alternate;
+        }
+        @keyframes heroAuraPulse {
+            0% { transform: translate(-50%, -50%) scale(0.92); opacity: 0.65; }
+            100% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+        }
+
+        /* SMARTPHONE CHASSIS */
+        .mockup-phone {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            max-width: 324px;
+            background: #111113;
+            border-radius: 36px;
+            border: 8px solid #232225;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.12);
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+            user-select: none;
+        }
+        .mockup-phone:hover {
+            transform: translateY(-4px) rotateX(2deg) rotateY(-2deg);
+            box-shadow: 0 32px 64px -14px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.16);
+        }
+
+        .mockup-notch-bar {
+            background: #111113;
+            padding: 8px 16px 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mockup-notch {
+            width: 82px;
+            height: 12px;
+            background: #000;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+        }
+        .mockup-notch-lens {
+            width: 4px;
+            height: 4px;
+            background: #27272a;
+            border-radius: 50%;
+        }
+
+        /* PHONE SCREEN CONTENTS */
+        .mockup-screen {
+            background: #0E0E10;
+            color: #F4F4F5;
+            font-size: 11px;
+            min-height: 410px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .mockup-screen-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: rgba(24, 24, 27, 0.88);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .mockup-store-info {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .mockup-store-avatar {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            background: var(--brand-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+        }
+        .mockup-store-name {
+            font-weight: 700;
+            font-size: 11.5px;
+            color: #FFF;
+        }
+        .mockup-store-status {
+            font-size: 8px;
+            color: #10B981;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 600;
+        }
+        .mockup-cart-btn {
+            position: relative;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            padding: 4px 9px;
+            color: #FFF;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .mockup-cart-badge {
+            background: var(--brand-accent);
+            color: #FFF;
+            font-size: 9px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
-            color: var(--brand-accent);
+            font-weight: 800;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .mockup-screen-hero {
+            padding: 12px 14px;
+            background: linear-gradient(135deg, rgba(246, 0, 0, 0.25) 0%, rgba(20, 20, 24, 0.95) 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .mockup-hero-tag {
+            font-size: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #F87171;
+            margin-bottom: 2px;
+        }
+        .mockup-hero-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #FFF;
+            line-height: 1.2;
+        }
+
+        .mockup-categories-strip {
+            display: flex;
+            gap: 6px;
+            padding: 8px 14px;
+            overflow-x: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .mockup-cat-pill {
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 8.5px;
+            font-weight: 600;
+            white-space: nowrap;
+            background: rgba(255, 255, 255, 0.05);
+            color: #A1A1AA;
+        }
+        .mockup-cat-pill.active {
+            background: var(--brand-accent);
+            color: #FFF;
+        }
+
+        .mockup-products-area {
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .mockup-product-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .mockup-product-thumb {
+            width: 46px;
+            height: 46px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
             flex-shrink: 0;
-            margin-top: 1px;
+            position: relative;
+        }
+        .mockup-thumb-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #10B981;
+            color: #000;
+            font-size: 7px;
+            font-weight: 800;
+            padding: 1px 4px;
+            border-radius: 4px;
+        }
+        .mockup-product-details {
+            flex: 1;
+            min-width: 0;
+        }
+        .mockup-prod-name {
+            font-weight: 700;
+            font-size: 10.5px;
+            color: #F4F4F5;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .mockup-prod-price {
+            font-size: 12px;
+            font-weight: 800;
+            color: #FFF;
+            margin: 2px 0 4px;
+        }
+        .mockup-btn-add {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 6px;
+            padding: 4px 8px;
+            color: #E4E4E7;
+            font-size: 9px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .mockup-btn-add:hover,
+        .mockup-btn-add.clicked {
+            background: var(--brand-accent);
+            border-color: var(--brand-accent);
+            color: #FFF;
+            transform: scale(0.97);
+        }
+
+        .mockup-checkout-bar {
+            margin-top: auto;
+            padding: 10px 14px;
+            background: rgba(18, 18, 22, 0.95);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .mockup-checkout-total {
+            font-size: 8.5px;
+            color: #A1A1AA;
+        }
+        .mockup-checkout-total strong {
+            display: block;
+            font-size: 12px;
+            color: #FFF;
+        }
+        .mockup-wapp-action-btn {
+            background: #25D366;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 9.5px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+        }
+        .mockup-wapp-action-btn:hover,
+        .mockup-wapp-action-btn.active-pulse {
+            background: #1EBE5D;
+            transform: scale(1.03);
+            box-shadow: 0 6px 16px rgba(37, 211, 102, 0.5);
+        }
+
+        /* VIRTUAL CURSOR */
+        .mock-virtual-cursor {
+            position: absolute;
+            top: 250px;
+            left: 140px;
+            width: 22px;
+            height: 22px;
+            pointer-events: none;
+            z-index: 20;
+            transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.4));
+        }
+        .mock-virtual-cursor svg {
+            width: 100%;
+            height: 100%;
+            fill: #FFF;
+            stroke: #000;
+            stroke-width: 1.5;
+        }
+
+        /* FLOATING WHATSAPP COMANDA POPUP */
+        .mock-whatsapp-card {
+            position: absolute;
+            right: -24px;
+            bottom: 50px;
+            z-index: 10;
+            width: 280px;
+            background: #FFFFFF;
+            border-radius: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(37, 211, 102, 0.25);
+            padding: 14px;
+            transform: translateY(18px) scale(0.92);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .mock-whatsapp-card.show-card {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        @media (max-width: 768px) {
+            .mock-whatsapp-card {
+                right: 0;
+                bottom: -20px;
+                width: 260px;
+            }
+        }
+        .mock-wapp-card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #F1F5F9;
+        }
+        .mock-wapp-icon {
+            width: 26px;
+            height: 26px;
+            background: #25D366;
+            color: #FFF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        .mock-wapp-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #0F172A;
+            line-height: 1.2;
+        }
+        .mock-wapp-time {
+            font-size: 9px;
+            color: #64748B;
+            margin-left: auto;
+        }
+        .mock-wapp-bubble {
+            background: #E7FCE8;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 10px;
+            color: #1E293B;
+            line-height: 1.45;
+            border: 1px solid rgba(37, 211, 102, 0.2);
+            font-family: monospace;
+        }
+        .mock-wapp-bubble-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 4px;
+            font-size: 9px;
+            color: #15803D;
+            margin-top: 6px;
+            font-family: var(--font-body);
+            font-weight: 600;
+        }
+
+        /* REPLAY / SIMULATION CONTROLS */
+        .mockup-controls-strip {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 18px;
+            z-index: 5;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .btn-mock-replay {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-pill);
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-heading);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease;
+        }
+        .btn-mock-replay:hover {
+            border-color: var(--brand-accent);
+            color: var(--brand-accent);
+            transform: translateY(-1px);
+        }
+        .mock-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .dot-pulse-green {
+            width: 7px;
+            height: 7px;
+            background: #10B981;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: pulseGreen 2s infinite;
+        }
+        @keyframes pulseGreen {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
 
         .hero-stats-grid {
@@ -459,12 +914,13 @@
             background: var(--bg-surface);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-card);
-            padding: 20px 16px;
+            padding: 16px;
             box-shadow: var(--shadow-card);
+            margin-top: 14px;
         }
         .hero-stat-item { text-align: center; }
         .hero-stat-val {
-            font-size: clamp(1.4rem, 2.5vw, 2rem);
+            font-size: clamp(1.3rem, 2.2vw, 1.8rem);
             font-weight: 700;
             color: var(--text-heading);
             letter-spacing: -0.02em;
@@ -1526,10 +1982,11 @@
                 <!-- COLUMNA IZQUIERDA -->
                 <div class="hero-left-col">
                     <div class="hero-badge">
-                        <span class="status-dot"></span> 15 días de prueba gratuita · 0% comisiones
+                        <span class="status-dot"></span> ⚡ Nuevo: Pedidos 24/7 Modo Sereno + Kit QR
                     </div>
                     <h1>Vendé más con tu catálogo digital conectado a <span class="text-accent">WhatsApp</span></h1>
-                    <p>La plataforma minimalista y veloz para comercios, gastronomía, ferreterías e indumentaria. Publicá tus productos en minutos y recibí pedidos claros y organizados sin intermediarios ni retenciones.</p>
+                    <p>La plataforma moderna, minimalista y ultraveloz para comercios, gastronomía, ferreterías e indumentaria. Publicá tus productos en 15 minutos, compartí en redes y recibí pedidos claros y organizados directo en tu chat, sin intermediarios ni retenciones.</p>
+                    
                     <div class="hero-btns">
                         <a href="/alta-usuario" class="btn-primary">
                             Crear Catálogo Gratis <i class="bi bi-arrow-right" style="font-size: 14px;"></i>
@@ -1538,47 +1995,168 @@
                             Ver Demos en Vivo
                         </a>
                     </div>
+
+                    <!-- SOCIAL PROOF STRIP -->
+                    <div class="hero-social-proof">
+                        <div class="proof-avatars">
+                            <span class="avatar-circle">👨‍🔧</span>
+                            <span class="avatar-circle">👩‍🍳</span>
+                            <span class="avatar-circle">👔</span>
+                            <span class="avatar-circle">🍕</span>
+                            <span class="avatar-circle">🏬</span>
+                        </div>
+                        <div class="proof-text">
+                            <div class="proof-stars">★★★★★ <strong>4.9 / 5</strong></div>
+                            <span>Más de <strong>150 negocios</strong> vendiendo · 0% Comisiones de por vida</span>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- COLUMNA DERECHA -->
+                <!-- COLUMNA DERECHA: INTERACTIVE LIVE MOCKUP -->
                 <div class="hero-right-col">
-                    <div class="tldr-card">
-                        <div class="tldr-header">
-                            <span>⚡</span> Beneficios Clave
-                        </div>
-                        <ul class="tldr-list">
-                            <li>
-                                <span class="tldr-icon-dot"><i class="bi bi-check2"></i></span>
-                                <span><strong>Listo en 15 minutos:</strong> Subí tus productos con fotos y precios de forma ágil e intuitiva.</span>
-                            </li>
-                            <li>
-                                <span class="tldr-icon-dot"><i class="bi bi-check2"></i></span>
-                                <span><strong>0% Comisiones por venta:</strong> Todo lo que cobrás ingresa directo a tu bolsillo.</span>
-                            </li>
-                            <li>
-                                <span class="tldr-icon-dot"><i class="bi bi-check2"></i></span>
-                                <span><strong>Pedidos directos a WhatsApp:</strong> Recibí la lista exacta con variantes y subtotales.</span>
-                            </li>
-                            <li>
-                                <span class="tldr-icon-dot"><i class="bi bi-check2"></i></span>
-                                <span><strong>Kit Imprimible y QR:</strong> Diseños listos para imprimir en tu mostrador o vidriera.</span>
-                            </li>
-                        </ul>
-                    </div>
+                    <div class="hero-mockup-stage">
+                        <!-- Glowing backdrop aura -->
+                        <div class="hero-mockup-glow"></div>
 
-                    <!-- METRICS GRID -->
-                    <div class="hero-stats-grid">
-                        <div class="hero-stat-item">
-                            <div class="hero-stat-val">+150</div>
-                            <div class="hero-stat-label">Tiendas Activas</div>
+                        <!-- Virtual Floating Cursor -->
+                        <div class="mock-virtual-cursor" id="mock-cursor">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87a.5.5 0 0 0 .35-.85L6.35 2.85a.5.5 0 0 0-.85.36z" />
+                            </svg>
                         </div>
-                        <div class="hero-stat-item">
-                            <div class="hero-stat-val accent-val">+12.000</div>
-                            <div class="hero-stat-label">Pedidos Enviados</div>
+
+                        <!-- Smartphone Chassis -->
+                        <div class="mockup-phone" id="hero-mockup-phone" onclick="triggerMockOrderSim(true)" title="Hacé clic para probar la simulación">
+                            <!-- Notch bar -->
+                            <div class="mockup-notch-bar">
+                                <div class="mockup-notch">
+                                    <div class="mockup-notch-lens"></div>
+                                </div>
+                            </div>
+
+                            <!-- Screen -->
+                            <div class="mockup-screen">
+                                <!-- Mini Nav -->
+                                <div class="mockup-screen-nav">
+                                    <div class="mockup-store-info">
+                                        <div class="mockup-store-avatar">🏬</div>
+                                        <div>
+                                            <div class="mockup-store-name">FerreApp</div>
+                                            <div class="mockup-store-status"><i class="bi bi-circle-fill" style="font-size:5px;"></i> Abierto ahora</div>
+                                        </div>
+                                    </div>
+                                    <div class="mockup-cart-btn">
+                                        <i class="bi bi-bag"></i>
+                                        <span class="mockup-cart-badge" id="mock-cart-badge"><span id="mock-cart-count">0</span></span>
+                                    </div>
+                                </div>
+
+                                <!-- Mini Hero -->
+                                <div class="mockup-screen-hero">
+                                    <div class="mockup-hero-tag">Envíos en el día</div>
+                                    <div class="mockup-hero-title">Tu ferretería online sin demoras</div>
+                                </div>
+
+                                <!-- Mini Category Pills -->
+                                <div class="mockup-categories-strip">
+                                    <span class="mockup-cat-pill active">Todos</span>
+                                    <span class="mockup-cat-pill">Herramientas</span>
+                                    <span class="mockup-cat-pill">Eléctrica</span>
+                                    <span class="mockup-cat-pill">Pinturas</span>
+                                </div>
+
+                                <!-- Products Area -->
+                                <div class="mockup-products-area">
+                                    <!-- Featured Product Card -->
+                                    <div class="mockup-product-card" id="mock-product-card">
+                                        <div class="mockup-product-thumb">
+                                            ⚙️
+                                            <span class="mockup-thumb-badge">Stock: 12</span>
+                                        </div>
+                                        <div class="mockup-product-details">
+                                            <div class="mockup-prod-name">Taladro Percutor 750W Industrial</div>
+                                            <div class="mockup-prod-price">$45.000</div>
+                                            <button class="mockup-btn-add" id="mock-add-btn">
+                                                <span>+ Agregar al Carrito</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Secondary Mini Card -->
+                                    <div class="mockup-product-card" style="opacity: 0.75; padding: 6px 10px;">
+                                        <div class="mockup-product-thumb" style="width:36px; height:36px; font-size:16px;">
+                                            ⚡
+                                        </div>
+                                        <div class="mockup-product-details">
+                                            <div class="mockup-prod-name" style="font-size:9.5px;">Cinta Aisladora Premium 20m</div>
+                                            <div class="mockup-prod-price" style="font-size:10.5px; margin:0;">$4.200</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Checkout Action Bar -->
+                                <div class="mockup-checkout-bar">
+                                    <div class="mockup-checkout-total">
+                                        <span>Total estimado</span>
+                                        <strong>$45.000</strong>
+                                    </div>
+                                    <button class="mockup-wapp-action-btn" id="mock-wapp-btn">
+                                        <i class="bi bi-whatsapp"></i> Pedir por WhatsApp
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="hero-stat-item">
-                            <div class="hero-stat-val">$0</div>
-                            <div class="hero-stat-label">Comisiones Extra</div>
+
+                        <!-- Floating WhatsApp Comanda Card -->
+                        <div class="mock-whatsapp-card" id="mock-whatsapp-card">
+                            <div class="mock-wapp-card-header">
+                                <div class="mock-wapp-icon"><i class="bi bi-whatsapp"></i></div>
+                                <div>
+                                    <div class="mock-wapp-title">WhatsApp Business · FerreApp</div>
+                                    <span style="font-size:9px; color:#10B981; font-weight:600;"><i class="bi bi-check-circle-fill"></i> Comanda Entrante</span>
+                                </div>
+                                <span class="mock-wapp-time">Ahora</span>
+                            </div>
+                            <div class="mock-wapp-bubble">
+                                <strong>🛒 *NUEVO PEDIDO #1084*</strong><br>
+                                👤 *Cliente:* Lucas Benítez<br>
+                                📍 *Entrega:* Envío a domicilio<br>
+                                💳 *Pago:* Transferencia bancaria<br>
+                                ────────────────<br>
+                                • 1x Taladro Percutor 750W ($45.000)<br>
+                                ────────────────<br>
+                                💰 *Total:* $45.000<br>
+                                <span style="color:#059669; font-weight:700;">⚡ 0% Comisiones para el local</span>
+                                <div class="mock-wapp-bubble-footer">
+                                    <span>11:42</span> <i class="bi bi-check2-all" style="color:#0284c7; font-size:12px;"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interaction controls strip -->
+                        <div class="mockup-controls-strip">
+                            <button class="btn-mock-replay" onclick="triggerMockOrderSim(true)">
+                                <i class="bi bi-play-circle-fill" style="color:var(--brand-accent);"></i> Probar Simulación en Vivo
+                            </button>
+                            <span class="mock-status-pill" id="mock-sim-status">
+                                <span class="dot-pulse-green"></span> Simulación en tiempo real
+                            </span>
+                        </div>
+
+                        <!-- METRICS GRID -->
+                        <div class="hero-stats-grid">
+                            <div class="hero-stat-item">
+                                <div class="hero-stat-val">+150</div>
+                                <div class="hero-stat-label">Tiendas Activas</div>
+                            </div>
+                            <div class="hero-stat-item">
+                                <div class="hero-stat-val accent-val">+12.000</div>
+                                <div class="hero-stat-label">Pedidos a WhatsApp</div>
+                            </div>
+                            <div class="hero-stat-item">
+                                <div class="hero-stat-val">$0</div>
+                                <div class="hero-stat-label">Comisiones Extra</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -3181,6 +3759,138 @@
                 }
             }, { passive: true });
         })();
+
+        // ==========================================
+        // HERO INTERACTIVE LIVE MOCKUP CONTROLLER
+        // ==========================================
+        let isMockSimRunning = false;
+        let mockSimTimer = null;
+
+        function triggerMockOrderSim(userTriggered) {
+            const cursor = document.getElementById('mock-cursor');
+            const addBtn = document.getElementById('mock-add-btn');
+            const wappBtn = document.getElementById('mock-wapp-btn');
+            const cartBadge = document.getElementById('mock-cart-badge');
+            const wappCard = document.getElementById('mock-whatsapp-card');
+            const statusPill = document.getElementById('mock-sim-status');
+
+            if (!cursor || !addBtn || !wappBtn || !cartBadge || !wappCard) return;
+
+            // Reset current state
+            if (mockSimTimer) clearTimeout(mockSimTimer);
+            isMockSimRunning = true;
+
+            // Initial visual state reset
+            cursor.style.transition = 'all 0.65s cubic-bezier(0.25, 1, 0.5, 1)';
+            cursor.style.opacity = '1';
+            cursor.style.top = '140px';
+            cursor.style.left = '80px';
+            cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+
+            cartBadge.textContent = '0';
+            cartBadge.style.transform = 'scale(0.85)';
+            cartBadge.style.background = '#64748B';
+
+            addBtn.innerHTML = '<i class="bi bi-cart-plus"></i> Agregar';
+            addBtn.style.background = 'var(--text-heading)';
+            addBtn.style.color = '#fff';
+            addBtn.style.transform = 'none';
+
+            wappBtn.style.transform = 'none';
+            wappBtn.style.boxShadow = 'none';
+
+            wappCard.classList.remove('active');
+
+            if (statusPill) {
+                statusPill.innerHTML = '<span class="dot-pulse-green"></span> Simulando navegación del cliente...';
+            }
+
+            // Step 1: Move cursor to "+ Agregar" button
+            setTimeout(() => {
+                const phone = document.getElementById('hero-mockup-phone');
+                if (!phone) return;
+                const btnRect = addBtn.getBoundingClientRect();
+                const phoneRect = phone.getBoundingClientRect();
+
+                const targetX = (btnRect.left + btnRect.width / 2) - phoneRect.left;
+                const targetY = (btnRect.top + btnRect.height / 2) - phoneRect.top;
+
+                cursor.style.top = targetY + 'px';
+                cursor.style.left = targetX + 'px';
+            }, 300);
+
+            // Step 2: Click button & add product to cart
+            setTimeout(() => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(0.82)';
+                addBtn.style.transform = 'scale(0.92)';
+
+                setTimeout(() => {
+                    cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                    addBtn.style.transform = 'scale(1)';
+                    addBtn.style.background = '#10B981';
+                    addBtn.innerHTML = '<i class="bi bi-check2"></i> ¡Agregado!';
+
+                    cartBadge.textContent = '1';
+                    cartBadge.style.background = 'var(--brand-accent)';
+                    cartBadge.style.transform = 'scale(1.25)';
+                    setTimeout(() => { cartBadge.style.transform = 'scale(1)'; }, 280);
+
+                    if (statusPill) {
+                        statusPill.innerHTML = '<span class="dot-pulse-green"></span> Producto agregado al carrito (1 ítem)';
+                    }
+                }, 180);
+            }, 1150);
+
+            // Step 3: Move cursor to "Pedir por WhatsApp"
+            setTimeout(() => {
+                const phone = document.getElementById('hero-mockup-phone');
+                if (!phone) return;
+                const wappRect = wappBtn.getBoundingClientRect();
+                const phoneRect = phone.getBoundingClientRect();
+
+                const targetX = (wappRect.left + wappRect.width / 2) - phoneRect.left;
+                const targetY = (wappRect.top + wappRect.height / 2) - phoneRect.top;
+
+                cursor.style.top = targetY + 'px';
+                cursor.style.left = targetX + 'px';
+            }, 1900);
+
+            // Step 4: Click "Pedir por WhatsApp"
+            setTimeout(() => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(0.82)';
+                wappBtn.style.transform = 'scale(0.96)';
+                wappBtn.style.boxShadow = '0 0 16px rgba(37, 211, 102, 0.45)';
+
+                setTimeout(() => {
+                    cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                    cursor.style.opacity = '0'; // Hide cursor smoothly
+                    wappBtn.style.transform = 'scale(1)';
+
+                    // Step 5: Reveal WhatsApp incoming order card
+                    wappCard.classList.add('active');
+
+                    if (statusPill) {
+                        statusPill.innerHTML = '<span style="color:#10B981; font-weight:700;">✓ ¡Comanda enviada a WhatsApp! (0% comisiones)</span>';
+                    }
+                }, 200);
+            }, 2700);
+
+            // Auto-loop after 7.5 seconds if user hasn't explicitly triggered another one
+            mockSimTimer = setTimeout(() => {
+                isMockSimRunning = false;
+                // Soft reset back to rest state
+                if (!userTriggered) {
+                    triggerMockOrderSim(false);
+                }
+            }, 7800);
+        }
+
+        // Initialize simulation shortly after load
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                triggerMockOrderSim(false);
+            }, 1200);
+        });
     </script>
 </body>
 </html>
