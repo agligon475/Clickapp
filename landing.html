@@ -100,19 +100,15 @@
     }
     </script>
 
-    <link rel="manifest" href="/manifest.json">
+    <!-- Home pública sin prompt de instalación de app para visitantes móviles -->
     <meta name="theme-color" content="#F6F6F6">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="DaleTePido">
     <link rel="apple-touch-icon" href="/dashboard-icon.png">
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW reg error:', err));
-        });
-      }
+      // Evitar que el navegador móvil ofrezca instalar la app o apk en la home pública
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        return false;
+      });
     </script>
 
     <!-- FONTS & ICONS -->
@@ -3892,5 +3888,13 @@
             }, 1200);
         });
     </script>
+
+    <!-- Vercel Web Analytics & Insights -->
+    <script>
+      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+      window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>
