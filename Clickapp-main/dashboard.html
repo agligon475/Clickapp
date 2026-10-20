@@ -4720,85 +4720,184 @@
       outline-offset: 2px !important;
       border-color: var(--red, #D72638) !important;
     }
-    /* ── DISEÑO DE CATÁLOGO & PREVIEW EN VIVO ── */
-    .design-wrap {
-      display: grid;
-      grid-template-columns: 1fr 400px;
-      gap: 20px;
+    /* ── DISEÑO DE CATÁLOGO & PREVIEW EN VIVO A MEDIA PANTALLA & ESCALADO ── */
+    .design-wrap,
+    #view-design-catalogo .design-wrap {
+      display: grid !important;
+      grid-template-columns: minmax(340px, 1fr) minmax(460px, 1.15fr) !important;
+      gap: 24px;
       align-items: start;
     }
-    @media (max-width: 1080px) {
-      .design-wrap {
-        grid-template-columns: 1fr;
+    @media (max-width: 1140px) {
+      .design-wrap,
+      #view-design-catalogo .design-wrap {
+        grid-template-columns: 1fr !important;
       }
     }
     .design-preview-wrap {
       position: sticky;
-      top: 70px;
+      top: 75px;
       z-index: 10;
+      display: flex;
+      flex-direction: column;
     }
     .preview-topbar {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 10px 14px;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 16px;
       background: var(--steel);
       border: 1px solid var(--zinc);
       border-bottom: none;
-      border-radius: 12px 12px 0 0;
+      border-radius: 14px 14px 0 0;
+      flex-wrap: wrap;
     }
     .prev-size-btn {
-      width: 32px;
       height: 30px;
+      padding: 0 10px;
       background: var(--iron);
-      border: 1px solid transparent;
+      border: 1px solid var(--zinc);
       border-radius: 6px;
       color: var(--silver);
       cursor: pointer;
       transition: all .15s;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
+      gap: 5px;
+      font-size: 11.5px;
+      font-weight: 600;
     }
     .prev-size-btn:hover {
       background: var(--zinc);
       color: var(--white);
     }
     .prev-size-btn.active {
-      background: var(--zinc);
+      background: rgba(215, 38, 56, 0.18);
       color: var(--red);
-      border-color: var(--zinc);
+      border-color: var(--red);
     }
     .preview-frame-wrap {
-      background: var(--steel);
+      background: #09090b;
       border: 1px solid var(--zinc);
-      border-radius: 0 0 12px 12px;
+      border-radius: 0 0 14px 14px;
       overflow: hidden;
       display: flex;
-      justify-content: center;
-      min-height: 520px;
-      padding: 16px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 580px;
+      max-height: calc(100vh - 130px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 20px 16px;
       transition: all .3s;
+      box-shadow: inset 0 2px 12px rgba(0,0,0,0.5);
     }
-    .preview-frame-wrap.mobile {
-      padding: 16px 20px;
-    }
-    .preview-frame {
+
+    /* MOCKUP MONITOR PC (Laptop) */
+    .preview-mockup-laptop {
       width: 100%;
-      max-width: 100%;
-      border-radius: 8px;
+      background: #18181b;
+      border-radius: 14px;
+      border: 1.5px solid #3f3f46;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255,255,255,0.05);
       overflow: hidden;
-      box-shadow: 0 8px 40px rgba(0, 0, 0, .5);
-      transition: all .3s;
+      display: flex;
+      flex-direction: column;
+      transition: width .3s ease, border-radius .3s ease, border .3s ease;
       margin: 0 auto;
-      background: #0E0E0E;
     }
-    .preview-frame-wrap.mobile .preview-frame {
+    .preview-mockup-chrome {
+      background: #27272a;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #3f3f46;
+    }
+    .preview-mockup-dots {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .preview-mockup-dots span {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .preview-mockup-dots .dot-red { background: #ef4444; }
+    .preview-mockup-dots .dot-yellow { background: #eab308; }
+    .preview-mockup-dots .dot-green { background: #22c55e; }
+    .preview-mockup-address {
+      flex: 1;
       max-width: 320px;
-      border-radius: 28px;
-      border: 6px solid #27272a;
+      background: #18181b;
+      border: 1px solid #3f3f46;
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-size: 10px;
+      color: #a1a1aa;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: monospace;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
+    .preview-screen-viewport {
+      width: 100%;
+      overflow: hidden;
+      background: #0E0E0E;
+      position: relative;
+    }
+
+    /* ESCALADOR PROPORCIONAL PARA MODO MONITOR */
+    .preview-screen-scaler {
+      width: 100%;
+      transform-origin: top left;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* MOCKUP SMARTPHONE (Mobile) */
+    .preview-frame-wrap.mobile .preview-mockup-laptop {
+      max-width: 360px;
+      border-radius: 38px;
+      border: 9px solid #27272a;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255,255,255,0.08);
+    }
+    .preview-frame-wrap.mobile .preview-mockup-chrome {
+      padding: 8px 16px 4px;
+      background: #18181b;
+      border-bottom: none;
+      justify-content: center;
+      position: relative;
+    }
+    .preview-frame-wrap.mobile .preview-mockup-dots,
+    .preview-frame-wrap.mobile .preview-mockup-address {
+      display: none !important;
+    }
+    .preview-mockup-notch {
+      display: none;
+      width: 96px;
+      height: 14px;
+      background: #000;
+      border-radius: 12px;
+      margin: 0 auto;
+    }
+    .preview-frame-wrap.mobile .preview-mockup-notch {
+      display: block;
+    }
+    .preview-frame-wrap.mobile #prev-products-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+    .preview-frame-wrap.mobile #prev-card-3 {
+      grid-column: span 2;
+    }
+
     .prev-spotlight-label {
       position: absolute;
       top: 50%;
@@ -6867,185 +6966,219 @@
         <!-- RIGHT: live preview -->
         <div class="design-preview-wrap">
           <div class="preview-topbar">
-            <span style="font-size:11px;font-weight:700;color:var(--white);text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:6px;">
-              <i class="bi bi-eye" style="color:var(--red);"></i> Vista previa en tiempo real
-            </span>
-            <div style="display:flex;gap:6px;margin-left:auto;">
-              <button class="prev-size-btn active" id="btn-prev-desktop" onclick="setPreviewSize(this,'desktop')" title="Vista Desktop / Computadora"><i class="bi bi-laptop"></i></button>
-              <button class="prev-size-btn" id="btn-prev-mobile" onclick="setPreviewSize(this,'mobile')" title="Vista Mobile / Celular"><i class="bi bi-phone"></i></button>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:11.5px;font-weight:700;color:var(--white);text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:6px;">
+                <i class="bi bi-display" style="color:var(--red);"></i> Vista previa en tiempo real
+              </span>
+              <span id="preview-resolution-badge" style="font-size:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--silver);padding:2px 8px;border-radius:12px;font-weight:600;">
+                <i class="bi bi-laptop"></i> Monitor PC
+              </span>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <button class="prev-size-btn active" id="btn-prev-desktop" onclick="setPreviewSize(this,'desktop')" title="Vista Monitor de PC / Laptop">
+                <i class="bi bi-laptop"></i> PC
+              </button>
+              <button class="prev-size-btn" id="btn-prev-mobile" onclick="setPreviewSize(this,'mobile')" title="Vista Smartphone / Celular">
+                <i class="bi bi-phone"></i> Mobile
+              </button>
+              <button class="prev-size-btn" onclick="openLiveStoreUrl()" title="Abrir tienda real en pestaña nueva" style="margin-left:4px;">
+                <i class="bi bi-box-arrow-up-right"></i>
+              </button>
             </div>
           </div>
           <div class="preview-frame-wrap" id="preview-wrap">
-            <div class="preview-frame" id="preview-frame">
-
-              <!-- Mini store preview -->
-              <div id="prev-store" style="font-family:'Barlow Condensed',sans-serif;font-size:11px;overflow:hidden;border-radius:8px;min-height:500px;transition:background .3s;position:relative;background:#0E0E0E;">
-
-                <!-- prev topbar -->
-                <div id="prev-nav" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);">
-                  <div style="position:relative;display:inline-flex;">
-                    <div id="prev-icon" style="width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;background:#D72638;">🔧</div>
-                    <div class="prev-spotlight-label" id="spl-nav-icon">Ícono nav</div>
-                  </div>
-                  <span id="prev-name" style="font-weight:800;font-size:14px;color:#F5F5F0;">FerreApp</span>
-                  <div style="position:relative;margin-left:auto;display:inline-flex;">
-                    <div style="display:flex;align-items:center;gap:6px;background:#D72638;border-radius:5px;padding:3px 8px;color:#fff;font-size:10px;font-weight:600;" id="prev-cart-btn">
-                      <i class="bi bi-bag"></i> 0
-                    </div>
-                    <div class="prev-spotlight-label" id="spl-cart">Carrito</div>
-                  </div>
+            
+            <!-- Mockup Device (Laptop / Smartphone Frame) -->
+            <div class="preview-mockup-laptop" id="preview-mockup-device">
+              <!-- Browser Chrome / Smartphone Header -->
+              <div class="preview-mockup-chrome" id="preview-mockup-chrome">
+                <div class="preview-mockup-dots">
+                  <span class="dot-red"></span>
+                  <span class="dot-yellow"></span>
+                  <span class="dot-green"></span>
                 </div>
+                <div class="preview-mockup-address">
+                  <i class="bi bi-lock-fill" style="color:#22c55e;font-size:9px;"></i>
+                  <span id="preview-mockup-url">https://daletepido.com/tienda</span>
+                </div>
+                <!-- Notch (visible sólo en modo Mobile) -->
+                <div class="preview-mockup-notch"></div>
+              </div>
 
-                <!-- prev hero -->
-                <div id="prev-hero" style="padding:16px 14px 12px;position:relative;overflow:hidden;min-height:115px;display:flex;align-items:center;background:#0E0E0E;">
-                  <!-- bg image layer -->
-                  <div id="prev-hero-img" style="position:absolute;inset:0;background-size:cover;background-position:center;transition:all .3s;"></div>
-                  <!-- overlay -->
-                  <div id="prev-hero-overlay" style="position:absolute;inset:0;background:rgba(0,0,0,.48);"></div>
-                  <!-- stripe fallback -->
-                  <div id="prev-hero-stripes" style="position:absolute;inset:0;background:repeating-linear-gradient(-55deg,transparent,transparent 10px,rgba(255,255,255,.02) 10px,rgba(255,255,255,.02) 11px);"></div>
-                  <div style="position:relative;z-index:1;width:100%;">
-                    <div id="prev-h1" style="font-size:19px;font-weight:800;line-height:.95;text-transform:uppercase;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.4);">Tu ferretería</div>
-                    <div style="position:relative;display:inline-block;">
-                      <div id="prev-h2" style="font-size:19px;font-weight:800;line-height:.95;text-transform:uppercase;color:#D72638;text-shadow:0 1px 6px rgba(0,0,0,.4);">sin demoras.</div>
-                      <div class="prev-spotlight-label" id="spl-h2">Título acento</div>
-                    </div>
-                    <div id="prev-desc" style="font-size:9px;color:rgba(255,255,255,.8);margin-top:5px;line-height:1.4;font-family:'Barlow',sans-serif;font-weight:400;text-shadow:0 1px 4px rgba(0,0,0,.4);">
-                      Elegí tus productos, armá tu pedido y coordiná por WhatsApp.
-                    </div>
-                    <div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;">
+              <!-- Viewport con Escalador Dinámico -->
+              <div class="preview-screen-viewport" id="preview-screen-viewport">
+                <div class="preview-screen-scaler" id="preview-screen-scaler">
+
+                  <!-- Mini store preview -->
+                  <div id="prev-store" style="font-family:'Barlow Condensed',sans-serif;font-size:11px;overflow:hidden;min-height:540px;transition:background .3s;position:relative;background:#0E0E0E;width:100%;">
+
+                    <!-- prev topbar -->
+                    <div id="prev-nav" style="display:flex;align-items:center;gap:8px;padding:12px 18px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);">
                       <div style="position:relative;display:inline-flex;">
-                        <span id="prev-pill1" style="background:#D72638;border:none;border-radius:20px;padding:3px 8px;font-size:8px;color:#fff;font-weight:600;font-family:'Barlow',sans-serif;display:flex;align-items:center;gap:3px;">
-                          <i class="bi bi-whatsapp"></i> WhatsApp
-                        </span>
-                        <div class="prev-spotlight-label" id="spl-pill1">Pill</div>
+                        <div id="prev-icon" style="width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;background:#D72638;">🔧</div>
+                        <div class="prev-spotlight-label" id="spl-nav-icon">Ícono nav</div>
                       </div>
-                      <div style="position:relative;display:inline-flex;">
-                        <span id="prev-pill2" style="background:#D72638;border:none;border-radius:20px;padding:3px 8px;font-size:8px;color:#fff;font-weight:600;font-family:'Barlow',sans-serif;display:flex;align-items:center;gap:3px;">
-                          <i class="bi bi-cash-coin"></i> Pagos
-                        </span>
-                        <div class="prev-spotlight-label" id="spl-pill2">Pill</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- prev products -->
-                <div style="padding:12px 14px;">
-                  <!-- Categories -->
-                  <div style="display:flex;gap:6px;margin-bottom:10px;overflow:hidden;">
-                    <div style="position:relative;display:inline-flex;">
-                      <div id="prev-cat-all" style="border-radius:5px;padding:4px 9px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:#D72638;color:#fff;border:1px solid #D72638;">
-                        Todos
-                      </div>
-                      <div class="prev-spotlight-label" id="spl-cat-active">Categoría activa</div>
-                    </div>
-                    <div style="border-radius:5px;padding:4px 9px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:rgba(255,255,255,.05);color:#8A8A90;border:1px solid rgba(255,255,255,.08);">
-                      Herramientas
-                    </div>
-                    <div style="border-radius:5px;padding:4px 9px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:rgba(255,255,255,.05);color:#8A8A90;border:1px solid rgba(255,255,255,.08);">
-                      Eléctrica
-                    </div>
-                  </div>
-
-                  <!-- Product cards -->
-                  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">
-                    <!-- Card 1 -->
-                    <div id="prev-card-1" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;transition:all .2s;">
-                      <div style="position:relative;aspect-ratio:1;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:24px;">
-                        🔧
-                        <div style="position:absolute;top:4px;right:4px;background:rgba(14,14,14,.7);backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.1);border-radius:9999px;padding:1px 5px;font-size:6px;font-weight:600;color:#fff;">
-                          Stock: 12
+                      <span id="prev-name" style="font-weight:800;font-size:15px;color:#F5F5F0;">FerreApp</span>
+                      <div style="position:relative;margin-left:auto;display:inline-flex;">
+                        <div style="display:flex;align-items:center;gap:6px;background:#D72638;border-radius:6px;padding:4px 10px;color:#fff;font-size:11px;font-weight:700;" id="prev-cart-btn">
+                          <i class="bi bi-bag"></i> 0
                         </div>
+                        <div class="prev-spotlight-label" id="spl-cart">Carrito</div>
                       </div>
-                      <div style="padding:6px 7px;">
-                        <div style="position:relative;display:inline-block;width:100%;">
-                          <div class="prev-cat-label" style="font-size:6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">
-                            Herramientas
+                    </div>
+
+                    <!-- prev hero -->
+                    <div id="prev-hero" style="padding:24px 20px 18px;position:relative;overflow:hidden;min-height:130px;display:flex;align-items:center;background:#0E0E0E;">
+                      <!-- bg image layer -->
+                      <div id="prev-hero-img" style="position:absolute;inset:0;background-size:cover;background-position:center;transition:all .3s;"></div>
+                      <!-- overlay -->
+                      <div id="prev-hero-overlay" style="position:absolute;inset:0;background:rgba(0,0,0,.48);"></div>
+                      <!-- stripe fallback -->
+                      <div id="prev-hero-stripes" style="position:absolute;inset:0;background:repeating-linear-gradient(-55deg,transparent,transparent 10px,rgba(255,255,255,.02) 10px,rgba(255,255,255,.02) 11px);"></div>
+                      <div style="position:relative;z-index:1;width:100%;">
+                        <div id="prev-h1" style="font-size:22px;font-weight:800;line-height:1;text-transform:uppercase;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.5);">Tu ferretería</div>
+                        <div style="position:relative;display:inline-block;">
+                          <div id="prev-h2" style="font-size:22px;font-weight:800;line-height:1;text-transform:uppercase;color:#D72638;text-shadow:0 1px 6px rgba(0,0,0,.5);">sin demoras.</div>
+                          <div class="prev-spotlight-label" id="spl-h2">Título acento</div>
+                        </div>
+                        <div id="prev-desc" style="font-size:10px;color:rgba(255,255,255,.85);margin-top:6px;line-height:1.45;font-family:'Barlow',sans-serif;font-weight:400;text-shadow:0 1px 4px rgba(0,0,0,.4);max-width:90%;">
+                          Elegí tus productos, armá tu pedido y coordiná por WhatsApp.
+                        </div>
+                        <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">
+                          <div style="position:relative;display:inline-flex;">
+                            <span id="prev-pill1" style="background:#D72638;border:none;border-radius:20px;padding:3px 10px;font-size:9px;color:#fff;font-weight:700;font-family:'Barlow',sans-serif;display:flex;align-items:center;gap:4px;">
+                              <i class="bi bi-whatsapp"></i> WhatsApp
+                            </span>
+                            <div class="prev-spotlight-label" id="spl-pill1">Pill</div>
                           </div>
-                          <div class="prev-spotlight-label" id="spl-cat-label" style="font-size:6px;">Etiqueta categoría</div>
-                        </div>
-                        <div style="font-size:8px;font-weight:700;color:#F0F0EC;line-height:1.2;margin-bottom:3px;">
-                          Llave inglesa
-                        </div>
-                        <div style="font-size:10px;font-weight:800;color:#F0F0EC;margin-bottom:4px;">$15.900</div>
-                        <div style="position:relative;">
-                          <div class="prev-add-btn" style="border-radius:9999px;padding:3px 5px;font-size:6px;font-weight:600;text-align:center;border:1px solid rgba(255,255,255,.15);color:#B0B0B8;display:flex;align-items:center;justify-content:space-between;gap:2px;">
-                            <span style="width:12px;height:12px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">−</span>
-                            <span>+ Agregar</span>
-                            <span style="width:12px;height:12px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">+</span>
+                          <div style="position:relative;display:inline-flex;">
+                            <span id="prev-pill2" style="background:#D72638;border:none;border-radius:20px;padding:3px 10px;font-size:9px;color:#fff;font-weight:700;font-family:'Barlow',sans-serif;display:flex;align-items:center;gap:4px;">
+                              <i class="bi bi-cash-coin"></i> Pagos
+                            </span>
+                            <div class="prev-spotlight-label" id="spl-pill2">Pill</div>
                           </div>
-                          <div class="prev-spotlight-label" id="spl-add-btn">Botón agregar</div>
                         </div>
                       </div>
                     </div>
 
-                    <!-- Card 2 -->
-                    <div id="prev-card-2" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;transition:all .2s;">
-                      <div style="position:relative;aspect-ratio:1;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:24px;">
-                        ⚡
-                        <div style="position:absolute;top:4px;right:4px;background:rgba(14,14,14,.7);backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.1);border-radius:9999px;padding:1px 5px;font-size:6px;font-weight:600;color:#fff;">
-                          Stock: 8
+                    <!-- prev products -->
+                    <div style="padding:14px 18px;">
+                      <!-- Categories -->
+                      <div style="display:flex;gap:8px;margin-bottom:12px;overflow:hidden;">
+                        <div style="position:relative;display:inline-flex;">
+                          <div id="prev-cat-all" style="border-radius:6px;padding:5px 12px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;background:#D72638;color:#fff;border:1px solid #D72638;">
+                            Todos
+                          </div>
+                          <div class="prev-spotlight-label" id="spl-cat-active">Categoría activa</div>
+                        </div>
+                        <div style="border-radius:6px;padding:5px 12px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:rgba(255,255,255,.05);color:#8A8A90;border:1px solid rgba(255,255,255,.08);">
+                          Herramientas
+                        </div>
+                        <div style="border-radius:6px;padding:5px 12px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:rgba(255,255,255,.05);color:#8A8A90;border:1px solid rgba(255,255,255,.08);">
+                          Eléctrica
                         </div>
                       </div>
-                      <div style="padding:6px 7px;">
-                        <div class="prev-cat-label" style="font-size:6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">
-                          Electricidad
+
+                      <!-- Product cards -->
+                      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;" id="prev-products-grid">
+                        <!-- Card 1 -->
+                        <div id="prev-card-1" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;transition:all .2s;">
+                          <div style="position:relative;aspect-ratio:1.2;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:26px;">
+                            🔧
+                            <div style="position:absolute;top:5px;right:5px;background:rgba(14,14,14,.75);backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.1);border-radius:9999px;padding:1px 6px;font-size:7px;font-weight:700;color:#fff;">
+                              Stock: 12
+                            </div>
+                          </div>
+                          <div style="padding:8px;">
+                            <div style="position:relative;display:inline-block;width:100%;">
+                              <div class="prev-cat-label" style="font-size:7px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">
+                                Herramientas
+                              </div>
+                              <div class="prev-spotlight-label" id="spl-cat-label" style="font-size:7px;">Etiqueta categoría</div>
+                            </div>
+                            <div style="font-size:9.5px;font-weight:700;color:#F0F0EC;line-height:1.25;margin-bottom:4px;">
+                              Llave inglesa ajust.
+                            </div>
+                            <div style="font-size:12px;font-weight:800;color:#F0F0EC;margin-bottom:6px;">$15.900</div>
+                            <div style="position:relative;">
+                              <div class="prev-add-btn" style="border-radius:9999px;padding:4px 8px;font-size:8px;font-weight:700;text-align:center;border:1px solid rgba(255,255,255,.15);color:#B0B0B8;display:flex;align-items:center;justify-content:space-between;gap:4px;">
+                                <span style="width:14px;height:14px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">−</span>
+                                <span>+ Agregar</span>
+                                <span style="width:14px;height:14px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">+</span>
+                              </div>
+                              <div class="prev-spotlight-label" id="spl-add-btn">Botón agregar</div>
+                            </div>
+                          </div>
                         </div>
-                        <div style="font-size:8px;font-weight:700;color:#F0F0EC;line-height:1.2;margin-bottom:3px;">
-                          Cinta aisladora
+
+                        <!-- Card 2 -->
+                        <div id="prev-card-2" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;transition:all .2s;">
+                          <div style="position:relative;aspect-ratio:1.2;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:26px;">
+                            ⚡
+                            <div style="position:absolute;top:5px;right:5px;background:rgba(14,14,14,.75);backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.1);border-radius:9999px;padding:1px 6px;font-size:7px;font-weight:700;color:#fff;">
+                              Stock: 8
+                            </div>
+                          </div>
+                          <div style="padding:8px;">
+                            <div class="prev-cat-label" style="font-size:7px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">
+                              Electricidad
+                            </div>
+                            <div style="font-size:9.5px;font-weight:700;color:#F0F0EC;line-height:1.25;margin-bottom:4px;">
+                              Cinta aisladora 20m
+                            </div>
+                            <div style="font-size:12px;font-weight:800;color:#F0F0EC;margin-bottom:6px;">$4.200</div>
+                            <div class="prev-add-btn" style="border-radius:9999px;padding:4px 8px;font-size:8px;font-weight:700;text-align:center;border:1px solid rgba(255,255,255,.15);color:#B0B0B8;display:flex;align-items:center;justify-content:space-between;gap:4px;">
+                              <span style="width:14px;height:14px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">−</span>
+                              <span>+ Agregar</span>
+                              <span style="width:14px;height:14px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">+</span>
+                            </div>
+                          </div>
                         </div>
-                        <div style="font-size:10px;font-weight:800;color:#F0F0EC;margin-bottom:4px;">$4.200</div>
-                        <div class="prev-add-btn" style="border-radius:9999px;padding:3px 5px;font-size:6px;font-weight:600;text-align:center;border:1px solid rgba(255,255,255,.15);color:#B0B0B8;display:flex;align-items:center;justify-content:space-between;gap:2px;">
-                          <span style="width:12px;height:12px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">−</span>
-                          <span>+ Agregar</span>
-                          <span style="width:12px;height:12px;background:rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;">+</span>
+
+                        <!-- Card 3 -->
+                        <div id="prev-card-3" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;transition:all .2s;">
+                          <div style="position:relative;aspect-ratio:1.2;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:26px;">
+                            🔌
+                            <div style="position:absolute;top:5px;right:5px;background:rgba(215,38,56,.85);backdrop-filter:blur(3px);border:1px solid rgba(215,38,56,.4);border-radius:9999px;padding:1px 6px;font-size:7px;font-weight:700;color:#fff;">
+                              Sin stock
+                            </div>
+                          </div>
+                          <div style="padding:8px;">
+                            <div class="prev-cat-label" style="font-size:7px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">
+                              Electricidad
+                            </div>
+                            <div style="font-size:9.5px;font-weight:700;color:#F0F0EC;line-height:1.25;margin-bottom:4px;">
+                              Disyuntor Dif. 20A
+                            </div>
+                            <div style="font-size:12px;font-weight:800;color:#F0F0EC;margin-bottom:6px;">$28.000</div>
+                            <div style="padding:4px;text-align:center;font-size:7.5px;color:#8A8A90;border:1px solid rgba(255,255,255,.08);border-radius:6px;opacity:.7;">
+                              Sin stock
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
 
-                    <!-- Card 3 -->
-                    <div id="prev-card-3" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;transition:all .2s;">
-                      <div style="position:relative;aspect-ratio:1;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:24px;">
-                        🔌
-                        <div style="position:absolute;top:4px;right:4px;background:rgba(215,38,56,.8);backdrop-filter:blur(3px);border:1px solid rgba(215,38,56,.4);border-radius:9999px;padding:1px 5px;font-size:6px;font-weight:600;color:#fff;">
-                          Sin stock
+                    <!-- prev footer -->
+                    <div id="prev-footer" style="padding:12px 18px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;margin-top:6px;">
+                      <span id="prev-footer-name" style="font-size:9px;font-weight:700;color:#8A8A90;">© FerreApp</span>
+                      <div style="display:flex;gap:6px;align-items:center;">
+                        <div style="position:relative;display:inline-flex;">
+                          <div id="prev-wapp-btn" style="width:20px;height:20px;border-radius:50%;background:#D72638;display:flex;align-items:center;justify-content:center;">
+                            <i class="bi bi-whatsapp" style="font-size:9px;color:#fff;"></i>
+                          </div>
+                          <div class="prev-spotlight-label" id="spl-footer">WhatsApp</div>
                         </div>
-                      </div>
-                      <div style="padding:6px 7px;">
-                        <div class="prev-cat-label" style="font-size:6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">
-                          Electricidad
-                        </div>
-                        <div style="font-size:8px;font-weight:700;color:#F0F0EC;line-height:1.2;margin-bottom:3px;">
-                          Disyuntor 20A
-                        </div>
-                        <div style="font-size:10px;font-weight:800;color:#F0F0EC;margin-bottom:4px;">$28.000</div>
-                        <div style="padding:3px;text-align:center;font-size:6px;color:#8A8A90;border:1px solid rgba(255,255,255,.08);border-radius:5px;opacity:.6;">
-                          Sin stock
+                        <div style="width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;">
+                          <i class="bi bi-instagram" style="font-size:9px;color:#8A8A90;"></i>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
 
-                <!-- prev footer -->
-                <div id="prev-footer" style="padding:10px 14px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
-                  <span id="prev-footer-name" style="font-size:8px;font-weight:700;color:#8A8A90;">© FerreApp</span>
-                  <div style="display:flex;gap:5px;align-items:center;">
-                    <div style="position:relative;display:inline-flex;">
-                      <div id="prev-wapp-btn" style="width:18px;height:18px;border-radius:50%;background:#D72638;display:flex;align-items:center;justify-content:center;">
-                        <i class="bi bi-whatsapp" style="font-size:8px;color:#fff;"></i>
-                      </div>
-                      <div class="prev-spotlight-label" id="spl-footer">WhatsApp</div>
-                    </div>
-                    <div style="width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;">
-                      <i class="bi bi-instagram" style="font-size:8px;color:#8A8A90;"></i>
-                    </div>
-                  </div>
-                </div>
-
-              </div><!-- /prev-store -->
-            </div><!-- /preview-frame -->
+                  </div><!-- /prev-store -->
+                </div><!-- /preview-screen-scaler -->
+              </div><!-- /preview-screen-viewport -->
+            </div><!-- /preview-mockup-laptop -->
           </div><!-- /preview-frame-wrap -->
         </div><!-- /design-preview-wrap -->
       </div><!-- /design-wrap -->
@@ -9457,7 +9590,10 @@
 
       if (name === 'products') renderProducts();
       if (name === 'account-plan') initAccountPlanView();
-      if (name === 'design-catalogo') loadBannersConfig();
+      if (name === 'design-catalogo') {
+        loadBannersConfig();
+        setTimeout(() => { if (typeof autoScalePreview === 'function') autoScalePreview(); }, 80);
+      }
       if (name === 'pages-internas') switchPagesInternasTab('nosotros');
       if (name === 'orders') renderAllOrders();
       if (name === 'pickups') loadPickupsList();
@@ -10671,6 +10807,10 @@
       if (footerName) {
         footerName.textContent = '© ' + (cfg.name || 'FerreApp');
       }
+
+      if (typeof autoScalePreview === 'function') {
+        requestAnimationFrame(autoScalePreview);
+      }
     }
 
     function pickEmoji(btn, emoji) {
@@ -10773,13 +10913,86 @@
       previewUpdate();
     }
 
+    /* ── ESCALADO PROPORCIONAL & MOCKUP DINÁMICO DE LA VISTA PREVIA ── */
+    function autoScalePreview() {
+      const wrap = document.getElementById('preview-wrap');
+      const scaler = document.getElementById('preview-screen-scaler');
+      const viewport = document.getElementById('preview-screen-viewport');
+      const badge = document.getElementById('preview-resolution-badge');
+      const urlEl = document.getElementById('preview-mockup-url');
+      if (!wrap || !scaler || !viewport) return;
+
+      const storeParam = (typeof STORE_ID !== 'undefined' && STORE_ID) ? encodeURIComponent(STORE_ID) : 'demo';
+      if (urlEl) {
+        urlEl.textContent = `https://daletepido.com/tienda.html?store=${storeParam}`;
+      }
+
+      const isMobile = wrap.classList.contains('mobile');
+      if (isMobile) {
+        scaler.style.transform = 'none';
+        scaler.style.width = '100%';
+        scaler.style.marginBottom = '0px';
+        viewport.style.height = 'auto';
+        if (badge) {
+          badge.innerHTML = '<i class="bi bi-phone"></i> Mobile (360px)';
+        }
+        return;
+      }
+
+      // Modo Desktop / Monitor PC Escalado
+      const targetWidth = 880;
+      scaler.style.width = targetWidth + 'px';
+      scaler.style.transform = 'none';
+      scaler.style.marginBottom = '0px';
+      viewport.style.height = 'auto';
+
+      // Ancho disponible en el contenedor de la pantalla
+      const availWidth = viewport.clientWidth || (wrap.clientWidth - 32);
+
+      if (availWidth > 0 && availWidth < targetWidth) {
+        const scale = availWidth / targetWidth;
+        scaler.style.transformOrigin = 'top left';
+        scaler.style.transform = `scale(${scale})`;
+        const unscaledHeight = scaler.scrollHeight || scaler.offsetHeight;
+        const scaledHeight = Math.ceil(unscaledHeight * scale);
+        if (scaledHeight > 0) {
+          viewport.style.height = scaledHeight + 'px';
+          scaler.style.marginBottom = `-${Math.round(unscaledHeight * (1 - scale))}px`;
+        }
+        if (badge) {
+          badge.innerHTML = `<i class="bi bi-laptop"></i> Monitor ${targetWidth}px (${Math.round(scale * 100)}%)`;
+        }
+      } else {
+        scaler.style.transform = 'none';
+        scaler.style.width = '100%';
+        scaler.style.marginBottom = '0px';
+        viewport.style.height = 'auto';
+        if (badge) {
+          badge.innerHTML = '<i class="bi bi-laptop"></i> Monitor PC 100%';
+        }
+      }
+    }
+    window.autoScalePreview = autoScalePreview;
+
+    function openLiveStoreUrl() {
+      const storeParam = (typeof STORE_ID !== 'undefined' && STORE_ID) ? encodeURIComponent(STORE_ID) : 'demo';
+      window.open(`tienda.html?store=${storeParam}`, '_blank');
+    }
+    window.openLiveStoreUrl = openLiveStoreUrl;
+
     function setPreviewSize(btn, size) {
       document.querySelectorAll('.prev-size-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+      if (btn) btn.classList.add('active');
       const wrap = document.getElementById('preview-wrap');
       if (wrap) wrap.classList.toggle('mobile', size === 'mobile');
       previewUpdate();
+      setTimeout(autoScalePreview, 40);
     }
+    window.setPreviewSize = setPreviewSize;
+
+    window.addEventListener('resize', () => {
+      if (typeof autoScalePreview === 'function') autoScalePreview();
+    });
 
     /* ── CONTROLADORES DE ESTÉTICA DEL CATÁLOGO ── */
     function selectCatalogStyle(styleId) {
