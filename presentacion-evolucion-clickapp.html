@@ -952,20 +952,33 @@
       <!-- SLIDE 11: APK GESTOR EXCLUSIVO, DARK MODE POPUP, PARIDAD MÓVIL Y VERCEL ANALYTICS -->
       <section class="slide" id="slide-11">
         <span class="slide-badge" style="background:rgba(214,0,0,0.15);border-color:rgba(214,0,0,0.4);color:#FF4D4D;"><i class="bi bi-10-circle-fill"></i> Etapa 10 · Release 20 de Octubre 2026</span>
-        <h2 class="slide-title">APK Exclusiva para Gestores, Dark Mode en Popups & Vercel Analytics</h2>
-        <p class="slide-desc">Optimización integral de la experiencia gestora: descarga de APK reservada al panel privado con acceso 1-tap en móviles, popups armonizados en modo oscuro, cuadro de aviso de escritorio y analítica activa.</p>
+        <h2 class="slide-title">APK Exclusiva, Zero Scroll en Samsung A23 & Vercel Analytics</h2>
+        <p class="slide-desc">Optimización integral de la experiencia móvil y gestora: eliminación de scroll lateral en Samsung Galaxy A23, ocultación automática de descarga de APK en la app instalada, dark mode en popups y analítica en vivo.</p>
 
         <div class="grid-4" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:16px;">
           <div class="card card-accent-red">
-            <div class="card-title"><i class="bi bi-phone-fill" style="color:var(--brand-red);"></i> APK Exclusiva en Panel Gestor</div>
+            <div class="card-title"><i class="bi bi-phone-fill" style="color:var(--brand-red);"></i> APK Gestor & Ocultación Standalone</div>
             <div class="card-text">
-              Supresión de manifest e instaladores automáticos en la home pública para visitantes móviles. Acceso a la APK nativa concentrado exclusivamente en el panel gestor: disponible en el menú móvil sheet, topbar y modal responsive con botón 1-tap para celulares.
+              Descarga de APK reservada al panel privado con detección nativa estándar (<code style="color:#FF4D4D;">display-mode: standalone</code>, referrer <code style="color:#FF4D4D;">android-app://</code> y persistencia). Si el usuario ya está dentro de la app instalada, se suprimen automáticamente todos los botones de descarga (topbar, sidebar, sheet y modal) con cero parpadeo.
             </div>
             <div class="pill-list" style="margin-top:14px;">
-              <span class="pill">Sin prompts en Home</span>
-              <span class="pill">Menú Sheet 1-Tap</span>
-              <span class="pill">Topbar APK</span>
-              <span class="pill">Solo Gestores</span>
+              <span class="pill">Auto-Hide en App</span>
+              <span class="pill">TWA Referrer</span>
+              <span class="pill">Display Standalone</span>
+              <span class="pill">Zero Parpadeo</span>
+            </div>
+          </div>
+
+          <div class="card card-accent-blue" style="border-left: 3px solid #3B82F6;">
+            <div class="card-title"><i class="bi bi-aspect-ratio-fill" style="color:#3B82F6;"></i> Zero Scroll en Samsung Galaxy A23</div>
+            <div class="card-text">
+              Solución definitiva al scroll horizontal en pantallas 384–412px: bloqueo de viewport (<code style="color:#60A5FA;">maximum-scale=1.0, user-scalable=no, viewport-fit=cover</code>), contención estricta <code style="color:#60A5FA;">overflow-x: hidden</code> en html/body/main, topbar ultracompacta con dot minimalista y grillas masonry colapsadas a 1 columna en móviles.
+            </div>
+            <div class="pill-list" style="margin-top:14px;">
+              <span class="pill">Viewport Lock</span>
+              <span class="pill">Samsung A23 OK</span>
+              <span class="pill">Topbar Compacta</span>
+              <span class="pill">No Scroll Lateral</span>
             </div>
           </div>
 

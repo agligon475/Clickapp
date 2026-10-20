@@ -3,8 +3,31 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Alta de Comercio — DaleTepido</title>
+  <script>
+    (function() {
+      try {
+        const isStandalone = 
+          window.matchMedia('(display-mode: standalone)').matches ||
+          window.matchMedia('(display-mode: fullscreen)').matches ||
+          window.matchMedia('(display-mode: minimal-ui)').matches ||
+          window.navigator.standalone === true ||
+          (document.referrer && document.referrer.startsWith('android-app://')) ||
+          new URLSearchParams(window.location.search).get('source') === 'apk' ||
+          new URLSearchParams(window.location.search).get('utm_source') === 'twa' ||
+          sessionStorage.getItem('is_standalone_app') === 'true' ||
+          localStorage.getItem('is_standalone_app') === 'true';
+
+        if (isStandalone) {
+          sessionStorage.setItem('is_standalone_app', 'true');
+          localStorage.setItem('is_standalone_app', 'true');
+          document.documentElement.classList.add('is-standalone-app');
+          window.isStandaloneApp = true;
+        }
+      } catch (e) {}
+    })();
+  </script>
   <!-- SEO & indexing directives to keep the page private -->
   <meta name="robots" content="noindex, nofollow" />
   
@@ -53,6 +76,14 @@
       padding: 0;
     }
 
+    html {
+      width: 100% !important;
+      max-width: 100vw !important;
+      overflow-x: hidden !important;
+      -webkit-text-size-adjust: 100%;
+      box-sizing: border-box;
+    }
+
     body {
       background-color: #F60000;
       background-image: 
@@ -67,7 +98,9 @@
       align-items: center;
       justify-content: center;
       padding: 40px 16px;
-      overflow-x: hidden;
+      width: 100% !important;
+      max-width: 100vw !important;
+      overflow-x: hidden !important;
       -webkit-font-smoothing: antialiased;
     }
 

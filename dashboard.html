@@ -46,8 +46,31 @@
     })();
   </script>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Panel de Control — DaleTePido</title>
+  <script>
+    (function() {
+      try {
+        const isStandalone = 
+          window.matchMedia('(display-mode: standalone)').matches ||
+          window.matchMedia('(display-mode: fullscreen)').matches ||
+          window.matchMedia('(display-mode: minimal-ui)').matches ||
+          window.navigator.standalone === true ||
+          (document.referrer && document.referrer.startsWith('android-app://')) ||
+          new URLSearchParams(window.location.search).get('source') === 'apk' ||
+          new URLSearchParams(window.location.search).get('utm_source') === 'twa' ||
+          sessionStorage.getItem('is_standalone_app') === 'true' ||
+          localStorage.getItem('is_standalone_app') === 'true';
+
+        if (isStandalone) {
+          sessionStorage.setItem('is_standalone_app', 'true');
+          localStorage.setItem('is_standalone_app', 'true');
+          document.documentElement.classList.add('is-standalone-app');
+          window.isStandaloneApp = true;
+        }
+      } catch (e) {}
+    })();
+  </script>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#F6F6F6">
   <meta name="mobile-web-app-capable" content="yes">
@@ -98,6 +121,14 @@
       padding: 0;
     }
 
+    html {
+      width: 100% !important;
+      max-width: 100vw !important;
+      overflow-x: hidden !important;
+      -webkit-text-size-adjust: 100%;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: var(--font-b);
       background: var(--black);
@@ -107,6 +138,35 @@
       font-size: 14px;
       -webkit-font-smoothing: antialiased;
       transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+      width: 100% !important;
+      max-width: 100vw !important;
+      overflow-x: hidden !important;
+      position: relative;
+    }
+
+    /* ─── NORMAS STANDALONE / APK: OCULTAR DESCARGA SI YA ESTÁ EN LA APP ─── */
+    html.is-standalone-app .topbar-apk-btn,
+    html.is-standalone-app .app-download-trigger,
+    html.is-standalone-app [data-apk-download="true"],
+    html.is-standalone-app #app-download-modal,
+    body.is-standalone-app .topbar-apk-btn,
+    body.is-standalone-app .app-download-trigger,
+    body.is-standalone-app [data-apk-download="true"],
+    body.is-standalone-app #app-download-modal {
+      display: none !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    @media all and (display-mode: standalone), all and (display-mode: fullscreen), all and (display-mode: minimal-ui) {
+      .topbar-apk-btn,
+      .app-download-trigger,
+      [data-apk-download="true"],
+      #app-download-modal {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+      }
     }
 
     h1, h2, h3, .h1, .h2, .h3,
@@ -629,6 +689,10 @@
       flex-direction: column;
       min-height: 100vh;
       transition: margin-left 0.3s ease;
+      overflow-x: hidden !important;
+      width: 100% !important;
+      max-width: 100vw !important;
+      box-sizing: border-box !important;
     }
 
     @media (max-width: 768px) {
@@ -636,12 +700,92 @@
         margin-left: 0 !important;
         width: 100% !important;
         max-width: 100vw !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
       }
       .view {
         padding: 12px !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+      }
+      .topbar {
+        height: 50px !important;
+        padding: 0 10px !important;
+        gap: 6px !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+        justify-content: space-between !important;
+      }
+      .topbar-title {
+        font-size: 13px !important;
+        max-width: 120px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        flex-shrink: 1 !important;
+      }
+      .topbar-right {
+        margin-left: auto !important;
+        gap: 6px !important;
+        flex-shrink: 0 !important;
+      }
+      .topbar-apk-btn {
+        height: 28px !important;
+        padding: 0 7px !important;
+        font-size: 10.5px !important;
+        gap: 4px !important;
+      }
+      .topbar-notif-btn,
+      .jaime-topbar-btn,
+      .theme-toggle-btn {
+        width: 28px !important;
+        height: 28px !important;
+        border-radius: 6px !important;
+        flex-shrink: 0 !important;
+      }
+      .status-pill {
+        padding: 3px 8px !important;
+        font-size: 10px !important;
+        gap: 4px !important;
       }
       .design-wrap {
         grid-template-columns: 1fr !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .topbar {
+        padding: 0 8px !important;
+        gap: 4px !important;
+      }
+      .topbar-title {
+        font-size: 12px !important;
+        max-width: 95px !important;
+      }
+      .topbar-right {
+        gap: 4px !important;
+      }
+      .status-pill {
+        padding: 6px !important;
+        border-radius: 50% !important;
+        min-width: unset !important;
+      }
+      .status-pill #status-txt {
+        display: none !important;
+      }
+      .card {
+        padding: 14px 12px !important;
+      }
+      .metrics {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+      }
+      .metric {
+        padding: 12px 10px !important;
       }
     }
 
@@ -657,6 +801,9 @@
       position: sticky;
       top: 0;
       z-index: 40;
+      width: 100%;
+      max-width: 100vw;
+      box-sizing: border-box;
     }
 
     .topbar-title {
@@ -3201,9 +3348,16 @@
     /* CONFIG VIEW */
     .masonry-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
       gap: 14px;
       align-items: start;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    @media (max-width: 640px) {
+      .masonry-grid {
+        grid-template-columns: 1fr !important;
+      }
     }
 
     .config-section,
@@ -4255,6 +4409,8 @@
         margin-left: 0 !important;
         width: 100% !important;
         max-width: 100vw !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
         padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
       }
       .mobile-bottom-nav {
@@ -5214,7 +5370,7 @@
     </div>
 
     <!-- 📱 APP MÓVIL DALE! TE PIDO -->
-    <div style="padding: 10px 12px 2px 12px;">
+    <div class="app-download-trigger" data-apk-download="true" style="padding: 10px 12px 2px 12px;">
       <button class="sb-btn" onclick="openAppDownloadModal()" style="background: linear-gradient(135deg, #D60000 0%, #990000 100%); color: white; border: none; height: 38px; font-size: 12px; font-weight: 700; border-radius: 8px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px rgba(214,0,0,0.35); transition: transform .2s ease;">
         <i class="bi bi-phone-fill" style="font-size: 15px;"></i>
         <span>Descargar App Móvil</span>
@@ -5233,7 +5389,7 @@
   </div>
 
   <!-- MODAL: DESCARGAR APP MÓVIL (DALE! TE PIDO) -->
-  <div id="app-download-modal" role="dialog" aria-modal="true" aria-labelledby="app-download-modal-title" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);align-items:center;justify-content:center;">
+  <div id="app-download-modal" class="app-download-trigger" data-apk-download="true" role="dialog" aria-modal="true" aria-labelledby="app-download-modal-title" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);align-items:center;justify-content:center;">
     <div style="background:var(--iron, #171313);border:1px solid var(--zinc, rgba(255,255,255,0.12));border-radius:18px;width:min(560px,94vw);max-height:92vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.6);color:#fff;font-family:var(--font-body, system-ui);">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.08);background:linear-gradient(135deg, rgba(214,0,0,0.15) 0%, transparent 100%);">
         <div style="display:flex;align-items:center;gap:12px;">
@@ -5563,7 +5719,7 @@
       </span>
       <div class="topbar-right">
         <!-- Botón Descargar App APK (Gestor) -->
-        <button class="topbar-apk-btn" onclick="openAppDownloadModal()" title="Descargar App Móvil (.APK)" style="display:inline-flex; align-items:center; gap:5px; height:32px; padding:0 10px; background:linear-gradient(135deg, #D60000 0%, #A00000 100%); color:#fff; border:none; border-radius:8px; font-size:11.5px; font-weight:700; cursor:pointer; box-shadow:0 2px 8px rgba(214,0,0,0.3);">
+        <button class="topbar-apk-btn app-download-trigger" data-apk-download="true" onclick="openAppDownloadModal()" title="Descargar App Móvil (.APK)" style="display:inline-flex; align-items:center; gap:5px; height:32px; padding:0 10px; background:linear-gradient(135deg, #D60000 0%, #A00000 100%); color:#fff; border:none; border-radius:8px; font-size:11.5px; font-weight:700; cursor:pointer; box-shadow:0 2px 8px rgba(214,0,0,0.3);">
           <i class="bi bi-phone-fill"></i>
           <span>App APK</span>
         </button>
@@ -9091,6 +9247,9 @@
       if (m) { m.style.display = 'none'; document.body.style.overflow = ''; }
     }
     function openAppDownloadModal() {
+      if (window.isStandaloneApp || document.documentElement.classList.contains('is-standalone-app') || document.body.classList.contains('is-standalone-app')) {
+        return;
+      }
       const m = document.getElementById('app-download-modal');
       if (m) {
         m.style.display = 'flex';
@@ -19288,6 +19447,14 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     });
 
     document.addEventListener('DOMContentLoaded', () => {
+      // Si estamos en la app (APK / PWA / TWA), ocultar definitivamente cualquier descarga de APK
+      if (window.isStandaloneApp || document.documentElement.classList.contains('is-standalone-app') || sessionStorage.getItem('is_standalone_app') === 'true' || localStorage.getItem('is_standalone_app') === 'true') {
+        document.body.classList.add('is-standalone-app');
+        document.querySelectorAll('.app-download-trigger, [data-apk-download="true"], .topbar-apk-btn').forEach(el => {
+          el.style.setProperty('display', 'none', 'important');
+        });
+      }
+
       setTimeout(() => {
         if (typeof loadBannersConfig === 'function') loadBannersConfig();
         if (typeof loadPages === 'function') loadPages();
@@ -20826,7 +20993,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     
     <div id="mobile-sheet-content" class="mobile-sheet-body">
       <!-- 📱 DESCARGA APK GESTOR MOBILE -->
-      <div style="margin-bottom: 14px;">
+      <div class="app-download-trigger" data-apk-download="true" style="margin-bottom: 14px;">
         <button onclick="closeMobileMenuSheet(); openAppDownloadModal();" style="width: 100%; background: linear-gradient(135deg, #D60000 0%, #8A0000 100%); color: #fff; border: none; border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; box-shadow: 0 4px 14px rgba(214,0,0,0.35); text-align: left;">
           <div style="display: flex; align-items: center; gap: 10px;">
             <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.18); display: flex; align-items: center; justify-content: center; font-size: 20px;">
@@ -20940,7 +21107,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           <div class="mobile-sheet-item-left"><i class="bi bi-box-arrow-up-right item-icon"></i><span>Ver Mi Tienda</span></div>
           <i class="bi bi-box-arrow-up-right" style="font-size:12px; color:var(--silver);"></i>
         </button>
-        <button class="mobile-sheet-item" onclick="closeMobileMenuSheet(); openAppDownloadModal();" style="background: rgba(214,0,0,0.06); border-color: rgba(214,0,0,0.2);">
+        <button class="mobile-sheet-item app-download-trigger" data-apk-download="true" onclick="closeMobileMenuSheet(); openAppDownloadModal();" style="background: rgba(214,0,0,0.06); border-color: rgba(214,0,0,0.2);">
           <div class="mobile-sheet-item-left"><i class="bi bi-phone-fill item-icon" style="color:var(--red);"></i><span style="font-weight:700; color:var(--red);">Descargar App Gestor (.APK)</span></div>
           <span style="background:var(--red); color:#fff; font-size:9.5px; font-weight:800; padding:2px 7px; border-radius:10px;">Android</span>
         </button>

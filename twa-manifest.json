@@ -7,7 +7,7 @@
   "navigationColor": "#18181B",
   "backgroundColor": "#0A0A0C",
   "enableNotifications": true,
-  "startUrl": "/alta-usuario.html?action=login",
+  "startUrl": "/alta-usuario.html?action=login&source=apk",
   "iconUrl": "https://daletepido.com.ar/icon-512.png",
   "maskableIconUrl": "https://daletepido.com.ar/icon-512-maskable.png",
   "appVersionName": "1.0.0",
@@ -16,13 +16,13 @@
     {
       "name": "Mi Dashboard",
       "shortName": "Dashboard",
-      "url": "https://daletepido.com.ar/dashboard.html",
+      "url": "https://daletepido.com.ar/dashboard.html?source=apk",
       "icon": "https://daletepido.com.ar/icon-192.png"
     },
     {
       "name": "Crear Tienda",
       "shortName": "Registro",
-      "url": "https://daletepido.com.ar/alta-usuario.html",
+      "url": "https://daletepido.com.ar/alta-usuario.html?source=apk",
       "icon": "https://daletepido.com.ar/icon-192.png"
     }
   ],
