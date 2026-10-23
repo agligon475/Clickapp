@@ -128,98 +128,78 @@
   <div id="storyContainer" class="relative w-full bg-[#FFFFFF]">
 
     <!-- ============================================================== -->
-    <!-- CAPA 1: CAPA FIJA DE FONDO (fixed inset-0 pointer-events-none)  -->
-    <!-- Contiene 5 reproductores de video 16:9 en márgenes laterales    -->
+    <!-- CAPA 1: CAPA FIJA DE FONDO FULL SIZE (fixed inset-0)           -->
+    <!-- Contiene los 5 videos en el fondo cubriendo todo el viewport   -->
     <!-- ============================================================== -->
-    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden w-full h-full">
 
-      <!-- VIDEO 1: Margen derecho (right-8) -->
-      <div id="videoBox-0" class="video-box absolute top-1/2 -translate-y-1/2 right-4 sm:right-8 md:right-12 xl:right-16 left-auto w-[92vw] sm:w-[420px] md:w-[480px] lg:w-[540px] xl:w-[600px] aspect-video transition-transform duration-300 opacity-100 scale-100" style="z-index:5;">
-        <div class="relative w-full h-full rounded-2xl border border-[#010101]/10 bg-[#FFFFFF] shadow-[0_20px_60px_-15px_rgba(1,1,1,0.08)] overflow-hidden flex items-center justify-center">
-          <div class="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFFFFF]/90 backdrop-blur-md border border-[#010101]/10 text-[10px] font-mono font-bold tracking-wider text-[#010101]">
-            <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
-            <span>ESCENA 01 // BOCETOS INICIALES &amp; PROPÓSITO</span>
-          </div>
-          <video class="w-full h-full object-cover" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-pensando.png">
-            <source src="/videos/desarrollo/escena-01.webm" type="video/webm" />
-            <source src="/videos/desarrollo/escena-1.webm" type="video/webm" />
-            <source src="/videos/daletepido-motion/renders/daletepido_15s_promo.mp4" type="video/mp4" />
-          </video>
-          <div class="absolute bottom-3 right-3 z-20 px-2 py-0.5 rounded bg-[#010101]/80 text-[#FFFFFF] text-[9px] font-mono font-semibold tracking-widest uppercase">
-            DALE!TEPIDO
-          </div>
+      <!-- VIDEO 1: Full Size -->
+      <div id="videoBox-0" class="video-box absolute inset-0 w-full h-full transition-opacity duration-300 opacity-100" style="z-index:2;">
+        <video class="w-full h-full object-cover object-center" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-pensando.png">
+          <source src="/videos/desarrollo/escena-01.webm" type="video/webm" />
+          <source src="/videos/desarrollo/escena-1.webm" type="video/webm" />
+          <source src="/videos/daletepido-motion/renders/daletepido_15s_promo.mp4" type="video/mp4" />
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-r from-[#FFFFFF]/95 via-[#FFFFFF]/80 sm:via-[#FFFFFF]/50 to-transparent"></div>
+        <div class="hidden sm:flex absolute top-20 right-8 z-20 items-center gap-2 px-3 py-1.5 rounded-full bg-[#FFFFFF]/85 backdrop-blur-md border border-[#010101]/10 text-[11px] font-mono font-bold tracking-wider text-[#010101] shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
+          <span>ESCENA 01 // BOCETOS INICIALES &amp; PROPÓSITO</span>
         </div>
       </div>
 
-      <!-- VIDEO 2: Margen izquierdo (left-8) -->
-      <div id="videoBox-1" class="video-box absolute top-1/2 -translate-y-1/2 left-4 sm:right-auto sm:left-8 md:left-12 xl:left-16 w-[92vw] sm:w-[420px] md:w-[480px] lg:w-[540px] xl:w-[600px] aspect-video transition-transform duration-300 opacity-0 scale-95" style="z-index:5;">
-        <div class="relative w-full h-full rounded-2xl border border-[#010101]/10 bg-[#FFFFFF] shadow-[0_20px_60px_-15px_rgba(1,1,1,0.08)] overflow-hidden flex items-center justify-center">
-          <div class="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFFFFF]/90 backdrop-blur-md border border-[#010101]/10 text-[10px] font-mono font-bold tracking-wider text-[#010101]">
-            <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
-            <span>ESCENA 02 // EDGE ARCHITECTURE &amp; SPEED</span>
-          </div>
-          <video class="w-full h-full object-cover" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-resolucion.png">
-            <source src="/videos/desarrollo/escena-02.webm" type="video/webm" />
-            <source src="/videos/desarrollo/escena-2.webm" type="video/webm" />
-            <source src="/videos/daletepido-motion/renders/test.mp4" type="video/mp4" />
-          </video>
-          <div class="absolute bottom-3 right-3 z-20 px-2 py-0.5 rounded bg-[#010101]/80 text-[#FFFFFF] text-[9px] font-mono font-semibold tracking-widest uppercase">
-            DALE!TEPIDO
-          </div>
+      <!-- VIDEO 2: Full Size -->
+      <div id="videoBox-1" class="video-box absolute inset-0 w-full h-full transition-opacity duration-300 opacity-0" style="z-index:2;">
+        <video class="w-full h-full object-cover object-center" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-resolucion.png">
+          <source src="/videos/desarrollo/escena-02.webm" type="video/webm" />
+          <source src="/videos/desarrollo/escena-2.webm" type="video/webm" />
+          <source src="/videos/daletepido-motion/renders/test.mp4" type="video/mp4" />
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-l from-[#FFFFFF]/95 via-[#FFFFFF]/80 sm:via-[#FFFFFF]/50 to-transparent"></div>
+        <div class="hidden sm:flex absolute top-20 left-8 z-20 items-center gap-2 px-3 py-1.5 rounded-full bg-[#FFFFFF]/85 backdrop-blur-md border border-[#010101]/10 text-[11px] font-mono font-bold tracking-wider text-[#010101] shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
+          <span>ESCENA 02 // EDGE ARCHITECTURE &amp; SPEED</span>
         </div>
       </div>
 
-      <!-- VIDEO 3: Margen derecho (right-8) -->
-      <div id="videoBox-2" class="video-box absolute top-1/2 -translate-y-1/2 right-4 sm:right-8 md:right-12 xl:right-16 left-auto w-[92vw] sm:w-[420px] md:w-[480px] lg:w-[540px] xl:w-[600px] aspect-video transition-transform duration-300 opacity-0 scale-95" style="z-index:5;">
-        <div class="relative w-full h-full rounded-2xl border border-[#010101]/10 bg-[#FFFFFF] shadow-[0_20px_60px_-15px_rgba(1,1,1,0.08)] overflow-hidden flex items-center justify-center">
-          <div class="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFFFFF]/90 backdrop-blur-md border border-[#010101]/10 text-[10px] font-mono font-bold tracking-wider text-[#010101]">
-            <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
-            <span>ESCENA 03 // KIT QR &amp; MOSTRADOR BARRIAL</span>
-          </div>
-          <video class="w-full h-full object-cover" autoplay muted loop playsinline preload="auto" poster="/img/kit-imprimible-mostrador.jpg">
-            <source src="/videos/desarrollo/escena-03.webm" type="video/webm" />
-            <source src="/videos/desarrollo/escena-3.webm" type="video/webm" />
-            <source src="/videos/daletepido-motion/renders/daletepido_30s_promo.mp4" type="video/mp4" />
-          </video>
-          <div class="absolute bottom-3 right-3 z-20 px-2 py-0.5 rounded bg-[#010101]/80 text-[#FFFFFF] text-[9px] font-mono font-semibold tracking-widest uppercase">
-            DALE!TEPIDO
-          </div>
+      <!-- VIDEO 3: Full Size -->
+      <div id="videoBox-2" class="video-box absolute inset-0 w-full h-full transition-opacity duration-300 opacity-0" style="z-index:2;">
+        <video class="w-full h-full object-cover object-center" autoplay muted loop playsinline preload="auto" poster="/img/kit-imprimible-mostrador.jpg">
+          <source src="/videos/desarrollo/escena-03.webm" type="video/webm" />
+          <source src="/videos/desarrollo/escena-3.webm" type="video/webm" />
+          <source src="/videos/daletepido-motion/renders/daletepido_30s_promo.mp4" type="video/mp4" />
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-r from-[#FFFFFF]/95 via-[#FFFFFF]/80 sm:via-[#FFFFFF]/50 to-transparent"></div>
+        <div class="hidden sm:flex absolute top-20 right-8 z-20 items-center gap-2 px-3 py-1.5 rounded-full bg-[#FFFFFF]/85 backdrop-blur-md border border-[#010101]/10 text-[11px] font-mono font-bold tracking-wider text-[#010101] shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
+          <span>ESCENA 03 // KIT QR &amp; MOSTRADOR BARRIAL</span>
         </div>
       </div>
 
-      <!-- VIDEO 4: Margen izquierdo (left-8) -->
-      <div id="videoBox-3" class="video-box absolute top-1/2 -translate-y-1/2 left-4 sm:right-auto sm:left-8 md:left-12 xl:left-16 w-[92vw] sm:w-[420px] md:w-[480px] lg:w-[540px] xl:w-[600px] aspect-video transition-transform duration-300 opacity-0 scale-95" style="z-index:5;">
-        <div class="relative w-full h-full rounded-2xl border border-[#010101]/10 bg-[#FFFFFF] shadow-[0_20px_60px_-15px_rgba(1,1,1,0.08)] overflow-hidden flex items-center justify-center">
-          <div class="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFFFFF]/90 backdrop-blur-md border border-[#010101]/10 text-[10px] font-mono font-bold tracking-wider text-[#010101]">
-            <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
-            <span>ESCENA 04 // ROW LEVEL SECURITY &amp; PRIVACY</span>
-          </div>
-          <video class="w-full h-full object-cover" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-buenaonda.png">
-            <source src="/videos/desarrollo/escena-04.webm" type="video/webm" />
-            <source src="/videos/desarrollo/escena-4.webm" type="video/webm" />
-            <source src="/videos/daletepido-motion/renders/daletepido_promo.mp4" type="video/mp4" />
-          </video>
-          <div class="absolute bottom-3 right-3 z-20 px-2 py-0.5 rounded bg-[#010101]/80 text-[#FFFFFF] text-[9px] font-mono font-semibold tracking-widest uppercase">
-            DALE!TEPIDO
-          </div>
+      <!-- VIDEO 4: Full Size -->
+      <div id="videoBox-3" class="video-box absolute inset-0 w-full h-full transition-opacity duration-300 opacity-0" style="z-index:2;">
+        <video class="w-full h-full object-cover object-center" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-buenaonda.png">
+          <source src="/videos/desarrollo/escena-04.webm" type="video/webm" />
+          <source src="/videos/desarrollo/escena-4.webm" type="video/webm" />
+          <source src="/videos/daletepido-motion/renders/daletepido_promo.mp4" type="video/mp4" />
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-l from-[#FFFFFF]/95 via-[#FFFFFF]/80 sm:via-[#FFFFFF]/50 to-transparent"></div>
+        <div class="hidden sm:flex absolute top-20 left-8 z-20 items-center gap-2 px-3 py-1.5 rounded-full bg-[#FFFFFF]/85 backdrop-blur-md border border-[#010101]/10 text-[11px] font-mono font-bold tracking-wider text-[#010101] shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
+          <span>ESCENA 04 // ROW LEVEL SECURITY &amp; PRIVACY</span>
         </div>
       </div>
 
-      <!-- VIDEO 5: Margen centro/derecho (right-1/4) -->
-      <div id="videoBox-4" class="video-box absolute top-1/2 -translate-y-1/2 right-4 sm:right-[10%] md:right-[15%] xl:right-1/4 left-auto w-[92vw] sm:w-[420px] md:w-[480px] lg:w-[540px] xl:w-[600px] aspect-video transition-transform duration-300 opacity-0 scale-95" style="z-index:5;">
-        <div class="relative w-full h-full rounded-2xl border border-[#010101]/10 bg-[#FFFFFF] shadow-[0_20px_60px_-15px_rgba(1,1,1,0.08)] overflow-hidden flex items-center justify-center">
-          <div class="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFFFFF]/90 backdrop-blur-md border border-[#010101]/10 text-[10px] font-mono font-bold tracking-wider text-[#010101]">
-            <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
-            <span>ESCENA 05 // VISIÓN A FUTURO &amp; EXPANSIÓN SAAS</span>
-          </div>
-          <video class="w-full h-full object-cover" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-alegria.png">
-            <source src="/videos/desarrollo/escena-05.webm" type="video/webm" />
-            <source src="/videos/desarrollo/escena-5.webm" type="video/webm" />
-            <source src="/videos/daletepido-motion/renders/daletepido_15s_promo.mp4" type="video/mp4" />
-          </video>
-          <div class="absolute bottom-3 right-3 z-20 px-2 py-0.5 rounded bg-[#010101]/80 text-[#FFFFFF] text-[9px] font-mono font-semibold tracking-widest uppercase">
-            DALE!TEPIDO
-          </div>
+      <!-- VIDEO 5: Full Size -->
+      <div id="videoBox-4" class="video-box absolute inset-0 w-full h-full transition-opacity duration-300 opacity-0" style="z-index:2;">
+        <video class="w-full h-full object-cover object-center" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-alegria.png">
+          <source src="/videos/desarrollo/escena-05.webm" type="video/webm" />
+          <source src="/videos/desarrollo/escena-5.webm" type="video/webm" />
+          <source src="/videos/daletepido-motion/renders/daletepido_15s_promo.mp4" type="video/mp4" />
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-r from-[#FFFFFF]/95 via-[#FFFFFF]/80 sm:via-[#FFFFFF]/50 to-transparent"></div>
+        <div class="hidden sm:flex absolute top-20 right-8 z-20 items-center gap-2 px-3 py-1.5 rounded-full bg-[#FFFFFF]/85 backdrop-blur-md border border-[#010101]/10 text-[11px] font-mono font-bold tracking-wider text-[#010101] shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
+          <span>ESCENA 05 // VISIÓN A FUTURO &amp; EXPANSIÓN SAAS</span>
         </div>
       </div>
 

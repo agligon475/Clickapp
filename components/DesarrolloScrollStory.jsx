@@ -442,72 +442,61 @@ export default function DesarrolloScrollStory() {
       </header>
 
       {/* ============================================================== */}
-      {/* CAPA 1: CAPA FIJA DE FONDO (fixed inset-0 pointer-events-none)  */}
-      {/* Contiene 5 reproductores de video 16:9 en márgenes laterales    */}
       {/* ============================================================== */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+      {/* CAPA 1: CAPA FIJA DE FONDO FULL SIZE (fixed inset-0)           */}
+      {/* Contiene los 5 videos en el fondo cubriendo todo el viewport   */}
+      {/* ============================================================== */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden w-full h-full">
         {SCENES.map((scene, idx) => {
-          // Alignment positioning classes based on requirements:
-          // Escena 1: right-8
-          // Escena 2: left-8
-          // Escena 3: right-8
-          // Escena 4: left-8
-          // Escena 5: right-1/4
-          let alignClasses = "";
-          if (scene.videoAlign === "right") {
-            alignClasses = "right-4 sm:right-8 md:right-12 xl:right-16 left-auto";
-          } else if (scene.videoAlign === "left") {
-            alignClasses = "left-4 sm:left-8 md:left-12 xl:left-16 right-auto";
-          } else if (scene.videoAlign === "center-right") {
-            alignClasses =
-              "right-4 sm:right-[10%] md:right-[15%] xl:right-1/4 left-auto";
-          }
-
+          const isTextLeft = scene.textAreaAlign === "left";
           return (
             <div
               key={`video-container-${scene.id}`}
               ref={(el) => (videoRefs.current[idx] = el)}
-              className={`absolute top-1/2 -translate-y-1/2 ${alignClasses} w-[92vw] sm:w-[420px] md:w-[480px] lg:w-[540px] xl:w-[600px] aspect-video transition-transform duration-300`}
-              style={{
-                zIndex: 5,
-              }}
+              className="absolute inset-0 w-full h-full transition-opacity duration-300"
+              style={{ zIndex: 2 }}
             >
-              {/* Card contenedor de video con estética minimalista */}
-              <div className="relative w-full h-full rounded-2xl border border-[#010101]/10 bg-[#FFFFFF] shadow-[0_20px_60px_-15px_rgba(1,1,1,0.08)] overflow-hidden flex items-center justify-center">
-                {/* Etiqueta superior del reproductor */}
-                <div className="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFFFFF]/90 backdrop-blur-md border border-[#010101]/10 text-[10px] font-mono font-bold tracking-wider text-[#010101]">
-                  <span className="w-2 h-2 rounded-full bg-[#F60000] animate-pulse" />
-                  <span>{scene.videoLabel}</span>
-                </div>
+              {/* Video en Full Size cubriendo toda la pantalla */}
+              <video
+                className="w-full h-full object-cover object-center"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                poster={scene.posterSrc}
+                onError={() => handleVideoError(idx)}
+              >
+                {scene.webmSrc && <source src={scene.webmSrc} type="video/webm" />}
+                {scene.altWebmSrc && <source src={scene.altWebmSrc} type="video/webm" />}
+                {scene.videoSrc && <source src={scene.videoSrc} type="video/mp4" />}
+              </video>
 
-                {/* Reproductor de Video */}
-                <video
-                  className="w-full h-full object-cover"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  poster={scene.posterSrc}
-                  onError={() => handleVideoError(idx)}
-                >
-                  {scene.webmSrc && <source src={scene.webmSrc} type="video/webm" />}
-                  {scene.altWebmSrc && <source src={scene.altWebmSrc} type="video/webm" />}
-                  {scene.videoSrc && <source src={scene.videoSrc} type="video/mp4" />}
-                </video>
+              {/* Imagen Fallback si el video no carga */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={scene.posterSrc}
+                alt={scene.fallbackAlt}
+                className="video-fallback-img absolute inset-0 w-full h-full object-cover object-center hidden"
+              />
 
-                {/* Imagen Fallback si el video no carga o está en red lenta */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={scene.posterSrc}
-                  alt={scene.fallbackAlt}
-                  className="video-fallback-img absolute inset-0 w-full h-full object-cover hidden"
-                />
+              {/* Velo blanco gradiente sutil para garantizar legibilidad perfecta del texto */}
+              <div
+                className={`absolute inset-0 ${
+                  isTextLeft
+                    ? "bg-gradient-to-r from-[#FFFFFF]/95 via-[#FFFFFF]/80 sm:via-[#FFFFFF]/50 to-transparent"
+                    : "bg-gradient-to-l from-[#FFFFFF]/95 via-[#FFFFFF]/80 sm:via-[#FFFFFF]/50 to-transparent"
+                }`}
+              />
 
-                {/* Marca de agua sutil de Dale!TePido */}
-                <div className="absolute bottom-3 right-3 z-20 px-2 py-0.5 rounded bg-[#010101]/80 text-[#FFFFFF] text-[9px] font-mono font-semibold tracking-widest uppercase">
-                  DALE!TEPIDO
-                </div>
+              {/* Badge superior sutil flotante */}
+              <div
+                className={`hidden sm:flex absolute top-20 ${
+                  isTextLeft ? "right-8" : "left-8"
+                } z-20 items-center gap-2 px-3 py-1.5 rounded-full bg-[#FFFFFF]/85 backdrop-blur-md border border-[#010101]/10 text-[11px] font-mono font-bold tracking-wider text-[#010101] shadow-sm`}
+              >
+                <span className="w-2 h-2 rounded-full bg-[#F60000] animate-pulse" />
+                <span>{scene.videoLabel}</span>
               </div>
             </div>
           );
