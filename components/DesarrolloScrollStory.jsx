@@ -27,6 +27,8 @@ const SCENES = [
     videoAlign: "right", // Escena 1: Margen derecho (right-8)
     textAreaAlign: "left",
     videoLabel: "ESCENA 01 // BOCETOS INICIALES & PROPÓSITO",
+    webmSrc: "/videos/desarrollo/escena-01.webm",
+    altWebmSrc: "/videos/desarrollo/escena-1.webm",
     videoSrc: "/videos/daletepido-motion/renders/daletepido_15s_promo.mp4",
     posterSrc: "/img/jaime/jaime-pensando.png",
     fallbackAlt: "Jaime ideando Dale!TePido en su libreta",
@@ -48,6 +50,8 @@ const SCENES = [
     videoAlign: "left", // Escena 2: Margen izquierdo (left-8)
     textAreaAlign: "right",
     videoLabel: "ESCENA 02 // EDGE ARCHITECTURE & SPEED",
+    webmSrc: "/videos/desarrollo/escena-02.webm",
+    altWebmSrc: "/videos/desarrollo/escena-2.webm",
     videoSrc: "/videos/daletepido-motion/renders/test.mp4",
     posterSrc: "/img/jaime/jaime-resolucion.png",
     fallbackAlt: "Desarrollo ágil de Dale!TePido con código de alta velocidad",
@@ -69,6 +73,8 @@ const SCENES = [
     videoAlign: "right", // Escena 3: Margen derecho (right-8)
     textAreaAlign: "left",
     videoLabel: "ESCENA 03 // KIT QR & MOSTRADOR BARRIAL",
+    webmSrc: "/videos/desarrollo/escena-03.webm",
+    altWebmSrc: "/videos/desarrollo/escena-3.webm",
     videoSrc: "/videos/daletepido-motion/renders/daletepido_30s_promo.mp4",
     posterSrc: "/img/kit-imprimible-mostrador.jpg",
     fallbackAlt: "Kit QR de mostrador Dale!TePido en comercios de barrio",
@@ -90,6 +96,8 @@ const SCENES = [
     videoAlign: "left", // Escena 4: Margen izquierdo (left-8)
     textAreaAlign: "right",
     videoLabel: "ESCENA 04 // ROW LEVEL SECURITY & PRIVACY",
+    webmSrc: "/videos/desarrollo/escena-04.webm",
+    altWebmSrc: "/videos/desarrollo/escena-4.webm",
     videoSrc: "/videos/daletepido-motion/renders/daletepido_promo.mp4",
     posterSrc: "/img/jaime/jaime-buenaonda.png",
     fallbackAlt: "Arquitectura segura y blindaje criptográfico de Dale!TePido",
@@ -111,6 +119,8 @@ const SCENES = [
     videoAlign: "center-right", // Escena 5: Margen centro/derecho (right-1/4)
     textAreaAlign: "left",
     videoLabel: "ESCENA 05 // VISIÓN A FUTURO & EXPANSIÓN SAAS",
+    webmSrc: "/videos/desarrollo/escena-05.webm",
+    altWebmSrc: "/videos/desarrollo/escena-5.webm",
     videoSrc: "/videos/daletepido-motion/renders/daletepido_15s_promo.mp4",
     posterSrc: "/img/jaime/jaime-alegria.png",
     fallbackAlt: "Visión a futuro de Dale!TePido con Jaime celebrando la evolución",
@@ -481,7 +491,9 @@ export default function DesarrolloScrollStory() {
                   poster={scene.posterSrc}
                   onError={() => handleVideoError(idx)}
                 >
-                  <source src={scene.videoSrc} type="video/mp4" />
+                  {scene.webmSrc && <source src={scene.webmSrc} type="video/webm" />}
+                  {scene.altWebmSrc && <source src={scene.altWebmSrc} type="video/webm" />}
+                  {scene.videoSrc && <source src={scene.videoSrc} type="video/mp4" />}
                 </video>
 
                 {/* Imagen Fallback si el video no carga o está en red lenta */}
