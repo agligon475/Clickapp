@@ -1,28 +1,28 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="dark">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <!-- SEO Meta Tags -->
-  <title>Historia y Evolución Tecnológica | Dale! Te Pido</title>
-  <meta name="description" content="Recorrido editorial por la historia, arquitectura y evolución de Dale! Te Pido: de un catálogo ágil por WhatsApp a una plataforma SaaS multi-tenant con seguridad bancaria." />
-  <meta name="keywords" content="Dale Te Pido, Clickapp, historia, arquitectura, ecommerce, catalogo whatsapp, SaaS, supabase, desarrollo web" />
+  <title>Desarrollo & Storytelling Interactivo | Dale! Te Pido</title>
+  <meta name="description" content="Experiencia interactiva de scroll storytelling: de una libreta de notas al motor SaaS barrial sin comisiones para toda la región." />
+  <meta name="keywords" content="Dale Te Pido, Storytelling, Desarrollo, Ecommerce WhatsApp, Tecnologia Barrial, SaaS, Next.js, Supabase" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://daletepido.com.ar/desarrollo.html" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://daletepido.com.ar/desarrollo.html" />
-  <meta property="og:title" content="Historia y Evolución | Dale! Te Pido" />
-  <meta property="og:description" content="Cómo construimos una plataforma SaaS multi-tenant de comercio local con 0% comisiones, velocidad extrema y seguridad de grado bancario." />
+  <meta property="og:title" content="Historia y Evolución Tecnológica | Dale! Te Pido" />
+  <meta property="og:description" content="Descubrí cómo ideamos y construimos Dale!TePido: 0% comisiones, velocidad sub-400ms y kit QR para mostradores barriales." />
   <meta property="og:image" content="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" />
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-  <!-- Google Fonts: Josefin Sans (Headings), Poppins (Body), JetBrains Mono (Codes & Tickers) -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Josefin+Sans:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -30,1973 +30,631 @@
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- GSAP & ScrollTrigger CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
   <style>
-    /* ========================================================
-       DESIGN TOKENS & BRAND FOUNDATIONS (Dale! Te Pido)
-       ======================================================== */
     :root {
-      /* Official Reds (Brand Foundations §3.1) */
-      --red-primary: #D60000;
-      --red-accent: #E53E3E;
-      --red-dark: #7A0000;
-      --red-shadow: #4A0000;
-      --red-light: #FF6666;
-      --red-glow: rgba(214, 0, 0, 0.35);
-
-      /* Typography */
-      --font-display: 'Josefin Sans', sans-serif;
-      --font-body: 'Poppins', sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
-
-      /* Semantics */
-      --green-success: #10B981;
-      --green-soft: rgba(16, 185, 129, 0.15);
-      --amber-warning: #F59E0B;
-      --amber-soft: rgba(245, 158, 11, 0.15);
-      --purple-accent: #8B5CF6;
-      --purple-soft: rgba(139, 92, 246, 0.15);
-      --cyan-accent: #0EA5E9;
-      --cyan-soft: rgba(14, 165, 233, 0.15);
+      --color-red: #F60000;
+      --color-black: #010101;
+      --color-white: #FFFFFF;
     }
-
-    /* Dark Mode (Default / Nocturne Edition) */
-    html[data-theme="dark"] {
-      --bg-body: #0A0A0C;
-      --bg-surface: #0F172A;
-      --bg-card: #151C2C;
-      --bg-card-hover: #1E293B;
-      --bg-elevated: #1E293B;
-      --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-medium: rgba(255, 255, 255, 0.16);
-      --text-heading: #F8FAFC;
-      --text-body: #E2E8F0;
-      --text-muted: #94A3B8;
-      --text-subtle: #64748B;
-      --polaroid-bg: #1A1F2C;
-      --polaroid-border: rgba(255, 255, 255, 0.12);
-      --polaroid-text: #F8FAFC;
-      --nav-bg: rgba(10, 10, 12, 0.88);
-      --badge-bg: rgba(255, 255, 255, 0.05);
-      --logo-filter: none;
-    }
-
-    /* Cream Edition (Inspired by Epic.net warm editorial #FEF6E5) */
-    html[data-theme="cream"] {
-      --bg-body: #FEF6E5;
-      --bg-surface: #F5EAD3;
-      --bg-card: #FFFFFF;
-      --bg-card-hover: #FFFDF9;
-      --bg-elevated: #FFFFFF;
-      --border-subtle: rgba(74, 0, 0, 0.10);
-      --border-medium: rgba(74, 0, 0, 0.20);
-      --text-heading: #1B1512;
-      --text-body: #3E332E;
-      --text-muted: #6B5B52;
-      --text-subtle: #968378;
-      --polaroid-bg: #FFFFFF;
-      --polaroid-border: #E8DCC8;
-      --polaroid-text: #1B1512;
-      --nav-bg: rgba(254, 246, 229, 0.92);
-      --badge-bg: rgba(214, 0, 0, 0.06);
-      --logo-filter: brightness(0);
-    }
-
-    /* Reset & Base Styles */
-    *, *::before, *::after {
-      box-sizing: border-box;
+    body {
+      background-color: #FFFFFF !important;
+      color: #010101;
+      font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
+      overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
-
-    body {
-      background-color: var(--bg-body);
-      color: var(--text-body);
-      font-family: var(--font-body);
-      font-size: 16px;
-      line-height: 1.7;
-      overflow-x: hidden;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      position: relative;
-    }
-
-    /* Background Ambient Canvas Glow */
-    .ambient-glow {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      background: 
-        radial-gradient(circle at 15% 20%, rgba(214, 0, 0, 0.06) 0%, transparent 40%),
-        radial-gradient(circle at 85% 70%, rgba(122, 0, 0, 0.05) 0%, transparent 50%);
-    }
-
-    /* Selection */
     ::selection {
-      background: var(--red-primary);
+      background-color: #F60000;
       color: #FFFFFF;
-    }
-
-    /* Headings */
-    h1, h2, h3, h4, h5, h6 {
-      font-family: var(--font-display);
-      color: var(--text-heading);
-      letter-spacing: -0.02em;
-      line-height: 1.15;
-    }
-
-    /* ========================================================
-       TOPBAR & NAVIGATION (Epic.net style)
-       ======================================================== */
-    .header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      background: var(--nav-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border-subtle);
-      transition: all 0.3s ease;
-    }
-
-    .header-inner {
-      max-width: 1440px;
-      margin: 0 auto;
-      padding: 16px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .header-brand {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      text-decoration: none;
-    }
-
-    .header-logo {
-      height: 30px;
-      width: auto;
-      object-fit: contain;
-      filter: var(--logo-filter);
-      transition: filter 0.3s ease, transform 0.2s ease;
-    }
-
-    .header-logo:hover {
-      transform: scale(1.02);
-    }
-
-    .section-label {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--red-primary);
-      background: var(--badge-bg);
-      border: 1px solid rgba(214, 0, 0, 0.25);
-      padding: 4px 12px;
-      border-radius: 999px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .section-label::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--red-primary);
-      box-shadow: 0 0 8px var(--red-primary);
-      display: inline-block;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    /* Quick Links */
-    .header-nav {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      margin-right: 12px;
-    }
-
-    .nav-link {
-      font-size: 13.5px;
-      font-weight: 500;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .nav-link:hover, .nav-link.active {
-      color: var(--text-heading);
-    }
-
-    /* Theme Switcher Button */
-    .theme-toggle-btn {
-      background: var(--badge-bg);
-      border: 1px solid var(--border-medium);
-      color: var(--text-heading);
-      padding: 7px 14px;
-      border-radius: 999px;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-    }
-
-    .theme-toggle-btn:hover {
-      border-color: var(--red-primary);
-      transform: translateY(-1px);
-    }
-
-    /* CTA Button (Primary) */
-    .btn-header-cta {
-      background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-dark) 100%);
-      color: #FFFFFF !important;
-      border: none;
-      padding: 9px 20px;
-      border-radius: 999px;
-      font-family: var(--font-display);
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 4px 15px var(--red-glow);
-      transition: all 0.2s ease;
-    }
-
-    .btn-header-cta:hover {
-      box-shadow: 0 6px 22px rgba(214, 0, 0, 0.55);
-      transform: translateY(-1px);
-    }
-
-    /* ========================================================
-       HERO: EPIC.NET LABELED TITLE & EDITORIAL OVERVIEW
-       ======================================================== */
-    .hero-section {
-      position: relative;
-      z-index: 1;
-      padding: 160px 32px 80px;
-      max-width: 1440px;
-      margin: 0 auto;
-    }
-
-    .hero-meta-bar {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 32px;
-    }
-
-    /* Staggered Title (The signature Epic.net headline) */
-    .epic-title-wrap {
-      position: relative;
-      margin-bottom: 36px;
-    }
-
-    .epic-display-title {
-      font-size: clamp(38px, 6.2vw, 88px);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -0.035em;
-      text-transform: none;
-    }
-
-    .epic-display-title .word-row {
-      display: block;
-      position: relative;
-    }
-
-    .epic-display-title .word-row.indent-1 {
-      padding-left: clamp(20px, 4vw, 70px);
-    }
-
-    .epic-display-title .word-row.indent-2 {
-      padding-left: clamp(40px, 8vw, 140px);
-    }
-
-    .epic-display-title .word-accent {
-      background: linear-gradient(135deg, var(--red-primary) 0%, #FF6666 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: inline-block;
-    }
-
-    /* Floating Info Labels scattered across the hero */
-    .hero-info-labels {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin: 32px 0 48px;
-    }
-
-    .info-label {
-      background: var(--bg-card);
-      border: 1px solid var(--border-medium);
-      padding: 8px 16px;
-      border-radius: 999px;
-      font-size: 13px;
-      color: var(--text-muted);
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-      transition: transform 0.2s ease, border-color 0.2s ease;
-    }
-
-    .info-label:hover {
-      transform: translateY(-2px);
-      border-color: var(--red-primary);
-    }
-
-    .info-label strong, .info-label b {
-      color: var(--text-heading);
-      font-family: var(--font-mono);
-      font-weight: 700;
-    }
-
-    /* Editorial Lead Paragraph */
-    .hero-lead-grid {
-      display: grid;
-      grid-template-columns: 1.3fr 1fr;
-      gap: 48px;
-      align-items: start;
-      padding-top: 24px;
-      border-top: 1px solid var(--border-subtle);
-    }
-
-    .hero-lead-text {
-      font-size: clamp(18px, 1.8vw, 22px);
-      line-height: 1.6;
-      color: var(--text-body);
-      font-weight: 400;
-    }
-
-    .hero-lead-text strong {
-      color: var(--text-heading);
-      font-weight: 600;
-    }
-
-    .hero-lead-text p + p {
-      margin-top: 16px;
-    }
-
-    /* Hero Key Stats Column */
-    .hero-stats-cards {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
-
-    .stat-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 18px;
-      padding: 22px 20px;
-      transition: all 0.25s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .stat-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 4px;
-      height: 100%;
-      background: var(--red-primary);
-      opacity: 0.8;
-    }
-
-    .stat-card:hover {
-      transform: translateY(-3px);
-      border-color: var(--border-medium);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-    }
-
-    .stat-num {
-      font-family: var(--font-display);
-      font-size: 38px;
-      font-weight: 800;
-      line-height: 1;
-      color: var(--text-heading);
-      margin-bottom: 6px;
-      display: flex;
-      align-items: baseline;
-      gap: 4px;
-    }
-
-    .stat-label {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--red-primary);
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .stat-desc {
-      font-size: 12.5px;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-
-    /* ========================================================
-       STICKY CHAPTER NAVIGATION (Quick Jump Pill Bar)
-       ======================================================== */
-    .chapter-quick-nav-wrap {
-      position: sticky;
-      top: 67px;
-      z-index: 900;
-      background: var(--nav-bg);
-      backdrop-filter: blur(15px);
-      border-bottom: 1px solid var(--border-subtle);
-      padding: 12px 32px;
-      margin-bottom: 60px;
-    }
-
-    .chapter-quick-nav {
-      max-width: 1440px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      padding-bottom: 2px;
-    }
-
-    .chapter-quick-nav::-webkit-scrollbar {
-      display: none;
-    }
-
-    .chapter-pill {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 999px;
-      background: var(--badge-bg);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-muted);
-      text-decoration: none;
-      white-space: nowrap;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .chapter-pill:hover {
-      color: var(--text-heading);
-      border-color: var(--red-primary);
-      background: rgba(214, 0, 0, 0.08);
-      transform: translateY(-1px);
-    }
-
-    /* ========================================================
-       EDITORIAL CHAPTERS LIST (Epic.net alternating pattern)
-       ======================================================== */
-    .chapters-container {
-      max-width: 1440px;
-      margin: 0 auto;
-      padding: 0 32px 100px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .chapter-item {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 64px;
-      align-items: center;
-      padding: 100px 0;
-      border-top: 1px solid var(--border-subtle);
-      position: relative;
-    }
-
-    .chapter-item:first-child {
-      border-top: none;
-      padding-top: 20px;
-    }
-
-    /* Reversed alternating order */
-    .chapter-item.is-reversed {
-      direction: rtl;
-    }
-
-    .chapter-item.is-reversed > * {
-      direction: ltr;
-    }
-
-    /* Content Side */
-    .chapter-content {
-      position: relative;
-    }
-
-    .chapter-count-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--font-mono);
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--red-primary);
-      letter-spacing: 0.1em;
-      margin-bottom: 12px;
-    }
-
-    .chapter-headline {
-      font-size: clamp(28px, 3.2vw, 46px);
-      font-weight: 800;
-      margin-bottom: 24px;
-      line-height: 1.15;
-    }
-
-    .chapter-text {
-      font-size: 16px;
-      color: var(--text-muted);
-      line-height: 1.7;
-      margin-bottom: 24px;
-    }
-
-    .chapter-text p + p {
-      margin-top: 14px;
-    }
-
-    .chapter-text strong {
-      color: var(--text-heading);
-      font-weight: 600;
-    }
-
-    /* Pill list of technologies & features */
-    .tech-pill-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 28px;
-    }
-
-    .tech-pill {
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 6px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-medium);
-      color: var(--text-heading);
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .tech-pill i {
-      color: var(--red-primary);
-    }
-
-    /* Epic Action Button (Discover More with Circle Arrow) */
-    .epic-action-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 14px;
-      font-family: var(--font-display);
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      color: var(--text-heading);
-      text-decoration: none;
-      transition: all 0.2s ease;
-      cursor: pointer;
-    }
-
-    .epic-action-circle {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: var(--bg-card);
-      border: 1px solid var(--border-medium);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--red-primary);
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .epic-action-btn:hover {
-      color: var(--red-primary);
-    }
-
-    .epic-action-btn:hover .epic-action-circle {
-      background: var(--red-primary);
-      color: #FFFFFF;
-      transform: scale(1.1) rotate(-45deg);
-      box-shadow: 0 4px 16px var(--red-glow);
-    }
-
-    /* ========================================================
-       VISUAL SIDE: POLAROID / TILTED CARDS (Epic.net style)
-       ======================================================== */
-    .chapter-visual {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 380px;
-      padding: 20px;
-    }
-
-    .polaroid-card {
-      background: var(--polaroid-bg);
-      border: 1px solid var(--polaroid-border);
-      border-radius: 16px;
-      padding: 16px 16px 20px;
-      box-shadow: 0 24px 50px -10px rgba(0, 0, 0, 0.25);
-      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
-      max-width: 520px;
-      width: 100%;
-      position: relative;
-    }
-
-    .polaroid-card:hover {
-      transform: translateY(-8px) rotate(0deg) scale(1.02) !important;
-      box-shadow: 0 35px 70px -15px rgba(214, 0, 0, 0.25);
-      z-index: 10;
-    }
-
-    .polaroid-screen {
-      background: #0D1117;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      position: relative;
-      aspect-ratio: 16 / 10;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .polaroid-caption {
-      margin-top: 14px;
-      font-size: 13px;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      font-family: var(--font-mono);
-    }
-
-    .polaroid-caption span {
-      color: var(--text-heading);
-      font-weight: 600;
-    }
-
-    .polaroid-tag {
-      font-size: 11px;
-      color: var(--red-primary);
-      background: var(--badge-bg);
-      padding: 2px 8px;
-      border-radius: 4px;
-      border: 1px solid rgba(214, 0, 0, 0.2);
-    }
-
-    /* Screen UI Mockup Elements */
-    .screen-header-bar {
-      height: 28px;
-      background: rgba(255, 255, 255, 0.04);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      display: flex;
-      align-items: center;
-      padding: 0 12px;
-      gap: 6px;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-    }
-    .dot.red { background: #FF5F56; }
-    .dot.yellow { background: #FFBD2E; }
-    .dot.green { background: #27C93F; }
-
-    .screen-body {
-      flex: 1;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      color: #E2E8F0;
-      font-size: 13px;
-      position: relative;
-    }
-
-    /* Custom UI Diagrams inside Screens */
-    .mock-chat-bubble {
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      color: #A7F3D0;
-      border-radius: 10px 10px 2px 10px;
-      padding: 10px 14px;
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      margin-bottom: 8px;
-      line-height: 1.5;
-    }
-
-    .mock-db-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 12px;
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 6px;
-      margin-bottom: 6px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      border-left: 3px solid var(--red-primary);
-    }
-
-    .mock-metric-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    .mock-metric-item {
-      background: rgba(255, 255, 255, 0.03);
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .mock-metric-val {
-      font-size: 20px;
-      font-weight: 700;
-      font-family: var(--font-display);
-      color: #FFFFFF;
-    }
-
-    /* Stacked secondary polaroid behind */
-    .polaroid-card-stack-bg {
-      position: absolute;
-      width: 95%;
-      height: 95%;
-      border-radius: 16px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      top: 15px;
-      left: 15px;
-      z-index: 0;
-      opacity: 0.5;
-      transform: rotate(7deg);
-      pointer-events: none;
-    }
-
-    /* ========================================================
-       COMPARISON ARCHITECTURE: "ANTES VS HOY"
-       ======================================================== */
-    .comparison-section {
-      background: var(--bg-surface);
-      border-top: 1px solid var(--border-subtle);
-      border-bottom: 1px solid var(--border-subtle);
-      padding: 100px 32px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .comparison-inner {
-      max-width: 1440px;
-      margin: 0 auto;
-    }
-
-    .section-header-centered {
-      text-align: center;
-      max-width: 780px;
-      margin: 0 auto 60px;
-    }
-
-    .section-header-centered h2 {
-      font-size: clamp(32px, 4vw, 54px);
-      margin: 14px 0;
-    }
-
-    .comparison-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 32px;
-    }
-
-    .comparison-column {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 20px;
-      padding: 36px 32px;
-      position: relative;
-    }
-
-    .comparison-column.highlight {
-      border-color: rgba(214, 0, 0, 0.35);
-      box-shadow: 0 10px 40px rgba(214, 0, 0, 0.08);
-    }
-
-    .col-title {
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .col-subtitle {
-      font-size: 13.5px;
-      color: var(--text-muted);
-      margin-bottom: 28px;
-    }
-
-    .comparison-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .comparison-list-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      font-size: 14.5px;
-      line-height: 1.5;
-    }
-
-    .comparison-icon {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .comparison-icon.cross {
-      background: rgba(239, 68, 68, 0.15);
-      color: #EF4444;
-    }
-
-    .comparison-icon.check {
-      background: rgba(16, 185, 129, 0.15);
-      color: #10B981;
-    }
-
-    /* ========================================================
-       BIG CTA SECTION (Epic.net signature bottom hero)
-       ======================================================== */
-    .epic-bottom-cta {
-      padding: 120px 32px;
-      max-width: 1440px;
-      margin: 0 auto;
-      text-align: center;
-      position: relative;
-      z-index: 1;
-    }
-
-    .cta-container {
-      background: linear-gradient(135deg, rgba(214, 0, 0, 0.08) 0%, rgba(122, 0, 0, 0.04) 100%);
-      border: 1px solid rgba(214, 0, 0, 0.25);
-      border-radius: 32px;
-      padding: clamp(48px, 6vw, 90px) 32px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cta-container::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80%;
-      height: 100%;
-      background: radial-gradient(circle, rgba(214, 0, 0, 0.2) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .cta-title {
-      font-size: clamp(34px, 4.8vw, 68px);
-      font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 20px;
-    }
-
-    .cta-description {
-      font-size: clamp(16px, 1.6vw, 20px);
-      color: var(--text-muted);
-      max-width: 720px;
-      margin: 0 auto 40px;
-    }
-
-    .cta-btn-group {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      gap: 18px;
-    }
-
-    .cta-btn-main {
-      background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-dark) 100%);
-      color: #FFFFFF !important;
-      font-family: var(--font-display);
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      padding: 16px 36px;
-      border-radius: 999px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 10px 30px var(--red-glow);
-      transition: all 0.25s ease;
-    }
-
-    .cta-btn-main:hover {
-      box-shadow: 0 15px 40px rgba(214, 0, 0, 0.6);
-      transform: translateY(-2px);
-    }
-
-    .cta-btn-secondary {
-      background: var(--bg-card);
-      border: 1px solid var(--border-medium);
-      color: var(--text-heading) !important;
-      font-family: var(--font-display);
-      font-size: 15px;
-      font-weight: 600;
-      padding: 16px 32px;
-      border-radius: 999px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      transition: all 0.2s ease;
-    }
-
-    .cta-btn-secondary:hover {
-      border-color: var(--red-primary);
-      transform: translateY(-2px);
-    }
-
-    /* ========================================================
-       FOOTER (Consistent with DaleTePido Brand)
-       ======================================================== */
-    footer {
-      border-top: 1px solid var(--border-subtle);
-      background: var(--bg-surface);
-      padding: 60px 32px 30px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .footer-inner {
-      max-width: 1440px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1.5fr 1fr 1fr 1fr;
-      gap: 40px;
-      margin-bottom: 50px;
-    }
-
-    .footer-brand p {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-top: 14px;
-      max-width: 320px;
-    }
-
-    .footer-col h5 {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-heading);
-      margin-bottom: 16px;
-    }
-
-    .footer-links {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .footer-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 13.5px;
-      transition: color 0.2s ease;
-    }
-
-    .footer-links a:hover {
-      color: var(--red-primary);
-    }
-
-    .footer-bottom {
-      max-width: 1440px;
-      margin: 0 auto;
-      padding-top: 24px;
-      border-top: 1px solid var(--border-subtle);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      font-size: 13px;
-      color: var(--text-subtle);
-      font-family: var(--font-mono);
-    }
-
-    /* ========================================================
-       RESPONSIVE DESIGN (Tablets & Mobile Phones)
-       ======================================================== */
-    @media (max-width: 1024px) {
-      .hero-lead-grid {
-        grid-template-columns: 1fr;
-        gap: 32px;
-      }
-      .chapter-item {
-        grid-template-columns: 1fr;
-        gap: 40px;
-        padding: 60px 0;
-      }
-      .chapter-item.is-reversed {
-        direction: ltr;
-      }
-      .comparison-grid {
-        grid-template-columns: 1fr;
-      }
-      .footer-inner {
-        grid-template-columns: 1fr 1fr;
-      }
-      .header-nav {
-        display: none;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .header-inner {
-        padding: 12px 20px;
-      }
-      .hero-section {
-        padding: 120px 20px 50px;
-      }
-      .chapters-container {
-        padding: 0 20px 60px;
-      }
-      .hero-stats-cards {
-        grid-template-columns: 1fr;
-      }
-      .footer-inner {
-        grid-template-columns: 1fr;
-      }
-      .polaroid-card {
-        transform: rotate(0deg) !important;
-      }
-      .polaroid-card-stack-bg {
-        display: none;
-      }
     }
   </style>
 </head>
-<body>
+<body class="bg-[#FFFFFF] text-[#010101]">
 
-  <!-- Ambient Glow Canvas Background -->
-  <div class="ambient-glow" aria-hidden="true"></div>
+  <!-- ============================================================== -->
+  <!-- 0. HEADER SUPERIOR MINIMALISTA & BARRA DE PROGRESO ROJA         -->
+  <!-- ============================================================== -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-[#FFFFFF]/90 backdrop-blur-md border-b border-[#010101]/10 transition-all duration-300">
+    <!-- Línea de progreso interactiva Rojo #F60000 -->
+    <div id="scrollProgress" class="h-[3px] bg-[#F60000] w-0 transition-all duration-75 ease-out"></div>
 
-  <!-- ========================================================
-       HEADER / TOPBAR
-       ======================================================== -->
-  <header class="header">
-    <div class="header-inner">
-      <a href="/" class="header-brand" title="Dale! Te Pido - Inicio">
-        <img 
-          src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" 
-          onerror="this.src='/img-default/daletepido-logo-white-hq.png'" 
-          alt="Dale! Te Pido" 
-          class="header-logo" 
-        />
-        <span class="section-label">Crónica & Arquitectura</span>
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <!-- Logo Brand Minimalista -->
+      <a href="https://www.daletepido.com.ar" class="group flex items-center gap-3 text-decoration-none" aria-label="Dale!TePido Inicio">
+        <div class="w-8 h-8 rounded-lg bg-[#F60000] flex items-center justify-center text-[#FFFFFF] font-black text-lg shadow-sm group-hover:scale-105 transition-transform duration-200">
+          !
+        </div>
+        <div class="flex flex-col">
+          <span class="font-extrabold text-[#010101] text-base tracking-tight leading-none">
+            DALE!<span class="text-[#F60000]">TEPIDO</span>
+          </span>
+          <span class="text-[10px] tracking-widest text-[#010101]/50 uppercase font-mono mt-0.5">
+            Storytelling &middot; /desarrollo
+          </span>
+        </div>
       </a>
 
-      <nav class="header-nav">
-        <a href="#etapa-1" class="nav-link">Génesis</a>
-        <a href="#etapa-3" class="nav-link">Supabase Cloud</a>
-        <a href="#etapa-4" class="nav-link">Suite Gestor</a>
-        <a href="#etapa-6" class="nav-link">Seguridad</a>
-        <a href="#etapa-8" class="nav-link">Modo Sereno</a>
-        <a href="/tienda-demo.html" target="_blank" class="nav-link">Tienda Demo</a>
+      <!-- Selector de Capítulos / Indicador de escenas -->
+      <nav class="hidden md:flex items-center gap-2" id="sceneNav" aria-label="Navegación de escenas">
+        <button onclick="scrollToScene(0)" class="scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101] text-[#FFFFFF]" data-idx="0">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#F60000]"></span>
+          <span>01</span>
+          <span class="hidden lg:inline">ORIGEN</span>
+        </button>
+        <button onclick="scrollToScene(1)" class="scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101]/5 text-[#010101]/70 hover:bg-[#010101]/10" data-idx="1">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#010101]/40"></span>
+          <span>02</span>
+          <span class="hidden lg:inline">TECNOLOGÍAS</span>
+        </button>
+        <button onclick="scrollToScene(2)" class="scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101]/5 text-[#010101]/70 hover:bg-[#010101]/10" data-idx="2">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#010101]/40"></span>
+          <span>03</span>
+          <span class="hidden lg:inline">TERRITORIO</span>
+        </button>
+        <button onclick="scrollToScene(3)" class="scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101]/5 text-[#010101]/70 hover:bg-[#010101]/10" data-idx="3">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#010101]/40"></span>
+          <span>04</span>
+          <span class="hidden lg:inline">SOLIDEZ</span>
+        </button>
+        <button onclick="scrollToScene(4)" class="scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101]/5 text-[#010101]/70 hover:bg-[#010101]/10" data-idx="4">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#010101]/40"></span>
+          <span>05</span>
+          <span class="hidden lg:inline">FUTURO</span>
+        </button>
       </nav>
 
-      <div class="header-actions">
-        <!-- Theme Switcher: Dark Nocturne vs Cream Editorial -->
-        <button id="themeToggleBtn" class="theme-toggle-btn" title="Alternar estilo editorial">
-          <i class="bi bi-palette2"></i>
-          <span id="themeToggleText">Modo Papel</span>
-        </button>
-
-        <a href="/alta-usuario.html" class="btn-header-cta">
-          <span>Probar 15 días</span>
-          <i class="bi bi-arrow-right"></i>
-        </a>
-      </div>
+      <!-- CTA Header a la Tienda Oficial -->
+      <a href="https://www.daletepido.com.ar" class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-[#F60000] text-[#FFFFFF] hover:bg-[#D60000] transition-colors duration-200 shadow-sm">
+        <span>Crear Mi Tienda</span>
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+        </svg>
+      </a>
     </div>
   </header>
 
-  <!-- ========================================================
-       HERO SECTION: LABELED TITLE & EDITORIAL OVERVIEW
-       ======================================================== */ -->
-  <section class="hero-section">
-    <div class="hero-meta-bar">
-      <span class="section-label">RETROSPECTIVA DE INGENIERÍA 2024 — 2026</span>
-      <span class="info-label"><i class="bi bi-geo-alt-fill" style="color:var(--red-primary);"></i> Origen: <b>Buenos Aires, Argentina</b></span>
-      <span class="info-label"><i class="bi bi-git" style="color:var(--red-primary);"></i> <b>+760</b> Commits sincronizados</span>
-      <span class="info-label"><i class="bi bi-shield-lock-fill" style="color:var(--green-success);"></i> Auditoría: <b>Score 94/100</b></span>
-    </div>
+  <!-- ============================================================== -->
+  <!-- CONTENEDOR PRINCIPAL STORYTELLING                              -->
+  <!-- ============================================================== -->
+  <div id="storyContainer" class="relative w-full bg-[#FFFFFF]">
 
-    <!-- Epic.net Staggered Large Display Headline -->
-    <div class="epic-title-wrap">
-      <h1 class="epic-display-title">
-        <span class="word-row">De una simple hoja</span>
-        <span class="word-row indent-1">a un <span class="word-accent">SaaS Multi-Tenant</span></span>
-        <span class="word-row indent-2">sin comisiones por venta.</span>
-      </h1>
-    </div>
+    <!-- ============================================================== -->
+    <!-- CAPA 1: CAPA FIJA DE FONDO (fixed inset-0 pointer-events-none)  -->
+    <!-- Contiene 5 reproductores de video 16:9 en márgenes laterales    -->
+    <!-- ============================================================== -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
 
-    <!-- Floating Info Badges (Epic style) -->
-    <div class="hero-info-labels">
-      <div class="info-label"><i class="bi bi-lightning-charge-fill" style="color:var(--amber-warning);"></i> Carga ultra-rápida: <b>100% Vanilla JS</b></div>
-      <div class="info-label"><i class="bi bi-database-fill" style="color:var(--cyan-accent);"></i> Base de datos: <b>PostgreSQL Realtime</b></div>
-      <div class="info-label"><i class="bi bi-whatsapp" style="color:var(--green-success);"></i> Conversión directa: <b>wa.me DeepLink</b></div>
-      <div class="info-label"><i class="bi bi-phone" style="color:var(--purple-accent);"></i> Omnicanal: <b>PWA + Android APK TWA</b></div>
-      <div class="info-label"><i class="bi bi-cash-stack" style="color:var(--red-primary);"></i> Modelo: <b>0% de comisión por pedido</b></div>
-    </div>
-
-    <!-- Editorial Lead & Stats Row -->
-    <div class="hero-lead-grid">
-      <div class="hero-lead-text">
-        <p>
-          <strong>Dale! Te Pido</strong> no nació en una sala de conferencias corporativa; nació en el mostrador del comercio barrial. Surgió para erradicar un problema estructural: las plataformas de marketplace tradicionales cobran comisiones que devoran entre el 15% y el 35% del margen de los comerciantes locales, interponiendo muros entre ellos y sus propios clientes.
-        </p>
-        <p>
-          Esta página documenta <strong>el viaje técnico y conceptual de nuestra plataforma</strong>. Desde el MVP inicial operado sobre Google Sheets hasta la moderna arquitectura multi-tenant cloud actual: protegida con criptografía HMAC, procesada con marcas de agua en Canvas HTML5, compilada nativamente para Android y equipada con el revolucionario <em>Modo Sereno</em> para capturar ventas las 24 horas del día.
-        </p>
-      </div>
-
-      <div class="hero-stats-cards">
-        <div class="stat-card">
-          <div class="stat-label">Seguridad Bancaria</div>
-          <div class="stat-num">94<span style="font-size:22px; color:var(--red-primary);">/100</span></div>
-          <div class="stat-desc">Mitigación estricta SEC-01 a SEC-08 con tokens HMAC y aislamiento RLS.</div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-label">Rendimiento Móvil</div>
-          <div class="stat-num">0.8<span style="font-size:22px; color:var(--green-success);">s</span></div>
-          <div class="stat-desc">First Contentful Paint sin bundles pesados de React o Angular.</div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-label">Comisión por Venta</div>
-          <div class="stat-num">0<span style="font-size:22px; color:var(--red-primary);">%</span></div>
-          <div class="stat-desc">El comercio cobra directo a su cuenta bancaria o billetera digital.</div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-label">Ecosistema 360°</div>
-          <div class="stat-num">8<span style="font-size:22px; color:var(--purple-accent);">+</span></div>
-          <div class="stat-desc">Módulos: Tienda, Dashboard, Superadmin, Kit QR, PWA, APK, CMS.</div>
+      <!-- VIDEO 1: Margen derecho (right-8) -->
+      <div id="videoBox-0" class="video-box absolute top-1/2 -translate-y-1/2 right-4 sm:right-8 md:right-12 xl:right-16 left-auto w-[92vw] sm:w-[420px] md:w-[480px] lg:w-[540px] xl:w-[600px] aspect-video transition-transform duration-300 opacity-100 scale-100" style="z-index:5;">
+        <div class="relative w-full h-full rounded-2xl border border-[#010101]/10 bg-[#FFFFFF] shadow-[0_20px_60px_-15px_rgba(1,1,1,0.08)] overflow-hidden flex items-center justify-center">
+          <div class="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFFFFF]/90 backdrop-blur-md border border-[#010101]/10 text-[10px] font-mono font-bold tracking-wider text-[#010101]">
+            <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
+            <span>ESCENA 01 // BOCETOS INICIALES &amp; PROPÓSITO</span>
+          </div>
+          <video class="w-full h-full object-cover" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-pensando.png">
+            <source src="/videos/desarrollo/escena-01.webm" type="video/webm" />
+            <source src="/videos/desarrollo/escena-1.webm" type="video/webm" />
+            <source src="/videos/daletepido-motion/renders/daletepido_15s_promo.mp4" type="video/mp4" />
+          </video>
+          <div class="absolute bottom-3 right-3 z-20 px-2 py-0.5 rounded bg-[#010101]/80 text-[#FFFFFF] text-[9px] font-mono font-semibold tracking-widest uppercase">
+            DALE!TEPIDO
+          </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- ========================================================
-       STICKY CHAPTER NAVIGATION BAR
-       ======================================================== -->
-  <div class="chapter-quick-nav-wrap">
-    <div class="chapter-quick-nav">
-      <span style="font-family:var(--font-mono); font-size:11px; font-weight:700; color:var(--red-primary); margin-right:8px; text-transform:uppercase;">Capítulos:</span>
-      <a href="#etapa-1" class="chapter-pill">01. Momento Cero (Sheets)</a>
-      <a href="#etapa-2" class="chapter-pill">02. Canvas & Watermark</a>
-      <a href="#etapa-3" class="chapter-pill">03. Migración Supabase</a>
-      <a href="#etapa-4" class="chapter-pill">04. Suite del Comerciante</a>
-      <a href="#etapa-5" class="chapter-pill">05. Kit QR & Android APK</a>
-      <a href="#etapa-6" class="chapter-pill">06. Blindaje Bancario</a>
-      <a href="#etapa-7" class="chapter-pill">07. Super Admin & CMS</a>
-      <a href="#etapa-8" class="chapter-pill">08. Modo Sereno & SEO</a>
+      <!-- VIDEO 2: Margen izquierdo (left-8) -->
+      <div id="videoBox-1" class="video-box absolute top-1/2 -translate-y-1/2 left-4 sm:right-auto sm:left-8 md:left-12 xl:left-16 w-[92vw] sm:w-[420px] md:w-[480px] lg:w-[540px] xl:w-[600px] aspect-video transition-transform duration-300 opacity-0 scale-95" style="z-index:5;">
+        <div class="relative w-full h-full rounded-2xl border border-[#010101]/10 bg-[#FFFFFF] shadow-[0_20px_60px_-15px_rgba(1,1,1,0.08)] overflow-hidden flex items-center justify-center">
+          <div class="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFFFFF]/90 backdrop-blur-md border border-[#010101]/10 text-[10px] font-mono font-bold tracking-wider text-[#010101]">
+            <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
+            <span>ESCENA 02 // EDGE ARCHITECTURE &amp; SPEED</span>
+          </div>
+          <video class="w-full h-full object-cover" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-resolucion.png">
+            <source src="/videos/desarrollo/escena-02.webm" type="video/webm" />
+            <source src="/videos/desarrollo/escena-2.webm" type="video/webm" />
+            <source src="/videos/daletepido-motion/renders/test.mp4" type="video/mp4" />
+          </video>
+          <div class="absolute bottom-3 right-3 z-20 px-2 py-0.5 rounded bg-[#010101]/80 text-[#FFFFFF] text-[9px] font-mono font-semibold tracking-widest uppercase">
+            DALE!TEPIDO
+          </div>
+        </div>
+      </div>
+
+      <!-- VIDEO 3: Margen derecho (right-8) -->
+      <div id="videoBox-2" class="video-box absolute top-1/2 -translate-y-1/2 right-4 sm:right-8 md:right-12 xl:right-16 left-auto w-[92vw] sm:w-[420px] md:w-[480px] lg:w-[540px] xl:w-[600px] aspect-video transition-transform duration-300 opacity-0 scale-95" style="z-index:5;">
+        <div class="relative w-full h-full rounded-2xl border border-[#010101]/10 bg-[#FFFFFF] shadow-[0_20px_60px_-15px_rgba(1,1,1,0.08)] overflow-hidden flex items-center justify-center">
+          <div class="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFFFFF]/90 backdrop-blur-md border border-[#010101]/10 text-[10px] font-mono font-bold tracking-wider text-[#010101]">
+            <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
+            <span>ESCENA 03 // KIT QR &amp; MOSTRADOR BARRIAL</span>
+          </div>
+          <video class="w-full h-full object-cover" autoplay muted loop playsinline preload="auto" poster="/img/kit-imprimible-mostrador.jpg">
+            <source src="/videos/desarrollo/escena-03.webm" type="video/webm" />
+            <source src="/videos/desarrollo/escena-3.webm" type="video/webm" />
+            <source src="/videos/daletepido-motion/renders/daletepido_30s_promo.mp4" type="video/mp4" />
+          </video>
+          <div class="absolute bottom-3 right-3 z-20 px-2 py-0.5 rounded bg-[#010101]/80 text-[#FFFFFF] text-[9px] font-mono font-semibold tracking-widest uppercase">
+            DALE!TEPIDO
+          </div>
+        </div>
+      </div>
+
+      <!-- VIDEO 4: Margen izquierdo (left-8) -->
+      <div id="videoBox-3" class="video-box absolute top-1/2 -translate-y-1/2 left-4 sm:right-auto sm:left-8 md:left-12 xl:left-16 w-[92vw] sm:w-[420px] md:w-[480px] lg:w-[540px] xl:w-[600px] aspect-video transition-transform duration-300 opacity-0 scale-95" style="z-index:5;">
+        <div class="relative w-full h-full rounded-2xl border border-[#010101]/10 bg-[#FFFFFF] shadow-[0_20px_60px_-15px_rgba(1,1,1,0.08)] overflow-hidden flex items-center justify-center">
+          <div class="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFFFFF]/90 backdrop-blur-md border border-[#010101]/10 text-[10px] font-mono font-bold tracking-wider text-[#010101]">
+            <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
+            <span>ESCENA 04 // ROW LEVEL SECURITY &amp; PRIVACY</span>
+          </div>
+          <video class="w-full h-full object-cover" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-buenaonda.png">
+            <source src="/videos/desarrollo/escena-04.webm" type="video/webm" />
+            <source src="/videos/desarrollo/escena-4.webm" type="video/webm" />
+            <source src="/videos/daletepido-motion/renders/daletepido_promo.mp4" type="video/mp4" />
+          </video>
+          <div class="absolute bottom-3 right-3 z-20 px-2 py-0.5 rounded bg-[#010101]/80 text-[#FFFFFF] text-[9px] font-mono font-semibold tracking-widest uppercase">
+            DALE!TEPIDO
+          </div>
+        </div>
+      </div>
+
+      <!-- VIDEO 5: Margen centro/derecho (right-1/4) -->
+      <div id="videoBox-4" class="video-box absolute top-1/2 -translate-y-1/2 right-4 sm:right-[10%] md:right-[15%] xl:right-1/4 left-auto w-[92vw] sm:w-[420px] md:w-[480px] lg:w-[540px] xl:w-[600px] aspect-video transition-transform duration-300 opacity-0 scale-95" style="z-index:5;">
+        <div class="relative w-full h-full rounded-2xl border border-[#010101]/10 bg-[#FFFFFF] shadow-[0_20px_60px_-15px_rgba(1,1,1,0.08)] overflow-hidden flex items-center justify-center">
+          <div class="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFFFFF]/90 backdrop-blur-md border border-[#010101]/10 text-[10px] font-mono font-bold tracking-wider text-[#010101]">
+            <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
+            <span>ESCENA 05 // VISIÓN A FUTURO &amp; EXPANSIÓN SAAS</span>
+          </div>
+          <video class="w-full h-full object-cover" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-alegria.png">
+            <source src="/videos/desarrollo/escena-05.webm" type="video/webm" />
+            <source src="/videos/desarrollo/escena-5.webm" type="video/webm" />
+            <source src="/videos/daletepido-motion/renders/daletepido_15s_promo.mp4" type="video/mp4" />
+          </video>
+          <div class="absolute bottom-3 right-3 z-20 px-2 py-0.5 rounded bg-[#010101]/80 text-[#FFFFFF] text-[9px] font-mono font-semibold tracking-widest uppercase">
+            DALE!TEPIDO
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================== -->
+      <!-- CAPA SVG INTERMEDIA (viewBox 0 0 1920 1080)                    -->
+      <!-- ============================================================== -->
+      <svg id="svgLayer" viewBox="0 0 1920 1080" class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <filter id="red-line-glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        <!-- LÍNEAS CONECTORAS DINÁMICAS (Acento Rojo #F60000) -->
+        <path id="line-0" d="M 1480 540 C 1120 740, 840 340, 440 540" fill="none" stroke="#F60000" stroke-width="4" stroke-linecap="round" filter="url(#red-line-glow)"></path>
+        <path id="line-1" d="M 440 540 C 800 780, 1160 300, 1480 540" fill="none" stroke="#F60000" stroke-width="4" stroke-linecap="round" filter="url(#red-line-glow)"></path>
+        <path id="line-2" d="M 1480 540 C 1140 760, 800 320, 440 540" fill="none" stroke="#F60000" stroke-width="4" stroke-linecap="round" filter="url(#red-line-glow)"></path>
+        <path id="line-3" d="M 440 540 C 680 720, 960 360, 1200 540" fill="none" stroke="#F60000" stroke-width="4" stroke-linecap="round" filter="url(#red-line-glow)"></path>
+
+        <!-- SILUETA 1 (x:1480, y:540) -->
+        <g id="sil-0" transform="translate(1480, 540)" opacity="0">
+          <circle cx="0" cy="0" r="170" fill="rgba(1,1,1,0.015)" stroke="#010101" stroke-width="1.5" stroke-dasharray="6 6"></circle>
+          <g stroke="#010101" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+            <circle cx="-15" cy="-75" r="28"></circle>
+            <path d="M -15 -47 Q -15 -25 -5 -10"></path>
+            <path d="M -5 -10 Q 15 25 -5 65"></path>
+            <path d="M 0 5 L -35 30 L -15 50"></path>
+            <path d="M 5 10 L 35 30 L 10 50"></path>
+            <polygon points="-25,45 0,40 25,45 15,80 -10,75 -35,80"></polygon>
+            <line x1="-1" y1="40" x2="-1" y2="76" stroke="#F60000" stroke-width="2"></line>
+            <line x1="-18" y1="52" x2="-6" y2="52" stroke-width="1.5"></line>
+            <line x1="-18" y1="60" x2="-6" y2="60" stroke-width="1.5"></line>
+            <line x1="6" y1="52" x2="18" y2="52" stroke-width="1.5"></line>
+            <line x1="6" y1="60" x2="18" y2="60" stroke-width="1.5"></line>
+            <path d="M 35 -90 C 25 -90, 25 -75, 30 -65 L 30 -58 L 40 -58 L 40 -65 C 45 -75, 45 -90, 35 -90 Z" stroke="#F60000"></path>
+            <line x1="32" y1="-55" x2="38" y2="-55" stroke="#F60000"></line>
+            <line x1="35" y1="-100" x2="35" y2="-95" stroke="#F60000"></line>
+            <line x1="50" y1="-85" x2="45" y2="-82" stroke="#F60000"></line>
+            <line x1="20" y1="-85" x2="25" y2="-82" stroke="#F60000"></line>
+          </g>
+        </g>
+
+        <!-- SILUETA 2 (x:440, y:540) -->
+        <g id="sil-1" transform="translate(440, 540)" opacity="0">
+          <circle cx="0" cy="0" r="170" fill="rgba(1,1,1,0.015)" stroke="#010101" stroke-width="1.5" stroke-dasharray="6 6"></circle>
+          <g stroke="#010101" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+            <circle cx="0" cy="-75" r="28"></circle>
+            <path d="M -28 -75 C -28 -95, 28 -95, 28 -75" stroke="#F60000" stroke-width="2"></path>
+            <path d="M 0 -47 L 0 35"></path>
+            <path d="M 0 -20 L -35 10 L -15 35"></path>
+            <path d="M 0 -20 L 35 10 L 15 35"></path>
+            <line x1="-50" y1="45" x2="50" y2="45" stroke-width="3"></line>
+            <polygon points="-40,45 -30,0 30,0 40,45"></polygon>
+            <path d="M -15 15 L -22 22 L -15 30" stroke="#F60000" stroke-width="2"></path>
+            <path d="M 15 15 L 22 22 L 15 30" stroke="#F60000" stroke-width="2"></path>
+            <line x1="-3" y1="30" x2="3" y2="15" stroke="#010101" stroke-width="2"></line>
+            <polygon points="75,-50 60,-25 72,-25 58,5 90,-20 75,-20" fill="none" stroke="#F60000" stroke-width="2"></polygon>
+          </g>
+        </g>
+
+        <!-- SILUETA 3 (x:1480, y:540) -->
+        <g id="sil-2" transform="translate(1480, 540)" opacity="0">
+          <circle cx="0" cy="0" r="170" fill="rgba(1,1,1,0.015)" stroke="#010101" stroke-width="1.5" stroke-dasharray="6 6"></circle>
+          <g stroke="#010101" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+            <line x1="-120" y1="55" x2="120" y2="55" stroke-width="3.5"></line>
+            <polygon points="-50,55 -35,-35 35,-35 50,55"></polygon>
+            <line x1="-30" y1="45" x2="30" y2="45" stroke-width="2"></line>
+            <rect x="-22" y="-20" width="44" height="44" stroke-width="2"></rect>
+            <rect x="-18" y="-16" width="12" height="12" stroke="#F60000" stroke-width="1.8"></rect>
+            <rect x="6" y="-16" width="12" height="12" stroke="#F60000" stroke-width="1.8"></rect>
+            <rect x="-18" y="8" width="12" height="12" stroke="#F60000" stroke-width="1.8"></rect>
+            <rect x="8" y="10" width="8" height="8" fill="#010101"></rect>
+            <rect x="-95" y="-60" width="34" height="60" rx="4"></rect>
+            <line x1="-85" y1="-54" x2="-71" y2="-54" stroke-width="1.5"></line>
+            <line x1="-61" y1="-30" x2="-25" y2="-10" stroke="#F60000" stroke-width="2" stroke-dasharray="3 3"></line>
+          </g>
+        </g>
+
+        <!-- SILUETA 4 (x:440, y:540) -->
+        <g id="sil-3" transform="translate(440, 540)" opacity="0">
+          <circle cx="0" cy="0" r="170" fill="rgba(1,1,1,0.015)" stroke="#010101" stroke-width="1.5" stroke-dasharray="6 6"></circle>
+          <g stroke="#010101" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+            <circle cx="0" cy="-80" r="28"></circle>
+            <path d="M -45 -35 Q 0 -45 45 -35"></path>
+            <path d="M 0 -45 L 0 55"></path>
+            <path d="M 0 -25 L 35 -10 L 35 25 C 35 55, 0 75, 0 75 C 0 75, -35 55, -35 25 L -35 -10 Z" stroke="#F60000" stroke-width="2.5"></path>
+            <rect x="-14" y="10" width="28" height="22" rx="3" stroke="#010101" stroke-width="2"></rect>
+            <path d="M -8 10 L -8 0 C -8 -6, 8 -6, 8 0 L 8 10" stroke="#010101" stroke-width="2"></path>
+            <circle cx="0" cy="20" r="2.5" fill="#F60000"></circle>
+            <circle cx="0" cy="0" r="110" stroke="#010101" stroke-width="1" stroke-dasharray="4 8"></circle>
+            <circle cx="0" cy="0" r="135" stroke="#F60000" stroke-width="1" stroke-dasharray="2 6"></circle>
+          </g>
+        </g>
+
+        <!-- SILUETA 5 (x:1200, y:540) -->
+        <g id="sil-4" transform="translate(1200, 540)" opacity="0">
+          <circle cx="0" cy="0" r="170" fill="rgba(1,1,1,0.015)" stroke="#010101" stroke-width="1.5" stroke-dasharray="6 6"></circle>
+          <g stroke="#010101" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+            <circle cx="-15" cy="-70" r="28"></circle>
+            <path d="M -10 -35 L 35 -60 L 70 -95" stroke="#F60000" stroke-width="3"></path>
+            <polygon points="68,-102 80,-97 73,-85" fill="#F60000"></polygon>
+            <path d="M -15 -42 L -10 45"></path>
+            <path d="M -10 45 L -35 95"></path>
+            <path d="M -10 45 L 20 95"></path>
+            <path d="M -100 70 Q 0 -40, 110 -110" stroke="#F60000" stroke-width="2" stroke-dasharray="5 5"></path>
+            <path d="M 90 -50 L 98 -50 M 94 -54 L 94 -46" stroke="#010101" stroke-width="2"></path>
+            <path d="M -60 -100 L -52 -100 M -56 -104 L -56 -96" stroke="#F60000" stroke-width="2"></path>
+          </g>
+        </g>
+      </svg>
     </div>
+
+    <!-- ============================================================== -->
+    <!-- CAPA 2: CAPA DELANTERA DE SCROLL (relative z-10)               -->
+    <!-- 5 secciones con texto en margen opuesto al video               -->
+    <!-- ============================================================== -->
+    <main class="relative z-10">
+
+      <!-- SECCIÓN 1: Texto a la izquierda -->
+      <section id="sec-0" class="story-section min-h-screen w-full flex items-center justify-center px-6 sm:px-10 md:px-14 lg:px-20 py-28 relative">
+        <div class="w-full max-w-7xl mx-auto flex items-center">
+          <div class="story-card w-full lg:w-[48%] xl:w-[45%] mr-auto text-left bg-[#FFFFFF]/95 backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-3xl border border-[#010101]/10 shadow-[0_15px_40px_rgba(1,1,1,0.04)]">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F60000]/10 border border-[#F60000]/30 text-[#F60000] text-xs font-mono font-bold tracking-wider mb-4">
+              <span class="w-2 h-2 rounded-full bg-[#F60000]"></span>
+              <span>01</span><span class="text-[#010101]/40">&middot;</span><span>EL ORIGEN</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#010101] tracking-tight leading-tight mb-3" style="font-family:'Josefin Sans', sans-serif;">
+              Ideando Dale!TePido: El fin de las comisiones abusivas
+            </h2>
+            <p class="text-xs sm:text-sm font-mono text-[#F60000] font-semibold mb-5 tracking-wide uppercase">
+              // Libreta de ideas &amp; génesis de una solución barrial
+            </p>
+            <p class="text-sm sm:text-base text-[#010101]/80 leading-relaxed mb-6 font-normal">
+              Nació de observar la realidad del comerciante de barrio: ahogado por plataformas que cobran entre 15% y 35% por venta y retienen el dinero por semanas. En una libreta de notas nació la premisa madre: crear un canal digital de pedidos directo por WhatsApp, sin fricción, sin comisiones y con acreditación inmediata.
+            </p>
+            <ul class="space-y-2.5 mb-6 text-xs sm:text-sm text-[#010101]/90">
+              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>0% comisiones sobre ventas para siempre</span></li>
+              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Canal directo al WhatsApp comercial sin intermediarios</span></li>
+              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Cobro instantáneo por Mercado Pago o efectivo al recibir</span></li>
+            </ul>
+            <div class="mt-6 flex items-center justify-between text-[11px] font-mono text-[#010101]/40 pt-4 border-t border-[#010101]/5">
+              <span>CAPÍTULO 01 DE 05</span>
+              <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#010101]/30"></span>SCROLL HACIA ABAJO</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN 2: Texto a la derecha -->
+      <section id="sec-1" class="story-section min-h-screen w-full flex items-center justify-center px-6 sm:px-10 md:px-14 lg:px-20 py-28 relative">
+        <div class="w-full max-w-7xl mx-auto flex items-center">
+          <div class="story-card w-full lg:w-[48%] xl:w-[45%] ml-auto text-left bg-[#FFFFFF]/95 backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-3xl border border-[#010101]/10 shadow-[0_15px_40px_rgba(1,1,1,0.04)]">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F60000]/10 border border-[#F60000]/30 text-[#F60000] text-xs font-mono font-bold tracking-wider mb-4">
+              <span class="w-2 h-2 rounded-full bg-[#F60000]"></span>
+              <span>02</span><span class="text-[#010101]/40">&middot;</span><span>TECNOLOGÍAS</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#010101] tracking-tight leading-tight mb-3" style="font-family:'Josefin Sans', sans-serif;">
+              Velocidad extrema y despliegue ágil en el borde
+            </h2>
+            <p class="text-xs sm:text-sm font-mono text-[#F60000] font-semibold mb-5 tracking-wide uppercase">
+              // Stack ultraliviano, Next.js &amp; Supabase en tiempo real
+            </p>
+            <p class="text-sm sm:text-base text-[#010101]/80 leading-relaxed mb-6 font-normal">
+              El usuario promedio abandona si una tienda tarda más de 3 segundos en abrir. Construimos una arquitectura hiperelegante sobre Edge Runtime y Supabase PostgreSQL con tiempo de respuesta inferior a 400ms. Catálogo PWA instalable con sincronización reactiva de stock y peso total menor a 150KB.
+            </p>
+            <ul class="space-y-2.5 mb-6 text-xs sm:text-sm text-[#010101]/90">
+              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Tiempo de carga inicial sub-400ms en redes móviles 4G/5G</span></li>
+              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Supabase PostgreSQL con suscripciones en tiempo real</span></li>
+              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Progressive Web App (PWA) instalable en Android e iOS</span></li>
+            </ul>
+            <div class="mt-6 flex items-center justify-between text-[11px] font-mono text-[#010101]/40 pt-4 border-t border-[#010101]/5">
+              <span>CAPÍTULO 02 DE 05</span>
+              <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#010101]/30"></span>SCROLL HACIA ABAJO</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN 3: Texto a la izquierda -->
+      <section id="sec-2" class="story-section min-h-screen w-full flex items-center justify-center px-6 sm:px-10 md:px-14 lg:px-20 py-28 relative">
+        <div class="w-full max-w-7xl mx-auto flex items-center">
+          <div class="story-card w-full lg:w-[48%] xl:w-[45%] mr-auto text-left bg-[#FFFFFF]/95 backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-3xl border border-[#010101]/10 shadow-[0_15px_40px_rgba(1,1,1,0.04)]">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F60000]/10 border border-[#F60000]/30 text-[#F60000] text-xs font-mono font-bold tracking-wider mb-4">
+              <span class="w-2 h-2 rounded-full bg-[#F60000]"></span>
+              <span>03</span><span class="text-[#010101]/40">&middot;</span><span>TERRITORIO</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#010101] tracking-tight leading-tight mb-3" style="font-family:'Josefin Sans', sans-serif;">
+              En el mostrador de cada barrio: el kit QR físico
+            </h2>
+            <p class="text-xs sm:text-sm font-mono text-[#F60000] font-semibold mb-5 tracking-wide uppercase">
+              // La tecnología se toca con las manos en el mostrador
+            </p>
+            <p class="text-sm sm:text-base text-[#010101]/80 leading-relaxed mb-6 font-normal">
+              El software solo triunfa si vive en el mundo real. Diseñamos un kit físico imprimible de alta resolución con códigos QR vectoriales para vidrieras y mostradores. Los clientes escanean sin instalar ninguna aplicación pesada, eligen productos en segundos y envían el pedido estructurado al comercio.
+            </p>
+            <ul class="space-y-2.5 mb-6 text-xs sm:text-sm text-[#010101]/90">
+              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Kit QR vectorial listo para imprimir en alta resolución</span></li>
+              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Experiencia Zero-Install: el cliente escanea y compra</span></li>
+              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Mensajes de WhatsApp estructurados listos para despachar</span></li>
+            </ul>
+            <div class="mt-6 flex items-center justify-between text-[11px] font-mono text-[#010101]/40 pt-4 border-t border-[#010101]/5">
+              <span>CAPÍTULO 03 DE 05</span>
+              <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#010101]/30"></span>SCROLL HACIA ABAJO</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN 4: Texto a la derecha -->
+      <section id="sec-3" class="story-section min-h-screen w-full flex items-center justify-center px-6 sm:px-10 md:px-14 lg:px-20 py-28 relative">
+        <div class="w-full max-w-7xl mx-auto flex items-center">
+          <div class="story-card w-full lg:w-[48%] xl:w-[45%] ml-auto text-left bg-[#FFFFFF]/95 backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-3xl border border-[#010101]/10 shadow-[0_15px_40px_rgba(1,1,1,0.04)]">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F60000]/10 border border-[#F60000]/30 text-[#F60000] text-xs font-mono font-bold tracking-wider mb-4">
+              <span class="w-2 h-2 rounded-full bg-[#F60000]"></span>
+              <span>04</span><span class="text-[#010101]/40">&middot;</span><span>SOLIDEZ</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#010101] tracking-tight leading-tight mb-3" style="font-family:'Josefin Sans', sans-serif;">
+              Seguridad de grado bancario, RLS y privacidad total
+            </h2>
+            <p class="text-xs sm:text-sm font-mono text-[#F60000] font-semibold mb-5 tracking-wide uppercase">
+              // Aislamiento estricto por tienda y protección de datos
+            </p>
+            <p class="text-sm sm:text-base text-[#010101]/80 leading-relaxed mb-6 font-normal">
+              Arquitectura Multi-tenant real con aislamiento estricto por tienda. Cada dato está blindado mediante políticas Row Level Security (RLS) en base de datos, cifrado criptográfico de credenciales y auditoría de accesos. Privacidad absoluta: los datos de tu comercio y de tus clientes nunca se comparten ni revenden.
+            </p>
+            <ul class="space-y-2.5 mb-6 text-xs sm:text-sm text-[#010101]/90">
+              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Row Level Security (RLS) nativo con aislamiento multi-tenant</span></li>
+              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Cifrado de credenciales y tokens con PBKDF2 / SHA-256</span></li>
+              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Zero data leakage: base de clientes 100% privada y soberana</span></li>
+            </ul>
+            <div class="mt-6 flex items-center justify-between text-[11px] font-mono text-[#010101]/40 pt-4 border-t border-[#010101]/5">
+              <span>CAPÍTULO 04 DE 05</span>
+              <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#010101]/30"></span>SCROLL HACIA ABAJO</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN 5: Texto a la izquierda + CTA -->
+      <section id="sec-4" class="story-section min-h-screen w-full flex items-center justify-center px-6 sm:px-10 md:px-14 lg:px-20 py-28 relative">
+        <div class="w-full max-w-7xl mx-auto flex items-center">
+          <div class="story-card w-full lg:w-[48%] xl:w-[45%] mr-auto text-left bg-[#FFFFFF]/95 backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-3xl border border-[#010101]/10 shadow-[0_15px_40px_rgba(1,1,1,0.04)]">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F60000]/10 border border-[#F60000]/30 text-[#F60000] text-xs font-mono font-bold tracking-wider mb-4">
+              <span class="w-2 h-2 rounded-full bg-[#F60000]"></span>
+              <span>05</span><span class="text-[#010101]/40">&middot;</span><span>EL FUTURO</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#010101] tracking-tight leading-tight mb-3" style="font-family:'Josefin Sans', sans-serif;">
+              Evolución continua: La plataforma SaaS que no duerme
+            </h2>
+            <p class="text-xs sm:text-sm font-mono text-[#F60000] font-semibold mb-5 tracking-wide uppercase">
+              // Automatizaciones con IA, n8n y ecosistema en expansión
+            </p>
+            <p class="text-sm sm:text-base text-[#010101]/80 leading-relaxed mb-6 font-normal">
+              Dale!TePido no se detiene. Desde asistentes de inteligencia artificial para generación automática de descripciones y fotografías de productos, hasta sincronización con n8n, métricas en vivo y cupones de fidelización. Estamos construyendo el estándar definitivo para el comercio de cercanía.
+            </p>
+            <ul class="space-y-2.5 mb-6 text-xs sm:text-sm text-[#010101]/90">
+              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Motor IA para generación instantánea de catálogos y fotos</span></li>
+              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Automatizaciones de logística y confirmación con n8n</span></li>
+              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Comunidad activa y actualización semanal sin interrupciones</span></li>
+            </ul>
+
+            <div class="pt-4 border-t border-[#010101]/10 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <a href="https://www.daletepido.com.ar" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-[#F60000] text-[#FFFFFF] font-bold text-sm hover:bg-[#D60000] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-[0_8px_20px_rgba(246,0,0,0.3)] text-decoration-none">
+                <span>Crear Mi Tienda en Dale!TePido</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                </svg>
+              </a>
+              <a href="/tienda-demo.html" class="inline-flex items-center justify-center px-4 py-3 rounded-2xl bg-transparent border border-[#010101]/20 text-[#010101] font-semibold text-xs hover:bg-[#010101]/5 transition-colors duration-200">
+                Ver Tienda Demo
+              </a>
+            </div>
+
+            <div class="mt-6 flex items-center justify-between text-[11px] font-mono text-[#010101]/40 pt-4 border-t border-[#010101]/5">
+              <span>CAPÍTULO 05 DE 05</span>
+              <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#010101]/30"></span>EXPERIENCIA COMPLETA</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ============================================================== -->
+    <!-- FOOTER MINIMALISTA FINAL (100% BLANCO INFINITO)                -->
+    <!-- ============================================================== -->
+    <footer class="relative z-20 bg-[#FFFFFF] border-t border-[#010101]/10 py-12 px-6 text-center">
+      <div class="max-w-4xl mx-auto flex flex-col items-center gap-4">
+        <div class="w-10 h-10 rounded-xl bg-[#F60000] flex items-center justify-center text-[#FFFFFF] font-black text-xl">
+          !
+        </div>
+        <h3 class="text-xl font-bold text-[#010101] tracking-tight">
+          Dale! Te Pido &mdash; Plataforma de Comercio Sin Comisiones
+        </h3>
+        <p class="text-xs text-[#010101]/60 max-w-lg leading-relaxed">
+          Diseñado y desarrollado para potenciar los negocios de barrio de toda la Argentina y la región.
+          Tecnología soberana, pedidos directos por WhatsApp y 0% de comisiones.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-6 text-xs text-[#010101]/70 font-mono mt-2">
+          <a href="https://www.daletepido.com.ar" class="hover:text-[#F60000] transition-colors">Inicio</a>
+          <span>&middot;</span>
+          <a href="/tienda-demo.html" class="hover:text-[#F60000] transition-colors">Tienda Demo</a>
+          <span>&middot;</span>
+          <a href="/kit-imprimible.html" class="hover:text-[#F60000] transition-colors">Kit Imprimible</a>
+          <span>&middot;</span>
+          <a href="/terminos.html" class="hover:text-[#F60000] transition-colors">Términos</a>
+          <span>&middot;</span>
+          <a href="/privacidad.html" class="hover:text-[#F60000] transition-colors">Privacidad</a>
+        </div>
+        <p class="text-[10px] text-[#010101]/40 font-mono mt-4">
+          &copy; <span id="currentYear"></span> Dale!TePido. Todos los derechos reservados.
+        </p>
+      </div>
+    </footer>
+
   </div>
 
-  <!-- ========================================================
-       EDITORIAL CHAPTERS CONTAINER (Epic.net Alternating Layout)
-       ======================================================== -->
-  <main class="chapters-container">
-
-    <!-- CHAPTER 01 -->
-    <article class="chapter-item" id="etapa-1">
-      <div class="chapter-content">
-        <div class="chapter-count-badge">01 / GÉNESIS & MVP</div>
-        <h2 class="chapter-headline">El Momento Cero: <br>Catálogo Ágil y Cierre Humano</h2>
-        <div class="chapter-text">
-          <p>
-            El desafío fundacional consistía en permitir a cualquier verdulería, fiambrería o tienda de ropa publicar su catálogo en menos de diez minutos sin requerir programadores ni contratos leoninos.
-          </p>
-          <p>
-            La primera iteración adoptó <strong>Google Sheets como backend ligero</strong>. Los comercios editaban su inventario en una hoja de cálculo y el frontend parseaba el archivo CSV exportado en tiempo real. Al finalizar la compra, un algoritmo formateaba el pedido con saltos de línea claros y lo despachaba vía <code>wa.me</code> directo al WhatsApp del dueño.
-          </p>
-          <p>
-            Pronto surgieron los límites naturales: la caché de Google demoraba hasta 5 minutos en reflejar cambios de precio, no existía autenticación por tienda y era imposible gestionar más de una foto por artículo. Fue el catalizador para diseñar una arquitectura formal.
-          </p>
-        </div>
-
-        <div class="tech-pill-list">
-          <span class="tech-pill"><i class="bi bi-filetype-csv"></i> CSV Google Sheets</span>
-          <span class="tech-pill"><i class="bi bi-whatsapp"></i> DeepLink WhatsApp</span>
-          <span class="tech-pill"><i class="bi bi-percent"></i> 0% Comisiones</span>
-          <span class="tech-pill"><i class="bi bi-lightning"></i> Carga Instantánea</span>
-        </div>
-
-        <a href="#etapa-2" class="epic-action-btn">
-          <span>Ver la solución visual</span>
-          <div class="epic-action-circle"><i class="bi bi-arrow-right"></i></div>
-        </a>
-      </div>
-
-      <div class="chapter-visual">
-        <div class="polaroid-card-stack-bg"></div>
-        <div class="polaroid-card" style="transform: rotate(-3deg);">
-          <div class="polaroid-screen">
-            <div class="screen-header-bar">
-              <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-              <span style="font-family:var(--font-mono); font-size:10px; color:#94A3B8; margin-left:6px;">pedido-whatsapp-gen1.txt</span>
-            </div>
-            <div class="screen-body">
-              <div class="mock-chat-bubble">
-                📱 <b>*NUEVO PEDIDO #042*</b><br>
-                Hola! Quiero encargar:<br>
-                • 1x Hamburguesa Especial ($4.800)<br>
-                • 1x Papas Rústicas ($2.100)<br>
-                <b>Total: $6.900</b><br>
-                Pago: Transferencia Alias<br>
-                Dirección: Av. Corrientes 1420
-              </div>
-              <div style="font-family:var(--font-mono); font-size:10px; color:#64748B; text-align:right;">
-                ✓✓ Enviado vía wa.me API
-              </div>
-            </div>
-          </div>
-          <div class="polaroid-caption">
-            <span>MVP v1.0 — Checkout directo</span>
-            <div class="polaroid-tag">Génesis 2024</div>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <!-- CHAPTER 02 -->
-    <article class="chapter-item is-reversed" id="etapa-2">
-      <div class="chapter-content">
-        <div class="chapter-count-badge">02 / EXPERIENCIA VISUAL</div>
-        <h2 class="chapter-headline">Multi-Imagen, Banners 50/50 & Marca de Agua 2D</h2>
-        <div class="chapter-text">
-          <p>
-            El comercio minorista entra por los ojos. Los clientes demandaban ver el plato desde varios ángulos y el dorso de las prendas. Pero subir fotos de alta resolución amenazaba la velocidad móvil y exponía a los comerciantes a que la competencia les robe las imágenes.
-          </p>
-          <p>
-            La respuesta fue una <strong>innovación de procesamiento en el cliente (Browser-side Canvas)</strong>: un motor gráfico en HTML5 Canvas que estampa automáticamente el isotipo del comercio en la esquina inferior con un ratio matemático del 15% y fondo traslúcido de legibilidad antes de enviarlo a la nube.
-          </p>
-          <p>
-            Se sumó el soporte de hasta 3 fotos por ficha con swipe táctil, transformación automática a formato WebP progresivo y banners promocionales duales 50/50 configurables para potenciar la venta cruzada.
-          </p>
-        </div>
-
-        <div class="tech-pill-list">
-          <span class="tech-pill"><i class="bi bi-brush"></i> HTML5 Canvas 2D</span>
-          <span class="tech-pill"><i class="bi bi-images"></i> Hasta 3 fotos por ítem</span>
-          <span class="tech-pill"><i class="bi bi-shield-check"></i> Watermark Anti-copia</span>
-          <span class="tech-pill"><i class="bi bi-file-earmark-image"></i> Cloudinary WebP</span>
-        </div>
-
-        <a href="#etapa-3" class="epic-action-btn">
-          <span>Conocer la migración a la nube</span>
-          <div class="epic-action-circle"><i class="bi bi-arrow-right"></i></div>
-        </a>
-      </div>
-
-      <div class="chapter-visual">
-        <div class="polaroid-card-stack-bg" style="transform: rotate(-6deg);"></div>
-        <div class="polaroid-card" style="transform: rotate(4deg);">
-          <div class="polaroid-screen">
-            <div class="screen-header-bar">
-              <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-              <span style="font-family:var(--font-mono); font-size:10px; color:#94A3B8; margin-left:6px;">canvas-watermark-engine.js</span>
-            </div>
-            <div class="screen-body" style="background: radial-gradient(circle at center, #1E293B 0%, #0F172A 100%);">
-              <div style="border: 2px dashed rgba(214,0,0,0.4); border-radius:8px; padding:18px; text-align:center; position:relative;">
-                <i class="bi bi-camera-fill" style="font-size:32px; color:#94A3B8;"></i>
-                <div style="font-size:11px; color:#CBD5E1; margin-top:6px;">Foto Original Producto (3.4 MB)</div>
-                <div style="position:absolute; bottom:8px; right:8px; background:rgba(214,0,0,0.85); color:#fff; font-family:var(--font-mono); font-size:9px; padding:3px 7px; border-radius:4px; font-weight:700;">
-                  🔒 DALE! TEPIDO WATERMARK
-                </div>
-              </div>
-              <div style="display:flex; justify-content:space-between; margin-top:12px; font-family:var(--font-mono); font-size:10px; color:#10B981;">
-                <span>✓ WebP Comprimido: 140 KB</span>
-                <span>✓ 0 ms en servidor</span>
-              </div>
-            </div>
-          </div>
-          <div class="polaroid-caption">
-            <span>Canvas 2D Watermark en Vivo</span>
-            <div class="polaroid-tag">Etapa 2</div>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <!-- CHAPTER 03 -->
-    <article class="chapter-item" id="etapa-3">
-      <div class="chapter-content">
-        <div class="chapter-count-badge">03 / ARQUITECTURA CLOUD</div>
-        <h2 class="chapter-headline">La Gran Migración: <br>Supabase & Multi-Tenancy</h2>
-        <div class="chapter-text">
-          <p>
-            Al superar los cientos de comercios registrados, la sincronización requería una base de datos relacional de nivel corporativo. La decisión fue migrar a <strong>Supabase (PostgreSQL relacional) con arquitectura Multi-Tenant</strong>.
-          </p>
-          <p>
-            Cada comercio es identificado dinámicamente mediante su subdominio (ej: <code>comercio.daletepido.com.ar</code>), path de URL o parámetro <code>store_id</code>. Todas las consultas SQL filtran estrictamente a nivel de fila mediante políticas RLS (Row Level Security).
-          </p>
-          <p>
-            Además, implementamos la librería resiliente <code>fetchSupabase()</code> con reintentos exponenciales automáticos, mitigación de caídas y fallback inteligente a caché local si la conectividad móvil sufre intermitencias.
-          </p>
-        </div>
-
-        <div class="tech-pill-list">
-          <span class="tech-pill"><i class="bi bi-database"></i> PostgreSQL Supabase</span>
-          <span class="tech-pill"><i class="bi bi-diagram-3"></i> Multi-tenant store_id</span>
-          <span class="tech-pill"><i class="bi bi-shield-lock"></i> RLS Policies</span>
-          <span class="tech-pill"><i class="bi bi-arrow-repeat"></i> Auto-Recovery 3 Retries</span>
-        </div>
-
-        <a href="#etapa-4" class="epic-action-btn">
-          <span>Explorar el dashboard</span>
-          <div class="epic-action-circle"><i class="bi bi-arrow-right"></i></div>
-        </a>
-      </div>
-
-      <div class="chapter-visual">
-        <div class="polaroid-card-stack-bg"></div>
-        <div class="polaroid-card" style="transform: rotate(-2deg);">
-          <div class="polaroid-screen">
-            <div class="screen-header-bar">
-              <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-              <span style="font-family:var(--font-mono); font-size:10px; color:#94A3B8; margin-left:6px;">postgresql-schema-multi-tenant.sql</span>
-            </div>
-            <div class="screen-body">
-              <div class="mock-db-row">
-                <span>SELECT * FROM products</span>
-                <span style="color:#10B981;">WHERE store_id = 'kiosco-central'</span>
-              </div>
-              <div class="mock-db-row" style="border-left-color: var(--amber-warning);">
-                <span>CREATE POLICY "Tenant Isolation"</span>
-                <span style="color:var(--amber-warning);">RLS: ON (auth.uid = owner)</span>
-              </div>
-              <div class="mock-db-row" style="border-left-color: var(--purple-accent);">
-                <span>TABLE store_activity_logs</span>
-                <span style="color:var(--purple-accent);">Realtime Change Listener</span>
-              </div>
-            </div>
-          </div>
-          <div class="polaroid-caption">
-            <span>Aislamiento SQL por Comercio</span>
-            <div class="polaroid-tag">Supabase Cloud</div>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <!-- CHAPTER 04 -->
-    <article class="chapter-item is-reversed" id="etapa-4">
-      <div class="chapter-content">
-        <div class="chapter-count-badge">04 / SUITE DEL COMERCIANTE</div>
-        <h2 class="chapter-headline">Dashboard Operativo 360°: <br>Kanban, Métricas & Wizard</h2>
-        <div class="chapter-text">
-          <p>
-            El comerciante no tenía tiempo para capacitarse en sistemas engorrosos. Creamos un <strong>Panel de Control táctil y reactivo</strong> adaptado para operar a una mano desde el teléfono mientras atiende el mostrador.
-          </p>
-          <p>
-            El corazón operativo incluye un <strong>Tablero Kanban</strong> con arrastre de pedidos (A Confirmar, En Preparación, Despachado, Entregado), un generador de cupones con porcentaje y tope de usos, y un flujo de configuración guiado en 5 pasos que clasifica productos según su arquetipo (Gastronomía, Talles de Indumentaria o Variantes).
-          </p>
-          <p>
-            Métricas vivas de facturación, gráfico de ticket promedio y editor en vivo de estilos CSS permiten que cada tienda refleje su propia identidad de marca en segundos.
-          </p>
-        </div>
-
-        <div class="tech-pill-list">
-          <span class="tech-pill"><i class="bi bi-kanban"></i> Tablero Kanban</span>
-          <span class="tech-pill"><i class="bi bi-ticket-perforated"></i> Motor de Cupones</span>
-          <span class="tech-pill"><i class="bi bi-sliders"></i> Arquetipos de Producto</span>
-          <span class="tech-pill"><i class="bi bi-graph-up"></i> Métricas en Vivo</span>
-        </div>
-
-        <a href="#etapa-5" class="epic-action-btn">
-          <span>Ver la experiencia física y móvil</span>
-          <div class="epic-action-circle"><i class="bi bi-arrow-right"></i></div>
-        </a>
-      </div>
-
-      <div class="chapter-visual">
-        <div class="polaroid-card-stack-bg" style="transform: rotate(5deg);"></div>
-        <div class="polaroid-card" style="transform: rotate(-4deg);">
-          <div class="polaroid-screen">
-            <div class="screen-header-bar">
-              <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-              <span style="font-family:var(--font-mono); font-size:10px; color:#94A3B8; margin-left:6px;">dashboard-operativo.html</span>
-            </div>
-            <div class="screen-body">
-              <div class="mock-metric-grid">
-                <div class="mock-metric-item">
-                  <div style="font-size:10px; color:#94A3B8; font-family:var(--font-mono);">VENTAS HOY</div>
-                  <div class="mock-metric-val">$148.900</div>
-                  <div style="font-size:9.5px; color:#10B981;">▲ +18% vs ayer</div>
-                </div>
-                <div class="mock-metric-item">
-                  <div style="font-size:10px; color:#94A3B8; font-family:var(--font-mono);">PEDIDOS</div>
-                  <div class="mock-metric-val">34 Órdenes</div>
-                  <div style="font-size:9.5px; color:var(--red-primary);">0% comisiones</div>
-                </div>
-              </div>
-              <div style="display:flex; gap:6px; margin-top:10px;">
-                <div style="flex:1; background:rgba(214,0,0,0.12); padding:6px; border-radius:4px; font-size:10px; text-align:center; color:#FF9999;">3 Pendientes</div>
-                <div style="flex:1; background:rgba(245,158,11,0.12); padding:6px; border-radius:4px; font-size:10px; text-align:center; color:#FBBF24;">5 En Cocina</div>
-                <div style="flex:1; background:rgba(16,185,129,0.12); padding:6px; border-radius:4px; font-size:10px; text-align:center; color:#34D399;">26 Despachados</div>
-              </div>
-            </div>
-          </div>
-          <div class="polaroid-caption">
-            <span>Dashboard Operativo Kanban</span>
-            <div class="polaroid-tag">Suite Gestor</div>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <!-- CHAPTER 05 -->
-    <article class="chapter-item" id="etapa-5">
-      <div class="chapter-content">
-        <div class="chapter-count-badge">05 / OMNICANALIDAD & MOBILE</div>
-        <h2 class="chapter-headline">Del Mostrador al Bolsillo: <br>Kit Imprimible A4 & Android Nativo</h2>
-        <div class="chapter-text">
-          <p>
-            El puente entre la tienda física y el mundo digital debía ser inmediato. Desarrollamos el módulo <code>kit-imprimible.html</code>, un generador automatizado que compone afiches de mostrador en resolución 300 DPI con código QR vectorial y grilla de 10 tarjetas de bolsillo listas para imprimir y recortar.
-          </p>
-          <p>
-            En el plano móvil, implementamos el estándar <strong>PWA con Service Worker</strong> (soporte offline, iconos maskables 192 y 512px) y dimos el salto a la aplicación nativa Android mediante <strong>Google Trusted Web Activity (TWA)</strong>.
-          </p>
-          <p>
-            A través de un pipeline automatizado de CI/CD en GitHub Actions con Java 17 y Gradle 8.5, cada actualización compila, firma y genera el instalable <code>app-release.apk</code> de manera desatendida.
-          </p>
-        </div>
-
-        <div class="tech-pill-list">
-          <span class="tech-pill"><i class="bi bi-printer"></i> Kit Imprimible A4 300 DPI</span>
-          <span class="tech-pill"><i class="bi bi-qr-code"></i> QR Vectorial Dinámico</span>
-          <span class="tech-pill"><i class="bi bi-android2"></i> Android TWA Nativo</span>
-          <span class="tech-pill"><i class="bi bi-github"></i> CI/CD Gradle 8.5</span>
-        </div>
-
-        <a href="#etapa-6" class="epic-action-btn">
-          <span>Ver la auditoría de seguridad</span>
-          <div class="epic-action-circle"><i class="bi bi-arrow-right"></i></div>
-        </a>
-      </div>
-
-      <div class="chapter-visual">
-        <div class="polaroid-card-stack-bg"></div>
-        <div class="polaroid-card" style="transform: rotate(3deg);">
-          <div class="polaroid-screen">
-            <div class="screen-header-bar">
-              <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-              <span style="font-family:var(--font-mono); font-size:10px; color:#94A3B8; margin-left:6px;">kit-imprimible-a4.pdf</span>
-            </div>
-            <div class="screen-body" style="background:#FFFFFF; color:#0F172A; text-align:center;">
-              <div style="font-family:var(--font-display); font-size:13px; font-weight:800; color:#D60000; letter-spacing:0.04em;">DALE! TEPIDO</div>
-              <div style="font-size:11px; font-weight:700; margin-bottom:8px;">ESCANEA Y PEDÍ ONLINE</div>
-              <!-- Simulated QR Vectorial -->
-              <div style="display:inline-block; padding:8px; border:2px solid #0F172A; border-radius:6px; background:#fff;">
-                <i class="bi bi-qr-code" style="font-size:54px; color:#0F172A;"></i>
-              </div>
-              <div style="font-family:var(--font-mono); font-size:9px; color:#64748B; margin-top:6px;">daletepido.com.ar/tu-tienda</div>
-            </div>
-          </div>
-          <div class="polaroid-caption">
-            <span>Kit QR Mostrador & Vidriera A4</span>
-            <div class="polaroid-tag">Físico + Digital</div>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <!-- CHAPTER 06 -->
-    <article class="chapter-item is-reversed" id="etapa-6">
-      <div class="chapter-content">
-        <div class="chapter-count-badge">06 / BLINDAJE & SEGURIDAD</div>
-        <h2 class="chapter-headline">Hardening Bancario: <br>Score 94/100 SEC-01 a SEC-08</h2>
-        <div class="chapter-text">
-          <p>
-            Al procesar pedidos y datos sensibles de cientos de comerciantes, la seguridad no podía ser una promesa abstracta; requería una auditoría forense integral de grado bancario.
-          </p>
-          <p>
-            Se implementó un programa riguroso de <strong>Hardening Criptográfico</strong>: erradicación de OTPs numéricos predecibles, reemplazados por <strong>tokens criptográficos HMAC-SHA256 con ventana de validez estricta de 15 minutos</strong> (SEC-01).
-          </p>
-          <p>
-            Se eliminaron todas las claves maestras de Supabase del código frontend, delegando mutaciones privilegiadas a funciones serverless con variables de entorno blindadas (SEC-02), y se aplicaron barreras de Row Level Security a prueba de manipulación de clientes (SEC-03). El resultado: un score de auditoría certificado de 94/100.
-          </p>
-        </div>
-
-        <div class="tech-pill-list">
-          <span class="tech-pill"><i class="bi bi-key"></i> HMAC-SHA256 Tokens</span>
-          <span class="tech-pill"><i class="bi bi-hourglass-split"></i> TTL Estricto 15 Min</span>
-          <span class="tech-pill"><i class="bi bi-shield-shaded"></i> Cero Secretos Expuestos</span>
-          <span class="tech-pill"><i class="bi bi-patch-check"></i> Score 94/100 Bancario</span>
-        </div>
-
-        <a href="informe-vulnerabilidades-clickapp.html" target="_blank" class="epic-action-btn">
-          <span>Leer el informe completo SEC</span>
-          <div class="epic-action-circle"><i class="bi bi-arrow-right"></i></div>
-        </a>
-      </div>
-
-      <div class="chapter-visual">
-        <div class="polaroid-card-stack-bg" style="transform: rotate(-5deg);"></div>
-        <div class="polaroid-card" style="transform: rotate(3deg);">
-          <div class="polaroid-screen">
-            <div class="screen-header-bar">
-              <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-              <span style="font-family:var(--font-mono); font-size:10px; color:#94A3B8; margin-left:6px;">security-audit-report.json</span>
-            </div>
-            <div class="screen-body">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <span style="font-family:var(--font-mono); font-size:11px; color:#A7F3D0;">AUDIT PASS: 11 / 11 CHECKS</span>
-                <span style="font-family:var(--font-display); font-size:18px; font-weight:800; color:#10B981;">94 / 100</span>
-              </div>
-              <div class="mock-db-row" style="border-left-color:#10B981;">
-                <span>SEC-01 HMAC Token</span>
-                <span style="color:#10B981;">✓ MITIGADO</span>
-              </div>
-              <div class="mock-db-row" style="border-left-color:#10B981;">
-                <span>SEC-02 Service Role Leak</span>
-                <span style="color:#10B981;">✓ ERRADICADO</span>
-              </div>
-              <div class="mock-db-row" style="border-left-color:#10B981;">
-                <span>SEC-03 Cross-tenant RLS</span>
-                <span style="color:#10B981;">✓ BLINDADO</span>
-              </div>
-            </div>
-          </div>
-          <div class="polaroid-caption">
-            <span>Certificación de Hardening</span>
-            <div class="polaroid-tag">SEC Audit</div>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <!-- CHAPTER 07 -->
-    <article class="chapter-item" id="etapa-7">
-      <div class="chapter-content">
-        <div class="chapter-count-badge">07 / CONTROL GLOBAL & TELEMETRÍA</div>
-        <h2 class="chapter-headline">Super Admin Maestro, <br>CMS de Correos & Nutrición</h2>
-        <div class="chapter-text">
-          <p>
-            Para sostener el crecimiento de la red de tiendas y garantizar estabilidad total a cada comerciante, diseñamos una cabina de mando centralizada: el <strong>Super Admin Secret Dashboard</strong>, protegido bajo estricta autenticación por capas.
-          </p>
-          <p>
-            Este panel provee un <em>Live Ticker de 15 segundos</em> para supervisar el pulso de la base de datos, diagnóstico en vivo de la infraestructura distribuida (estado de las conexiones SQL, CDN de imágenes y entregabilidad) y gestión de prospectos comerciales.
-          </p>
-          <p>
-            Además, desarrollamos artesanalmente un <strong>CMS Visual de Correos Transaccionales</strong> con 9 plantillas oficiales en modo claro de alto contraste, y secuencias automatizadas de acompañamiento (Día 2 configuración de redes, Día 3 kit imprimible, Día 4 logística de envíos) con alertas instantáneas vía Telegram y canales directos.
-          </p>
-        </div>
-
-        <div class="tech-pill-list">
-          <span class="tech-pill"><i class="bi bi-speedometer2"></i> Live Ticker 15s</span>
-          <span class="tech-pill"><i class="bi bi-envelope"></i> CMS 9 Plantillas Resend</span>
-          <span class="tech-pill"><i class="bi bi-cpu"></i> Flujos Automatizados</span>
-          <span class="tech-pill"><i class="bi bi-telegram"></i> Alertas Directas Telegram</span>
-        </div>
-
-        <a href="#etapa-8" class="epic-action-btn">
-          <span>Ver la última innovación</span>
-          <div class="epic-action-circle"><i class="bi bi-arrow-right"></i></div>
-        </a>
-      </div>
-
-      <div class="chapter-visual">
-        <div class="polaroid-card-stack-bg"></div>
-        <div class="polaroid-card" style="transform: rotate(-3deg);">
-          <div class="polaroid-screen">
-            <div class="screen-header-bar">
-              <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-              <span style="font-family:var(--font-mono); font-size:10px; color:#94A3B8; margin-left:6px;">super-admin-secret-dashboard.html</span>
-            </div>
-            <div class="screen-body">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                <span style="font-family:var(--font-mono); font-size:10px; color:#94A3B8;">INFRAESTRUCTURA EN VIVO</span>
-                <span style="font-family:var(--font-mono); font-size:10px; color:#10B981;">● ALL SYSTEMS OPERATIONAL</span>
-              </div>
-              <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:6px;">
-                <div style="background:rgba(255,255,255,0.03); padding:8px; border-radius:6px; font-family:var(--font-mono); font-size:10.5px;">
-                  <div style="color:#94A3B8;">Supabase DB</div>
-                  <div style="color:#10B981; font-weight:700;">Conectado (12ms)</div>
-                </div>
-                <div style="background:rgba(255,255,255,0.03); padding:8px; border-radius:6px; font-family:var(--font-mono); font-size:10.5px;">
-                  <div style="color:#94A3B8;">Email Service</div>
-                  <div style="color:#10B981; font-weight:700;">Activo (Resend)</div>
-                </div>
-                <div style="background:rgba(255,255,255,0.03); padding:8px; border-radius:6px; font-family:var(--font-mono); font-size:10.5px;">
-                  <div style="color:#94A3B8;">CDN Media</div>
-                  <div style="color:#10B981; font-weight:700;">Cloudinary OK</div>
-                </div>
-                <div style="background:rgba(255,255,255,0.03); padding:8px; border-radius:6px; font-family:var(--font-mono); font-size:10.5px;">
-                  <div style="color:#94A3B8;">Live Countdown</div>
-                  <div style="color:var(--amber-warning); font-weight:700;">15s Sync</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="polaroid-caption">
-            <span>Super Admin & Salud de Red</span>
-            <div class="polaroid-tag">Infraestructura</div>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <!-- CHAPTER 08 -->
-    <article class="chapter-item is-reversed" id="etapa-8">
-      <div class="chapter-content">
-        <div class="chapter-count-badge">08 / INNOVACIÓN CONTINUA</div>
-        <h2 class="chapter-headline">Modo Sereno / Vigilador <br>& Tarjetas SEO en WhatsApp</h2>
-        <div class="chapter-text">
-          <p>
-            Uno de los dolores más frecuentes del comercio tradicional es perder pedidos cuando el local está cerrado. Tradicionalmente, las webs desactivan el botón de compra o muestran un cartel frustrante de "Cerrado".
-          </p>
-          <p>
-            Creamos el <strong>Modo Sereno ("El Vigilador 24/7")</strong>: una modalidad nocturna inteligente que permite a los clientes navegar, armar su carrito y enviar el pedido en cualquier momento. El sistema despliega un modal empático explicando los horarios de reapertura, rotula el ticket con el badge <code>🌙 Pedido Sereno</code> y lo deposita ordenadamente para que el comerciante lo despache a primera hora.
-          </p>
-          <p>
-            En paralelo, incorporamos el motor de <strong>SEO Social de Alta Conversión</strong>: cada vez que se comparte el enlace de un producto, genera automáticamente una tarjeta rica en WhatsApp con foto nítida, título, precio exacto y marca del comercio.
-          </p>
-        </div>
-
-        <div class="tech-pill-list">
-          <span class="tech-pill"><i class="bi bi-moon-stars"></i> Modo Sereno 24/7</span>
-          <span class="tech-pill"><i class="bi bi-cart-check"></i> Retención Cero Pérdidas</span>
-          <span class="tech-pill"><i class="bi bi-share"></i> SEO Social WhatsApp</span>
-          <span class="tech-pill"><i class="bi bi-palette"></i> Banners Armónicos</span>
-        </div>
-
-        <a href="/tienda-demo.html" target="_blank" class="epic-action-btn">
-          <span>Probar en la Tienda Demo</span>
-          <div class="epic-action-circle"><i class="bi bi-arrow-right"></i></div>
-        </a>
-      </div>
-
-      <div class="chapter-visual">
-        <div class="polaroid-card-stack-bg" style="transform: rotate(6deg);"></div>
-        <div class="polaroid-card" style="transform: rotate(-2deg);">
-          <div class="polaroid-screen">
-            <div class="screen-header-bar">
-              <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-              <span style="font-family:var(--font-mono); font-size:10px; color:#94A3B8; margin-left:6px;">modo-sereno-modal.js</span>
-            </div>
-            <div class="screen-body" style="background: radial-gradient(circle at center, #1E1B4B 0%, #0F172A 100%);">
-              <div style="text-align:center; padding:10px;">
-                <div style="font-size:24px; margin-bottom:4px;">🌙</div>
-                <div style="font-family:var(--font-display); font-size:15px; font-weight:700; color:#E0E7FF;">Tienda en Reposo</div>
-                <div style="font-size:11px; color:#94A3B8; margin:6px 0 12px; line-height:1.4;">
-                  Recibimos tu pedido ahora. Lo cocinamos y despachamos mañana a partir de las 11:30 hs.
-                </div>
-                <div style="display:inline-block; background:rgba(214,0,0,0.9); color:#fff; font-size:10.5px; font-weight:700; padding:6px 14px; border-radius:999px;">
-                  Confirmar Pedido Sereno
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="polaroid-caption">
-            <span>Modo Sereno / Vigilador Activo</span>
-            <div class="polaroid-tag">Innovación 2026</div>
-          </div>
-        </div>
-      </div>
-    </article>
-
-  </main>
-
-  <!-- ========================================================
-       COMPARISON MATRIX: ANTES VS HOY
-       ======================================================== -->
-  <section class="comparison-section">
-    <div class="comparison-inner">
-      <div class="section-header-centered">
-        <span class="section-label">SALTO CUALITATIVO Y TÉCNICO</span>
-        <h2>La Transformación Arquitectónica</h2>
-        <p style="color:var(--text-muted); font-size:16px;">
-          Comparativa transparente entre el punto de partida y la infraestructura robusta que opera hoy en producción.
-        </p>
-      </div>
-
-      <div class="comparison-grid">
-        <!-- Columna Antes -->
-        <div class="comparison-column">
-          <div class="col-title" style="color:var(--text-muted);">
-            <i class="bi bi-clock-history"></i> El Momento Cero (MVP)
-          </div>
-          <div class="col-subtitle">Google Sheets CSV & Enlace Básico</div>
-
-          <ul class="comparison-list">
-            <li class="comparison-list-item">
-              <div class="comparison-icon cross"><i class="bi bi-x-lg"></i></div>
-              <div><strong>Caché rígido de 5 minutos</strong>: los cambios de stock o precio demoraban en actualizarse.</div>
-            </li>
-            <li class="comparison-list-item">
-              <div class="comparison-icon cross"><i class="bi bi-x-lg"></i></div>
-              <div><strong>1 sola imagen por artículo</strong> sin zoom, carrusel táctil ni protección de autoría.</div>
-            </li>
-            <li class="comparison-list-item">
-              <div class="comparison-icon cross"><i class="bi bi-x-lg"></i></div>
-              <div><strong>Ventas bloqueadas de noche</strong>: los clientes se iban al ver el comercio cerrado.</div>
-            </li>
-            <li class="comparison-list-item">
-              <div class="comparison-icon cross"><i class="bi bi-x-lg"></i></div>
-              <div><strong>Sin panel de control multi-tenant</strong> ni estadísticas consolidadas de facturación.</div>
-            </li>
-            <li class="comparison-list-item">
-              <div class="comparison-icon cross"><i class="bi bi-x-lg"></i></div>
-              <div><strong>Vínculos OTP predecibles</strong> sin firma criptográfica ni expiración corta.</div>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Columna Hoy -->
-        <div class="comparison-column highlight">
-          <div class="col-title" style="color:var(--red-primary);">
-            <i class="bi bi-rocket-takeoff-fill"></i> El Estado Actual (Hoy)
-          </div>
-          <div class="col-subtitle">PostgreSQL Supabase, Vanilla JS & Hardening</div>
-
-          <ul class="comparison-list">
-            <li class="comparison-list-item">
-              <div class="comparison-icon check"><i class="bi bi-check-lg"></i></div>
-              <div><strong>Actualización instantánea en milisegundos</strong> vía Supabase Realtime y WebSockets.</div>
-            </li>
-            <li class="comparison-list-item">
-              <div class="comparison-icon check"><i class="bi bi-check-lg"></i></div>
-              <div><strong>Hasta 3 fotos WebP progresivas</strong> con marca de agua automática en Canvas HTML5.</div>
-            </li>
-            <li class="comparison-list-item">
-              <div class="comparison-icon check"><i class="bi bi-check-lg"></i></div>
-              <div><strong>Modo Sereno 24/7</strong>: pedidos fuera de horario capturados sin fricción.</div>
-            </li>
-            <li class="comparison-list-item">
-              <div class="comparison-icon check"><i class="bi bi-check-lg"></i></div>
-              <div><strong>Suite Completa 360°</strong>: Tablero Kanban, cupones, wizard y Super Admin Maestro.</div>
-            </li>
-            <li class="comparison-list-item">
-              <div class="comparison-icon check"><i class="bi bi-check-lg"></i></div>
-              <div><strong>Hardening Bancario 94/100</strong> con tokens HMAC-SHA256 y políticas de Row Level Security.</div>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========================================================
-       EPIC.NET SIGNATURE BOTTOM CALL TO ACTION
-       ======================================================== -->
-  <section class="epic-bottom-cta">
-    <div class="cta-container">
-      <span class="section-label" style="margin-bottom:20px;">EMPEZÁ HOY MISMO</span>
-      <h2 class="cta-title">Tu comercio, tus reglas.<br>Sin intermediarios ni comisiones.</h2>
-      <p class="cta-description">
-        Creá tu catálogo digital en menos de 15 minutos, descargá tu kit imprimible para el mostrador y empezá a recibir pedidos directos en tu WhatsApp.
-      </p>
-
-      <div class="cta-btn-group">
-        <a href="/alta-usuario.html" class="cta-btn-main">
-          <span>Crear Catálogo Gratis (15 días)</span>
-          <i class="bi bi-arrow-right"></i>
-        </a>
-        <a href="/tienda-demo.html" target="_blank" class="cta-btn-secondary">
-          <i class="bi bi-shop"></i>
-          <span>Explorar Tienda Demo</span>
-        </a>
-        <a href="/" class="cta-btn-secondary">
-          <i class="bi bi-house"></i>
-          <span>Volver al Inicio</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========================================================
-       FOOTER
-       ======================================================== -->
-  <footer>
-    <div class="footer-inner">
-      <div class="footer-brand">
-        <img 
-          src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" 
-          onerror="this.src='/img-default/daletepido-logo-white-hq.png'" 
-          alt="Dale! Te Pido" 
-          class="header-logo" 
-        />
-        <p>
-          La plataforma ágil para comercios locales y gastronómicos. Catálogo online para WhatsApp con 0% de comisiones por venta.
-        </p>
-      </div>
-
-      <div class="footer-col">
-        <h5>Plataforma</h5>
-        <ul class="footer-links">
-          <li><a href="/landing.html">Portada</a></li>
-          <li><a href="/desarrollo.html">Historia y Desarrollo</a></li>
-          <li><a href="/tienda-demo.html" target="_blank">Tienda Demo</a></li>
-          <li><a href="/kit-imprimible.html">Kit Imprimible QR</a></li>
-          <li><a href="/alta-usuario.html">Crear Cuenta</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h5>Ingeniería</h5>
-        <ul class="footer-links">
-          <li><a href="/informe-vulnerabilidades-clickapp.html" target="_blank">Auditoría SEC-01 a SEC-08</a></li>
-          <li><a href="/presentacion-evolucion-clickapp.html" target="_blank">Presentación Diapositivas</a></li>
-          <li><a href="/dashboard.html" target="_blank">Dashboard de Comercio</a></li>
-          <li><a href="/super-admin-login.html">Acceso Super Admin</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h5>Legal & Contacto</h5>
-        <ul class="footer-links">
-          <li><a href="/terminos.html">Términos y Condiciones</a></li>
-          <li><a href="/privacidad.html">Políticas de Privacidad</a></li>
-          <li><a href="/ayuda.html">Centro de Ayuda</a></li>
-          <li><a href="https://wa.me/5491100000000" target="_blank">Soporte por WhatsApp</a></li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <div>
-        Dale! Te Pido © 2024 — 2026. Todos los derechos reservados.
-      </div>
-      <div>
-        Diseñado con los fundamentos de marca de Dale! Te Pido e inspirado en la elegancia editorial de Epic.net.
-      </div>
-    </div>
-  </footer>
-
-  <!-- ========================================================
-       JAVASCRIPT: THEME TOGGLE & INTERACTIVE BEHAVIORS
-       ======================================================== -->
+  <!-- SCRIPT GSAP SCROLLTRIGGER COREOGRAFÍA -->
   <script>
-    // Theme Switcher: Dark Nocturne vs Cream Editorial
-    const htmlElem = document.documentElement;
-    const themeBtn = document.getElementById('themeToggleBtn');
-    const themeText = document.getElementById('themeToggleText');
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
 
-    // Retrieve saved theme or default to dark
-    const savedTheme = localStorage.getItem('dtp_desarrollo_theme') || 'dark';
-    setTheme(savedTheme);
+    gsap.registerPlugin(ScrollTrigger);
 
-    themeBtn.addEventListener('click', () => {
-      const currentTheme = htmlElem.getAttribute('data-theme');
-      const nextTheme = currentTheme === 'dark' ? 'cream' : 'dark';
-      setTheme(nextTheme);
+    const videoBoxes = [
+      document.getElementById('videoBox-0'),
+      document.getElementById('videoBox-1'),
+      document.getElementById('videoBox-2'),
+      document.getElementById('videoBox-3'),
+      document.getElementById('videoBox-4')
+    ];
+
+    const silBoxes = [
+      document.getElementById('sil-0'),
+      document.getElementById('sil-1'),
+      document.getElementById('sil-2'),
+      document.getElementById('sil-3'),
+      document.getElementById('sil-4')
+    ];
+
+    const lines = [
+      document.getElementById('line-0'),
+      document.getElementById('line-1'),
+      document.getElementById('line-2'),
+      document.getElementById('line-3')
+    ];
+
+    const progressBar = document.getElementById('scrollProgress');
+    const navButtons = document.querySelectorAll('.scene-nav-btn');
+
+    // Inicializar strokeDash de las líneas SVG
+    lines.forEach(line => {
+      if (line) {
+        const len = line.getTotalLength ? line.getTotalLength() : 1600;
+        gsap.set(line, {
+          strokeDasharray: len,
+          strokeDashoffset: len,
+          opacity: 0.95
+        });
+      }
     });
 
-    function setTheme(theme) {
-      htmlElem.setAttribute('data-theme', theme);
-      localStorage.setItem('dtp_desarrollo_theme', theme);
-      if (theme === 'cream') {
-        themeText.textContent = 'Modo Noche';
-        themeBtn.querySelector('i').className = 'bi bi-moon-stars-fill';
-      } else {
-        themeText.textContent = 'Modo Papel';
-        themeBtn.querySelector('i').className = 'bi bi-palette2';
+    // Timeline maestra conectada a ScrollTrigger con scrub: 0.6
+    const masterTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#storyContainer',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.6,
+        onUpdate: (self) => {
+          const prog = self.progress;
+          if (progressBar) progressBar.style.width = (prog * 100) + '%';
+          const sceneIdx = Math.min(4, Math.floor(prog * 5 + 0.15));
+          navButtons.forEach((btn, idx) => {
+            if (idx === sceneIdx) {
+              btn.className = 'scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101] text-[#FFFFFF]';
+              const dot = btn.querySelector('span');
+              if (dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-[#F60000]';
+            } else {
+              btn.className = 'scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101]/5 text-[#010101]/70 hover:bg-[#010101]/10';
+              const dot = btn.querySelector('span');
+              if (dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-[#010101]/40';
+            }
+          });
+        }
       }
+    });
+
+    // Construir las 4 transiciones
+    for (let i = 0; i < 4; i++) {
+      const curVideo = videoBoxes[i];
+      const nextVideo = videoBoxes[i + 1];
+      const curSil = silBoxes[i];
+      const nextSil = silBoxes[i + 1];
+      const line = lines[i];
+
+      const trans = gsap.timeline();
+
+      // 1. Video saliente hace fade out
+      if (curVideo) {
+        trans.to(curVideo, { opacity: 0, scale: 0.94, duration: 0.2, ease: 'power2.out' }, 0);
+      }
+      // 2. Se enciende silueta de trazos en misma posición
+      if (curSil) {
+        trans.to(curSil, { opacity: 1, scale: 1, duration: 0.18, ease: 'power2.inOut' }, 0.1);
+      }
+      // 3. Línea roja viaja cruzando la pantalla
+      if (line) {
+        trans.to(line, { strokeDashoffset: 0, duration: 0.45, ease: 'power1.inOut' }, 0.22);
+      }
+      // 4. Se dibuja silueta en trazo de la siguiente postura en margen opuesto
+      if (nextSil) {
+        trans.to(nextSil, { opacity: 1, scale: 1, duration: 0.22, ease: 'power2.inOut' }, 0.55);
+      }
+      // 5. Se apagan SVGs y se enciende nuevo video en loop
+      if (curSil) trans.to(curSil, { opacity: 0, duration: 0.15, ease: 'power2.out' }, 0.7);
+      if (nextSil) trans.to(nextSil, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 0.76);
+      if (line) trans.to(line, { opacity: 0.15, duration: 0.2, ease: 'power2.out' }, 0.75);
+      if (nextVideo) {
+        trans.to(nextVideo, { opacity: 1, scale: 1, duration: 0.24, ease: 'power2.out' }, 0.76);
+      }
+
+      masterTl.add(trans, i * 1.0);
     }
 
-    // Smooth subtle tilt effect on hover for polaroid cards
-    document.querySelectorAll('.polaroid-card').forEach(card => {
-      card.addEventListener('mouseenter', () => {
-        card.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease';
-      });
-    });
-
-    // Active Chapter Indicator in Sticky Nav on Scroll
-    window.addEventListener('scroll', () => {
-      const scrollPos = window.scrollY + 200;
-      const chapters = document.querySelectorAll('.chapter-item');
-      const pills = document.querySelectorAll('.chapter-pill');
-
-      chapters.forEach((chapter, index) => {
-        const top = chapter.offsetTop;
-        const height = chapter.offsetHeight;
-        if (scrollPos >= top && scrollPos < top + height) {
-          pills.forEach(p => p.classList.remove('active'));
-          if (pills[index]) {
-            pills[index].classList.add('active');
-          }
-        }
-      });
-    });
+    // Navegación suave a escenas
+    function scrollToScene(idx) {
+      const target = document.getElementById('sec-' + idx);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   </script>
-
 </body>
 </html>

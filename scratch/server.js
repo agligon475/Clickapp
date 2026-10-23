@@ -33,7 +33,9 @@ const MIME_TYPES = {
   '.jpg': 'image/jpeg',
   '.gif': 'image/gif',
   '.ico': 'image/x-icon',
-  '.svg': 'image/svg+xml'
+  '.svg': 'image/svg+xml',
+  '.webm': 'video/webm',
+  '.mp4': 'video/mp4'
 };
 
 function parseRequestBody(req) {
@@ -117,6 +119,10 @@ const server = http.createServer(async (req, res) => {
   let filePath = '.' + urlPath;
   if (filePath === './' || filePath === './index' || filePath === './index.html') {
     filePath = fs.existsSync('./index.html') ? './index.html' : './landing.html';
+  } else if (!fs.existsSync(filePath) && fs.existsSync(filePath + '.html')) {
+    filePath = filePath + '.html';
+  } else if (!fs.existsSync(filePath) && fs.existsSync('./public' + urlPath)) {
+    filePath = './public' + urlPath;
   }
 
   // ═══════════════════════════════════════════ API PROXY ENDPOINTS
