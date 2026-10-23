@@ -412,7 +412,7 @@
       <div class="topbar-brand">
         <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" onerror="this.src='/img-default/daletepido-logo-white-hq.png'" alt="Dale! Te Pido" class="topbar-logo" />
         <span class="topbar-tag"><i class="bi bi-clock-history"></i> RETROSPECTIVA HISTÓRICA</span>
-        <span class="topbar-tag" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.35); color: #10B981;"><i class="bi bi-calendar-check"></i> ACTUALIZADO: 20 OCTUBRE 2026</span>
+        <span class="topbar-tag" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.35); color: #10B981;"><i class="bi bi-calendar-check"></i> ACTUALIZADO: 23 OCTUBRE 2026</span>
       </div>
       <div class="topbar-actions">
         <a href="super-admin-secret-dashboard.html" class="nav-btn" title="Regresar al panel general">
@@ -421,7 +421,7 @@
         <button class="nav-btn" onclick="prevSlide()" title="Diapositiva Anterior (←)">
           <i class="bi bi-chevron-left"></i>
         </button>
-        <span id="slide-indicator" style="font-family: var(--font-mono); font-size: 12px; font-weight:700; color: #FFFFFF; min-width: 48px; text-align: center;">1 / 12</span>
+        <span id="slide-indicator" style="font-family: var(--font-mono); font-size: 12px; font-weight:700; color: #FFFFFF; min-width: 48px; text-align: center;">1 / 13</span>
         <button class="nav-btn primary" onclick="nextSlide()" title="Siguiente Diapositiva (→ o Espacio)">
           <i class="bi bi-chevron-right"></i>
         </button>
@@ -439,7 +439,7 @@
         <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding: 20px 0;">
           <div style="display:inline-flex; align-items:center; gap:8px; padding:6px 16px; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3); border-radius:999px; margin-bottom:18px;">
             <i class="bi bi-rocket-takeoff-fill" style="color:var(--brand-amber); font-size:14px;"></i>
-            <span style="font-family:var(--font-mono); font-size:12px; font-weight:700; color:var(--brand-amber); letter-spacing:0.06em;">MEMORIA DE DESARROLLO INTEGRAL · ACTUALIZADO 19/10/2026</span>
+            <span style="font-family:var(--font-mono); font-size:12px; font-weight:700; color:var(--brand-amber); letter-spacing:0.06em;">MEMORIA DE DESARROLLO INTEGRAL · ACTUALIZADO 23/10/2026</span>
           </div>
           
           <h1 style="font-family:var(--font-heading); font-size:clamp(30px, 4vw, 50px); font-weight:800; line-height:1.15; max-width:980px; margin-bottom:14px; background:linear-gradient(135deg, #FFFFFF 30%, #F59E0B 75%, #F60000 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
@@ -1023,8 +1023,65 @@
         </div>
       </section>
 
-      <!-- SLIDE 12: CONCLUSIÓN & HOJA DE RUTA -->
+      <!-- SLIDE 12: SCROLL STORYTELLING & EXPERIENCIA EDITORIAL (/desarrollo) -->
       <section class="slide" id="slide-12">
+        <span class="slide-badge"><i class="bi bi-play-circle-fill"></i> Etapa 12 · Experiencia Inmersiva</span>
+        <h2 class="slide-title">Scroll Storytelling en /desarrollo: GSAP, Capas SVG y Video Scrub</h2>
+        <p class="slide-desc">Arquitectura visual interactiva en Next.js App Router: 3 capas superpuestas, video playback lateral coordinado, siluetas vectoriales de trazos limpios y líneas de viaje continuo en Rojo Institucional #F60000.</p>
+
+        <div class="grid-3">
+          <div class="card card-accent-red" style="border-left: 3px solid #F60000;">
+            <div class="card-title" style="color:#F60000;"><i class="bi bi-layers-fill"></i> Arquitectura Visual en 3 Capas</div>
+            <div class="card-text">
+              <strong>1. Capa Fija de Fondo:</strong> 5 reproductores de video 16:9 en márgenes laterales alternados (right-8, left-8, right-8, left-8, right-1/4).<br>
+              <strong>2. Capa SVG Intermedia:</strong> Siluetas en trazos (#010101) y conectoras dinámicas con acento Rojo #F60000.<br>
+              <strong>3. Capa Delantera:</strong> 5 secciones con texto editorial en el margen opuesto al video.
+            </div>
+            <div class="pill-list" style="margin-top:14px;">
+              <span class="pill">Fixed Background</span>
+              <span class="pill">SVG 1920x1080</span>
+              <span class="pill">Relative z-10</span>
+              <span class="pill">Fondo Blanco Puro</span>
+            </div>
+          </div>
+
+          <div class="card card-accent-amber">
+            <div class="card-title" style="color:var(--brand-amber);"><i class="bi bi-lightning-charge-fill"></i> GSAP ScrollTrigger (Scrub 0.6)</div>
+            <div class="card-text">
+              Transición coreográfica fluida entre secciones:<br>
+              • Fade out del video saliente (opacity: 0).<br>
+              • Encendido de silueta vectorial en la misma posición (opacity: 1).<br>
+              • Línea conductora roja viajando cruzando la pantalla.<br>
+              • Dibujo de silueta en margen opuesto y fade in del nuevo video en loop.
+            </div>
+            <div class="pill-list" style="margin-top:14px;">
+              <span class="pill">Scrub: 0.6</span>
+              <span class="pill">strokeDashoffset</span>
+              <span class="pill">Loop Videos</span>
+              <span class="pill">gsap.context</span>
+            </div>
+          </div>
+
+          <div class="card card-accent-teal">
+            <div class="card-title" style="color:var(--brand-teal);"><i class="bi bi-box-seam"></i> Componentización Next.js</div>
+            <div class="card-text">
+              Implementación modular y mantenible:<br>
+              • Componente de cliente: <code>components/DesarrolloScrollStory.jsx</code> con directiva <code>"use client"</code>.<br>
+              • Integración limpia en <code>app/desarrollo/page.jsx</code> con metadatos SEO y OpenGraph.<br>
+              • Tokens oficiales de marca: Rojo #F60000, Negro #010101 y Blanco #FFFFFF.
+            </div>
+            <div class="pill-list" style="margin-top:14px;">
+              <span class="pill">App Router</span>
+              <span class="pill">Tailwind CSS</span>
+              <span class="pill">Full Responsive</span>
+              <span class="pill">23/10/2026</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 13: CONCLUSIÓN & HOJA DE RUTA -->
+      <section class="slide" id="slide-13">
         <span class="slide-badge"><i class="bi bi-award-fill"></i> Balance & Futuro</span>
         <h2 class="slide-title">Estado de la Plataforma: Un SaaS Robusto y Listo para Crecer</h2>
         <p class="slide-desc">Resumen comparativo del salto cuantitativo y cualitativo logrado entre el momento cero y el estado actual de Dale! Te Pido / Clickapp.</p>
@@ -1062,7 +1119,7 @@
               <div class="timeline-item">
                 <div class="timeline-dot"></div>
                 <div class="timeline-time">Omnicanal Web, PWA & Android APK</div>
-                <div class="timeline-content">Compilación CI/CD en GitHub Actions, Kit imprimible A4 y 10 tarjetas.</div>
+                <div class="timeline-content">Compilación CI/CD en GitHub Actions, Kit imprimible A4 y Storytelling /desarrollo.</div>
               </div>
               <div class="timeline-item">
                 <div class="timeline-dot"></div>
@@ -1098,7 +1155,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 3.5 SaaS · Actualizado 20/10/2026
+        Dale! Te Pido © 2026 · Versión 3.6 SaaS · Actualizado 23/10/2026
       </div>
     </footer>
 
@@ -1107,7 +1164,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 12;
+  const totalSlides = 13;
 
   function showSlide(index) {
     if (index < 1) index = 1;
