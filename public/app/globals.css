@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Josefin+Sans:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --color-red: #F60000;
+  --color-black: #010101;
+  --color-white: #FFFFFF;
+}
+
+html, body {
+  background-color: #FFFFFF !important;
+  color: #010101;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: #F60000;
+  color: #FFFFFF;
+}

@@ -1,0 +1,371 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: 'Josefin Sans';
+          font-style: normal;
+          font-weight: 400 800;
+          src: local('Josefin Sans'), url('https://fonts.gstatic.com/s/josefinsans/v32/Qw3aZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhKg.woff2') format('woff2');
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: #F6F6F6;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Josefin Sans', sans-serif;
+          color: #010101;
+          padding: 60px 48px;
+        }
+
+        .ambient-light {
+          position: absolute;
+          width: 900px;
+          height: 900px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(246, 0, 0, 0.08) 0%, rgba(246, 0, 0, 0.02) 40%, rgba(246, 246, 246, 0) 70%);
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        .bento-container {
+          position: relative;
+          z-index: 5;
+          width: 980px;
+          height: 1720px;
+          background: #FFFFFF;
+          border: 2px solid rgba(0, 0, 0, 0.08);
+          border-radius: 44px;
+          padding: 48px 40px;
+          display: flex;
+          flex-direction: column;
+          box-shadow: 0 28px 70px rgba(0, 0, 0, 0.08), 0 2px 12px rgba(0, 0, 0, 0.04);
+          overflow: hidden;
+          opacity: 0;
+          transform: scale(0.94) translateY(30px);
+        }
+
+        .bento-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-bottom: 24px;
+          border-bottom: 2px solid #F0F0F0;
+          margin-bottom: 32px;
+        }
+
+        .bento-tag {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px 24px;
+          border-radius: 999px;
+          background: #F60000;
+          color: #FFFFFF;
+          font-size: 20px;
+          font-weight: 800;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+
+        .bento-step {
+          font-size: 22px;
+          font-weight: 700;
+          color: #888888;
+        }
+
+        .bento-title {
+          font-size: 68px;
+          font-weight: 800;
+          line-height: 1.05;
+          color: #010101;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          margin-bottom: 24px;
+        }
+
+        .bento-title span {
+          color: #F60000;
+        }
+
+        /* Chips Grid */
+        .chips-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 16px;
+          position: relative;
+        }
+
+        .chip-item {
+          padding: 22px 24px;
+          border-radius: 20px;
+          background: #F9F9F9;
+          border: 2px solid #E5E5E5;
+          font-size: 26px;
+          font-weight: 700;
+          color: #444444;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+        }
+
+        .target-chip {
+          border-color: #E5E5E5;
+          color: #111111;
+        }
+
+        .tap-cursor {
+          position: absolute;
+          width: 56px;
+          height: 56px;
+          border-radius: 50%;
+          background: rgba(246, 0, 0, 0.4);
+          border: 3px solid #F60000;
+          pointer-events: none;
+          z-index: 10;
+          opacity: 0;
+          transform: scale(0.5);
+        }
+
+        /* Red Badge Pill Drop */
+        .chau-badge {
+          align-self: flex-start;
+          margin-top: 36px;
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 28px;
+          border-radius: 999px;
+          background: #F60000;
+          color: #FFFFFF;
+          font-size: 22px;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          box-shadow: 0 8px 24px rgba(246, 0, 0, 0.35);
+          opacity: 0;
+          transform: translateY(20px);
+        }
+
+        /* Cascading Categories */
+        .categories-stack {
+          margin-top: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .cat-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 20px 28px;
+          border-radius: 20px;
+          background: #F8F9FA;
+          border: 1.5px solid #EBECEF;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+          opacity: 0;
+          transform: translateX(-40px);
+        }
+
+        .cat-name {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          font-size: 26px;
+          font-weight: 700;
+          color: #111111;
+        }
+
+        .cat-icon {
+          width: 48px;
+          height: 48px;
+          border-radius: 12px;
+          background: #FFFFFF;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 24px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .cat-status {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #10B981;
+          font-size: 20px;
+          font-weight: 700;
+          background: rgba(16, 185, 129, 0.1);
+          padding: 6px 14px;
+          border-radius: 999px;
+        }
+      </style>
+
+      <div data-hf-id="hf-24tv" id="root" data-composition-id="scene-3-tienda-rapida" data-width="1080" data-height="1920">
+        <div data-hf-id="hf-yajf" class="ambient-light"></div>
+
+        <div data-hf-id="hf-aj36" class="bento-container" id="bento-container">
+          <div data-hf-id="hf-aju6" class="bento-header">
+            <div data-hf-id="hf-y2nw" class="bento-tag">⚡ DALE!TEPIDO</div>
+            <div data-hf-id="hf-fpi9" class="bento-step">TIENDA LISTA EN 5 MIN</div>
+          </div>
+
+          <h2 data-hf-id="hf-1be2" class="bento-title">2. TU TIENDA<br data-hf-id="hf-x5px" /><span data-hf-id="hf-lc2i">EN 5 MINUTOS</span></h2>
+
+          <div data-hf-id="hf-61eu" class="chips-grid">
+            <div data-hf-id="hf-thqa" class="tap-cursor" id="tap-cursor"></div>
+            <div data-hf-id="hf-2nr4" class="chip-item target-chip" id="chip-almacen">
+              <span data-hf-id="hf-em2f">🏪</span> ALMACÉN / GASTRONOMÍA
+            </div>
+            <div data-hf-id="hf-umux" class="chip-item">
+              <span data-hf-id="hf-rk01">🥖</span> PANADERÍA
+            </div>
+            <div data-hf-id="hf-o5wz" class="chip-item">
+              <span data-hf-id="hf-nz8s">🥩</span> CARNICERÍA
+            </div>
+            <div data-hf-id="hf-pzg0" class="chip-item">
+              <span data-hf-id="hf-1osa">💊</span> FARMACIA
+            </div>
+          </div>
+
+          <div data-hf-id="hf-fnsu" class="chau-badge" id="chau-badge">
+            ✨ CHAU AL SÍNDROME DE LA PANTALLA EN BLANCO
+          </div>
+
+          <div data-hf-id="hf-syvz" class="categories-stack">
+            <div data-hf-id="hf-4q58" class="cat-item" id="cat-1">
+              <div data-hf-id="hf-1qvs" class="cat-name">
+                <div data-hf-id="hf-1ck4" class="cat-icon">🍺</div>
+                <span data-hf-id="hf-in8s">Bebidas & Cervezas</span>
+              </div>
+              <div data-hf-id="hf-4khc" class="cat-status">✓ Precargado</div>
+            </div>
+            <div data-hf-id="hf-flmv" class="cat-item" id="cat-2">
+              <div data-hf-id="hf-swxc" class="cat-name">
+                <div data-hf-id="hf-f8zk" class="cat-icon">🧀</div>
+                <span data-hf-id="hf-0pj3">Frescos & Lácteos</span>
+              </div>
+              <div data-hf-id="hf-uz60" class="cat-status">✓ Precargado</div>
+            </div>
+            <div data-hf-id="hf-9fx2" class="cat-item" id="cat-3">
+              <div data-hf-id="hf-rq09" class="cat-name">
+                <div data-hf-id="hf-nrao" class="cat-icon">🥐</div>
+                <span data-hf-id="hf-qdjj">Panadería & Facturas</span>
+              </div>
+              <div data-hf-id="hf-ts8x" class="cat-status">✓ Precargado</div>
+            </div>
+            <div data-hf-id="hf-kbep" class="cat-item" id="cat-4">
+              <div data-hf-id="hf-s4ba" class="cat-name">
+                <div data-hf-id="hf-d10x" class="cat-icon">🥫</div>
+                <span data-hf-id="hf-tunv">Despensa & Almacén</span>
+              </div>
+              <div data-hf-id="hf-u6jy" class="cat-status">✓ Precargado</div>
+            </div>
+            <div data-hf-id="hf-jjqw" class="cat-item" id="cat-5">
+              <div data-hf-id="hf-qxe7" class="cat-name">
+                <div data-hf-id="hf-ncms" class="cat-icon">🧼</div>
+                <span data-hf-id="hf-39d3">Limpieza & Hogar</span>
+              </div>
+              <div data-hf-id="hf-szmv" class="cat-status">✓ Precargado</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        const tl = gsap.timeline({ paused: true });
+
+        // Initial setup
+        gsap.set("#bento-container", { autoAlpha: 0, scale: 0.94, y: 30 });
+        gsap.set("#tap-cursor", { x: 180, y: 35, opacity: 0 });
+
+        // 0.0s - 0.5s: Entrance of Bento Container
+        tl.to("#bento-container", {
+          autoAlpha: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.5,
+          ease: "power3.out"
+        }, 0.1);
+
+        // 0.6s - 1.2s: Tap simulation on rubro chip
+        tl.to("#tap-cursor", {
+          opacity: 1,
+          scale: 1,
+          duration: 0.25,
+          ease: "power2.out"
+        }, 0.6);
+
+        tl.to("#tap-cursor", {
+          scale: 0.6,
+          duration: 0.15,
+          ease: "power1.in"
+        }, 0.85);
+
+        // Chip turns solid #F60000 with white text
+        tl.to("#chip-almacen", {
+          backgroundColor: "#F60000",
+          color: "#FFFFFF",
+          borderColor: "#F60000",
+          scale: 1.04,
+          boxShadow: "0 10px 25px rgba(246, 0, 0, 0.35)",
+          duration: 0.25,
+          ease: "back.out(2)"
+        }, 0.95);
+
+        tl.to("#tap-cursor", {
+          opacity: 0,
+          scale: 1.4,
+          duration: 0.2
+        }, 1.1);
+
+        // 1.3s: Red badge drops
+        tl.to("#chau-badge", {
+          opacity: 1,
+          y: 0,
+          duration: 0.35,
+          ease: "back.out(1.8)"
+        }, 1.3);
+
+        // 1.6s - 2.8s: 5 category cards cascade in
+        const cats = ["#cat-1", "#cat-2", "#cat-3", "#cat-4", "#cat-5"];
+        tl.to(cats, {
+          opacity: 1,
+          x: 0,
+          duration: 0.35,
+          stagger: 0.12,
+          ease: "back.out(1.5)"
+        }, 1.6);
+
+        // Exit transition
+        tl.to("#bento-container", {
+          autoAlpha: 0.2,
+          scale: 0.95,
+          duration: 0.25,
+          ease: "power2.in"
+        }, 4.2);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["scene-3-tienda-rapida"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

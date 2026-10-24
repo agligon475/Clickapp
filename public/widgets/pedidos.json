@@ -1,0 +1,24 @@
+{
+  "type": "AdaptiveCard",
+  "version": "1.4",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "Dale! Te Pido - Panel de Control",
+      "size": "Medium",
+      "weight": "Bolder"
+    },
+    {
+      "type": "TextBlock",
+      "text": "Consulta tus pedidos y estado de tienda en tiempo real.",
+      "wrap": true
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.OpenUrl",
+      "title": "Abrir Dashboard",
+      "url": "https://daletepido.ar/dashboard.html"
+    }
+  ]
+}

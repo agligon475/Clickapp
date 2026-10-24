@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: 'Josefin Sans';
+          font-style: normal;
+          font-weight: 400 800;
+          src: local('Josefin Sans'), url('https://fonts.gstatic.com/s/josefinsans/v32/Qw3aZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhKg.woff2') format('woff2');
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: #010101;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Josefin Sans', sans-serif;
+          color: #F6F6F6;
+          padding: 60px 48px;
+        }
+
+        .ambient-glow {
+          position: absolute;
+          width: 950px;
+          height: 950px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(246, 0, 0, 0.26) 0%, rgba(246, 0, 0, 0.05) 45%, rgba(0, 0, 0, 0) 70%);
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        .outro-wrap {
+          position: relative;
+          z-index: 5;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          width: 100%;
+          max-width: 960px;
+          gap: 36px;
+          opacity: 0;
+          transform: scale(0.9);
+        }
+
+        .outro-logo-box {
+          width: 720px;
+          height: 296px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .outro-logo-img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          display: block;
+        }
+
+        .outro-statement {
+          font-size: 76px;
+          font-weight: 800;
+          line-height: 1.05;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          color: #FFFFFF;
+        }
+
+        .cta-button {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 20px;
+          width: 100%;
+          max-width: 780px;
+          padding: 28px 48px;
+          border-radius: 999px;
+          background: #F60000;
+          color: #FFFFFF;
+          font-size: 44px;
+          font-weight: 800;
+          letter-spacing: 0.04em;
+          box-shadow: 0 20px 60px rgba(246, 0, 0, 0.65), 0 0 40px rgba(246, 0, 0, 0.35);
+          border: 2px solid rgba(255, 255, 255, 0.25);
+          text-transform: lowercase;
+        }
+
+        .outro-footer-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 14px 34px;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1.5px solid rgba(255, 255, 255, 0.15);
+          color: #10B981;
+          font-size: 22px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+      </style>
+
+      <div data-hf-id="hf-jc13" id="root" data-composition-id="scene-7-outro" data-width="1080" data-height="1920">
+        <div data-hf-id="hf-hmnu" class="ambient-glow" id="ambient-glow"></div>
+
+        <div data-hf-id="hf-pir6" class="outro-wrap" id="outro-wrap">
+          <!-- Vector Logo Asset Prominently Centered -->
+          <div data-hf-id="hf-tq3r" class="outro-logo-box">
+            <img data-hf-id="hf-8z84" src="./assets/logo-dtp-vector-04.svg" class="outro-logo-img" alt="Dale!TePido" id="outro-logo-asset" />
+          </div>
+
+          <!-- Bold Statement -->
+          <h2 data-hf-id="hf-0m2h" class="outro-statement" id="outro-statement">
+            TU COMERCIO, TUS REGLAS.
+          </h2>
+
+          <!-- High-Contrast CTA Pill Button -->
+          <div data-hf-id="hf-29n2" class="cta-button" id="cta-button">
+            <span data-hf-id="hf-nywa">daletepido.com.ar &rarr;</span>
+          </div>
+
+          <!-- Footer Badge -->
+          <div data-hf-id="hf-3cdf" class="outro-footer-badge" id="footer-badge">
+            ✓ 15 DÍAS DE PRUEBA GRATIS · ACTIVÁ TU TIENDA HOY
+          </div>
+        </div>
+      </div>
+
+      <script>
+        const tl = gsap.timeline({ paused: true });
+
+        // Initial state
+        gsap.set("#outro-wrap", { autoAlpha: 0, scale: 0.88 });
+
+        // 0.0s - 0.7s: Outro lockup entrance
+        tl.to("#outro-wrap", {
+          autoAlpha: 1,
+          scale: 1,
+          duration: 0.65,
+          ease: "back.out(2)"
+        }, 0.05);
+
+        // CTA Button pulse
+        tl.fromTo("#cta-button",
+          { scale: 1 },
+          { scale: 1.06, duration: 0.35, yoyo: true, repeat: 3, ease: "power1.inOut" },
+          0.7
+        );
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["scene-7-outro"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

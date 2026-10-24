@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Políticas de Privacidad — Dale! Te Pido</title>
+  <meta name="description" content="Políticas de Privacidad de Dale! Te Pido. Conoce cómo protegemos y gestionamos la información de comercios y clientes finales." />
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <meta name="theme-color" content="#FAFAFC">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #FAFAFC;
+      --bg-card: #FFFFFF;
+      --border: #E2E8F0;
+      --border-focus: rgba(246, 0, 0, 0.4);
+      --primary: #F60000;
+      --primary-hover: #D60000;
+      --primary-glow: rgba(246, 0, 0, 0.25);
+      --text: #0F172A;
+      --text-body: #334155;
+      --text-muted: #64748B;
+      --text-subtle: #94A3B8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --font-title: 'Josefin Sans', sans-serif;
+      --font: 'Poppins', sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0A0A0C;
+        --bg-card: #151C2C;
+        --border: #24304A;
+        --border-focus: rgba(246, 0, 0, 0.5);
+        --text: #F8FAFC;
+        --text-body: #CBD5E1;
+        --text-muted: #94A3B8;
+        --text-subtle: #64748B;
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      background-color: var(--bg);
+      background-image: radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+      background-size: 24px 24px;
+      font-family: var(--font);
+      color: var(--text-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      }
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-title);
+      color: var(--text);
+    }
+
+    /* HEADER */
+    header {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 16px 28px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    }
+
+    .header-container {
+      max-width: 1060px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand img {
+      height: 34px;
+      width: auto;
+      filter: brightness(0);
+      transition: filter 0.2s;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .brand img {
+        filter: brightness(0) invert(1);
+      }
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      transition: all 0.2s ease;
+    }
+
+    .btn-back:hover {
+      color: var(--text);
+      border-color: var(--text-muted);
+      background: var(--bg);
+      transform: translateY(-1px);
+    }
+
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary);
+      color: #FFFFFF;
+      text-decoration: none;
+      font-family: var(--font-title);
+      font-size: 13.5px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      padding: 9px 18px;
+      border-radius: 10px;
+      box-shadow: 0 4px 14px rgba(246, 0, 0, 0.25);
+      transition: all 0.2s ease;
+    }
+
+    .btn-cta:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(246, 0, 0, 0.35);
+    }
+
+    /* MAIN CONTAINER */
+    main {
+      flex: 1;
+      max-width: 960px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 44px 20px 80px;
+    }
+
+    .legal-hero {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .badge-legal {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #059669;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 6px 16px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+
+    .legal-title {
+      font-size: clamp(2rem, 4.5vw, 2.7rem);
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .legal-meta {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .legal-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* INDEX TABS */
+    .table-of-contents {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 36px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    }
+
+    .toc-title {
+      font-family: var(--font-title);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 8px 16px;
+    }
+
+    .toc-link {
+      color: var(--text-body);
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 500;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toc-link:hover {
+      background: rgba(16, 185, 129, 0.06);
+      color: #059669;
+      transform: translateX(3px);
+    }
+
+    .toc-link span.num {
+      font-family: var(--font-title);
+      font-weight: 800;
+      color: var(--primary);
+      font-size: 12.5px;
+    }
+
+    /* SECTIONS */
+    .legal-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 32px 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+      scroll-margin-top: 90px;
+      transition: border-color 0.2s ease;
+    }
+
+    .legal-section:hover {
+      border-color: var(--border-focus);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-num {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #059669;
+      display: grid;
+      place-items: center;
+      font-family: var(--font-title);
+      font-weight: 800;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .legal-section p {
+      font-size: 14.5px;
+      color: var(--text-body);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+
+    .legal-section p:last-child {
+      margin-bottom: 0;
+    }
+
+    .legal-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 16px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .legal-section li {
+      font-size: 14px;
+      color: var(--text-body);
+      line-height: 1.6;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .legal-section li::before {
+      content: '▪';
+      color: var(--primary);
+      font-size: 16px;
+      line-height: 1;
+      margin-top: 3px;
+    }
+
+    .highlight-card {
+      background: rgba(16, 185, 129, 0.04);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin: 16px 0;
+    }
+
+    .highlight-card h4 {
+      font-family: var(--font-title);
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .highlight-card p {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    .data-levels-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 18px 0;
+    }
+
+    .data-level-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .data-level-box h4 {
+      font-family: var(--font-title);
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .data-level-box ul {
+      margin: 0;
+      gap: 8px;
+    }
+
+    .data-level-box li {
+      font-size: 13px;
+      color: var(--text-body);
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      padding: 40px 24px 28px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .footer-container {
+      max-width: 1060px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+
+    @media (max-width: 768px) {
+      header { padding: 14px 16px; }
+      .brand img { height: 28px; }
+      main { padding: 32px 14px 60px; }
+      .legal-section { padding: 22px 18px; border-radius: 14px; }
+      .section-title { font-size: 1.15rem; }
+      .table-of-contents { padding: 18px 14px; }
+      .btn-cta span { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-container">
+      <a href="/" class="brand">
+        <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" onerror="this.src='/img-default/daletepido-logo-white-hq.png'" alt="Dale! Te Pido">
+      </a>
+      <div class="nav-actions">
+        <a href="/" class="btn-back"><i class="bi bi-arrow-left"></i> Inicio</a>
+        <a href="/terminos" class="btn-back"><i class="bi bi-file-earmark-text"></i> Términos</a>
+        <a href="/alta-usuario" class="btn-cta"><i class="bi bi-rocket-takeoff-fill"></i> <span>Crear Catálogo</span></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <div class="legal-hero">
+      <div class="badge-legal">🛡️ Protección de Datos & Privacidad</div>
+      <h1 class="legal-title">Políticas de Privacidad</h1>
+      <div class="legal-meta">
+        <span><i class="bi bi-calendar3"></i> Última actualización: 23 de Octubre de 2026</span>
+        <span><i class="bi bi-shield-check"></i> Cumplimiento & First-Party Data</span>
+      </div>
+    </div>
+
+    <!-- TABLA DE CONTENIDOS -->
+    <div class="table-of-contents">
+      <div class="toc-title"><i class="bi bi-list-nested"></i> Índice de Secciones</div>
+      <div class="toc-grid">
+        <a href="#seccion-1" class="toc-link"><span class="num">1.</span> Información que Recopilamos</a>
+        <a href="#seccion-2" class="toc-link"><span class="num">2.</span> Uso de la Información y Opt-in</a>
+        <a href="#seccion-3" class="toc-link"><span class="num">3.</span> Seguridad y Automatizaciones</a>
+        <a href="#seccion-4" class="toc-link"><span class="num">4.</span> Terceros y Red de Vendedores</a>
+        <a href="#seccion-5" class="toc-link"><span class="num">5.</span> Derechos de los Usuarios</a>
+        <a href="#seccion-6" class="toc-link"><span class="num">6.</span> Contacto y Consultas</a>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 1 -->
+    <section id="seccion-1" class="legal-section">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <h2 class="section-title">Información que Recopilamos</h2>
+      </div>
+      <p>
+        En <strong>Dale!TePido (DTP)</strong> valoramos profundamente la privacidad y seguridad de la información. Esta política rige cómo recopilamos, procesamos y resguardamos los datos tanto de nuestros comercios usuarios (modelo B2B) como de los consumidores finales que utilizan sus catálogos.
+      </p>
+      
+      <p>Recolectamos información en dos niveles claramente diferenciados:</p>
+
+      <div class="data-levels-grid">
+        <div class="data-level-box">
+          <h4>🏪 A. Datos del Comercio (Gestor B2B)</h4>
+          <ul>
+            <li><div><strong>Información comercial:</strong> rubro, subrubro, dirección física de atención y nombre o razón social del titular.</div></li>
+            <li><div><strong>Información de contacto:</strong> Correo electrónico y número de teléfono (incluyendo el número de WhatsApp vinculado para recibir pedidos vía enlaces directos o webhooks/APIs).</div></li>
+            <li><div><strong>Datos de suscripción:</strong> Plan contratado, historial de facturación y estado de cuenta.</div></li>
+          </ul>
+        </div>
+
+        <div class="data-level-box">
+          <h4>👥 B. Datos del Cliente Final (First-Party Data)</h4>
+          <ul>
+            <li><div><strong>Comandas y Pedidos:</strong> Al armar un pedido o escanear el Kit QR, se recolectan temporalmente los datos para armar la orden (productos elegidos, nombre, dirección de entrega, notas especiales y método de pago).</div></li>
+            <li><div><strong>Consentimiento Opt-in de Novedades:</strong> Si el comprador tilda voluntariamente la opción en el checkout, se registra su autorización expresa para recibir promociones directas del comercio a través de WhatsApp.</div></li>
+            <li><div><strong>Propiedad Exclusiva:</strong> Estos datos pertenecen pura y exclusivamente al comercio. Dale!TePido opera únicamente como intermediario tecnológico para dar estructura y enviar el pedido directo al WhatsApp del local.</div></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="highlight-card">
+        <h4>🔒 Soberanía de Datos (First-Party Data)</h4>
+        <p>Los clientes de tu comercio son tuyos. Dale!TePido nunca utiliza la base de contactos de tus compradores para fines publicitarios propios ni la comparte con la competencia.</p>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 2 -->
+    <section id="seccion-2" class="legal-section">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <h2 class="section-title">Uso de la Información y Consentimiento Comercial</h2>
+      </div>
+      <p>
+        Utilizamos la información recolectada estrictamente para los siguientes propósitos operativos y de crecimiento para tu negocio:
+      </p>
+      <ul>
+        <li>
+          <div>
+            <strong>Facilitación de Pedidos:</strong> Ordenar y estructurar comandas limpias y detalladas, eliminando la fricción de largos intercambios de audios o mensajes desorganizados por WhatsApp.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Posicionamiento Local (Motor SEO/GEO y AEO):</strong> Indexar públicamente las categorías, productos y datos del catálogo (dirección, rubro) para generar páginas dinámicas optimizadas que aparezcan en búsquedas de cercanía de Google y motores de Inteligencia Artificial (ChatGPT, Perplexity, Gemini).
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Métricas y Análisis:</strong> Proveer estadísticas en tiempo real y paneles analíticos desde el dashboard para que el comerciante entienda el rendimiento de su catálogo (disponible en planes PRO y superiores).
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Gestión Ética de Campañas y Consentimiento (Opt-in WhatsApp):</strong> Proveer la infraestructura para que los comercios organicen listas de clientes que hayan manifestado explícitamente su voluntad de recibir promociones y novedades comerciales, previniendo el envío de mensajes no solicitados (spam).
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- SECCIÓN 3 -->
+    <section id="seccion-3" class="legal-section">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <h2 class="section-title">Seguridad de Datos y Automatizaciones</h2>
+      </div>
+      <p>
+        Empleamos estándares modernos de seguridad, protocolos HTTPS/TLS y almacenamiento encriptado para proteger los datos contra accesos no autorizados, pérdida o alteración.
+      </p>
+      <p>
+        En caso de que el comercio decida utilizar flujos automatizados para cambiar los estados de los pedidos en segundo plano (a través de conexiones como Meta Cloud API o herramientas de automatización como n8n/Make), la información viaja por canales encriptados de extremo a extremo. El uso comercial de esos números corre por cuenta de la responsabilidad del comercio local ante las políticas de Meta y normativas de mensajería.
+      </p>
+    </section>
+
+    <!-- SECCIÓN 4 -->
+    <section id="seccion-4" class="legal-section">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <h2 class="section-title">Terceros y Red de Vendedores</h2>
+      </div>
+      <ul>
+        <li>
+          <div>
+            <strong>No comercializamos datos:</strong> Dale!TePido no vende, alquila ni cede la base de datos de los comercios ni de los clientes finales a empresas o plataformas de terceros con fines publicitarios.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Red de Vendedores / Cupones:</strong> En caso de que el comercio asigne un cupón de descuento a un afiliado o vendedor, la plataforma rastreará cuántos pedidos ingresaron con ese código. Dicha información es únicamente visible para el administrador del local para liquidar los beneficios, sin ceder datos personales al titular del cupón.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Transmisión Operativa a la Red Logística Dale!QueVoy:</strong> Cuando el comercio solicita el despacho bajo demanda hacia la plataforma hermana <em>Dale!QueVoy</em> a través de la base compartida en Supabase Realtime, se transmiten con carácter estrictamente operativo y confidencial los datos requeridos para la entrega física del paquete: domicilio de entrega, teléfono de contacto del comprador para avisos de llegada, descripción del paquete, peso estimado y código PIN de 4 dígitos para validación unívoca en destino. El repartidor asignado accede a esta información únicamente durante el curso activo del viaje.
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- SECCIÓN 5 -->
+    <section id="seccion-5" class="legal-section">
+      <div class="section-header">
+        <div class="section-num">5</div>
+        <h2 class="section-title">Derechos de los Usuarios</h2>
+      </div>
+      <p>
+        Cualquier comercio registrado puede solicitar la actualización, corrección o eliminación definitiva de los datos de su cuenta y catálogo en cualquier momento.
+      </p>
+      <p>
+        Asimismo, el comercio cuenta con total autonomía para gestionar, consultar y exportar la base de datos de sus propios clientes (First-Party Data) directamente desde su panel de control en formatos estándar como CSV o Excel.
+      </p>
+    </section>
+
+    <!-- SECCIÓN 6 -->
+    <section id="seccion-6" class="legal-section">
+      <div class="section-header">
+        <div class="section-num">6</div>
+        <h2 class="section-title">Contacto</h2>
+      </div>
+      <p>
+        Si tenés dudas, consultas o solicitudes relacionadas con nuestras Políticas de Privacidad o el tratamiento de tus datos, podés comunicarte con nuestro equipo a través de los canales de soporte dentro de tu panel de gestión o enviando un correo a:
+      </p>
+      <div class="highlight-card" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <h4 style="color: #10b981;"><i class="bi bi-envelope-at-fill"></i> Privacidad & Soporte</h4>
+          <p>soporte@daletepido.com.ar</p>
+        </div>
+        <a href="/ayuda" class="btn-back" style="border-color: rgba(16, 185, 129, 0.3); color: #fff;">
+          <i class="bi bi-question-circle"></i> Centro de Ayuda
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-container">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+        <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" alt="Dale! Te Pido" style="height: 28px; opacity: 0.9;">
+        <div style="display: flex; gap: 16px;">
+          <a href="https://www.instagram.com/daletepido/" target="_blank" style="color: #fff; font-size: 16px;"><i class="bi bi-instagram"></i></a>
+          <a href="https://www.linkedin.com/company/dale-te-pido" target="_blank" style="color: #fff; font-size: 16px;"><i class="bi bi-linkedin"></i></a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div>© 2026 Dale! Te Pido. Todos los derechos reservados.</div>
+        <div style="display: flex; gap: 18px; flex-wrap: wrap;">
+          <a href="/">Inicio</a>
+          <a href="/ayuda">Centro de Ayuda</a>
+          <a href="/privacidad" style="color: #10b981; font-weight: 700;">Políticas de Privacidad</a>
+          <a href="/terminos">Términos y Condiciones</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

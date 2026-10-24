@@ -1,0 +1,523 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: 'Josefin Sans';
+          font-style: normal;
+          font-weight: 400 800;
+          src: local('Josefin Sans'), url('https://fonts.gstatic.com/s/josefinsans/v32/Qw3aZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhKg.woff2') format('woff2');
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        #scene-2-logistica {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background-color: #F6F6F6;
+          font-family: 'Josefin Sans', sans-serif;
+          color: #010101;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-start;
+          padding: 80px 48px;
+        }
+
+        .s2-bg-grid {
+          position: absolute;
+          inset: 0;
+          background-image: radial-gradient(#D4D4D8 1.5px, transparent 1.5px);
+          background-size: 40px 40px;
+          opacity: 0.55;
+          pointer-events: none;
+        }
+
+        /* Top Bar */
+        .s2-top-bar {
+          position: relative;
+          z-index: 10;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          margin-bottom: 24px;
+        }
+
+        .s2-brand-badge {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          background: #010101;
+          border: 2px solid #27272A;
+          border-radius: 999px;
+          padding: 8px 22px;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+        }
+
+        .s2-brand-logo {
+          height: 26px;
+          width: auto;
+          display: block;
+        }
+
+        .s2-pill-badge {
+          background: #991B1B;
+          color: #FFFFFF;
+          font-size: 16px;
+          font-weight: 700;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          padding: 10px 22px;
+          border-radius: 999px;
+        }
+
+        /* Headline Section */
+        .s2-hero-intro {
+          position: relative;
+          z-index: 10;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          width: 100%;
+          margin-top: 10px;
+        }
+
+        .s2-tag {
+          display: inline-block;
+          font-size: 20px;
+          font-weight: 700;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: #991B1B;
+          background: rgba(246, 0, 0, 0.08);
+          border: 1.5px solid rgba(246, 0, 0, 0.25);
+          padding: 8px 24px;
+          border-radius: 999px;
+          margin-bottom: 16px;
+        }
+
+        .s2-headline {
+          font-size: 64px;
+          line-height: 1.06;
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          color: #010101;
+        }
+
+        .s2-subheadline {
+          font-size: 24px;
+          font-weight: 700;
+          color: #27272A;
+          margin-top: 12px;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+
+        /* 3D Isometric Lanes Container */
+        .s2-lanes-container {
+          position: relative;
+          z-index: 10;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+          margin-top: 36px;
+        }
+
+        .s2-lane-card {
+          position: relative;
+          background: #FFFFFF;
+          border: 2px solid #E4E4E7;
+          border-radius: 28px;
+          padding: 24px 30px;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+          overflow: hidden;
+        }
+
+        .s2-lane-a {
+          border-color: #FCA5A5;
+          background: linear-gradient(135deg, #FFFFFF 60%, #FEF2F2 100%);
+        }
+
+        .s2-lane-b {
+          border-color: #E4E4E7;
+          background: linear-gradient(135deg, #FFFFFF 60%, #F4F4F5 100%);
+          opacity: 0.85;
+        }
+
+        .s2-lane-c {
+          border-color: #DC2626;
+          border-width: 3px;
+          background: linear-gradient(135deg, #FFFFFF 50%, #FFF5F5 100%);
+          box-shadow: 0 16px 40px rgba(220, 38, 38, 0.12);
+        }
+
+        .s2-lane-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 16px;
+        }
+
+        .s2-lane-title-wrap {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .s2-lane-tag {
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          padding: 4px 14px;
+          border-radius: 999px;
+        }
+
+        .s2-tag-a {
+          background: #010101;
+          color: #F87171;
+        }
+
+        .s2-tag-b {
+          background: #010101;
+          color: #D4D4D8;
+        }
+
+        .s2-tag-c {
+          background: #010101;
+          color: #FFFFFF;
+        }
+
+        .s2-lane-name {
+          font-size: 24px;
+          font-weight: 800;
+          color: #010101;
+        }
+
+        .s2-lane-body {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 20px;
+        }
+
+        .s2-lane-visual {
+          width: 86px;
+          height: 86px;
+          border-radius: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+
+        .s2-visual-a {
+          background: #FEF3C7;
+          border: 2px solid #D97706;
+        }
+
+        .s2-visual-b {
+          background: #F4F4F5;
+          border: 2px solid #71717A;
+        }
+
+        .s2-visual-c {
+          background: #FEE2E2;
+          border: 2px solid #DC2626;
+        }
+
+        .s2-lane-details {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .s2-badge-impact {
+          display: inline-block;
+          font-size: 17px;
+          font-weight: 800;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          padding: 8px 16px;
+          border-radius: 12px;
+          width: fit-content;
+        }
+
+        .s2-impact-a {
+          background: #010101;
+          color: #F87171;
+          border: 1px solid #7F1D1D;
+        }
+
+        .s2-impact-b {
+          background: #010101;
+          color: #FCA5A5;
+          border: 1px solid #52525B;
+        }
+
+        .s2-impact-c {
+          background: #010101;
+          color: #34D399;
+          border: 1.5px solid #059669;
+        }
+
+        .s2-desc-text {
+          font-size: 17px;
+          font-weight: 600;
+          color: #27272A;
+        }
+
+        /* Store C WhatsApp Floating Bubble */
+        .s2-chat-bubble {
+          margin-top: 14px;
+          background: #047857;
+          color: #FFFFFF;
+          padding: 12px 20px;
+          border-radius: 16px;
+          font-size: 16px;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          box-shadow: 0 8px 20px rgba(4, 120, 87, 0.25);
+        }
+
+        /* Bottom Fixed Rate Key Metric Banner */
+        .s2-key-banner {
+          margin-top: 28px;
+          width: 100%;
+          background: #DC2626;
+          color: #FFFFFF;
+          border-radius: 24px;
+          padding: 24px 36px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          box-shadow: 0 16px 40px rgba(220, 38, 38, 0.25);
+        }
+
+        .s2-key-text {
+          font-size: 26px;
+          font-weight: 800;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+
+        .s2-key-subtext {
+          font-size: 18px;
+          font-weight: 600;
+          color: #FEE2E2;
+          display: block;
+          margin-top: 4px;
+        }
+
+        .s2-key-pill {
+          background: #FFFFFF;
+          color: #010101;
+          padding: 12px 26px;
+          border-radius: 999px;
+          font-size: 18px;
+          font-weight: 800;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+
+        /* Snap Cut Overlay */
+        .s2-snap-overlay {
+          position: absolute;
+          inset: 0;
+          background: #010101;
+          opacity: 0;
+          pointer-events: none;
+          z-index: 100;
+        }
+      </style>
+
+      <div data-hf-id="hf-j1bb" id="scene-2-logistica" data-composition-id="scene-2-logistica" data-width="1080" data-height="1920">
+        <div data-hf-id="hf-gq62" class="s2-bg-grid"></div>
+
+        <!-- Top Bar -->
+        <div data-hf-id="hf-97k2" class="s2-top-bar" id="s2-top-bar">
+          <div data-hf-id="hf-k4qd" class="s2-brand-badge">
+            <img data-hf-id="hf-ddj5" src="./assets/logo-dtp-vector-04.svg" class="s2-brand-logo" alt="Dale!TePido" id="s2-top-logo" />
+          </div>
+          <div data-hf-id="hf-kdre" class="s2-pill-badge">LOGÍSTICA TOTAL</div>
+        </div>
+
+        <!-- Headline -->
+        <div data-hf-id="hf-phx0" class="s2-hero-intro" id="s2-hero-intro">
+          <div data-hf-id="hf-cywd" class="s2-tag">● CONTROL DE ENVÍOS</div>
+          <h2 data-hf-id="hf-fct8" class="s2-headline">¿QUIÉN CONTROLA TU ENTREGA?</h2>
+          <div data-hf-id="hf-jrjj" class="s2-subheadline">El repartidor es la cara visible de tu marca</div>
+        </div>
+
+        <!-- Lanes -->
+        <div data-hf-id="hf-hmxi" class="s2-lanes-container" id="s2-lanes-container">
+          <!-- Lane A: App Delivery -->
+          <div data-hf-id="hf-pjwp" class="s2-lane-card s2-lane-a" id="s2-lane-a">
+            <div data-hf-id="hf-uwj0" class="s2-lane-header">
+              <div data-hf-id="hf-o7xg" class="s2-lane-title-wrap">
+                <span data-hf-id="hf-u2gc" class="s2-lane-tag s2-tag-a">APP TERCEROS</span>
+                <span data-hf-id="hf-4zgo" class="s2-lane-name">CADETE EXTERNO</span>
+              </div>
+            </div>
+            <div data-hf-id="hf-eshf" class="s2-lane-body">
+              <div data-hf-id="hf-b60d" class="s2-lane-visual s2-visual-a">
+                <!-- Slow bike SVG -->
+                <svg data-hf-id="hf-1h41" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle data-hf-id="hf-tiov" cx="5.5" cy="17.5" r="3.5"></circle>
+                  <circle data-hf-id="hf-ta8x" cx="18.5" cy="17.5" r="3.5"></circle>
+                  <path data-hf-id="hf-7528" d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h4"></path>
+                </svg>
+              </div>
+              <div data-hf-id="hf-u7cj" class="s2-lane-details">
+                <span data-hf-id="hf-w9kl" class="s2-badge-impact s2-impact-a">COMISIÓN ALTA + CERO CONTROL</span>
+                <span data-hf-id="hf-8aw3" class="s2-desc-text">Cadete llega tarde · Pedido frío · Cliente molesto</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lane B: Traditional Offline -->
+          <div data-hf-id="hf-fzx3" class="s2-lane-card s2-lane-b" id="s2-lane-b">
+            <div data-hf-id="hf-3nic" class="s2-lane-header">
+              <div data-hf-id="hf-h3vg" class="s2-lane-title-wrap">
+                <span data-hf-id="hf-lsif" class="s2-lane-tag s2-tag-b">TRADICIONAL</span>
+                <span data-hf-id="hf-c0oa" class="s2-lane-name">SIN REPARTO</span>
+              </div>
+            </div>
+            <div data-hf-id="hf-j503" class="s2-lane-body">
+              <div data-hf-id="hf-f44e" class="s2-lane-visual s2-visual-b">
+                <!-- Walking customer icon SVG -->
+                <svg data-hf-id="hf-vyub" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#52525B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle data-hf-id="hf-rd6p" cx="12" cy="5" r="3"></circle>
+                  <path data-hf-id="hf-h5g1" d="M9 20l3-6 3 6"></path>
+                  <path data-hf-id="hf-waqq" d="M6 13l6-3 6 3"></path>
+                </svg>
+              </div>
+              <div data-hf-id="hf-zker" class="s2-lane-details">
+                <span data-hf-id="hf-ohxx" class="s2-badge-impact s2-impact-b">✕ SIN ENVÍOS A DOMICILIO</span>
+                <span data-hf-id="hf-i13i" class="s2-desc-text">El cliente debe ir al local o no compra</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lane C: Dale!TePido -->
+          <div data-hf-id="hf-1ysx" class="s2-lane-card s2-lane-c" id="s2-lane-c">
+            <div data-hf-id="hf-2gl9" class="s2-lane-header">
+              <div data-hf-id="hf-fwyd" class="s2-lane-title-wrap">
+                <span data-hf-id="hf-xf32" class="s2-lane-tag s2-tag-c">DALE! TEPIDO</span>
+                <span data-hf-id="hf-nxpl" class="s2-lane-name">FLOTA PROPIA O ASIGNADA</span>
+              </div>
+            </div>
+            <div data-hf-id="hf-iqp2" class="s2-lane-body">
+              <div data-hf-id="hf-j28f" class="s2-lane-visual s2-visual-c">
+                <!-- Fast moped SVG -->
+                <svg data-hf-id="hf-dnvw" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle data-hf-id="hf-2o6c" cx="6" cy="18" r="3"></circle>
+                  <circle data-hf-id="hf-3jgp" cx="18" cy="18" r="3"></circle>
+                  <path data-hf-id="hf-rhgi" d="M6 15h7l3-6h4"></path>
+                  <path data-hf-id="hf-ayh4" d="M10 9l2-4h4"></path>
+                </svg>
+              </div>
+              <div data-hf-id="hf-z63q" class="s2-lane-details">
+                <span data-hf-id="hf-jrtg" class="s2-badge-impact s2-impact-c">✓ REPARTIDORES PROPIOS · TARIFA FIJA</span>
+                <span data-hf-id="hf-snz2" class="s2-desc-text">Tú decides quién entrega · Sin sobreprecios</span>
+              </div>
+            </div>
+            <!-- WhatsApp Chat Notification -->
+            <div data-hf-id="hf-oil2" class="s2-chat-bubble" id="s2-chat-bubble">
+              <svg data-hf-id="hf-zt8c" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path data-hf-id="hf-mrn2" d="M20.52 3.48A11.9 11.9 0 0 0 12.06 0C5.46 0 .09 5.37.09 11.97c0 2.11.55 4.17 1.6 5.99L0 24l6.22-1.63a11.87 11.87 0 0 0 5.84 1.51h.01c6.6 0 11.97-5.37 11.97-11.97 0-3.2-1.25-6.21-3.52-8.43z"></path>
+              </svg>
+              <span data-hf-id="hf-ygnj">PEDIDO #1042 EN CAMINO · SEGUIMIENTO EN VIVO</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Key Banner -->
+        <div data-hf-id="hf-rjzy" class="s2-key-banner" id="s2-key-banner">
+          <div data-hf-id="hf-yeow">
+            <span data-hf-id="hf-39au" class="s2-key-text">REPARTIDORES PROPIOS</span>
+            <span data-hf-id="hf-sp06" class="s2-key-subtext">Tarifa fija por envío, 100% transparente</span>
+          </div>
+          <div data-hf-id="hf-4la5" class="s2-key-pill">0% RETENCIÓN</div>
+        </div>
+
+        <!-- Snap Cut Overlay -->
+        <div data-hf-id="hf-s8pj" class="s2-snap-overlay" id="s2-snap-overlay" data-layout-allow-overflow="true"></div>
+      </div>
+
+      <script>
+        const tl = gsap.timeline({ paused: true });
+
+        // Initial setup
+        gsap.set("#s2-top-bar", { opacity: 0, y: -20 });
+        gsap.set("#s2-hero-intro", { opacity: 0, scale: 0.94 });
+        gsap.set("#s2-lane-a", { opacity: 0, y: 40 });
+        gsap.set("#s2-lane-b", { opacity: 0, y: 40 });
+        gsap.set("#s2-lane-c", { opacity: 0, y: 40, scale: 0.95 });
+        gsap.set("#s2-chat-bubble", { opacity: 0, scale: 0.85, transformOrigin: "left center" });
+        gsap.set("#s2-key-banner", { opacity: 0, y: 40 });
+        gsap.set("#s2-snap-overlay", { opacity: 0 });
+
+        // 0.0s - 1.2s: Header entrance
+        tl.to("#s2-top-bar", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.2);
+        tl.to("#s2-hero-intro", { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.6)" }, 0.4);
+
+        // 2.0s - 4.0s: Lanes staggered
+        tl.to("#s2-lane-a", { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 1.8);
+        tl.to("#s2-lane-b", { opacity: 0.85, y: 0, duration: 0.6, ease: "power2.out" }, 2.4);
+        tl.to("#s2-lane-c", { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "back.out(1.5)" }, 3.0);
+
+        // 4.0s: WhatsApp Chat Pop
+        tl.to("#s2-chat-bubble", {
+          opacity: 1,
+          scale: 1,
+          duration: 0.5,
+          ease: "elastic.out(1, 0.75)"
+        }, 4.2);
+
+        // 5.5s: Key Banner pop
+        tl.to("#s2-key-banner", {
+          opacity: 1,
+          y: 0,
+          duration: 0.65,
+          ease: "back.out(1.5)"
+        }, 5.5);
+
+        // 11.5s - 12.0s: Vertical snap cut transition
+        tl.to("#scene-2-logistica", {
+          scale: 0.92,
+          duration: 0.35,
+          ease: "power2.in"
+        }, 11.6);
+
+        tl.to("#s2-snap-overlay", {
+          opacity: 1,
+          duration: 0.2,
+          ease: "power1.in"
+        }, 11.75);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["scene-2-logistica"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

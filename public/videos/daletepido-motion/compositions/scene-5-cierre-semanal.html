@@ -1,0 +1,596 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: 'Josefin Sans';
+          font-style: normal;
+          font-weight: 400 800;
+          src: local('Josefin Sans'), url('https://fonts.gstatic.com/s/josefinsans/v32/Qw3aZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhKg.woff2') format('woff2');
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        #scene-5-cierre-semanal {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background-color: #F6F6F6;
+          font-family: 'Josefin Sans', sans-serif;
+          color: #010101;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-start;
+          padding: 80px 48px;
+        }
+
+        .s5-bg-grid {
+          position: absolute;
+          inset: 0;
+          background-image: radial-gradient(#D4D4D8 1.5px, transparent 1.5px);
+          background-size: 40px 40px;
+          opacity: 0.55;
+          pointer-events: none;
+        }
+
+        /* Phase 1 Wrapper */
+        .s5-phase-1 {
+          position: relative;
+          z-index: 10;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        /* Top Bar */
+        .s5-top-bar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          margin-bottom: 24px;
+        }
+
+        .s5-brand-badge {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          background: #010101;
+          border: 2px solid #27272A;
+          border-radius: 999px;
+          padding: 8px 22px;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+        }
+
+        .s5-pill-badge {
+          background: #010101;
+          color: #FFFFFF;
+          font-size: 16px;
+          font-weight: 700;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          padding: 10px 22px;
+          border-radius: 999px;
+        }
+
+        /* Headline Section */
+        .s5-hero-intro {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          width: 100%;
+          margin-top: 10px;
+        }
+
+        .s5-tag {
+          display: inline-block;
+          font-size: 20px;
+          font-weight: 700;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: #991B1B;
+          background: rgba(246, 0, 0, 0.08);
+          border: 1.5px solid rgba(246, 0, 0, 0.25);
+          padding: 8px 24px;
+          border-radius: 999px;
+          margin-bottom: 16px;
+        }
+
+        .s5-headline {
+          font-size: 64px;
+          line-height: 1.05;
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          color: #010101;
+        }
+
+        .s5-subheadline {
+          font-size: 24px;
+          font-weight: 700;
+          color: #27272A;
+          margin-top: 10px;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+
+        /* 3-Pillar Scorecard */
+        .s5-scorecard-wrap {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          margin-top: 32px;
+        }
+
+        .s5-score-card {
+          position: relative;
+          background: #FFFFFF;
+          border: 2px solid #E4E4E7;
+          border-radius: 28px;
+          padding: 22px 30px;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+          overflow: hidden;
+        }
+
+        .s5-card-a {
+          border-color: #FCA5A5;
+          background: linear-gradient(135deg, #FFFFFF 60%, #FEF2F2 100%);
+        }
+
+        .s5-card-b {
+          border-color: #E4E4E7;
+          background: linear-gradient(135deg, #FFFFFF 60%, #F4F4F5 100%);
+          opacity: 0.85;
+        }
+
+        .s5-card-c {
+          border-color: #DC2626;
+          border-width: 3px;
+          background: linear-gradient(135deg, #FFFFFF 50%, #FFF5F5 100%);
+          box-shadow: 0 16px 40px rgba(220, 38, 38, 0.12);
+        }
+
+        .s5-card-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 10px;
+        }
+
+        .s5-card-title-group {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .s5-card-tag {
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          padding: 4px 12px;
+          border-radius: 999px;
+        }
+
+        .s5-tag-a {
+          background: #010101;
+          color: #F87171;
+        }
+
+        .s5-tag-b {
+          background: #010101;
+          color: #D4D4D8;
+        }
+
+        .s5-tag-c {
+          background: #010101;
+          color: #FFFFFF;
+        }
+
+        .s5-card-name {
+          font-size: 22px;
+          font-weight: 800;
+          color: #010101;
+        }
+
+        .s5-card-grid {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+        }
+
+        .s5-calc-line {
+          font-size: 18px;
+          font-weight: 600;
+          color: #27272A;
+        }
+
+        .s5-result-badge {
+          text-align: right;
+        }
+
+        .s5-result-num {
+          font-size: 38px;
+          font-weight: 800;
+          letter-spacing: -0.02em;
+        }
+
+        .s5-num-a {
+          color: #991B1B;
+        }
+
+        .s5-num-b {
+          color: #52525B;
+        }
+
+        .s5-num-c {
+          color: #065F46;
+          font-size: 44px;
+        }
+
+        .s5-stock-status {
+          margin-top: 8px;
+          font-size: 15px;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+
+        .s5-stock-bad {
+          color: #991B1B;
+        }
+
+        .s5-stock-warn {
+          color: #27272A;
+        }
+
+        .s5-stock-good {
+          color: #065F46;
+        }
+
+        /* Extra Profit Banner */
+        .s5-extra-banner {
+          margin-top: 24px;
+          width: 100%;
+          background: #010101;
+          border: 3px solid #DC2626;
+          color: #FFFFFF;
+          border-radius: 24px;
+          padding: 22px 32px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .s5-extra-left {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .s5-extra-label {
+          font-size: 18px;
+          font-weight: 700;
+          color: #E4E4E7;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+
+        .s5-extra-amount {
+          font-size: 32px;
+          font-weight: 800;
+          color: #34D399;
+        }
+
+        .s5-extra-pill {
+          background: #DC2626;
+          color: #FFFFFF;
+          padding: 12px 24px;
+          border-radius: 999px;
+          font-size: 18px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+
+        /* ----------------------------------------------------
+           FINAL OUTRO OVERLAY (56.0s - 60.0s / Scene t: 8.0s - 12.0s)
+           ---------------------------------------------------- */
+        .s5-outro-overlay {
+          position: absolute;
+          inset: 0;
+          background: #FFFFFF;
+          z-index: 50;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 80px 48px;
+          text-align: center;
+          opacity: 0;
+          pointer-events: none;
+        }
+
+        .s5-outro-logo-card {
+          background: #010101;
+          border: 2.5px solid #27272A;
+          padding: 24px 50px;
+          border-radius: 28px;
+          box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15), 0 0 40px rgba(220, 38, 38, 0.15);
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 36px;
+        }
+
+        .s5-outro-logo {
+          width: 380px;
+          height: auto;
+          display: block;
+        }
+
+        .s5-outro-headline {
+          font-size: 76px;
+          line-height: 1.05;
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          color: #010101;
+          margin-bottom: 24px;
+        }
+
+        .s5-outro-subtext {
+          font-size: 26px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #27272A;
+          margin-bottom: 48px;
+        }
+
+        /* High-Impact CTA Pill Button */
+        .s5-cta-button {
+          background: #DC2626;
+          color: #FFFFFF;
+          font-size: 36px;
+          font-weight: 800;
+          letter-spacing: 0.05em;
+          padding: 24px 64px;
+          border-radius: 999px;
+          box-shadow: 0 20px 50px rgba(220, 38, 38, 0.35);
+          display: inline-flex;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 36px;
+        }
+
+        .s5-trial-tag {
+          font-size: 24px;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #991B1B;
+          background: #FEF2F2;
+          border: 2px solid #FCA5A5;
+          padding: 12px 32px;
+          border-radius: 999px;
+        }
+      </style>
+
+      <div data-hf-id="hf-w815" id="scene-5-cierre-semanal" data-composition-id="scene-5-cierre-semanal" data-width="1080" data-height="1920">
+        <div data-hf-id="hf-lz51" class="s5-bg-grid"></div>
+
+        <!-- Phase 1 Container -->
+        <div data-hf-id="hf-utqe" class="s5-phase-1" id="s5-phase-1">
+          <!-- Top Bar -->
+          <div data-hf-id="hf-l5qi" class="s5-top-bar" id="s5-top-bar">
+            <div data-hf-id="hf-2r3a" class="s5-brand-badge">
+              <span data-hf-id="hf-ah8m" style="font-weight: 800; font-size: 20px; color: #DC2626; letter-spacing: -0.01em;">DALE! TEPIDO</span>
+            </div>
+            <div data-hf-id="hf-lwpf" class="s5-pill-badge">BALANCE SEMANAL</div>
+          </div>
+
+          <!-- Headline -->
+          <div data-hf-id="hf-0h9e" class="s5-hero-intro" id="s5-hero-intro">
+            <div data-hf-id="hf-29vl" class="s5-tag">● FINANZAS Y STOCK</div>
+            <h2 data-hf-id="hf-tq5l" class="s5-headline">CIERRE SEMANAL & CONTROL DE STOCK</h2>
+            <div data-hf-id="hf-b2un" class="s5-subheadline">El número real que te queda en el bolsillo</div>
+          </div>
+
+          <!-- 3-Pillar Scorecard -->
+          <div data-hf-id="hf-dzr2" class="s5-scorecard-wrap" id="s5-scorecard-wrap">
+            <!-- Card A: App Delivery -->
+            <div data-hf-id="hf-ih3c" class="s5-score-card s5-card-a" id="s5-card-a">
+              <div data-hf-id="hf-53v3" class="s5-card-header">
+                <div data-hf-id="hf-q5sw" class="s5-card-title-group">
+                  <span data-hf-id="hf-i9qu" class="s5-card-tag s5-tag-a">APP DE DELIVERY</span>
+                  <span data-hf-id="hf-4rzw" class="s5-card-name">VENTAS: $500.000</span>
+                </div>
+              </div>
+              <div data-hf-id="hf-5d5c" class="s5-card-grid">
+                <span data-hf-id="hf-hbky" class="s5-calc-line">Comisión (-35%): -$175.000</span>
+                <div data-hf-id="hf-qc3s" class="s5-result-badge">
+                  <span data-hf-id="hf-i13u" class="s5-result-num s5-num-a">COBRÓ: $325.000</span>
+                </div>
+              </div>
+              <div data-hf-id="hf-k4vt" class="s5-stock-status s5-stock-bad">⚠ Stock desincronizado con faltantes</div>
+            </div>
+
+            <!-- Card B: Traditional -->
+            <div data-hf-id="hf-hy5a" class="s5-score-card s5-card-b" id="s5-card-b">
+              <div data-hf-id="hf-6rqn" class="s5-card-header">
+                <div data-hf-id="hf-esbc" class="s5-card-title-group">
+                  <span data-hf-id="hf-tph3" class="s5-card-tag s5-tag-b">TRADICIONAL</span>
+                  <span data-hf-id="hf-kqc5" class="s5-card-name">VENTAS: $150.000</span>
+                </div>
+              </div>
+              <div data-hf-id="hf-dajs" class="s5-card-grid">
+                <span data-hf-id="hf-b0lh" class="s5-calc-line">Pérdidas y descontrol: -$40.000</span>
+                <div data-hf-id="hf-kj0g" class="s5-result-badge">
+                  <span data-hf-id="hf-j83i" class="s5-result-num s5-num-b">NETO: $110.000</span>
+                </div>
+              </div>
+              <div data-hf-id="hf-go07" class="s5-stock-status s5-stock-warn">✕ Stock en libreta, descontrol y pérdidas</div>
+            </div>
+
+            <!-- Card C: Dale!TePido -->
+            <div data-hf-id="hf-kls0" class="s5-score-card s5-card-c" id="s5-card-c">
+              <div data-hf-id="hf-6dfm" class="s5-card-header">
+                <div data-hf-id="hf-dle9" class="s5-card-title-group">
+                  <span data-hf-id="hf-49vi" class="s5-card-tag s5-tag-c">DALE! TEPIDO</span>
+                  <span data-hf-id="hf-i6us" class="s5-card-name">VENTAS: $500.000</span>
+                </div>
+              </div>
+              <div data-hf-id="hf-c3mp" class="s5-card-grid">
+                <span data-hf-id="hf-4j3m" class="s5-calc-line">Costos: -$100k ($20k SaaS + $80k Envíos)</span>
+                <div data-hf-id="hf-jc3d" class="s5-result-badge">
+                  <span data-hf-id="hf-dsex" class="s5-result-num s5-num-c">GANANCIA: $400.000</span>
+                </div>
+              </div>
+              <div data-hf-id="hf-53ei" class="s5-stock-status s5-stock-good">✓ Alertas de stock bajo en vivo y sincronizado</div>
+            </div>
+          </div>
+
+          <!-- Extra Banner -->
+          <div data-hf-id="hf-v2i2" class="s5-extra-banner" id="s5-extra-banner">
+            <div data-hf-id="hf-ij29" class="s5-extra-left">
+              <span data-hf-id="hf-6rnn" class="s5-extra-label">DIFERENCIA A TU FAVOR</span>
+              <span data-hf-id="hf-h00m" class="s5-extra-amount">+$75.000 EXTRA EN TU BOLSILLO</span>
+            </div>
+            <div data-hf-id="hf-fwph" class="s5-extra-pill">0% COMISIÓN</div>
+          </div>
+        </div>
+
+        <!-- FINAL OUTRO OVERLAY (Scene t: 8.0s - 12.0s) -->
+        <div data-hf-id="hf-2tf0" class="s5-outro-overlay" id="s5-outro-overlay" data-layout-allow-occlusion="true" data-layout-allow-overlap="true">
+          <div data-hf-id="hf-lzeb" class="s5-outro-logo-card" id="s5-outro-logo-box">
+            <img data-hf-id="hf-ompp" src="./assets/logo-dtp-vector-04.svg" class="s5-outro-logo" alt="Dale!TePido" id="s5-outro-logo" />
+          </div>
+
+          <h1 data-hf-id="hf-0tqk" class="s5-outro-headline" id="s5-outro-headline">
+            TU COMERCIO,<br data-hf-id="hf-x5px" />TUS REGLAS.
+          </h1>
+
+          <div data-hf-id="hf-hlrm" class="s5-cta-button" id="s5-cta-button">
+            <span data-hf-id="hf-wsfo">daletepido.com.ar</span>
+          </div>
+
+          <div data-hf-id="hf-d9oo" class="s5-trial-tag" id="s5-trial-tag">
+            15 DÍAS DE PRUEBA GRATIS · 0% COMISIONES
+          </div>
+        </div>
+      </div>
+
+      <script>
+        const tl = gsap.timeline({ paused: true });
+
+        // Initial setup
+        gsap.set("#s5-phase-1", { opacity: 1 });
+        gsap.set("#s5-top-bar", { opacity: 0, y: -20 });
+        gsap.set("#s5-hero-intro", { opacity: 0, scale: 0.94 });
+        gsap.set("#s5-card-a", { opacity: 0, y: 30 });
+        gsap.set("#s5-card-b", { opacity: 0, y: 30 });
+        gsap.set("#s5-card-c", { opacity: 0, y: 30, scale: 0.95 });
+        gsap.set("#s5-extra-banner", { opacity: 0, y: 40 });
+        gsap.set("#s5-outro-overlay", { opacity: 0, pointerEvents: "none" });
+        gsap.set("#s5-outro-logo-box", { scale: 0.7, opacity: 0 });
+        gsap.set("#s5-outro-headline", { y: 30, opacity: 0 });
+        gsap.set("#s5-cta-button", { scale: 0.85, opacity: 0 });
+        gsap.set("#s5-trial-tag", { y: 20, opacity: 0 });
+
+        // Phase 1: Scorecard entrance (0.0s - 7.5s)
+        tl.to("#s5-top-bar", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.2);
+        tl.to("#s5-hero-intro", { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.6)" }, 0.4);
+
+        tl.to("#s5-card-a", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 1.4);
+        tl.to("#s5-card-b", { opacity: 0.85, y: 0, duration: 0.5, ease: "power2.out" }, 1.9);
+        tl.to("#s5-card-c", { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "back.out(1.5)" }, 2.4);
+
+        tl.to("#s5-extra-banner", {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "elastic.out(1, 0.75)"
+        }, 3.5);
+
+        // Highlight pulse on Dale!TePido
+        tl.fromTo("#s5-card-c",
+          { boxShadow: "0 16px 40px rgba(220, 38, 38, 0.12)" },
+          { boxShadow: "0 20px 50px rgba(220, 38, 38, 0.3)", duration: 0.7, repeat: 3, yoyo: true, ease: "sine.inOut" },
+          4.0
+        );
+
+        // Hide Phase 1 before outro enters
+        tl.to("#s5-phase-1", {
+          opacity: 0,
+          duration: 0.35,
+          ease: "power2.in"
+        }, 7.65);
+
+        // ----------------------------------------------------
+        // Phase 2: Final Outro reveal (8.0s - 12.0s)
+        // ----------------------------------------------------
+        tl.to("#s5-outro-overlay", {
+          opacity: 1,
+          duration: 0.45,
+          ease: "power2.inOut",
+          pointerEvents: "auto"
+        }, 8.0);
+
+        tl.to("#s5-outro-logo-box", {
+          scale: 1,
+          opacity: 1,
+          duration: 0.8,
+          ease: "back.out(1.8)"
+        }, 8.3);
+
+        tl.to("#s5-outro-headline", {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          ease: "power2.out"
+        }, 8.7);
+
+        tl.to("#s5-cta-button", {
+          scale: 1,
+          opacity: 1,
+          duration: 0.7,
+          ease: "elastic.out(1, 0.7)"
+        }, 9.1);
+
+        tl.to("#s5-trial-tag", {
+          y: 0,
+          opacity: 1,
+          duration: 0.5,
+          ease: "power2.out"
+        }, 9.5);
+
+        // Final pulse on CTA button
+        tl.fromTo("#s5-cta-button",
+          { scale: 1 },
+          { scale: 1.05, duration: 0.6, repeat: 2, yoyo: true, ease: "sine.inOut" },
+          10.0
+        );
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["scene-5-cierre-semanal"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

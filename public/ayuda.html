@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Base de Conocimientos — DaleTepido</title>
+  
+  <!-- Premium Fonts and Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Josefin+Sans:ital,wght@0,300..700;1,300..700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #F6F6F6;
+      --panel: #FFFFFF;
+      --border: #E5E5E5;
+      --primary: #F60000;
+      --primary-hover: #D60000;
+      --primary-glow: rgba(246, 0, 0, 0.15);
+      --text: #010101;
+      --text-muted: #737373;
+      --fog: #525252;
+      --success: #16A34A;
+      --warning: #F59E0B;
+      --info: #2563EB;
+      --font: 'Josefin Sans', sans-serif;
+      --font-b: 'Poppins', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      font-family: var(--font-b);
+      color: var(--fog);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, .h1, .h2, .h3, .brand {
+      font-family: var(--font) !important;
+    }
+
+    /* Header Nav */
+    header {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 14px 24px;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: -0.01em;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 600;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    /* Main Container layout */
+    .wrapper {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 32px;
+      flex: 1;
+    }
+
+    @media (max-width: 900px) {
+      .wrapper {
+        grid-template-columns: 1fr;
+        padding-top: 24px;
+      }
+      aside {
+        position: static !important;
+        max-height: none !important;
+      }
+    }
+
+    /* Sidebar Navigation */
+    aside {
+      position: sticky;
+      top: 90px;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
+
+    .sidebar-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      font-family: var(--font);
+    }
+
+    .menu-list {
+      list-style: none;
+    }
+
+    .menu-item {
+      margin-bottom: 4px;
+    }
+
+    .menu-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      color: var(--fog);
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+
+    .menu-link:hover {
+      color: var(--text);
+      background: #F6F6F6;
+    }
+
+    .menu-link.active {
+      border-left: 3px solid var(--primary);
+      border-radius: 0 8px 8px 0;
+      padding-left: 11px;
+      background: #FFF5F5;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* Search Area */
+    .search-section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 32px;
+      margin-bottom: 32px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
+
+    .search-section h2 {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .search-box-wrapper {
+      position: relative;
+      max-width: 520px;
+      margin: 18px auto 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-box-wrapper i {
+      position: absolute;
+      left: 16px;
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+
+    .search-input {
+      width: 100%;
+      background: #F6F6F6;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 16px 11px 44px;
+      font-family: var(--font-b);
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+      background: #FFFFFF;
+      border-color: #010101;
+      box-shadow: 0 0 0 3px rgba(1, 1, 1, 0.06);
+    }
+
+    /* Content Area */
+    .content-section {
+      animation: fadeIn 0.4s ease both;
+    }
+
+    .guide-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 24px;
+      scroll-margin-top: 100px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
+
+    .guide-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+
+    .guide-icon-badge {
+      width: 38px;
+      height: 38px;
+      background: rgba(246, 0, 0, 0.08);
+      border: 1px solid rgba(246, 0, 0, 0.15);
+      border-radius: 10px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .guide-card h3 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .guide-text {
+      font-size: 14px;
+      color: var(--fog);
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+
+    /* Steps list */
+    .step-list {
+      margin-left: 20px;
+      margin-bottom: 16px;
+    }
+
+    .step-list li {
+      font-size: 14px;
+      color: var(--fog);
+      line-height: 1.65;
+      margin-bottom: 10px;
+    }
+
+    .step-list li strong {
+      color: var(--text);
+    }
+
+    /* Callouts */
+    .callout {
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin: 16px 0;
+      display: flex;
+      gap: 12px;
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+
+    .callout i {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .callout-info {
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      color: #1E40AF;
+    }
+
+    .callout-warning {
+      background: #FEF3C7;
+      border: 1px solid #FDE68A;
+      color: #92400E;
+    }
+
+    .callout-important {
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      color: #991B1B;
+    }
+
+    /* Code Snippets */
+    code {
+      font-family: var(--font-mono);
+      background: #F6F6F6;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 12.5px;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Accordion */
+    .accordion-item {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      background: var(--panel);
+    }
+
+    .accordion-header {
+      background: #FAFAFA;
+      padding: 14px 18px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s ease;
+      font-family: var(--font);
+    }
+
+    .accordion-header:hover {
+      background: #F6F6F6;
+    }
+
+    .accordion-content {
+      padding: 0 18px;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 13.5px;
+      color: var(--fog);
+      line-height: 1.6;
+    }
+
+    .accordion-item.open .accordion-content {
+      padding: 14px 18px;
+      max-height: 500px;
+      border-top: 1px solid var(--border);
+    }
+
+    .accordion-header i {
+      transition: transform 0.2s;
+    }
+
+    .accordion-item.open .accordion-header i {
+      transform: rotate(180deg);
+    }
+
+    /* Keyframes */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Footer styling */
+    footer {
+      border-top: 1px solid var(--border);
+      background: var(--panel);
+      padding: 24px;
+      text-align: center;
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: auto;
+    }
+
+    footer a {
+      color: var(--text);
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER -->
+  <header>
+    <div class="header-container">
+      <a href="landing.html" class="brand" style="display: flex; align-items: center;">
+        <img src="/img-default/daletepido-logo-black-hq.png" onerror="this.src='/img-default/daletepido-logo-white-hq.png'" alt="Dale! Te Pido" style="height: 32px; width: auto;" />
+      </a>
+      <nav class="nav-links">
+        <a href="dashboard.html"><i class="bi bi-speedometer2"></i> Volver al Panel</a>
+      </nav>
+    </div>
+  <!-- WRAPPER LAYOUT -->
+  <div class="wrapper">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside>
+      <div class="sidebar-title">Temas de Ayuda</div>
+      <ul class="menu-list">
+        <li class="menu-item"><a href="#introduccion" class="menu-link active"><i class="bi bi-bookmark-fill"></i> Introducción</a></li>
+        <li class="menu-item"><a href="#config-basica" class="menu-link"><i class="bi bi-gear-fill"></i> Datos Básicos</a></li>
+        <li class="menu-item"><a href="#diseno-estetica" class="menu-link"><i class="bi bi-palette-fill"></i> Diseño y Estética</a></li>
+        <li class="menu-item"><a href="#categorias" class="menu-link"><i class="bi bi-tags-fill"></i> Categorías (Emojis)</a></li>
+        <li class="menu-item"><a href="#productos" class="menu-link"><i class="bi bi-egg-fill"></i> Cargar Catálogo</a></li>
+        <li class="menu-item"><a href="#repartidores" class="menu-link"><i class="bi bi-truck"></i> Repartidores (PickUp)</a></li>
+        <li class="menu-item"><a href="#faq" class="menu-link"><i class="bi bi-question-circle-fill"></i> Preguntas Frecuentes</a></li>
+      </ul>
+    </aside>
+
+    <!-- RIGHT CONTENT AREA -->
+    <main class="content-section">
+      
+      <!-- Search Header -->
+      <div class="search-section">
+        <h2>¿Qué necesitás saber hoy?</h2>
+        <p class="subtitle" style="font-size:14px;color:var(--text-muted);">Buscá guías, procedimientos y mejores prácticas para configurar tu tienda.</p>
+        <div class="search-box-wrapper">
+          <i class="bi bi-search"></i>
+          <input type="text" class="search-input" id="search-input" placeholder="Buscar palabras clave (ej: logo, WhatsApp, precio...)" oninput="filterGuides(this.value)" />
+        </div>
+      </div>
+
+      <div id="guides-container">
+
+        <!-- INTRODUCCIÓN -->
+        <section class="guide-card" id="introduccion">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge"><i class="bi bi-bookmark"></i></div>
+            <h3>Introducción al Sistema</h3>
+          </div>
+          <div class="guide-text">
+            Bienvenido a la Base de Conocimientos de <strong>Dale! Te Pido</strong>. Esta plataforma está diseñada para que puedas autogestionar tu catálogo online de forma rápida, recibiendo todos los pedidos de tus clientes de manera organizada directo en tu chat de WhatsApp.
+          </div>
+          <div class="guide-text">
+            <strong>¿Cómo solicitar una nueva tienda?</strong> El alta se realiza a través de nuestro formulario en la página principal. Una vez aprobado, nuestro equipo de soporte te enviará tus credenciales y el <code>store_id</code> único para acceder a tu panel de control privado.
+          </div>
+        </section>
+
+        <!-- CONFIGURACIÓN BÁSICA -->
+        <section class="guide-card" id="config-basica">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge"><i class="bi bi-gear"></i></div>
+            <h3>1. Datos Básicos y Contacto</h3>
+          </div>
+          <div class="guide-text">
+            Una vez que tengas tu cuenta activa, podés ingresar a tu panel administrativo ingresando a la URL: <code>/dashboard.html?store=TU_ID_TIENDA</code> utilizando tu contraseña.
+          </div>
+          <ul class="step-list">
+            <li><strong>Dirección Física y Horario:</strong> Indicalos en la sección de Ajustes -> Configuración. Estos datos se mostrarán en la parte inferior de la tienda y se autointegrarán en las plantillas de mensaje de pedidos para retiro en local.</li>
+            <li><strong>WhatsApp Comercial:</strong> Modificá el número ante cualquier cambio. Recordá ingresar los números de corrido sin espacios, paréntesis ni símbolos <code>+</code>.</li>
+            <li><strong>Contraseña del Panel:</strong> Podés actualizar la clave de acceso de este comercio directamente desde aquí.</li>
+          </ul>
+        </section>
+
+        <!-- DISEÑO Y ESTÉTICA -->
+        <section class="guide-card" id="diseno-estetica">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge"><i class="bi bi-palette"></i></div>
+            <h3>2. Diseño y Estética del Sitio</h3>
+          </div>
+          <div class="guide-text">
+            La estética de la tienda se configura en la sección <strong>Personalización -> Diseño</strong>. Desde aquí podés elegir colores, tipografías y logos.
+          </div>
+          <ul class="step-list">
+            <li><strong>Colores del Sitio:</strong> Podés definir el color primario (botones principales y acentos) y secundario.</li>
+            <li><strong>Tipografía:</strong> Seleccioná combinaciones modernas precargadas (como Outfit, Barlow, Inter, Oswald) para títulos y textos.</li>
+            <li><strong>Tema Visual:</strong> Elegí entre el modo Oscuro (Dark Mode) y Claro (Light Mode) para la interfaz de cara al cliente.</li>
+            <li><strong>Logo e Imagen de Portada (Hero):</strong> Subí el logo en formato PNG/JPG o colocá una URL directa. Podés subir también una imagen de fondo para el banner de bienvenida.</li>
+          </ul>
+          <div class="callout callout-info">
+            <i class="bi bi-info-circle"></i>
+            <div>
+              <strong>Consejo:</strong> Si tenés configurado Cloudinary, la carga y optimización de imágenes (incluyendo marcas de agua) se ejecutará automáticamente de forma remota.
+            </div>
+          </div>
+        </section>
+
+        <!-- GESTIÓN DE CATEGORÍAS -->
+        <section class="guide-card" id="categorias">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge"><i class="bi bi-tags"></i></div>
+            <h3>3. Gestión de Categorías</h3>
+          </div>
+          <div class="guide-text">
+            Las categorías dividen los productos en el catálogo público facilitando la navegación de los clientes.
+          </div>
+          <ol class="step-list">
+            <li>Hacé clic en <strong>Nueva Categoría</strong> o elegí una existente para editar.</li>
+            <li>Ingresá el nombre (ej: <code>Minutas</code>).</li>
+            <li>Seleccioná un <strong>Emoji representativo</strong> haciendo clic en el selector interactivo 😀.</li>
+            <li>Definí si la categoría está activa (visible) u oculta.</li>
+          </ol>
+          <div class="callout callout-warning">
+            <i class="bi bi-exclamation-triangle"></i>
+            <div>
+              <strong>Atención:</strong> Las categorías eliminadas no borrarán los productos asociados a ella, pero dichos productos quedarán temporalmente sin categoría (mostrándose en el grupo "Otros/General").
+            </div>
+          </div>
+        </section>
+
+        <!-- CARGA DE PRODUCTOS -->
+        <section class="guide-card" id="productos">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge"><i class="bi bi-egg"></i></div>
+            <h3>4. Cargar Productos (Catálogo)</h3>
+          </div>
+          <div class="guide-text">
+            Desde el módulo <strong>Catálogo -> ABM</strong> se realiza la gestión de inventario, precios y publicación de productos.
+          </div>
+          <ul class="step-list">
+            <li><strong>Campos Obligatorios:</strong> Nombre del producto, Categoría y Precio base.</li>
+            <li><strong>Variantes y Modificadores:</strong> Si vendés productos que tienen talles, colores, sabores o adicionales, podés configurarlos en la solapa de variantes del producto. Podés definir opciones obligatorias (ej. Talle S, M, L) o adicionales con costo extra (ej. Queso extra +$500). El sistema validará automáticamente las selecciones de tus clientes.</li>
+            <li><strong>Gestión de stock:</strong> Podés ingresar el número de unidades en stock. Si queda en 0, el catálogo de cara al cliente deshabilitará automáticamente el botón "Agregar" para ese producto.</li>
+            <li><strong>Imágenes:</strong> Podés cargar hasta 3 imágenes por producto. Si usás Cloudinary, se redimensionan automáticamente para mejorar la velocidad de carga de la web.</li>
+            <li><strong>Código de Barras:</strong> Escaneá o ingresá el código EAN del producto para habilitar búsquedas rápidas o control rápido de stock.</li>
+          </ul>
+        </section>
+
+        <!-- REPARTIDORES -->
+        <section class="guide-card" id="repartidores">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge"><i class="bi bi-truck"></i></div>
+            <h3>5. Repartidores (PickUp)</h3>
+          </div>
+          <div class="guide-text">
+            Configurar repartidores permite asignar pedidos de WhatsApp de forma rápida.
+          </div>
+          <ol class="step-list">
+            <li>Ingresá a la sección <strong>Gestión -> PickUp</strong>.</li>
+            <li>Hacé clic en <strong>Nuevo Repartidor</strong>.</li>
+            <li>Cargá el nombre completo, DNI y su número de WhatsApp de contacto.</li>
+            <li>Al guardar, el repartidor quedará registrado y disponible en el panel. Podés ver un botón de envío rápido para remitirle detalles del despacho de los pedidos.</li>
+          </ol>
+        </section>
+
+        <!-- FAQ -->
+        <section class="guide-card" id="faq">
+          <div class="guide-card-header">
+            <div class="guide-icon-badge"><i class="bi bi-question-circle"></i></div>
+            <h3>Preguntas Frecuentes</h3>
+          </div>
+          
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              ¿Dónde se guarda físicamente el código QR de cada comercio?
+              <i class="bi bi-chevron-down"></i>
+            </div>
+            <div class="accordion-content">
+              El QR de la tienda se genera mediante el endpoint del backend <code>/api/qr?store=ID_TIENDA</code> y se almacena en el campo de configuración general del cliente en la base de datos Supabase, listo para ser consumido por las plantillas del kit imprimible.
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              ¿Qué pasa si olvido mi contraseña del Dashboard?
+              <i class="bi bi-chevron-down"></i>
+            </div>
+            <div class="accordion-content">
+              Si perdiste tu contraseña de acceso al panel de control, ponete en contacto con nuestro equipo de soporte técnico escribiendo a <strong>soporte@daletepido.com.ar</strong> para validar tu identidad y restablecerla de forma rápida y segura.
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              ¿Cómo direcciono un dominio propio de un cliente a su tienda?
+              <i class="bi bi-chevron-down"></i>
+            </div>
+            <div class="accordion-content">
+              El cliente debe apuntar un registro CNAME a tu alias de Vercel. Una vez apuntado, debés configurar dicho dominio en su sección de Configuración -> Dominio Personalizado dentro del Dashboard para que el ruteo interno se resuelva automáticamente.
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div style="margin-bottom:8px;">Base de Conocimientos de DaleTepido</div>
+    <div style="opacity: 0.5;">Creado por <a href="https://daletepido.com.ar" target="_blank">DaleTepido</a> · Todos los derechos reservados</div>
+  </footer>
+
+  <script>
+    // Accordion Toggle
+    function toggleAccordion(header) {
+      const item = header.parentElement;
+      const isOpen = item.classList.contains('open');
+      
+      // Close all other items
+      document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('open'));
+      
+      if (!isOpen) {
+        item.classList.add('open');
+      }
+    }
+
+    // Dynamic Live Filtering (Search Bar)
+    function filterGuides(query) {
+      const q = query.toLowerCase().trim();
+      const sections = document.querySelectorAll('.guide-card');
+      
+      sections.forEach(sec => {
+        const text = sec.textContent.toLowerCase();
+        if (text.includes(q)) {
+          sec.style.display = 'block';
+        } else {
+          sec.style.display = 'none';
+        }
+      });
+    }
+
+    // Active Sidebar Link Highlighter on Scroll
+    window.addEventListener('scroll', () => {
+      const scrollPos = window.scrollY + 120;
+      const sections = document.querySelectorAll('.guide-card');
+      const menuLinks = document.querySelectorAll('.menu-link');
+
+      sections.forEach(sec => {
+        if (sec.style.display !== 'none' && scrollPos >= sec.offsetTop && scrollPos < (sec.offsetTop + sec.offsetHeight)) {
+          const id = sec.getAttribute('id');
+          menuLinks.forEach(link => {
+            if (link.getAttribute('href') === '#' + id) {
+              link.classList.add('active');
+            } else {
+              link.classList.remove('active');
+            }
+          });
+        }
+      });
+    });
+  </script>
+  <script src="/js/jaime-widget.js"></script>
+</body>
+</html>

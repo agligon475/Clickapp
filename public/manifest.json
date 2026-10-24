@@ -1,0 +1,187 @@
+{
+  "id": "/",
+  "name": "Dale! Te Pido - Catálogo y Pedidos",
+  "short_name": "DaleTePido",
+  "description": "Plataforma de gestión de pedidos y catálogo digital por WhatsApp",
+  "start_url": "/alta-usuario.html?action=login",
+  "scope": "/",
+  "lang": "es",
+  "dir": "ltr",
+  "display": "standalone",
+  "display_override": [
+    "standalone"
+  ],
+  "background_color": "#F6F6F6",
+  "theme_color": "#F60000",
+  "orientation": "portrait-primary",
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "categories": [
+    "business",
+    "shopping",
+    "productivity",
+    "utilities"
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=ar.com.daletepido.app",
+      "id": "ar.com.daletepido.app"
+    }
+  ],
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "handle_links": "preferred",
+  "edge_side_panel": {
+    "preferred_width": 480
+  },
+  "tab_strip": {
+    "home_tab": {
+      "scope_patterns": [
+        "/dashboard.html",
+        "/dashboard",
+        "/alta-usuario.html",
+        "/alta-usuario",
+        "/"
+      ]
+    },
+    "new_tab_button": {
+      "url": "/dashboard.html"
+    }
+  },
+  "note_taking": {
+    "new_note_url": "/dashboard.html?action=new-note"
+  },
+  "widgets": [
+    {
+      "name": "Pedidos Recientes",
+      "short_name": "Pedidos",
+      "description": "Ver pedidos recientes en tu comercio",
+      "tag": "pedidos-widget",
+      "template": "pedidos-template",
+      "ms_ac_template": "/widgets/pedidos.json",
+      "data": "/api/auth",
+      "type": "application/json",
+      "screenshots": [
+        {
+          "src": "/screenshot-narrow.png",
+          "sizes": "750x1334",
+          "label": "Widget de Pedidos"
+        }
+      ],
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ],
+      "auth": false,
+      "update": 3600
+    }
+  ],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Panel de Control DaleTePido"
+    },
+    {
+      "src": "/screenshot-narrow.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Gestión de Pedidos Móvil"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Pedidos",
+      "short_name": "Pedidos",
+      "description": "Ver pedidos recibidos",
+      "url": "/dashboard.html?view=orders",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Productos",
+      "short_name": "Productos",
+      "description": "Gestionar productos y precios",
+      "url": "/dashboard.html?view=products",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "/dashboard.html",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "file_handlers": [
+    {
+      "action": "/dashboard.html",
+      "accept": {
+        "text/csv": [
+          ".csv"
+        ],
+        "application/json": [
+          ".json"
+        ]
+      }
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+daletepido",
+      "url": "/dashboard.html?store=%s"
+    }
+  ]
+}

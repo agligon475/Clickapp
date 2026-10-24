@@ -1,0 +1,333 @@
+{
+  "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/.well-known/(.*)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
+      "source": "/manifest.json",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/manifest+json; charset=utf-8"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "source": "/js/(.*)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/javascript; charset=utf-8"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)\\.css",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/css; charset=utf-8"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)\\.(?:png|jpg|jpeg|gif|svg|ico|webp)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    }
+  ],
+  "functions": {
+    "api/store.js": {
+      "includeFiles": "{*.html,*.css,*.png,*.ico,*.svg,*.jpg,*.jpeg,img/**,img-default/**,widgets/**,bgd-samples/**}"
+    },
+    "api/auth.js": {
+      "includeFiles": "api/email-templates.js"
+    }
+  },
+  "redirects": [
+    {
+      "source": "/descargar-app",
+      "destination": "https://github.com/agligon475/Clickapp/releases/latest/download/DaleTePido.apk",
+      "permanent": false
+    },
+    {
+      "source": "/app",
+      "destination": "https://github.com/agligon475/Clickapp/releases/latest/download/DaleTePido.apk",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/manifest.json",
+      "destination": "/manifest.json"
+    },
+    {
+      "source": "/twa-manifest.json",
+      "destination": "/twa-manifest.json"
+    },
+    {
+      "source": "/sw.js",
+      "destination": "/sw.js"
+    },
+    {
+      "source": "/js/(.*)",
+      "destination": "/js/$1"
+    },
+    {
+      "source": "/img/(.*)",
+      "destination": "/img/$1"
+    },
+    {
+      "source": "/img-default/(.*)",
+      "destination": "/img-default/$1"
+    },
+    {
+      "source": "/videos/(.*)",
+      "destination": "/videos/$1"
+    },
+    {
+      "source": "/widgets/(.*)",
+      "destination": "/widgets/$1"
+    },
+    {
+      "source": "/bgd-samples/(.*)",
+      "destination": "/bgd-samples/$1"
+    },
+    {
+      "source": "/vov.min.css",
+      "destination": "/vov.min.css"
+    },
+    {
+      "source": "/dashboard-icon.png",
+      "destination": "/dashboard-icon.png"
+    },
+    {
+      "source": "/favicon.png",
+      "destination": "/favicon.png"
+    },
+    {
+      "source": "/favicon.ico",
+      "destination": "/favicon.ico"
+    },
+    {
+      "source": "/apple-touch-icon.png",
+      "destination": "/apple-touch-icon.png"
+    },
+    {
+      "source": "/icon-192.png",
+      "destination": "/icon-192.png"
+    },
+    {
+      "source": "/icon-512.png",
+      "destination": "/icon-512.png"
+    },
+    {
+      "source": "/icon-192-maskable.png",
+      "destination": "/icon-192-maskable.png"
+    },
+    {
+      "source": "/icon-512-maskable.png",
+      "destination": "/icon-512-maskable.png"
+    },
+    {
+      "source": "/screenshot-wide.png",
+      "destination": "/screenshot-wide.png"
+    },
+    {
+      "source": "/screenshot-narrow.png",
+      "destination": "/screenshot-narrow.png"
+    },
+    {
+      "source": "/super-admin-login",
+      "destination": "/super-admin-login.html"
+    },
+    {
+      "source": "/super-admin-login.html",
+      "destination": "/super-admin-login.html"
+    },
+    {
+      "source": "/super-admin-secret-dashboard",
+      "destination": "/super-admin-secret-dashboard.html"
+    },
+    {
+      "source": "/super-admin-secret-dashboard.html",
+      "destination": "/super-admin-secret-dashboard.html"
+    },
+    {
+      "source": "/super-admin-prospectos",
+      "destination": "/super-admin-prospectos.html"
+    },
+    {
+      "source": "/super-admin-prospectos.html",
+      "destination": "/super-admin-prospectos.html"
+    },
+    {
+      "source": "/super-admin-email-cms",
+      "destination": "/super-admin-email-cms.html"
+    },
+    {
+      "source": "/super-admin-email-cms.html",
+      "destination": "/super-admin-email-cms.html"
+    },
+    {
+      "source": "/super-admin-config",
+      "destination": "/super-admin-config.html"
+    },
+    {
+      "source": "/super-admin-config.html",
+      "destination": "/super-admin-config.html"
+    },
+    {
+      "source": "/presentacion-evolucion-clickapp",
+      "destination": "/presentacion-evolucion-clickapp.html"
+    },
+    {
+      "source": "/presentacion-evolucion-clickapp.html",
+      "destination": "/presentacion-evolucion-clickapp.html"
+    },
+    {
+      "source": "/desarrollo",
+      "destination": "/desarrollo.html"
+    },
+    {
+      "source": "/desarrollo.html",
+      "destination": "/desarrollo.html"
+    },
+    {
+      "source": "/enviar-comprobante",
+      "destination": "/enviar-comprobante.html"
+    },
+    {
+      "source": "/ayuda",
+      "destination": "/ayuda.html"
+    },
+    {
+      "source": "/dejar-resena",
+      "destination": "/dejar-resena.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/dashboard.html"
+    },
+    {
+      "source": "/alta-usuario",
+      "destination": "/alta-usuario.html"
+    },
+    {
+      "source": "/kit-imprimible",
+      "destination": "/kit-imprimible.html"
+    },
+    {
+      "source": "/landing",
+      "destination": "/landing.html"
+    },
+    {
+      "source": "/terminos",
+      "destination": "/terminos.html"
+    },
+    {
+      "source": "/terminos-y-condiciones",
+      "destination": "/terminos.html"
+    },
+    {
+      "source": "/privacidad",
+      "destination": "/privacidad.html"
+    },
+    {
+      "source": "/politicas-de-privacidad",
+      "destination": "/privacidad.html"
+    },
+    {
+      "source": "/robots.txt",
+      "destination": "/robots.txt"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/sitemap.xml"
+    },
+    {
+      "source": "/llms.txt",
+      "destination": "/llms.txt"
+    },
+    {
+      "source": "/",
+      "destination": "/api/store"
+    },
+    {
+      "source": "/.well-known/:path*",
+      "destination": "/.well-known/:path*"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/api/store"
+    }
+  ]
+}

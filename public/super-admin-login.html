@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Super Admin Portal — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+  
+  <style>
+    :root {
+      --bg-main: #F6F6F6;
+      --bg-card: #FFFFFF;
+      --bg-input: #FAFAFC;
+      --border-color: #E2E8F0;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --red-primary: #F60000;
+      --red-hover: #D60000;
+      --font-title: 'Josefin Sans', sans-serif;
+      --font-body: 'Poppins', sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-main: #0B0F17;
+        --bg-card: #151C2C;
+        --bg-input: #0E1322;
+        --border-color: #24304A;
+        --text-main: #F8FAFC;
+        --text-muted: #94A3B8;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-main);
+      background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      }
+    }
+
+    .login-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 44px 36px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.07);
+      text-align: center;
+      position: relative;
+    }
+
+    .brand-logo-wrap {
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .brand-logo-wrap img {
+      height: 38px;
+      width: auto;
+      filter: brightness(0);
+      transition: opacity 0.2s;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .brand-logo-wrap img {
+        filter: brightness(0) invert(1);
+      }
+    }
+
+    .shield-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(246, 0, 0, 0.08);
+      border: 1px solid rgba(246, 0, 0, 0.2);
+      color: var(--red-primary);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-family: var(--font-title);
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    p.subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      line-height: 1.4;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-wrap i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+
+    .ctrl-input {
+      width: 100%;
+      height: 46px;
+      background-color: var(--bg-input);
+      border: 1.5px solid var(--border-color);
+      border-radius: 10px;
+      color: var(--text-main);
+      padding: 0 16px 0 40px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .ctrl-input:focus {
+      border-color: var(--red-primary);
+      background-color: var(--bg-card);
+      box-shadow: 0 0 0 3px rgba(246, 0, 0, 0.12);
+    }
+
+    .btn-submit {
+      width: 100%;
+      height: 48px;
+      background-color: var(--red-primary);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 10px;
+      font-family: var(--font-title);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      margin-top: 10px;
+      box-shadow: 0 4px 14px rgba(246, 0, 0, 0.25);
+    }
+
+    .btn-submit:hover {
+      background-color: var(--red-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(246, 0, 0, 0.35);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .error-msg {
+      display: none;
+      background: rgba(246, 0, 0, 0.08);
+      border: 1px solid rgba(246, 0, 0, 0.2);
+      color: var(--red-primary);
+      font-size: 13px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      text-align: left;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-card">
+    <div class="brand-logo-wrap">
+      <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" onerror="this.src='/img-default/daletepido-logo-white-hq.png'" alt="Dale! Te Pido" />
+    </div>
+
+    <div class="shield-badge">
+      <i class="bi bi-shield-lock-fill"></i> Acceso Restringido
+    </div>
+    
+    <h1>Super Admin Portal</h1>
+    <p class="subtitle">Panel de control y monitoreo de operaciones de la plataforma</p>
+
+    <div id="auth-err" class="error-msg"></div>
+
+    <form onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="master-user">Usuario Administrador</label>
+        <div class="input-wrap">
+          <i class="bi bi-person"></i>
+          <input type="text" id="master-user" required autocomplete="username" placeholder="admin-alicari" class="ctrl-input" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="master-pwd">Contraseña Maestra</label>
+        <div class="input-wrap">
+          <i class="bi bi-key"></i>
+          <input type="password" id="master-pwd" required autocomplete="current-password" placeholder="Contraseña" class="ctrl-input" />
+        </div>
+      </div>
+
+      <button type="submit" id="btn-login-submit" class="btn-submit">
+        Ingresar al Panel <i class="bi bi-arrow-right"></i>
+      </button>
+    </form>
+  </div>
+
+  <script>
+    // Si ya existe un token en la sesión o almacenamiento local, verificar si podemos redirigir
+    (function checkExistingToken() {
+      const token = sessionStorage.getItem('super_admin_master_key') || localStorage.getItem('super_admin_master_key');
+      if (token && token.trim().length > 0) {
+        sessionStorage.setItem('super_admin_master_key', token);
+        window.location.replace('super-admin-secret-dashboard.html');
+      }
+    })();
+
+    async function handleLogin(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const userInput = document.getElementById('master-user');
+      const pwdInput = document.getElementById('master-pwd');
+      const submitBtn = document.getElementById('btn-login-submit');
+      const errEl = document.getElementById('auth-err');
+
+      const user = userInput ? userInput.value.trim() : '';
+      const pwd = pwdInput ? pwdInput.value.trim() : '';
+
+      if (errEl) errEl.style.display = 'none';
+
+      if (!user || !pwd) {
+        showError('Por favor complete todos los campos.');
+        return;
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Verificando...';
+      }
+
+      const isMasterUser = ['admin-alicari', 'admin'].includes(user.toLowerCase());
+      const isMasterPwd = ['42904062gpaz', '42904062Gpaz', 'super-admin-alicari'].includes(pwd);
+
+      try {
+        const res = await fetch('/api/super-admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'auth', username: user, password: pwd })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.token) {
+            sessionStorage.setItem('super_admin_master_key', data.token);
+            localStorage.setItem('super_admin_master_key', data.token);
+            window.location.replace('super-admin-secret-dashboard.html');
+            return;
+          }
+        }
+
+        // Si la API devuelve 404 (ej. en servidores estáticos locales como Live Server) o falla
+        if (isMasterUser && isMasterPwd) {
+          sessionStorage.setItem('super_admin_master_key', 'super-admin-token-valid-key');
+          localStorage.setItem('super_admin_master_key', 'super-admin-token-valid-key');
+          window.location.replace('super-admin-secret-dashboard.html');
+          return;
+        }
+
+        showError('Usuario o contraseña incorrectos.');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Ingresar al Panel <i class="bi bi-arrow-right"></i>';
+        }
+      } catch (err) {
+        console.warn('Fallback de red en login:', err);
+        // Respaldo local si coincide con las credenciales maestras autorizadas
+        if (isMasterUser && isMasterPwd) {
+          sessionStorage.setItem('super_admin_master_key', 'super-admin-token-valid-key');
+          localStorage.setItem('super_admin_master_key', 'super-admin-token-valid-key');
+          window.location.replace('super-admin-secret-dashboard.html');
+        } else {
+          showError('Usuario o contraseña incorrectos.');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Ingresar al Panel <i class="bi bi-arrow-right"></i>';
+          }
+        }
+      }
+    }
+
+    function showError(msg) {
+      const errEl = document.getElementById('auth-err');
+      if (errEl) {
+        errEl.textContent = msg;
+        errEl.style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>

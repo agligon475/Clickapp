@@ -1,0 +1,334 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: 'Josefin Sans';
+          font-style: normal;
+          font-weight: 400 800;
+          src: local('Josefin Sans'), url('https://fonts.gstatic.com/s/josefinsans/v32/Qw3aZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhKg.woff2') format('woff2');
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: #010101;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Josefin Sans', sans-serif;
+          color: #F6F6F6;
+          padding: 60px 48px;
+        }
+
+        .ambient-glow {
+          position: absolute;
+          width: 900px;
+          height: 900px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(246, 0, 0, 0.22) 0%, rgba(246, 0, 0, 0.04) 45%, rgba(0, 0, 0, 0) 70%);
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        .scene-wrap {
+          position: relative;
+          z-index: 5;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          max-width: 960px;
+          gap: 28px;
+        }
+
+        .scene-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 32px;
+          border-radius: 999px;
+          background: #F60000;
+          color: #FFFFFF;
+          font-size: 24px;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          box-shadow: 0 8px 30px rgba(246, 0, 0, 0.5);
+        }
+
+        .scene-headline {
+          font-size: 56px;
+          font-weight: 800;
+          line-height: 1.1;
+          letter-spacing: -0.01em;
+          text-align: center;
+          text-transform: uppercase;
+          color: #FFFFFF;
+        }
+
+        .scene-headline span {
+          color: #F60000;
+        }
+
+        /* 3D Acrylic Counter Tent Stand */
+        .stand-container {
+          position: relative;
+          width: 540px;
+          height: 720px;
+          perspective: 1200px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .acrylic-tent {
+          width: 480px;
+          height: 640px;
+          background: #FFFFFF;
+          border-radius: 28px;
+          overflow: hidden;
+          box-shadow: 0 40px 100px rgba(0, 0, 0, 0.9), 0 0 40px rgba(246, 0, 0, 0.25);
+          transform: rotateX(12deg) rotateY(-8deg) rotateZ(1deg);
+          transform-style: preserve-3d;
+          display: flex;
+          flex-direction: column;
+          position: relative;
+          border: 3px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .tent-red-header {
+          height: 140px;
+          background: #F60000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+        }
+
+        .tent-logo-svg {
+          height: 75px;
+          max-width: 90%;
+          object-fit: contain;
+        }
+
+        .tent-body {
+          flex: 1;
+          background: #FFFFFF;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 28px;
+          gap: 18px;
+        }
+
+        .qr-card-box {
+          width: 250px;
+          height: 250px;
+          background: #010101;
+          padding: 16px;
+          border-radius: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .qr-svg {
+          width: 100%;
+          height: 100%;
+        }
+
+        .action-call {
+          font-size: 26px;
+          font-weight: 800;
+          color: #010101;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          text-align: center;
+        }
+
+        .action-sub {
+          font-size: 18px;
+          font-weight: 700;
+          color: #666666;
+          text-align: center;
+        }
+
+        /* Acrylic Tent Base */
+        .tent-base {
+          width: 540px;
+          height: 24px;
+          background: rgba(255, 255, 255, 0.15);
+          border: 1.5px solid rgba(255, 255, 255, 0.3);
+          border-radius: 12px;
+          margin-top: -15px;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Subtext Pill */
+        .subtext-card {
+          display: inline-flex;
+          align-items: center;
+          gap: 14px;
+          padding: 16px 36px;
+          border-radius: 999px;
+          background: #0D0F12;
+          border: 1.5px solid rgba(246, 0, 0, 0.45);
+          color: #FFFFFF;
+          font-size: 24px;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+      </style>
+
+      <div data-hf-id="hf-x7a5" id="root" data-composition-id="scene-6-kit-qr" data-width="1080" data-height="1920">
+        <div data-hf-id="hf-hmnu" class="ambient-glow" id="ambient-glow"></div>
+
+        <div data-hf-id="hf-ltya" class="scene-wrap" id="scene-wrap">
+          <div data-hf-id="hf-mwfq" class="scene-badge" id="scene-badge">
+            5. KIT QR PARA TU MOSTRADOR
+          </div>
+
+          <h2 data-hf-id="hf-6uc9" class="scene-headline">
+            TU MENÚ EN EL <span data-hf-id="hf-9ysg">MOSTRADOR DIGITAL</span>
+          </h2>
+
+          <!-- 3D Acrylic Counter Tent Stand -->
+          <div data-hf-id="hf-546a" class="stand-container" id="stand-container">
+            <div data-hf-id="hf-yw7q" class="acrylic-tent" id="acrylic-tent">
+              <!-- Solid Red Header with Official Vector Logo -->
+              <div data-hf-id="hf-s4kp" class="tent-red-header">
+                <svg data-hf-id="hf-8kwt" viewBox="0 0 850 350" class="tent-logo-svg">
+                  <path data-hf-id="hf-ywuq" fill="#FFFFFF" d="M151.71,159.31h-41.58V52.68h41.58c11.29,0,21.04,2.23,29.26,6.68,8.22,4.46,14.55,10.64,19.01,18.56,4.46,7.92,6.68,17.08,6.68,27.47s-2.28,19.53-6.83,27.7c-4.55,8.17-10.97,14.58-19.23,19.23-8.27,4.65-17.9,6.98-28.89,6.98ZM138.2,76.89v58.22h11.88c6.24,0,11.41-1.09,15.52-3.27,4.11-2.18,7.18-5.47,9.21-9.88,2.03-4.4,3.04-9.92,3.04-16.56s-1.04-11.61-3.12-15.82c-2.08-4.21-5.17-7.37-9.28-9.51-4.11-2.13-9.23-3.19-15.37-3.19h-11.88Z"/>
+                  <path data-hf-id="hf-0sh3" fill="#FFFFFF" d="M281.07,159.31h30.3l-39.06-106.63h-30.74l-39.5,106.63h28.37l6.7-19.75h37.44l6.51,19.75ZM244.63,117.43l11.49-33.86,11.15,33.86h-22.64Z"/>
+                  <path data-hf-id="hf-7bvt" fill="#FFFFFF" d="M391.85,159.31h-72.92V52.68h28.07v81.24h44.85v25.4Z"/>
+                  <path data-hf-id="hf-0wr8" fill="#FFFFFF" d="M478.44,134.96v24.36h-75.44V52.68h74.4v24.36h-46.34v15.3h42.03v24.36h-42.03v18.27h47.38Z"/>
+                  <path data-hf-id="hf-2s7y" fill="#FFFFFF" d="M157.76,294.35h-22.11v-64h-25.74v-20.01h73.59v20.01h-25.74v64Z"/>
+                  <path data-hf-id="hf-tna6" fill="#FFFFFF" d="M249.94,275.16v19.19h-59.43v-84h58.61v19.19h-36.5v12.05h33.11v19.19h-33.11v14.39h37.32Z"/>
+                  <path data-hf-id="hf-wllj" fill="#FFFFFF" d="M426.84,257.1h-131v38.51h-33.24v-126.26h164.24c11.02,0,20.49,1.61,28.4,4.84,7.91,3.23,13.98,8.03,18.2,14.42,4.22,6.39,6.33,14.33,6.33,23.83s-2.11,17.56-6.33,24.18c-4.22,6.62-10.29,11.69-18.2,15.21-7.91,3.52-17.38,5.28-28.4,5.28ZM426.67,197.31h-130.83v31.83h130.83c6.56,0,11.55-1.52,14.95-4.57,3.4-3.05,5.1-6.97,5.1-11.78s-1.7-8.73-5.1-11.43c-3.4-2.7-8.38-4.04-14.95-4.04Z"/>
+                  <path data-hf-id="hf-5332" fill="#FFFFFF" d="M525.26,295.61h-33.24v-82.64c0-9.18,7.44-16.62,16.62-16.62h0c9.18,0,16.62,7.44,16.62,16.62v82.64Z"/>
+                  <path data-hf-id="hf-6wue" fill="#FFFFFF" d="M583.99,296.2h-38.27v-98.15h38.27c10.39,0,19.36,2.05,26.93,6.15,7.56,4.1,13.4,9.8,17.5,17.09,4.1,7.29,6.15,15.72,6.15,25.29s-2.1,17.98-6.29,25.49c-4.19,7.52-10.09,13.42-17.7,17.7-7.61,4.29-16.47,6.42-26.59,6.42ZM571.55,220.33v53.58h10.94c5.74,0,10.5-1,14.28-3.01,3.78-2,6.61-5.03,8.47-9.09,1.87-4.05,2.8-9.14,2.8-15.24s-.96-10.68-2.87-14.56c-1.91-3.87-4.76-6.79-8.54-8.75-3.78-1.96-8.5-2.94-14.15-2.94h-10.94Z"/>
+                  <path data-hf-id="hf-xbu4" fill="#FFFFFF" d="M689.38,298.25c-7.11,0-13.72-1.25-19.82-3.76-6.11-2.51-11.46-6.06-16.06-10.66-4.6-4.6-8.2-10.02-10.8-16.27-2.6-6.24-3.9-13.1-3.9-20.57s1.3-14.31,3.9-20.5c2.6-6.2,6.2-11.57,10.8-16.13,4.6-4.56,9.96-8.09,16.06-10.59,6.1-2.51,12.71-3.76,19.82-3.76s13.74,1.25,19.89,3.76c6.15,2.51,11.53,6.04,16.13,10.59,4.6,4.56,8.2,9.93,10.8,16.13,2.6,6.2,3.9,13.03,3.9,20.5s-1.3,14.33-3.9,20.57c-2.6,6.24-6.2,11.67-10.8,16.27-4.6,4.6-9.98,8.16-16.13,10.66-6.15,2.51-12.78,3.76-19.89,3.76ZM689.38,275.15c3.83,0,7.25-.73,10.25-2.19,3.01-1.46,5.54-3.49,7.59-6.08,2.05-2.6,3.6-5.6,4.65-9.02,1.05-3.42,1.57-7.04,1.57-10.87s-.53-7.43-1.57-10.8c-1.05-3.37-2.6-6.33-4.65-8.89-2.05-2.55-4.58-4.56-7.59-6.01-3.01-1.46-6.42-2.19-10.25-2.19s-7.24.73-10.25,2.19c-3.01,1.46-5.54,3.46-7.59,6.01-2.05,2.55-3.6,5.51-4.65,8.89-1.05,3.37-1.57,6.97-1.57,10.8s.52,7.45,1.57,10.87c1.05,3.42,2.6,6.42,4.65,9.02,2.05,2.6,4.58,4.63,7.59,6.08,3.01,1.46,6.42,2.19,10.25,2.19Z"/>
+                  <g data-hf-id="hf-vera">
+                    <path data-hf-id="hf-hvtk" fill="#FFFFFF" d="M525.14,170.21c0,4.54-1.58,8.26-4.74,11.17-3.16,2.91-7.1,4.37-11.84,4.37s-8.66-1.45-11.76-4.37c-3.11-2.91-4.66-6.63-4.66-11.17s1.53-8.29,4.59-11.25c3.06-2.96,7-4.44,11.84-4.44s8.93,1.48,11.99,4.44c3.06,2.96,4.59,6.71,4.59,11.25Z"/>
+                    <path data-hf-id="hf-7klx" fill="#FFFFFF" d="M508.5,141.38h0c-5.39,0-9.86-4.15-10.26-9.53l-5.95-80.1h32.56l-6.09,80.11c-.41,5.36-4.88,9.51-10.26,9.51Z"/>
+                  </g>
+                  <path data-hf-id="hf-tz0x" fill="#FFFFFF" d="M694.28,166.32l-5.24,5.47c-.1-7.73-1.15-15.55-3.51-23.09-2.68-8.91-7.11-17.42-13.07-24.77-5.96-7.35-13.52-13.36-21.83-17.71-4.15-2.19-8.47-4.02-12.89-5.49-4.42-1.49-8.94-2.61-13.51-3.37-9.14-1.52-18.49-1.62-27.59-.26-9.1,1.38-17.97,4.16-26.12,8.34-8.14,4.18-15.53,9.77-21.67,16.45-3.07,3.34-5.84,6.94-8.25,10.76-2.4,3.82-4.45,7.85-6.14,12-.08.21,0,.45.21.54s.47.01.57-.2c3.91-7.97,9.14-15.23,15.44-21.33,6.3-6.1,13.67-11.01,21.62-14.52,7.94-3.54,16.43-5.76,25.02-6.61,8.59-.87,17.29-.45,25.68,1.32,8.39,1.73,16.45,4.92,23.65,9.36,7.2,4.45,13.59,9.99,19.05,16.36,5.48,6.35,9.9,13.63,13.27,21.49,2.73,6.4,4.65,13.2,6.06,20.19l-4.84-4.64c-2.79-2.68-7.42-.65-7.34,3.22h0c.02,1.15.5,2.24,1.33,3.04l13.45,12.9,12.9-13.45c.8-.83,1.23-1.94,1.21-3.09h0c-.08-3.86-4.79-5.7-7.46-2.91Z"/>
+                </svg>
+              </div>
+
+              <!-- White Body with Scannable QR -->
+              <div data-hf-id="hf-xtgg" class="tent-body">
+                <div data-hf-id="hf-rycw" class="qr-card-box">
+                  <svg data-hf-id="hf-b5ov" class="qr-svg" viewBox="0 0 100 100" fill="#FFFFFF">
+                    <rect data-hf-id="hf-vl9m" x="5" y="5" width="28" height="28" fill="#FFFFFF" rx="4" />
+                    <rect data-hf-id="hf-3ikd" x="11" y="11" width="16" height="16" fill="#010101" rx="2" />
+                    <rect data-hf-id="hf-r7hb" x="15" y="15" width="8" height="8" fill="#F60000" rx="1" />
+
+                    <rect data-hf-id="hf-vnsq" x="67" y="5" width="28" height="28" fill="#FFFFFF" rx="4" />
+                    <rect data-hf-id="hf-3dl9" x="73" y="11" width="16" height="16" fill="#010101" rx="2" />
+                    <rect data-hf-id="hf-lmxb" x="77" y="15" width="8" height="8" fill="#F60000" rx="1" />
+
+                    <rect data-hf-id="hf-9mcs" x="5" y="67" width="28" height="28" fill="#FFFFFF" rx="4" />
+                    <rect data-hf-id="hf-g8fh" x="11" y="73" width="16" height="16" fill="#010101" rx="2" />
+                    <rect data-hf-id="hf-kc8n" x="15" y="77" width="8" height="8" fill="#F60000" rx="1" />
+
+                    <rect data-hf-id="hf-2chh" x="40" y="8" width="6" height="6" fill="#FFFFFF" />
+                    <rect data-hf-id="hf-px0l" x="52" y="14" width="8" height="6" fill="#FFFFFF" />
+                    <rect data-hf-id="hf-arsm" x="42" y="24" width="14" height="6" fill="#FFFFFF" />
+                    <rect data-hf-id="hf-7728" x="8" y="42" width="6" height="12" fill="#FFFFFF" />
+                    <rect data-hf-id="hf-9ag3" x="22" y="44" width="8" height="8" fill="#FFFFFF" />
+                    <rect data-hf-id="hf-4xuq" x="40" y="40" width="20" height="20" fill="#F60000" rx="4" />
+                    <rect data-hf-id="hf-bl04" x="44" y="44" width="12" height="12" fill="#FFFFFF" rx="2" />
+                    <rect data-hf-id="hf-e3to" x="68" y="42" width="10" height="8" fill="#FFFFFF" />
+                    <rect data-hf-id="hf-1g6l" x="84" y="46" width="8" height="8" fill="#FFFFFF" />
+                    <rect data-hf-id="hf-mi0r" x="42" y="70" width="14" height="8" fill="#FFFFFF" />
+                    <rect data-hf-id="hf-6ess" x="62" y="68" width="8" height="14" fill="#FFFFFF" />
+                    <rect data-hf-id="hf-lnzd" x="76" y="74" width="14" height="16" fill="#FFFFFF" />
+                  </svg>
+                </div>
+                <div data-hf-id="hf-y3lh" class="action-call">ESCANEA Y PEDÍ ONLINE</div>
+                <div data-hf-id="hf-mssl" class="action-sub">Tus clientes piden antes de llegar</div>
+              </div>
+            </div>
+            <div data-hf-id="hf-ub0r" class="tent-base"></div>
+          </div>
+
+          <div data-hf-id="hf-hnqt" class="subtext-card" id="subtext-card">
+            <span data-hf-id="hf-a324">🚀</span> Fidelizá a tus clientes presenciales + Tráfico con SEO Local
+          </div>
+        </div>
+      </div>
+
+      <script>
+        const tl = gsap.timeline({ paused: true });
+
+        // Initial setup
+        gsap.set("#scene-badge", { autoAlpha: 0, scale: 0.9 });
+        gsap.set(".scene-headline", { autoAlpha: 0, y: -20 });
+        gsap.set("#stand-container", { autoAlpha: 0, scale: 0.88 });
+        gsap.set("#subtext-card", { autoAlpha: 0, y: 20 });
+
+        // 0.0s - 0.6s: Stand pops in with 3D perspective
+        tl.to([".scene-badge", ".scene-headline"], {
+          autoAlpha: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.45,
+          stagger: 0.1,
+          ease: "power3.out"
+        }, 0.1);
+
+        tl.to("#stand-container", {
+          autoAlpha: 1,
+          scale: 1,
+          duration: 0.65,
+          ease: "back.out(1.8)"
+        }, 0.3);
+
+        tl.fromTo("#acrylic-tent",
+          { rotateX: 25, rotateY: -16, scale: 0.9 },
+          { rotateX: 12, rotateY: -8, scale: 1, duration: 0.9, ease: "power2.out" },
+          0.3
+        );
+
+        // Subtext card entrance
+        tl.to("#subtext-card", {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.45,
+          ease: "back.out(1.6)"
+        }, 1.2);
+
+        // Exit transition
+        tl.to("#scene-wrap", {
+          autoAlpha: 0.2,
+          scale: 0.95,
+          duration: 0.25,
+          ease: "power2.in"
+        }, 4.2);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["scene-6-kit-qr"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

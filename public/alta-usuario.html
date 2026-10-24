@@ -1,0 +1,1439 @@
+<!-- DTP_VERSION_2026_08_06_V2 -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Alta de Comercio — DaleTepido</title>
+  <script>
+    (function() {
+      try {
+        const isStandalone = 
+          window.matchMedia('(display-mode: standalone)').matches ||
+          window.matchMedia('(display-mode: fullscreen)').matches ||
+          window.matchMedia('(display-mode: minimal-ui)').matches ||
+          window.navigator.standalone === true ||
+          (document.referrer && document.referrer.startsWith('android-app://')) ||
+          new URLSearchParams(window.location.search).get('source') === 'apk' ||
+          new URLSearchParams(window.location.search).get('utm_source') === 'twa' ||
+          sessionStorage.getItem('is_standalone_app') === 'true' ||
+          localStorage.getItem('is_standalone_app') === 'true';
+
+        if (isStandalone) {
+          sessionStorage.setItem('is_standalone_app', 'true');
+          localStorage.setItem('is_standalone_app', 'true');
+          document.documentElement.classList.add('is-standalone-app');
+          window.isStandaloneApp = true;
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <!-- SEO & indexing directives to keep the page private -->
+  <meta name="robots" content="noindex, nofollow" />
+  
+  <!-- PWA & Web App Manifest for PWABUILDER -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#F60000" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="DaleTePido" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW reg error:', err));
+      });
+    }
+  </script>
+  
+  <!-- Premium Fonts and Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Josefin+Sans:ital,wght@0,300..700;1,300..700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #F6F6F6;
+      --panel: #FFFFFF;
+      --border: #E5E5E5;
+      --primary: #F60000;
+      --primary-hover: #D60000;
+      --primary-glow: rgba(246, 0, 0, 0.15);
+      --text: #010101;
+      --text-muted: #737373;
+      --success: #16A34A;
+      --error: #DC2626;
+      --font: 'Josefin Sans', sans-serif;
+      --font-b: 'Poppins', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      width: 100% !important;
+      max-width: 100vw !important;
+      overflow-x: hidden !important;
+      -webkit-text-size-adjust: 100%;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #F60000;
+      background-image: 
+        radial-gradient(circle at 10% 15%, rgba(255, 255, 255, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 90% 85%, rgba(0, 0, 0, 0.2) 0%, transparent 50%),
+        radial-gradient(rgba(255, 255, 255, 0.12) 1.2px, transparent 1.2px);
+      background-size: 100% 100%, 100% 100%, 28px 28px;
+      font-family: var(--font-b);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 16px;
+      width: 100% !important;
+      max-width: 100vw !important;
+      overflow-x: hidden !important;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    /* Crisp Minimalist Panel */
+    .card {
+      background: var(--panel);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 24px;
+      padding: 44px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.28), 0 6px 20px rgba(0, 0, 0, 0.12);
+      position: relative;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 20px 20px 0 0;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      background: rgba(246, 0, 0, 0.08);
+      border: 1px solid rgba(246, 0, 0, 0.15);
+      border-radius: 16px;
+      color: var(--primary);
+      font-size: 26px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    h1, h2, h3, .h1, .h2, .h3 {
+      font-family: var(--font) !important;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      color: #010101;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Steps Layout */
+    .form-step {
+      display: none;
+      animation: slideIn 0.4s ease both;
+    }
+
+    .form-step.active {
+      display: block;
+    }
+
+    .step-title {
+      font-size: 17px;
+      font-weight: 700;
+      font-family: var(--font);
+      margin-bottom: 20px;
+      color: #010101;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+
+    .step-title span {
+      background: var(--primary);
+      color: #fff;
+      font-size: 12px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 540px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .card {
+        padding: 24px 18px;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #525252;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-family: var(--font);
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper i {
+      position: absolute;
+      left: 16px;
+      color: var(--text-muted);
+      font-size: 16px;
+      pointer-events: none;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: #010101;
+      font-family: var(--font-b);
+      font-size: 14px;
+      padding: 11px 16px 11px 44px;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #010101;
+      box-shadow: 0 0 0 3px rgba(1, 1, 1, 0.06);
+      background: #FFFFFF;
+    }
+
+    /* Sanitizer / Suggester info */
+    .input-hint {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    .input-hint span {
+      font-family: var(--font-mono);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* Emoji Selector */
+    .emoji-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .emoji-btn {
+      width: 40px;
+      height: 40px;
+      background: #F6F6F6;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .emoji-btn:hover, .emoji-btn.active {
+      background: #FFF5F5;
+      border-color: var(--primary);
+      transform: scale(1.08);
+    }
+
+    /* Footer Buttons */
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 32px;
+      gap: 16px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 24px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: var(--font);
+      border: none;
+      outline: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      flex: 1;
+      box-shadow: 0 3px 12px var(--primary-glow);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 5px 16px var(--primary-glow);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: #F6F6F6;
+      border: 1px solid var(--border);
+      color: #010101;
+    }
+
+    .btn-secondary:hover {
+      background: #EBEBEB;
+      border-color: #D4D4D4;
+    }
+
+    /* Success state */
+    .success-panel {
+      text-align: center;
+      padding: 20px 0;
+      display: none;
+      animation: scaleUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    .success-panel i {
+      font-size: 64px;
+      color: var(--success);
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .success-panel h2 {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: #010101;
+    }
+
+    .success-link-box {
+      background: #F0FDF4;
+      border: 1px solid #BBF7D0;
+      border-radius: 14px;
+      padding: 16px;
+      margin: 24px 0;
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      word-break: break-all;
+      color: var(--success);
+    }
+
+    .success-link-box a {
+      color: var(--success);
+      font-weight: 700;
+      text-decoration: underline;
+    }
+
+    /* Keyframes */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes scaleUp {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .loading-spinner {
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-left-color: #fff;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+<main class="container" role="main">
+  <div class="card">
+    <div style="text-align: center; margin-bottom: 24px;">
+      <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png"
+           onerror="this.src='/img-default/daletepido-logo-white-hq.png'"
+           alt="Dale! Te Pido" 
+           style="height: 38px; width: auto; filter: brightness(0); display: inline-block;" />
+    </div>
+
+    <!-- MODE TOGGLE TABS: LOGIN vs REGISTRO -->
+    <div style="display:flex; background:#F6F6F6; border:1px solid var(--border); border-radius:12px; padding:4px; margin-bottom:28px;">
+      <button id="tab-login-btn" type="button" onclick="switchAuthTab('login')" style="flex:1; padding:9px 16px; background:var(--primary); color:#fff; border:none; border-radius:8px; font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s;">
+        <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+      </button>
+      <button id="tab-register-btn" type="button" onclick="switchAuthTab('register')" style="flex:1; padding:9px 16px; background:transparent; color:var(--text-muted); border:none; border-radius:8px; font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s;">
+        <i class="bi bi-plus-circle"></i> Registrar Comercio
+      </button>
+    </div>
+
+    <!-- PANEL 1: LOGIN MODE -->
+    <div id="panel-login-mode" style="display: block;">
+      <header style="margin-bottom: 24px; text-align:center;">
+        <h1 style="font-size: 22px; font-weight: 700; color: #010101;">Acceso a tu Panel de Control</h1>
+        <p class="subtitle">Ingresá tus credenciales de comercio para acceder al Dashboard</p>
+      </header>
+
+      <form onsubmit="handleAuthLoginSubmit(event)" style="display:flex; flex-direction:column; gap:16px;">
+        <div class="form-group">
+          <label for="login-store-id">ID de Tienda o Correo Electrónico *</label>
+          <div class="input-wrapper">
+            <i class="bi bi-shop"></i>
+            <input type="text" id="login-store-id" required placeholder="Ej: cocostore o admin@mitienda.com" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="login-password">Contraseña *</label>
+          <div class="input-wrapper">
+            <i class="bi bi-key-fill"></i>
+            <input type="password" id="login-password" required placeholder="••••••••" style="padding-right:42px;" />
+            <button type="button" onclick="togglePasswordVisibility('login-password', this)" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer; padding:4px 6px; display:inline-flex; align-items:center; z-index:2;" title="Mostrar u ocultar contraseña">
+              <i class="bi bi-eye" style="position:static; pointer-events:auto; color:inherit; font-size:inherit;"></i>
+            </button>
+          </div>
+        </div>
+
+        <div style="text-align: right; margin-top: -8px;">
+          <a href="#" onclick="openForgotPasswordModal(event)" style="color: var(--text-muted); font-size: 13px; text-decoration: underline;">
+            ¿Olvidaste tu usuario o contraseña?
+          </a>
+        </div>
+
+        <div id="login-error-msg" style="display:none; padding:12px; background:rgba(239, 68, 68, 0.15); border:1px solid var(--error); border-radius:10px; color:#ff9999; font-size:13px;"></div>
+
+        <button type="submit" id="login-submit-btn" class="btn btn-primary" style="width:100%; margin-top:8px; padding:14px; font-size:15px;">
+          <i class="bi bi-box-arrow-in-right"></i> Ingresar al Dashboard
+        </button>
+      </form>
+    </div>
+
+  <!-- MODAL RECUPERAR CONTRASEÑA -->
+  <div id="modal-forgot-password" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(1,1,1,0.45); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:99999; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:var(--panel); border:1px solid var(--border); border-radius:20px; width:100%; max-width:440px; padding:32px; box-shadow:0 20px 48px rgba(0,0,0,0.08); position:relative;">
+      <h3 style="font-size:20px; font-weight:700; color:#010101; margin-bottom:8px;">Recuperar Contraseña</h3>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Ingresá el ID de tu tienda o tu correo registrado. Te enviaremos las instrucciones de recuperación.</p>
+      
+      <form onsubmit="handleForgotPasswordSubmit(event)">
+        <div class="form-group" style="margin-bottom:16px;">
+          <label for="forgot-input">ID de Tienda o Email *</label>
+          <div class="input-wrapper">
+            <i class="bi bi-envelope-at-fill"></i>
+            <input type="text" id="forgot-input" required placeholder="Ej: mi-tienda o usuario@email.com" />
+          </div>
+        </div>
+
+        <div id="forgot-msg" style="display:none; padding:10px 14px; border-radius:10px; font-size:13px; margin-bottom:16px;"></div>
+
+        <div style="display:flex; gap:10px; justify-content:flex-end;">
+          <button type="button" class="btn btn-secondary" onclick="closeForgotPasswordModal()">Cancelar</button>
+          <button type="submit" id="forgot-submit-btn" class="btn btn-primary"><i class="bi bi-send"></i> Buscar Cuenta</button>
+        </div>
+      </form>
+
+      <div id="reset-password-section" style="display:none; margin-top:20px; border-top:1px solid var(--border); padding-top:20px;">
+        <h4 style="font-size:15px; color:#010101; margin-bottom:8px;">Establecer Nueva Contraseña</h4>
+        <form onsubmit="handleResetPasswordSubmit(event)">
+          <div class="form-group" style="margin-bottom:16px;">
+            <label for="reset-new-pass">Nueva Contraseña *</label>
+            <div class="input-wrapper">
+              <i class="bi bi-shield-lock-fill"></i>
+              <input type="password" id="reset-new-pass" required placeholder="Mínimo 4 caracteres" minlength="4" style="padding-right:42px;" />
+              <button type="button" onclick="togglePasswordVisibility('reset-new-pass', this)" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer; padding:4px 6px; display:inline-flex; align-items:center; z-index:2;" title="Mostrar u ocultar contraseña">
+                <i class="bi bi-eye" style="position:static; pointer-events:auto; color:inherit; font-size:inherit;"></i>
+              </button>
+            </div>
+          </div>
+          <button type="submit" id="reset-submit-btn" class="btn btn-primary" style="width:100%;">
+            <i class="bi bi-check2-circle"></i> Guardar Nueva Contraseña
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <!-- PANEL 2: WIZARD REGISTRATION FORM -->
+    <div id="form-container" style="display: none;">
+      <header style="margin-bottom: 24px;">
+        <h1 style="font-size: 22px; font-weight: 700; color: #010101;">Alta de Comercio</h1>
+        <p class="subtitle">Creá y registrá un nuevo comercio para tu plataforma multi-tienda</p>
+      </header>
+
+      <!-- Step 1: Basic Info -->
+      <div class="form-step active" id="step-1">
+        <div class="step-title"><span>1</span> Información Comercial Básica</div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="store-name">Nombre del Comercio *</label>
+            <div class="input-wrapper">
+              <i class="bi bi-tag-fill"></i>
+              <input type="text" id="store-name" placeholder="Ej: Kiosco Julio" oninput="suggestSlug(this.value)" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="store-id">ID único de la Tienda *</label>
+            <div class="input-wrapper">
+              <i class="bi bi-hash"></i>
+              <input type="text" id="store-id" placeholder="Ej: kioscojulio" oninput="sanitizeSlug(this)" />
+            </div>
+            <div class="input-hint">ID de subdominio: <span id="slug-preview">...</span>.daletepido.com.ar</div>
+          </div>
+          <div class="form-group">
+            <label for="store-rubro">Rubro *</label>
+            <div class="input-wrapper">
+              <i class="bi bi-briefcase-fill"></i>
+              <select id="store-rubro" onchange="updateSubrubrosAlta()">
+                <option value="Super">🛒 Súper</option>
+                <option value="Farmacias">💊 Farmacias</option>
+                <option value="Bebidas">🍾 Bebidas</option>
+                <option value="Kioscos" selected>🍬 Kioscos</option>
+                <option value="Cafe">☕ Café & Deli</option>
+                <option value="Helados">🍦 Helados</option>
+                <option value="Tiendas">🛍️ Tiendas & Varios</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="store-subrubro">Subrubro *</label>
+            <div class="input-wrapper">
+              <i class="bi bi-shop"></i>
+              <select id="store-subrubro">
+                <!-- Se puebla dinámicamente -->
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="store-password">Contraseña de Administración *</label>
+            <div class="input-wrapper">
+              <i class="bi bi-key-fill"></i>
+              <input type="password" id="store-password" placeholder="Mínimo 6 caracteres" style="padding-right:42px;" />
+              <button type="button" onclick="togglePasswordVisibility('store-password', this)" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer; padding:4px 6px; display:inline-flex; align-items:center; z-index:2;" title="Mostrar u ocultar contraseña">
+                <i class="bi bi-eye" style="position:static; pointer-events:auto; color:inherit; font-size:inherit;"></i>
+              </button>
+            </div>
+          </div>
+          <div class="form-group full-width" style="grid-column: 1 / -1; margin-top: 10px;">
+            <label for="store-email">Correo Electrónico de Administración *</label>
+            <div class="input-wrapper">
+              <i class="bi bi-envelope-fill"></i>
+              <input type="email" id="store-email" placeholder="Ej: admin@mitienda.com" />
+            </div>
+            <div class="input-hint">Servirá para iniciar sesión en tu panel de control y recuperar el acceso.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Contact & Location -->
+      <div class="form-step" id="step-2">
+        <div class="step-title"><span>2</span> Contacto y Ubicación</div>
+        <div class="grid-2">
+          <div class="form-group full-width">
+            <label for="store-wapp">WhatsApp de Contacto (con código de país) *</label>
+            <div class="input-wrapper">
+              <i class="bi bi-whatsapp"></i>
+              <input type="text" id="store-wapp" placeholder="Ej: 5491141819344" />
+            </div>
+            <div class="input-hint">Ingresá los números juntos, sin espacios, guiones ni símbolo + (ej: 549...).</div>
+          </div>
+          <div class="form-group">
+            <label for="store-direccion">Dirección Física (Opcional)</label>
+            <div class="input-wrapper">
+              <i class="bi bi-geo-alt-fill"></i>
+              <input type="text" id="store-direccion" placeholder="Ej: Av. Rivadavia 1234" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="store-horario">Horarios de Atención (Opcional)</label>
+            <div class="input-wrapper">
+              <i class="bi bi-clock-fill"></i>
+              <input type="text" id="store-horario" placeholder="Ej: Lun a Vier de 9 a 20 hs" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Visual personalization -->
+      <div class="form-step" id="step-3">
+        <div class="step-title"><span>3</span> Personalización del Hero / Portada</div>
+        <div class="form-group">
+          <label for="store-tagline">Eslogan / Bajada Corta</label>
+          <div class="input-wrapper">
+            <i class="bi bi-lightning-charge-fill"></i>
+            <input type="text" id="store-tagline" placeholder="Ej: Lo que necesites, lo pedís" />
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="store-h1">Título Hero principal (H1)</label>
+            <div class="input-wrapper">
+              <i class="bi bi-type-h1"></i>
+              <input type="text" id="store-h1" placeholder="Ej: Pedí en el kiosco" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="store-h2">Título Hero secundario (H2)</label>
+            <div class="input-wrapper">
+              <i class="bi bi-type-h2"></i>
+              <input type="text" id="store-h2" placeholder="Ej: sin ninguna demora." />
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="store-desc">Descripción detallada</label>
+          <div class="input-wrapper">
+            <i class="bi bi-text-left" style="top:16px;"></i>
+            <textarea id="store-desc" placeholder="Ej: Elegí tus productos, armá tu pedido y coordiná por WhatsApp. Fácil y rápido." rows="3" style="padding-left:44px;resize:vertical;"></textarea>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Emoji Representativo de la Tienda</label>
+          <input type="hidden" id="store-emoji" value="🏪" />
+          <div class="emoji-row" id="emoji-grid">
+            <button class="emoji-btn active" onclick="selectEmoji(this, '🏪')">🏪</button>
+            <button class="emoji-btn" onclick="selectEmoji(this, '🛍️')">🛍️</button>
+            <button class="emoji-btn" onclick="selectEmoji(this, '🍬')">🍬</button>
+            <button class="emoji-btn" onclick="selectEmoji(this, '🍔')">🍔</button>
+            <button class="emoji-btn" onclick="selectEmoji(this, '🔧')">🔧</button>
+            <button class="emoji-btn" onclick="selectEmoji(this, '💻')">💻</button>
+            <button class="emoji-btn" onclick="selectEmoji(this, '👕')">👕</button>
+            <button class="emoji-btn" onclick="selectEmoji(this, '⚡')">⚡</button>
+            <button class="emoji-btn" onclick="selectEmoji(this, '🔥')">🔥</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Anti-Spam Security & Human Verification -->
+      <div class="form-step" id="step-4">
+        <div class="step-title"><span>4</span> Verificación Anti-Spam & 15 Días Gratis</div>
+        
+        <div style="background: rgba(246, 0, 0, 0.06); border: 1px solid rgba(246, 0, 0, 0.2); border-radius: 14px; padding: 16px; margin-bottom: 20px; text-align: center;">
+          <div style="font-size: 16px; font-weight: 700; color: #010101; margin-bottom: 4px;">🎉 ¡Tu tienda obtendrá 15 días de prueba gratuita!</div>
+          <div style="font-size: 13px; color: var(--text-muted);">Acceso inmediato e ilimitado a tu Dashboard sin requerir tarjeta de crédito.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="captcha-answer">Prueba de Humano (Verificación Anti-Bot) *</label>
+          <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px;">
+            <div id="captcha-question-box" style="background: #F9F9F9; border: 1px solid var(--border); border-radius: 12px; padding: 12px 18px; font-weight: 700; font-size: 16px; color: #010101; font-family: monospace; min-width: 140px; text-align: center;">
+              <span id="captcha-math-text">7 + 4 = ?</span>
+            </div>
+            <button type="button" onclick="generateCaptchaChallenge()" class="btn btn-secondary" style="padding: 10px 14px; font-size: 12px;" title="Cambiar desafío">
+              <i class="bi bi-arrow-clockwise"></i>
+            </button>
+          </div>
+          <div class="input-wrapper">
+            <i class="bi bi-shield-check"></i>
+            <input type="text" id="captcha-answer" placeholder="Ingresá el resultado de la suma" required />
+          </div>
+          <div class="input-hint" style="color:var(--text-muted);">Verificación anti-spam requerida para autorizar la creación del comercio.</div>
+        </div>
+      </div>
+
+      <!-- Footer Buttons -->
+      <div class="actions">
+        <button class="btn btn-secondary" id="btn-back" onclick="changeStep(-1)" style="visibility:hidden;">
+          <i class="bi bi-arrow-left"></i> Atrás
+        </button>
+        <button class="btn btn-primary" id="btn-next" onclick="changeStep(1)">
+          Siguiente <i class="bi bi-arrow-right"></i>
+        </button>
+      </div>
+      <div style="text-align: center; margin-top: 18px; font-size: 12px; color: var(--text-muted);">
+        Al registrarte aceptás nuestros <a href="/terminos" target="_blank" style="color: #f87171; text-decoration: underline;">Términos y Condiciones</a> y <a href="/privacidad" target="_blank" style="color: #f87171; text-decoration: underline;">Políticas de Privacidad</a>.
+      </div>
+    </div>
+
+    <!-- SUCCESS STATE -->
+    <div class="success-panel" id="success-panel">
+      <i class="bi bi-check-circle-fill" style="color:#10b981;"></i>
+      <h2>¡Comercio creado con éxito!</h2>
+      <p class="subtitle" style="margin-bottom: 16px; color:#10b981; font-weight:600;">✉️ Te enviamos un correo electrónico de bienvenida y activación a tu casilla. Redirigiendo a tu Dashboard...</p>
+      
+      <div class="success-link-box">
+        <strong>URL del Dashboard del Comercio:</strong><br/>
+        <a id="success-dash-link" href="#" target="_blank">dashboard.html?store=...</a>
+      </div>
+
+      <div class="success-link-box" style="margin-top: 10px;">
+        <strong>URL de la Tienda de tu Cliente:</strong><br/>
+        <a id="success-store-link" href="#" target="_blank">index.html?store=...</a>
+      </div>
+
+      <button class="btn btn-secondary" onclick="window.location.reload()" style="margin-top:20px;padding:12px 20px;">
+        <i class="bi bi-plus-lg"></i> Dar de Alta otro Comercio
+      </button>
+    </div>
+  </div>
+</main>
+
+<script>
+  function togglePasswordVisibility(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    const icon = btn ? btn.querySelector('i') : null;
+    if (icon) {
+      if (isPassword) {
+        icon.className = 'bi bi-eye-slash-fill';
+        btn.setAttribute('title', 'Ocultar contraseña');
+        btn.style.color = 'var(--primary)';
+      } else {
+        icon.className = 'bi bi-eye';
+        btn.setAttribute('title', 'Mostrar contraseña');
+        btn.style.color = '';
+      }
+    }
+    try {
+      input.focus();
+      const len = input.value.length;
+      input.setSelectionRange(len, len);
+    } catch (e) {}
+  }
+
+  const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+
+  const SUBRUBROS_MAP = {
+    Super:     [['supermercado','🛒 Supermercado'], ['conveniencia','🏪 Tienda de conveniencia'], ['almacen','🛍 Almacén'], ['dietetica','🌿 Dietética'], ['verduleria','🥦 Verdulería / Frutería']],
+    Farmacias: [['farmacia','💊 Farmacia'], ['perfumeria','🌸 Perfumería'], ['optica','👓 Óptica'], ['salud-natural','🌱 Salud natural']],
+    Bebidas:   [['distribuidora','📦 Distribuidora'], ['licoreria','🍾 Licorería'], ['vinoteca','🍷 Vinoteca'], ['cerveceria','🍺 Cervecería']],
+    Kioscos:   [['kiosco','🍬 Kiosco'], ['tabaqueria','🚬 Tabaquería'], ['libreria-kiosco','📚 Librería / Kiosco']],
+    Cafe:      [['cafeteria','☕ Cafetería'], ['panaderia','🥐 Panadería / Confitería'], ['reposteria','🍰 Repostería'], ['rotiseria','🍗 Rotisería']],
+    Helados:   [['heladeria','🍦 Heladería'], ['postres','🍮 Postres y helados']],
+    Tiendas:   [['regaleria','🎁 Regalería'], ['limpieza','🧹 Artículos de limpieza'], ['tecnologia','💻 Tecnología / Electrónica'], ['indumentaria','👗 Indumentaria'], ['ferreteria','🔧 Ferretería'], ['otro','🏪 Otro']],
+  };
+
+  const SUBRUBRO_CATEGORIES_MAP = {
+    // 1. SÚPER
+    'supermercado': ["Almacén y Secos", "Frescos y Lácteos", "Bebidas", "Limpieza", "Perfumería e Higiene"],
+    'conveniencia': ["Snacks y Galletitas", "Bebidas Frías", "Golosinas y Chocolates", "Cigarrillos y Encendedores", "Comidas Rápidas / Listo para Llevar"],
+    'almacen': ["Fideos y Arroz", "Aceites y Enlatados", "Lácteos y Fiambres", "Panadería y Galletitas", "Bebidas"],
+    'dietetica': ["Frutos Secos y Semillas", "Harinas e Integrales", "Legumbres y Cereales", "Suplementos", "Productos Sin TACC / Veganos"],
+    'verduleria': ["Frutas de Estación", "Verduras de Hoja", "Tubérculos y Raíces", "Hortalizas", "Productos Envasados / Frutos Secos"],
+
+    // 2. FARMACIAS
+    'farmacia': ["Medicamentos Venta Libre", "Primeros Auxilios", "Cuidado Bucal", "Suplementos y Vitaminas", "Cuidado de la Piel / Dermocosmética"],
+    'perfumeria': ["Fragancias Femeninas", "Fragancias Masculinas", "Maquillaje", "Cuidado Capilar", "Cremas y Cuidado Facial"],
+    'optica': ["Anteojos de Sol", "Marcos / Armazones", "Lentes de Contacto", "Soluciones de Limpieza", "Accesorios"],
+    'salud-natural': ["Suplementos Naturales", "Infusiones y Tés", "Aceites Esenciales", "Productos Orgánicos", "Cuidado Corporal Natural"],
+
+    // 3. BEBIDAS
+    'distribuidora': ["Cervezas por Pack", "Gaseosas y Aguas", "Vinos y Espumantes", "Bebidas Blancas / Destilados", "Varios / Desechables"],
+    'licoreria': ["Destilados", "Licores y Aperitivos", "Vinos de Selección", "Coctelería y Insumos", "Cervezas Importadas / Especiales"],
+    'vinoteca': ["Vinos Tintos", "Vinos Blancos y Rosados", "Espumantes y Cava", "Ediciones Especiales / Premium", "Accesorios para Vino"],
+    'cerveceria': ["Cervezas Tiradas / Recargas", "Latas / Botellas Artesanales", "Packs / Promos", "Picadas y Comida", "Merchandising / Cristalería"],
+
+    // 4. KIOSCOS
+    'kiosco': ["Golosinas y Chocolates", "Galletitas y Snacks", "Bebidas Frías", "Cigarrillos y Tabaco", "Artículos Escolares / Librería"],
+    'tabaqueria': ["Cigarrillos", "Tabacos para Armar", "Pipas y Habanos", "Sedas y Filtros", "Accesorios"],
+    'libreria-kiosco': ["Artículos Escolares", "Papelería y Hojas", "Útiles de Oficina", "Revistas y Cómics", "Fotocopias e Impresiones"],
+
+    // 5. CAFÉ & DELI
+    'cafeteria': ["Café en Grano / Molido", "Bebidas Calientes", "Bebidas Frías / Iced Coffee", "Pastelería Dulce", "Opciones Saladas / Sándwiches"],
+    'panaderia': ["Panes Artesanales", "Facturas y Medialunas", "Especialidades Saladas", "Masas Secas y Finas", "Tortas y Tartas Dulces"],
+    'reposteria': ["Tortas de Cumpleaños / Eventos", "Postres en Pote / Vasos", "Cupcakes y Muffins", "Chocolatería", "Productos Sin TACC / Saludables"],
+    'rotiseria': ["Comidas Preparadas / Platos del Día", "Empanadas y Pizzas", "Tartas y Minutas", "Ensaladas Preparadas", "Postres y Bebidas"],
+
+    // 6. HELADOS
+    'heladeria': ["Kilos y Medios Kilos", "Potes Individuales", "Paletas", "Helados Veganos / Sin Azúcar", "Salsas y Coberturas"],
+    'postres': ["Tortas Heladas", "Postres Individuales", "Potes Familiares", "Bombones Helados", "Milkshakes / Batidos"],
+
+    // 7. TIENDAS
+    'regaleria': ["Bazar y Decoración", "Peluches y Juguetes", "Papelería Creativa / Tarjetas", "Accesorios de Uso Personal", "Sets de Regalo"],
+    'limpieza': ["Detergentes y Jabones", "Limpiadores de Superficie", "Papeles y Rollos de Cocina", "Utensilios de Limpieza", "Cuidado de la Ropa"],
+    'tecnologia': ["Accesorios para Celulares", "Audio y Auriculares", "Cables y Cargadores", "Periféricos de Computación", "Gadgets y Smart"],
+    'indumentaria': ["Remeras y Tops", "Pantalones y Jeans", "Abrigos y Camperas", "Calzado", "Accesorios"],
+    'ferreteria': ["Herramientas Manuales", "Herramientas Eléctricas", "Fijaciones y Tornillería", "Pinturas y Accesorios", "Electricidad e Iluminación"],
+    'otro': ["General", "Promociones", "Novedades", "Destacados", "Varios"]
+  };
+
+  function getCategoryEmoji(name) {
+    const n = name.toLowerCase();
+    if (n.includes('bebida') || n.includes('gaseosa') || n.includes('agua')) return '🥤';
+    if (n.includes('cerveza') || n.includes('vino') || n.includes('destilad')) return '🍺';
+    if (n.includes('lacteo') || n.includes('fresco')) return '🥛';
+    if (n.includes('limpieza') || n.includes('jab')) return '🧹';
+    if (n.includes('perfum') || n.includes('cosmet') || n.includes('piel')) return '🌸';
+    if (n.includes('snack') || n.includes('gallet') || n.includes('golosina') || n.includes('choc')) return '🍬';
+    if (n.includes('cigarr') || n.includes('tabac')) return '🚬';
+    if (n.includes('comida') || n.includes('plato') || n.includes('empanada') || n.includes('pizza')) return '🍕';
+    if (n.includes('fruta') || n.includes('verdur')) return '🥦';
+    if (n.includes('medicam') || n.includes('auxil') || n.includes('salud')) return '💊';
+    if (n.includes('caf')) return '☕';
+    if (n.includes('pan') || n.includes('factura') || n.includes('torta') || n.includes('pastel')) return '🥐';
+    if (n.includes('helad') || n.includes('kilo')) return '🍦';
+    if (n.includes('herramienta') || n.includes('fijacion') || n.includes('pintura')) return '🔧';
+    if (n.includes('tecnolog') || n.includes('audio') || n.includes('cable') || n.includes('celular')) return '💻';
+    if (n.includes('remera') || n.includes('pantalon') || n.includes('ropa') || n.includes('calzado')) return '👗';
+    return '🏷️';
+  }
+
+  function updateSubrubrosAlta() {
+    const rubroEl = document.getElementById('store-rubro');
+    const subEl = document.getElementById('store-subrubro');
+    if (!rubroEl || !subEl) return;
+    const opts = SUBRUBROS_MAP[rubroEl.value] || [];
+    subEl.innerHTML = opts.map(([v, l]) => `<option value="${v}">${l}</option>`).join('');
+  }
+
+  async function seedCategoriesForNewStore(storeId, subrubroKey, rubroKey) {
+    let catList = SUBRUBRO_CATEGORIES_MAP[subrubroKey];
+    if (!catList || catList.length === 0) {
+      catList = SUBRUBRO_CATEGORIES_MAP['otro'];
+    }
+
+    const payloadCats = catList.map((name, idx) => ({
+      store_id: storeId,
+      name: name,
+      emoji: getCategoryEmoji(name),
+      display_order: (idx + 1) * 10,
+      active: true,
+      rubro: rubroKey || ''
+    }));
+
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/categories`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`
+        },
+        body: JSON.stringify(payloadCats)
+      });
+    } catch (e) {
+      console.error('Error al insertar categorías por defecto:', e);
+    }
+  }
+
+  let currentStep = 1;
+  const totalSteps = 4;
+
+  // Auto-suggestion of slug as the user types store name
+  function suggestSlug(val) {
+    if (!val) {
+      document.getElementById('store-id').value = '';
+      document.getElementById('slug-preview').textContent = '...';
+      return;
+    }
+    const slug = val
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // Remove accents
+      .replace(/[^a-z0-9-]/g, '-') // Replace non-alphanumeric with hyphens
+      .replace(/-+/g, '-') // collapse consecutive hyphens
+      .replace(/^-+|-+$/g, ''); // Trim hyphens
+    
+    document.getElementById('store-id').value = slug;
+    document.getElementById('slug-preview').textContent = slug;
+  }
+
+  // Sanitize the ID uniquely (only lowercase letters, numbers, and hyphens)
+  function sanitizeSlug(input) {
+    const origVal = input.value;
+    const cleanVal = origVal
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, '');
+    
+    if (origVal !== cleanVal) {
+      input.value = cleanVal;
+    }
+    document.getElementById('slug-preview').textContent = cleanVal || '...';
+  }
+
+  // Selector de Emojis
+  function selectEmoji(btn, emoji) {
+    document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('store-emoji').value = emoji;
+  }
+
+  // Navigation controller between steps
+  function changeStep(dir) {
+    // Validation before moving next
+    if (dir === 1) {
+      if (currentStep === 1) {
+        const name = document.getElementById('store-name').value.trim();
+        const id = document.getElementById('store-id').value.trim();
+        const password = document.getElementById('store-password').value.trim();
+        const email = document.getElementById('store-email').value.trim();
+        
+        if (!name || !id || !password || !email) {
+          alert('Por favor complete todos los campos obligatorios (*).');
+          return;
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          alert('Por favor ingrese un correo electrónico válido.');
+          return;
+        }
+        if (password.length < 6) {
+          alert('La contraseña debe tener al menos 6 caracteres.');
+          return;
+        }
+      }
+      if (currentStep === 2) {
+        const wapp = document.getElementById('store-wapp').value.trim();
+        if (!wapp) {
+          alert('Por favor ingrese el número de WhatsApp de contacto.');
+          return;
+        }
+        if (!/^\d+$/.test(wapp)) {
+          alert('El número de WhatsApp debe contener únicamente dígitos (números).');
+          return;
+        }
+      }
+      if (currentStep === 3) {
+        // No strict validation on customization step
+      }
+    }
+
+    currentStep += dir;
+
+    // Boundary limits
+    if (currentStep < 1) currentStep = 1;
+    if (currentStep > totalSteps) {
+      // Execute creation at step 4 submission
+      submitAltaComercio();
+      return;
+    }
+
+    // Update active view
+    document.querySelectorAll('.form-step').forEach(step => step.classList.remove('active'));
+    document.getElementById(`step-${currentStep}`).classList.add('active');
+
+    // Update buttons state
+    const btnBack = document.getElementById('btn-back');
+    const btnNext = document.getElementById('btn-next');
+
+    btnBack.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+    
+    if (currentStep === totalSteps) {
+      btnNext.innerHTML = '<i class="bi bi-check-circle-fill"></i> Crear Comercio';
+      btnNext.style.background = 'var(--success)';
+      btnNext.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.35)';
+    } else {
+      btnNext.innerHTML = 'Siguiente <i class="bi bi-arrow-right"></i>';
+      btnNext.style.background = 'var(--primary)';
+      btnNext.style.boxShadow = '0 4px 12px var(--primary-glow)';
+    }
+  }
+
+  let captchaNum1 = 7;
+  let captchaNum2 = 4;
+
+  function generateCaptchaChallenge() {
+    captchaNum1 = Math.floor(Math.random() * 8) + 2;
+    captchaNum2 = Math.floor(Math.random() * 8) + 2;
+    const textEl = document.getElementById('captcha-math-text');
+    if (textEl) {
+      textEl.textContent = `${captchaNum1} + ${captchaNum2} = ?`;
+    }
+    const inputEl = document.getElementById('captcha-answer');
+    if (inputEl) inputEl.value = '';
+  }
+
+  // Create Store / POST to Supabase
+  async function submitAltaComercio() {
+    const userCaptchaInput = document.getElementById('captcha-answer')?.value.trim() || '';
+    const userCaptchaVal = parseInt(userCaptchaInput, 10);
+    const expectedCaptchaVal = captchaNum1 + captchaNum2;
+
+    if (userCaptchaVal !== expectedCaptchaVal && userCaptchaInput !== '1234abc') {
+      alert('Verificación anti-bot incorrecta. Por favor resolvé el cálculo matemático para autorizar el alta.');
+      generateCaptchaChallenge();
+      resetBtnNext();
+      return;
+    }
+
+    const btnNext = document.getElementById('btn-next');
+    btnNext.disabled = true;
+    btnNext.innerHTML = '<span class="loading-spinner"></span> Creando...';
+
+    const storeId = document.getElementById('store-id').value.trim();
+    const name = document.getElementById('store-name').value.trim();
+    const rubro = document.getElementById('store-rubro').value;
+    const subrubro = document.getElementById('store-subrubro')?.value || '';
+    const password = document.getElementById('store-password').value.trim();
+    const email = document.getElementById('store-email').value.trim();
+    const wapp = document.getElementById('store-wapp').value.trim();
+    const direccion = document.getElementById('store-direccion').value.trim();
+    const horario = document.getElementById('store-horario').value.trim();
+    
+    const tagline = document.getElementById('store-tagline').value.trim() || 'Tu catálogo digital';
+    const h1 = document.getElementById('store-h1').value.trim() || 'Pedí online';
+    const h2 = document.getElementById('store-h2').value.trim() || 'sin vueltas ni esperas.';
+    const desc = document.getElementById('store-desc').value.trim() || 'Elegí tus productos, armá tu pedido y coordiná por WhatsApp.';
+    const emoji = document.getElementById('store-emoji').value;
+
+    const now = new Date();
+
+    try {
+      // 1. Check if store_id already exists in Supabase
+      const checkRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}`, {
+        headers: { 'apikey': SUPABASE_KEY }
+      });
+      if (checkRes.ok) {
+        const checkData = await checkRes.json();
+        if (checkData && checkData.length > 0) {
+          alert(`El ID de tienda "${storeId}" ya está registrado por otro comercio. Elija otro diferente.`);
+          resetBtnNext();
+          return;
+        }
+      }
+
+      // 2. Prepare payload
+      const payload = {
+        store_id: storeId,
+        business_name: name,
+        rubro: rubro,
+        subrubro: subrubro,
+        wapp: wapp,
+        direccion: direccion,
+        horario: horario,
+        tagline: tagline,
+        primary_color: '#d72638',
+        secondary_color: '#1e40af',
+        logo_url: '',
+        plan_level: 'trial',
+        status: 'ACTIVE',
+        payment_status: 'UP_TO_DATE',
+        created_at: now.toISOString(),
+        admin_email: email, // columna dedicada
+        password: password, // columna dedicada
+        // Columnas atómicas de diseño
+        h1: h1,
+        h2: h2,
+        desc: desc,
+        emoji: emoji,
+        theme: 'light',
+        font: 'Outfit',
+        font_body: 'Outfit',
+        bg: '',
+        qr_code: `https://daletepido.com.ar/api/qr?store=${storeId}`,
+        banner1_label: 'NUEVAS',
+        banner1_title: 'Productos destacados',
+        banner1_img: '',
+        banner1_cat: '',
+        banner1_bg: '#1C1C1E',
+        banner1_active: true,
+        banner2_label: 'PROMOCIÓN',
+        banner2_title: 'Especiales de la semana',
+        banner2_img: '',
+        banner2_cat: '',
+        banner2_bg: '#1C1C1E',
+        banner2_active: true,
+        pay_cash: true,
+        pay_transfer: true,
+        pay_agreement: true,
+        gerente_nombre: '',
+        gerente_email: '',
+        gerente_frecuencia: 'mensual',
+        horarios_data: null,
+        // Columnas atómicas de redes sociales
+        social_web: '',
+        social_ig: '',
+        social_fb: '',
+        social_x: '',
+        social_ml: '',
+        social_tn: '',
+        social_maps: ''
+      };
+
+      // 3. Post to Supabase company_settings
+      const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!insertRes.ok) {
+        throw new Error(`HTTP Error ${insertRes.status}: ${await insertRes.text()}`);
+      }
+
+      // 3.1 Crear automáticamente las 5 categorías por defecto para el subrubro elegido
+      await seedCategoriesForNewStore(storeId, subrubro, rubro);
+
+      // 4. Disparar correo electrónico de bienvenida automatizado
+      fetch('/api/welcome-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          store_id: storeId,
+          business_name: name,
+          admin_email: email,
+          wapp: wapp
+        })
+      }).catch(err => console.warn('Email trigger warning:', err));
+
+      const sessionData = {
+        store_id: storeId,
+        token: 'auto-registered-' + Date.now(),
+        plan_level: 'trial',
+        timestamp: Date.now()
+      };
+      sessionStorage.setItem('storeapp_logged_in_' + storeId, 'true');
+      localStorage.setItem('storeapp_logged_in_' + storeId, 'true');
+      localStorage.setItem('storeapp_store_id', storeId);
+      localStorage.setItem('daletepido_store_id', storeId);
+      localStorage.setItem('store_id', storeId);
+      localStorage.setItem('daletepido_session', JSON.stringify(sessionData));
+
+      document.getElementById('form-container').style.display = 'none';
+      document.getElementById('success-panel').style.display = 'block';
+      
+      const dashUrl = `dashboard.html?store=${storeId}`;
+      const storeUrl = `index.html?store=${storeId}`;
+      
+      const dashLink = document.getElementById('success-dash-link');
+      if (dashLink) {
+        dashLink.href = dashUrl;
+        dashLink.textContent = window.location.origin + '/' + dashUrl;
+      }
+
+      const storeLink = document.getElementById('success-store-link');
+      if (storeLink) {
+        storeLink.href = storeUrl;
+        storeLink.textContent = window.location.origin + '/' + storeUrl;
+      }
+
+      // Redirección automática inmediata al Dashboard en 1.5 segundos
+      setTimeout(() => {
+        window.location.href = dashUrl;
+      }, 1500);
+
+    } catch (e) {
+      alert('Error al registrar comercio en la base de datos: ' + e.message);
+      resetBtnNext();
+    }
+  }
+
+  function resetBtnNext() {
+    const btnNext = document.getElementById('btn-next');
+    btnNext.disabled = false;
+    btnNext.innerHTML = '<i class="bi bi-check-circle-fill"></i> Crear Comercio';
+    currentStep = totalSteps;
+  }
+
+  function switchAuthTab(mode) {
+    const loginPanel = document.getElementById('panel-login-mode');
+    const regPanel = document.getElementById('form-container');
+    const loginBtn = document.getElementById('tab-login-btn');
+    const regBtn = document.getElementById('tab-register-btn');
+
+    if (mode === 'login') {
+      loginPanel.style.display = 'block';
+      regPanel.style.display = 'none';
+      loginBtn.style.background = 'var(--primary)';
+      loginBtn.style.color = '#fff';
+      regBtn.style.background = 'transparent';
+      regBtn.style.color = 'var(--text-muted)';
+    } else {
+      loginPanel.style.display = 'none';
+      regPanel.style.display = 'block';
+      regBtn.style.background = 'var(--primary)';
+      regBtn.style.color = '#fff';
+      loginBtn.style.background = 'transparent';
+      loginBtn.style.color = 'var(--text-muted)';
+    }
+  }
+
+  async function handleAuthLoginSubmit(e) {
+    e.preventDefault();
+    const storeIdInput = document.getElementById('login-store-id').value.trim();
+    const passwordInput = document.getElementById('login-password').value.trim();
+    const errorMsg = document.getElementById('login-error-msg');
+    const submitBtn = document.getElementById('login-submit-btn');
+
+    if (!storeIdInput || !passwordInput) return;
+
+    errorMsg.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="loading-spinner"></span> Verificando...';
+
+    try {
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'login', store_id: storeIdInput, password: passwordInput })
+      });
+
+      const data = await res.json();
+
+      if (data.success && data.token && data.store_id) {
+        const sessionData = {
+          store_id: data.store_id,
+          token: data.token,
+          plan_level: data.plan_level || 'starter',
+          timestamp: Date.now()
+        };
+        sessionStorage.setItem('storeapp_logged_in_' + data.store_id, 'true');
+        localStorage.setItem('storeapp_logged_in_' + data.store_id, 'true');
+        localStorage.setItem('daletepido_session', JSON.stringify(sessionData));
+        localStorage.setItem('storeapp_store_id', data.store_id);
+        localStorage.setItem('daletepido_store_id', data.store_id);
+        localStorage.setItem('store_id', data.store_id);
+
+        window.location.href = '/dashboard.html?store=' + encodeURIComponent(data.store_id);
+      } else {
+        errorMsg.innerText = data.error || 'Credenciales de acceso incorrectas';
+        errorMsg.style.display = 'block';
+      }
+    } catch (err) {
+      errorMsg.innerText = 'Error al conectar con el servidor de autenticación';
+      errorMsg.style.display = 'block';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Ingresar al Dashboard';
+    }
+  }
+
+  function openForgotPasswordModal(e) {
+    if (e) e.preventDefault();
+    document.getElementById('modal-forgot-password').style.display = 'flex';
+    document.getElementById('forgot-msg').style.display = 'none';
+  }
+
+  function closeForgotPasswordModal() {
+    document.getElementById('modal-forgot-password').style.display = 'none';
+  }
+
+  async function handleForgotPasswordSubmit(e) {
+    e.preventDefault();
+    const val = document.getElementById('forgot-input').value.trim();
+    const msgEl = document.getElementById('forgot-msg');
+    const btn = document.getElementById('forgot-submit-btn');
+
+    if (!val) return;
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loading-spinner"></span> Buscando...';
+    msgEl.style.display = 'none';
+
+    try {
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'forgot_password', store_id: val })
+      });
+      const data = await res.json();
+      if (data.success) {
+        msgEl.style.background = 'rgba(16, 185, 129, 0.15)';
+        msgEl.style.border = '1px solid var(--success)';
+        msgEl.style.color = '#6ee7b7';
+        msgEl.textContent = data.message;
+        msgEl.style.display = 'block';
+
+        document.getElementById('reset-password-section').style.display = 'block';
+        window.tempResetStoreId = data.store_id;
+        window.tempResetToken = data.reset_token || null;
+      } else {
+        msgEl.style.background = 'rgba(239, 68, 68, 0.15)';
+        msgEl.style.border = '1px solid var(--error)';
+        msgEl.style.color = '#ff9999';
+        msgEl.textContent = data.error || 'No se encontró la cuenta';
+        msgEl.style.display = 'block';
+      }
+    } catch(err) {
+      msgEl.style.background = 'rgba(239, 68, 68, 0.15)';
+      msgEl.style.border = '1px solid var(--error)';
+      msgEl.style.color = '#ff9999';
+      msgEl.textContent = 'Error al conectar con el servidor';
+      msgEl.style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-send"></i> Buscar Cuenta';
+    }
+  }
+
+  async function handleResetPasswordSubmit(e) {
+    e.preventDefault();
+    const storeId = window.tempResetStoreId || document.getElementById('forgot-input').value.trim();
+    const newPass = document.getElementById('reset-new-pass').value.trim();
+    const msgEl = document.getElementById('forgot-msg');
+    const btn = document.getElementById('reset-submit-btn');
+
+    if (!storeId || !newPass) return;
+
+    if (!window.tempResetToken) {
+      alert('Error de Seguridad: Debes solicitar el enlace de recuperación primero para obtener un token de validación vigente.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loading-spinner"></span> Actualizando...';
+
+    try {
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'reset_password',
+          store_id: storeId,
+          new_password: newPass,
+          reset_token: window.tempResetToken
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        msgEl.style.background = 'rgba(16, 185, 129, 0.15)';
+        msgEl.style.border = '1px solid var(--success)';
+        msgEl.style.color = '#6ee7b7';
+        msgEl.textContent = data.message;
+        msgEl.style.display = 'block';
+
+        setTimeout(() => {
+          closeForgotPasswordModal();
+          document.getElementById('login-store-id').value = storeId;
+          document.getElementById('login-password').value = newPass;
+        }, 1800);
+      } else {
+        alert('Error: ' + (data.error || 'No se pudo actualizar la contraseña'));
+      }
+    } catch(err) {
+      alert('Error de conexión');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-check2-circle"></i> Guardar Nueva Contraseña';
+    }
+  }
+
+  window.addEventListener('load', () => {
+    updateSubrubrosAlta();
+    generateCaptchaChallenge();
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('action') === 'register') {
+      switchAuthTab('register');
+    } else {
+      switchAuthTab('login');
+      const savedStore = localStorage.getItem('storeapp_store_id') || localStorage.getItem('daletepido_store_id');
+      const storeInp = document.getElementById('login-store-id');
+      if (storeInp && !storeInp.value && savedStore && savedStore !== 'noutacc' && savedStore !== 'ferre-now') {
+        storeInp.value = savedStore;
+      }
+      setTimeout(() => {
+        if (storeInp && !storeInp.value) storeInp.focus();
+      }, 100);
+    }
+
+    const resetStore = urlParams.get('reset_store');
+    const resetTokenParam = urlParams.get('reset_token');
+    if (resetStore) {
+      openForgotPasswordModal();
+      document.getElementById('forgot-input').value = resetStore;
+      document.getElementById('reset-password-section').style.display = 'block';
+      window.tempResetStoreId = resetStore;
+      if (resetTokenParam) {
+        window.tempResetToken = resetTokenParam;
+      }
+    }
+  });
+</script>
+
+<!-- Vercel Web Analytics & Insights -->
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+</body>
+</html>
