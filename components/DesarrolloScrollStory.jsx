@@ -32,7 +32,7 @@ const SCENES = [
     videoSrc: "/videos/daletepido-motion/renders/daletepido_15s_promo.mp4",
     posterSrc: "/img/jaime/jaime-pensando.png",
     fallbackAlt: "Jaime ideando Dale!TePido en su libreta",
-    centerCoords: { x: 1480, y: 540 },
+    centerCoords: { x: 1666, y: 536 },
   },
   {
     id: "tecnologias",
@@ -55,7 +55,7 @@ const SCENES = [
     videoSrc: "/videos/daletepido-motion/renders/test.mp4",
     posterSrc: "/img/jaime/jaime-resolucion.png",
     fallbackAlt: "Desarrollo ágil de Dale!TePido con código de alta velocidad",
-    centerCoords: { x: 440, y: 540 },
+    centerCoords: { x: 369, y: 530 },
   },
   {
     id: "territorio",
@@ -78,7 +78,7 @@ const SCENES = [
     videoSrc: "/videos/daletepido-motion/renders/daletepido_30s_promo.mp4",
     posterSrc: "/img/kit-imprimible-mostrador.jpg",
     fallbackAlt: "Kit QR de mostrador Dale!TePido en comercios de barrio",
-    centerCoords: { x: 1480, y: 540 },
+    centerCoords: { x: 1650, y: 530 },
   },
   {
     id: "solidez",
@@ -101,7 +101,7 @@ const SCENES = [
     videoSrc: "/videos/daletepido-motion/renders/daletepido_promo.mp4",
     posterSrc: "/img/jaime/jaime-buenaonda.png",
     fallbackAlt: "Arquitectura segura y blindaje criptográfico de Dale!TePido",
-    centerCoords: { x: 440, y: 540 },
+    centerCoords: { x: 327, y: 526 },
   },
   {
     id: "futuro",
@@ -124,7 +124,7 @@ const SCENES = [
     videoSrc: "/videos/daletepido-motion/renders/daletepido_15s_promo.mp4",
     posterSrc: "/img/jaime/jaime-alegria.png",
     fallbackAlt: "Visión a futuro de Dale!TePido con Jaime celebrando la evolución",
-    centerCoords: { x: 1200, y: 540 },
+    centerCoords: { x: 1671, y: 530 },
   },
 ];
 
@@ -456,9 +456,9 @@ export default function DesarrolloScrollStory() {
               className="absolute inset-0 w-full h-full transition-opacity duration-300"
               style={{ zIndex: 2 }}
             >
-              {/* Video en Full Size cubriendo toda la pantalla */}
+              {/* Video en Full Size cubriendo toda la pantalla, escalado ligeramente para fundir en blanco puro */}
               <video
-                className="w-full h-full object-cover object-center"
+                className="w-full h-full object-cover object-center transform scale-110 sm:scale-115 origin-center"
                 autoPlay
                 muted
                 loop
@@ -488,23 +488,13 @@ export default function DesarrolloScrollStory() {
                     : "bg-gradient-to-l from-[#FFFFFF]/95 via-[#FFFFFF]/80 sm:via-[#FFFFFF]/50 to-transparent"
                 }`}
               />
-
-              {/* Badge superior sutil flotante */}
-              <div
-                className={`hidden sm:flex absolute top-20 ${
-                  isTextLeft ? "right-8" : "left-8"
-                } z-20 items-center gap-2 px-3 py-1.5 rounded-full bg-[#FFFFFF]/85 backdrop-blur-md border border-[#010101]/10 text-[11px] font-mono font-bold tracking-wider text-[#010101] shadow-sm`}
-              >
-                <span className="w-2 h-2 rounded-full bg-[#F60000] animate-pulse" />
-                <span>{scene.videoLabel}</span>
-              </div>
             </div>
           );
         })}
 
         {/* ============================================================== */}
         {/* CAPA SVG INTERMEDIA (viewBox 0 0 1920 1080)                    */}
-        {/* Siluetas en trazo limpio (#010101) + Líneas conductoras #F60000 */}
+        {/* Siluetas vectoriales exactas del usuario + Acento Rojo #F60000 */}
         {/* ============================================================== */}
         <svg
           ref={svgRef}
@@ -516,267 +506,159 @@ export default function DesarrolloScrollStory() {
           <defs>
             {/* Glow sutil para la línea conductora roja #F60000 */}
             <filter id="red-line-glow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="5" result="blur" />
+              <feGaussianBlur stdDeviation="6" result="blur" />
               <feMerge>
                 <feMergeNode in="blur" />
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
-
-            {/* Gradiente sutil para trazos de siluetas */}
-            <linearGradient id="stroke-dark" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#010101" />
-              <stop offset="100%" stopColor="#222222" />
-            </linearGradient>
           </defs>
 
           {/* ------------------------------------------------------------ */}
           {/* LÍNEAS CONECTORAS DINÁMICAS (Acento Rojo #F60000)             */}
-          {/* Viajan horizontalmente de margen a margen al scrollear       */}
+          {/* Viajan horizontalmente de personaje a personaje al scrollear */}
           {/* ------------------------------------------------------------ */}
-          {/* Línea 1 -> 2: De Margen Derecho (x:1480) a Margen Izquierdo (x:440) */}
+          {/* Línea 1 -> 2: De Margen Derecho (x:1666, y:536) a Margen Izquierdo (x:369, y:530) */}
           <path
             ref={(el) => (lineRefs.current[0] = el)}
-            d="M 1480 540 C 1120 740, 840 340, 440 540"
+            d="M 1666 536 C 1250 750, 750 320, 369 530"
             fill="none"
             stroke="#F60000"
-            strokeWidth="4"
+            strokeWidth="4.5"
             strokeLinecap="round"
             filter="url(#red-line-glow)"
           />
 
-          {/* Línea 2 -> 3: De Margen Izquierdo (x:440) a Margen Derecho (x:1480) */}
+          {/* Línea 2 -> 3: De Margen Izquierdo (x:369, y:530) a Margen Derecho (x:1650, y:530) */}
           <path
             ref={(el) => (lineRefs.current[1] = el)}
-            d="M 440 540 C 800 780, 1160 300, 1480 540"
+            d="M 369 530 C 760 760, 1250 300, 1650 530"
             fill="none"
             stroke="#F60000"
-            strokeWidth="4"
+            strokeWidth="4.5"
             strokeLinecap="round"
             filter="url(#red-line-glow)"
           />
 
-          {/* Línea 3 -> 4: De Margen Derecho (x:1480) a Margen Izquierdo (x:440) */}
+          {/* Línea 3 -> 4: De Margen Derecho (x:1650, y:530) a Margen Izquierdo (x:327, y:526) */}
           <path
             ref={(el) => (lineRefs.current[2] = el)}
-            d="M 1480 540 C 1140 760, 800 320, 440 540"
+            d="M 1650 530 C 1220 760, 750 300, 327 526"
             fill="none"
             stroke="#F60000"
-            strokeWidth="4"
+            strokeWidth="4.5"
             strokeLinecap="round"
             filter="url(#red-line-glow)"
           />
 
-          {/* Línea 4 -> 5: De Margen Izquierdo (x:440) a Centro-Derecho (x:1200) */}
+          {/* Línea 4 -> 5: De Margen Izquierdo (x:327, y:526) a Margen Derecho (x:1671, y:530) */}
           <path
             ref={(el) => (lineRefs.current[3] = el)}
-            d="M 440 540 C 680 720, 960 360, 1200 540"
+            d="M 327 526 C 750 750, 1250 310, 1671 530"
             fill="none"
             stroke="#F60000"
-            strokeWidth="4"
+            strokeWidth="4.5"
             strokeLinecap="round"
             filter="url(#red-line-glow)"
           />
 
           {/* ------------------------------------------------------------ */}
-          {/* SILUETAS EN TRAZOS LIMPIOS (stroke="#010101" strokeWidth="2") */}
-          {/* Una por cada escena / postura de Jaime y el ecosistema       */}
+          {/* SILUETAS VECTORIALES EXACTAS PROVISTAS POR EL USUARIO        */}
           {/* ------------------------------------------------------------ */}
 
-          {/* Silueta 1: Escena 1 (Margen derecho x:1480, y:540) - Libreta de ideas */}
+          {/* Silueta 1: Escena 1 (Vector exacto - Libreta en Margen Derecho x:1666, y:536) */}
           <g
             ref={(el) => (silhouetteRefs.current[0] = el)}
             id="silhouette-1-origen"
-            transform="translate(1480, 540)"
             className="transition-opacity duration-300"
+            opacity="0"
           >
-            {/* Círculo guía de fondo */}
-            <circle
-              cx="0"
-              cy="0"
-              r="170"
-              fill="rgba(1,1,1,0.015)"
-              stroke="#010101"
-              strokeWidth="1.5"
-              strokeDasharray="6 6"
+            <image
+              href="/img/silhouettes/silueta-01.svg"
+              x="0"
+              y="0"
+              width="1920"
+              height="1080"
+              preserveAspectRatio="xMidYMid slice"
             />
-            {/* Silueta: Figura sentada pensando con libreta de bocetos */}
-            <g stroke="#010101" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none">
-              {/* Cabeza y rostro de concentración */}
-              <circle cx="-15" cy="-75" r="28" />
-              <path d="M -15 -47 Q -15 -25 -5 -10" />
-              {/* Torso inclinado hacia libreta */}
-              <path d="M -5 -10 Q 15 25 -5 65" />
-              {/* Brazo izquierdo sosteniendo libreta */}
-              <path d="M 0 5 L -35 30 L -15 50" />
-              {/* Brazo derecho con lápiz anotando */}
-              <path d="M 5 10 L 35 30 L 10 50" />
-              {/* Libreta abierta */}
-              <polygon points="-25,45 0,40 25,45 15,80 -10,75 -35,80" />
-              <line x1="-1" y1="40" x2="-1" y2="76" stroke="#F60000" strokeWidth="2" />
-              {/* Líneas de escritura / notas */}
-              <line x1="-18" y1="52" x2="-6" y2="52" strokeWidth="1.5" />
-              <line x1="-18" y1="60" x2="-6" y2="60" strokeWidth="1.5" />
-              <line x1="6" y1="52" x2="18" y2="52" strokeWidth="1.5" />
-              <line x1="6" y1="60" x2="18" y2="60" strokeWidth="1.5" />
-              {/* Bombilla de idea / génesis arriba */}
-              <path d="M 35 -90 C 25 -90, 25 -75, 30 -65 L 30 -58 L 40 -58 L 40 -65 C 45 -75, 45 -90, 35 -90 Z" stroke="#F60000" />
-              <line x1="32" y1="-55" x2="38" y2="-55" stroke="#F60000" />
-              <line x1="35" y1="-100" x2="35" y2="-95" stroke="#F60000" />
-              <line x1="50" y1="-85" x2="45" y2="-82" stroke="#F60000" />
-              <line x1="20" y1="-85" x2="25" y2="-82" stroke="#F60000" />
-            </g>
+            <circle cx="1666" cy="536" r="22" fill="none" stroke="#F60000" strokeWidth="1.5" strokeDasharray="4 4" opacity="0.7" />
+            <circle cx="1666" cy="536" r="5" fill="#F60000" />
           </g>
 
-          {/* Silueta 2: Escena 2 (Margen izquierdo x:440, y:540) - Laptop / Código */}
+          {/* Silueta 2: Escena 2 (Vector exacto - Laptop en Margen Izquierdo x:369, y:530) */}
           <g
             ref={(el) => (silhouetteRefs.current[1] = el)}
             id="silhouette-2-tecnologias"
-            transform="translate(440, 540)"
             className="transition-opacity duration-300"
+            opacity="0"
           >
-            <circle
-              cx="0"
-              cy="0"
-              r="170"
-              fill="rgba(1,1,1,0.015)"
-              stroke="#010101"
-              strokeWidth="1.5"
-              strokeDasharray="6 6"
+            <image
+              href="/img/silhouettes/silueta-02.svg"
+              x="0"
+              y="0"
+              width="1920"
+              height="1080"
+              preserveAspectRatio="xMidYMid slice"
             />
-            {/* Silueta: Programador en postura ágil con laptop y brackets */}
-            <g stroke="#010101" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none">
-              {/* Cabeza erguida y audífonos / foco */}
-              <circle cx="0" cy="-75" r="28" />
-              <path d="M -28 -75 C -28 -95, 28 -95, 28 -75" stroke="#F60000" strokeWidth="2" />
-              {/* Torso */}
-              <path d="M 0 -47 L 0 35" />
-              {/* Brazos tecleando */}
-              <path d="M 0 -20 L -35 10 L -15 35" />
-              <path d="M 0 -20 L 35 10 L 15 35" />
-              {/* Laptop abierta */}
-              <line x1="-50" y1="45" x2="50" y2="45" strokeWidth="3" />
-              <polygon points="-40,45 -30,0 30,0 40,45" />
-              {/* Bracket de código en la pantalla < / > */}
-              <path d="M -15 15 L -22 22 L -15 30" stroke="#F60000" strokeWidth="2" />
-              <path d="M 15 15 L 22 22 L 15 30" stroke="#F60000" strokeWidth="2" />
-              <line x1="-3" y1="30" x2="3" y2="15" stroke="#010101" strokeWidth="2" />
-              {/* Rayo de velocidad / Edge runtime */}
-              <polygon points="75,-50 60,-25 72,-25 58,5 90,-20 75,-20" fill="none" stroke="#F60000" strokeWidth="2" />
-            </g>
+            <circle cx="369" cy="530" r="22" fill="none" stroke="#F60000" strokeWidth="1.5" strokeDasharray="4 4" opacity="0.7" />
+            <circle cx="369" cy="530" r="5" fill="#F60000" />
           </g>
 
-          {/* Silueta 3: Escena 3 (Margen derecho x:1480, y:540) - Kit QR en mostrador */}
+          {/* Silueta 3: Escena 3 (Vector exacto - Mostrador en Margen Derecho x:1650, y:530) */}
           <g
             ref={(el) => (silhouetteRefs.current[2] = el)}
             id="silhouette-3-territorio"
-            transform="translate(1480, 540)"
             className="transition-opacity duration-300"
+            opacity="0"
           >
-            <circle
-              cx="0"
-              cy="0"
-              r="170"
-              fill="rgba(1,1,1,0.015)"
-              stroke="#010101"
-              strokeWidth="1.5"
-              strokeDasharray="6 6"
+            <image
+              href="/img/silhouettes/silueta-03.svg"
+              x="0"
+              y="0"
+              width="1920"
+              height="1080"
+              preserveAspectRatio="xMidYMid slice"
             />
-            {/* Silueta: Mostrador barrial, exhibidor acrílico con código QR y teléfono escaneando */}
-            <g stroke="#010101" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none">
-              {/* Línea horizontal del mostrador de madera */}
-              <line x1="-120" y1="55" x2="120" y2="55" strokeWidth="3.5" />
-              {/* Soporte / Exhibidor Acrílico del Kit QR */}
-              <polygon points="-50,55 -35,-35 35,-35 50,55" />
-              <line x1="-30" y1="45" x2="30" y2="45" strokeWidth="2" />
-              {/* Patrón de Código QR central */}
-              <rect x="-22" y="-20" width="44" height="44" strokeWidth="2" />
-              {/* Mini cuadrados en esquinas del QR */}
-              <rect x="-18" y="-16" width="12" height="12" stroke="#F60000" strokeWidth="1.8" />
-              <rect x="6" y="-16" width="12" height="12" stroke="#F60000" strokeWidth="1.8" />
-              <rect x="-18" y="8" width="12" height="12" stroke="#F60000" strokeWidth="1.8" />
-              <rect x="8" y="10" width="8" height="8" fill="#010101" />
-              {/* Mano sosteniendo smartphone que escanea */}
-              <rect x="-95" y="-60" width="34" height="60" rx="4" />
-              <line x1="-85" y1="-54" x2="-71" y2="-54" strokeWidth="1.5" />
-              {/* Haz láser de escaneo rojo */}
-              <line x1="-61" y1="-30" x2="-25" y2="-10" stroke="#F60000" strokeWidth="2" strokeDasharray="3 3" />
-            </g>
+            <circle cx="1650" cy="530" r="22" fill="none" stroke="#F60000" strokeWidth="1.5" strokeDasharray="4 4" opacity="0.7" />
+            <circle cx="1650" cy="530" r="5" fill="#F60000" />
           </g>
 
-          {/* Silueta 4: Escena 4 (Margen izquierdo x:440, y:540) - Postura erguida de seguridad */}
+          {/* Silueta 4: Escena 4 (Vector exacto - Seguridad en Margen Izquierdo x:327, y:526) */}
           <g
             ref={(el) => (silhouetteRefs.current[3] = el)}
             id="silhouette-4-solidez"
-            transform="translate(440, 540)"
             className="transition-opacity duration-300"
+            opacity="0"
           >
-            <circle
-              cx="0"
-              cy="0"
-              r="170"
-              fill="rgba(1,1,1,0.015)"
-              stroke="#010101"
-              strokeWidth="1.5"
-              strokeDasharray="6 6"
+            <image
+              href="/img/silhouettes/silueta-04.svg"
+              x="0"
+              y="0"
+              width="1920"
+              height="1080"
+              preserveAspectRatio="xMidYMid slice"
             />
-            {/* Silueta: Postura erguida de guardián de seguridad con escudo y candado RLS */}
-            <g stroke="#010101" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none">
-              {/* Cabeza firme erguida */}
-              <circle cx="0" cy="-80" r="28" />
-              {/* Hombros anchos y postura vertical */}
-              <path d="M -45 -35 Q 0 -45 45 -35" />
-              <path d="M 0 -45 L 0 55" />
-              {/* Escudo emblemático en el pecho */}
-              <path
-                d="M 0 -25 L 35 -10 L 35 25 C 35 55, 0 75, 0 75 C 0 75, -35 55, -35 25 L -35 -10 Z"
-                stroke="#F60000"
-                strokeWidth="2.5"
-              />
-              {/* Candado criptográfico central */}
-              <rect x="-14" y="10" width="28" height="22" rx="3" stroke="#010101" strokeWidth="2" />
-              <path d="M -8 10 L -8 0 C -8 -6, 8 -6, 8 0 L 8 10" stroke="#010101" strokeWidth="2" />
-              <circle cx="0" cy="20" r="2.5" fill="#F60000" />
-              {/* Llaves y anillos concéntricos de RLS */}
-              <circle cx="0" cy="0" r="110" stroke="#010101" strokeWidth="1" strokeDasharray="4 8" />
-              <circle cx="0" cy="0" r="135" stroke="#F60000" strokeWidth="1" strokeDasharray="2 6" />
-            </g>
+            <circle cx="327" cy="526" r="22" fill="none" stroke="#F60000" strokeWidth="1.5" strokeDasharray="4 4" opacity="0.7" />
+            <circle cx="327" cy="526" r="5" fill="#F60000" />
           </g>
 
-          {/* Silueta 5: Escena 5 (Centro-Derecho x:1200, y:540) - Visión a futuro */}
+          {/* Silueta 5: Escena 5 (Vector exacto - Visión a futuro en Margen Derecho x:1671, y:530) */}
           <g
             ref={(el) => (silhouetteRefs.current[4] = el)}
             id="silhouette-5-futuro"
-            transform="translate(1200, 540)"
             className="transition-opacity duration-300"
+            opacity="0"
           >
-            <circle
-              cx="0"
-              cy="0"
-              r="170"
-              fill="rgba(1,1,1,0.015)"
-              stroke="#010101"
-              strokeWidth="1.5"
-              strokeDasharray="6 6"
+            <image
+              href="/img/silhouettes/silueta-05.svg"
+              x="0"
+              y="0"
+              width="1920"
+              height="1080"
+              preserveAspectRatio="xMidYMid slice"
             />
-            {/* Silueta: Postura mirando al horizonte hacia arriba, cohete/trayectoria ascendente */}
-            <g stroke="#010101" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none">
-              {/* Cabeza mirando hacia arriba y adelante */}
-              <circle cx="-15" cy="-70" r="28" />
-              {/* Brazo señalando hacia el futuro superior derecho */}
-              <path d="M -10 -35 L 35 -60 L 70 -95" stroke="#F60000" strokeWidth="3" />
-              <polygon points="68,-102 80,-97 73,-85" fill="#F60000" />
-              {/* Torso y postura triunfal */}
-              <path d="M -15 -42 L -10 45" />
-              <path d="M -10 45 L -35 95" />
-              <path d="M -10 45 L 20 95" />
-              {/* Arco orbital de crecimiento exponencial */}
-              <path d="M -100 70 Q 0 -40, 110 -110" stroke="#F60000" strokeWidth="2" strokeDasharray="5 5" />
-              {/* Destellos de innovación / IA */}
-              <path d="M 90 -50 L 98 -50 M 94 -54 L 94 -46" stroke="#010101" strokeWidth="2" />
-              <path d="M -60 -100 L -52 -100 M -56 -104 L -56 -96" stroke="#F60000" strokeWidth="2" />
-              <polygon points="120,-80 123,-73 130,-70 123,-67 120,-60 117,-67 110,-70 117,-73" fill="none" stroke="#010101" strokeWidth="1.5" />
-            </g>
+            <circle cx="1671" cy="530" r="22" fill="none" stroke="#F60000" strokeWidth="1.5" strokeDasharray="4 4" opacity="0.7" />
+            <circle cx="1671" cy="530" r="5" fill="#F60000" />
           </g>
         </svg>
       </div>

@@ -1033,14 +1033,14 @@
           <div class="card card-accent-red" style="border-left: 3px solid #F60000;">
             <div class="card-title" style="color:#F60000;"><i class="bi bi-layers-fill"></i> Arquitectura Visual en 3 Capas</div>
             <div class="card-text">
-              <strong>1. Capa Fija de Fondo:</strong> 5 reproductores de video 16:9 en márgenes laterales alternados (right-8, left-8, right-8, left-8, right-1/4).<br>
-              <strong>2. Capa SVG Intermedia:</strong> Siluetas en trazos (#010101) y conectoras dinámicas con acento Rojo #F60000.<br>
-              <strong>3. Capa Delantera:</strong> 5 secciones con texto editorial en el margen opuesto al video.
+              <strong>1. Capa Fija de Fondo:</strong> 5 videos WebM full size con fondo blanco, escalados (scale-110) para fundir sin bordes y sin etiquetas superpuestas.<br>
+              <strong>2. Capa SVG Intermedia:</strong> 5 siluetas vectoriales SVG exactas del usuario (silueta-01 a silueta-05) y líneas conectoras dinámicas #F60000.<br>
+              <strong>3. Capa Delantera:</strong> 5 secciones editoriales con tipografía Poppins en el margen opuesto.
             </div>
             <div class="pill-list" style="margin-top:14px;">
               <span class="pill">Fixed Background</span>
-              <span class="pill">SVG 1920x1080</span>
-              <span class="pill">Relative z-10</span>
+              <span class="pill">SVGs Vectoriales Exactos</span>
+              <span class="pill">Videos Scale-110</span>
               <span class="pill">Fondo Blanco Puro</span>
             </div>
           </div>
@@ -1049,9 +1049,9 @@
             <div class="card-title" style="color:var(--brand-amber);"><i class="bi bi-lightning-charge-fill"></i> GSAP ScrollTrigger (Scrub 0.6)</div>
             <div class="card-text">
               Transición coreográfica fluida entre secciones:<br>
-              • Fade out del video saliente (opacity: 0).<br>
-              • Encendido de silueta vectorial en la misma posición (opacity: 1).<br>
-              • Línea conductora roja viajando cruzando la pantalla.<br>
+              • Fade out del video saliente.<br>
+              • Encendido de la silueta vectorial SVG del usuario en su posición nativa.<br>
+              • Línea conductora roja viajando de personaje a personaje cruzando la pantalla.<br>
               • Dibujo de silueta en margen opuesto y fade in del nuevo video en loop.
             </div>
             <div class="pill-list" style="margin-top:14px;">
@@ -1063,11 +1063,11 @@
           </div>
 
           <div class="card card-accent-teal">
-            <div class="card-title" style="color:var(--brand-teal);"><i class="bi bi-box-seam"></i> Componentización Next.js</div>
+            <div class="card-title" style="color:var(--brand-teal);"><i class="bi bi-box-seam"></i> Componentización Next.js & HTML</div>
             <div class="card-text">
               Implementación modular y mantenible:<br>
               • Componente de cliente: <code>components/DesarrolloScrollStory.jsx</code> con directiva <code>"use client"</code>.<br>
-              • Integración limpia en <code>app/desarrollo/page.jsx</code> con metadatos SEO y OpenGraph.<br>
+              • Página independiente en <code>desarrollo.html</code> y <code>app/desarrollo/page.jsx</code> con metadatos SEO y OpenGraph.<br>
               • Tokens oficiales de marca: Rojo #F60000, Negro #010101 y Blanco #FFFFFF.
             </div>
             <div class="pill-list" style="margin-top:14px;">

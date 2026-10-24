@@ -12,7 +12,9 @@
   },
   "dependencies": {
     "gsap": "^3.15.0",
+    "jimp": "^0.22.12",
     "next": "^16.4.3",
+    "potrace": "^2.1.8",
     "qrcode": "^1.5.4",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
