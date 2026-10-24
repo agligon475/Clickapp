@@ -323,17 +323,18 @@ export default function DesarrolloScrollStory() {
             className="group flex items-center gap-3 text-decoration-none"
             aria-label="Dale!TePido Inicio"
           >
-            <div className="w-8 h-8 rounded-lg bg-[#F60000] flex items-center justify-center text-[#FFFFFF] font-black text-lg shadow-sm group-hover:scale-105 transition-transform duration-200">
-              !
-            </div>
-            <div className="flex flex-col">
-              <span className="font-extrabold text-[#010101] text-base tracking-tight leading-none">
-                DALE!<span className="text-[#F60000]">TEPIDO</span>
-              </span>
-              <span className="text-[10px] tracking-widest text-[#010101]/50 uppercase font-mono mt-0.5">
-                Storytelling &middot; /desarrollo
-              </span>
-            </div>
+            <img
+              src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png"
+              onError={(e) => {
+                e.currentTarget.src = "/img-default/daletepido-logo-white-hq.png";
+              }}
+              alt="Dale! Te Pido"
+              style={{ height: "32px", width: "auto", filter: "brightness(0)" }}
+              className="transition-transform duration-200 group-hover:scale-105"
+            />
+            <span className="text-[10px] tracking-widest text-[#010101]/50 uppercase font-mono mt-0.5 hidden sm:inline-block border-l border-[#010101]/15 pl-2.5">
+              Storytelling &middot; /desarrollo
+            </span>
           </a>
 
           {/* Selector de Capítulos */}
@@ -570,9 +571,15 @@ export default function DesarrolloScrollStory() {
       {/* FOOTER */}
       <footer className="relative z-20 bg-[#FFFFFF] border-t border-[#010101]/10 py-16 px-6 text-center">
         <div className="max-w-4xl mx-auto flex flex-col items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-[#F60000] flex items-center justify-center text-[#FFFFFF] font-black text-xl">
-            !
-          </div>
+          <img
+            src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png"
+            onError={(e) => {
+              e.currentTarget.src = "/img-default/daletepido-logo-white-hq.png";
+            }}
+            alt="Dale! Te Pido"
+            style={{ height: "38px", width: "auto", filter: "brightness(0)" }}
+            className="mb-1"
+          />
           <h3 className="text-xl font-bold text-[#010101] tracking-tight">
             Dale! Te Pido &mdash; Plataforma de Comercio Sin Comisiones
           </h3>
