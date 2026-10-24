@@ -21,10 +21,10 @@
         valid = true;
         if (!sessionRaw) {
           localStorage.setItem('daletepido_session', JSON.stringify({
-            store_id: urlParams.get('store') || 'ferrenow',
+            store_id: urlParams.get('store') || 'demo-store',
             token: 'demo_preview_token',
             role: 'owner',
-            name: 'FerreNow'
+            name: 'Dale! Te Pido'
           }));
         }
       }
@@ -6715,11 +6715,11 @@
               </div>
               <div class="ctrl-group">
                 <label class="ctrl-label">Nombre de la tienda</label>
-                <input class="ctrl-input" id="cfg-name" value="FerreApp" oninput="previewUpdate()" />
+                <input class="ctrl-input" id="cfg-name" value="Mi Tienda Digital" oninput="previewUpdate()" />
               </div>
               <div class="ctrl-group">
                 <label class="ctrl-label">Eslogan</label>
-                <input class="ctrl-input" id="cfg-tagline" value="Tu ferretería digital" oninput="previewUpdate()" />
+                <input class="ctrl-input" id="cfg-tagline" value="Tu catálogo online" oninput="previewUpdate()" />
               </div>
               <div class="ctrl-group">
                 <label class="ctrl-label">Emoji / ícono de la tienda</label>
@@ -7424,10 +7424,10 @@
                     <!-- prev topbar -->
                     <div id="prev-nav" style="display:flex;align-items:center;gap:8px;padding:12px 18px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);">
                       <div style="position:relative;display:inline-flex;">
-                        <div id="prev-icon" style="width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;background:#D72638;">🔧</div>
+                        <div id="prev-icon" style="width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;background:#F60000;">🛍️</div>
                         <div class="prev-spotlight-label" id="spl-nav-icon">Ícono nav</div>
                       </div>
-                      <span id="prev-name" style="font-weight:800;font-size:15px;color:#F5F5F0;">FerreApp</span>
+                      <span id="prev-name" style="font-weight:800;font-size:15px;color:#F5F5F0;">Dale! Te Pido</span>
                       <div style="position:relative;margin-left:auto;display:inline-flex;">
                         <div style="display:flex;align-items:center;gap:6px;background:#D72638;border-radius:6px;padding:4px 10px;color:#fff;font-size:11px;font-weight:700;" id="prev-cart-btn">
                           <i class="bi bi-bag"></i> 0
@@ -7570,7 +7570,7 @@
 
                     <!-- prev footer -->
                     <div id="prev-footer" style="padding:12px 18px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;margin-top:6px;">
-                      <span id="prev-footer-name" style="font-size:9px;font-weight:700;color:#8A8A90;">© FerreApp</span>
+                      <span id="prev-footer-name" style="font-size:9px;font-weight:700;color:#8A8A90;">© Dale! Te Pido</span>
                       <div style="display:flex;gap:6px;align-items:center;">
                         <div style="position:relative;display:inline-flex;">
                           <div id="prev-wapp-btn" style="width:20px;height:20px;border-radius:50%;background:#D72638;display:flex;align-items:center;justify-content:center;">
@@ -7911,7 +7911,7 @@
               <!-- 1. Nombre de la empresa -->
               <div class="ctrl-group">
                 <label class="ctrl-label">Nombre de la tienda</label>
-                <input class="ctrl-input" id="cfg-store-name" placeholder="FerreApp" />
+                <input class="ctrl-input" id="cfg-store-name" placeholder="Dale! Te Pido" />
               </div>
               
               <!-- 2. Eslogan -->
@@ -11061,10 +11061,10 @@
 
     /* ═══════════════════════════ DESIGN PANEL */
     let cfg = {
-      name: 'FerreApp', tagline: 'Tu ferretería digital',
-      emoji: '🔧', color: '#D72638', color2: '#1A73E8', color3: '#F4B400', theme: 'dark',
-      font: 'Barlow Condensed', fontBody: 'Barlow',
-      h1: 'Tu ferretería', h2: 'sin filas.',
+      name: 'Dale! Te Pido', tagline: 'Tu catálogo online',
+      emoji: '🛍️', color: '#F60000', color2: '#1A73E8', color3: '#F4B400', theme: 'dark',
+      font: 'Josefin Sans', fontBody: 'Poppins',
+      h1: 'Tu tienda digital', h2: 'sin filas.',
       desc: 'Elegí tus productos, armá tu pedido y coordiná por WhatsApp.',
       wapp: '5491141819344',
       bg: ''
@@ -11225,7 +11225,7 @@
       if (footerWapp) footerWapp.style.background = c;
       const footerName = document.getElementById('prev-footer-name');
       if (footerName) {
-        footerName.textContent = '© ' + (cfg.name || 'FerreApp');
+        footerName.textContent = '© ' + (cfg.name || 'Dale! Te Pido');
       }
 
       if (typeof autoScalePreview === 'function') {

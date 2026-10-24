@@ -1298,7 +1298,20 @@ let detectedStore = window.__INITIAL_STORE_ID__ || urlParams.get('store');
 
 if (!detectedStore) {
   const path = window.location.pathname.replace(/\/$/, '').trim();
-  if (path && path !== '/' && path !== '/index.html' && path !== '/tienda.html' && path !== '/tienda') {
+  const reservedPaths = [
+    '/', '/index.html', '/tienda.html', '/tienda',
+    '/dashboard', '/dashboard.html',
+    '/alta-usuario', '/alta-usuario.html',
+    '/super-admin-login', '/super-admin-login.html',
+    '/super-admin-secret-dashboard', '/super-admin-secret-dashboard.html',
+    '/super-admin-prospectos', '/super-admin-prospectos.html',
+    '/super-admin-email-cms', '/super-admin-email-cms.html',
+    '/super-admin-config', '/super-admin-config.html',
+    '/ayuda', '/ayuda.html', '/dejar-resena', '/dejar-resena.html',
+    '/landing', '/landing.html', '/terminos', '/terminos.html',
+    '/privacidad', '/privacidad.html', '/desarrollo', '/desarrollo.html'
+  ];
+  if (path && !reservedPaths.includes(path)) {
     const cleanPath = path.replace(/^\//, '');
     if (cleanPath && !cleanPath.includes('/') && !cleanPath.includes('.')) {
       detectedStore = cleanPath;
@@ -1317,17 +1330,17 @@ if (!detectedStore) {
   }
 }
 if (!detectedStore) {
-  detectedStore = localStorage.getItem('storeapp_store_id') || 'ferre-now';
+  detectedStore = localStorage.getItem('storeapp_store_id') || 'demo';
 }
 const STORE_ID = detectedStore.toLowerCase();
 localStorage.setItem('storeapp_store_id', STORE_ID);
 
 // Load config saved by dashboard
 const CFG_DEFAULTS = {
-  name:'FerreApp', tagline:'Tu ferretería digital',
-  emoji:'🔧', color:'#F60000', theme:'light',
+  name:'Dale! Te Pido', tagline:'Tu catálogo digital interactivo',
+  emoji:'🛍️', color:'#F60000', theme:'light',
   font:'Josefin Sans', fontBody:'Poppins',
-  h1:'Tu ferretería', h2:'sin filas.',
+  h1:'Tu tienda digital', h2:'sin filas.',
   desc:'Elegí tus productos, armá tu pedido y coordiná por WhatsApp. Fácil, rápido y sin vueltas.',
   wapp:'5491141819344', logo:'',
   heroBgColor:'#0E0E0E', heroImgOpacity:100,

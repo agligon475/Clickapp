@@ -43,8 +43,20 @@ export default async function handler(req, res) {
     '/alta-usuario.html': 'alta-usuario.html',
     '/dashboard': 'dashboard.html',
     '/dashboard.html': 'dashboard.html',
+    '/super-admin-login': 'super-admin-login.html',
+    '/super-admin-login.html': 'super-admin-login.html',
     '/super-admin-secret-dashboard': 'super-admin-secret-dashboard.html',
     '/super-admin-secret-dashboard.html': 'super-admin-secret-dashboard.html',
+    '/super-admin-prospectos': 'super-admin-prospectos.html',
+    '/super-admin-prospectos.html': 'super-admin-prospectos.html',
+    '/super-admin-email-cms': 'super-admin-email-cms.html',
+    '/super-admin-email-cms.html': 'super-admin-email-cms.html',
+    '/super-admin-config': 'super-admin-config.html',
+    '/super-admin-config.html': 'super-admin-config.html',
+    '/presentacion-evolucion-clickapp': 'presentacion-evolucion-clickapp.html',
+    '/presentacion-evolucion-clickapp.html': 'presentacion-evolucion-clickapp.html',
+    '/email-previews': 'email-previews.html',
+    '/email-previews.html': 'email-previews.html',
     '/enviar-comprobante': 'enviar-comprobante.html',
     '/enviar-comprobante.html': 'enviar-comprobante.html',
     '/kit-imprimible': 'kit-imprimible.html',
@@ -73,7 +85,7 @@ export default async function handler(req, res) {
     '/llms.txt': { file: 'llms.txt', type: 'text/plain; charset=utf-8' }
   };
 
-  // 1. Serve static page if requested directly (e.g. /dashboard, /ayuda, /alta-usuario, /robots.txt)
+  // 1. Serve static page if requested directly (e.g. /dashboard, /super-admin-login, /ayuda, /alta-usuario, /robots.txt)
   if (routeMap[rawPath]) {
     try {
       const entry = routeMap[rawPath];
@@ -87,6 +99,21 @@ export default async function handler(req, res) {
       }
     } catch (e) {
       console.error('Error serving static route:', e);
+    }
+  }
+
+  // 1b. Dynamic HTML fallback: Si el path coincide con un archivo .html existente en la raíz (ej: /super-admin-login -> super-admin-login.html)
+  const cleanPotentialFile = rawPath.replace(/^\//, '').replace(/\.html$/, '');
+  if (cleanPotentialFile && cleanPotentialFile !== 'tienda' && !cleanPotentialFile.includes('/')) {
+    try {
+      const candPath = path.join(process.cwd(), `${cleanPotentialFile}.html`);
+      if (fs.existsSync(candPath)) {
+        const content = fs.readFileSync(candPath, 'utf8');
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        return res.status(200).send(content);
+      }
+    } catch (e) {
+      console.error('Error serving dynamic HTML file:', e);
     }
   }
 

@@ -140,12 +140,32 @@
       "destination": "/super-admin-prospectos.html"
     },
     {
+      "source": "/super-admin-prospectos.html",
+      "destination": "/super-admin-prospectos.html"
+    },
+    {
       "source": "/super-admin-email-cms",
+      "destination": "/super-admin-email-cms.html"
+    },
+    {
+      "source": "/super-admin-email-cms.html",
       "destination": "/super-admin-email-cms.html"
     },
     {
       "source": "/super-admin-config",
       "destination": "/super-admin-config.html"
+    },
+    {
+      "source": "/super-admin-config.html",
+      "destination": "/super-admin-config.html"
+    },
+    {
+      "source": "/presentacion-evolucion-clickapp",
+      "destination": "/presentacion-evolucion-clickapp.html"
+    },
+    {
+      "source": "/presentacion-evolucion-clickapp.html",
+      "destination": "/presentacion-evolucion-clickapp.html"
     },
     {
       "source": "/desarrollo",
