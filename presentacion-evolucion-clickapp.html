@@ -1048,17 +1048,17 @@
           <div class="card card-accent-amber">
             <div class="card-title" style="color:var(--brand-amber);"><i class="bi bi-lightning-charge-fill"></i> GSAP ScrollTrigger (Scrub 0.6)</div>
             <div class="card-text">
-              Transición coreográfica fluida entre secciones:<br>
-              • Fade out del video saliente.<br>
-              • Encendido de la silueta vectorial SVG del usuario en su posición nativa.<br>
-              • Línea conductora roja viajando de personaje a personaje cruzando la pantalla.<br>
-              • Dibujo de silueta en margen opuesto y fade in del nuevo video en loop.
+              Transición coreográfica fluida y fijación en pantalla (Pinning):<br>
+              • Fijación del canvas en viewport (<code>pin: true, scrub: 0.8</code>) sin saltos.<br>
+              • Disposición desktop refinada: Jaime y textos alternados (izq/der) sin superposiciones ni tapados por navbar.<br>
+              • Línea conductora roja viajando continuamente con efecto glow de personaje en personaje al compás del scroll.<br>
+              • Fusión perfecta de videos sobre fondo blanco puro mediante <code>mix-blend-mode: multiply</code>.
             </div>
             <div class="pill-list" style="margin-top:14px;">
-              <span class="pill">Scrub: 0.6</span>
+              <span class="pill">Desktop Pinned</span>
+              <span class="pill">Scrub: 0.8</span>
               <span class="pill">strokeDashoffset</span>
-              <span class="pill">Loop Videos</span>
-              <span class="pill">gsap.context</span>
+              <span class="pill">Red Traveling Line</span>
             </div>
           </div>
 

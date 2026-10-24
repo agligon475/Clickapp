@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <!-- SEO Meta Tags -->
-  <title>Desarrollo & Storytelling Interactivo | Dale! Te Pido</title>
+  <title>Desarrollo &amp; Storytelling Interactivo | Dale! Te Pido</title>
   <meta name="description" content="Experiencia interactiva de scroll storytelling: de una libreta de notas al motor SaaS barrial sin comisiones para toda la región." />
   <meta name="keywords" content="Dale Te Pido, Storytelling, Desarrollo, Ecommerce WhatsApp, Tecnologia Barrial, SaaS, Next.js, Supabase" />
   <meta name="robots" content="index, follow" />
@@ -56,6 +56,9 @@
       background-color: #F60000;
       color: #FFFFFF;
     }
+    .video-blend {
+      mix-blend-mode: multiply;
+    }
   </style>
 </head>
 <body class="bg-[#FFFFFF] text-[#010101]">
@@ -85,27 +88,27 @@
 
       <!-- Selector de Capítulos / Indicador de escenas -->
       <nav class="hidden md:flex items-center gap-2" id="sceneNav" aria-label="Navegación de escenas">
-        <button onclick="scrollToScene(0)" class="scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101] text-[#FFFFFF]" data-idx="0">
+        <button onclick="jumpToScene(0)" class="scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101] text-[#FFFFFF]" data-idx="0">
           <span class="w-1.5 h-1.5 rounded-full bg-[#F60000]"></span>
           <span>01</span>
           <span class="hidden lg:inline">ORIGEN</span>
         </button>
-        <button onclick="scrollToScene(1)" class="scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101]/5 text-[#010101]/70 hover:bg-[#010101]/10" data-idx="1">
+        <button onclick="jumpToScene(1)" class="scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101]/5 text-[#010101]/70 hover:bg-[#010101]/10" data-idx="1">
           <span class="w-1.5 h-1.5 rounded-full bg-[#010101]/40"></span>
           <span>02</span>
           <span class="hidden lg:inline">TECNOLOGÍAS</span>
         </button>
-        <button onclick="scrollToScene(2)" class="scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101]/5 text-[#010101]/70 hover:bg-[#010101]/10" data-idx="2">
+        <button onclick="jumpToScene(2)" class="scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101]/5 text-[#010101]/70 hover:bg-[#010101]/10" data-idx="2">
           <span class="w-1.5 h-1.5 rounded-full bg-[#010101]/40"></span>
           <span>03</span>
           <span class="hidden lg:inline">TERRITORIO</span>
         </button>
-        <button onclick="scrollToScene(3)" class="scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101]/5 text-[#010101]/70 hover:bg-[#010101]/10" data-idx="3">
+        <button onclick="jumpToScene(3)" class="scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101]/5 text-[#010101]/70 hover:bg-[#010101]/10" data-idx="3">
           <span class="w-1.5 h-1.5 rounded-full bg-[#010101]/40"></span>
           <span>04</span>
           <span class="hidden lg:inline">SOLIDEZ</span>
         </button>
-        <button onclick="scrollToScene(4)" class="scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101]/5 text-[#010101]/70 hover:bg-[#010101]/10" data-idx="4">
+        <button onclick="jumpToScene(4)" class="scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101]/5 text-[#010101]/70 hover:bg-[#010101]/10" data-idx="4">
           <span class="w-1.5 h-1.5 rounded-full bg-[#010101]/40"></span>
           <span>05</span>
           <span class="hidden lg:inline">FUTURO</span>
@@ -116,349 +119,357 @@
       <a href="https://www.daletepido.com.ar" class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-[#F60000] text-[#FFFFFF] hover:bg-[#D60000] transition-colors duration-200 shadow-sm">
         <span>Crear Mi Tienda</span>
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
         </svg>
       </a>
     </div>
   </header>
 
   <!-- ============================================================== -->
-  <!-- CONTENEDOR PRINCIPAL STORYTELLING                              -->
+  <!-- CONTENEDOR PRINCIPAL STORYTELLING (PINNED POR SCROLLTRIGGER)    -->
   <!-- ============================================================== -->
-  <div id="storyContainer" class="relative w-full bg-[#FFFFFF]">
+  <div id="storyContainer" class="relative w-full h-screen bg-[#FFFFFF] overflow-hidden select-none">
 
     <!-- ============================================================== -->
-    <!-- CAPA 1: CAPA FIJA DE FONDO FULL SIZE (fixed inset-0)           -->
-    <!-- Contiene los 5 videos en el fondo cubriendo todo el viewport   -->
+    <!-- CAPA 1: CAPA DE VIDEOS (Fondo infinito blanco con multiply)     -->
     <!-- ============================================================== -->
-    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden w-full h-full">
+    <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden w-full h-full">
 
-      <!-- VIDEO 1: Full Size -->
-      <div id="videoBox-0" class="video-box absolute inset-0 w-full h-full transition-opacity duration-300 opacity-100" style="z-index:2;">
-        <video class="w-full h-full object-cover object-center transform scale-110 sm:scale-115 origin-center" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-pensando.png">
+      <!-- VIDEO 1 (Jaime en margen derecho - Libreta / Génesis) -->
+      <div id="videoBox-0" class="absolute inset-0 w-full h-full flex items-center justify-center opacity-100" style="z-index:2;">
+        <video class="w-full h-full object-contain object-center video-blend" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-pensando.png">
           <source src="/videos/desarrollo/escena-01.webm" type="video/webm" />
           <source src="/videos/desarrollo/escena-1.webm" type="video/webm" />
           <source src="/videos/daletepido-motion/renders/daletepido_15s_promo.mp4" type="video/mp4" />
         </video>
-        <div class="absolute inset-0 bg-gradient-to-r from-[#FFFFFF]/95 via-[#FFFFFF]/80 sm:via-[#FFFFFF]/50 to-transparent"></div>
       </div>
 
-      <!-- VIDEO 2: Full Size -->
-      <div id="videoBox-1" class="video-box absolute inset-0 w-full h-full transition-opacity duration-300 opacity-0" style="z-index:2;">
-        <video class="w-full h-full object-cover object-center transform scale-110 sm:scale-115 origin-center" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-resolucion.png">
+      <!-- VIDEO 2 (Jaime en margen izquierdo - Laptop / Código) -->
+      <div id="videoBox-1" class="absolute inset-0 w-full h-full flex items-center justify-center opacity-0" style="z-index:2;">
+        <video class="w-full h-full object-contain object-center video-blend" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-resolucion.png">
           <source src="/videos/desarrollo/escena-02.webm" type="video/webm" />
           <source src="/videos/desarrollo/escena-2.webm" type="video/webm" />
           <source src="/videos/daletepido-motion/renders/test.mp4" type="video/mp4" />
         </video>
-        <div class="absolute inset-0 bg-gradient-to-l from-[#FFFFFF]/95 via-[#FFFFFF]/80 sm:via-[#FFFFFF]/50 to-transparent"></div>
       </div>
 
-      <!-- VIDEO 3: Full Size -->
-      <div id="videoBox-2" class="video-box absolute inset-0 w-full h-full transition-opacity duration-300 opacity-0" style="z-index:2;">
-        <video class="w-full h-full object-cover object-center transform scale-110 sm:scale-115 origin-center" autoplay muted loop playsinline preload="auto" poster="/img/kit-imprimible-mostrador.jpg">
+      <!-- VIDEO 3 (Jaime en margen derecho - Kit QR Mostrador) -->
+      <div id="videoBox-2" class="absolute inset-0 w-full h-full flex items-center justify-center opacity-0" style="z-index:2;">
+        <video class="w-full h-full object-contain object-center video-blend" autoplay muted loop playsinline preload="auto" poster="/img/kit-imprimible-mostrador.jpg">
           <source src="/videos/desarrollo/escena-03.webm" type="video/webm" />
           <source src="/videos/desarrollo/escena-3.webm" type="video/webm" />
           <source src="/videos/daletepido-motion/renders/daletepido_30s_promo.mp4" type="video/mp4" />
         </video>
-        <div class="absolute inset-0 bg-gradient-to-r from-[#FFFFFF]/95 via-[#FFFFFF]/80 sm:via-[#FFFFFF]/50 to-transparent"></div>
       </div>
 
-      <!-- VIDEO 4: Full Size -->
-      <div id="videoBox-3" class="video-box absolute inset-0 w-full h-full transition-opacity duration-300 opacity-0" style="z-index:2;">
-        <video class="w-full h-full object-cover object-center transform scale-110 sm:scale-115 origin-center" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-buenaonda.png">
+      <!-- VIDEO 4 (Jaime en margen izquierdo - Blindaje / Seguridad) -->
+      <div id="videoBox-3" class="absolute inset-0 w-full h-full flex items-center justify-center opacity-0" style="z-index:2;">
+        <video class="w-full h-full object-contain object-center video-blend" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-buenaonda.png">
           <source src="/videos/desarrollo/escena-04.webm" type="video/webm" />
           <source src="/videos/desarrollo/escena-4.webm" type="video/webm" />
           <source src="/videos/daletepido-motion/renders/daletepido_promo.mp4" type="video/mp4" />
         </video>
-        <div class="absolute inset-0 bg-gradient-to-l from-[#FFFFFF]/95 via-[#FFFFFF]/80 sm:via-[#FFFFFF]/50 to-transparent"></div>
       </div>
 
-      <!-- VIDEO 5: Full Size -->
-      <div id="videoBox-4" class="video-box absolute inset-0 w-full h-full transition-opacity duration-300 opacity-0" style="z-index:2;">
-        <video class="w-full h-full object-cover object-center transform scale-110 sm:scale-115 origin-center" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-alegria.png">
+      <!-- VIDEO 5 (Jaime en margen derecho - Futuro / Expansión SaaS) -->
+      <div id="videoBox-4" class="absolute inset-0 w-full h-full flex items-center justify-center opacity-0" style="z-index:2;">
+        <video class="w-full h-full object-contain object-center video-blend" autoplay muted loop playsinline preload="auto" poster="/img/jaime/jaime-alegria.png">
           <source src="/videos/desarrollo/escena-05.webm" type="video/webm" />
           <source src="/videos/desarrollo/escena-5.webm" type="video/webm" />
           <source src="/videos/daletepido-motion/renders/daletepido_15s_promo.mp4" type="video/mp4" />
         </video>
-        <div class="absolute inset-0 bg-gradient-to-r from-[#FFFFFF]/95 via-[#FFFFFF]/80 sm:via-[#FFFFFF]/50 to-transparent"></div>
       </div>
 
-      <!-- ============================================================== -->
-      <!-- CAPA SVG INTERMEDIA (viewBox 0 0 1920 1080)                    -->
-      <!-- Siluetas vectoriales exactas del usuario + Acento Rojo #F60000 -->
-      <!-- ============================================================== -->
-      <svg id="svgLayer" viewBox="0 0 1920 1080" class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-        <defs>
-          <filter id="red-line-glow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="6" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
-        <!-- LÍNEAS CONECTORAS DINÁMICAS (Acento Rojo #F60000) -->
-        <!-- Línea 1 -> 2: De Margen Derecho (x:1666, y:536) a Margen Izquierdo (x:369, y:530) -->
-        <path id="line-0" d="M 1666 536 C 1250 750, 750 320, 369 530" fill="none" stroke="#F60000" stroke-width="4.5" stroke-linecap="round" filter="url(#red-line-glow)"></path>
-
-        <!-- Línea 2 -> 3: De Margen Izquierdo (x:369, y:530) a Margen Derecho (x:1650, y:530) -->
-        <path id="line-1" d="M 369 530 C 760 760, 1250 300, 1650 530" fill="none" stroke="#F60000" stroke-width="4.5" stroke-linecap="round" filter="url(#red-line-glow)"></path>
-
-        <!-- Línea 3 -> 4: De Margen Derecho (x:1650, y:530) a Margen Izquierdo (x:327, y:526) -->
-        <path id="line-2" d="M 1650 530 C 1220 760, 750 300, 327 526" fill="none" stroke="#F60000" stroke-width="4.5" stroke-linecap="round" filter="url(#red-line-glow)"></path>
-
-        <!-- Línea 4 -> 5: De Margen Izquierdo (x:327, y:526) a Margen Derecho (x:1671, y:530) -->
-        <path id="line-3" d="M 327 526 C 750 750, 1250 310, 1671 530" fill="none" stroke="#F60000" stroke-width="4.5" stroke-linecap="round" filter="url(#red-line-glow)"></path>
-
-        <!-- SILUETA 1 (Vector exacto Escena 01 - Libreta / Génesis en Margen Derecho) -->
-        <g id="sil-0" opacity="0" class="transition-opacity duration-300">
-          <image href="/img/silhouettes/silueta-01.svg" x="0" y="0" width="1920" height="1080" preserveAspectRatio="xMidYMid slice"></image>
-          <!-- Foco técnico en personaje -->
-          <circle cx="1666" cy="536" r="22" fill="none" stroke="#F60000" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.7"></circle>
-          <circle cx="1666" cy="536" r="5" fill="#F60000"></circle>
-        </g>
-
-        <!-- SILUETA 2 (Vector exacto Escena 02 - Laptop / Edge Stack en Margen Izquierdo) -->
-        <g id="sil-1" opacity="0" class="transition-opacity duration-300">
-          <image href="/img/silhouettes/silueta-02.svg" x="0" y="0" width="1920" height="1080" preserveAspectRatio="xMidYMid slice"></image>
-          <!-- Foco técnico en personaje -->
-          <circle cx="369" cy="530" r="22" fill="none" stroke="#F60000" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.7"></circle>
-          <circle cx="369" cy="530" r="5" fill="#F60000"></circle>
-        </g>
-
-        <!-- SILUETA 3 (Vector exacto Escena 03 - Mostrador / Kit QR en Margen Derecho) -->
-        <g id="sil-2" opacity="0" class="transition-opacity duration-300">
-          <image href="/img/silhouettes/silueta-03.svg" x="0" y="0" width="1920" height="1080" preserveAspectRatio="xMidYMid slice"></image>
-          <!-- Foco técnico en personaje -->
-          <circle cx="1650" cy="530" r="22" fill="none" stroke="#F60000" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.7"></circle>
-          <circle cx="1650" cy="530" r="5" fill="#F60000"></circle>
-        </g>
-
-        <!-- SILUETA 4 (Vector exacto Escena 04 - Blindaje / Seguridad en Margen Izquierdo) -->
-        <g id="sil-3" opacity="0" class="transition-opacity duration-300">
-          <image href="/img/silhouettes/silueta-04.svg" x="0" y="0" width="1920" height="1080" preserveAspectRatio="xMidYMid slice"></image>
-          <!-- Foco técnico en personaje -->
-          <circle cx="327" cy="526" r="22" fill="none" stroke="#F60000" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.7"></circle>
-          <circle cx="327" cy="526" r="5" fill="#F60000"></circle>
-        </g>
-
-        <!-- SILUETA 5 (Vector exacto Escena 05 - Futuro / Expansión SaaS en Margen Derecho) -->
-        <g id="sil-4" opacity="0" class="transition-opacity duration-300">
-          <image href="/img/silhouettes/silueta-05.svg" x="0" y="0" width="1920" height="1080" preserveAspectRatio="xMidYMid slice"></image>
-          <!-- Foco técnico en personaje -->
-          <circle cx="1671" cy="530" r="22" fill="none" stroke="#F60000" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.7"></circle>
-          <circle cx="1671" cy="530" r="5" fill="#F60000"></circle>
-        </g>
-      </svg>
     </div>
 
     <!-- ============================================================== -->
-    <!-- CAPA 2: CAPA DELANTERA DE SCROLL (relative z-10)               -->
-    <!-- 5 secciones con texto en margen opuesto al video               -->
+    <!-- CAPA 2: CAPA SVG INTERMEDIA CON LÍNEAS VIAJERAS ROJAS           -->
+    <!-- Las líneas viajan desde un video hasta el siguiente al scroll  -->
     <!-- ============================================================== -->
-    <main class="relative z-10">
+    <svg id="svgLayer" viewBox="0 0 1920 1080" class="absolute inset-0 w-full h-full pointer-events-none z-10" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <!-- Filtro Glow Rojo Intenso -->
+        <filter id="red-line-glow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="7" result="blur1" />
+          <feGaussianBlur stdDeviation="3" result="blur2" />
+          <feMerge>
+            <feMergeNode in="blur1" />
+            <feMergeNode in="blur2" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
 
-      <!-- SECCIÓN 1: Texto a la izquierda -->
-      <section id="sec-0" class="story-section min-h-screen w-full flex items-center justify-center px-6 sm:px-10 md:px-14 lg:px-20 py-28 relative">
-        <div class="w-full max-w-7xl mx-auto flex items-center">
-          <div class="story-card w-full lg:w-[48%] xl:w-[45%] mr-auto text-left bg-[#FFFFFF]/95 backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-3xl border border-[#010101]/10 shadow-[0_15px_40px_rgba(1,1,1,0.04)]">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F60000]/10 border border-[#F60000]/30 text-[#F60000] text-xs font-mono font-bold tracking-wider mb-4">
-              <span class="w-2 h-2 rounded-full bg-[#F60000]"></span>
-              <span>01</span><span class="text-[#010101]/40">&middot;</span><span>EL ORIGEN</span>
-            </div>
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#010101] tracking-tight leading-tight mb-3" style="font-family:'Josefin Sans', sans-serif;">
-              Ideando Dale!TePido: El fin de las comisiones abusivas
-            </h2>
-            <p class="text-xs sm:text-sm font-mono text-[#F60000] font-semibold mb-5 tracking-wide uppercase">
-              // Libreta de ideas &amp; génesis de una solución barrial
-            </p>
-            <p class="text-sm sm:text-base text-[#010101]/80 leading-relaxed mb-6 font-normal">
-              Nació de observar la realidad del comerciante de barrio: ahogado por plataformas que cobran entre 15% y 35% por venta y retienen el dinero por semanas. En una libreta de notas nació la premisa madre: crear un canal digital de pedidos directo por WhatsApp, sin fricción, sin comisiones y con acreditación inmediata.
-            </p>
-            <ul class="space-y-2.5 mb-6 text-xs sm:text-sm text-[#010101]/90">
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>0% comisiones sobre ventas para siempre</span></li>
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Canal directo al WhatsApp comercial sin intermediarios</span></li>
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Cobro instantáneo por Mercado Pago o efectivo al recibir</span></li>
-            </ul>
-            <div class="mt-6 flex items-center justify-between text-[11px] font-mono text-[#010101]/40 pt-4 border-t border-[#010101]/5">
-              <span>CAPÍTULO 01 DE 05</span>
-              <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#010101]/30"></span>SCROLL HACIA ABAJO</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <!-- LÍNEAS CONDUCTORAS QUE VIAJAN DE VIDEO EN VIDEO -->
+      <!-- Línea 0: De Video 1 (1666, 536) a Video 2 (369, 530) -->
+      <path id="line-0" d="M 1666 536 C 1300 780, 700 280, 369 530" fill="none" stroke="#F60000" stroke-width="4.5" stroke-linecap="round" filter="url(#red-line-glow)"></path>
 
-      <!-- SECCIÓN 2: Texto a la derecha -->
-      <section id="sec-1" class="story-section min-h-screen w-full flex items-center justify-center px-6 sm:px-10 md:px-14 lg:px-20 py-28 relative">
-        <div class="w-full max-w-7xl mx-auto flex items-center">
-          <div class="story-card w-full lg:w-[48%] xl:w-[45%] ml-auto text-left bg-[#FFFFFF]/95 backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-3xl border border-[#010101]/10 shadow-[0_15px_40px_rgba(1,1,1,0.04)]">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F60000]/10 border border-[#F60000]/30 text-[#F60000] text-xs font-mono font-bold tracking-wider mb-4">
-              <span class="w-2 h-2 rounded-full bg-[#F60000]"></span>
-              <span>02</span><span class="text-[#010101]/40">&middot;</span><span>TECNOLOGÍAS</span>
-            </div>
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#010101] tracking-tight leading-tight mb-3" style="font-family:'Josefin Sans', sans-serif;">
-              Velocidad extrema y despliegue ágil en el borde
-            </h2>
-            <p class="text-xs sm:text-sm font-mono text-[#F60000] font-semibold mb-5 tracking-wide uppercase">
-              // Stack ultraliviano, Next.js &amp; Supabase en tiempo real
-            </p>
-            <p class="text-sm sm:text-base text-[#010101]/80 leading-relaxed mb-6 font-normal">
-              El usuario promedio abandona si una tienda tarda más de 3 segundos en abrir. Construimos una arquitectura hiperelegante sobre Edge Runtime y Supabase PostgreSQL con tiempo de respuesta inferior a 400ms. Catálogo PWA instalable con sincronización reactiva de stock y peso total menor a 150KB.
-            </p>
-            <ul class="space-y-2.5 mb-6 text-xs sm:text-sm text-[#010101]/90">
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Tiempo de carga inicial sub-400ms en redes móviles 4G/5G</span></li>
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Supabase PostgreSQL con suscripciones en tiempo real</span></li>
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Progressive Web App (PWA) instalable en Android e iOS</span></li>
-            </ul>
-            <div class="mt-6 flex items-center justify-between text-[11px] font-mono text-[#010101]/40 pt-4 border-t border-[#010101]/5">
-              <span>CAPÍTULO 02 DE 05</span>
-              <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#010101]/30"></span>SCROLL HACIA ABAJO</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <!-- Línea 1: De Video 2 (369, 530) a Video 3 (1650, 530) -->
+      <path id="line-1" d="M 369 530 C 700 780, 1300 280, 1650 530" fill="none" stroke="#F60000" stroke-width="4.5" stroke-linecap="round" filter="url(#red-line-glow)"></path>
 
-      <!-- SECCIÓN 3: Texto a la izquierda -->
-      <section id="sec-2" class="story-section min-h-screen w-full flex items-center justify-center px-6 sm:px-10 md:px-14 lg:px-20 py-28 relative">
-        <div class="w-full max-w-7xl mx-auto flex items-center">
-          <div class="story-card w-full lg:w-[48%] xl:w-[45%] mr-auto text-left bg-[#FFFFFF]/95 backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-3xl border border-[#010101]/10 shadow-[0_15px_40px_rgba(1,1,1,0.04)]">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F60000]/10 border border-[#F60000]/30 text-[#F60000] text-xs font-mono font-bold tracking-wider mb-4">
-              <span class="w-2 h-2 rounded-full bg-[#F60000]"></span>
-              <span>03</span><span class="text-[#010101]/40">&middot;</span><span>TERRITORIO</span>
-            </div>
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#010101] tracking-tight leading-tight mb-3" style="font-family:'Josefin Sans', sans-serif;">
-              En el mostrador de cada barrio: el kit QR físico
-            </h2>
-            <p class="text-xs sm:text-sm font-mono text-[#F60000] font-semibold mb-5 tracking-wide uppercase">
-              // La tecnología se toca con las manos en el mostrador
-            </p>
-            <p class="text-sm sm:text-base text-[#010101]/80 leading-relaxed mb-6 font-normal">
-              El software solo triunfa si vive en el mundo real. Diseñamos un kit físico imprimible de alta resolución con códigos QR vectoriales para vidrieras y mostradores. Los clientes escanean sin instalar ninguna aplicación pesada, eligen productos en segundos y envían el pedido estructurado al comercio.
-            </p>
-            <ul class="space-y-2.5 mb-6 text-xs sm:text-sm text-[#010101]/90">
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Kit QR vectorial listo para imprimir en alta resolución</span></li>
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Experiencia Zero-Install: el cliente escanea y compra</span></li>
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Mensajes de WhatsApp estructurados listos para despachar</span></li>
-            </ul>
-            <div class="mt-6 flex items-center justify-between text-[11px] font-mono text-[#010101]/40 pt-4 border-t border-[#010101]/5">
-              <span>CAPÍTULO 03 DE 05</span>
-              <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#010101]/30"></span>SCROLL HACIA ABAJO</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <!-- Línea 2: De Video 3 (1650, 530) a Video 4 (327, 526) -->
+      <path id="line-2" d="M 1650 530 C 1300 780, 700 280, 327 526" fill="none" stroke="#F60000" stroke-width="4.5" stroke-linecap="round" filter="url(#red-line-glow)"></path>
 
-      <!-- SECCIÓN 4: Texto a la derecha -->
-      <section id="sec-3" class="story-section min-h-screen w-full flex items-center justify-center px-6 sm:px-10 md:px-14 lg:px-20 py-28 relative">
-        <div class="w-full max-w-7xl mx-auto flex items-center">
-          <div class="story-card w-full lg:w-[48%] xl:w-[45%] ml-auto text-left bg-[#FFFFFF]/95 backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-3xl border border-[#010101]/10 shadow-[0_15px_40px_rgba(1,1,1,0.04)]">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F60000]/10 border border-[#F60000]/30 text-[#F60000] text-xs font-mono font-bold tracking-wider mb-4">
-              <span class="w-2 h-2 rounded-full bg-[#F60000]"></span>
-              <span>04</span><span class="text-[#010101]/40">&middot;</span><span>SOLIDEZ</span>
-            </div>
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#010101] tracking-tight leading-tight mb-3" style="font-family:'Josefin Sans', sans-serif;">
-              Seguridad de grado bancario, RLS y privacidad total
-            </h2>
-            <p class="text-xs sm:text-sm font-mono text-[#F60000] font-semibold mb-5 tracking-wide uppercase">
-              // Aislamiento estricto por tienda y protección de datos
-            </p>
-            <p class="text-sm sm:text-base text-[#010101]/80 leading-relaxed mb-6 font-normal">
-              Arquitectura Multi-tenant real con aislamiento estricto por tienda. Cada dato está blindado mediante políticas Row Level Security (RLS) en base de datos, cifrado criptográfico de credenciales y auditoría de accesos. Privacidad absoluta: los datos de tu comercio y de tus clientes nunca se comparten ni revenden.
-            </p>
-            <ul class="space-y-2.5 mb-6 text-xs sm:text-sm text-[#010101]/90">
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Row Level Security (RLS) nativo con aislamiento multi-tenant</span></li>
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Cifrado de credenciales y tokens con PBKDF2 / SHA-256</span></li>
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Zero data leakage: base de clientes 100% privada y soberana</span></li>
-            </ul>
-            <div class="mt-6 flex items-center justify-between text-[11px] font-mono text-[#010101]/40 pt-4 border-t border-[#010101]/5">
-              <span>CAPÍTULO 04 DE 05</span>
-              <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#010101]/30"></span>SCROLL HACIA ABAJO</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <!-- Línea 3: De Video 4 (327, 526) a Video 5 (1671, 530) -->
+      <path id="line-3" d="M 327 526 C 700 780, 1300 280, 1671 530" fill="none" stroke="#F60000" stroke-width="4.5" stroke-linecap="round" filter="url(#red-line-glow)"></path>
 
-      <!-- SECCIÓN 5: Texto a la izquierda + CTA -->
-      <section id="sec-4" class="story-section min-h-screen w-full flex items-center justify-center px-6 sm:px-10 md:px-14 lg:px-20 py-28 relative">
-        <div class="w-full max-w-7xl mx-auto flex items-center">
-          <div class="story-card w-full lg:w-[48%] xl:w-[45%] mr-auto text-left bg-[#FFFFFF]/95 backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-3xl border border-[#010101]/10 shadow-[0_15px_40px_rgba(1,1,1,0.04)]">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F60000]/10 border border-[#F60000]/30 text-[#F60000] text-xs font-mono font-bold tracking-wider mb-4">
-              <span class="w-2 h-2 rounded-full bg-[#F60000]"></span>
-              <span>05</span><span class="text-[#010101]/40">&middot;</span><span>EL FUTURO</span>
-            </div>
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#010101] tracking-tight leading-tight mb-3" style="font-family:'Josefin Sans', sans-serif;">
-              Evolución continua: La plataforma SaaS que no duerme
-            </h2>
-            <p class="text-xs sm:text-sm font-mono text-[#F60000] font-semibold mb-5 tracking-wide uppercase">
-              // Automatizaciones con IA, n8n y ecosistema en expansión
-            </p>
-            <p class="text-sm sm:text-base text-[#010101]/80 leading-relaxed mb-6 font-normal">
-              Dale!TePido no se detiene. Desde asistentes de inteligencia artificial para generación automática de descripciones y fotografías de productos, hasta sincronización con n8n, métricas en vivo y cupones de fidelización. Estamos construyendo el estándar definitivo para el comercio de cercanía.
-            </p>
-            <ul class="space-y-2.5 mb-6 text-xs sm:text-sm text-[#010101]/90">
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Motor IA para generación instantánea de catálogos y fotos</span></li>
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Automatizaciones de logística y confirmación con n8n</span></li>
-              <li class="flex items-start gap-2.5"><span class="mt-0.5 w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span><span>Comunidad activa y actualización semanal sin interrupciones</span></li>
-            </ul>
+      <!-- NODOS TECNOLÓGICOS Y PULSOS EN CADA PERSONAJE -->
+      <!-- Nodo 1 (1666, 536) -->
+      <g id="node-0" opacity="1">
+        <circle cx="1666" cy="536" r="28" fill="none" stroke="#F60000" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.6"></circle>
+        <circle id="pulse-0" cx="1666" cy="536" r="6" fill="#F60000"></circle>
+      </g>
 
-            <div class="pt-4 border-t border-[#010101]/10 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              <a href="https://www.daletepido.com.ar" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-[#F60000] text-[#FFFFFF] font-bold text-sm hover:bg-[#D60000] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-[0_8px_20px_rgba(246,0,0,0.3)] text-decoration-none">
-                <span>Crear Mi Tienda en Dale!TePido</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                </svg>
-              </a>
-              <a href="/tienda-demo.html" class="inline-flex items-center justify-center px-4 py-3 rounded-2xl bg-transparent border border-[#010101]/20 text-[#010101] font-semibold text-xs hover:bg-[#010101]/5 transition-colors duration-200">
-                Ver Tienda Demo
-              </a>
-            </div>
+      <!-- Nodo 2 (369, 530) -->
+      <g id="node-1" opacity="0.3">
+        <circle cx="369" cy="530" r="28" fill="none" stroke="#F60000" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.6"></circle>
+        <circle id="pulse-1" cx="369" cy="530" r="6" fill="#F60000"></circle>
+      </g>
 
-            <div class="mt-6 flex items-center justify-between text-[11px] font-mono text-[#010101]/40 pt-4 border-t border-[#010101]/5">
-              <span>CAPÍTULO 05 DE 05</span>
-              <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#010101]/30"></span>EXPERIENCIA COMPLETA</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <!-- Nodo 3 (1650, 530) -->
+      <g id="node-2" opacity="0.3">
+        <circle cx="1650" cy="530" r="28" fill="none" stroke="#F60000" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.6"></circle>
+        <circle id="pulse-2" cx="1650" cy="530" r="6" fill="#F60000"></circle>
+      </g>
 
-    </main>
+      <!-- Nodo 4 (327, 526) -->
+      <g id="node-3" opacity="0.3">
+        <circle cx="327" cy="526" r="28" fill="none" stroke="#F60000" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.6"></circle>
+        <circle id="pulse-3" cx="327" cy="526" r="6" fill="#F60000"></circle>
+      </g>
+
+      <!-- Nodo 5 (1671, 530) -->
+      <g id="node-4" opacity="0.3">
+        <circle cx="1671" cy="530" r="28" fill="none" stroke="#F60000" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.6"></circle>
+        <circle id="pulse-4" cx="1671" cy="530" r="6" fill="#F60000"></circle>
+      </g>
+
+    </svg>
 
     <!-- ============================================================== -->
-    <!-- FOOTER MINIMALISTA FINAL (100% BLANCO INFINITO)                -->
+    <!-- CAPA 3: CAPA EDITORIAL DE TEXTOS (Despliegue elegante desktop)  -->
+    <!-- Ubicada exactamente en el margen opuesto a cada personaje       -->
     <!-- ============================================================== -->
-    <footer class="relative z-20 bg-[#FFFFFF] border-t border-[#010101]/10 py-12 px-6 text-center">
-      <div class="max-w-4xl mx-auto flex flex-col items-center gap-4">
-        <div class="w-10 h-10 rounded-xl bg-[#F60000] flex items-center justify-center text-[#FFFFFF] font-black text-xl">
-          !
+    <div class="relative z-20 w-full h-full max-w-7xl mx-auto px-6 sm:px-12 lg:px-20 pointer-events-auto">
+
+      <!-- PANEL 1: Margen Izquierdo (Video a la derecha) -->
+      <div id="card-0" class="story-panel absolute left-6 sm:left-12 lg:left-20 top-24 lg:top-32 w-full max-w-md lg:max-w-lg xl:max-w-xl text-left opacity-100 transform translate-y-0">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#010101]/5 text-[#010101] text-xs font-mono font-bold tracking-wider mb-4">
+          <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
+          <span class="text-[#F60000]">01</span>
+          <span class="text-[#010101]/30">/</span>
+          <span class="uppercase tracking-widest text-[11px]">El Origen</span>
         </div>
-        <h3 class="text-xl font-bold text-[#010101] tracking-tight">
-          Dale! Te Pido &mdash; Plataforma de Comercio Sin Comisiones
-        </h3>
-        <p class="text-xs text-[#010101]/60 max-w-lg leading-relaxed">
-          Diseñado y desarrollado para potenciar los negocios de barrio de toda la Argentina y la región.
-          Tecnología soberana, pedidos directos por WhatsApp y 0% de comisiones.
+        <h2 class="text-3xl sm:text-4xl lg:text-[42px] font-black text-[#010101] tracking-tight leading-[1.12] mb-3" style="font-family:'Josefin Sans', sans-serif;">
+          Ideando Dale!TePido: El fin de las comisiones abusivas
+        </h2>
+        <p class="text-xs sm:text-sm font-mono text-[#F60000] font-bold mb-4 tracking-wider uppercase">
+          // Libreta de ideas &amp; génesis de una solución barrial
         </p>
-        <div class="flex flex-wrap items-center justify-center gap-6 text-xs text-[#010101]/70 font-mono mt-2">
-          <a href="https://www.daletepido.com.ar" class="hover:text-[#F60000] transition-colors">Inicio</a>
-          <span>&middot;</span>
-          <a href="/tienda-demo.html" class="hover:text-[#F60000] transition-colors">Tienda Demo</a>
-          <span>&middot;</span>
-          <a href="/kit-imprimible.html" class="hover:text-[#F60000] transition-colors">Kit Imprimible</a>
-          <span>&middot;</span>
-          <a href="/terminos.html" class="hover:text-[#F60000] transition-colors">Términos</a>
-          <span>&middot;</span>
-          <a href="/privacidad.html" class="hover:text-[#F60000] transition-colors">Privacidad</a>
-        </div>
-        <p class="text-[10px] text-[#010101]/40 font-mono mt-4">
-          &copy; <span id="currentYear"></span> Dale!TePido. Todos los derechos reservados.
+        <p class="text-sm sm:text-base text-[#010101]/75 leading-relaxed mb-6 font-normal">
+          Nació de observar la realidad del comerciante de barrio: ahogado por plataformas que cobran entre 15% y 35% por venta y retienen el dinero por semanas. En una libreta de notas nació la premisa madre: crear un canal digital de pedidos directo por WhatsApp, sin comisiones y con cobro inmediato.
         </p>
+        <div class="space-y-2.5 mb-6 text-xs sm:text-sm text-[#010101]/90">
+          <div class="flex items-center gap-2.5">
+            <span class="w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span>
+            <span>0% comisiones sobre ventas para siempre</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span>
+            <span>Canal directo al WhatsApp comercial sin intermediarios</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span>
+            <span>Cobro instantáneo por Mercado Pago o efectivo al recibir</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 text-[11px] font-mono text-[#010101]/40 uppercase tracking-widest">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#F60000]"></span>
+          <span>Deslizá hacia abajo para continuar el recorrido</span>
+        </div>
       </div>
-    </footer>
+
+      <!-- PANEL 2: Margen Derecho (Video a la izquierda) -->
+      <div id="card-1" class="story-panel absolute right-6 sm:right-12 lg:right-20 top-24 lg:top-32 w-full max-w-md lg:max-w-lg xl:max-w-xl text-left opacity-0 transform translate-y-6 pointer-events-none hidden">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#010101]/5 text-[#010101] text-xs font-mono font-bold tracking-wider mb-4">
+          <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
+          <span class="text-[#F60000]">02</span>
+          <span class="text-[#010101]/30">/</span>
+          <span class="uppercase tracking-widest text-[11px]">Tecnologías</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl lg:text-[42px] font-black text-[#010101] tracking-tight leading-[1.12] mb-3" style="font-family:'Josefin Sans', sans-serif;">
+          Velocidad extrema y despliegue ágil en el borde
+        </h2>
+        <p class="text-xs sm:text-sm font-mono text-[#F60000] font-bold mb-4 tracking-wider uppercase">
+          // Stack ultraliviano, Next.js &amp; Supabase en tiempo real
+        </p>
+        <p class="text-sm sm:text-base text-[#010101]/75 leading-relaxed mb-6 font-normal">
+          El usuario promedio abandona si una tienda tarda más de 3 segundos en abrir. Construimos una arquitectura hiperelegante sobre Edge Runtime y Supabase PostgreSQL con tiempo de respuesta inferior a 400ms. Catálogo PWA instalable con sincronización reactiva de stock y peso menor a 150KB.
+        </p>
+        <div class="space-y-2.5 mb-6 text-xs sm:text-sm text-[#010101]/90">
+          <div class="flex items-center gap-2.5">
+            <span class="w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span>
+            <span>Tiempo de carga inicial sub-400ms en redes móviles 4G/5G</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span>
+            <span>Supabase PostgreSQL con suscripciones en tiempo real</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span>
+            <span>Progressive Web App (PWA) instalable en Android e iOS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 3: Margen Izquierdo (Video a la derecha) -->
+      <div id="card-2" class="story-panel absolute left-6 sm:left-12 lg:left-20 top-24 lg:top-32 w-full max-w-md lg:max-w-lg xl:max-w-xl text-left opacity-0 transform translate-y-6 pointer-events-none hidden">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#010101]/5 text-[#010101] text-xs font-mono font-bold tracking-wider mb-4">
+          <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
+          <span class="text-[#F60000]">03</span>
+          <span class="text-[#010101]/30">/</span>
+          <span class="uppercase tracking-widest text-[11px]">Territorio</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl lg:text-[42px] font-black text-[#010101] tracking-tight leading-[1.12] mb-3" style="font-family:'Josefin Sans', sans-serif;">
+          En el mostrador de cada barrio: el kit QR físico
+        </h2>
+        <p class="text-xs sm:text-sm font-mono text-[#F60000] font-bold mb-4 tracking-wider uppercase">
+          // La tecnología se toca con las manos en el mostrador
+        </p>
+        <p class="text-sm sm:text-base text-[#010101]/75 leading-relaxed mb-6 font-normal">
+          El software solo triunfa si vive en el mundo real. Diseñamos un kit físico imprimible de alta resolución con códigos QR vectoriales para vidrieras y mostradores. Los clientes escanean sin instalar ninguna aplicación pesada, eligen productos en segundos y envían el pedido estructurado al comercio.
+        </p>
+        <div class="space-y-2.5 mb-6 text-xs sm:text-sm text-[#010101]/90">
+          <div class="flex items-center gap-2.5">
+            <span class="w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span>
+            <span>Kit QR vectorial listo para imprimir en alta resolución</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span>
+            <span>Experiencia Zero-Install: el cliente escanea y compra</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span>
+            <span>Mensajes de WhatsApp estructurados listos para despachar</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 4: Margen Derecho (Video a la izquierda) -->
+      <div id="card-3" class="story-panel absolute right-6 sm:right-12 lg:right-20 top-24 lg:top-32 w-full max-w-md lg:max-w-lg xl:max-w-xl text-left opacity-0 transform translate-y-6 pointer-events-none hidden">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#010101]/5 text-[#010101] text-xs font-mono font-bold tracking-wider mb-4">
+          <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
+          <span class="text-[#F60000]">04</span>
+          <span class="text-[#010101]/30">/</span>
+          <span class="uppercase tracking-widest text-[11px]">Solidez</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl lg:text-[42px] font-black text-[#010101] tracking-tight leading-[1.12] mb-3" style="font-family:'Josefin Sans', sans-serif;">
+          Seguridad de grado bancario, RLS y privacidad total
+        </h2>
+        <p class="text-xs sm:text-sm font-mono text-[#F60000] font-bold mb-4 tracking-wider uppercase">
+          // Aislamiento estricto por tienda y protección de datos
+        </p>
+        <p class="text-sm sm:text-base text-[#010101]/75 leading-relaxed mb-6 font-normal">
+          Arquitectura Multi-tenant real con aislamiento estricto por tienda. Cada dato está blindado mediante políticas Row Level Security (RLS) en base de datos, cifrado criptográfico de credenciales y auditoría de accesos. Privacidad absoluta: los datos de tu comercio y de tus clientes nunca se comparten ni revenden.
+        </p>
+        <div class="space-y-2.5 mb-6 text-xs sm:text-sm text-[#010101]/90">
+          <div class="flex items-center gap-2.5">
+            <span class="w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span>
+            <span>Row Level Security (RLS) nativo con aislamiento multi-tenant</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span>
+            <span>Cifrado de credenciales y tokens con PBKDF2 / SHA-256</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span>
+            <span>Zero data leakage: base de clientes 100% privada y soberana</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 5: Margen Izquierdo (Video a la derecha) + CTA -->
+      <div id="card-4" class="story-panel absolute left-6 sm:left-12 lg:left-20 top-24 lg:top-32 w-full max-w-md lg:max-w-lg xl:max-w-xl text-left opacity-0 transform translate-y-6 pointer-events-none hidden">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#010101]/5 text-[#010101] text-xs font-mono font-bold tracking-wider mb-4">
+          <span class="w-2 h-2 rounded-full bg-[#F60000] animate-pulse"></span>
+          <span class="text-[#F60000]">05</span>
+          <span class="text-[#010101]/30">/</span>
+          <span class="uppercase tracking-widest text-[11px]">El Futuro</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl lg:text-[42px] font-black text-[#010101] tracking-tight leading-[1.12] mb-3" style="font-family:'Josefin Sans', sans-serif;">
+          Evolución continua: La plataforma SaaS que no duerme
+        </h2>
+        <p class="text-xs sm:text-sm font-mono text-[#F60000] font-bold mb-4 tracking-wider uppercase">
+          // Automatizaciones con IA, n8n y ecosistema en expansión
+        </p>
+        <p class="text-sm sm:text-base text-[#010101]/75 leading-relaxed mb-6 font-normal">
+          Dale!TePido no se detiene. Desde asistentes de inteligencia artificial para generación automática de descripciones y fotografías de productos, hasta sincronización con n8n, métricas en vivo y cupones de fidelización. Estamos construyendo el estándar definitivo para el comercio de cercanía.
+        </p>
+        <div class="space-y-2.5 mb-6 text-xs sm:text-sm text-[#010101]/90">
+          <div class="flex items-center gap-2.5">
+            <span class="w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span>
+            <span>Motor IA para generación instantánea de catálogos y fotos</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span>
+            <span>Automatizaciones de logística y confirmación con n8n</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="w-4 h-4 rounded-full bg-[#F60000] flex-shrink-0 flex items-center justify-center text-[#FFFFFF] text-[10px] font-bold">✓</span>
+            <span>Comunidad activa y actualización semanal sin interrupciones</span>
+          </div>
+        </div>
+
+        <div class="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <a href="https://www.daletepido.com.ar" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-[#F60000] text-[#FFFFFF] font-bold text-sm hover:bg-[#D60000] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-[0_8px_20px_rgba(246,0,0,0.3)] text-decoration-none">
+            <span>Crear Mi Tienda en Dale!TePido</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </a>
+          <a href="/tienda-demo.html" class="inline-flex items-center justify-center px-4 py-3 rounded-2xl bg-transparent border border-[#010101]/20 text-[#010101] font-semibold text-xs hover:bg-[#010101]/5 transition-colors duration-200">
+            Ver Tienda Demo
+          </a>
+        </div>
+      </div>
+
+    </div>
 
   </div>
 
-  <!-- SCRIPT GSAP SCROLLTRIGGER COREOGRAFÍA -->
+  <!-- ============================================================== -->
+  <!-- FOOTER MINIMALISTA FINAL (100% BLANCO INFINITO)                -->
+  <!-- ============================================================== -->
+  <footer class="relative z-20 bg-[#FFFFFF] border-t border-[#010101]/10 py-16 px-6 text-center">
+    <div class="max-w-4xl mx-auto flex flex-col items-center gap-4">
+      <div class="w-10 h-10 rounded-xl bg-[#F60000] flex items-center justify-center text-[#FFFFFF] font-black text-xl">
+        !
+      </div>
+      <h3 class="text-xl font-bold text-[#010101] tracking-tight">
+        Dale! Te Pido &mdash; Plataforma de Comercio Sin Comisiones
+      </h3>
+      <p class="text-xs text-[#010101]/60 max-w-lg leading-relaxed">
+        Diseñado y desarrollado para potenciar los negocios de barrio de toda la Argentina y la región.
+        Tecnología soberana, pedidos directos por WhatsApp y 0% de comisiones.
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-6 text-xs text-[#010101]/70 font-mono mt-2">
+        <a href="https://www.daletepido.com.ar" class="hover:text-[#F60000] transition-colors">Inicio</a>
+        <span>&middot;</span>
+        <a href="/tienda-demo.html" class="hover:text-[#F60000] transition-colors">Tienda Demo</a>
+        <span>&middot;</span>
+        <a href="/kit-imprimible.html" class="hover:text-[#F60000] transition-colors">Kit Imprimible</a>
+        <span>&middot;</span>
+        <a href="/terminos.html" class="hover:text-[#F60000] transition-colors">Términos</a>
+        <span>&middot;</span>
+        <a href="/privacidad.html" class="hover:text-[#F60000] transition-colors">Privacidad</a>
+      </div>
+      <p class="text-[10px] text-[#010101]/40 font-mono mt-4">
+        &copy; <span id="currentYear"></span> Dale!TePido. Todos los derechos reservados.
+      </p>
+    </div>
+  </footer>
+
+  <!-- SCRIPT GSAP SCROLLTRIGGER COREOGRAFÍA DE LÍNEAS VIAJERAS -->
   <script>
     document.getElementById('currentYear').textContent = new Date().getFullYear();
 
@@ -472,12 +483,20 @@
       document.getElementById('videoBox-4')
     ];
 
-    const silBoxes = [
-      document.getElementById('sil-0'),
-      document.getElementById('sil-1'),
-      document.getElementById('sil-2'),
-      document.getElementById('sil-3'),
-      document.getElementById('sil-4')
+    const cards = [
+      document.getElementById('card-0'),
+      document.getElementById('card-1'),
+      document.getElementById('card-2'),
+      document.getElementById('card-3'),
+      document.getElementById('card-4')
+    ];
+
+    const nodes = [
+      document.getElementById('node-0'),
+      document.getElementById('node-1'),
+      document.getElementById('node-2'),
+      document.getElementById('node-3'),
+      document.getElementById('node-4')
     ];
 
     const lines = [
@@ -487,13 +506,21 @@
       document.getElementById('line-3')
     ];
 
+    const silBoxes = [
+      document.getElementById('sil-0'),
+      document.getElementById('sil-1'),
+      document.getElementById('sil-2'),
+      document.getElementById('sil-3'),
+      document.getElementById('sil-4')
+    ];
+
     const progressBar = document.getElementById('scrollProgress');
     const navButtons = document.querySelectorAll('.scene-nav-btn');
 
-    // Inicializar strokeDash de las líneas SVG
-    lines.forEach(line => {
+    // Inicializar strokeDasharray de cada línea para que viajen desde su origen
+    lines.forEach((line) => {
       if (line) {
-        const len = line.getTotalLength ? line.getTotalLength() : 1600;
+        const len = line.getTotalLength ? line.getTotalLength() : 1800;
         gsap.set(line, {
           strokeDasharray: len,
           strokeDashoffset: len,
@@ -502,75 +529,143 @@
       }
     });
 
-    // Timeline maestra conectada a ScrollTrigger con scrub: 0.6
+    // Make cards ready for display
+    cards.forEach((card, idx) => {
+      if (idx !== 0) {
+        card.classList.remove('hidden');
+        gsap.set(card, { opacity: 0, y: 30, pointerEvents: 'none' });
+      }
+    });
+
+    // Timeline Pinned conectada a ScrollTrigger con scrub 0.8
+    // Total de 4 transiciones (1 -> 2 -> 3 -> 4 -> 5)
     const masterTl = gsap.timeline({
       scrollTrigger: {
         trigger: '#storyContainer',
         start: 'top top',
-        end: 'bottom bottom',
-        scrub: 0.6,
+        end: '+=4500', // 4500px de scroll interactivo
+        pin: true,
+        scrub: 0.8,
+        anticipatePin: 1,
         onUpdate: (self) => {
           const prog = self.progress;
           if (progressBar) progressBar.style.width = (prog * 100) + '%';
-          const sceneIdx = Math.min(4, Math.floor(prog * 5 + 0.15));
-          navButtons.forEach((btn, idx) => {
-            if (idx === sceneIdx) {
-              btn.className = 'scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101] text-[#FFFFFF]';
-              const dot = btn.querySelector('span');
-              if (dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-[#F60000]';
-            } else {
-              btn.className = 'scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101]/5 text-[#010101]/70 hover:bg-[#010101]/10';
-              const dot = btn.querySelector('span');
-              if (dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-[#010101]/40';
-            }
-          });
+          const sceneIdx = Math.min(4, Math.floor(prog * 5 + 0.1));
+          updateNav(sceneIdx);
         }
       }
     });
 
-    // Construir las 4 transiciones
+    function updateNav(sceneIdx) {
+      navButtons.forEach((btn, idx) => {
+        const dot = btn.querySelector('span');
+        if (idx === sceneIdx) {
+          btn.className = 'scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101] text-[#FFFFFF] shadow-sm';
+          if (dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-[#F60000]';
+        } else {
+          btn.className = 'scene-nav-btn px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-200 flex items-center gap-2 bg-[#010101]/5 text-[#010101]/70 hover:bg-[#010101]/10';
+          if (dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-[#010101]/40';
+        }
+      });
+    }
+
+    // CONSTRUCCIÓN DE LAS 4 TRANSICIONES VIAJERAS
+    // Cada transición dura 1.0 unidad de tiempo de la timeline
     for (let i = 0; i < 4; i++) {
       const curVideo = videoBoxes[i];
       const nextVideo = videoBoxes[i + 1];
-      const curSil = silBoxes[i];
-      const nextSil = silBoxes[i + 1];
+      const curCard = cards[i];
+      const nextCard = cards[i + 1];
       const line = lines[i];
+      const nextNode = nodes[i + 1];
+      const nextSil = silBoxes[i + 1];
 
       const trans = gsap.timeline();
 
-      // 1. Video saliente hace fade out
-      if (curVideo) {
-        trans.to(curVideo, { opacity: 0, scale: 0.94, duration: 0.2, ease: 'power2.out' }, 0);
-      }
-      // 2. Se enciende silueta de trazos en misma posición
-      if (curSil) {
-        trans.to(curSil, { opacity: 1, scale: 1, duration: 0.18, ease: 'power2.inOut' }, 0.1);
-      }
-      // 3. Línea roja viaja cruzando la pantalla
+      // 1. La línea roja #F60000 empieza a viajar desde el personaje actual hacia el siguiente
       if (line) {
-        trans.to(line, { strokeDashoffset: 0, duration: 0.45, ease: 'power1.inOut' }, 0.22);
+        trans.to(line, {
+          strokeDashoffset: 0,
+          duration: 0.85,
+          ease: 'power1.inOut'
+        }, 0.05);
       }
-      // 4. Se dibuja silueta en trazo de la siguiente postura en margen opuesto
-      if (nextSil) {
-        trans.to(nextSil, { opacity: 1, scale: 1, duration: 0.22, ease: 'power2.inOut' }, 0.55);
+
+      // 2. Transición suave de textos editoriales
+      if (curCard) {
+        trans.to(curCard, {
+          opacity: 0,
+          y: -25,
+          duration: 0.35,
+          ease: 'power2.in',
+          pointerEvents: 'none'
+        }, 0.1);
       }
-      // 5. Se apagan SVGs y se enciende nuevo video en loop
-      if (curSil) trans.to(curSil, { opacity: 0, duration: 0.15, ease: 'power2.out' }, 0.7);
-      if (nextSil) trans.to(nextSil, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 0.76);
-      if (line) trans.to(line, { opacity: 0.15, duration: 0.2, ease: 'power2.out' }, 0.75);
+
+      // 3. Crossfade cinematográfico continuo entre videos (¡SIN quedar vacío en blanco!)
+      if (curVideo) {
+        trans.to(curVideo, {
+          opacity: 0,
+          scale: 0.98,
+          duration: 0.45,
+          ease: 'power1.inOut'
+        }, 0.35);
+      }
       if (nextVideo) {
-        trans.to(nextVideo, { opacity: 1, scale: 1, duration: 0.24, ease: 'power2.out' }, 0.76);
+        trans.to(nextVideo, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.45,
+          ease: 'power1.inOut'
+        }, 0.45);
+      }
+
+      // 4. Silueta blueprint del siguiente personaje parpadea sutilmente mientras llega la línea
+      if (nextSil) {
+        trans.to(nextSil, {
+          opacity: 0.7,
+          duration: 0.25,
+          ease: 'power2.out'
+        }, 0.55);
+        trans.to(nextSil, {
+          opacity: 0,
+          duration: 0.2,
+          ease: 'power2.out'
+        }, 0.8);
+      }
+
+      // 5. La línea llega al próximo video: el nodo tecnológico se ilumina en rojo
+      if (nextNode) {
+        trans.to(nextNode, {
+          opacity: 1,
+          duration: 0.25,
+          ease: 'back.out(2)'
+        }, 0.75);
+      }
+
+      // 6. El nuevo texto editorial entra suavemente en escena
+      if (nextCard) {
+        trans.to(nextCard, {
+          opacity: 1,
+          y: 0,
+          duration: 0.4,
+          ease: 'power2.out',
+          pointerEvents: 'auto'
+        }, 0.65);
       }
 
       masterTl.add(trans, i * 1.0);
     }
 
-    // Navegación suave a escenas
-    function scrollToScene(idx) {
-      const target = document.getElementById('sec-' + idx);
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth' });
-      }
+    // Salto directo a una escena al hacer clic en los botones superiores
+    function jumpToScene(idx) {
+      if (!masterTl.scrollTrigger) return;
+      const totalProg = idx / 4;
+      const targetScroll = masterTl.scrollTrigger.start + totalProg * (masterTl.scrollTrigger.end - masterTl.scrollTrigger.start);
+      window.scrollTo({
+        top: targetScroll,
+        behavior: 'smooth'
+      });
     }
   </script>
 </body>
