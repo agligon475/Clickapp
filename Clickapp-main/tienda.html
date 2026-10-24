@@ -1833,6 +1833,8 @@ async function loadSheet() {
           } catch (e) {
             console.error("Error parsing JSON options in tienda load:", e);
           }
+        }
+
         let options = p.options || null;
         if (!variants && options) {
           try {

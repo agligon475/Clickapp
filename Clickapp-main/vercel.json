@@ -19,6 +19,32 @@
       ]
     },
     {
+      "source": "/manifest.json",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/manifest+json; charset=utf-8"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "source": "/js/(.*)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/javascript; charset=utf-8"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {
@@ -70,6 +96,58 @@
       "destination": "/api/$1"
     },
     {
+      "source": "/manifest.json",
+      "destination": "/manifest.json"
+    },
+    {
+      "source": "/twa-manifest.json",
+      "destination": "/twa-manifest.json"
+    },
+    {
+      "source": "/sw.js",
+      "destination": "/sw.js"
+    },
+    {
+      "source": "/js/(.*)",
+      "destination": "/js/$1"
+    },
+    {
+      "source": "/widgets/(.*)",
+      "destination": "/widgets/$1"
+    },
+    {
+      "source": "/bgd-samples/(.*)",
+      "destination": "/bgd-samples/$1"
+    },
+    {
+      "source": "/super-admin-login",
+      "destination": "/super-admin-login.html"
+    },
+    {
+      "source": "/super-admin-login.html",
+      "destination": "/super-admin-login.html"
+    },
+    {
+      "source": "/super-admin-secret-dashboard",
+      "destination": "/super-admin-secret-dashboard.html"
+    },
+    {
+      "source": "/super-admin-secret-dashboard.html",
+      "destination": "/super-admin-secret-dashboard.html"
+    },
+    {
+      "source": "/super-admin-prospectos",
+      "destination": "/super-admin-prospectos.html"
+    },
+    {
+      "source": "/super-admin-email-cms",
+      "destination": "/super-admin-email-cms.html"
+    },
+    {
+      "source": "/super-admin-config",
+      "destination": "/super-admin-config.html"
+    },
+    {
       "source": "/desarrollo",
       "destination": "/desarrollo.html"
     },
@@ -100,10 +178,6 @@
     {
       "source": "/kit-imprimible",
       "destination": "/kit-imprimible.html"
-    },
-    {
-      "source": "/super-admin-secret-dashboard",
-      "destination": "/super-admin-secret-dashboard.html"
     },
     {
       "source": "/landing",
