@@ -90,8 +90,9 @@
   <link
     href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Josefin+Sans:ital,wght@0,300..700;1,300..700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
     rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/logistics.js"></script>
   <style>
     :root {
       --red: #F60000;
@@ -5607,6 +5608,132 @@
     </div>
   </div>
 
+  <!-- MODAL: DESPACHO MULTIMODAL DALE!TEPIDO 🤝 DALE!QUEVOY (SUPABASE SHARED REALTIME) -->
+  <div id="dalequevoy-dispatch-modal" role="dialog" aria-modal="true" aria-labelledby="dqv-modal-title" aria-hidden="true" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(1,1,1,0.85); backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#010101; border:1px solid #27272a; border-radius:20px; width:min(620px, 95vw); max-height:92vh; overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,0.8); color:#F6F6F6; font-family:'Poppins', sans-serif;">
+      
+      <!-- Head con branding Dale!TePido 🤝 Dale!QueVoy -->
+      <div style="padding:20px 24px; border-bottom:1px solid #27272a; display:flex; align-items:center; justify-content:space-between; background:linear-gradient(135deg, rgba(246,0,0,0.1) 0%, rgba(1,1,1,0) 100%);">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:40px; height:40px; border-radius:10px; background:#F60000; color:#fff; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; box-shadow:0 4px 12px rgba(246,0,0,0.4);">
+            <i class="bi bi-truck"></i>
+          </div>
+          <div>
+            <div style="font-family:'Josefin Sans', sans-serif; font-size:17px; font-weight:800; color:#fff; display:flex; align-items:center; gap:6px;">
+              <span>Dale! Te Pido</span>
+              <span style="color:#F60000;">🤝</span>
+              <span style="color:#F60000;">Dale! Que Voy</span>
+            </div>
+            <div style="font-size:11px; color:#a1a1aa;">Despacho Logístico Multimodal en Tiempo Real</div>
+          </div>
+        </div>
+        <button onclick="closeDaleQueVoyModal()" aria-label="Cerrar modal" style="background:#18181b; border:1px solid #27272a; border-radius:50%; width:32px; height:32px; color:#a1a1aa; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;">&times;</button>
+      </div>
+
+      <!-- Cuerpo del modal -->
+      <div style="padding:24px; display:flex; flex-direction:column; gap:18px;">
+
+        <!-- Datos del pedido -->
+        <div style="background:rgba(255,255,255,0.03); border:1px solid #27272a; border-radius:12px; padding:14px 16px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+            <div>
+              <span style="font-size:10px; color:#a1a1aa; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Orden a Despachar</span>
+              <div id="dqv-order-title" style="font-family:'Josefin Sans', sans-serif; font-size:17px; font-weight:700; color:#fff;">Pedido #TP-0000</div>
+            </div>
+            <div id="dqv-rubro-badge" style="font-size:11px; font-weight:700; background:rgba(246,0,0,0.15); border:1px solid rgba(246,0,0,0.3); color:#F60000; padding:4px 10px; border-radius:99px;">
+              🏪 Rubro General
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12.5px; color:#d4d4d8;">
+            <div><span style="color:#71717a;">Cliente:</span> <b id="dqv-order-cliente">—</b></div>
+            <div><span style="color:#71717a;">Teléfono:</span> <b id="dqv-order-phone">—</b></div>
+            <div style="grid-column:1/-1;"><span style="color:#71717a;">Destino:</span> <b id="dqv-order-address">—</b></div>
+            <div style="grid-column:1/-1;"><span style="color:#71717a;">Contenido:</span> <span id="dqv-order-items" style="color:#a1a1aa;">—</span></div>
+          </div>
+        </div>
+
+        <!-- Métricas de Carga y Vehículo Recomendado en Dale!QueVoy -->
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:12px;">
+          <!-- Peso Acumulado -->
+          <div style="background:#09090b; border:1px solid #27272a; border-radius:12px; padding:14px; text-align:center;">
+            <div style="font-size:11px; color:#a1a1aa; text-transform:uppercase; font-weight:700;">⚖️ Peso Acumulado</div>
+            <div id="dqv-calc-weight" style="font-family:'Josefin Sans', sans-serif; font-size:24px; font-weight:800; color:#fff; margin-top:4px;">0.5 kg</div>
+            <div style="font-size:10px; color:#71717a; margin-top:2px;">Calculado por catálogo</div>
+          </div>
+
+          <!-- Categoría de Carga -->
+          <div style="background:#09090b; border:1px solid #27272a; border-radius:12px; padding:14px; text-align:center;">
+            <div style="font-size:11px; color:#a1a1aa; text-transform:uppercase; font-weight:700;">📦 Categoría Carga</div>
+            <div id="dqv-calc-category" style="font-family:'Josefin Sans', sans-serif; font-size:16px; font-weight:700; color:#F60000; margin-top:6px;">SMALL_BOX</div>
+            <div id="dqv-calc-cat-desc" style="font-size:10px; color:#71717a; margin-top:2px;">Paquete estándar</div>
+          </div>
+
+          <!-- Vehículo Sugerido -->
+          <div style="background:#09090b; border:1px solid #27272a; border-radius:12px; padding:14px; text-align:center;">
+            <div style="font-size:11px; color:#a1a1aa; text-transform:uppercase; font-weight:700;">🚗 Flota Multimodal</div>
+            <div id="dqv-calc-vehicle" style="font-family:'Josefin Sans', sans-serif; font-size:16px; font-weight:700; color:#22c55e; margin-top:6px;">🛵 MOTO / BICI</div>
+            <div id="dqv-calc-vehicle-desc" style="font-size:10px; color:#71717a; margin-top:2px;">Ágil y veloz</div>
+          </div>
+        </div>
+
+        <!-- Código PIN de Seguridad para Destino -->
+        <div style="background:rgba(246,0,0,0.06); border:2px dashed #F60000; border-radius:14px; padding:18px; text-align:center;">
+          <div style="display:flex; align-items:center; justify-content:center; gap:6px; font-size:11px; font-weight:700; color:#F60000; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">
+            <i class="bi bi-shield-lock-fill"></i> PIN de Validación en Entrega (Destino)
+          </div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:12px;">
+            <span id="dqv-pin-display" style="font-family:'Josefin Sans', monospace; font-size:40px; font-weight:800; color:#fff; letter-spacing:6px;">----</span>
+            <button type="button" onclick="copiarPinDaleQueVoy()" title="Copiar PIN" style="background:#18181b; border:1px solid #3f3f46; color:#fff; width:34px; height:34px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+              <i class="bi bi-copy"></i>
+            </button>
+          </div>
+          <div style="font-size:11px; color:#a1a1aa; margin-top:4px;">
+            El cadete solo podrá finalizar el viaje cuando el cliente le dicte este PIN en la puerta.
+          </div>
+        </div>
+
+        <!-- Estado en Vivo (Supabase Realtime) -->
+        <div id="dqv-live-status-box" style="display:none; background:#09090b; border:1px solid #27272a; border-radius:12px; padding:16px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+            <div style="font-size:11px; font-weight:700; color:#a1a1aa; text-transform:uppercase; letter-spacing:0.05em;">
+              <i class="bi bi-broadcast" style="color:#F60000;"></i> Trazabilidad en Vivo (Dale!QueVoy)
+            </div>
+            <div id="dqv-status-pill" style="font-size:10px; font-weight:800; padding:3px 8px; border-radius:6px; background:#eab308; color:#000;">
+              SEARCHING
+            </div>
+          </div>
+          <div id="dqv-status-message" style="font-size:13px; font-weight:600; color:#fff; margin-bottom:8px;">
+            🔍 Buscando repartidor en la red multimodal...
+          </div>
+          <div style="width:100%; height:6px; background:#27272a; border-radius:3px; overflow:hidden;">
+            <div id="dqv-progress-bar" style="width:25%; height:100%; background:linear-gradient(90deg, #F60000, #22c55e); transition:width 0.4s ease;"></div>
+          </div>
+          <div style="font-size:10px; color:#71717a; margin-top:8px;" id="dqv-driver-info">
+            Conductores conectados en tu zona: recibiendo alerta en Dale!QueVoy Driver App.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Pie del modal con acciones -->
+      <div style="padding:16px 24px; border-top:1px solid #27272a; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:#09090b; border-radius:0 0 20px 20px;">
+        <button type="button" onclick="enviarPinPorWhatsApp()" style="background:#18181b; border:1px solid #3f3f46; color:#F6F6F6; padding:10px 16px; border-radius:10px; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+          <i class="bi bi-whatsapp" style="color:#22c55e;"></i> Compartir PIN por WhatsApp
+        </button>
+
+        <div style="display:flex; gap:10px;">
+          <button type="button" onclick="closeDaleQueVoyModal()" style="background:transparent; border:1px solid #27272a; color:#a1a1aa; padding:10px 16px; border-radius:10px; font-size:12px; font-weight:600; cursor:pointer;">
+            Cerrar
+          </button>
+          <button type="button" id="dqv-btn-dispatch" onclick="confirmarDespachoDaleQueVoy()" style="background:linear-gradient(135deg, #F60000 0%, #B80000 100%); border:none; color:#fff; padding:10px 20px; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 15px rgba(246,0,0,0.4);">
+            <i class="bi bi-send-check-fill"></i> Confirmar Despacho a Dale!QueVoy
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- MODAL: ACTUALIZAR PLAN / ELEGIR PLAN -->
   <div id="plan-upgrade-modal" role="dialog" aria-modal="true" aria-labelledby="plan-upgrade-title" aria-hidden="true" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.75); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:20px;">
     <div style="background:var(--steel); border:1px solid var(--zinc); border-radius:20px; max-width:620px; width:100%; max-height:90vh; overflow-y:auto; padding:28px; position:relative; box-shadow:0 24px 64px rgba(0,0,0,0.6); color:var(--white);">
@@ -7801,17 +7928,20 @@
 
               <!-- 3. Rubro principal -->
               <div class="ctrl-group" style="grid-column:1/-1;">
-                <label class="ctrl-label">Rubro principal (Sincronizado con Setup Guiado)</label>
+                <label class="ctrl-label">Rubro del Comercio (Ecosistema Multi-Rubro & Red Dale!QueVoy)</label>
                 <select class="ctrl-input" id="cfg-store-rubro" onchange="syncRubroFromBasicConfig(this.value)">
-                  <option value="kiosco_almacen">🏪 Kiosco / Almacén</option>
-                  <option value="industrial">🏭 Industrial</option>
-                  <option value="gastronomia">🍔 Gastronomía</option>
-                  <option value="tecnologia">📱 Tecnología</option>
-                  <option value="indumentaria">👕 Indumentaria</option>
-                  <option value="insumos">📦 Insumos</option>
-                  <option value="otros">✨ Otros</option>
+                  <option value="PHARMACY">💊 Farmacia & Cosmética (PHARMACY)</option>
+                  <option value="HARDWARE">🔧 Ferretería & Corralón (HARDWARE)</option>
+                  <option value="RETAIL">👗 Moda, Calzado & Indumentaria (RETAIL)</option>
+                  <option value="PETSHOP">🐾 Pet Shop & Alimentos Mascotas (PETSHOP)</option>
+                  <option value="GROCERY">🥫 Almacén, Kiosco & Bebidas (GROCERY)</option>
+                  <option value="GASTRONOMY">🍽️ Gastronomía, Restaurante & Bar (GASTRONOMY)</option>
+                  <option value="ELECTRONICS">⚡ Electrónica, Computación & Repuestos (ELECTRONICS)</option>
+                  <option value="BOOKSTORE">📚 Librería & Juguetería (BOOKSTORE)</option>
+                  <option value="ECOMMERCE">📦 Tienda Online & E-commerce General (ECOMMERCE)</option>
+                  <option value="OTHER">✨ Otros Rubros Comerciales (OTHER)</option>
                 </select>
-                <div style="font-size:11px; color:var(--silver); margin-top:4px;">Al cambiar el rubro se actualizará automáticamente tu plantilla y configuración de tienda.</div>
+                <div style="font-size:11px; color:var(--silver); margin-top:4px;">Determina el tipo de paquete y el vehículo óptimo (bici, moto, auto, camioneta) asignado en Dale!QueVoy.</div>
               </div>
 
               <!-- 5. Dirección física -->
@@ -9745,6 +9875,7 @@
 
     function mapSupabaseRowToLocal(p) {
       let localDetalle = p.detalles || p.detalle || '';
+      let opts = p.options || null;
       if (p.variants) {
         const variantsStr = typeof p.variants === 'string' ? p.variants : JSON.stringify(p.variants);
         if (variantsStr !== '{}' && variantsStr !== '[]' && variantsStr !== 'null') {
@@ -9768,6 +9899,8 @@
         detalle: localDetalle,
         codigo: p.codigo || '',
         pills: p.pills || '',
+        weight_kg: p.weight_kg !== undefined ? parseFloat(p.weight_kg) : 0.5,
+        options: opts,
         hidden: !!p.oculto
       };
     }
@@ -9798,6 +9931,8 @@
         marca: p.marca || null,
         detalles: textDetalles,
         variants: jsonVariants,
+        options: jsonVariants?.variants || p.options || [],
+        weight_kg: p.weight_kg !== undefined ? Number(p.weight_kg) : 0.5,
         origen: p.origen || null,
         oculto: !!p.hidden
       };
@@ -13565,6 +13700,49 @@
     }
     window.addColorPresetGroup = addColorPresetGroup;
 
+    function addPharmaPresetGroup() {
+      const chk = document.getElementById('m-has-variations');
+      if (chk && !chk.checked) {
+        chk.checked = true;
+        toggleVariationsEditor();
+      }
+      addVariantGroup('Presentación / Dosis', [
+        { name: 'Caja × 10 comprimidos', priceDelta: 0 },
+        { name: 'Caja × 20 comprimidos', priceDelta: 0 },
+        { name: 'Jarabe 120 ml', priceDelta: 0 }
+      ]);
+    }
+    window.addPharmaPresetGroup = addPharmaPresetGroup;
+
+    function addPetPresetGroup() {
+      const chk = document.getElementById('m-has-variations');
+      if (chk && !chk.checked) {
+        chk.checked = true;
+        toggleVariationsEditor();
+      }
+      addVariantGroup('Presentación Alimento', [
+        { name: 'Bolsa 3 kg', priceDelta: 0 },
+        { name: 'Bolsa 7.5 kg', priceDelta: 0 },
+        { name: 'Bolsa 15 kg (Flete Van)', priceDelta: 0 },
+        { name: 'Bolsa 20 kg (Flete Van)', priceDelta: 0 }
+      ]);
+    }
+    window.addPetPresetGroup = addPetPresetGroup;
+
+    function addHardwarePresetGroup() {
+      const chk = document.getElementById('m-has-variations');
+      if (chk && !chk.checked) {
+        chk.checked = true;
+        toggleVariationsEditor();
+      }
+      addVariantGroup('Medida / Calibre', [
+        { name: '1/2 pulgada', priceDelta: 0 },
+        { name: '3/4 pulgada', priceDelta: 0 },
+        { name: '1 pulgada', priceDelta: 0 }
+      ]);
+    }
+    window.addHardwarePresetGroup = addHardwarePresetGroup;
+
     function clearPwErrors() {
       const eName = document.getElementById('m-name-error');
       const eCat = document.getElementById('m-cat-error');
@@ -13768,6 +13946,11 @@
       } else {
         stockInput.setAttribute('step', '1');
         stockInput.value = p ? Math.round(p.stock) : '';
+      }
+
+      const weightInput = document.getElementById('m-weight-kg');
+      if (weightInput) {
+        weightInput.value = (p && p.weight_kg !== undefined) ? Number(p.weight_kg) : 0.5;
       }
 
       // Detalle y rubro gastronomia
@@ -14142,12 +14325,13 @@
         textDetalle = textDetalle + ' ||| ' + JSON.stringify(customOpts);
       }
 
+      const weight_kg = parseFloat(document.getElementById('m-weight-kg')?.value) || 0.5;
       const prevEditingId = editingId;
 
       if (editingId != null && editingId !== '') {
         const p = localProducts.find(x => String(x.id) === String(editingId));
         if (p) {
-          Object.assign(p, { name, codigo, cat, marca, price, currency, divisa, stock, emoji, origen, detalle: textDetalle, img, img2, img3, pills });
+          Object.assign(p, { name, codigo, cat, marca, price, currency, divisa, stock, emoji, origen, detalle: textDetalle, img, img2, img3, pills, weight_kg, options: customOpts.variants || [] });
           if (isSupabaseRowId(editingId)) {
             try {
               await updateInSupabase('products', editingId, mapLocalProductToSupabaseRow(p));
@@ -14171,7 +14355,7 @@
           }
         }
       } else {
-        const draft = { name, codigo, cat, marca, price, currency, divisa, stock, emoji, origen, detalle: textDetalle, img, img2, img3, pills, hidden: false };
+        const draft = { name, codigo, cat, marca, price, currency, divisa, stock, emoji, origen, detalle: textDetalle, img, img2, img3, pills, weight_kg, options: customOpts.variants || [], hidden: false };
         try {
           const inserted = await postToSupabase('products', mapLocalProductToSupabaseRow(draft));
           const row0 = Array.isArray(inserted) ? inserted[0] : inserted;
@@ -14940,10 +15124,15 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       <td style="white-space:nowrap;font-size:11px;">
         ${o.logistica}<br/>
         ${o.logistica === 'Envío a domicilio' ?
-          `<select class="ctrl-input" style="padding:2px 4px;font-size:10px;margin-top:4px;" onchange="assignPickUp('${o.id}', this.value)">
-            <option value="">Asignar Repartidor...</option>
-            ${(window.currentPickups || []).filter(p => p.active).map(p => `<option value="${p.id}" ${o.pickup_id === p.id ? 'selected' : ''}>${p.name}</option>`).join('')}
-           </select>`
+          `<div style="display:flex; flex-direction:column; gap:4px; margin-top:4px;">
+            <button type="button" onclick="openDaleQueVoyModal('${o.id}')" style="background:${o.delivery_id ? 'rgba(16,185,129,0.15)' : 'linear-gradient(135deg, #F60000 0%, #B80000 100%)'}; border:1px solid ${o.delivery_id ? 'rgba(16,185,129,0.4)' : '#F60000'}; color:${o.delivery_id ? '#10B981' : '#fff'}; font-size:10px; font-weight:700; padding:4px 8px; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:${o.delivery_id ? 'none' : '0 2px 8px rgba(246,0,0,0.3)'};">
+              <i class="bi ${o.delivery_id ? 'bi-shield-check' : 'bi-send-check-fill'}"></i> ${o.delivery_id ? 'Tracking QueVoy (' + (o.pin_code || 'PIN') + ')' : '🚀 Despachar Dale!QueVoy'}
+            </button>
+            <select class="ctrl-input" style="padding:2px 4px;font-size:10px;" onchange="assignPickUp('${o.id}', this.value)">
+              <option value="">O asignar cadete local...</option>
+              ${(window.currentPickups || []).filter(p => p.active).map(p => `<option value="${p.id}" ${o.pickup_id === p.id ? 'selected' : ''}>${p.name}</option>`).join('')}
+            </select>
+          </div>`
           : '<span style="color:var(--zinc);">Retira cliente</span>'}
       </td>
       <td style="white-space:nowrap;font-family:var(--font-h);font-size:15px;font-weight:700;">
@@ -15013,10 +15202,15 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
             <td style="font-size:11px;color:var(--silver);">${o.direccion || '—'}</td>
             <td style="font-family:var(--font-h);font-size:13px;font-weight:700;">$${Number(o.total || 0).toLocaleString('es-AR')}</td>
             <td style="padding-right:14px;">
-              <select class="ctrl-input" style="padding:4px 8px;font-size:11px;width:100%;max-width:200px;" onchange="assignPickUp('${o.id}', this.value)">
-                <option value="">Seleccionar Repartidor...</option>
-                ${(window.currentPickups || []).filter(p => p.active).map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
-              </select>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <button type="button" onclick="openDaleQueVoyModal('${o.id}')" style="background:linear-gradient(135deg, #F60000 0%, #B80000 100%); border:none; color:#fff; font-size:11px; font-weight:700; padding:6px 12px; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap; box-shadow:0 2px 8px rgba(246,0,0,0.35);">
+                  <i class="bi bi-truck"></i> Despachar Dale!QueVoy
+                </button>
+                <select class="ctrl-input" style="padding:4px 8px;font-size:11px;width:100%;max-width:160px;" onchange="assignPickUp('${o.id}', this.value)">
+                  <option value="">O cadete propio...</option>
+                  ${(window.currentPickups || []).filter(p => p.active).map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
+                </select>
+              </div>
             </td>
           </tr>
         `).join('')}
@@ -18862,8 +19056,16 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     window.renderRubroViewSummary = renderRubroViewSummary;
 
     function syncRubroFromBasicConfig(val) {
-      if (!window.onboardingState) return;
-      window.onboardingState.rubro = val;
+      if (window.onboardingState) window.onboardingState.rubro = val;
+      const bType = window.DaleLogistics ? window.DaleLogistics.normalizeBusinessType(val) : val;
+      if (window.onboardingState) window.onboardingState.business_type = bType;
+      try {
+        const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+        sc.rubro = val;
+        sc.business_type = bType;
+        localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
+        localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(sc));
+      } catch(e) {}
       if (typeof renderRubroViewSummary === 'function') renderRubroViewSummary();
     }
     window.syncRubroFromBasicConfig = syncRubroFromBasicConfig;
@@ -20173,9 +20375,19 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
                 <option value="UYU">UYU ($ - Peso Uruguayo)</option>
               </select>
             </div>
-            <div class="ctrl-group" style="grid-column:1/-1;">
+            <div class="ctrl-group">
               <label class="ctrl-label" id="lbl-m-stock">Stock disponible (unidades)</label>
               <input class="ctrl-input" id="m-stock" type="number" min="0" placeholder="24" />
+            </div>
+            <div class="ctrl-group">
+              <label class="ctrl-label" id="lbl-m-weight-kg" style="display:flex; justify-content:space-between; align-items:center;">
+                <span>Peso por unidad (kg) *</span>
+                <span style="font-size:10px; color:var(--red); font-weight:700;"><i class="bi bi-truck"></i> Flete Dale!QueVoy</span>
+              </label>
+              <input class="ctrl-input" id="m-weight-kg" type="number" step="0.1" min="0.05" value="0.5" placeholder="0.5" />
+              <div style="font-size:10px; color:var(--silver); margin-top:3px;">
+                Asigna el vehículo adecuado en Dale!QueVoy (moto &lt;5kg, auto 5-15kg, camioneta &gt;15kg).
+              </div>
             </div>
           </div>
 
@@ -20183,20 +20395,23 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
           <div id="m-gastronomy-section" class="ctrl-group" style="margin-top:14px; border-top:1px solid var(--zinc); padding-top:14px;">
             <label style="display:flex; align-items:center; gap:8px; font-weight:600; font-size:13px; color:var(--white); margin-bottom:12px; cursor:pointer;">
               <input type="checkbox" id="m-has-variations" onchange="toggleVariationsEditor()" style="width:16px; height:16px; accent-color:var(--red); margin:0;">
-              <span id="lbl-has-variations">¿Agregar variaciones o adicionales de producto? (ej: modelos, capacidades, sabores, talles)</span>
+              <span id="lbl-has-variations">¿Agregar variaciones o adicionales de producto? (ej: modelos, capacidades, sabores, talles, dosis)</span>
             </label>
 
             <!-- Panel de Editor Interactivo -->
             <div id="m-variations-editor" style="display:none; flex-direction:column; gap:16px; background:var(--steel); border:1px solid var(--zinc); border-radius:10px; padding:14px;">
               
-              <!-- Botones de Presets Rápidos para Modelos / Indumentaria / Variantes -->
+              <!-- Botones de Presets Rápidos para Modelos / Indumentaria / Variantes / Farmacia / Petshop -->
               <div id="pw-variants-presets-bar" style="display:none; flex-direction:column; gap:6px; background:var(--iron); border:1px solid var(--zinc); border-radius:8px; padding:10px;">
-                <div style="font-size:11px; font-weight:700; color:var(--white);">⚡ Plantillas Rápidas de Modelos y Opciones:</div>
+                <div style="font-size:11px; font-weight:700; color:var(--white);">⚡ Plantillas Rápidas Multi-Rubro:</div>
                 <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                  <button type="button" class="pw-mode-change-btn" onclick="addTechPresetGroup()"><i class="bi bi-cpu"></i> + Capacidad / Modelos (128GB, 256GB, 512GB)</button>
+                  <button type="button" class="pw-mode-change-btn" onclick="addSizePresetGroup()"><i class="bi bi-rulers"></i> + Talles Ropa (S, M, L, XL)</button>
+                  <button type="button" class="pw-mode-change-btn" onclick="addColorPresetGroup()"><i class="bi bi-palette"></i> + Colores (Negro, Blanco, Azul)</button>
+                  <button type="button" class="pw-mode-change-btn" onclick="addPharmaPresetGroup()"><i class="bi bi-capsule"></i> + Dosis Farmacia (10 comp, 20 comp, Jarabe)</button>
+                  <button type="button" class="pw-mode-change-btn" onclick="addPetPresetGroup()"><i class="bi bi-heart-pulse"></i> + Bolsa Alimento (3kg, 15kg, 20kg)</button>
+                  <button type="button" class="pw-mode-change-btn" onclick="addHardwarePresetGroup()"><i class="bi bi-tools"></i> + Medidas Ferretería (1/2", 3/4", 1")</button>
+                  <button type="button" class="pw-mode-change-btn" onclick="addTechPresetGroup()"><i class="bi bi-cpu"></i> + Capacidad Tech (128GB, 256GB)</button>
                   <button type="button" class="pw-mode-change-btn" onclick="addVoltagePresetGroup()"><i class="bi bi-lightning-charge"></i> + Voltaje (220V, 110V)</button>
-                  <button type="button" class="pw-mode-change-btn" onclick="addSizePresetGroup()"><i class="bi bi-rulers"></i> + Talles (S, M, L, XL)</button>
-                  <button type="button" class="pw-mode-change-btn" onclick="addColorPresetGroup()"><i class="bi bi-palette"></i> + Colores (Negro, Blanco, Gris)</button>
                 </div>
               </div>
 
@@ -21342,6 +21557,266 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
             btn.innerHTML = '<i class="bi bi-send-fill"></i> Disparar por n8n (Bot)';
         }
     }
+
+    /* ==========================================================================
+       INTEGRACIÓN MULTIMODAL DALE!TEPIDO 🤝 DALE!QUEVOY (SUPABASE REALTIME)
+       ========================================================================== */
+    let currentDqvOrder = null;
+    let currentDqvUnsub = null;
+
+    function updateDqvStatusUI(status, driverName, driverPhone) {
+      const pill = document.getElementById('dqv-status-pill');
+      const msg = document.getElementById('dqv-status-message');
+      const bar = document.getElementById('dqv-progress-bar');
+      const driverInfo = document.getElementById('dqv-driver-info');
+
+      const statusMap = {
+        'SEARCHING': { label: 'BUSCANDO CADETE', color: '#eab308', bg: 'rgba(234,179,8,0.15)', progress: '25%', msg: 'Buscando el repartidor más cercano en la red de Dale!QueVoy...' },
+        'ASSIGNED': { label: 'CADETE ASIGNADO', color: '#3b82f6', bg: 'rgba(59,130,246,0.15)', progress: '50%', msg: 'Repartidor asignado y en viaje al comercio para retirar el pedido' },
+        'PICKED_UP': { label: 'EN CAMINO', color: '#a855f7', bg: 'rgba(168,85,247,0.15)', progress: '75%', msg: 'Pedido retirado del local. En viaje directo al domicilio del cliente' },
+        'DELIVERED': { label: 'ENTREGADO', color: '#22c55e', bg: 'rgba(34,197,94,0.15)', progress: '100%', msg: '¡Pedido entregado con validación de PIN exitosa!' },
+        'CANCELLED': { label: 'CANCELADO', color: '#ef4444', bg: 'rgba(239,68,68,0.15)', progress: '100%', msg: 'El envío fue cancelado en Dale!QueVoy.' }
+      };
+
+      const s = statusMap[status] || statusMap['SEARCHING'];
+      if (pill) {
+        pill.innerText = s.label;
+        pill.style.color = s.color;
+        pill.style.background = s.bg;
+      }
+      if (msg) msg.innerText = s.msg;
+      if (bar) bar.style.width = s.progress;
+      if (driverInfo) {
+        if (driverName) {
+          driverInfo.innerHTML = `Repartidor asignado: <b>${driverName}</b> ${driverPhone ? `• <a href="https://wa.me/${driverPhone.replace(/\\D/g, '')}" target="_blank" style="color:#22c55e; text-decoration:none;"><i class="bi bi-whatsapp"></i> Chat WhatsApp</a>` : ''}`;
+        } else {
+          driverInfo.innerText = 'Red multimodal de repartidores de Dale!QueVoy conectada vía Supabase Realtime.';
+        }
+      }
+    }
+
+    function subscribeDqvRealtime(deliveryId) {
+      if (currentDqvUnsub) {
+        try { currentDqvUnsub(); } catch(e) {}
+        currentDqvUnsub = null;
+      }
+      if (window.DaleLogistics && window.DaleLogistics.escucharEstadoCadete) {
+        currentDqvUnsub = window.DaleLogistics.escucharEstadoCadete(deliveryId, (payload) => {
+          const newStatus = payload.status || payload.estado;
+          if (currentDqvOrder) {
+            currentDqvOrder.delivery_status = newStatus;
+            if (payload.driver_name) currentDqvOrder.driver_name = payload.driver_name;
+            if (payload.driver_phone) currentDqvOrder.driver_phone = payload.driver_phone;
+            if (typeof saveOrders === 'function' && typeof allOrders !== 'undefined') {
+              saveOrders(allOrders);
+            }
+          }
+          updateDqvStatusUI(newStatus, payload.driver_name, payload.driver_phone);
+          if (typeof showToast === 'function') {
+            showToast(`Dale!QueVoy: Pedido ${newStatus}`);
+          }
+        });
+      }
+    }
+
+    window.openDaleQueVoyModal = function(orderId) {
+      const orders = (typeof allOrders !== 'undefined' && Array.isArray(allOrders)) ? allOrders : (JSON.parse(localStorage.getItem('storeapp_orders_' + (typeof STORE_ID !== 'undefined' ? STORE_ID : '')) || localStorage.getItem('storeapp_orders') || '[]'));
+      const order = orders.find(o => String(o.id) === String(orderId) || String(o.orderId) === String(orderId) || String(o.order_number) === String(orderId));
+      if (!order) {
+        alert('No se encontró el pedido solicitado.');
+        return;
+      }
+      currentDqvOrder = order;
+
+      const storeCfg = (typeof CONFIG !== 'undefined' ? CONFIG : {}) || JSON.parse(localStorage.getItem('storeapp_cfg_' + (typeof STORE_ID !== 'undefined' ? STORE_ID : '')) || localStorage.getItem('storeapp_cfg') || '{}');
+      const storeRubro = storeCfg.rubro || storeCfg.business_type || 'OTHER';
+
+      let itemsList = [];
+      if (Array.isArray(order.items)) itemsList = order.items;
+      else if (Array.isArray(order.productos)) itemsList = order.productos;
+      else if (Array.isArray(order.items_data)) itemsList = order.items_data;
+      else if (typeof order.items === 'string') {
+        try { itemsList = JSON.parse(order.items); } catch(e) {}
+      }
+
+      if (!order.pin_code) {
+        order.pin_code = window.DaleLogistics ? window.DaleLogistics.generateSecurityPin() : Math.floor(1000 + Math.random() * 9000).toString();
+      }
+
+      const metrics = window.DaleLogistics ? window.DaleLogistics.calculateOrderMetrics(itemsList, storeRubro) : {
+        totalWeightKg: 0.5,
+        category: 'SMALL_BOX',
+        suggestedVehicle: '🛵 MOTO / BICI',
+        itemsSummary: 'Artículos generales'
+      };
+
+      const titleEl = document.getElementById('dqv-order-title');
+      if (titleEl) titleEl.innerText = `Pedido #${order.order_number || order.orderNumber || order.id || 'N/A'}`;
+
+      const rubroBadge = document.getElementById('dqv-rubro-badge');
+      if (rubroBadge) rubroBadge.innerText = `📦 Rubro: ${storeRubro}`;
+
+      const clientEl = document.getElementById('dqv-order-cliente');
+      if (clientEl) clientEl.innerText = order.customer_name || order.cliente || order.nombre || 'Consumidor Final';
+
+      const phoneEl = document.getElementById('dqv-order-phone');
+      if (phoneEl) phoneEl.innerText = order.customer_phone || order.telefono || order.wapp || 'Sin registrar';
+
+      const addressEl = document.getElementById('dqv-order-address');
+      if (addressEl) addressEl.innerText = order.delivery_address || order.direccion || 'Dirección no especificada';
+
+      const itemsEl = document.getElementById('dqv-order-items');
+      if (itemsEl) itemsEl.innerText = metrics.itemsSummary || (itemsList.map(i => `${i.cant || i.cantidad || 1}x ${i.name || i.nombre}`).join(', ') || 'Sin detalle');
+
+      const weightEl = document.getElementById('dqv-calc-weight');
+      if (weightEl) weightEl.innerText = `${metrics.totalWeightKg} kg`;
+
+      const catEl = document.getElementById('dqv-calc-category');
+      if (catEl) catEl.innerText = metrics.category;
+
+      const catDescEl = document.getElementById('dqv-calc-cat-desc');
+      if (catDescEl) catDescEl.innerText = metrics.category === 'LARGE_CARGO' ? 'Carga pesada / voluminosa' : 'Paquete prioritario';
+
+      const vehEl = document.getElementById('dqv-calc-vehicle');
+      if (vehEl) vehEl.innerText = metrics.suggestedVehicle;
+
+      const vehDescEl = document.getElementById('dqv-calc-vehicle-desc');
+      if (vehDescEl) vehDescEl.innerText = metrics.category === 'LARGE_CARGO' ? 'Espacio de carga amplio' : (metrics.totalWeightKg > 5 ? 'Capacidad media' : 'Ágil y rápido');
+
+      const pinEl = document.getElementById('dqv-pin-display');
+      if (pinEl) pinEl.innerText = order.pin_code;
+
+      const statusBox = document.getElementById('dqv-live-status-box');
+      const btnDispatch = document.getElementById('dqv-btn-dispatch');
+
+      if (order.delivery_id) {
+        if (statusBox) statusBox.style.display = 'block';
+        if (btnDispatch) {
+          btnDispatch.disabled = true;
+          btnDispatch.innerHTML = '<i class="bi bi-check2-all"></i> Despachado en Dale!QueVoy';
+          btnDispatch.style.background = '#27272a';
+        }
+        updateDqvStatusUI(order.delivery_status || 'SEARCHING', order.driver_name, order.driver_phone);
+        subscribeDqvRealtime(order.delivery_id);
+      } else {
+        if (statusBox) statusBox.style.display = 'none';
+        if (btnDispatch) {
+          btnDispatch.disabled = false;
+          btnDispatch.innerHTML = '<i class="bi bi-send-check-fill"></i> Confirmar Despacho a Dale!QueVoy';
+          btnDispatch.style.background = 'linear-gradient(135deg, #F60000 0%, #B80000 100%)';
+        }
+      }
+
+      const modal = document.getElementById('dalequevoy-dispatch-modal');
+      if (modal) {
+        modal.style.display = 'flex';
+        modal.setAttribute('aria-hidden', 'false');
+      }
+    };
+
+    window.confirmarDespachoDaleQueVoy = async function() {
+      if (!currentDqvOrder) return;
+      const btn = document.getElementById('dqv-btn-dispatch');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Conectando con Dale!QueVoy...';
+      }
+
+      try {
+        const storeCfg = (typeof CONFIG !== 'undefined' ? CONFIG : {}) || JSON.parse(localStorage.getItem('storeapp_cfg_' + (typeof STORE_ID !== 'undefined' ? STORE_ID : '')) || localStorage.getItem('storeapp_cfg') || '{}');
+        const merchant = {
+          id: storeCfg.id || storeCfg.store_id || (typeof STORE_ID !== 'undefined' ? STORE_ID : 'default_merchant'),
+          name: storeCfg.name || 'Mi Comercio',
+          address: storeCfg.direccion || storeCfg.address || 'Local Comercial',
+          lat: storeCfg.lat || -34.6037,
+          lng: storeCfg.lng || -58.3816,
+          rubro: storeCfg.rubro || storeCfg.business_type || 'OTHER'
+        };
+
+        let itemsList = [];
+        if (Array.isArray(currentDqvOrder.items)) itemsList = currentDqvOrder.items;
+        else if (Array.isArray(currentDqvOrder.productos)) itemsList = currentDqvOrder.productos;
+        else if (Array.isArray(currentDqvOrder.items_data)) itemsList = currentDqvOrder.items_data;
+
+        const res = await window.DaleLogistics.despacharEnvioDaleQueVoy({
+          order: currentDqvOrder,
+          merchant: merchant,
+          items: itemsList
+        });
+
+        if (!res.success) {
+          throw new Error(res.error || 'Error al conectar con la base de Dale!QueVoy');
+        }
+
+        currentDqvOrder.delivery_id = res.delivery.id;
+        currentDqvOrder.delivery_status = 'SEARCHING';
+        currentDqvOrder.pin_code = res.delivery.pin_code || currentDqvOrder.pin_code;
+        currentDqvOrder.estado = 'enviado';
+
+        if (typeof saveOrders === 'function' && typeof allOrders !== 'undefined') {
+          saveOrders(allOrders);
+        }
+        if (typeof renderAllOrders === 'function') {
+          renderAllOrders();
+        }
+
+        const statusBox = document.getElementById('dqv-live-status-box');
+        if (statusBox) statusBox.style.display = 'block';
+        updateDqvStatusUI('SEARCHING');
+        subscribeDqvRealtime(res.delivery.id);
+
+        if (btn) {
+          btn.disabled = true;
+          btn.innerHTML = '<i class="bi bi-check2-all"></i> ¡Despachado a Dale!QueVoy!';
+          btn.style.background = '#27272a';
+        }
+
+        if (typeof showToast === 'function') {
+          showToast('🚀 Despacho generado exitosamente en Dale!QueVoy');
+        } else {
+          alert('🚀 Despacho generado exitosamente en Dale!QueVoy. El repartidor verificará el PIN al entregar.');
+        }
+
+      } catch (err) {
+        console.error('Error al despachar en Dale!QueVoy:', err);
+        alert('No se pudo conectar el despacho: ' + err.message);
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="bi bi-send-check-fill"></i> Confirmar Despacho a Dale!QueVoy';
+        }
+      }
+    };
+
+    window.closeDaleQueVoyModal = function() {
+      const modal = document.getElementById('dalequevoy-dispatch-modal');
+      if (modal) {
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+      }
+      if (currentDqvUnsub) {
+        try { currentDqvUnsub(); } catch(e) {}
+        currentDqvUnsub = null;
+      }
+    };
+
+    window.copiarPinDaleQueVoy = function() {
+      if (!currentDqvOrder || !currentDqvOrder.pin_code) return;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(currentDqvOrder.pin_code).then(() => {
+          if (typeof showToast === 'function') showToast(`PIN copiado: ${currentDqvOrder.pin_code}`);
+          else alert(`PIN copiado: ${currentDqvOrder.pin_code}`);
+        });
+      }
+    };
+
+    window.enviarPinPorWhatsApp = function() {
+      if (!currentDqvOrder) return;
+      const phone = (currentDqvOrder.customer_phone || currentDqvOrder.telefono || '').replace(/\D/g, '');
+      const orderNum = currentDqvOrder.order_number || currentDqvOrder.orderNumber || currentDqvOrder.id || '';
+      const pin = currentDqvOrder.pin_code || '----';
+      const msg = encodeURIComponent(`Hola! 👋 Te avisamos de tu pedido #${orderNum}. Ya fue despachado con la red de repartidores Dale!QueVoy 🛵💨\n\nTu PIN de recepción seguro es: *${pin}*\nPor favor dictáselo al repartidor al momento de recibir el paquete.`);
+      window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+    };
   </script>
   <script src="/js/jaime-widget.js"></script>
 

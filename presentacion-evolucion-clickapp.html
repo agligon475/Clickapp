@@ -1080,8 +1080,65 @@
         </div>
       </section>
 
-      <!-- SLIDE 13: CONCLUSIÓN & HOJA DE RUTA -->
+      <!-- SLIDE 13: ECOSISTEMA MULTI-RUBRO & DESPACHO MULTIMODAL DALE!QUEVOY -->
       <section class="slide" id="slide-13">
+        <span class="slide-badge" style="background:rgba(246,0,0,0.15);border-color:rgba(246,0,0,0.4);color:#F60000;"><i class="bi bi-truck"></i> Etapa 13 · Release 23 de Octubre 2026</span>
+        <h2 class="slide-title">Ecosistema Multi-Rubro & Despacho Multimodal Dale!QueVoy</h2>
+        <p class="slide-desc">Apertura universal para 10 rubros comerciales y conexión logística bajo demanda con la red de cadetes de Dale!QueVoy a través de Supabase Realtime con validación por PIN de 4 dígitos.</p>
+
+        <div class="grid-3">
+          <div class="card card-accent-red" style="border-left: 3px solid #F60000;">
+            <div class="card-title" style="color:#F60000;"><i class="bi bi-boxes"></i> Catálogo Multi-Rubro Universal</div>
+            <div class="card-text">
+              Transformación más allá de la gastronomía:<br>
+              • Soporte para 10 tipologías comerciales: Farmacias, Ferreterías, Indumentaria/Retail, Pet Shops, Almacenes, E-commerce, Librerías, Electrónica y Gastronomía.<br>
+              • Atributos dinámicos en <code>options</code> (JSONB): talles, colores, presentaciones, dosificaciones y especificaciones técnicas.<br>
+              • Nuevo atributo nativo <code>weight_kg</code> (default 0.5 kg) por producto con cálculo acumulativo automático de carga por comanda.
+            </div>
+            <div class="pill-list" style="margin-top:14px;">
+              <span class="pill">10 Rubros</span>
+              <span class="pill">JSONB Options</span>
+              <span class="pill">weight_kg</span>
+              <span class="pill">Multi-Vertical</span>
+            </div>
+          </div>
+
+          <div class="card card-accent-amber">
+            <div class="card-title" style="color:var(--brand-amber);"><i class="bi bi-send-check-fill"></i> Despacho Multimodal Bajo Demanda</div>
+            <div class="card-text">
+              Mapeo inteligente de carga y flota en <code>public.deliveries</code>:<br>
+              • Clasificación automática: <code>PHARMACY</code>, <code>PETSHOP</code>, <code>RETAIL</code>, <code>FOOD</code>, <code>LARGE_CARGO</code> (&gt;15 kg o ferretería) y <code>SMALL_BOX</code>.<br>
+              • Sugerencia visual de vehículo óptimo: 🛵 Moto / Bici para livianos, 🚗 Auto para intermedios y 🚐 Camioneta / Utilitario para gran porte.<br>
+              • Integración bidireccional en dashboard con modal de pre-despacho y métricas instantáneas.
+            </div>
+            <div class="pill-list" style="margin-top:14px;">
+              <span class="pill">LARGE_CARGO</span>
+              <span class="pill">SMALL_BOX</span>
+              <span class="pill">Auto / Moto / Camioneta</span>
+              <span class="pill">Shared Supabase</span>
+            </div>
+          </div>
+
+          <div class="card card-accent-green">
+            <div class="card-title" style="color:var(--brand-green);"><i class="bi bi-shield-check"></i> PIN 4 Dígitos & Supabase Realtime</div>
+            <div class="card-text">
+              Seguridad total en entrega y seguimiento en vivo:<br>
+              • Generación automática de PIN numérico de 4 dígitos generado en el checkout para validación obligatoria con el repartidor en destino.<br>
+              • Modal y banner de confirmación en <code>tienda.html</code> e inclusión del PIN en la comanda de WhatsApp.<br>
+              • Listener reactivo en <code>dashboard.html</code> con Supabase Realtime (<code>SEARCHING</code> ➔ <code>ASSIGNED</code> ➔ <code>PICKED_UP</code> ➔ <code>DELIVERED</code>) y contacto directo con el cadete.
+            </div>
+            <div class="pill-list" style="margin-top:14px;">
+              <span class="pill">PIN de 4 dígitos</span>
+              <span class="pill">Supabase Realtime</span>
+              <span class="pill">Live Tracking</span>
+              <span class="pill">WhatsApp Comanda</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 14: CONCLUSIÓN & HOJA DE RUTA -->
+      <section class="slide" id="slide-14">
         <span class="slide-badge"><i class="bi bi-award-fill"></i> Balance & Futuro</span>
         <h2 class="slide-title">Estado de la Plataforma: Un SaaS Robusto y Listo para Crecer</h2>
         <p class="slide-desc">Resumen comparativo del salto cuantitativo y cualitativo logrado entre el momento cero y el estado actual de Dale! Te Pido / Clickapp.</p>
@@ -1118,13 +1175,13 @@
               </div>
               <div class="timeline-item">
                 <div class="timeline-dot"></div>
-                <div class="timeline-time">Omnicanal Web, PWA & Android APK</div>
-                <div class="timeline-content">Compilación CI/CD en GitHub Actions, Kit imprimible A4 y Storytelling /desarrollo.</div>
+                <div class="timeline-time">Ecosistema Multi-Rubro & Dale!QueVoy</div>
+                <div class="timeline-content">10 rubros, options JSONB, cálculo de peso, despacho multimodal con PIN y Supabase Realtime.</div>
               </div>
               <div class="timeline-item">
                 <div class="timeline-dot"></div>
-                <div class="timeline-time">Modo Sereno, Dark Mode & Vercel Analytics</div>
-                <div class="timeline-content">Retención 24/7, analítica en vivo, popups pulidos y APK exclusiva gestora.</div>
+                <div class="timeline-time">Omnicanal Web, PWA & Android APK</div>
+                <div class="timeline-content">Compilación CI/CD en GitHub Actions, Kit imprimible A4 y Storytelling /desarrollo.</div>
               </div>
             </div>
           </div>
@@ -1155,7 +1212,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 3.6 SaaS · Actualizado 23/10/2026
+        Dale! Te Pido © 2026 · Versión 3.7 SaaS · Actualizado 23/10/2026
       </div>
     </footer>
 
@@ -1164,7 +1221,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 13;
+  const totalSlides = 14;
 
   function showSlide(index) {
     if (index < 1) index = 1;

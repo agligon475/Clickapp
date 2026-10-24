@@ -1224,6 +1224,51 @@ a.logo{
 <!-- ── TOAST ── -->
 <div class="toast" id="toast"></div>
 
+<!-- ── MODAL PIN DE RECEPCIÓN SEGURA DALE!TEPIDO 🤝 DALE!QUEVOY ── -->
+<div id="dale-pin-modal" style="display:none; position:fixed; inset:0; z-index:999999; background:rgba(1,1,1,0.85); backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:16px;">
+  <div style="background:#010101; border:1px solid #27272a; border-radius:18px; max-width:440px; width:100%; padding:24px; color:#F6F6F6; font-family:'Poppins',sans-serif; box-shadow:0 12px 40px rgba(0,0,0,0.6); text-align:center; position:relative;">
+    <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(246,0,0,0.12); border:1px solid rgba(246,0,0,0.3); color:#F60000; font-size:11px; font-weight:700; padding:4px 12px; border-radius:99px; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:14px;">
+      <i class="bi bi-shield-lock-fill"></i> Entrega Segura Dale!QueVoy
+    </div>
+    <h3 style="font-family:'Josefin Sans',sans-serif; font-size:22px; font-weight:800; margin:0 0 8px 0; color:#fff;">¡Tu pedido está en camino!</h3>
+    <p style="font-size:13px; color:#a1a1aa; line-height:1.5; margin:0 0 18px 0;">
+      Para confirmar la entrega con el repartidor cuando llegue a tu puerta, tené a mano tu código PIN de recepción:
+    </p>
+
+    <!-- Caja Destacada del PIN -->
+    <div style="background:rgba(255,255,255,0.04); border:2px dashed #F60000; border-radius:14px; padding:18px; margin-bottom:18px;">
+      <div style="font-size:11px; font-weight:700; color:#a1a1aa; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;">
+        🔒 Código de Recepción
+      </div>
+      <div id="dale-pin-modal-code" style="font-family:'Josefin Sans',monospace; font-size:44px; font-weight:800; color:#fff; letter-spacing:6px;">
+        ----
+      </div>
+      <div style="font-size:11.5px; color:#a1a1aa; margin-top:4px;">
+        Dictale este número al repartidor al recibir tu compra.
+      </div>
+    </div>
+
+    <!-- Info del despacho -->
+    <div style="background:rgba(255,255,255,0.02); border:1px solid #27272a; border-radius:10px; padding:10px 14px; font-size:12px; color:#d4d4d8; text-align:left; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <span style="color:#71717a; display:block; font-size:10px; text-transform:uppercase;">Carga aproximada:</span>
+        <b id="dale-pin-modal-weight" style="color:#fff;">0.5 kg</b>
+      </div>
+      <div style="text-align:right;">
+        <span style="color:#71717a; display:block; font-size:10px; text-transform:uppercase;">Transporte sugerido:</span>
+        <b id="dale-pin-modal-vehicle" style="color:#F60000;">🛵 Moto / Bici</b>
+      </div>
+    </div>
+
+    <button type="button" onclick="document.getElementById('dale-pin-modal').style.display='none'" style="width:100%; background:linear-gradient(135deg, #F60000 0%, #D60000 100%); color:#fff; border:none; padding:12px; border-radius:12px; font-weight:700; font-size:14px; cursor:pointer; box-shadow:0 4px 15px rgba(246,0,0,0.35);">
+      Entendido, tengo mi PIN listo
+    </button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/logistics.js"></script>
+
 <script>
 /* ═══════════════════════════════════════════ SUPABASE CONFIG */
 const DEFAULT_SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
@@ -1788,6 +1833,17 @@ async function loadSheet() {
           } catch (e) {
             console.error("Error parsing JSON options in tienda load:", e);
           }
+        let options = p.options || null;
+        if (!variants && options) {
+          try {
+            const parsedOpts = typeof options === 'string' ? JSON.parse(options) : options;
+            if (Array.isArray(parsedOpts)) {
+              variants = parsedOpts;
+            } else if (parsedOpts && parsedOpts.variants) {
+              variants = parsedOpts.variants;
+              if (parsedOpts.modifiers) modifiers = parsedOpts.modifiers;
+            }
+          } catch(e) {}
         }
 
         return {
@@ -1805,6 +1861,8 @@ async function loadSheet() {
           marca: p.marca || '',
           detalles: textDetalles,
           origen: p.origen || '',
+          weight_kg: p.weight_kg !== undefined ? Number(p.weight_kg) : 0.5,
+          options: options,
           variants: variants,
           modifiers: modifiers
         };
@@ -2529,14 +2587,15 @@ function enviarWhatsApp() {
 
   const isNightGuardOrder = !sched.isOpen && sched.serenoActive;
 
-  // Build order items
+  // Build order items with weight_kg for multimodal logistics
   const items = Object.entries(cart).map(([id,q])=>{
     const p = findProduct(id);
     if (!p) return null;
     const price = cartDetails[id] ? cartDetails[id].price : p.price;
     const name = cartDetails[id] ? `${p.name} (${cartDetails[id].optionsText})` : p.name;
     const curr = p.currency || p.divisa || 'ARS';
-    return { id, nombre: name, cantidad: q, precio_unitario: price, subtotal: price*q, currency: curr };
+    const weight_kg = Number(p.weight_kg !== undefined ? p.weight_kg : 0.5);
+    return { id, nombre: name, cantidad: q, precio_unitario: price, subtotal: price*q, currency: curr, weight_kg };
   }).filter(Boolean);
 
   const totalsByCurrency = {};
@@ -2547,8 +2606,24 @@ function enviarWhatsApp() {
     .map(([curr, amt]) => `${getCurrencySymbol(curr)}${amt.toLocaleString('es-AR')}`)
     .join(' + ') || '$0';
 
-  // ── Generar ID del pedido ────────────────────────
+  // ── Generar ID del pedido & Cálculo Logístico Multimodal (Dale!QueVoy) ──
   const pedidoId = 'PED-' + Date.now().toString(36).toUpperCase();
+  
+  let pinCode = null;
+  let totalWeightKg = 0;
+  let logisticsInfo = null;
+
+  if (logis === 'Envío a domicilio') {
+    if (window.DaleLogistics) {
+      logisticsInfo = window.DaleLogistics.calculateOrderMetrics(items, CFG.business_type || CFG.rubro);
+      totalWeightKg = logisticsInfo.totalWeightKg;
+      pinCode = window.DaleLogistics.generateSecurityPin();
+    } else {
+      totalWeightKg = items.reduce((sum, it) => sum + ((it.weight_kg || 0.5) * it.cantidad), 0);
+      totalWeightKg = Math.round(totalWeightKg * 100) / 100;
+      pinCode = Math.floor(1000 + Math.random() * 9000).toString();
+    }
+  }
 
   // ── 1. Mensaje al dueño por WhatsApp ─────────────
   const serenoHeader = isNightGuardOrder
@@ -2566,6 +2641,8 @@ function enviarWhatsApp() {
     `💳 *Pago:* ${pago}`,
     `🚚 *Logística:* ${logis}`,
     dir ? `📍 *Dirección:* ${dir}` : '',
+    totalWeightKg > 0 ? `⚖️ *Carga aprox:* ${totalWeightKg} kg ${logisticsInfo ? '(' + logisticsInfo.suggestedVehicleIcon + ' ' + logisticsInfo.suggestedVehicle + ')' : ''}` : null,
+    pinCode ? `🔒 *PIN de Recepción Segura:* ${pinCode}\n_(El cliente dictará este PIN de 4 dígitos al repartidor de Dale!QueVoy al recibir su paquete)_` : null,
     ``,
     `👤 *Cliente:* ${nombre}`,
     `🪪 *DNI:* ${dni}`,
@@ -2589,9 +2666,35 @@ function enviarWhatsApp() {
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
 
   // ── 2. Registrar pedido ──────────────────────────
-  registrarPedido({ id: pedidoId, nombre, dni, pago, logistica: logis, direccion: dir, items, total: totalFormatted, is_night_guard: isNightGuardOrder, opt_in_whatsapp: optInWapp });
+  registrarPedido({ 
+    id: pedidoId, 
+    nombre, 
+    dni, 
+    pago, 
+    logistica: logis, 
+    direccion: dir, 
+    items, 
+    total: totalFormatted, 
+    is_night_guard: isNightGuardOrder, 
+    opt_in_whatsapp: optInWapp,
+    pin_code: pinCode,
+    weight_kg: totalWeightKg,
+    category: logisticsInfo?.resolvedCategory || 'SMALL_BOX'
+  });
 
-  // ── 3. Limpiar carrito ───────────────────────────
+  // ── 3. Mostrar Modal PIN si es entrega a domicilio ──────────────────
+  if (pinCode) {
+    const pinEl = document.getElementById('dale-pin-modal-code');
+    const weightEl = document.getElementById('dale-pin-modal-weight');
+    const vehicleEl = document.getElementById('dale-pin-modal-vehicle');
+    if (pinEl) pinEl.textContent = pinCode;
+    if (weightEl) weightEl.textContent = `${totalWeightKg} kg`;
+    if (vehicleEl && logisticsInfo) vehicleEl.textContent = `${logisticsInfo.suggestedVehicleIcon} ${logisticsInfo.suggestedVehicle}`;
+    const modalEl = document.getElementById('dale-pin-modal');
+    if (modalEl) modalEl.style.display = 'flex';
+  }
+
+  // ── 4. Limpiar carrito ───────────────────────────
   window.SERENO_ORDER_CONFIRMED = false;
   cart = {};
   cartDetails = {};
@@ -2620,7 +2723,10 @@ async function registrarPedido(pedido) {
     total:     pedido.total,
     estado:    'confirmar',
     is_night_guard: !!pedido.is_night_guard,
-    opt_in_whatsapp: !!pedido.opt_in_whatsapp
+    opt_in_whatsapp: !!pedido.opt_in_whatsapp,
+    pin_code:  pedido.pin_code || null,
+    weight_kg: pedido.weight_kg || 0.5,
+    category:  pedido.category || 'SMALL_BOX'
   };
 
   // ── 1. Guardar en localStorage (misma key que usa el dashboard) ──
@@ -2743,6 +2849,7 @@ function openProductDrawer(id) {
     <div class="pdrawer-badges" style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;">
       <span class="pdrawer-badge">${p.cat||'General'}</span>
       ${p.marca?`<span class="pdrawer-badge"><i class="bi bi-tag"></i> ${p.marca}</span>`:''}
+      ${p.weight_kg?`<span class="pdrawer-badge" title="Peso aproximado"><i class="bi bi-box-seam"></i> ${p.weight_kg} kg</span>`:''}
       ${flag?`<span class="pdrawer-badge">${flag} ${originName}</span>`:''}
       <span class="pdrawer-badge">
         ${p.stock===0?'<span style="color:var(--red);">Sin stock</span>':`Stock: ${p.stock} uds.`}
