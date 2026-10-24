@@ -45,6 +45,36 @@
       ]
     },
     {
+      "source": "/(.*)\\.css",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/css; charset=utf-8"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)\\.(?:png|jpg|jpeg|gif|svg|ico|webp)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {
@@ -72,7 +102,7 @@
   ],
   "functions": {
     "api/store.js": {
-      "includeFiles": "*.html"
+      "includeFiles": "{*.html,*.css,*.png,*.ico,*.svg,*.jpg,*.jpeg,img/**,img-default/**,widgets/**,bgd-samples/**}"
     },
     "api/auth.js": {
       "includeFiles": "api/email-templates.js"
@@ -112,12 +142,68 @@
       "destination": "/js/$1"
     },
     {
+      "source": "/img/(.*)",
+      "destination": "/img/$1"
+    },
+    {
+      "source": "/img-default/(.*)",
+      "destination": "/img-default/$1"
+    },
+    {
+      "source": "/videos/(.*)",
+      "destination": "/videos/$1"
+    },
+    {
       "source": "/widgets/(.*)",
       "destination": "/widgets/$1"
     },
     {
       "source": "/bgd-samples/(.*)",
       "destination": "/bgd-samples/$1"
+    },
+    {
+      "source": "/vov.min.css",
+      "destination": "/vov.min.css"
+    },
+    {
+      "source": "/dashboard-icon.png",
+      "destination": "/dashboard-icon.png"
+    },
+    {
+      "source": "/favicon.png",
+      "destination": "/favicon.png"
+    },
+    {
+      "source": "/favicon.ico",
+      "destination": "/favicon.ico"
+    },
+    {
+      "source": "/apple-touch-icon.png",
+      "destination": "/apple-touch-icon.png"
+    },
+    {
+      "source": "/icon-192.png",
+      "destination": "/icon-192.png"
+    },
+    {
+      "source": "/icon-512.png",
+      "destination": "/icon-512.png"
+    },
+    {
+      "source": "/icon-192-maskable.png",
+      "destination": "/icon-192-maskable.png"
+    },
+    {
+      "source": "/icon-512-maskable.png",
+      "destination": "/icon-512-maskable.png"
+    },
+    {
+      "source": "/screenshot-wide.png",
+      "destination": "/screenshot-wide.png"
+    },
+    {
+      "source": "/screenshot-narrow.png",
+      "destination": "/screenshot-narrow.png"
     },
     {
       "source": "/super-admin-login",

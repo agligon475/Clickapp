@@ -117,19 +117,38 @@ export default async function handler(req, res) {
     }
   }
 
-  // Serve bgd-samples static images
-  if (rawPath.startsWith('/bgd-samples/')) {
+  // 1c. Universal Static Assets Handler (images, css, videos, icons)
+  const mimeMap = {
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.webp': 'image/webp',
+    '.svg': 'image/svg+xml',
+    '.gif': 'image/gif',
+    '.ico': 'image/x-icon',
+    '.css': 'text/css; charset=utf-8',
+    '.js': 'application/javascript; charset=utf-8',
+    '.mp4': 'video/mp4',
+    '.webm': 'video/webm'
+  };
+
+  const ext = path.extname(rawPath).toLowerCase();
+  if (mimeMap[ext]) {
     try {
-      const fileName = path.basename(rawPath);
-      const filePath = path.join(process.cwd(), 'bgd-samples', fileName);
-      if (fs.existsSync(filePath)) {
-        const content = fs.readFileSync(filePath);
-        res.setHeader('Content-Type', 'image/jpeg');
-        return res.status(200).send(content);
+      const cleanRel = rawPath.replace(/^\//, '');
+      const assetPath = path.join(process.cwd(), cleanRel);
+      if (fs.existsSync(assetPath) && !fs.statSync(assetPath).isDirectory()) {
+        const fileContent = fs.readFileSync(assetPath);
+        res.setHeader('Content-Type', mimeMap[ext]);
+        res.setHeader('Cache-Control', 'public, max-age=86400');
+        return res.status(200).send(fileContent);
       }
     } catch (e) {
-      console.error('Error serving bgd-samples image:', e);
+      console.error('Error serving static asset:', e);
     }
+    // Si es un recurso estático (extensión de imagen/css/video) y no se encuentra, retornar 404 estricto (NUNCA HTML)
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    return res.status(404).send('Asset Not Found');
   }
 
   // 2. Determine store ID
