@@ -260,10 +260,11 @@
   </div>
 
   <script>
-    // Si ya existe un token, verificar si podemos redirigir
+    // Si ya existe un token en la sesión o almacenamiento local, verificar si podemos redirigir
     (function checkExistingToken() {
-      const token = sessionStorage.getItem('super_admin_master_key');
+      const token = sessionStorage.getItem('super_admin_master_key') || localStorage.getItem('super_admin_master_key');
       if (token && token.trim().length > 0) {
+        sessionStorage.setItem('super_admin_master_key', token);
         window.location.replace('super-admin-secret-dashboard.html');
       }
     })();
@@ -304,6 +305,7 @@
           const data = await res.json();
           if (data.success && data.token) {
             sessionStorage.setItem('super_admin_master_key', data.token);
+            localStorage.setItem('super_admin_master_key', data.token);
             window.location.replace('super-admin-secret-dashboard.html');
             return;
           }
@@ -312,6 +314,7 @@
         // Si la API devuelve 404 (ej. en servidores estáticos locales como Live Server) o falla
         if (isMasterUser && isMasterPwd) {
           sessionStorage.setItem('super_admin_master_key', 'super-admin-token-valid-key');
+          localStorage.setItem('super_admin_master_key', 'super-admin-token-valid-key');
           window.location.replace('super-admin-secret-dashboard.html');
           return;
         }
@@ -326,6 +329,7 @@
         // Respaldo local si coincide con las credenciales maestras autorizadas
         if (isMasterUser && isMasterPwd) {
           sessionStorage.setItem('super_admin_master_key', 'super-admin-token-valid-key');
+          localStorage.setItem('super_admin_master_key', 'super-admin-token-valid-key');
           window.location.replace('super-admin-secret-dashboard.html');
         } else {
           showError('Usuario o contraseña incorrectos.');
