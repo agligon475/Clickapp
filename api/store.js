@@ -180,8 +180,8 @@ export default async function handler(req, res) {
     for (const domain of domains) {
       if (hostname.endsWith(`.${domain}`)) {
         const subdomain = hostname.substring(0, hostname.length - domain.length - 1);
-        const cleanSubdomain = subdomain.replace(/^www\./, '');
-        if (cleanSubdomain) {
+        const cleanSubdomain = subdomain.replace(/^www\./, '').replace(/^www$/, '').trim();
+        if (cleanSubdomain && cleanSubdomain !== 'www') {
           storeId = cleanSubdomain;
           break;
         }
@@ -189,10 +189,21 @@ export default async function handler(req, res) {
     }
   }
 
+  if (storeId === 'www') {
+    storeId = null;
+  }
+
   // Extract from rawPath if not a root or static route
   if (!storeId && rawPath !== '/' && rawPath !== '') {
     const cleanPath = rawPath.replace(/^\//, '');
-    if (cleanPath && !cleanPath.includes('.') && !cleanPath.includes('/')) {
+    const reservedSlugs = [
+      'tienda', 'dashboard', 'alta-usuario', 'ayuda', 'dejar-resena',
+      'terminos', 'privacidad', 'super-admin-login', 'super-admin-secret-dashboard',
+      'super-admin-prospectos', 'super-admin-email-cms', 'super-admin-config',
+      'desarrollo', 'landing', 'kit-imprimible', 'enviar-comprobante',
+      'presentacion-evolucion-clickapp', 'email-previews'
+    ];
+    if (cleanPath && !cleanPath.includes('.') && !cleanPath.includes('/') && !reservedSlugs.includes(cleanPath)) {
       storeId = cleanPath;
     }
   }
