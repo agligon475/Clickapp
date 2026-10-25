@@ -6706,6 +6706,10 @@
               onclick="exportOrders()">
               <i class="bi bi-download"></i> CSV
             </button>
+            <button class="sb-btn" id="btn-load-demo-orders" style="background:linear-gradient(135deg, rgba(246,0,0,0.18) 0%, rgba(184,0,0,0.18) 100%);border:1px solid rgba(246,0,0,0.45);color:var(--white);font-weight:600;"
+              onclick="loadDemoOrdersNoutacc()" title="Generar 5 pedidos de simulacro para Noutacc">
+              <i class="bi bi-magic" style="color:var(--red);"></i> 5 Pedidos Simulacro
+            </button>
           </div>
         </div>
         <div style="overflow-x:auto;">
@@ -14910,29 +14914,11 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         const saved = localStorage.getItem('storeapp_orders_' + STORE_ID) || localStorage.getItem('storeapp_orders');
         if (saved) allOrders = JSON.parse(saved);
 
-        // Auto-inject simulated order for testing noutacc store if list is empty
-        if (STORE_ID === 'noutacc' && allOrders.length === 0) {
-          const testOrder = {
-            id: 'PED-SIMULADO-1A',
-            fecha: new Date().toLocaleString('es-AR', {
-              day:'2-digit', month:'2-digit', year:'numeric',
-              hour:'2-digit', minute:'2-digit'
-            }),
-            cliente: 'Simulacro Cliente Sin TACC',
-            dni: '12345678',
-            productos: 'Pan de Molde Lactal (Sin TACC) ×1 | Medialunas de Manteca (Sin TACC) ×2',
-            detalle: JSON.stringify([
-              { id: 1, nombre: 'Pan de Molde Lactal (Sin TACC)', cantidad: 1, precio: 3200, emoji: '🍞' },
-              { id: 2, nombre: 'Medialunas de Manteca (Sin TACC)', cantidad: 2, precio: 1200, emoji: '🥐' }
-            ]),
-            pago: 'Efectivo',
-            logistica: 'Retiro por la tienda',
-            direccion: '',
-            total: 5600,
-            estado: 'confirmar'
-          };
-          allOrders.unshift(testOrder);
+        // Auto-inject 5 realistic simulated orders for Noutacc if list is empty or has old test placeholder
+        if (STORE_ID === 'noutacc' && (allOrders.length === 0 || allOrders.some(o => o.id === 'PED-SIMULADO-1A'))) {
+          allOrders = getNoutaccSimulatedOrders();
           localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
+          localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
         }
       } catch (e) { allOrders = []; }
 
@@ -14940,6 +14926,159 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       renderAllOrders(allOrders);
       updateDashboardFromOrders(allOrders);
     }
+
+    function getNoutaccSimulatedOrders() {
+      const now = new Date();
+      const fmt = (date) => date.toLocaleString('es-AR', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      });
+
+      const d1 = new Date(now.getTime() - 15 * 60 * 1000);   // 15 mins atrás
+      const d2 = new Date(now.getTime() - 55 * 60 * 1000);   // 55 mins atrás
+      const d3 = new Date(now.getTime() - 2.5 * 3600 * 1000);// 2.5 horas atrás
+      const d4 = new Date(now.getTime() - 18 * 3600 * 1000); // 18 horas atrás
+      const d5 = new Date(now.getTime() - 28 * 3600 * 1000); // 28 horas atrás
+
+      return [
+        {
+          id: 'PED-NT-101',
+          fecha: fmt(d1),
+          cliente: 'Valeria Soria',
+          dni: '34182904',
+          telefono: '+54 9 11 5821-4433',
+          productos: 'Pan de Molde Lactal (Sin TACC) ×2 | Medialunas de Manteca Gluten Free (x6) ×1',
+          detalle: JSON.stringify([
+            { id: 1, name: 'Pan de Molde Lactal (Sin TACC)', emoji: '🍞', price: 4500, qty: 2 },
+            { id: 2, name: 'Medialunas de Manteca Gluten Free (x6)', emoji: '🥐', price: 5200, qty: 1 }
+          ]),
+          items: [
+            { cant: 2, name: 'Pan de Molde Lactal (Sin TACC)', price: 4500 },
+            { cant: 1, name: 'Medialunas de Manteca Gluten Free (x6)', price: 5200 }
+          ],
+          pago: 'Transferencia',
+          comprobante: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600',
+          logistica: 'Envío a domicilio',
+          direccion: 'Av. Santa Fe 3420, 4° B, Palermo',
+          total: 14200,
+          estado: 'confirmar',
+          opt_in_whatsapp: true,
+          pin_code: '4812',
+          is_night_guard: false
+        },
+        {
+          id: 'PED-NT-102',
+          fecha: fmt(d2),
+          cliente: 'Mariano Rossi',
+          dni: '28910452',
+          telefono: '+54 9 11 4192-3321',
+          productos: 'Hamburguesa Doble Cheddar & Bacon (Sin TACC) ×2 | Muffins de Arándanos y Limón (Pack x2) ×1',
+          detalle: JSON.stringify([
+            { id: 4, name: 'Hamburguesa Doble Cheddar & Bacon (Sin TACC)', emoji: '🍔', price: 8900, qty: 2 },
+            { id: 7, name: 'Muffins de Arándanos y Limón (Pack x2)', emoji: '🧁', price: 3400, qty: 1 }
+          ]),
+          items: [
+            { cant: 2, name: 'Hamburguesa Doble Cheddar & Bacon (Sin TACC)', price: 8900 },
+            { cant: 1, name: 'Muffins de Arándanos y Limón (Pack x2)', price: 3400 }
+          ],
+          pago: 'Mercado Pago',
+          logistica: 'Envío a domicilio',
+          direccion: 'Av. Corrientes 4550, 2° A, Almagro',
+          total: 21200,
+          estado: 'en_curso',
+          delivery_id: 'DQV-NT-8821',
+          pin_code: '7391',
+          opt_in_whatsapp: true,
+          is_night_guard: false
+        },
+        {
+          id: 'PED-NT-103',
+          fecha: fmt(d3),
+          cliente: 'Carolina Méndez',
+          dni: '36145890',
+          telefono: '+54 9 11 6544-7890',
+          productos: 'Porción de Torta Red Velvet (Sin TACC) ×2 | Café Latte Especial de Especias & Vainilla ×2',
+          detalle: JSON.stringify([
+            { id: 6, name: 'Porción de Torta Red Velvet (Sin TACC)', emoji: '🍰', price: 4600, qty: 2 },
+            { id: 8, name: 'Café Latte Especial de Especias & Vainilla', emoji: '☕', price: 3100, qty: 2 }
+          ]),
+          items: [
+            { cant: 2, name: 'Porción de Torta Red Velvet (Sin TACC)', price: 4600 },
+            { cant: 2, name: 'Café Latte Especial de Especias & Vainilla', price: 3100 }
+          ],
+          pago: 'Efectivo',
+          logistica: 'Retiro por la tienda',
+          direccion: 'Retiro en mostrador Noutacc Sin TACC',
+          total: 15400,
+          estado: 'listo_retirar',
+          opt_in_whatsapp: false,
+          is_night_guard: false
+        },
+        {
+          id: 'PED-NT-104',
+          fecha: fmt(d4),
+          cliente: 'Ignacio Brizuela',
+          dni: '39812304',
+          telefono: '+54 9 11 3201-9988',
+          productos: 'Empanadas Criollas de Carne (x3) ×2 | Tarta Individual de Jamón, Queso y Huevo ×2',
+          detalle: JSON.stringify([
+            { id: 5, name: 'Empanadas Criollas de Carne (x3)', emoji: '🥟', price: 4200, qty: 2 },
+            { id: 3, name: 'Tarta Individual de Jamón, Queso y Huevo', emoji: '🥧', price: 4800, qty: 2 }
+          ]),
+          items: [
+            { cant: 2, name: 'Empanadas Criollas de Carne (x3)', price: 4200 },
+            { cant: 2, name: 'Tarta Individual de Jamón, Queso y Huevo', price: 4800 }
+          ],
+          pago: 'Transferencia',
+          logistica: 'Envío a domicilio',
+          direccion: 'Thames 1850, Palermo Soho',
+          total: 18000,
+          estado: 'despachado',
+          delivery_id: 'DQV-NT-8760',
+          pin_code: '9154',
+          opt_in_whatsapp: true,
+          is_night_guard: true
+        },
+        {
+          id: 'PED-NT-105',
+          fecha: fmt(d5),
+          cliente: 'Florencia Carrizo',
+          dni: '34778112',
+          telefono: '+54 9 11 2344-9011',
+          productos: 'Alfajor Artesanal Dulce de Leche y Chocolate (x6) ×1 | Medialunas de Manteca Gluten Free (x6) ×2',
+          detalle: JSON.stringify([
+            { id: 9, name: 'Alfajor Artesanal Dulce de Leche y Chocolate (x6)', emoji: '🍪', price: 13200, qty: 1 },
+            { id: 2, name: 'Medialunas de Manteca Gluten Free (x6)', emoji: '🥐', price: 5200, qty: 2 }
+          ]),
+          items: [
+            { cant: 1, name: 'Alfajor Artesanal Dulce de Leche y Chocolate (x6)', price: 13200 },
+            { cant: 2, name: 'Medialunas de Manteca Gluten Free (x6)', price: 5200 }
+          ],
+          pago: 'Mercado Pago',
+          logistica: 'Envío a domicilio',
+          direccion: 'Av. del Libertador 2450, 7° D, Recoleta',
+          total: 23600,
+          estado: 'cobrado',
+          delivery_id: 'DQV-NT-8692',
+          pin_code: '2085',
+          opt_in_whatsapp: true,
+          is_night_guard: false
+        }
+      ];
+    }
+
+    window.loadDemoOrdersNoutacc = function(silent = false) {
+      allOrders = getNoutaccSimulatedOrders();
+      saveOrders(allOrders);
+      renderAllOrders(allOrders);
+      updateDashboardFromOrders(allOrders);
+      if (typeof showToastDash === 'function' && !silent) {
+        showToastDash('✓ 5 pedidos de simulacro para Noutacc generados con éxito');
+      }
+    };
+    window.showToast = function(msg) {
+      if (typeof showToastDash === 'function') showToastDash(msg);
+    };
 
     function addOrderItem() {
       const sel = document.getElementById('of-prod-select');

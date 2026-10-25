@@ -439,7 +439,7 @@
         <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding: 20px 0;">
           <div style="display:inline-flex; align-items:center; gap:8px; padding:6px 16px; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3); border-radius:999px; margin-bottom:18px;">
             <i class="bi bi-rocket-takeoff-fill" style="color:var(--brand-amber); font-size:14px;"></i>
-            <span style="font-family:var(--font-mono); font-size:12px; font-weight:700; color:var(--brand-amber); letter-spacing:0.06em;">MEMORIA DE DESARROLLO INTEGRAL · ACTUALIZADO 23/10/2026</span>
+            <span style="font-family:var(--font-mono); font-size:12px; font-weight:700; color:var(--brand-amber); letter-spacing:0.06em;">MEMORIA DE DESARROLLO INTEGRAL · ACTUALIZADO 25/10/2026</span>
           </div>
           
           <h1 style="font-family:var(--font-heading); font-size:clamp(30px, 4vw, 50px); font-weight:800; line-height:1.15; max-width:980px; margin-bottom:14px; background:linear-gradient(135deg, #FFFFFF 30%, #F59E0B 75%, #F60000 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
@@ -454,7 +454,7 @@
           <div class="grid-4" style="width:100%; max-width:1050px;">
             <div class="card card-accent-amber" style="text-align:left;">
               <div class="metric-hero">
-                <span class="metric-num">+760</span>
+                <span class="metric-num">+775</span>
                 <span class="metric-sub">Commits</span>
               </div>
               <div class="card-text">Evolución continua, resiliencia y sincronización automática.</div>
@@ -1245,6 +1245,40 @@
         </div>
       </section>
 
+      <!-- SLIDE 16: SIMULADOR DE PEDIDOS MULTI-RUBRO & EXPERIENCIA NOUTACC SIN TACC -->
+      <section class="slide" id="slide-16">
+        <span class="slide-badge" style="background:rgba(246,0,0,0.15);border-color:rgba(246,0,0,0.4);color:#F60000;"><i class="bi bi-cart-check-fill"></i> Etapa 16 · Release 25 de Octubre 2026</span>
+        <h2 class="slide-title">Simulador de Pedidos Multi-Rubro: Flujo Realista 100% Sin TACC (Noutacc)</h2>
+        <p class="slide-desc">Generación e inyección automatizada de 5 pedidos de prueba completos adaptados a Noutacc, cubriendo todo el ciclo operativo (Kanban completo), logística con Dale!QueVoy, pines de seguridad y opt-in WhatsApp.</p>
+
+        <div class="grid-3" style="margin-top:16px;">
+          <div class="card">
+            <div class="card-title" style="color:var(--brand-red);"><i class="bi bi-kanban"></i> 5 Estados en Kanban</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Los pedidos <code>PED-NT-101</code> a <code>PED-NT-105</code> distribuyen de forma realista el flujo en todas las columnas: <em>A confirmar</em>, <em>En curso</em>, <em>Listo para retirar</em>, <em>Despachado</em> (Modo Sereno) y <em>Cobrado</em>.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-box-seam"></i> Catálogo Fiel & Diversidad de Pago</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Productos auténticos de Noutacc (Pan Lactal, Medialunas, Hamburguesas, Red Velvet, Alfajores y Empanadas) con montos exactos ($14.200 a $23.600) y medios diversificados (Transferencia, Mercado Pago y Efectivo).
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-title" style="color:#3B82F6;"><i class="bi bi-truck"></i> Dale!QueVoy PIN & Disparo en 1 Click</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Asignación de PINs de seguridad de 4 dígitos para cadetería Dale!QueVoy, badges de consentimiento WhatsApp y botón interactivo <code>5 Pedidos Simulacro</code> en la barra de herramientas del historial.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:center; gap:12px;">
+          <a href="/dashboard.html?store=noutacc#orders" target="_blank" class="nav-btn primary" style="padding:10px 22px; font-size:13px;">
+            <i class="bi bi-bag-check-fill"></i> Ver Pedidos de Noutacc en el Dashboard
+          </a>
+        </div>
+      </section>
+
     </main>
 
     <!-- BOTTOMBAR -->
@@ -1256,7 +1290,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 3.9 UI & Dashboard Perfection · Actualizado 24/10/2026
+        Dale! Te Pido © 2026 · Versión 4.0 Multi-Rubro & Orders Engine · Actualizado 25/10/2026
       </div>
     </footer>
 
@@ -1265,7 +1299,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 15;
+  const totalSlides = 16;
 
   function showSlide(index) {
     if (index < 1) index = 1;
