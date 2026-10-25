@@ -6751,8 +6751,8 @@
               <i class="bi bi-download"></i> CSV
             </button>
             <button class="sb-btn" id="btn-load-bh-orders" style="background:linear-gradient(135deg, rgba(231,76,60,0.22) 0%, rgba(184,0,0,0.22) 100%);border:1px solid rgba(231,76,60,0.6);color:#fff;font-weight:700;"
-              onclick="loadDemoOrdersBurgerHouse()" title="Cargar 5 pedidos simulados gastronómicos de Burger House (Delivery Dale!QueVoy, Particular y Takeaway)">
-              <i class="bi bi-fire" style="color:#FF6B6B;"></i> 🍔 5 Pedidos Burger House
+              onclick="loadDemoOrdersBurgerHouse()" title="Cargar 5 pedidos simulados gastronómicos de BigHouse (Delivery Dale!QueVoy, Particular y Takeaway)">
+              <i class="bi bi-fire" style="color:#FF6B6B;"></i> 🍔 5 Pedidos BigHouse
             </button>
             <button class="sb-btn" id="btn-load-demo-orders" style="background:var(--iron);border:1px solid var(--zinc);color:var(--fog);font-weight:600;"
               onclick="loadDemoOrdersNoutacc()" title="Generar 5 pedidos de simulacro para Noutacc (Sin TACC)">
@@ -14992,8 +14992,8 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         const saved = localStorage.getItem('storeapp_orders_' + STORE_ID) || localStorage.getItem('storeapp_orders');
         if (saved) allOrders = JSON.parse(saved);
 
-        // Auto-inject 5 realistic simulated orders for Burger House if store is gastronomia or burgerhouse
-        if ((STORE_ID === 'gastronomia' || STORE_ID === 'burgerhouse') && (allOrders.length === 0 || allOrders.some(o => o.id === 'PED-SIMULADO-1A'))) {
+        // Auto-inject 5 realistic simulated orders for BigHouse if store is gastronomia, burgerhouse or bighouse
+        if ((STORE_ID === 'bighouse' || STORE_ID === 'burgerhouse' || STORE_ID === 'gastronomia' || STORE_ID === 'gastronomia-demo') && (allOrders.length === 0 || allOrders.some(o => o.id === 'PED-SIMULADO-1A'))) {
           allOrders = getBurgerHouseSimulatedOrders();
           localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
           localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
@@ -15396,10 +15396,10 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       currentComandaOrder = o;
 
       const cfg = JSON.parse(localStorage.getItem('storeapp_cfg_' + STORE_ID) || localStorage.getItem('storeapp_cfg') || '{}');
-      const storeName = (cfg.name && cfg.name !== 'Mi Tienda') ? cfg.name : 'BURGER HOUSE';
+      const storeName = (cfg.name && cfg.name !== 'Mi Tienda') ? cfg.name : 'BIGHOUSE';
       const storeAddress = cfg.address || 'Av. Corrientes 1840, CABA';
       const storePhone = cfg.wapp || cfg.phone || '11-4488-3322';
-      const storeTagline = cfg.tagline || 'Smash Burgers & Street Food Artesanal';
+      const storeTagline = cfg.tagline || 'The Smash Master · Smash Burgers Artesanales';
 
       // Identificar tipo de servicio / logística
       let logisticaBadge = '';
