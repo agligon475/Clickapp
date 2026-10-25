@@ -8802,12 +8802,17 @@
     <!-- ══ PICKUPS ══ -->
     <div class="view" id="view-pickups">
       <div class="card" style="margin-bottom:16px;">
-        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
           <span style="font-size:12px;font-weight:700;color:var(--silver);letter-spacing:0.05em;"><i
-              class="bi bi-search" style="color:var(--red);"></i> REPARTIDORES (PICKUPS)</span>
-          <button class="abm-btn-new" onclick="openPickupForm()" style="padding:7px 14px;font-size:12px;">
-            <i class="bi bi-plus"></i> Nuevo Repartidor
-          </button>
+              class="bi bi-truck" style="color:var(--red);"></i> REPARTIDORES & CADETES (PICKUPS)</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="sb-btn" onclick="loadDemoPickupsNoutacc()" style="background:linear-gradient(135deg, rgba(246,0,0,0.18) 0%, rgba(184,0,0,0.18) 100%);border:1px solid rgba(246,0,0,0.45);color:var(--white);font-weight:600;padding:7px 14px;font-size:12px;">
+              <i class="bi bi-magic" style="color:var(--red);"></i> 4 Repartidores Simulacro
+            </button>
+            <button class="abm-btn-new" onclick="openPickupForm()" style="padding:7px 14px;font-size:12px;">
+              <i class="bi bi-plus"></i> Nuevo Repartidor
+            </button>
+          </div>
         </div>
         <div style="overflow-x:auto;">
           <table class="data-table" id="pickups-tbl">
@@ -14988,6 +14993,8 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
           estado: 'en_curso',
           delivery_id: 'DQV-NT-8821',
           pin_code: '7391',
+          pickup_id: 'PU-NT-01',
+          pickup_cost: 2200,
           opt_in_whatsapp: true,
           is_night_guard: false
         },
@@ -15036,6 +15043,8 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
           estado: 'despachado',
           delivery_id: 'DQV-NT-8760',
           pin_code: '9154',
+          pickup_id: 'PU-NT-04',
+          pickup_cost: 2500,
           opt_in_whatsapp: true,
           is_night_guard: true
         },
@@ -15068,6 +15077,11 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     }
 
     window.loadDemoOrdersNoutacc = function(silent = false) {
+      if (!window.currentPickups || !window.currentPickups.length) {
+        if (typeof window.loadDemoPickupsNoutacc === 'function') {
+          window.loadDemoPickupsNoutacc(true);
+        }
+      }
       allOrders = getNoutaccSimulatedOrders();
       saveOrders(allOrders);
       renderAllOrders(allOrders);
@@ -18526,6 +18540,80 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       showView('new-pickup');
     }
 
+    function getNoutaccSimulatedPickups() {
+      return [
+        {
+          id: 'PU-NT-01',
+          name: 'Lucas Benítez (Moto Exprés)',
+          dni: '38192044',
+          wapp: '5491138294411',
+          zona: 'Palermo / Recoleta / Barrio Norte',
+          vehiculo: 'Honda GLH 150 (Mochila Térmica)',
+          time_from: '09:00',
+          time_to: '19:00',
+          holidays: false,
+          days: 'Lunes,Martes,Miércoles,Jueves,Viernes,Sábado',
+          active: true,
+          store_id: 'noutacc'
+        },
+        {
+          id: 'PU-NT-02',
+          name: 'Matías Peralta (Cadete Propio)',
+          dni: '41203991',
+          wapp: '5491167448822',
+          zona: 'Belgrano / Colegiales / Nuñez',
+          vehiculo: 'Yamaha YBR 125 (Caja Sellada Sin TACC)',
+          time_from: '10:00',
+          time_to: '21:00',
+          holidays: true,
+          days: 'Martes,Miércoles,Jueves,Viernes,Sábado,Domingo',
+          active: true,
+          store_id: 'noutacc'
+        },
+        {
+          id: 'PU-NT-03',
+          name: 'Sofía Villalba (Eco Bici Cargas)',
+          dni: '43819022',
+          wapp: '5491124991100',
+          zona: 'Almagro / Villa Crespo / Caballito',
+          vehiculo: 'Bicicleta Eléctrica de Carga',
+          time_from: '11:00',
+          time_to: '18:00',
+          holidays: false,
+          days: 'Lunes,Miércoles,Viernes',
+          active: true,
+          store_id: 'noutacc'
+        },
+        {
+          id: 'PU-NT-04',
+          name: 'Gonzalo Quiroga (Turno Noche / Sereno)',
+          dni: '35902187',
+          wapp: '5491159003344',
+          zona: 'Centro / Retiro / San Telmo / Puerto Madero',
+          vehiculo: 'Zanella Ceccato 150',
+          time_from: '19:00',
+          time_to: '02:00',
+          holidays: true,
+          days: 'Jueves,Viernes,Sábado,Domingo',
+          active: true,
+          store_id: 'noutacc'
+        }
+      ];
+    }
+
+    window.loadDemoPickupsNoutacc = async function(silent = false) {
+      window.currentPickups = getNoutaccSimulatedPickups();
+      localStorage.setItem('storeapp_pickups_' + STORE_ID, JSON.stringify(window.currentPickups));
+      renderPickupsTableUI();
+      if (allOrders && allOrders.length) {
+        renderAllOrders(allOrders);
+        updateDashboardFromOrders(allOrders);
+      }
+      if (typeof showToastDash === 'function' && !silent) {
+        showToastDash('✓ 4 repartidores de simulacro para Noutacc cargados con éxito');
+      }
+    };
+
     async function savePickup() {
       const id = document.getElementById('pu-id').value;
       const name = document.getElementById('pu-name').value.trim();
@@ -18542,16 +18630,28 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
       if (!name || !wapp) return alert('El nombre y el WhatsApp son obligatorios');
 
-      const payload = { name, dni, wapp, zona, vehiculo, time_from, time_to, holidays, days, active };
+      const payload = { name, dni, wapp, zona, vehiculo, time_from, time_to, holidays, days, active, store_id: STORE_ID };
 
       try {
         if (id) {
-          await updateInSupabase('pickups', id, payload);
+          try { await updateInSupabase('pickups', id, payload); } catch(err){}
+          if (window.currentPickups) {
+            const idx = window.currentPickups.findIndex(p => String(p.id) === String(id));
+            if (idx >= 0) window.currentPickups[idx] = { ...window.currentPickups[idx], ...payload, id };
+          }
         } else {
-          await postToSupabase('pickups', payload);
+          payload.id = 'PU-' + Date.now().toString(36).toUpperCase();
+          try { await postToSupabase('pickups', payload); } catch(err){}
+          if (!window.currentPickups) window.currentPickups = [];
+          window.currentPickups.push(payload);
         }
+        localStorage.setItem('storeapp_pickups_' + STORE_ID, JSON.stringify(window.currentPickups));
         showView('pickups');
-        loadPickupsList();
+        renderPickupsTableUI();
+        if (allOrders && allOrders.length) {
+          renderAllOrders(allOrders);
+          updateDashboardFromOrders(allOrders);
+        }
         showToastDash('✓ Repartidor guardado con éxito');
       } catch (e) {
         alert('Error al guardar repartidor: ' + e.message);
@@ -18564,11 +18664,19 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         await safeFetchSupabase(`${SUPABASE_URL}/rest/v1/pickups?id=eq.${id}&store_id=eq.${encodeURIComponent(STORE_ID)}`, {
           method: 'DELETE'
         });
-        await loadPickupsList();
-        showToastDash('✓ Repartidor eliminado');
       } catch (e) {
-        alert('Error al eliminar repartidor: ' + e.message);
+        console.warn('Supabase deletePickup fallback:', e.message);
       }
+      if (window.currentPickups) {
+        window.currentPickups = window.currentPickups.filter(p => String(p.id) !== String(id));
+        localStorage.setItem('storeapp_pickups_' + STORE_ID, JSON.stringify(window.currentPickups));
+      }
+      renderPickupsTableUI();
+      if (allOrders && allOrders.length) {
+        renderAllOrders(allOrders);
+        updateDashboardFromOrders(allOrders);
+      }
+      showToastDash('✓ Repartidor eliminado');
     }
 
     async function loadPickupsList() {
@@ -18578,42 +18686,80 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--silver);"><span style="display:inline-block;width:16px;height:16px;border:2px solid var(--red);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin-right:8px;vertical-align:middle;"></span> Cargando repartidores...</td></tr>';
 
       try {
-        const pickups = await fetchFromSupabase('pickups', { filter: 'order=id.asc' });
-        window.currentPickups = Array.isArray(pickups) ? pickups : [];
-
-        if (!window.currentPickups.length) {
-          tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--silver);padding:40px;">
-        <i class="bi bi-truck" style="font-size:32px;display:block;margin-bottom:10px;opacity:.3;"></i>
-        No hay repartidores cargados. Creá uno con el botón "Nuevo Repartidor".
-      </td></tr>`;
-          renderPendingPickups();
-          return;
+        let pickups = null;
+        try {
+          pickups = await fetchFromSupabase('pickups', { filter: 'order=id.asc' });
+        } catch (e) {
+          console.warn('Supabase fetch pickups error:', e);
         }
 
-        tbody.innerHTML = window.currentPickups.map(p => `
-      <tr>
-        <td style="color:var(--fog);font-weight:600;">${p.name || ''}</td>
-        <td style="color:var(--silver);">${p.zona || '-'}</td>
-        <td><a href="https://wa.me/${p.wapp}" target="_blank" style="color:var(--red);text-decoration:none;"><i class="bi bi-whatsapp"></i> ${p.wapp || ''}</a></td>
-        <td style="color:var(--silver);">${p.dni || '-'}</td>
-        <td>
-          <span style="display:inline-block;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:.05em;background:${p.active !== false ? 'rgba(46,204,113,.15)' : 'rgba(138,138,144,.15)'};color:${p.active !== false ? '#2ECC71' : 'var(--silver)'};">
-            ${p.active !== false ? 'ACTIVO' : 'INACTIVO'}
-          </span>
-        </td>
-        <td>
-          <div style="display:flex;gap:6px;">
-            <button onclick="openPickupForm('${p.id}')" class="sb-btn" style="padding:6px 24px;font-size:12px;background:var(--iron);border:none;border-radius:16px;color:var(--silver);"><i class="bi bi-pencil"></i></button>
-            <button onclick="deletePickup('${p.id}')" class="sb-btn" style="padding:6px 24px;font-size:12px;background:rgba(215,38,56,.1);border:none;border-radius:16px;color:var(--red);"><i class="bi bi-trash"></i></button>
-          </div>
-        </td>
-      </tr>
-    `).join('');
+        const localSaved = localStorage.getItem('storeapp_pickups_' + STORE_ID);
+        if (Array.isArray(pickups) && pickups.length > 0) {
+          window.currentPickups = pickups;
+        } else if (localSaved) {
+          try { window.currentPickups = JSON.parse(localSaved); } catch(e) { window.currentPickups = []; }
+        } else if (STORE_ID === 'noutacc') {
+          // Auto-inject 4 simulated delivery drivers for Noutacc
+          window.currentPickups = getNoutaccSimulatedPickups();
+          localStorage.setItem('storeapp_pickups_' + STORE_ID, JSON.stringify(window.currentPickups));
+        } else {
+          window.currentPickups = [];
+        }
 
-        renderPendingPickups();
+        renderPickupsTableUI();
 
       } catch (e) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--red);padding:20px;">Error al cargar repartidores: ${e.message}</td></tr>`;
+        if (STORE_ID === 'noutacc') {
+          window.currentPickups = getNoutaccSimulatedPickups();
+          localStorage.setItem('storeapp_pickups_' + STORE_ID, JSON.stringify(window.currentPickups));
+          renderPickupsTableUI();
+        } else {
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--red);padding:20px;">Error al cargar repartidores: ${e.message}</td></tr>`;
+        }
+      }
+    }
+
+    function renderPickupsTableUI() {
+      const tbody = document.getElementById('pickups-tbody');
+      if (!tbody) return;
+
+      if (!window.currentPickups || !window.currentPickups.length) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--silver);padding:40px;">
+          <i class="bi bi-truck" style="font-size:32px;display:block;margin-bottom:10px;opacity:.3;"></i>
+          No hay repartidores cargados. Creá uno con el botón "Nuevo Repartidor" o usá "4 Repartidores Simulacro".
+        </td></tr>`;
+        renderPendingPickups();
+        return;
+      }
+
+      tbody.innerHTML = window.currentPickups.map(p => `
+        <tr>
+          <td style="color:var(--fog);font-weight:600;">
+            <i class="bi bi-person-badge" style="color:var(--red);margin-right:4px;"></i>${p.name || ''}
+            <div style="font-size:10px;color:var(--silver);font-weight:normal;margin-top:2px;"><i class="bi bi-bicycle"></i> ${p.vehiculo || 'Vehículo propio'} · Horario: ${p.time_from || '09:00'} a ${p.time_to || '20:00'}</div>
+          </td>
+          <td style="color:var(--silver);font-size:11px;">${p.zona || '-'}</td>
+          <td><a href="https://wa.me/${p.wapp}" target="_blank" style="color:#25D366;text-decoration:none;font-weight:600;font-size:11px;"><i class="bi bi-whatsapp"></i> +${p.wapp || ''}</a></td>
+          <td style="color:var(--silver);font-size:11px;">${p.dni || '-'}</td>
+          <td>
+            <span style="display:inline-block;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:.05em;background:${p.active !== false ? 'rgba(46,204,113,.15)' : 'rgba(138,138,144,.15)'};color:${p.active !== false ? '#2ECC71' : 'var(--silver)'};">
+              ${p.active !== false ? 'ACTIVO' : 'INACTIVO'}
+            </span>
+          </td>
+          <td>
+            <div style="display:flex;gap:6px;">
+              <button onclick="openPickupForm('${p.id}')" class="sb-btn" title="Editar" style="padding:6px 14px;font-size:12px;background:var(--iron);border:none;border-radius:10px;color:var(--silver);"><i class="bi bi-pencil"></i></button>
+              <button onclick="deletePickup('${p.id}')" class="sb-btn" title="Eliminar" style="padding:6px 14px;font-size:12px;background:rgba(215,38,56,.1);border:none;border-radius:10px;color:var(--red);"><i class="bi bi-trash"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+
+      renderPendingPickups();
+
+      const mRep = document.getElementById('m-repartidores');
+      if (mRep) {
+        mRep.textContent = (window.currentPickups || []).filter(p => p.active !== false).length;
       }
     }
 
