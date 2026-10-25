@@ -1285,6 +1285,46 @@
         </div>
       </section>
 
+      <!-- SLIDE 17: Motor de Comandas Térmicas & Demo Burger House -->
+      <section class="slide" id="slide-17">
+        <span class="slide-badge" style="background:rgba(231,76,60,0.15);border-color:rgba(231,76,60,0.4);color:#E74C3C;"><i class="bi bi-printer-fill"></i> Etapa 17 · Release 25 de Octubre 2026</span>
+        <h2 class="slide-title">Motor de Comandas Térmicas (58/80mm) con Auto-Print & Demo Burger House</h2>
+        <p class="slide-desc">Despliegue integral para casas de comida con delivery (Dale!QueVoy o particular) y takeaway. Impresión automática en cocina al pasar a estados marcados con el check <em>🖨️ Imprimible</em> (ej: "En cocina"), comanda física lista para el despachador y simulación gastronómica completa.</p>
+
+        <div class="grid-3" style="margin-top:16px;">
+          <div class="card">
+            <div class="card-title" style="color:#E74C3C;"><i class="bi bi-printer"></i> Comandas con Auto-Print</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Formato ticket estándar 58mm y 80mm ESC/POS con <code>@media print</code>. Al mover un pedido a <strong>"En cocina"</strong> o cualquier estado con <code>printable: true</code>, se dispara la orden de impresión al instante sin clicks manuales.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-title" style="color:#F59E0B;"><i class="bi bi-fire"></i> Demo Burger House Completa</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Catálogo de 18 productos smash artesanales, 6 categorías, combos de amigos y cervezas. Configuración institucional completa con banners, horarios nocturnos y preguntas frecuentes gastronómicas.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-send-check"></i> 5 Pedidos & Logística Dual</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              5 pedidos simulados (<code>PED-BH-201</code> al <code>205</code>) que recorren Dale!QueVoy con PIN de 4 dígitos, cadetes propios zonales (Lucas y Mateo) y Retiro en Mostrador Takeaway sin intermediarios.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <a href="/dashboard.html?store=gastronomia#orders" target="_blank" class="nav-btn primary" style="padding:10px 22px; font-size:13px; background:linear-gradient(135deg, #E74C3C 0%, #B80000 100%);">
+            <i class="bi bi-fire"></i> Probar Kanban & Comandas Burger House
+          </a>
+          <a href="/tienda.html?store=gastronomia" target="_blank" class="nav-btn secondary" style="padding:10px 22px; font-size:13px;">
+            <i class="bi bi-shop"></i> Ver Tienda Online Burger House
+          </a>
+          <a href="/dashboard.html?store=gastronomia#pickups" target="_blank" class="nav-btn" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);padding:10px 22px; font-size:13px; color:#fff;">
+            <i class="bi bi-truck"></i> Ver Cadetes Particulares
+          </a>
+        </div>
+      </section>
+
     </main>
 
     <!-- BOTTOMBAR -->
@@ -1305,7 +1345,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 16;
+  const totalSlides = 17;
 
   function showSlide(index) {
     if (index < 1) index = 1;

@@ -5231,9 +5231,44 @@
       opacity: 0;
       transition: opacity .2s, transform .2s;
     }
-    .prev-spotlight-label.show {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
+    /* ══ ESTILOS DE IMPRESIÓN DE COMANDA TÉRMICA (58mm / 80mm ESC/POS) ══ */
+    @media print {
+      @page {
+        margin: 0mm !important;
+        size: 80mm auto !important;
+      }
+      html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+        color: #000 !important;
+        width: 100% !important;
+      }
+      body * {
+        visibility: hidden !important;
+      }
+      #comanda-print-area, #comanda-print-area * {
+        visibility: visible !important;
+      }
+      #comanda-print-area {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 78mm !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        padding: 2mm 3mm !important;
+        font-family: 'Courier New', Courier, monospace !important;
+        font-size: 11px !important;
+        line-height: 1.3 !important;
+        color: #000 !important;
+        background: #fff !important;
+        display: block !important;
+        box-sizing: border-box !important;
+      }
+      #comanda-modal {
+        display: none !important;
+      }
     }
   </style>
 
@@ -6662,28 +6697,37 @@
 
       <!-- Kanban board -->
       <div class="card" style="margin-bottom:16px;">
-        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-          <span><i class="bi bi-kanban" style="color:var(--red);"></i> Tablero de estados</span>
-          <button onclick="toggleStateConfig()" style="font-size:11px;padding:4px 10px;background:var(--iron);border:1px solid var(--zinc);
-                 border-radius:6px;color:var(--fog);cursor:pointer;font-family:var(--font-b);">
+        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+            <span><i class="bi bi-kanban" style="color:var(--red);"></i> Tablero de estados</span>
+            <label style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--fog);cursor:pointer;background:var(--iron);border:1px solid var(--zinc);padding:4px 10px;border-radius:6px;user-select:none;" title="Al mover un pedido a un estado con el check 'Imprimible' activo (ej: En cocina), se disparará automáticamente la impresión de la comanda térmica">
+              <input type="checkbox" id="autoprint-orders-check" onchange="toggleAutoPrintOrders(this.checked)" checked style="accent-color:var(--red);cursor:pointer;width:14px;height:14px;" />
+              <span><i class="bi bi-printer" style="color:var(--white);"></i> Auto-imprimir comanda (En cocina)</span>
+            </label>
+          </div>
+          <button onclick="toggleStateConfig()" style="font-size:11px;padding:5px 12px;background:var(--iron);border:1px solid var(--zinc);
+                 border-radius:6px;color:var(--fog);cursor:pointer;font-family:var(--font-b);display:inline-flex;align-items:center;gap:5px;">
             <i class="bi bi-gear"></i> Configurar estados
           </button>
         </div>
         <!-- State config panel (hidden by default) -->
         <div id="state-config"
-          style="display:none;margin-bottom:16px;padding:14px;background:var(--iron);border-radius:10px;border:1px solid var(--zinc);">
-          <div style="font-size:11px;color:var(--silver);margin-bottom:10px;">
-            Editá los estados que aparecen en el tablero y en los selectores de la tabla.
-            Los pedidos sin actividad por más de 15 días pasan a <strong>Perdido</strong> automáticamente.
+          style="display:none;margin-bottom:16px;padding:16px;background:var(--iron);border-radius:10px;border:1px solid var(--zinc);position:relative;">
+          <div style="font-size:11px;color:var(--silver);margin-bottom:12px;line-height:1.4;">
+            Editá los estados del tablero y selectores. Marcá la casilla <strong>🖨️ Imprimible</strong> en aquellos estados donde precises comandar el pedido (por ejemplo <em>En cocina</em> o <em>En preparación</em>) para enviar automáticamente el ticket térmico a la impresora.
           </div>
-          <div id="state-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;"></div>
-          <div style="display:flex;gap:8px;position:absolute;top:16px;right:16px;">
+          <div id="state-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
             <button onclick="addState()" style="font-size:11px;padding:6px 12px;background:var(--iron);border:1px solid var(--zinc);
-                   border-radius:7px;color:var(--fog);cursor:pointer;font-family:var(--font-b);">
-              <i class="bi bi-plus"></i> Configurar estados
+                   border-radius:7px;color:var(--fog);cursor:pointer;font-family:var(--font-b);display:inline-flex;align-items:center;gap:4px;">
+              <i class="bi bi-plus-lg"></i> Agregar estado
             </button>
-            <button onclick="resetStates()" style="font-size:11px;padding:6px 12px;background:var(--iron);border:1px solid var(--zinc);
-                   border-radius:7px;color:var(--fog);cursor:pointer;font-family:var(--font-b);">
+            <button onclick="saveStates()" style="font-size:11px;padding:6px 14px;background:linear-gradient(135deg, #E74C3C 0%, #B80000 100%);border:none;
+                   border-radius:7px;color:#fff;cursor:pointer;font-weight:700;font-family:var(--font-b);display:inline-flex;align-items:center;gap:5px;box-shadow:0 2px 8px rgba(231,76,60,0.35);">
+              <i class="bi bi-check2"></i> Guardar estados
+            </button>
+            <button onclick="resetStates()" style="font-size:11px;padding:6px 12px;background:transparent;border:1px solid var(--zinc);
+                   border-radius:7px;color:var(--silver);cursor:pointer;font-family:var(--font-b);display:inline-flex;align-items:center;gap:4px;">
               <i class="bi bi-arrow-counterclockwise"></i> Restaurar por defecto
             </button>
           </div>
@@ -6693,22 +6737,26 @@
 
       <!-- Orders history table -->
       <div class="card">
-        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-          Historial completo
-          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+          <span>Historial completo</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
             <select class="ctrl-input" id="orders-filter-estado" onchange="filterOrdersTable()"
               style="font-size:11px;padding:4px 8px;width:140px;">
               <option value="">Todos los estados</option>
             </select>
             <input class="ctrl-input" id="orders-search" placeholder="Buscar cliente..." oninput="filterOrdersTable()"
-              style="width:160px;font-size:11px;padding:4px 8px;" />
+              style="width:150px;font-size:11px;padding:4px 8px;" />
             <button class="sb-btn" style="background:var(--iron);border:1px solid var(--zinc);"
               onclick="exportOrders()">
               <i class="bi bi-download"></i> CSV
             </button>
-            <button class="sb-btn" id="btn-load-demo-orders" style="background:linear-gradient(135deg, rgba(246,0,0,0.18) 0%, rgba(184,0,0,0.18) 100%);border:1px solid rgba(246,0,0,0.45);color:var(--white);font-weight:600;"
-              onclick="loadDemoOrdersNoutacc()" title="Generar 5 pedidos de simulacro para Noutacc">
-              <i class="bi bi-magic" style="color:var(--red);"></i> 5 Pedidos Simulacro
+            <button class="sb-btn" id="btn-load-bh-orders" style="background:linear-gradient(135deg, rgba(231,76,60,0.22) 0%, rgba(184,0,0,0.22) 100%);border:1px solid rgba(231,76,60,0.6);color:#fff;font-weight:700;"
+              onclick="loadDemoOrdersBurgerHouse()" title="Cargar 5 pedidos simulados gastronómicos de Burger House (Delivery Dale!QueVoy, Particular y Takeaway)">
+              <i class="bi bi-fire" style="color:#FF6B6B;"></i> 🍔 5 Pedidos Burger House
+            </button>
+            <button class="sb-btn" id="btn-load-demo-orders" style="background:var(--iron);border:1px solid var(--zinc);color:var(--fog);font-weight:600;"
+              onclick="loadDemoOrdersNoutacc()" title="Generar 5 pedidos de simulacro para Noutacc (Sin TACC)">
+              <i class="bi bi-magic" style="color:var(--silver);"></i> 🥐 Noutacc
             </button>
           </div>
         </div>
@@ -10880,25 +10928,29 @@
     const DEMO_ORDERS = [];  // no demo — only real data
 
     // ── STATE DEFINITIONS ─────────────────────────────
-    // Each state: { key, label, color (bg), text, icon }
+    // Each state: { key, label, color (bg), text, icon, printable }
     const DEFAULT_STATES = [
-      { key: 'confirmar', label: 'A confirmar', bg: 'rgba(243,156,18,.15)', text: '#F39C12', icon: 'bi-hourglass-split' },
-      { key: 'en_curso', label: 'En curso', bg: 'rgba(52,152,219,.15)', text: '#3498DB', icon: 'bi-arrow-repeat' },
-      { key: 'despachado', label: 'Despachado', bg: 'rgba(155,89,182,.15)', text: '#9B59B6', icon: 'bi-box-seam' },
-      { key: 'listo_retirar', label: 'Listo para retirar', bg: 'rgba(46,204,113,.15)', text: '#2ECC71', icon: 'bi-bag-check' },
-      { key: 'cobrado', label: 'Cobrado', bg: 'rgba(46,204,113,.15)', text: '#2ECC71', icon: 'bi-cash-coin' },
-      { key: 'por_cobrar', label: 'Por cobrar', bg: 'rgba(243,156,18,.15)', text: '#F39C12', icon: 'bi-cash' },
-      { key: 'retirado', label: 'Retirado', bg: 'rgba(46,204,113,.15)', text: '#27AE60', icon: 'bi-bag-check' },
-      { key: 'enviado', label: 'Enviado', bg: 'rgba(52,152,219,.25)', text: '#2980B9', icon: 'bi-truck' },
-      { key: 'entregado', label: 'Entregado', bg: 'rgba(46,204,113,.15)', text: '#2ECC71', icon: 'bi-check-circle' },
-      { key: 'devuelto', label: 'Devuelto', bg: 'rgba(215,38,56,.15)', text: '#D72638', icon: 'bi-arrow-return-left' },
-      { key: 'perdido', label: 'Perdido', bg: 'rgba(100,100,100,.2)', text: '#888', icon: 'bi-x-circle' },
+      { key: 'confirmar', label: 'A confirmar', bg: 'rgba(243,156,18,.15)', text: '#F39C12', icon: 'bi-hourglass-split', printable: false },
+      { key: 'en_cocina', label: 'En cocina', bg: 'rgba(231,76,60,.18)', text: '#E74C3C', icon: 'bi-fire', printable: true },
+      { key: 'en_curso', label: 'En curso', bg: 'rgba(52,152,219,.15)', text: '#3498DB', icon: 'bi-arrow-repeat', printable: false },
+      { key: 'despachado', label: 'Despachado', bg: 'rgba(155,89,182,.15)', text: '#9B59B6', icon: 'bi-box-seam', printable: false },
+      { key: 'listo_retirar', label: 'Listo para retirar', bg: 'rgba(46,204,113,.15)', text: '#2ECC71', icon: 'bi-bag-check', printable: false },
+      { key: 'cobrado', label: 'Cobrado', bg: 'rgba(46,204,113,.15)', text: '#2ECC71', icon: 'bi-cash-coin', printable: false },
+      { key: 'por_cobrar', label: 'Por cobrar', bg: 'rgba(243,156,18,.15)', text: '#F39C12', icon: 'bi-cash', printable: false },
+      { key: 'retirado', label: 'Retirado', bg: 'rgba(46,204,113,.15)', text: '#27AE60', icon: 'bi-bag-check', printable: false },
+      { key: 'enviado', label: 'Enviado', bg: 'rgba(52,152,219,.25)', text: '#2980B9', icon: 'bi-truck', printable: false },
+      { key: 'entregado', label: 'Entregado', bg: 'rgba(46,204,113,.15)', text: '#2ECC71', icon: 'bi-check-circle', printable: false },
+      { key: 'devuelto', label: 'Devuelto', bg: 'rgba(215,38,56,.15)', text: '#D72638', icon: 'bi-arrow-return-left', printable: false },
+      { key: 'perdido', label: 'Perdido', bg: 'rgba(100,100,100,.2)', text: '#888', icon: 'bi-x-circle', printable: false },
     ];
 
     function getStates() {
       try {
         const saved = localStorage.getItem('storeapp_states');
-        if (saved) return JSON.parse(saved);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length) return parsed;
+        }
       } catch (e) { }
       return DEFAULT_STATES;
     }
@@ -10906,7 +10958,7 @@
     function badge(estado) {
       const s = getStates().find(x => x.key === estado) || { label: estado, bg: 'rgba(255,255,255,.08)', text: '#aaa', icon: 'bi-circle' };
       return `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;background:${s.bg};color:${s.text};">
-    <i class="bi ${s.icon}"></i> ${s.label}</span>`;
+    <i class="bi ${s.icon}"></i> ${s.label}${s.printable ? ' <i class="bi bi-printer" style="font-size:9px;" title="Estado imprimible (comanda)"></i>' : ''}</span>`;
     }
 
     function stateSelect(orderId, current) {
@@ -14806,14 +14858,30 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       await webhookCall({ action: 'delete', id });
     }
 
-    /* ═══════════════════════════════════════════ STATE CONFIG */
+    /* ═══════════════════════════════════════════ STATE CONFIG & AUTO-PRINT */
+
+    function toggleAutoPrintOrders(val) {
+      localStorage.setItem('storeapp_autoprint_enabled', val ? 'true' : 'false');
+      if (typeof showToastDash === 'function') {
+        showToastDash(val ? '✓ Auto-impresión de comandas activada (En cocina)' : 'Auto-impresión de comandas desactivada');
+      }
+    }
+
+    function isAutoPrintOrdersEnabled() {
+      const v = localStorage.getItem('storeapp_autoprint_enabled');
+      return v === null || v === 'true'; // activado por defecto
+    }
 
     function toggleStateConfig() {
       const el = document.getElementById('state-config');
       if (!el) return;
       const visible = el.style.display !== 'none';
       el.style.display = visible ? 'none' : 'block';
-      if (!visible) renderStateConfig();
+      if (!visible) {
+        renderStateConfig();
+        const chk = document.getElementById('autoprint-orders-check');
+        if (chk) chk.checked = isAutoPrintOrdersEnabled();
+      }
     }
 
     function renderStateConfig() {
@@ -14821,15 +14889,19 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const list = document.getElementById('state-list');
       if (!list) return;
       list.innerHTML = states.map((s, i) => `
-    <div class="state-row" id="sr-${i}">
+    <div class="state-row" id="sr-${i}" style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);flex-wrap:wrap;">
       <input type="color" value="${s.text}" title="Color" id="sc-color-${i}"
-        style="width:28px;height:28px;flex-shrink:0;"/>
+        style="width:30px;height:30px;flex-shrink:0;cursor:pointer;background:transparent;border:none;border-radius:4px;"/>
       <input type="text" value="${s.label}" placeholder="Nombre del estado"
-        id="sc-label-${i}" style="flex:1;min-width:80px;"/>
+        id="sc-label-${i}" style="flex:1;min-width:120px;background:var(--carbon);border:1px solid var(--zinc);color:var(--white);padding:5px 8px;border-radius:6px;font-size:11px;"/>
       <input type="text" value="${s.icon}" placeholder="bi-circle"
-        id="sc-icon-${i}" style="width:110px;font-size:10px;" title="Bootstrap Icon class (bi-xxx)"/>
+        id="sc-icon-${i}" style="width:110px;font-size:10px;background:var(--carbon);border:1px solid var(--zinc);color:var(--fog);padding:5px 6px;border-radius:6px;" title="Bootstrap Icon class (bi-xxx)"/>
+      <label style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--fog);cursor:pointer;white-space:nowrap;user-select:none;margin:0;background:var(--carbon);padding:4px 8px;border-radius:6px;border:1px solid var(--zinc);" title="Marcar si querés que al cambiar un pedido a este estado se auto-imprima la comanda para cocina">
+        <input type="checkbox" id="sc-printable-${i}" ${s.printable ? 'checked' : ''} style="accent-color:var(--red);cursor:pointer;width:13px;height:13px;"/>
+        <span>🖨️ Imprimible</span>
+      </label>
       <button onclick="removeState(${i})"
-        style="width:24px;height:24px;border-radius:5px;background:transparent;
+        style="width:26px;height:26px;border-radius:5px;background:transparent;
                border:1px solid var(--zinc);color:var(--silver);cursor:pointer;
                display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;">
         <i class="bi bi-x"></i>
@@ -14839,7 +14911,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
     function addState() {
       const states = getStates();
-      states.push({ key: 'nuevo_' + Date.now(), label: 'Nuevo estado', bg: 'rgba(100,100,200,.15)', text: '#6464C8', icon: 'bi-circle' });
+      states.push({ key: 'nuevo_' + Date.now(), label: 'Nuevo estado', bg: 'rgba(100,100,200,.15)', text: '#6464C8', icon: 'bi-circle', printable: false });
       localStorage.setItem('storeapp_states', JSON.stringify(states));
       renderStateConfig();
     }
@@ -14857,22 +14929,23 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         const label = document.getElementById(`sc-label-${i}`)?.value.trim() || s.label;
         const color = document.getElementById(`sc-color-${i}`)?.value || s.text;
         const icon = document.getElementById(`sc-icon-${i}`)?.value.trim() || s.icon;
+        const printable = Boolean(document.getElementById(`sc-printable-${i}`)?.checked);
         const r = parseInt(color.slice(1, 3), 16), g = parseInt(color.slice(3, 5), 16), b = parseInt(color.slice(5, 7), 16);
         return {
-          key: label.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, ''),
+          key: s.key || label.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, ''),
           label, text: color,
           bg: `rgba(${r},${g},${b},.15)`,
           icon,
+          printable
         };
       });
       localStorage.setItem('storeapp_states', JSON.stringify(updated));
       renderAllOrders(allOrders);
       buildStateFilter();
       // Flash
-      const btn = event.currentTarget;
-      const orig = btn.innerHTML;
-      btn.innerHTML = '<i class="bi bi-check2"></i> Guardado!';
-      setTimeout(() => { btn.innerHTML = orig; }, 2000);
+      if (typeof showToastDash === 'function') {
+        showToastDash('✓ Estados del tablero actualizados con éxito');
+      }
     }
 
     function resetStates() {
@@ -14919,8 +14992,12 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         const saved = localStorage.getItem('storeapp_orders_' + STORE_ID) || localStorage.getItem('storeapp_orders');
         if (saved) allOrders = JSON.parse(saved);
 
-        // Auto-inject 5 realistic simulated orders for Noutacc if list is empty or has old test placeholder
-        if (STORE_ID === 'noutacc' && (allOrders.length === 0 || allOrders.some(o => o.id === 'PED-SIMULADO-1A'))) {
+        // Auto-inject 5 realistic simulated orders for Burger House if store is gastronomia or burgerhouse
+        if ((STORE_ID === 'gastronomia' || STORE_ID === 'burgerhouse') && (allOrders.length === 0 || allOrders.some(o => o.id === 'PED-SIMULADO-1A'))) {
+          allOrders = getBurgerHouseSimulatedOrders();
+          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
+          localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
+        } else if (STORE_ID === 'noutacc' && (allOrders.length === 0 || allOrders.some(o => o.id === 'PED-SIMULADO-1A'))) {
           allOrders = getNoutaccSimulatedOrders();
           localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
           localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
@@ -15090,6 +15167,416 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         showToastDash('✓ 5 pedidos de simulacro para Noutacc generados con éxito');
       }
     };
+
+    /* ═══════════════════════════════════════════ BURGER HOUSE SIMULATED DATA & PICKUPS */
+
+    function getBurgerHouseSimulatedOrders() {
+      const now = new Date();
+      const fmt = (date) => date.toLocaleString('es-AR', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      });
+
+      const d1 = new Date(now.getTime() - 12 * 60 * 1000);   // 12 mins atrás
+      const d2 = new Date(now.getTime() - 28 * 60 * 1000);   // 28 mins atrás
+      const d3 = new Date(now.getTime() - 1.2 * 3600 * 1000);// 1.2 horas atrás
+      const d4 = new Date(now.getTime() - 3.5 * 3600 * 1000);// 3.5 horas atrás
+      const d5 = new Date(now.getTime() - 18 * 3600 * 1000); // 18 horas atrás
+
+      return [
+        {
+          id: 'PED-BH-201',
+          fecha: fmt(d1),
+          cliente: 'Lautaro Giménez',
+          dni: '38.412.981',
+          telefono: '+54 9 11 4981-2244',
+          productos: 'Hamburguesa Doble Cheddar Bacon (Pan de Papa) ×2 | Papas Fritas Rústicas Grandes ×1 | Lata Coca-Cola Zero 354ml ×2',
+          detalle: JSON.stringify([
+            { id: 1, name: 'Hamburguesa Doble Cheddar Bacon (Pan de Papa)', emoji: '🍔', price: 8900, qty: 2, variant: 'Doble', notes: 'Punto jugoso' },
+            { id: 6, name: 'Papas Fritas Rústicas Grandes', emoji: '🍟', price: 3800, qty: 1, notes: 'Bien crocantes' },
+            { id: 12, name: 'Lata Coca-Cola Zero 354ml', emoji: '🥤', price: 1800, qty: 2 }
+          ]),
+          items: [
+            { cant: 2, name: 'Hamburguesa Doble Cheddar Bacon', price: 8900, notes: 'Pan de papa, punto jugoso' },
+            { cant: 1, name: 'Papas Fritas Rústicas Grandes', price: 3800, notes: 'Bien crocantes' },
+            { cant: 2, name: 'Lata Coca-Cola Zero 354ml', price: 1800 }
+          ],
+          pago: 'Transferencia',
+          comprobante: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600',
+          logistica: 'Envío a domicilio',
+          direccion: 'Av. Cabildo 2140, 5° A, Belgrano',
+          total: 25200,
+          estado: 'confirmar',
+          delivery_id: 'DQV-BH-9501',
+          pin_code: '5912',
+          opt_in_whatsapp: true,
+          is_night_guard: false,
+          notas: 'El timbre suena bajo, tocar dos veces o avisar por WhatsApp al llegar.'
+        },
+        {
+          id: 'PED-BH-202',
+          fecha: fmt(d2),
+          cliente: 'Sofía Rossi',
+          dni: '40.119.340',
+          telefono: '+54 9 11 6122-3399',
+          productos: 'Smash Oklahoma Onion Doble ×1 | Papas Burger House Especiales (Cheddar & Bacon) ×1 | Cerveza Patagonia Bohemian Pilsener 730ml ×1',
+          detalle: JSON.stringify([
+            { id: 2, name: 'Smash Oklahoma Onion Doble', emoji: '🍔', price: 8500, qty: 1, notes: 'SIN CEBOLLA FRITA, SALSA TÁRTARA APARTE' },
+            { id: 7, name: 'Papas Burger House Especiales (Cheddar & Bacon)', emoji: '🍟', price: 5200, qty: 1, notes: 'EXTRA CHEDDAR FUNDIDO' },
+            { id: 13, name: 'Cerveza Patagonia Bohemian Pilsener 730ml', emoji: '🍺', price: 4600, qty: 1 }
+          ]),
+          items: [
+            { cant: 1, name: 'Smash Oklahoma Onion Doble', price: 8500, notes: 'SIN CEBOLLA FRITA, SALSA TÁRTARA APARTE' },
+            { cant: 1, name: 'Papas Burger House Especiales', price: 5200, notes: 'EXTRA CHEDDAR FUNDIDO' },
+            { cant: 1, name: 'Cerveza Patagonia Bohemian Pilsener 730ml', price: 4600 }
+          ],
+          pago: 'Efectivo',
+          pago_detalle: 'Abona con $20.000 (Vuelto: $1.700)',
+          logistica: 'Envío a domicilio',
+          direccion: 'Honduras 4820, 2° B, Palermo Soho',
+          total: 18300,
+          estado: 'en_cocina',
+          pickup_id: 'PU-BH-01',
+          pickup_cost: 1800,
+          opt_in_whatsapp: true,
+          is_night_guard: false,
+          notas: 'Llevar cambio de $20.000 exacto por favor.'
+        },
+        {
+          id: 'PED-BH-203',
+          fecha: fmt(d3),
+          cliente: 'Martín Benítez',
+          dni: '35.890.123',
+          telefono: '+54 9 11 3820-9177',
+          productos: 'Burger Royale Crispy ×1 | Nuggets de Pollo Crocantes (x10) con BBQ ×1 | Chocotorta Casera en Vaso ×1',
+          detalle: JSON.stringify([
+            { id: 3, name: 'Burger Royale Crispy', emoji: '🍔', price: 7900, qty: 1 },
+            { id: 9, name: 'Nuggets de Pollo Crocantes (x10) con BBQ', emoji: '🍗', price: 4900, qty: 1 },
+            { id: 15, name: 'Chocotorta Casera en Vaso', emoji: '🍰', price: 3900, qty: 1 }
+          ]),
+          items: [
+            { cant: 1, name: 'Burger Royale Crispy', price: 7900 },
+            { cant: 1, name: 'Nuggets de Pollo Crocantes (x10)', price: 4900 },
+            { cant: 1, name: 'Chocotorta Casera en Vaso', price: 3900 }
+          ],
+          pago: 'Mercado Pago',
+          logistica: 'Retiro por la tienda',
+          direccion: 'Retiro en mostrador Burger House (Av. Corrientes 1840)',
+          total: 16700,
+          estado: 'listo_retirar',
+          opt_in_whatsapp: true,
+          is_night_guard: false,
+          notas: 'Pasa a retirar a las 21:45 hs puntual.'
+        },
+        {
+          id: 'PED-BH-204',
+          fecha: fmt(d4),
+          cliente: 'Camila Domínguez',
+          dni: '42.008.711',
+          telefono: '+54 9 11 5501-7890',
+          productos: 'Combo Cuadrilla Amigos (x4 Burgers + 2 Papas + 4 Bebidas) ×1 | Tequeños de Queso Llanero (x6) ×1',
+          detalle: JSON.stringify([
+            { id: 18, name: 'Combo Cuadrilla Amigos (x4 Burgers + 2 Papas + 4 Bebidas)', emoji: '🏷️', price: 43900, qty: 1 },
+            { id: 11, name: 'Tequeños de Queso Llanero (x6)', emoji: '🧀', price: 5600, qty: 1 }
+          ]),
+          items: [
+            { cant: 1, name: 'Combo Cuadrilla Amigos (x4 Burgers + 2 Papas + 4 Bebidas)', price: 43900 },
+            { cant: 1, name: 'Tequeños de Queso Llanero (x6)', price: 5600 }
+          ],
+          pago: 'Mercado Pago',
+          logistica: 'Envío a domicilio',
+          direccion: 'Billinghurst 1720, 3° C, Recoleta',
+          total: 49500,
+          estado: 'despachado',
+          delivery_id: 'DQV-BH-9412',
+          pin_code: '3481',
+          pickup_id: 'PU-BH-02',
+          pickup_cost: 2400,
+          opt_in_whatsapp: true,
+          is_night_guard: false,
+          notas: 'Dejar en portería con el encargado Jorge si no atiendo.'
+        },
+        {
+          id: 'PED-BH-205',
+          fecha: fmt(d5),
+          cliente: 'Tomás Varela',
+          dni: '37.662.190',
+          telefono: '+54 9 11 2290-4411',
+          productos: 'Hamburguesa Criolla con Huevo & Provoleta ×2 | Aros de Cebolla Rebozados (x8) ×1 | Cerveza Patagonia Amber Lager 730ml ×2',
+          detalle: JSON.stringify([
+            { id: 4, name: 'Hamburguesa Criolla con Huevo & Provoleta', emoji: '🍔', price: 9200, qty: 2 },
+            { id: 10, name: 'Aros de Cebolla Rebozados (x8)', emoji: '🧅', price: 4200, qty: 1 },
+            { id: 14, name: 'Cerveza Patagonia Amber Lager 730ml', emoji: '🍺', price: 4600, qty: 2 }
+          ]),
+          items: [
+            { cant: 2, name: 'Hamburguesa Criolla con Huevo & Provoleta', price: 9200 },
+            { cant: 1, name: 'Aros de Cebolla Rebozados (x8)', price: 4200 },
+            { cant: 2, name: 'Cerveza Patagonia Amber Lager 730ml', price: 4600 }
+          ],
+          pago: 'Transferencia',
+          comprobante: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600',
+          logistica: 'Envío a domicilio',
+          direccion: 'Paraguay 3920, PB 2, Palermo',
+          total: 31800,
+          estado: 'cobrado',
+          delivery_id: 'DQV-BH-8902',
+          pin_code: '8129',
+          firma: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400',
+          opt_in_whatsapp: true,
+          is_night_guard: false
+        }
+      ];
+    }
+
+    window.loadDemoOrdersBurgerHouse = function(silent = false) {
+      if (!window.currentPickups || !window.currentPickups.length) {
+        if (typeof window.loadDemoPickupsBurgerHouse === 'function') {
+          window.loadDemoPickupsBurgerHouse(true);
+        }
+      }
+      allOrders = getBurgerHouseSimulatedOrders();
+      saveOrders(allOrders);
+      renderAllOrders(allOrders);
+      updateDashboardFromOrders(allOrders);
+      if (typeof showToastDash === 'function' && !silent) {
+        showToastDash('✓ 5 pedidos de Burger House cargados con éxito (Dale!QueVoy, Cadete Propio y Takeaway)');
+      }
+    };
+
+    window.loadDemoPickupsBurgerHouse = function(silent = false) {
+      const pickups = [
+        {
+          id: 'PU-BH-01',
+          name: 'Lucas Rodríguez',
+          dni: '38.120.443',
+          wapp: '5491155889922',
+          zona: 'Palermo / Recoleta / Belgrano',
+          vehiculo: 'Moto Honda CG 150 (Delivery Propio)',
+          time_from: '19:00',
+          time_to: '01:00',
+          holidays: true,
+          days: ['Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+          active: true,
+          pedidos_count: 8,
+          rating: 4.9
+        },
+        {
+          id: 'PU-BH-02',
+          name: 'Mateo Giménez',
+          dni: '41.982.110',
+          wapp: '5491133221199',
+          zona: 'Almagro / Caballito / Tribunales',
+          vehiculo: 'Bicicleta Rodado 28 con caja térmica',
+          time_from: '20:00',
+          time_to: '00:30',
+          holidays: false,
+          days: ['Jueves', 'Viernes', 'Sábado'],
+          active: true,
+          pedidos_count: 5,
+          rating: 4.8
+        }
+      ];
+      window.currentPickups = pickups;
+      localStorage.setItem('storeapp_pickups_' + STORE_ID, JSON.stringify(pickups));
+      localStorage.setItem('storeapp_pickups', JSON.stringify(pickups));
+      if (typeof renderPickupsList === 'function') renderPickupsList();
+      if (typeof renderPendingPickups === 'function') renderPendingPickups();
+      if (typeof showToastDash === 'function' && !silent) {
+        showToastDash('✓ Cadetes de Burger House registrados en PickUp');
+      }
+    };
+
+    /* ═══════════════════════════════════════════ MOTOR DE COMANDA TÉRMICA ESC/POS ═══════════════════════════════════════════ */
+
+    let currentComandaOrder = null;
+
+    function printComanda(orderId, isAuto = false) {
+      const o = allOrders.find(x => x.id === orderId);
+      if (!o) return;
+      currentComandaOrder = o;
+
+      const cfg = JSON.parse(localStorage.getItem('storeapp_cfg_' + STORE_ID) || localStorage.getItem('storeapp_cfg') || '{}');
+      const storeName = (cfg.name && cfg.name !== 'Mi Tienda') ? cfg.name : 'BURGER HOUSE';
+      const storeAddress = cfg.address || 'Av. Corrientes 1840, CABA';
+      const storePhone = cfg.wapp || cfg.phone || '11-4488-3322';
+      const storeTagline = cfg.tagline || 'Smash Burgers & Street Food Artesanal';
+
+      // Identificar tipo de servicio / logística
+      let logisticaBadge = '';
+      let logisticaExtra = '';
+      if (o.logistica === 'Envío a domicilio') {
+        if (o.delivery_id) {
+          logisticaBadge = '>>> 🚀 DELIVERY DALE!QUEVOY <<<';
+          logisticaExtra = `TRACKING: ${o.delivery_id}\nPIN DE ENTREGA SEGURO: *** ${o.pin_code || 'S/N'} ***\n(Solicitar PIN al entregar)`;
+        } else if (o.pickup_id) {
+          const cadete = (window.currentPickups || []).find(p => p.id === o.pickup_id);
+          logisticaBadge = '>>> 🛵 CADETE DEL LOCAL (PARTICULAR) <<<';
+          logisticaExtra = `REPARTIDOR ASIGNADO: ${cadete ? cadete.name : 'Cadete Propio'}`;
+        } else {
+          logisticaBadge = '>>> 🛵 DELIVERY A DOMICILIO <<<';
+          logisticaExtra = `CADETE: Pendiente de asignar`;
+        }
+      } else {
+        logisticaBadge = '>>> 🥡 TAKEAWAY / RETIRO EN MOSTRADOR <<<';
+        logisticaExtra = `RETIRA EN LOCAL: ${storeAddress}`;
+      }
+
+      // Parsear items con detalles
+      let parsedItems = [];
+      try {
+        if (o.detalle) {
+          const d = typeof o.detalle === 'string' ? JSON.parse(o.detalle) : o.detalle;
+          if (Array.isArray(d)) parsedItems = d;
+        }
+      } catch(e) {}
+      if (!parsedItems.length && o.items && Array.isArray(o.items)) {
+        parsedItems = o.items.map(it => ({
+          name: it.name,
+          qty: it.cant || 1,
+          price: it.price || 0,
+          notes: it.notes || ''
+        }));
+      }
+      if (!parsedItems.length && o.productos) {
+        const rawParts = o.productos.split('|').map(s => s.trim()).filter(Boolean);
+        parsedItems = rawParts.map(str => {
+          const match = str.match(/^(.*?)\s*×\s*(\d+)$/);
+          if (match) {
+            return { name: match[1].trim(), qty: parseInt(match[2]), price: 0 };
+          }
+          return { name: str, qty: 1, price: 0 };
+        });
+      }
+
+      // Líneas de texto estructurado de ítems
+      const itemsTextLines = parsedItems.map(it => {
+        let line = `[ ${it.qty || 1} ] ${(it.name || '').toUpperCase()}`;
+        if (it.notes) {
+          line += `\n      * NOTA: ${it.notes.toUpperCase()}`;
+        }
+        if (it.variant) {
+          line += `\n      * OPCIÓN: ${it.variant.toUpperCase()}`;
+        }
+        if (it.price) {
+          line += `\n      Subtotal: $${((it.price || 0) * (it.qty || 1)).toLocaleString('es-AR')}`;
+        }
+        return line;
+      }).join('\n\n');
+
+      let pagoInfo = `MÉTODO: ${(o.pago || 'A convenir').toUpperCase()}`;
+      if (o.pago_detalle) pagoInfo += `\n${o.pago_detalle}`;
+      else if (o.pago === 'Efectivo') pagoInfo += `\n(Cobrar en destino)`;
+
+      const ticketHtml = `
+        <div style="text-align:center; margin-bottom:8px;">
+          <div style="font-size:16px; font-weight:900; letter-spacing:1px; margin-bottom:2px;">${storeName.toUpperCase()}</div>
+          <div style="font-size:10px; color:#555;">${storeTagline}</div>
+          <div style="font-size:10px; color:#555;">${storeAddress}</div>
+          <div style="font-size:10px; color:#555;">Tel: ${storePhone}</div>
+        </div>
+        <div style="border-top:1px dashed #000; margin:6px 0;"></div>
+        
+        <div style="display:flex; justify-content:space-between; font-weight:700; font-size:13px; margin:4px 0;">
+          <span>COMANDA:</span>
+          <span>${o.id}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:10px; color:#444;">
+          <span>FECHA: ${o.fecha || new Date().toLocaleDateString('es-AR')}</span>
+          <span>ESTADO: ${(o.estado || 'CONFIRMADO').toUpperCase()}</span>
+        </div>
+        
+        <div style="border-top:1px dashed #000; margin:6px 0;"></div>
+        <div style="background:#000; color:#fff; text-align:center; padding:5px 4px; font-weight:800; font-size:11px; margin:6px 0; border-radius:2px;">
+          ${logisticaBadge}
+        </div>
+        ${logisticaExtra ? `<div style="font-size:10px; font-weight:700; margin-bottom:6px; white-space:pre-line; color:#222; background:#f4f4f4; padding:5px 7px; border-left:3px solid #000;">${logisticaExtra}</div>` : ''}
+
+        <div style="border-top:1px dashed #000; margin:6px 0;"></div>
+        <div style="font-size:11px;">
+          <strong>CLIENTE:</strong> ${o.cliente.toUpperCase()}<br/>
+          ${o.telefono ? `<strong>TEL/WAPP:</strong> ${o.telefono}<br/>` : ''}
+          ${o.dni ? `<strong>DNI:</strong> ${o.dni}<br/>` : ''}
+          ${o.direccion ? `<strong>DIRECCIÓN:</strong> ${o.direccion}<br/>` : ''}
+          ${o.notas ? `<div style="margin-top:4px; padding:4px 6px; background:#fff3cd; border:1px solid #ffeeba; color:#856404; font-weight:700;">⚠️ NOTA: ${o.notas}</div>` : ''}
+        </div>
+
+        <div style="border-top:1px dashed #000; margin:6px 0;"></div>
+        <div style="font-weight:700; font-size:10px; margin-bottom:4px; text-decoration:underline;">ITEMS DEL PEDIDO:</div>
+        <div style="white-space:pre-wrap; font-size:11px; line-height:1.4;">${itemsTextLines}</div>
+
+        <div style="border-top:1px dashed #000; margin:8px 0;"></div>
+        <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:900; margin:4px 0;">
+          <span>TOTAL:</span>
+          <span>$${Number(o.total || 0).toLocaleString('es-AR')}</span>
+        </div>
+        <div style="font-size:10px; color:#333; margin-top:4px; white-space:pre-line;">
+          ${pagoInfo}
+        </div>
+
+        ${o.pin_code ? `
+        <div style="border:2px dashed #000; padding:6px; text-align:center; margin:10px 0; background:#f9f9f9;">
+          <div style="font-size:9px; font-weight:700; color:#555;">PIN DE SEGURIDAD DALE!QUEVOY</div>
+          <div style="font-size:18px; font-weight:900; letter-spacing:4px; color:#000;">${o.pin_code}</div>
+        </div>` : ''}
+
+        <div style="border-top:1px dashed #000; margin:8px 0;"></div>
+        <div style="text-align:center; font-size:9px; color:#666;">
+          *** ¡MUCHAS GRACIAS POR SU COMPRA! ***<br/>
+          daletepido.com.ar · Dale!QueVoy Logística
+        </div>
+      `;
+
+      // Inyectar en preview modal
+      const previewEl = document.getElementById('comanda-ticket-preview');
+      if (previewEl) previewEl.innerHTML = ticketHtml;
+
+      // Inyectar en print area nativa
+      const printEl = document.getElementById('comanda-print-area');
+      if (printEl) printEl.innerHTML = ticketHtml;
+
+      const modal = document.getElementById('comanda-modal');
+      if (modal) {
+        modal.style.display = 'flex';
+        const sub = document.getElementById('comanda-modal-sub');
+        if (sub) {
+          sub.textContent = isAuto
+            ? `¡Auto-disparo activado por cambio a estado imprimible!`
+            : `Comanda #${o.id} · Formato para impresora térmica de cocina y mostrador`;
+        }
+      }
+
+      // Si es auto-disparo por estado imprimible, llamar a print
+      if (isAuto) {
+        setTimeout(() => {
+          triggerBrowserPrint();
+        }, 400);
+      }
+    }
+
+    function triggerBrowserPrint() {
+      window.print();
+    }
+
+    function closeComandaModal() {
+      const m = document.getElementById('comanda-modal');
+      if (m) m.style.display = 'none';
+    }
+
+    function copyComandaText() {
+      if (!currentComandaOrder) return;
+      const o = currentComandaOrder;
+      const text = `*COMANDA #${o.id}*\nCliente: ${o.cliente}\nTel: ${o.telefono || '—'}\nDirección: ${o.direccion || 'Retiro en mostrador'}\nLogística: ${o.logistica}\n\n*Productos:*\n${o.productos}\n\n*Total:* $${Number(o.total || 0).toLocaleString('es-AR')}\nPago: ${o.pago}\n${o.pin_code ? `PIN Dale!QueVoy: ${o.pin_code}\n` : ''}${o.notas ? `Obs: ${o.notas}` : ''}`;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          if (typeof showToastDash === 'function') showToastDash('✓ Texto de comanda copiado al portapapeles');
+        }).catch(() => {
+          prompt('Copiá el texto de la comanda:', text);
+        });
+      } else {
+        prompt('Copiá el texto de la comanda:', text);
+      }
+    }
+
     window.showToast = function(msg) {
       if (typeof showToastDash === 'function') showToastDash(msg);
     };
@@ -15272,21 +15759,26 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
           const cols = orders.filter(o => o.estado === st.key);
           return `<div class="kanban-col" style="min-width: 220px; flex: 1;">
         <div class="kanban-col-head" style="border-top:3px solid ${st.text};">
-          <span style="color:${st.text}; font-weight:700;"><i class="bi ${st.icon}"></i> ${st.label.toUpperCase()}</span>
+          <span style="color:${st.text}; font-weight:700;"><i class="bi ${st.icon}"></i> ${st.label.toUpperCase()}${st.printable ? ' <i class="bi bi-printer" title="Estado imprimible (comanda automática activa)" style="font-size:10px;margin-left:3px;color:var(--fog);"></i>' : ''}</span>
           <span class="kanban-count" style="background:${st.bg}; color:${st.text}; font-weight:700;">${cols.length}</span>
         </div>
         <div class="kanban-cards">
           ${cols.length ? cols.map(o => `
-            <div class="kanban-card" style="border-left:3px solid ${st.text};">
-              <div class="kc-id">${o.id}${o.is_night_guard ? ' <span title="Pedido fuera de horario (Modo Sereno)" style="background:rgba(129,140,248,0.2);color:#A5B4FC;border:1px solid rgba(129,140,248,0.4);padding:1px 4px;border-radius:4px;font-size:9px;font-weight:600;">🌙 Sereno</span>' : ''}</div>
-              <div class="kc-client">${o.cliente}</div>
-              <div class="kc-prods">${o.productos}</div>
+            <div class="kanban-card" style="border-left:3px solid ${st.text}; position:relative;">
+              <div class="kc-id" style="display:flex;justify-content:space-between;align-items:center;">
+                <span>${o.id}${o.is_night_guard ? ' <span title="Pedido fuera de horario (Modo Sereno)" style="background:rgba(129,140,248,0.2);color:#A5B4FC;border:1px solid rgba(129,140,248,0.4);padding:1px 4px;border-radius:4px;font-size:9px;font-weight:600;">🌙 Sereno</span>' : ''}</span>
+                <button type="button" onclick="printComanda('${o.id}')" title="🖨️ Imprimir Comanda Térmica (58/80mm)" style="background:transparent;border:1px solid var(--zinc);color:var(--fog);border-radius:5px;padding:2px 6px;font-size:10px;cursor:pointer;display:inline-flex;align-items:center;gap:3px;" onmouseover="this.style.color='#fff';this.style.borderColor='var(--fog)'" onmouseout="this.style.color='var(--fog)';this.style.borderColor='var(--zinc)'">
+                  <i class="bi bi-printer"></i> <span>Comanda</span>
+                </button>
+              </div>
+              <div class="kc-client"><strong>${o.cliente}</strong> · <span style="font-size:10px;color:var(--silver);">${o.logistica || 'Mostrador'}</span></div>
+              <div class="kc-prods" style="font-size:11px;color:var(--fog);margin:4px 0;">${o.productos}</div>
               <div class="kc-footer">
                 <span class="kc-total">$${Number(o.total || 0).toLocaleString('es-AR')}</span>
                 <span class="kc-date">${(o.fecha || '').split(' ')[0]}</span>
               </div>
               <select onchange="changeOrderEstado('${o.id}',this.value)" class="kc-select">
-                ${allStates.map(s => `<option value="${s.key}" ${o.estado === s.key ? 'selected' : ''}>${s.label}</option>`).join('')}
+                ${allStates.map(s => `<option value="${s.key}" ${o.estado === s.key ? 'selected' : ''}>${s.label}${s.printable ? ' 🖨️' : ''}</option>`).join('')}
               </select>
             </div>`).join('')
               : `<div style="font-size:11px;color:var(--silver);text-align:center;padding:16px;">Sin pedidos</div>`}
@@ -15359,9 +15851,14 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         }
       </td>
       <td>
-        <button class="abm-action del" onclick="deleteOrder('${o.id}')" title="Eliminar">
-          <i class="bi bi-trash"></i>
-        </button>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <button class="abm-action" onclick="printComanda('${o.id}')" title="🖨️ Imprimir Comanda Térmica (58/80mm)" style="background:var(--iron);border:1px solid var(--zinc);color:var(--fog);border-radius:6px;padding:4px 8px;cursor:pointer;">
+            <i class="bi bi-printer"></i>
+          </button>
+          <button class="abm-action del" onclick="deleteOrder('${o.id}')" title="Eliminar">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
       </td>
     </tr>`).join('');
 
@@ -15434,14 +15931,26 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const o = allOrders.find(x => x.id === id);
       if (!o) return;
 
+      const previousEstado = o.estado;
       o.estado = estado;
       saveOrders(allOrders);
       renderAllOrders(allOrders);
       updateDashboardFromOrders(allOrders);
 
       // Sync to Sheet
-      const label = getStates().find(s => s.key === estado)?.label || estado;
+      const targetState = getStates().find(s => s.key === estado);
+      const label = targetState?.label || estado;
       updateOrderEstado(id, label);
+
+      // ── VERIFICACIÓN DE AUTO-IMPRESIÓN DE COMANDA ─────────
+      if (previousEstado !== estado && targetState && targetState.printable && isAutoPrintOrdersEnabled()) {
+        if (typeof showToastDash === 'function') {
+          showToastDash(`🖨️ Estado "${targetState.label}" imprimible: enviando comanda #${o.id}...`);
+        }
+        setTimeout(() => {
+          printComanda(o.id, true);
+        }, 350);
+      }
 
       // ── Mensajes automáticos según estado ────────────
       const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
@@ -18917,26 +19426,45 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         cfg.color = '#E74C3C';
         cfg.h1 = 'Burger';
         cfg.h2 = 'HOUSE';
-        cfg.tagline = 'Las mejores de la zona.';
-        cfg.desc = 'Hamburguesas 100% carne vacuna, papas crocantes y mucho cheddar. Hacé tu pedido online y disfrutá sin moverte de tu casa.';
+        cfg.tagline = 'Smash Burgers & Street Food Artesanal';
+        cfg.desc = 'Hamburguesas 100% carne vacuna seleccionada, panes de papa horneados en el día, papas rústicas triple cocción y cheddar fundido. Delivery por Dale!QueVoy, cadete propio o Takeaway sin fila.';
         cfg.bg = 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&q=80&w=2000';
+        cfg.wapp = '5491144883322';
+        cfg.address = 'Av. Corrientes 1840, CABA (Tribunales / Centro)';
+        cfg.instagram = '@burgerhouse.ar';
+        cfg.hours = 'Miércoles a Domingo de 19:30 a 00:30 hs';
         cats = [
           { id: '1', name: 'Hamburguesas', icon: '🍔', active: true },
           { id: '2', name: 'Acompañamientos', icon: '🍟', active: true },
-          { id: '3', name: 'Entradas', icon: '🍗', active: true },
-          { id: '4', name: 'Bebidas', icon: '🥤', active: true }
+          { id: '3', name: 'Entradas & Finger Food', icon: '🍗', active: true },
+          { id: '4', name: 'Bebidas & Cervezas', icon: '🥤', active: true },
+          { id: '5', name: 'Postres Caseros', icon: '🍰', active: true },
+          { id: '6', name: 'Combos Cuadrilla', icon: '🏷️', active: true }
         ];
         prods = [
-          { id: 'p1', cat: '1', name: 'Hamburguesa Clásica', price: 6500, desc: 'Hamburguesa con lechuga, tomate y salsa especial ||| {"variants":[{"name":"Tamaño","options":[{"name":"Simple","priceDelta":0},{"name":"Doble","priceDelta":1500}]}]}', stock: 100, active: true },
-          { id: 'p2', cat: '1', name: 'Hamburguesa con Cheddar y Bacon', price: 7900, desc: 'Hamburguesa bañada en queso cheddar con bacon crocante ||| {"variants":[{"name":"Tamaño","options":[{"name":"Doble","priceDelta":0},{"name":"Triple","priceDelta":1800}]}]}', stock: 100, active: true },
-          { id: 'p3', cat: '1', name: 'Hamburguesa con Huevo', price: 7200, desc: 'Hamburguesa con huevo a la plancha ||| {"modifiers":[{"name":"Opciones","options":[{"name":"Con cebolla frita","priceDelta":0},{"name":"Sin cebolla frita","priceDelta":0}]}]}', stock: 100, active: true },
-          { id: 'p4', cat: '2', name: 'Papas Fritas', price: 2500, desc: 'Papas fritas cortadas a mano super crocantes ||| {"variants":[{"name":"Porción","options":[{"name":"Medianas","priceDelta":0},{"name":"Grandes","priceDelta":1000}]}]}', stock: 100, active: true },
-          { id: 'p5', cat: '3', name: 'Nuggets de Pollo', price: 3200, desc: 'Nuggets de pollo crujientes con aderezo ||| {"variants":[{"name":"Cantidad","options":[{"name":"Por 6 unidades","priceDelta":0},{"name":"Por 12 unidades","priceDelta":2000}]}]}', stock: 100, active: true },
-          { id: 'p6', cat: '4', name: 'Gaseosa', price: 1200, desc: 'Bebida en lata de 354ml bien fría ||| {"variants":[{"name":"Tipo","options":[{"name":"Común","priceDelta":0},{"name":"Zero","priceDelta":0}]}]}', stock: 200, active: true }
+          { id: 'p1', cat: '1', name: 'Hamburguesa Doble Cheddar Bacon', price: 8900, desc: 'Doble medallón 110g smash de carne vacuna seleccionada, cuádruple queso cheddar fundido, panceta crocante y salsa especial en pan de papa suave ||| {"variants":[{"name":"Tamaño","options":[{"name":"Simple","priceDelta":-1500},{"name":"Doble","priceDelta":0},{"name":"Triple","priceDelta":1800}]}],"modifiers":[{"name":"Preferencias","options":[{"name":"Con todo","priceDelta":0},{"name":"Sin cebolla","priceDelta":0},{"name":"Extra cheddar","priceDelta":900},{"name":"Extra bacon crocante","priceDelta":1200}]}]}', stock: 100, active: true },
+          { id: 'p2', cat: '1', name: 'Smash Oklahoma Onion Burger', price: 8500, desc: 'Doble carne smash prensada sobre finas láminas de cebolla caramelizada a la chapa, doble queso provolone y alioli de ajo asado ||| {"variants":[{"name":"Tamaño","options":[{"name":"Doble","priceDelta":0},{"name":"Triple","priceDelta":1600}]}],"modifiers":[{"name":"Salsa","options":[{"name":"Alioli clásico","priceDelta":0},{"name":"Salsa barbacoa","priceDelta":0},{"name":"Salsa picante suave","priceDelta":300}]}]}', stock: 80, active: true },
+          { id: 'p3', cat: '1', name: 'Burger Royale Crispy', price: 7900, desc: 'Medallón artesanal 150g, queso gouda derretido, lechuga capuchina, tomate fresco de quinta, pepinillos encurtidos y salsa tártara ||| {"variants":[{"name":"Medallón","options":[{"name":"Carne Vacuna","priceDelta":0},{"name":"Pollo Crispy","priceDelta":0},{"name":"Veggie de Lentejas","priceDelta":0}]}]}', stock: 60, active: true },
+          { id: 'p4', cat: '1', name: 'Hamburguesa Criolla con Huevo & Provoleta', price: 9200, desc: 'Medallón 160g a las brasas, provoleta grillada a la chapa, huevo a la plancha con yema tierna y toque de chimichurri suave ||| {"modifiers":[{"name":"Cocción","options":[{"name":"A punto jugoso","priceDelta":0},{"name":"Bien cocido","priceDelta":0}]}]}', stock: 50, active: true },
+          { id: 'p5', cat: '1', name: 'Veggie Portobello Burger', price: 7600, desc: 'Medallón de portobellos salteados y lentejas caramelizadas, queso provolone, hojas de rúcula selvática y tomates secos confitados ||| {"variants":[{"name":"Pan","options":[{"name":"Pan de Papa","priceDelta":0},{"name":"Sin TACC (Apto Celíaco)","priceDelta":800}]}]}', stock: 40, active: true },
+          { id: 'p6', cat: '2', name: 'Papas Fritas Rústicas Grandes', price: 3800, desc: 'Bastones gruesos de papa seleccionada triple cocción, super crocantes por fuera y suaves por dentro ||| {"variants":[{"name":"Porción","options":[{"name":"Medianas","priceDelta":-1000},{"name":"Grandes","priceDelta":0}]}]}', stock: 150, active: true },
+          { id: 'p7', cat: '2', name: 'Papas Burger House Especiales (Cheddar & Bacon)', price: 5200, desc: 'Porción grande de papas rústicas bañadas en fondue de cheddar fundido caliente, lluvia de bacon crocante y cebollita de verdeo fresca', stock: 100, active: true },
+          { id: 'p8', cat: '2', name: 'Papas Criollas Bravas', price: 4400, desc: 'Papas rústicas con dip de mayonesa de ajo asado casero, ciboulette picado y pimentón ahumado de Cachi', stock: 80, active: true },
+          { id: 'p9', cat: '3', name: 'Nuggets de Pollo Crocantes (x10)', price: 4900, desc: 'Bocaditos de pechuga de pollo rebozados en panko japonés crocante, acompañados con salsa barbacoa dulce ahumada ||| {"variants":[{"name":"Cantidad","options":[{"name":"Por 10 unidades","priceDelta":0},{"name":"Por 20 unidades","priceDelta":3600}]}]}', stock: 90, active: true },
+          { id: 'p10', cat: '3', name: 'Aros de Cebolla Rebozados (x8)', price: 4200, desc: 'Aros de cebolla morada crujientes rebozados a la cerveza con salsa alioli de la casa', stock: 75, active: true },
+          { id: 'p11', cat: '3', name: 'Tequeños de Queso Llanero (x6)', price: 5600, desc: 'Deditos de masa crujiente rellenos de abundante queso fundido, servidos con dip de salsa tártara', stock: 60, active: true },
+          { id: 'p12', cat: '4', name: 'Gaseosa en Lata 354ml', price: 1800, desc: 'Bebida en lata de 354ml servida bien fría ||| {"variants":[{"name":"Variedad","options":[{"name":"Coca-Cola Clásica","priceDelta":0},{"name":"Coca-Cola Zero","priceDelta":0},{"name":"Sprite Lima-Limón","priceDelta":0},{"name":"Fanta Naranja","priceDelta":0}]}]}', stock: 250, active: true },
+          { id: 'p13', cat: '4', name: 'Cerveza Patagonia Bohemian Pilsener 730ml', price: 4600, desc: 'Cerveza rubia lager aromática de maltas seleccionadas y lúpulo checo. Botella 730ml bien fría', stock: 90, active: true },
+          { id: 'p14', cat: '4', name: 'Cerveza Patagonia Amber Lager 730ml', price: 4600, desc: 'Cerveza con notas tostadas y maltosas, ideal para acompañar hamburguesas smash y papas cargadas', stock: 70, active: true },
+          { id: 'p15', cat: '5', name: 'Chocotorta Casera en Vaso', price: 3900, desc: 'Auténtica chocotorta argentina con capas de Chocolinas embebidas en café y crema de dulce de leche con queso crema', stock: 45, active: true },
+          { id: 'p16', cat: '5', name: 'Volcán de Chocolate con Dulce de Leche', price: 4500, desc: 'Bizcocho tibio de puro chocolate con centro líquido de dulce de leche colonial fundido', stock: 35, active: true },
+          { id: 'p17', cat: '6', name: 'Combo Dúo Smash Burgers', price: 21500, desc: '2x Hamburguesas Doble Cheddar Bacon + 1x Papas Fritas Grandes + 2x Gaseosas en lata a elección. ¡Ahorro asegurado!', stock: 50, active: true },
+          { id: 'p18', cat: '6', name: 'Combo Cuadrilla Amigos (x4)', price: 43900, desc: '4x Hamburguesas Dobles a elección + 2x Papas Burger House Especiales + 4x Bebidas en lata. La promo definitiva para compartir.', stock: 30, active: true }
         ];
         banners = [
-          { id: 'b1', title: '20% OFF en Dobles', subtitle: 'PROMO MARTES', url: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80', active: true },
-          { id: 'b2', title: 'Papas con Cheddar Gratis', subtitle: 'Con tu menú grande', url: 'https://images.unsplash.com/photo-1576107232684-1279f390859f?auto=format&fit=crop&w=800&q=80', active: true }
+          { id: 'b1', title: '2x1 en Doble Smash', subtitle: 'PROMO MARTES Y MIÉRCOLES', url: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80', active: true },
+          { id: 'b2', title: 'Delivery Dale!QueVoy con PIN', subtitle: 'TU BURGER CALIENTE EN 25 MIN', url: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80', active: true },
+          { id: 'b3', title: 'Papas Especiales con Cheddar', subtitle: 'COMBOS CON CERVEZA PATAGONIA', url: 'https://images.unsplash.com/photo-1576107232684-1279f390859f?auto=format&fit=crop&w=800&q=80', active: true }
         ];
       } else if (tipo === 'electronica') {
         cfg.name = 'Electro Store';
@@ -21679,6 +22207,56 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       </div>
     </div>
   </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- MODAL DE PREVIEW E IMPRESIÓN DE COMANDA TÉRMICA (58mm / 80mm ESC/POS)   -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <div id="comanda-modal" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.85); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:var(--carbon); border:1px solid var(--zinc); border-radius:14px; max-width:440px; width:100%; max-height:92vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,0.6);">
+      
+      <!-- Modal Header -->
+      <div style="padding:16px 20px; border-bottom:1px solid var(--zinc); display:flex; justify-content:space-between; align-items:center; background:linear-gradient(135deg, rgba(231,76,60,0.15) 0%, rgba(20,20,20,0.4) 100%);">
+        <div>
+          <div style="font-size:14px; font-weight:800; color:var(--white); display:flex; align-items:center; gap:8px;">
+            <i class="bi bi-printer-fill" style="color:#E74C3C;"></i>
+            <span>Comanda Térmica de Cocina</span>
+          </div>
+          <div id="comanda-modal-sub" style="font-size:11px; color:var(--silver); margin-top:2px;">
+            Formato ticket 58mm / 80mm ESC/POS
+          </div>
+        </div>
+        <button onclick="closeComandaModal()" style="background:transparent; border:none; color:var(--silver); font-size:18px; cursor:pointer; width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:6px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--silver)'">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <!-- Ticket Paper Preview Area (simulates thermal paper roll) -->
+      <div style="padding:18px; overflow-y:auto; flex:1; background:#18181b; display:flex; justify-content:center;">
+        <div id="comanda-ticket-preview" style="background:#fff; color:#000; width:100%; max-width:320px; padding:18px 16px; border-radius:4px; box-shadow:0 6px 20px rgba(0,0,0,0.5); font-family:'Courier New', Courier, monospace; font-size:11px; line-height:1.35; position:relative;">
+          <!-- Injected via printComanda() -->
+        </div>
+      </div>
+
+      <!-- Modal Footer Actions -->
+      <div style="padding:14px 18px; border-top:1px solid var(--zinc); background:var(--iron); display:flex; gap:8px; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+        <div style="display:flex; gap:6px;">
+          <button type="button" onclick="copyComandaText()" style="background:var(--carbon); border:1px solid var(--zinc); color:var(--fog); font-size:11px; padding:7px 12px; border-radius:7px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-family:var(--font-b);" title="Copiar detalle en formato texto para WhatsApp o bloc">
+            <i class="bi bi-clipboard"></i> Copiar texto
+          </button>
+          <button type="button" onclick="closeComandaModal()" style="background:transparent; border:1px solid var(--zinc); color:var(--silver); font-size:11px; padding:7px 12px; border-radius:7px; cursor:pointer; font-family:var(--font-b);">
+            Cerrar
+          </button>
+        </div>
+        <button type="button" onclick="triggerBrowserPrint()" style="background:linear-gradient(135deg, #E74C3C 0%, #B80000 100%); border:none; color:#fff; font-size:12px; font-weight:700; padding:8px 16px; border-radius:7px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; font-family:var(--font-b); box-shadow:0 3px 12px rgba(231,76,60,0.4);">
+          <i class="bi bi-printer-fill"></i> Imprimir Comanda
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Print Container for ESC/POS Thermal Printers (@media print) -->
+  <div id="comanda-print-area" style="display:none;"></div>
 
   <nav class="mobile-bottom-nav">
     <button class="mobile-nav-item active" id="mnav-dashboard" onclick="goToMobileView('dashboard')">
