@@ -90,6 +90,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Josefin+Sans:ital,wght@0,300..700;1,300..700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
     rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/js/logistics.js"></script>
@@ -120,6 +121,55 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+    }
+
+    body.light-mode * {
+      scrollbar-color: rgba(0, 0, 0, 0.22) transparent;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--red);
+    }
+    body.light-mode ::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.22);
+    }
+    body.light-mode ::-webkit-scrollbar-thumb:hover {
+      background: var(--red);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 11.5px;
+      color: var(--silver);
+    }
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
     }
 
     html {
@@ -3430,14 +3480,14 @@
     }
 
     .config-section-title:hover,
-    .card-title:hover,
+    .card.collapsible .card-title:hover,
     .view#view-design .card-title:hover,
     .view#view-design-catalogo .card-title:hover {
       background: rgba(255, 255, 255, 0.03);
     }
 
     .config-section-title::after,
-    .card-title::after,
+    .card.collapsible .card-title::after,
     .view#view-design .card-title::after,
     .view#view-design-catalogo .card-title::after {
       content: '\F282';
@@ -3448,8 +3498,7 @@
     }
 
     .config-section.collapsed .config-section-title::after,
-    .card.collapsed .card-title::after,
-    .config-section.collapsed .card-title::after,
+    .card.collapsible.collapsed .card-title::after,
     .view#view-design .card.collapsed .card-title::after,
     .view#view-design-catalogo .card.collapsed .card-title::after {
       transform: rotate(-90deg);
@@ -6380,11 +6429,11 @@
     <!-- ══ REPORTS (INFORMES) ══ -->
     <div class="view" id="view-reports">
 
-      <div style="display:flex; justify-content:flex-end; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
-        <button class="sb-btn" onclick="exportarInforme()" style="background:var(--iron); border:1px solid var(--zinc); color:var(--fog); display:inline-flex; align-items:center; gap:8px; cursor:pointer;">
+      <div style="display:flex; justify-content:flex-end; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+        <button onclick="exportarInforme()" style="width:auto; margin:0; padding:10px 18px; font-size:13px; font-weight:600; background:var(--steel); border:1px solid var(--zinc); color:var(--white); border-radius:8px; display:inline-flex; align-items:center; gap:8px; cursor:pointer; transition:all 0.15s ease;">
           <i class="bi bi-download"></i> Exportar informe
         </button>
-        <button class="abm-btn-new" onclick="enviarCorreoGerente()" style="display:inline-flex; align-items:center; gap:8px; padding:10px 18px; font-size:13px; cursor:pointer;">
+        <button onclick="enviarCorreoGerente()" style="width:auto; margin:0; padding:10px 18px; font-size:13px; font-weight:700; background:var(--red); border:none; color:#fff; border-radius:8px; box-shadow:0 4px 14px rgba(246,0,0,0.35); display:inline-flex; align-items:center; gap:8px; cursor:pointer; transition:all 0.15s ease;">
           <i class="bi bi-envelope"></i> Enviar por correo al Gerente
         </button>
       </div>
@@ -7764,21 +7813,21 @@
         <div
           style="margin-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
           <span id="abm-count" style="font-size:11px;color:var(--silver);"></span>
-          <div style="display:flex;gap:12px;flex-wrap:wrap;">
-            <button class="sb-btn" style="background:#2ecc71;border:none;color:#fff;padding:12px 24px;font-size:14px;width:auto;"
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+            <button style="background:rgba(46,204,113,0.15);border:1px solid rgba(46,204,113,0.4);color:#2ecc71;padding:10px 18px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all 0.15s ease;"
               onclick="loadDemoProductsToABM()">
-              <i class="bi bi-cloud-arrow-down"></i> Cargar datos de demostración al ABM
+              <i class="bi bi-cloud-arrow-down"></i> Cargar datos demo
             </button>
-            <button class="sb-btn" style="background:#555;border:none;color:#fff;padding:12px 24px;font-size:14px;width:auto;"
+            <button style="background:var(--steel);border:1px solid var(--zinc);color:var(--white);padding:10px 18px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all 0.15s ease;"
               onclick="document.getElementById('abm-csv-file').click()">
-              <i class="bi bi-upload"></i> Cargar ABM mediante CSV
+              <i class="bi bi-upload"></i> Cargar CSV
             </button>
             <input type="file" id="abm-csv-file" accept=".csv" style="display:none;" onchange="importProductsFromCSV(this)"/>
-            <button class="sb-btn" style="background:#444;border:none;color:#fff;padding:12px 24px;font-size:14px;width:auto;"
+            <button style="background:var(--steel);border:1px solid var(--zinc);color:var(--white);padding:10px 18px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all 0.15s ease;"
               onclick="exportProducts()">
-              <i class="bi bi-download"></i> Descargar ABM
+              <i class="bi bi-download"></i> Descargar CSV
             </button>
-            <button class="abm-btn-new" onclick="saveLocalProducts(this)" style="padding:12px 24px;font-size:14px;width:auto;">
+            <button onclick="saveLocalProducts(this)" style="padding:10px 22px;font-size:13px;font-weight:700;background:var(--red);border:none;color:#fff;border-radius:8px;box-shadow:0 4px 14px rgba(246,0,0,0.35);cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all 0.15s ease;">
               <i class="bi bi-floppy2"></i> Guardar configuración
             </button>
           </div>
@@ -16011,6 +16060,8 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const isLight = theme === 'light';
       document.body.classList.toggle('light-mode', isLight);
       document.body.classList.toggle('dark-mode', !isLight);
+      document.documentElement.classList.toggle('light-mode', isLight);
+      document.documentElement.classList.toggle('dark-mode', !isLight);
       localStorage.setItem('storeapp_dash_theme', theme);
       
       const themeIcon = document.getElementById('theme-icon');
@@ -18156,17 +18207,20 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       bannerEl.style.display = 'flex';
 
       if (remainingDays > 0) {
-        bannerTextEl.innerHTML = `Te queda${remainingDays !== 1 ? 'n' : ''} <strong style="color:#fff; text-decoration:underline;">${remainingDays} día${remainingDays !== 1 ? 's' : ''} de prueba gratuita</strong>. ¡Aprovechá al máximo todas las funciones de tu tienda!`;
-        bannerEl.style.background = 'linear-gradient(90deg, #D72638 0%, #800000 100%)';
+        bannerTextEl.innerHTML = `Te queda${remainingDays !== 1 ? 'n' : ''} <strong style="color:var(--white); text-decoration:underline;">${remainingDays} día${remainingDays !== 1 ? 's' : ''} de prueba gratuita</strong>. ¡Aprovechá al máximo todas las funciones de tu tienda!`;
+        bannerEl.style.background = 'linear-gradient(135deg, rgba(246, 0, 0, 0.12) 0%, rgba(20, 20, 22, 0.95) 100%)';
+        bannerEl.style.borderColor = 'rgba(246, 0, 0, 0.35)';
+        bannerEl.style.boxShadow = '0 4px 16px rgba(246, 0, 0, 0.15)';
         if (badgeEl) {
-          badgeEl.style.background = 'rgba(215,38,56,0.15)';
+          badgeEl.style.background = 'rgba(246, 0, 0, 0.12)';
           badgeEl.style.color = 'var(--red)';
-          badgeEl.style.border = '1px solid rgba(215,38,56,0.3)';
+          badgeEl.style.border = '1px solid rgba(246, 0, 0, 0.3)';
           badgeEl.innerHTML = `<i class="bi bi-clock-history"></i> Prueba: ${remainingDays}d restantes`;
         }
       } else {
-        bannerTextEl.innerHTML = `⚠️ <strong style="color:#fff;">Tu período de prueba gratuita de 15 días ha finalizado.</strong> Actualizá tu plan para mantener las funciones activas.`;
-        bannerEl.style.background = 'linear-gradient(90deg, #b91c1c 0%, #7f1d1d 100%)';
+        bannerTextEl.innerHTML = `⚠️ <strong style="color:var(--white);">Tu período de prueba gratuita de 15 días ha finalizado.</strong> Actualizá tu plan para mantener las funciones activas.`;
+        bannerEl.style.background = 'linear-gradient(135deg, rgba(239, 68, 68, 0.18) 0%, rgba(20, 20, 22, 0.95) 100%)';
+        bannerEl.style.borderColor = 'rgba(239, 68, 68, 0.4)';
         if (badgeEl) {
           badgeEl.style.background = 'rgba(239, 68, 68, 0.2)';
           badgeEl.style.color = '#ef4444';
@@ -18180,7 +18234,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const urlParams = new URLSearchParams(window.location.search);
       const storeId = window.STORE_ID || 'coquito';
       let verified = false;
-      if (urlParams.get('verify') === 'true') {
+      if (urlParams.get('verify') === 'true' || urlParams.get('demo') === '1' || urlParams.get('preview') === '1') {
         verified = true;
         localStorage.setItem('dtp_account_verified_' + storeId, 'true');
       } else {

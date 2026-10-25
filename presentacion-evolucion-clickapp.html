@@ -1211,6 +1211,40 @@
         </div>
       </section>
 
+      <!-- SLIDE 15: RESTAURACIÓN VISUAL Y CONSISTENCIA UI EN DASHBOARD DE CUENTAS -->
+      <section class="slide" id="slide-15">
+        <span class="slide-badge" style="background:rgba(246,0,0,0.15);border-color:rgba(246,0,0,0.4);color:#F60000;"><i class="bi bi-palette2"></i> Etapa 15 · Release 24 de Octubre 2026</span>
+        <h2 class="slide-title">Restauración Visual & Consistencia UI en Dashboard de Cuentas</h2>
+        <p class="slide-desc">Optimización integral del Panel de Control de los comercios (dashboard.html): recuperación de tipografía vectorial Bootstrap Icons, scrollbars invisibles/elegantes, banners translúcidos y paridad estricta entre Modo Oscuro y Modo Claro.</p>
+
+        <div class="grid-3" style="margin-top:16px;">
+          <div class="card">
+            <div class="card-title" style="color:var(--brand-red);"><i class="bi bi-check2-circle"></i> Bootstrap Icons en Head</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Se restauró el CDN de <strong>Bootstrap Icons 1.11.3</strong> en el <code>&lt;head&gt;</code> de <code>dashboard.html</code>, eliminando por completo los botones vacíos y cuadros fantasma (<code>▯</code>) en las acciones de ABM, botones rápidos del sidebar y conmutador de tema.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-sliders"></i> Scrollbars & Gráficos</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Implementación de scrollbars modernos de 6px semitransparentes en Kanban y tablas de pedidos, eliminando las barras grises nativas de Windows, e incorporación de estilos para leyendas y badges en gráficos de donas de medios de pago.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-title" style="color:#3B82F6;"><i class="bi bi-shield-check"></i> Banners & Sync de Temas</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Rediseño del banner de prueba de 15 días a tarjeta translúcida de cristal oscuro con acento rojo institucional, supresión del banner de verificación en modo demo y sincronización instantánea de clases <code>light-mode</code> / <code>dark-mode</code> en <code>html</code> y <code>body</code>.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:center; gap:12px;">
+          <a href="/dashboard.html?demo=1" target="_blank" class="nav-btn primary" style="padding:10px 22px; font-size:13px;">
+            <i class="bi bi-speedometer2"></i> Probar Dashboard de Cuentas en Vivo
+          </a>
+        </div>
+      </section>
+
     </main>
 
     <!-- BOTTOMBAR -->
@@ -1222,7 +1256,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 3.8 Multi-Rubro & Cloud Routing · Actualizado 24/10/2026
+        Dale! Te Pido © 2026 · Versión 3.9 UI & Dashboard Perfection · Actualizado 24/10/2026
       </div>
     </footer>
 
@@ -1231,7 +1265,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 14;
+  const totalSlides = 15;
 
   function showSlide(index) {
     if (index < 1) index = 1;
