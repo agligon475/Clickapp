@@ -1325,6 +1325,42 @@
         </div>
       </section>
 
+      <!-- SLIDE 18: UX/UI Storefront, Visibilidad de Marca y Botones de Compra -->
+      <section class="slide" id="slide-18">
+        <span class="slide-badge" style="background:rgba(246,0,0,0.15);border-color:rgba(246,0,0,0.4);color:#F60000;"><i class="bi bi-palette-fill"></i> Etapa 18 · Release 25 de Octubre 2026</span>
+        <h2 class="slide-title">Optimización UX/UI Storefront: Visibilidad de Marca y Sistema de Botones de Compra</h2>
+        <p class="slide-desc">Auditoría y resolución de contraste visual para la experiencia de usuario: logotipo y nombre del comercio siempre nítidos en la barra superior integrada, rediseño del sistema de botones de compra con mutación fluida "+ Agregar" / control de cantidades y botones de personalización gastronómica.</p>
+
+        <div class="grid-3" style="margin-top:16px;">
+          <div class="card">
+            <div class="card-title" style="color:#F60000;"><i class="bi bi-eye-fill"></i> Marca y Topbar Nítidos</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Corrección del contraste en cabecera: el nombre de la tienda y su emblema oficial se integran con fondo translúcido y desenfoque adaptativo <code>--nav-bg</code>, eliminando textos invisibles y asegurando lectura impecable tanto en temas oscuros como claros.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-cart-plus-fill"></i> Botones "+ Agregar" y "Personalizar"</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Reemplazo de controles pasivos por botones claros de llamada a la acción: botón rojo con gradiente para productos con opciones (hamburguesas) y botón interactivo <code>+ Agregar</code> que muta instantáneamente al contador de unidades al primer clic.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#6366F1;"><i class="bi bi-sliders"></i> Categorías y Modales Optimizados</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Los selectores de categorías ahora destacan la categoría activa con color de acento de marca y eliminan estados de hover blanco-sobre-blanco. Los botones de modificadores en el modal de detalle cuentan con botones claros y alto contraste.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <a href="/tienda.html?store=bighouse" target="_blank" class="nav-btn primary" style="padding:10px 22px; font-size:13px; background:linear-gradient(135deg, #F60000 0%, #D60000 100%);">
+            <i class="bi bi-shop"></i> Explorar Tienda BigHouse Optimizada
+          </a>
+        </div>
+      </section>
+
     </main>
 
     <!-- BOTTOMBAR -->
@@ -1336,7 +1372,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 4.0 Multi-Rubro & Orders Engine · Actualizado 25/10/2026
+        Dale! Te Pido © 2026 · Versión 4.1 Multi-Rubro & Orders Engine · Actualizado 25/10/2026
       </div>
     </footer>
 
@@ -1345,7 +1381,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 17;
+  const totalSlides = 18;
 
   function showSlide(index) {
     if (index < 1) index = 1;

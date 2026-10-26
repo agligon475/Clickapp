@@ -72,6 +72,7 @@
   --silver:     #737373;
   --fog:        #525252;
   --white:      #010101;
+  --nav-bg:     rgba(255,255,255,.95);
   --font-head:  'Josefin Sans', sans-serif;
   --font-body:  'Poppins', sans-serif;
   --font-mono:  'JetBrains Mono', monospace;
@@ -113,38 +114,49 @@ body::before{
 /* ── TOPBAR ─────────────────────────────────────── */
 .topbar{
   position:sticky;top:0;z-index:100;
-  background:rgba(255,255,255,.94);
+  background:var(--nav-bg, rgba(255,255,255,.95));
   backdrop-filter:blur(16px);
   -webkit-backdrop-filter:blur(16px);
   border-bottom:1px solid var(--zinc);
   display:flex;align-items:center;
-  padding:0 24px;height:64px;gap:16px;
-  transition:background .2s, border-color .2s;
+  padding:0 24px;height:66px;gap:16px;
+  transition:background .25s ease, border-color .25s ease;
 }
 .logo{
   font-family:var(--font-head);
-  font-size:22px;font-weight:800;
-  color:var(--white);letter-spacing:-.01em;
+  font-size:20px;font-weight:800;
+  color:var(--white) !important;letter-spacing:-.01em;
   display:flex;align-items:center;gap:10px;
   text-decoration:none;
+  flex-shrink:0;
 }
 a.logo{
-  color:var(--white);
+  color:var(--white) !important;
+}
+.logo-title, #logo-text{
+  color:var(--white) !important;
+  font-weight:800;
+  font-size:18px;
+  letter-spacing:-.01em;
+  line-height:1.2;
+  white-space:nowrap;
 }
 .logo-icon{
-  width:34px;height:34px;background:var(--red);
+  width:36px;height:36px;background:var(--red);
   color:#fff;
-  border-radius:8px;display:flex;align-items:center;
-  justify-content:center;font-size:16px;
+  border-radius:10px;display:flex;align-items:center;
+  justify-content:center;font-size:18px;
   box-shadow:0 2px 8px var(--red-glow);
+  flex-shrink:0;
 }
 .tagline{
-  font-size:11.5px;color:var(--silver);
+  font-size:12px;color:var(--silver);
   border-left:1px solid var(--zinc);
   padding-left:12px;margin-left:4px;
   display:none;font-weight:500;
+  max-width:320px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-@media(min-width:500px){.tagline{display:block;}}
+@media(min-width:680px){.tagline{display:block;}}
 
 .search-wrap{
   flex:1;max-width:420px;margin:0 auto;
@@ -152,7 +164,7 @@ a.logo{
 }
 .search-input{
   width:100%;
-  background:var(--black);
+  background:var(--steel);
   border:1px solid var(--zinc);
   border-radius:10px;
   padding:9px 14px 9px 38px;
@@ -162,9 +174,9 @@ a.logo{
 }
 .search-input::placeholder{color:var(--silver);}
 .search-input:focus{
-  background:#fff;
-  border-color:var(--white);
-  box-shadow:0 0 0 3px rgba(1,1,1,.05);
+  background:var(--card);
+  border-color:var(--red);
+  box-shadow:0 0 0 3px var(--red-glow);
 }
 .search-icon{
   position:absolute;left:13px;top:50%;
@@ -173,13 +185,31 @@ a.logo{
   pointer-events:none;
 }
 
+.nav-link-item{
+  color:var(--white) !important;
+  opacity:0.85;
+  text-decoration:none;
+  font-size:13px;
+  font-weight:600;
+  display:flex;align-items:center;gap:6px;
+  transition:all .18s ease;
+  padding:6px 10px;
+  border-radius:8px;
+}
+.nav-link-item:hover{
+  opacity:1;
+  background:rgba(255,255,255,0.06);
+  color:var(--red) !important;
+}
+
 .cart-btn{
   margin-left:auto;
-  background:var(--red);color:#fff;
+  background:linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+  color:#fff;
   border:none;border-radius:10px;
   padding:9px 18px;
   font-family:var(--font-body);
-  font-size:13px;font-weight:600;
+  font-size:13px;font-weight:700;
   cursor:pointer;display:flex;
   align-items:center;gap:8px;
   transition:all .18s;
@@ -187,9 +217,9 @@ a.logo{
   box-shadow:0 2px 10px var(--red-glow);
 }
 .cart-btn:hover{
-  background:var(--red-dark);
+  filter:brightness(1.08);
   transform:translateY(-1px);
-  box-shadow:0 4px 14px var(--red-glow);
+  box-shadow:0 4px 16px var(--red-glow);
 }
 .cart-n{
   background:#fff;color:var(--red);
@@ -308,18 +338,25 @@ a.logo{
   border-radius:9999px;
   padding:8px 18px;
   font-family:var(--font-body);
-  font-size:12px;font-weight:600;
+  font-size:13px;font-weight:600;
   color:var(--fog);
-  cursor:pointer;transition:all .15s;
-  display:flex;align-items:center;gap:6px;
-  letter-spacing:.02em;
+  cursor:pointer;transition:all .18s ease;
+  display:flex;align-items:center;gap:7px;
+  letter-spacing:.01em;
   scroll-snap-align: start;
 }
-.cat-btn:hover{border-color:var(--white);color:var(--white);background:#fff;}
+.cat-btn:hover{
+  border-color:var(--red);
+  color:var(--white);
+  background:rgba(246,0,0,.08);
+  transform:translateY(-1px);
+}
 .cat-btn.active{
-  background:var(--white);color:var(--black);
-  border-color:var(--white);
-  box-shadow:0 2px 8px rgba(0,0,0,.12);
+  background:var(--red) !important;
+  color:#FFFFFF !important;
+  border-color:var(--red) !important;
+  box-shadow:0 4px 14px var(--red-glow);
+  transform:translateY(-1px);
 }
 
 /* ── SECTION LABEL ──────────────────────────────── */
@@ -355,9 +392,9 @@ a.logo{
   box-shadow:0 2px 8px rgba(0,0,0,.02);
 }
 .promo-banner:hover{
-  border-color:var(--white);
+  border-color:var(--red);
   transform:translateY(-2px);
-  box-shadow:0 10px 24px rgba(0,0,0,.06);
+  box-shadow:0 10px 24px rgba(0,0,0,.15);
 }
 .promo-banner-img{
   position:absolute;inset:0;
@@ -366,7 +403,7 @@ a.logo{
 }
 .promo-banner-overlay{
   position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(246,0,0,.4) 0%,rgba(0,0,0,.35) 100%);
+  background:linear-gradient(135deg,rgba(0,0,0,.35) 0%,rgba(0,0,0,.75) 100%);
 }
 .promo-banner-content{
   position:relative;z-index:2;
@@ -385,12 +422,28 @@ a.logo{
   font-size:26px;font-weight:800;
   color:var(--banner-text-col, #fff);line-height:1.15;
   margin-bottom:6px;
+  text-shadow:0 2px 8px rgba(0,0,0,0.6);
 }
 .promo-banner-cta{
   font-size:12px;
-  color:var(--banner-cta-col, var(--banner-text-col, #fff));font-weight:600;
-  margin-top:10px;display:flex;align-items:center;gap:6px;
+  font-weight:700;
+  color:#FFFFFF;
+  background:rgba(255,255,255,0.18);
+  backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,0.35);
+  border-radius:99px;
+  padding:6px 14px;
+  margin-top:12px;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
   justify-content:center;
+  transition:all .2s ease;
+}
+.promo-banner:hover .promo-banner-cta{
+  background:var(--red);
+  border-color:var(--red);
+  transform:scale(1.04);
 }
 
 @media(max-width:768px){
@@ -550,30 +603,90 @@ a.logo{
   font-weight:500;margin-right:2px;
 }
 
-/* ── QUANTITY COUNTER ────────────────────────────── */
+/* ── PRODUCT CARD BUTTONS & QUANTITY COUNTER ─────── */
+.btn-card-add{
+  margin-top:auto;
+  width:100%;
+  height:38px;
+  font-size:13px;
+  font-weight:700;
+  font-family:var(--font-body);
+  padding:0 14px;
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;
+  background:rgba(246,0,0,0.1);
+  border:1px solid var(--red);
+  border-radius:10px;
+  color:var(--red) !important;
+  cursor:pointer;
+  transition:all .18s ease;
+}
+.btn-card-add:hover{
+  background:var(--red);
+  color:#FFFFFF !important;
+  transform:translateY(-1px);
+  box-shadow:0 4px 14px var(--red-glow);
+}
+.btn-personalizar, .sb-btn{
+  margin-top:auto;
+  width:100%;
+  height:38px;
+  font-size:13px;
+  font-weight:700;
+  font-family:var(--font-body);
+  padding:0 14px;
+  display:flex;align-items:center;justify-content:center;
+  gap:7px;
+  background:linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%) !important;
+  border:none !important;
+  border-radius:10px;
+  color:#FFFFFF !important;
+  cursor:pointer;
+  transition:all .18s ease;
+  box-shadow:0 3px 10px var(--red-glow);
+}
+.btn-personalizar:hover, .sb-btn:hover{
+  filter:brightness(1.08);
+  transform:translateY(-1px);
+  box-shadow:0 6px 18px var(--red-glow);
+}
+.btn-personalizar .badge-count{
+  background:rgba(255,255,255,0.25);
+  color:#FFFFFF;
+  border-radius:999px;
+  padding:1px 8px;
+  font-size:11px;
+  font-weight:800;
+  margin-left:4px;
+}
 .qty-control{
   display:flex;align-items:center;
-  margin-top:auto;padding-top:10px;border-radius:8px;overflow:hidden;
+  margin-top:auto;height:38px;border-radius:10px;overflow:hidden;
   border:1px solid var(--zinc);
-  background:var(--black);
+  background:var(--steel);
+  transition:all .2s ease;
 }
-.qty-control.has-items{border-color:var(--red);background:#FFF8F8;}
+.qty-control.has-items{
+  border-color:var(--red);
+  background:rgba(246,0,0,0.08);
+  box-shadow:0 0 0 1px var(--red-glow);
+}
 .qty-btn{
-  width:36px;height:32px;flex-shrink:0;
+  width:40px;height:38px;flex-shrink:0;
   background:transparent;border:none;
-  color:var(--white);font-size:16px;
+  color:var(--white);font-size:17px;font-weight:700;
   cursor:pointer;transition:all .12s;
   display:flex;align-items:center;justify-content:center;
 }
-.qty-btn:hover{background:var(--red);color:#fff;}
+.qty-btn:hover{background:var(--red);color:#FFFFFF !important;}
 .qty-num{
   flex:1;text-align:center;
-  font-family:var(--font-mono);font-size:13.5px;font-weight:700;
+  font-family:var(--font-mono);font-size:14px;font-weight:800;
   color:var(--white);background:transparent;
   border:none;outline:none;
   padding:0;pointer-events:none;
 }
-.qty-control.has-items .qty-num{color:var(--red);}
+.qty-control.has-items .qty-num{color:var(--red);font-weight:800;}
 
 /* ── PRODUCT DETAIL MODAL ────────────────────────── */
 .pdrawer-overlay{
@@ -941,25 +1054,25 @@ a.logo{
 <!-- ── TOPBAR ── -->
 <nav class="topbar">
   <a href="#" class="logo" aria-label="Página de inicio de la tienda">
-    <span class="logo-icon" id="logo-icon">🏪</span>
-    <img id="logo-img" alt="Logo de la tienda" style="display:none; height:34px; width:34px; object-fit:contain; border-radius:8px;"/>
-    <span id="logo-text">Mi Tienda</span>
+    <span class="logo-icon" id="logo-icon">🍔</span>
+    <img id="logo-img" alt="Logo de la tienda" style="display:none; height:36px; width:36px; object-fit:cover; border-radius:8px; flex-shrink:0; box-shadow:0 2px 8px rgba(0,0,0,0.3);"/>
+    <span id="logo-text" class="logo-title">BigHouse</span>
   </a>
-  <span class="tagline" id="tagline">Tu tienda digital</span>
+  <span class="tagline" id="tagline">The Smash Master</span>
 
   <div class="search-wrap">
     <i class="bi bi-search search-icon" aria-hidden="true"></i>
     <input type="text" class="search-input" id="search"
-      placeholder="Buscar productos..."
+      placeholder="Buscar smash burgers, combos..."
       aria-label="Buscar productos en el catálogo"
       oninput="onSearch(this.value)"/>
   </div>
 
-  <div class="nav-links" style="display: flex; gap: 16px; margin-left: 12px; margin-right: 12px; flex-shrink: 0;">
-    <a href="javascript:void(0)" onclick="openPagesDrawer('nosotros')" class="nav-link-item" style="color: var(--silver); text-decoration: none; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: color 0.2s;" aria-label="Ver información sobre nosotros">
+  <div class="nav-links" style="display: flex; gap: 8px; margin-left: 8px; margin-right: 8px; flex-shrink: 0;">
+    <a href="javascript:void(0)" onclick="openPagesDrawer('nosotros')" class="nav-link-item" aria-label="Ver información sobre nosotros">
       <i class="bi bi-info-circle" style="font-size:16px;" aria-hidden="true"></i> <span class="hide-mobile">Nosotros</span>
     </a>
-    <a href="javascript:void(0)" onclick="openPagesDrawer('faq')" class="nav-link-item" style="color: var(--silver); text-decoration: none; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: color 0.2s;" aria-label="Ver preguntas frecuentes">
+    <a href="javascript:void(0)" onclick="openPagesDrawer('faq')" class="nav-link-item" aria-label="Ver preguntas frecuentes">
       <i class="bi bi-question-circle" style="font-size:16px;" aria-hidden="true"></i> <span class="hide-mobile">FAQs</span>
     </a>
   </div>
@@ -1456,8 +1569,8 @@ function applyConfig() {
 
   // Build theme tokens
   const themes = {
-    light: { bg:'#F6F6F6', body:'#FFFFFF', border:'#E5E5E5', text:'#010101', muted:'#737373', fog:'#525252', navBg:'rgba(255,255,255,.94)' },
-    dark:  { bg:'#0E0E0E', body:'#1C1C1E', border:'#3E3E42', text:'#F5F5F0', muted:'#8A8A90', fog:'#C8C8CC', navBg:'rgba(14,14,14,.92)' },
+    light: { bg:'#F6F6F6', body:'#FFFFFF', border:'#E5E5E5', text:'#010101', muted:'#737373', fog:'#525252', navBg:'rgba(255,255,255,.95)' },
+    dark:  { bg:'#0E0E0E', body:'#1C1C1E', border:'#3E3E42', text:'#F5F5F0', muted:'#8A8A90', fog:'#C8C8CC', navBg:'rgba(14,14,16,.95)' },
     brand: { bg:c,         body:hexToRgba(c,.15), border:hexToRgba(c,.3), text:'#FFFFFF', muted:'rgba(255,255,255,.7)', fog:'rgba(255,255,255,.5)', navBg:hexToRgba(c,.95) },
   };
   const T = themes[th] || themes.light;
@@ -1476,6 +1589,7 @@ function applyConfig() {
   root.style.setProperty('--silver',     T.muted);
   root.style.setProperty('--fog',        T.fog);
   root.style.setProperty('--white',      T.text);
+  root.style.setProperty('--nav-bg',     T.navBg);
   root.style.setProperty('--font-head',  `'${fH}', sans-serif`);
   root.style.setProperty('--font-body',  `'${fB}', sans-serif`);
 
@@ -1487,20 +1601,41 @@ function applyConfig() {
   document.body.style.background = T.bg;
   document.body.style.color = T.text;
 
-  // Logo
-  const logoIcon = document.getElementById('logo-icon');
-  const logoImg  = document.getElementById('logo-img');
-  const logoText = document.getElementById('logo-text');
-  if (CFG.logo) {
-    logoImg.src = CFG.logo;
-    logoImg.style.display = 'block';
-    logoIcon.style.display = 'none';
-  } else {
-    logoIcon.textContent = CFG.emoji || '🔧';
-    logoIcon.style.display = 'flex';
-    logoImg.style.display = 'none';
+  // Logo & Store Name
+  const storeName = CFG.name || 'BigHouse';
+  let logoIcon = document.getElementById('logo-icon');
+  let logoImg  = document.getElementById('logo-img');
+  let logoText = document.getElementById('logo-text') || document.querySelector('.logo-title');
+  const logoEl = document.querySelector('.logo');
+
+  if (logoEl && (!logoText || !logoImg)) {
+    logoEl.innerHTML = `
+      <img id="logo-img" alt="${storeName}" style="display:none; height:36px; width:36px; object-fit:cover; border-radius:8px; flex-shrink:0; box-shadow:0 2px 8px rgba(0,0,0,0.3);"/>
+      <span class="logo-icon" id="logo-icon">🍔</span>
+      <span id="logo-text" class="logo-title" style="color:var(--white) !important; font-weight:800; font-size:18px; letter-spacing:-0.01em;">${storeName}</span>
+    `;
+    logoIcon = document.getElementById('logo-icon');
+    logoImg  = document.getElementById('logo-img');
+    logoText = document.getElementById('logo-text');
   }
-  if (logoText) logoText.textContent = CFG.name || 'Mi Tienda';
+
+  if (CFG.logo) {
+    if (logoImg) {
+      logoImg.src = optimizeImg(CFG.logo, 80, 80);
+      logoImg.style.display = 'block';
+    }
+    if (logoIcon) logoIcon.style.display = 'none';
+  } else {
+    if (logoIcon) {
+      logoIcon.textContent = CFG.emoji || '🍔';
+      logoIcon.style.display = 'flex';
+    }
+    if (logoImg) logoImg.style.display = 'none';
+  }
+  if (logoText) {
+    logoText.textContent = storeName;
+    logoText.style.setProperty('color', T.text, 'important');
+  }
 
   // Tagline
   const tl = document.getElementById('tagline');
@@ -1977,13 +2112,17 @@ function render() {
         </div>
         ${p.stock > 0
           ? ((p.variants && p.variants.length > 0) || (p.modifiers && p.modifiers.length > 0)
-            ? `<button class="sb-btn" style="margin-top:10px;width:100%;height:32px;font-size:11px;padding:0;display:flex;align-items:center;justify-content:center;gap:6px;background:transparent;border:1px solid var(--zinc);color:var(--white);" onclick='event.stopPropagation(); openProductDrawer(${JSON.stringify(p.id)})'><i class="bi bi-sliders"></i> Personalizar</button>`
-            : `<div class="qty-control ${qty>0?'has-items':''}" id="qc-${p.id}" onclick="event.stopPropagation()">
-                <button type="button" class="qty-btn" onclick='changeQtyCard(${JSON.stringify(p.id)},-1)' aria-label="Disminuir cantidad"><i class="bi bi-dash"></i></button>
-                <span class="qty-num">${qty > 0 ? qty : '+'}</span>
-                <button type="button" class="qty-btn" onclick='changeQtyCard(${JSON.stringify(p.id)},1)' aria-label="Aumentar cantidad"><i class="bi bi-plus"></i></button>
-              </div>`)
-          : `<div style="margin-top:10px;padding:8px;text-align:center;font-size:11px;color:var(--silver);border:1px solid var(--zinc);border-radius:8px;opacity:.5;">Sin stock</div>`}
+            ? `<button class="btn-personalizar" onclick='event.stopPropagation(); openProductDrawer(${JSON.stringify(p.id)})'><i class="bi bi-sliders"></i> Personalizar ${qty > 0 ? `<span class="badge-count">${qty}</span>` : ''}</button>`
+            : (qty > 0
+              ? `<div class="qty-control has-items" id="qc-${p.id}" onclick="event.stopPropagation()">
+                  <button type="button" class="qty-btn" onclick='changeQtyCard(${JSON.stringify(p.id)},-1)' aria-label="Disminuir cantidad"><i class="bi bi-dash"></i></button>
+                  <span class="qty-num">${qty}</span>
+                  <button type="button" class="qty-btn" onclick='changeQtyCard(${JSON.stringify(p.id)},1)' aria-label="Aumentar cantidad"><i class="bi bi-plus"></i></button>
+                </div>`
+              : `<button class="btn-card-add" id="qc-${p.id}" onclick='event.stopPropagation(); changeQtyCard(${JSON.stringify(p.id)},1)' aria-label="Agregar al carrito"><i class="bi bi-plus-lg"></i> Agregar</button>`
+              )
+            )
+          : `<div style="margin-top:auto;height:38px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--silver);border:1px solid var(--zinc);border-radius:10px;opacity:.6;">Sin stock</div>`}
       </div>
     </div>`;
   }).join('');
@@ -2802,9 +2941,21 @@ function changeQtyCard(id, delta) {
   // Update counter in card without full re-render
   const qc = document.getElementById('qc-'+key);
   if (qc) {
-    const num = qc.querySelector('.qty-num');
-    if (num) num.textContent = newQty > 0 ? newQty : '+';
-    qc.classList.toggle('has-items', newQty > 0);
+    if (newQty > 0) {
+      if (qc.classList.contains('qty-control')) {
+        const num = qc.querySelector('.qty-num');
+        if (num) num.textContent = newQty;
+        qc.classList.add('has-items');
+      } else {
+        qc.outerHTML = `<div class="qty-control has-items" id="qc-${key}" onclick="event.stopPropagation()">
+            <button type="button" class="qty-btn" onclick='changeQtyCard(${JSON.stringify(key)},-1)' aria-label="Disminuir cantidad"><i class="bi bi-dash"></i></button>
+            <span class="qty-num">${newQty}</span>
+            <button type="button" class="qty-btn" onclick='changeQtyCard(${JSON.stringify(key)},1)' aria-label="Aumentar cantidad"><i class="bi bi-plus"></i></button>
+          </div>`;
+      }
+    } else {
+      qc.outerHTML = `<button class="btn-card-add" id="qc-${key}" onclick='event.stopPropagation(); changeQtyCard(${JSON.stringify(key)},1)' aria-label="Agregar al carrito"><i class="bi bi-plus-lg"></i> Agregar</button>`;
+    }
   }
   // Update drawer if open
   const drawerQty = document.getElementById('pdrawer-qty-num');
@@ -3309,9 +3460,9 @@ function applyStoredConfig() {
   const onAccent = getContrastColor(accent);
 
   const themes = {
-    light: { bg:'#F6F6F6', steel:'#FFFFFF', iron:'#F6F6F6', zinc:'#E5E5E5', text:'#010101', muted:'#737373', fog:'#525252' },
-    dark:  { bg:'#0E0E0E', steel:'#1C1C1E', iron:'#2A2A2D', zinc:'#3E3E42', text:'#F5F5F0', muted:'#8A8A90', fog:'#C8C8CC' },
-    brand: { bg:accent,   steel:darken(accent,15), iron:darken(accent,25), zinc:darken(accent,35), text:onAccent, muted:`rgba(${onAccent==='#000000'?'0,0,0':'255,255,255'},.65)`, fog:`rgba(${onAccent==='#000000'?'0,0,0':'255,255,255'},.9)` },
+    light: { bg:'#F6F6F6', steel:'#FFFFFF', iron:'#F6F6F6', zinc:'#E5E5E5', text:'#010101', muted:'#737373', fog:'#525252', navBg:'rgba(255,255,255,.95)' },
+    dark:  { bg:'#0E0E0E', steel:'#1C1C1E', iron:'#2A2A2D', zinc:'#3E3E42', text:'#F5F5F0', muted:'#8A8A90', fog:'#C8C8CC', navBg:'rgba(14,14,16,.95)' },
+    brand: { bg:accent,   steel:darken(accent,15), iron:darken(accent,25), zinc:darken(accent,35), text:onAccent, muted:`rgba(${onAccent==='#000000'?'0,0,0':'255,255,255'},.65)`, fog:`rgba(${onAccent==='#000000'?'0,0,0':'255,255,255'},.9)`, navBg:hexToRgba(accent,.95) },
   };
   const t = themes[theme] || themes.light;
 
@@ -3333,6 +3484,10 @@ function applyStoredConfig() {
   root.setProperty('--white',     t.text);
   root.setProperty('--silver',    t.muted);
   root.setProperty('--fog',       t.fog);
+  root.setProperty('--nav-bg',    t.navBg);
+
+  const topbar = document.querySelector('.topbar');
+  if (topbar) topbar.style.background = t.navBg;
 
   if (cfg.font) {
     const link = document.createElement('link');
@@ -3346,11 +3501,37 @@ function applyStoredConfig() {
   // Logo image takes priority over emoji
   const logoImg = cfg.logo || cfg.logo_url || localStorage.getItem(`storeapp_logo_${STORE_ID}`) || localStorage.getItem('storeapp_logo');
   const logoEl  = document.querySelector('.logo');
+  const storeName = cfg.name || (typeof CFG !== 'undefined' ? CFG.name : '') || 'BigHouse';
   if (logoEl) {
+    let logoImgEl = document.getElementById('logo-img');
+    let logoIconEl = document.getElementById('logo-icon');
+    let logoTextEl = document.getElementById('logo-text') || document.querySelector('.logo-title');
+
+    if (!logoImgEl || !logoTextEl) {
+      logoEl.innerHTML = `
+        <img id="logo-img" alt="${storeName}" style="display:none; height:36px; width:36px; object-fit:cover; border-radius:8px; flex-shrink:0; box-shadow:0 2px 8px rgba(0,0,0,0.3);"/>
+        <span class="logo-icon" id="logo-icon">🍔</span>
+        <span id="logo-text" class="logo-title" style="color:var(--white) !important; font-weight:800; font-size:18px; letter-spacing:-0.01em;">${storeName}</span>
+      `;
+      logoImgEl = document.getElementById('logo-img');
+      logoIconEl = document.getElementById('logo-icon');
+      logoTextEl = document.getElementById('logo-text');
+    }
+
     if (logoImg) {
-      logoEl.innerHTML = `<img src="${optimizeImg(logoImg, 80, 80)}" alt="${cfg.name||'Logo'}" style="height:34px;width:34px;object-fit:contain;border-radius:8px;"/> ${cfg.name||'Mi Tienda'}`;
-    } else if (cfg.name) {
-      logoEl.innerHTML = `<span class="logo-icon">${cfg.emoji||'🏪'}</span>${cfg.name}`;
+      logoImgEl.src = optimizeImg(logoImg, 80, 80);
+      logoImgEl.style.display = 'block';
+      if (logoIconEl) logoIconEl.style.display = 'none';
+    } else {
+      logoImgEl.style.display = 'none';
+      if (logoIconEl) {
+        logoIconEl.textContent = cfg.emoji || '🍔';
+        logoIconEl.style.display = 'flex';
+      }
+    }
+    if (logoTextEl) {
+      logoTextEl.textContent = storeName;
+      logoTextEl.style.setProperty('color', t.text, 'important');
     }
   }
 
