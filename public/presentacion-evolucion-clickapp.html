@@ -1416,6 +1416,43 @@
             <i class="bi bi-fire"></i> BigHouse
           </a>
         </div>
+      <!-- SLIDE 20: SHOWCASE DEMO FLEET EN LA HOME OFICIAL (26/10/2026) -->
+      <section class="slide" id="slide-20">
+        <span class="slide-badge" style="background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.4);color:#60A5FA;"><i class="bi bi-laptop"></i> Etapa 20 · Release 26 de Octubre 2026</span>
+        <h2 class="slide-title">Vitrina Interactiva en la Home: 8 Tiendas Demo en Vivo con Filtro de Rubros</h2>
+        <p class="slide-desc">Integración en la página principal (<code>landing.html</code>) de una sección premium para experimentar las 8 tiendas demo oficiales. Filtros en tiempo real por rubro gastronómico, ferretero, tecnológico, textil y librería con animaciones fluidas, logos hiper-reales y enlaces directos al catálogo de compra.</p>
+
+        <div class="grid-3" style="margin-top:16px;">
+          <div class="card">
+            <div class="card-title" style="color:#60A5FA;"><i class="bi bi-funnel-fill"></i> Filtro de Rubro Instantáneo</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Píldoras interactivas (Gastronomía, Ferretería & Corralón, Kiosco, Tecnología, Moda y Librería) que filtran dinámicamente el catálogo sin recarga de página mediante micro-animaciones <code>fadeInUp</code>.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#34D399;"><i class="bi bi-shop-window"></i> Tarjetas de Alta Conversión</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Diseño de tarjetas de comercio con logo oficial, geolocalización bonaerense/porteña, insignia de rubro en tono cromático exacto, tags de beneficios y botón <strong>Ver Tienda Demo</strong> con enlace a <code>/tienda.html?store=...</code>.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#F472B6;"><i class="bi bi-phone-fill"></i> Experiencia Mobile & QR Ready</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Los potenciales clientes de DaleTePido pueden explorar desde cualquier smartphone cómo ven sus clientes el catálogo veloz, el carrito con opciones de variantes y el despacho directo a WhatsApp sin comisiones.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <a href="/#demo-stores-section" target="_blank" class="nav-btn primary" style="padding:10px 22px; font-size:13px; background:linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);">
+            <i class="bi bi-box-arrow-up-right"></i> Ver Sección Demo en la Home Oficial
+          </a>
+          <a href="/tienda.html?store=bighouse" target="_blank" class="nav-btn secondary" style="padding:10px 22px; font-size:13px;">
+            <i class="bi bi-fire"></i> Probar Demo BigHouse
+          </a>
+        </div>
       </section>
 
     </main>
@@ -1438,7 +1475,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 19;
+  const totalSlides = 20;
 
   function showSlide(index) {
     if (index < 1) index = 1;

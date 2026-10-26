@@ -1018,48 +1018,166 @@
         }
 
         /* DEMO STORES SECTION */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
         .demo-stores-section {
             background: var(--bg-primary);
             border-bottom: 1px solid var(--border-subtle);
+            padding: 80px 0;
         }
-        #demo-slider-container {
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-card);
-            background: var(--bg-surface);
-            box-shadow: var(--shadow-card);
-            overflow: hidden;
-        }
-        .demo-slide-card {
-            min-width: 100%;
-            padding: 40px 36px;
-            box-sizing: border-box;
-            background: var(--bg-surface);
-        }
-        .demo-nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-            cursor: pointer;
+        .demo-filters-wrap {
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text-heading);
-            font-size: 18px;
-            z-index: 10;
-            transition: all 0.15s ease;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 36px;
         }
-        .demo-nav-btn:hover {
-            background: #FAFAFA;
+        .demo-filter-btn {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-body);
+            padding: 8px 16px;
+            border-radius: var(--radius-pill);
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .demo-filter-btn:hover {
             border-color: var(--border-subtle-hover);
+            color: var(--text-heading);
+            transform: translateY(-1px);
         }
-        .demo-nav-prev { left: -14px; }
-        .demo-nav-next { right: -14px; }
+        .demo-filter-btn.active {
+            background: var(--text-heading);
+            color: #ffffff;
+            border-color: var(--text-heading);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+        }
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+        .demo-card-item {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .demo-card-item:hover {
+            transform: translateY(-4px);
+            border-color: rgba(246, 0, 0, 0.3);
+            box-shadow: 0 16px 32px rgba(0,0,0,0.08);
+        }
+        .demo-card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .demo-card-logo {
+            width: 58px;
+            height: 58px;
+            border-radius: 14px;
+            object-fit: cover;
+            border: 1px solid rgba(0,0,0,0.08);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+            flex-shrink: 0;
+        }
+        .demo-card-badge {
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            letter-spacing: 0.02em;
+        }
+        .demo-card-name {
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--text-heading);
+            line-height: 1.25;
+            margin-bottom: 6px;
+        }
+        .demo-card-geo {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        .demo-card-tagline {
+            font-size: 13.5px;
+            color: var(--text-body);
+            line-height: 1.55;
+            margin-bottom: 18px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .demo-card-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+        .demo-chip {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+        .demo-card-bottom {
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .demo-btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--text-heading);
+            color: #ffffff !important;
+            padding: 9px 16px;
+            border-radius: var(--radius-pill);
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .demo-btn-action:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+        }
 
         /* 3-STEP PROCESS */
         .how-section {
@@ -2185,103 +2303,280 @@
         <!-- DEMO STORES SECTION -->
         <section class="demo-stores-section" id="demo-stores-section">
             <div class="container">
-                <div style="text-align:center; margin-bottom:44px;">
+                <div style="text-align:center; margin-bottom:36px;">
                     <div class="section-tag">🛍️ Tiendas Demo en Vivo</div>
-                    <h2 class="section-title">Explorá Catálogos Reales</h2>
-                    <p class="section-sub">Probá la experiencia interactiva tal como la verán tus clientes desde sus teléfonos celulares.</p>
+                    <h2 class="section-title">Explorá Catálogos Reales por Rubro</h2>
+                    <p class="section-sub">Probá la experiencia interactiva tal como la ven tus clientes desde sus teléfonos celulares: pedidos directos a WhatsApp, catálogo veloz y 0% comisiones.</p>
                 </div>
 
-                <!-- SLIDER CAROUSEL -->
-                <div style="position:relative; max-width:860px; margin:0 auto;">
-                    <div id="demo-slider-container">
-                        <div id="demo-slider-track" style="display:flex; transition:transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);">
-                            
-                            <!-- SLIDE 1: GASTRONOMÍA & SIN TACC -->
-                            <div class="demo-slide-card">
-                                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;">
-                                    <span style="font-size:36px; background:var(--green-light); border:1px solid #A7F3D0; width:56px; height:56px; border-radius:12px; display:flex; align-items:center; justify-content:center;">🥐</span>
-                                    <span style="background:var(--green-light); color:#047857; font-size:12px; font-weight:600; padding:5px 14px; border-radius:var(--radius-pill); border:1px solid #A7F3D0;">
-                                        🌾 Gastronomía & Sin Gluten
-                                    </span>
-                                </div>
-                                <h3 style="font-size:24px; font-weight:700; margin-bottom:6px;">Noutacc - 100% Sin TACC</h3>
-                                <div style="display:inline-flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:12px; color:#047857; background:var(--green-light); border:1px solid #A7F3D0; padding:4px 10px; border-radius:6px; margin-bottom:16px;">
-                                    <i class="bi bi-globe"></i> noutacc.daletepido.com.ar
-                                </div>
-                                <p style="font-size:14.5px; color:var(--text-body); line-height:1.6; margin-bottom:24px;">
-                                    Catálogo completo de panadería y repostería artesanal sin gluten. Permite a los clientes elegir sus productos, armar su pedido y despacharlo directo al WhatsApp del local.
-                                </p>
-                                <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--border-subtle); padding-top:20px; flex-wrap:wrap; gap:12px;">
-                                    <span style="font-size:13px; color:var(--text-muted); font-weight:500;"><i class="bi bi-geo-alt" style="color:#059669;"></i> Buenos Aires · Retiro & Envíos</span>
-                                    <a href="https://noutacc.daletepido.com.ar/" target="_blank" class="btn-secondary" style="padding:10px 18px; font-size:13px;">
-                                        Probar Demo <i class="bi bi-box-arrow-up-right"></i>
-                                    </a>
-                                </div>
-                            </div>
+                <!-- CATEGORY FILTERS -->
+                <div class="demo-filters-wrap">
+                    <button class="demo-filter-btn active" onclick="filterDemoStores('all', this)">
+                        <span>🌐</span> Todos los Rubros (8)
+                    </button>
+                    <button class="demo-filter-btn" onclick="filterDemoStores('gastro', this)">
+                        <span>🍔</span> Gastronomía
+                    </button>
+                    <button class="demo-filter-btn" onclick="filterDemoStores('ferre', this)">
+                        <span>🛠️</span> Ferretería & Corralón
+                    </button>
+                    <button class="demo-filter-btn" onclick="filterDemoStores('kiosco', this)">
+                        <span>🍬</span> Kiosco 24hs
+                    </button>
+                    <button class="demo-filter-btn" onclick="filterDemoStores('tecno', this)">
+                        <span>⚡</span> Tecnología & Gaming
+                    </button>
+                    <button class="demo-filter-btn" onclick="filterDemoStores('moda', this)">
+                        <span>👗</span> Moda Femenina
+                    </button>
+                    <button class="demo-filter-btn" onclick="filterDemoStores('libreria', this)">
+                        <span>📚</span> Librería & Papelería
+                    </button>
+                </div>
 
-                            <!-- SLIDE 2: FERRETERÍA & PRO -->
-                            <div class="demo-slide-card">
-                                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;">
-                                    <span style="font-size:36px; background:#FFF7ED; border:1px solid #FED7AA; width:56px; height:56px; border-radius:12px; display:flex; align-items:center; justify-content:center;">🛠️</span>
-                                    <span style="background:#FFF7ED; color:#C2410C; font-size:12px; font-weight:600; padding:5px 14px; border-radius:var(--radius-pill); border:1px solid #FED7AA;">
-                                        🔧 Ferretería Industrial
-                                    </span>
-                                </div>
-                                <h3 style="font-size:24px; font-weight:700; margin-bottom:6px;">FerreNow Herramientas</h3>
-                                <div style="display:inline-flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:12px; color:#C2410C; background:#FFF7ED; border:1px solid #FED7AA; padding:4px 10px; border-radius:6px; margin-bottom:16px;">
-                                    <i class="bi bi-globe"></i> ferrenow.daletepido.com.ar
-                                </div>
-                                <p style="font-size:14.5px; color:var(--text-body); line-height:1.6; margin-bottom:24px;">
-                                    Catálogo técnico de herramientas eléctricas, insumos de construcción y ferretería pesada organizado por subrubros con fotos en alta definición y especificaciones.
-                                </p>
-                                <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--border-subtle); padding-top:20px; flex-wrap:wrap; gap:12px;">
-                                    <span style="font-size:13px; color:var(--text-muted); font-weight:500;"><i class="bi bi-geo-alt" style="color:#EA580C;"></i> Envíos en el Día</span>
-                                    <a href="https://ferrenow.daletepido.com.ar/" target="_blank" class="btn-secondary" style="padding:10px 18px; font-size:13px;">
-                                        Probar Demo <i class="bi bi-box-arrow-up-right"></i>
-                                    </a>
-                                </div>
-                            </div>
+                <!-- 8 DEMO STORES GRID -->
+                <div class="demo-grid" id="demo-stores-grid">
 
-                            <!-- SLIDE 3: KIOSCO 24HS -->
-                            <div class="demo-slide-card">
-                                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;">
-                                    <span style="font-size:36px; background:#FDF2F8; border:1px solid #FBCFE8; width:56px; height:56px; border-radius:12px; display:flex; align-items:center; justify-content:center;">🍬</span>
-                                    <span style="background:#FDF2F8; color:#BE185D; font-size:12px; font-weight:600; padding:5px 14px; border-radius:var(--radius-pill); border:1px solid #FBCFE8;">
-                                        🥤 Kiosco & Bebidas
-                                    </span>
-                                </div>
-                                <h3 style="font-size:24px; font-weight:700; margin-bottom:6px;">Kiosco Julio 24hs</h3>
-                                <div style="display:inline-flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:12px; color:#BE185D; background:#FDF2F8; border:1px solid #FBCFE8; padding:4px 10px; border-radius:6px; margin-bottom:16px;">
-                                    <i class="bi bi-globe"></i> kioscojulio.daletepido.com.ar
-                                </div>
-                                <p style="font-size:14.5px; color:var(--text-body); line-height:1.6; margin-bottom:24px;">
-                                    Golosinas, snacks y bebidas heladas listo para recibir pedidos instantáneos para retiro por ventanilla o delivery en el barrio.
-                                </p>
-                                <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--border-subtle); padding-top:20px; flex-wrap:wrap; gap:12px;">
-                                    <span style="font-size:13px; color:var(--text-muted); font-weight:500;"><i class="bi bi-geo-alt" style="color:#DB2777;"></i> Abierto 24hs</span>
-                                    <a href="https://kioscojulio.daletepido.com.ar/" target="_blank" class="btn-secondary" style="padding:10px 18px; font-size:13px;">
-                                        Probar Demo <i class="bi bi-box-arrow-up-right"></i>
-                                    </a>
-                                </div>
+                    <!-- STORE 1: BIGHOUSE -->
+                    <div class="demo-card-item" data-category="gastro">
+                        <div>
+                            <div class="demo-card-top">
+                                <img src="/img/logos/bighouse-logo.jpg" alt="BigHouse Logo" class="demo-card-logo" onerror="this.src='/img/logo-daletepido.png'">
+                                <span class="demo-card-badge" style="background:#FEF3C7; color:#B45309; border:1px solid #FDE68A;">
+                                    🍔 Smash Burgers
+                                </span>
                             </div>
-
+                            <h3 class="demo-card-name">BigHouse — The Smash Master</h3>
+                            <div class="demo-card-geo">
+                                <i class="bi bi-geo-alt-fill" style="color:#B45309;"></i> Tribunales / San Nicolás, CABA
+                            </div>
+                            <p class="demo-card-tagline">
+                                Smash burgers artesanales de doble medallón con pan de papa potato roll, papas fritas rústicas bañadas en cheddar y bacon crocante con cerveza tirada.
+                            </p>
+                            <div class="demo-card-chips">
+                                <span class="demo-chip">18 productos</span>
+                                <span class="demo-chip">Combos + Bebida</span>
+                                <span class="demo-chip">Take Away & Delivery</span>
+                            </div>
+                        </div>
+                        <div class="demo-card-bottom">
+                            <span style="font-family:var(--font-mono); font-size:12px; color:var(--text-muted);">bighouse</span>
+                            <a href="/tienda.html?store=bighouse" target="_blank" class="demo-btn-action">
+                                Ver Tienda Demo <i class="bi bi-arrow-up-right"></i>
+                            </a>
                         </div>
                     </div>
 
-                    <!-- CONTROLS -->
-                    <button onclick="moveDemoSlide(-1)" class="demo-nav-btn demo-nav-prev" aria-label="Demo anterior">
-                        <i class="bi bi-chevron-left"></i>
-                    </button>
-                    <button onclick="moveDemoSlide(1)" class="demo-nav-btn demo-nav-next" aria-label="Demo siguiente">
-                        <i class="bi bi-chevron-right"></i>
-                    </button>
-
-                    <!-- DOTS -->
-                    <div style="display:flex; justify-content:center; gap:8px; margin-top:20px;">
-                        <button class="demo-dot active" onclick="setDemoSlide(0)" aria-label="Slide 1" style="width:24px; height:6px; border-radius:3px; background:var(--text-heading); border:none; cursor:pointer; transition:all 0.2s;"></button>
-                        <button class="demo-dot" onclick="setDemoSlide(1)" aria-label="Slide 2" style="width:6px; height:6px; border-radius:3px; background:var(--border-subtle); border:none; cursor:pointer; transition:all 0.2s;"></button>
-                        <button class="demo-dot" onclick="setDemoSlide(2)" aria-label="Slide 3" style="width:6px; height:6px; border-radius:3px; background:var(--border-subtle); border:none; cursor:pointer; transition:all 0.2s;"></button>
+                    <!-- STORE 2: FERRE-NOW -->
+                    <div class="demo-card-item" data-category="ferre">
+                        <div>
+                            <div class="demo-card-top">
+                                <img src="/img/logos/ferrenow-logo.jpg" alt="FerreNow Logo" class="demo-card-logo" onerror="this.src='/img/logo-daletepido.png'">
+                                <span class="demo-card-badge" style="background:#FFF7ED; color:#C2410C; border:1px solid #FED7AA;">
+                                    🛠️ Ferretería Industrial
+                                </span>
+                            </div>
+                            <h3 class="demo-card-name">FerreNow — Herramientas & Obras</h3>
+                            <div class="demo-card-geo">
+                                <i class="bi bi-geo-alt-fill" style="color:#C2410C;"></i> Munro, Vicente López (GBA Norte)
+                            </div>
+                            <p class="demo-card-tagline">
+                                Herramientas eléctricas de alto rendimiento, rotomartillos, amoladoras angulares, discos de corte diamantados y tornillería pesada para gremios y constructoras.
+                            </p>
+                            <div class="demo-card-chips">
+                                <span class="demo-chip">18 productos</span>
+                                <span class="demo-chip">Línea DeWalt & Bosch</span>
+                                <span class="demo-chip">Envíos a Obra</span>
+                            </div>
+                        </div>
+                        <div class="demo-card-bottom">
+                            <span style="font-family:var(--font-mono); font-size:12px; color:var(--text-muted);">ferre-now</span>
+                            <a href="/tienda.html?store=ferre-now" target="_blank" class="demo-btn-action">
+                                Ver Tienda Demo <i class="bi bi-arrow-up-right"></i>
+                            </a>
+                        </div>
                     </div>
+
+                    <!-- STORE 3: KIOSCO JULIO -->
+                    <div class="demo-card-item" data-category="kiosco">
+                        <div>
+                            <div class="demo-card-top">
+                                <img src="/img/logos/kioscojulio-logo.jpg" alt="Kiosco Julio Logo" class="demo-card-logo" onerror="this.src='/img/logo-daletepido.png'">
+                                <span class="demo-card-badge" style="background:#FDF2F8; color:#BE185D; border:1px solid #FBCFE8;">
+                                    🍬 Kiosco & Bebidas 24hs
+                                </span>
+                            </div>
+                            <h3 class="demo-card-name">Kiosco Julio — Abierto 24 Horas</h3>
+                            <div class="demo-card-geo">
+                                <i class="bi bi-geo-alt-fill" style="color:#BE185D;"></i> Belgrano / Colegiales, CABA
+                            </div>
+                            <p class="demo-card-tagline">
+                                Golosinas importadas, chocolates en barra, energizantes, gaseosas heladas, alfajores marplatenses y cigarrillos listos para despacho inmediato por ventanilla.
+                            </p>
+                            <div class="demo-card-chips">
+                                <span class="demo-chip">18 productos</span>
+                                <span class="demo-chip">Despacho Inmediato</span>
+                                <span class="demo-chip">Atención 24hs</span>
+                            </div>
+                        </div>
+                        <div class="demo-card-bottom">
+                            <span style="font-family:var(--font-mono); font-size:12px; color:var(--text-muted);">kioscojulio</span>
+                            <a href="/tienda.html?store=kioscojulio" target="_blank" class="demo-btn-action">
+                                Ver Tienda Demo <i class="bi bi-arrow-up-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- STORE 4: NOUTACC -->
+                    <div class="demo-card-item" data-category="tecno">
+                        <div>
+                            <div class="demo-card-top">
+                                <img src="/img/logos/noutacc-logo.jpg" alt="Noutacc Logo" class="demo-card-logo" onerror="this.src='/img/logo-daletepido.png'">
+                                <span class="demo-card-badge" style="background:#ECFDF5; color:#047857; border:1px solid #A7F3D0;">
+                                    📱 Accesorios Premium
+                                </span>
+                            </div>
+                            <h3 class="demo-card-name">Noutacc — Tech Cases & Gadgets</h3>
+                            <div class="demo-card-geo">
+                                <i class="bi bi-geo-alt-fill" style="color:#047857;"></i> Recoleta / Barrio Norte, CABA
+                            </div>
+                            <p class="demo-card-tagline">
+                                Fundas MagSafe con protección de grado militar, vidrios templados cerámicos 9D, correas para Apple Watch y cargadores rápidos GaN ultra compactos.
+                            </p>
+                            <div class="demo-card-chips">
+                                <span class="demo-chip">18 productos</span>
+                                <span class="demo-chip">Apple & Galaxy</span>
+                                <span class="demo-chip">Garantía Escrita</span>
+                            </div>
+                        </div>
+                        <div class="demo-card-bottom">
+                            <span style="font-family:var(--font-mono); font-size:12px; color:var(--text-muted);">noutacc</span>
+                            <a href="/tienda.html?store=noutacc" target="_blank" class="demo-btn-action">
+                                Ver Tienda Demo <i class="bi bi-arrow-up-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- STORE 5: TECNOMONT -->
+                    <div class="demo-card-item" data-category="tecno">
+                        <div>
+                            <div class="demo-card-top">
+                                <img src="/img/logos/tecnomont-logo.jpg" alt="Tecnomont Logo" class="demo-card-logo" onerror="this.src='/img/logo-daletepido.png'">
+                                <span class="demo-card-badge" style="background:#EEF2FF; color:#4338CA; border:1px solid #C7D2FE;">
+                                    ⚡ Gaming & Hardware High-End
+                                </span>
+                            </div>
+                            <h3 class="demo-card-name">Tecnomont — Hardware High-End</h3>
+                            <div class="demo-card-geo">
+                                <i class="bi bi-geo-alt-fill" style="color:#4338CA;"></i> Caballito / Primera Junta, CABA
+                            </div>
+                            <p class="demo-card-tagline">
+                                Placas gráficas GeForce RTX serie 4000, auriculares inalámbricos espaciales, teclados custom switches hot-swap y memorias RAM DDR5 para gamers y streamers.
+                            </p>
+                            <div class="demo-card-chips">
+                                <span class="demo-chip">18 productos</span>
+                                <span class="demo-chip">Factura A / B</span>
+                                <span class="demo-chip">Garantía Oficial</span>
+                            </div>
+                        </div>
+                        <div class="demo-card-bottom">
+                            <span style="font-family:var(--font-mono); font-size:12px; color:var(--text-muted);">tecnomont</span>
+                            <a href="/tienda.html?store=tecnomont" target="_blank" class="demo-btn-action">
+                                Ver Tienda Demo <i class="bi bi-arrow-up-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- STORE 6: BIUTI -->
+                    <div class="demo-card-item" data-category="moda">
+                        <div>
+                            <div class="demo-card-top">
+                                <img src="/img/logos/biuti-logo.jpg" alt="Biuti Logo" class="demo-card-logo" onerror="this.src='/img/logo-daletepido.png'">
+                                <span class="demo-card-badge" style="background:#FFF1F2; color:#BE123C; border:1px solid #FECDD3;">
+                                    ✨ Indumentaria Femenina +35
+                                </span>
+                            </div>
+                            <h3 class="demo-card-name">Biuti — Moda Urbana & Sastrería</h3>
+                            <div class="demo-card-geo">
+                                <i class="bi bi-geo-alt-fill" style="color:#BE123C;"></i> Palermo Soho, CABA
+                            </div>
+                            <p class="demo-card-tagline">
+                                Blazers oversize de lino y viscosa, pantalones sastreros de caída impecable, camisas de poplín puro algodón y vestidos midi para la mujer profesional contemporánea.
+                            </p>
+                            <div class="demo-card-chips">
+                                <span class="demo-chip">18 productos</span>
+                                <span class="demo-chip">Talles Reales 1 al 5</span>
+                                <span class="demo-chip">Cambios sin Cargo</span>
+                            </div>
+                        </div>
+                        <div class="demo-card-bottom">
+                            <span style="font-family:var(--font-mono); font-size:12px; color:var(--text-muted);">biuti</span>
+                            <a href="/tienda.html?store=biuti" target="_blank" class="demo-btn-action">
+                                Ver Tienda Demo <i class="bi bi-arrow-up-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- STORE 7: TODOLISTO -->
+                    <div class="demo-card-item" data-category="libreria">
+                        <div>
+                            <div class="demo-card-top">
+                                <img src="/img/logos/todolisto-logo.jpg" alt="TodoListo Logo" class="demo-card-logo" onerror="this.src='/img/logo-daletepido.png'">
+                                <span class="demo-card-badge" style="background:#F0F9FF; color:#0369A1; border:1px solid #BAE6FD;">
+                                    📚 Librería & Escolar
+                                </span>
+                            </div>
+                            <h3 class="demo-card-name">TodoListo — Librería & Oficina</h3>
+                            <div class="demo-card-geo">
+                                <i class="bi bi-geo-alt-fill" style="color:#0369A1;"></i> San Justo, La Matanza (GBA Oeste)
+                            </div>
+                            <p class="demo-card-tagline">
+                                Armado de listas escolares completas, mochilas reforzadas, resmas de papel de 75g/80g, marcadores artísticos y carpetas ejecutivas para estudios contables y empresas.
+                            </p>
+                            <div class="demo-card-chips">
+                                <span class="demo-chip">18 productos</span>
+                                <span class="demo-chip">Listas Escolares</span>
+                                <span class="demo-chip">Venta Mayorista y Minorista</span>
+                            </div>
+                        </div>
+                        <div class="demo-card-bottom">
+                            <span style="font-family:var(--font-mono); font-size:12px; color:var(--text-muted);">todolisto</span>
+                            <a href="/tienda.html?store=todolisto" target="_blank" class="demo-btn-action">
+                                Ver Tienda Demo <i class="bi bi-arrow-up-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- STORE 8: LUGONES & SILVA -->
+                    <div class="demo-card-item" data-category="ferre">
+                        <div>
+                            <div class="demo-card-top">
+                                <img src="/img/logos/lugonessilva-logo.jpg" alt="Lugones & Silva Logo" class="demo-card-logo" onerror="this.src='/img/logo-daletepido.png'">
+                                <span class="demo-card-badge" style="background:#F5F5F4; color:#44403C; border:1px solid #E7E5E4;">
+                                    🏗️ Corralón Mayorista
+                                </span>
+                            </div>
+                            <h3 class="demo-card-name">Lugones & Silva — Materiales</h3>
+                            <div class="demo-card-geo">
+                                <i class="bi bi-geo-alt-fill" style="color:#44403C;"></i> San Vicente, Canning (GBA Sur)
+                            </div>
+                            <p class="demo-card-tagline">
+                                Bolsas de cemento Loma Negra, barras de hierro del 8 y 10, ladrillos cerámicos huecos del 12 y del 18, hidrófugos y arena a granel con flota propia de camiones volcadores.
+                            </p>
+                            <div class="demo-card-chips">
+                                <span class="demo-chip">18 productos</span>
+                                <span class="demo-chip">Venta por Pallet/Bolsa</span>
+                                <span class="demo-chip">Entrega en Obra</span>
+                            </div>
+                        </div>
+                        <div class="demo-card-bottom">
+                            <span style="font-family:var(--font-mono); font-size:12px; color:var(--text-muted);">lugonessilva</span>
+                            <a href="/tienda.html?store=lugonessilva" target="_blank" class="demo-btn-action">
+                                Ver Tienda Demo <i class="bi bi-arrow-up-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -3888,6 +4183,24 @@
                     triggerMockOrderSim(false);
                 }
             }, 7800);
+        }
+
+        // DEMO STORES INTERACTIVE FILTERING
+        function filterDemoStores(category, btnEl) {
+            const buttons = document.querySelectorAll('.demo-filter-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+
+            const cards = document.querySelectorAll('#demo-stores-grid .demo-card-item');
+            cards.forEach(card => {
+                const cardCat = card.getAttribute('data-category');
+                if (category === 'all' || cardCat === category) {
+                    card.style.display = 'flex';
+                    card.style.animation = 'fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         }
 
         // Initialize simulation shortly after load
