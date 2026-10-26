@@ -211,8 +211,11 @@ export default async function handler(req, res) {
 
       const stores = await response.json();
 
+      // Filter out deleted / deactivated stores
+      const activeStores = stores.filter(s => s.status !== 'DELETED' && !s.store_id?.startsWith('deleted-'));
+
       // Normalize store properties for Super Admin Dashboard
-      const normalizedStores = stores.map(s => {
+      const normalizedStores = activeStores.map(s => {
         let bInfo = s.billing_info || {};
         if (typeof bInfo === 'string') {
           try { bInfo = JSON.parse(bInfo); } catch(e) { bInfo = {}; }
@@ -259,6 +262,64 @@ export default async function handler(req, res) {
         success: true,
         stores: normalizedStores
       });
+    }
+
+    // 1.1 Delete Store Completely (Hard/Soft Cascade Delete)
+    if (action === 'delete_store') {
+      const targetStoreId = (reqBody?.store_id || req.query?.store_id || '').trim();
+      if (!targetStoreId) {
+        return res.status(400).json({ success: false, error: 'Se requiere store_id para eliminar' });
+      }
+
+      try {
+        // Borrar productos
+        await fetch(`${SUPABASE_URL}/rest/v1/products?store_id=eq.${targetStoreId}`, {
+          method: 'DELETE',
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+
+        // Borrar categorías
+        await fetch(`${SUPABASE_URL}/rest/v1/categories?store_id=eq.${targetStoreId}`, {
+          method: 'DELETE',
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+
+        // Borrar órdenes
+        await fetch(`${SUPABASE_URL}/rest/v1/orders?store_id=eq.${targetStoreId}`, {
+          method: 'DELETE',
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+
+        // Intentar DELETE en company_settings
+        const delRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${targetStoreId}`, {
+          method: 'DELETE',
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Prefer': 'return=representation' }
+        });
+
+        // Neutralizar / desasociar en company_settings para garantizar 404
+        await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${targetStoreId}`, {
+          method: 'PATCH',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            store_id: `deleted-${targetStoreId}-${Date.now().toString().slice(-4)}`,
+            business_name: 'Cuenta Eliminada',
+            tagline: 'Esta cuenta ha sido desactivada',
+            status: 'DELETED'
+          })
+        });
+
+        return res.status(200).json({
+          success: true,
+          message: `La tienda ${targetStoreId} y todos sus datos fueron eliminados exitosamente.`
+        });
+      } catch (delErr) {
+        console.error('Error al eliminar tienda:', delErr);
+        return res.status(500).json({ success: false, error: delErr.message });
+      }
     }
 
     // 2. Update Store Status, Membership, Billing Cycle and Details
