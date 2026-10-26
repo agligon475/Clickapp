@@ -1780,6 +1780,12 @@ async function loadSheet() {
       const cfg = configData[0];
       window.STORE_COUPONS = (cfg.billing_info && Array.isArray(cfg.billing_info.coupons)) ? cfg.billing_info.coupons : [];
 
+      // Membresía y permiso para Micro Videos (Enterprise, Exclusive o Testers/Demos)
+      const planLevel = (cfg.plan_level || 'starter').toLowerCase();
+      const isOfficialTesterOrDemo = Boolean(cfg.is_demo || ['bighouse','ferre-now','kioscojulio','noutacc','tecnomont','biuti','todolisto','lugonessilva'].includes(STORE_ID));
+      window.STORE_PLAN_LEVEL = planLevel;
+      window.CAN_USE_MICRO_VIDEOS = (planLevel === 'enterprise' || planLevel === 'exclusive' || isOfficialTesterOrDemo);
+
       // Verificar si la tienda se encuentra suspendida por el Super Admin
       if (cfg.status === 'SUSPENDED_PAYMENT' || cfg.status === 'DISABLED') {
         renderSuspendedStoreScreen(cfg.business_name || cfg.store_id);
@@ -1962,12 +1968,14 @@ async function loadSheet() {
         let textDetalles = rawDetalles;
         let variants = null;
         let modifiers = null;
+        let video_url = p.video_url || p.video || '';
 
         if (p.variants) {
           try {
             const parsedOpts = typeof p.variants === 'string' ? JSON.parse(p.variants) : p.variants;
             if (parsedOpts.variants) variants = parsedOpts.variants;
             if (parsedOpts.modifiers) modifiers = parsedOpts.modifiers;
+            if (parsedOpts.video_url && !video_url) video_url = parsedOpts.video_url;
           } catch (e) {
             console.error("Error parsing JSON variants in tienda load:", e);
           }
@@ -1978,6 +1986,7 @@ async function loadSheet() {
             const parsedOpts = JSON.parse(parts[1].trim());
             if (parsedOpts.variants) variants = parsedOpts.variants;
             if (parsedOpts.modifiers) modifiers = parsedOpts.modifiers;
+            if (parsedOpts.video_url && !video_url) video_url = parsedOpts.video_url;
           } catch (e) {
             console.error("Error parsing JSON options in tienda load:", e);
           }
@@ -1993,6 +2002,7 @@ async function loadSheet() {
               variants = parsedOpts.variants;
               if (parsedOpts.modifiers) modifiers = parsedOpts.modifiers;
             }
+            if (parsedOpts && parsedOpts.video_url && !video_url) video_url = parsedOpts.video_url;
           } catch(e) {}
         }
 
@@ -2008,6 +2018,7 @@ async function loadSheet() {
           img: p.img || '',
           img2: p.img2 || '',
           img3: p.img3 || '',
+          video_url: video_url,
           marca: p.marca || '',
           detalles: textDetalles,
           origen: p.origen || '',
@@ -2090,11 +2101,18 @@ function render() {
   document.getElementById('grid').innerHTML = filtered.map((p,i) => {
     const qty = cart[String(p.id)] || 0;
     const flag = ORIGIN_FLAGS[p.origen] || '';
+    const hasVideo = p.video_url && window.CAN_USE_MICRO_VIDEOS;
     return `
     <div class="product-card ${p.stock <= 0 ? 'out-of-stock' : ''}" style="animation-delay:${Math.min(i,12)*30}ms;cursor:pointer;"
       onclick='openProductDrawer(${JSON.stringify(p.id)})'>
       <div class="product-img" style="position:relative;">
-        <button type="button" class="card-share-btn" onclick='event.stopPropagation(); shareProduct(${JSON.stringify(p.id)})' title="Compartir producto" style="position:absolute;top:8px;right:8px;z-index:2;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;padding:0;line-height:1;"><i class="bi bi-share"></i></button>
+        <button type="button" class="card-share-btn" onclick='event.stopPropagation(); shareProduct(${JSON.stringify(p.id)})' title="Compartir producto" style="position:absolute;top:8px;right:8px;z-index:4;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;padding:0;line-height:1;"><i class="bi bi-share"></i></button>
+        ${hasVideo ? `
+          <div class="micro-video-pill" style="position:absolute;top:8px;left:8px;z-index:4;background:linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;backdrop-filter:blur(4px);display:inline-flex;align-items:center;gap:4px;box-shadow:0 2px 8px rgba(239,68,68,0.4);letter-spacing:0.02em;">
+            <i class="bi bi-play-circle-fill"></i> 5s Video
+          </div>
+          <video class="card-micro-video" src="${p.video_url}" muted loop playsinline preload="metadata" onmouseenter="this.play()" onmouseleave="this.pause();this.currentTime=0;" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:2;opacity:0;transition:opacity 0.25s ease;" onplay="this.style.opacity='1'" onpause="this.style.opacity='0'"></video>
+        ` : ''}
         ${p.img
           ? `<img src="${optimizeImg(p.img)}" alt="${p.name}" loading="lazy" class="main-img" onerror="this.style.display='none';this.parentElement.querySelector('.product-img-fallback').style.display='flex'"/>
              ${p.img2 ? `<img src="${optimizeImg(p.img2)}" alt="${p.name} detalle" loading="lazy" class="hover-img"/>` : ''}
@@ -3116,11 +3134,65 @@ function openProductDrawer(id) {
   }
   optionsWrap.innerHTML = optionsHtml;
 
-  // Image Carousel
+  // Image & Micro Video Carousel
   const imgWrap = document.getElementById('pdrawer-img');
+  const hasVideo = p.video_url && window.CAN_USE_MICRO_VIDEOS;
   const images = [p.img, p.img2, p.img3].filter(Boolean);
   
-  if (images.length > 0) {
+  if (hasVideo) {
+    let slidesHtml = `
+      <div class="carousel-slide active" id="slide-0" style="position:relative;width:100%;height:100%;background:#000;display:flex;align-items:center;justify-content:center;">
+        <video id="drawer-video-el" src="${p.video_url}" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>
+        <div style="position:absolute;bottom:12px;left:12px;z-index:4;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;gap:6px;">
+          <span style="color:#ef4444;font-size:10px;">●</span> Micro Video (5s)
+        </div>
+        <button type="button" onclick="toggleDrawerVideoAudio(event)" id="drawer-video-audio-btn" style="position:absolute;bottom:12px;right:12px;z-index:4;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;" title="Activar/Silenciar audio">
+          <i class="bi bi-volume-mute-fill"></i>
+        </button>
+      </div>
+    `;
+
+    images.forEach((imgUrl, idx) => {
+      slidesHtml += `<div class="carousel-slide" id="slide-${idx + 1}">
+                       <img src="${optimizeImg(imgUrl)}" alt="${p.name} ${idx+1}" />
+                     </div>`;
+    });
+    imgWrap.innerHTML = slidesHtml;
+
+    const totalMedia = images.length + 1;
+    let thumbsHtml = `
+      <div class="carousel-thumb active" onclick="setCarouselSlide(0, ${totalMedia})" style="position:relative;display:flex;align-items:center;justify-content:center;background:#18181B;border-color:var(--red);">
+        <i class="bi bi-play-circle-fill" style="color:var(--red);font-size:20px;"></i>
+      </div>
+    `;
+    images.forEach((imgUrl, idx) => {
+      thumbsHtml += `<div class="carousel-thumb" onclick="setCarouselSlide(${idx + 1}, ${totalMedia})">
+                       <img src="${optimizeImg(imgUrl)}" alt="thumb ${idx+1}"/>
+                     </div>`;
+    });
+
+    const thumbsWrap = document.createElement('div');
+    thumbsWrap.className = 'carousel-thumbs';
+    thumbsWrap.id = 'pdrawer-thumbs-container';
+    thumbsWrap.style.margin = '0 0 16px 0';
+    thumbsWrap.innerHTML = thumbsHtml;
+    
+    const pbody = document.getElementById('pdrawer-body');
+    const existingThumbs = document.getElementById('pdrawer-thumbs-container');
+    if (existingThumbs) existingThumbs.remove();
+    pbody.insertBefore(thumbsWrap, pbody.firstChild);
+
+    // Limitador estricto de 5 segundos con reinicio suave
+    const vEl = document.getElementById('drawer-video-el');
+    if (vEl) {
+      vEl.addEventListener('timeupdate', () => {
+        if (vEl.currentTime >= 5.0) {
+          vEl.currentTime = 0;
+          vEl.play().catch(()=>{});
+        }
+      });
+    }
+  } else if (images.length > 0) {
     if (images.length === 1) {
       imgWrap.innerHTML = `<img src="${optimizeImg(images[0])}" alt="${p.name}" onerror="this.parentElement.innerHTML='<span style=font-size:72px>${p.emoji}</span>'"/>`;
     } else {
@@ -3138,10 +3210,13 @@ function openProductDrawer(id) {
       
       const thumbsWrap = document.createElement('div');
       thumbsWrap.className = 'carousel-thumbs';
+      thumbsWrap.id = 'pdrawer-thumbs-container';
       thumbsWrap.style.margin = '0 0 16px 0';
       thumbsWrap.innerHTML = thumbsHtml;
       
       const pbody = document.getElementById('pdrawer-body');
+      const existingThumbs = document.getElementById('pdrawer-thumbs-container');
+      if (existingThumbs) existingThumbs.remove();
       pbody.insertBefore(thumbsWrap, pbody.firstChild);
     }
   } else {
@@ -3296,6 +3371,12 @@ function closeProductDrawer() {
   document.getElementById('pdrawer').classList.remove('open');
   document.body.style.overflow = '';
 
+  const vEl = document.getElementById('drawer-video-el');
+  if (vEl) {
+    vEl.pause();
+    vEl.currentTime = 0;
+  }
+
   // Limpiar parámetro ?p= de la URL al cerrar el modal
   try {
     const curUrl = new URL(window.location.href);
@@ -3373,6 +3454,31 @@ function setCarouselSlide(index, total) {
         thumb.classList.remove('active');
       }
     }
+  }
+
+  // Si se cambia de slide, pausar o reproducir el micro-video
+  const vEl = document.getElementById('drawer-video-el');
+  if (vEl) {
+    const videoSlide = document.getElementById('slide-0');
+    if (videoSlide && videoSlide.contains(vEl)) {
+      if (index === 0) {
+        vEl.play().catch(()=>{});
+      } else {
+        vEl.pause();
+      }
+    }
+  }
+}
+
+function toggleDrawerVideoAudio(e) {
+  if (e) e.stopPropagation();
+  const vEl = document.getElementById('drawer-video-el');
+  const btn = document.getElementById('drawer-video-audio-btn');
+  if (!vEl) return;
+  vEl.muted = !vEl.muted;
+  if (btn) {
+    btn.innerHTML = vEl.muted ? '<i class="bi bi-volume-mute-fill"></i>' : '<i class="bi bi-volume-up-fill"></i>';
+    btn.style.color = vEl.muted ? '#fff' : '#22C55E';
   }
 }
 

@@ -1453,6 +1453,46 @@
             <i class="bi bi-fire"></i> Probar Demo BigHouse
           </a>
         </div>
+      <!-- SLIDE 21: MICRO VIDEOS 5s - VIDEO COMMERCE PARA ENTERPRISE & TESTERS (26/10/2026) -->
+      <section class="slide" id="slide-21">
+        <span class="slide-badge" style="background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.4);color:#EF4444;"><i class="bi bi-camera-reels-fill"></i> Etapa 21 · Release 26 de Octubre 2026</span>
+        <h2 class="slide-title">Micro Videos de 5 Segundos: Video Commerce de Alta Conversión para Planes Enterprise & Testers</h2>
+        <p class="slide-desc">Incorporación de clips audiovisuales de 5 segundos estilo Reels/TikTok integrados directamente en el catálogo. Restricción por membresía como palanca de monetización, validación estricta de duración en el Dashboard y reproducción fluida en loop tanto en las tarjetas del catálogo como en el Drawer multimedia de compra.</p>
+
+        <div class="grid-3" style="margin-top:16px;">
+          <div class="card">
+            <div class="card-title" style="color:#EF4444;"><i class="bi bi-stopwatch-fill"></i> Límite Estricto de 5 Segundos</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Validación en cliente con <code>video.duration &le; 5.5s</code> al subir o vincular clips MP4/WebM. En la tienda, un listener en <code>timeupdate</code> garantiza el reinicio instantáneo al segundo 5.0, protegiendo el consumo de datos móviles y la velocidad.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#A855F7;"><i class="bi bi-lock-fill"></i> Segmentación Enterprise & Testers</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Palanca de monetización (upsell): los comercios en Starter o Pro visualizan el campo con candado interactivo y botón de upgrade. Las cuentas Enterprise y la flota de 8 tiendas oficiales cuentan con acceso irrestricto.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-play-btn-fill"></i> Experiencia Grid & Drawer</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Insignia roja <strong>5s Video</strong> en el catálogo con previsualización en hover (desktop) y reproductor en cabecera del modal de detalle con control de audio, integrado armoniosamente con el carrusel de fotos.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <a href="/tienda.html?store=bighouse" target="_blank" class="nav-btn primary" style="padding:10px 22px; font-size:13px; background:linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);">
+            <i class="bi bi-fire"></i> Ver Micro Video en BigHouse (Doble Cheddar Bacon)
+          </a>
+          <a href="/tienda.html?store=tecnomont" target="_blank" class="nav-btn secondary" style="padding:10px 22px; font-size:13px;">
+            <i class="bi bi-controller"></i> Probar en TecnoMont (RTX 4070)
+          </a>
+          <a href="/dashboard.html?store=bighouse#abm" target="_blank" class="nav-btn" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);padding:10px 22px; font-size:13px; color:#fff;">
+            <i class="bi bi-pencil-square"></i> Probar Carga en Dashboard ABM
+          </a>
+        </div>
       </section>
 
     </main>
@@ -1466,7 +1506,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 4.2 Multi-Rubro & Oficial Demo Fleet · Actualizado 26/10/2026
+        Dale! Te Pido © 2026 · Versión 4.3 Micro-Videos 5s & Video Commerce · Actualizado 26/10/2026
       </div>
     </footer>
 
@@ -1475,7 +1515,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 20;
+  const totalSlides = 21;
 
   function showSlide(index) {
     if (index < 1) index = 1;

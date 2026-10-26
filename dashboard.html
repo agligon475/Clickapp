@@ -10025,6 +10025,13 @@
         }
       }
 
+      if (p.video_url) {
+        if (!jsonVariants) jsonVariants = {};
+        jsonVariants.video_url = p.video_url;
+      }
+
+      const fullDetalles = jsonVariants ? `${textDetalles} ||| ${JSON.stringify(jsonVariants)}` : textDetalles;
+
       return {
         nombre: p.name,
         precio: p.price,
@@ -10035,7 +10042,7 @@
         img2: p.img2 || null,
         img3: p.img3 || null,
         marca: p.marca || null,
-        detalles: textDetalles,
+        detalles: fullDetalles,
         variants: jsonVariants,
         options: jsonVariants?.variants || p.options || [],
         weight_kg: p.weight_kg !== undefined ? Number(p.weight_kg) : 0.5,
@@ -14159,6 +14166,37 @@
       previewImgUrl(p?.img2 || '', 1);
       previewImgUrl(p?.img3 || '', 2);
 
+      // Micro Video 5s (Enterprise & Testers)
+      const currentPlan = getActivePlanLevel();
+      const isTesterOrDemo = (typeof isDemoAccount === 'function' && isDemoAccount()) || 
+                             ['bighouse','ferre-now','kioscojulio','noutacc','tecnomont','biuti','todolisto','lugonessilva'].includes(STORE_ID);
+      const canUseVideo = (currentPlan === 'enterprise' || currentPlan === 'exclusive' || isTesterOrDemo);
+      
+      const vLockedMsg = document.getElementById('m-video-locked-msg');
+      const vControls = document.getElementById('m-video-controls');
+      const vUrlInput = document.getElementById('m-video-url');
+      const vStatus = document.getElementById('m-video-status');
+      
+      let initialVideo = p?.video_url || p?.video || '';
+      if (!initialVideo && typeof jsonOpts !== 'undefined' && jsonOpts && jsonOpts.video_url) {
+        initialVideo = jsonOpts.video_url;
+      }
+
+      if (vLockedMsg && vControls) {
+        if (canUseVideo) {
+          vLockedMsg.style.display = 'none';
+          vControls.style.display = 'block';
+          if (vUrlInput) vUrlInput.value = initialVideo;
+          if (vStatus) vStatus.textContent = '';
+          previewVideoUrl(initialVideo);
+        } else {
+          vLockedMsg.style.display = 'block';
+          vControls.style.display = 'none';
+          if (vUrlInput) vUrlInput.value = '';
+          previewVideoUrl('');
+        }
+      }
+
       // Inicializar el checkbox de IA desactivado y el panel oculto al abrir
       const useAiChk = document.getElementById('m-use-ai-helper');
       if (useAiChk) useAiChk.checked = false;
@@ -14314,6 +14352,114 @@
       }
     }
 
+    /* ═══════════════════════════════════════════ MICRO VIDEOS 5s (Enterprise & Testers) */
+    function previewVideoUrl(url, duration = null) {
+      const wrap = document.getElementById('m-video-preview-wrap');
+      const video = document.getElementById('m-video-preview');
+      const durLabel = document.getElementById('m-video-duration-label');
+      if (!wrap || !video) return;
+
+      if (url && (url.startsWith('http') || url.startsWith('data:video') || url.startsWith('/videos/'))) {
+        video.src = url;
+        wrap.style.display = 'block';
+        video.play().catch(() => {});
+        if (durLabel) {
+          if (duration) {
+            durLabel.textContent = `${duration.toFixed(1)}s`;
+          } else {
+            video.onloadedmetadata = function() {
+              durLabel.textContent = `${video.duration.toFixed(1)}s`;
+            };
+          }
+        }
+      } else {
+        video.pause();
+        video.removeAttribute('src');
+        wrap.style.display = 'none';
+      }
+    }
+
+    function handleVideoUrlInput(url) {
+      const status = document.getElementById('m-video-status');
+      const clean = (url || '').trim();
+      if (!clean) {
+        removeModalVideo();
+        return;
+      }
+      if (status) status.innerHTML = '<span style="color:#60A5FA;"><i class="bi bi-hourglass-split"></i> Verificando duración del clip...</span>';
+      
+      const v = document.createElement('video');
+      v.preload = 'metadata';
+      v.src = clean;
+      
+      v.onloadedmetadata = function() {
+        const duration = v.duration;
+        if (duration > 5.5) {
+          if (status) status.innerHTML = `<span style="color:#EF4444;"><i class="bi bi-exclamation-triangle-fill"></i> El video dura ${duration.toFixed(1)}s (máximo 5 segundos permitidos).</span>`;
+          alert(`⚠️ El video supera los 5 segundos permitidos (duración: ${duration.toFixed(1)}s). Por favor recortalo a un clip de hasta 5s.`);
+          document.getElementById('m-video-url').value = '';
+          previewVideoUrl('');
+          return;
+        }
+        previewVideoUrl(clean, duration);
+        if (status) status.innerHTML = `<span style="color:#10B981;"><i class="bi bi-check-circle-fill"></i> Micro video válido (${duration.toFixed(1)}s).</span>`;
+      };
+
+      v.onerror = function() {
+        // Fallback si CORS bloquea metadata
+        previewVideoUrl(clean, 4.5);
+        if (status) status.innerHTML = '<span style="color:#F59E0B;"><i class="bi bi-info-circle"></i> URL vinculada (asegurate que dure máx 5 seg).</span>';
+      };
+    }
+
+    function handleModalVideoUpload(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      const status = document.getElementById('m-video-status');
+      if (status) status.innerHTML = '<span style="color:#60A5FA;"><i class="bi bi-hourglass-split"></i> Validando duración del archivo...</span>';
+
+      const tempUrl = URL.createObjectURL(file);
+      const v = document.createElement('video');
+      v.preload = 'metadata';
+      v.src = tempUrl;
+
+      v.onloadedmetadata = function() {
+        URL.revokeObjectURL(tempUrl);
+        const duration = v.duration;
+        if (duration > 5.5) {
+          if (status) status.innerHTML = `<span style="color:#EF4444;"><i class="bi bi-exclamation-triangle-fill"></i> El video dura ${duration.toFixed(1)}s (máx 5 seg permitidos).</span>`;
+          alert(`⚠️ El video seleccionado dura ${duration.toFixed(1)} segundos y supera el límite de 5 segundos. Por favor recortalo a un clip de máximo 5 segundos.`);
+          input.value = '';
+          return;
+        }
+
+        if (status) status.innerHTML = '<span style="color:#60A5FA;"><i class="bi bi-arrow-repeat"></i> Procesando micro video...</span>';
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const dataUrl = e.target.result;
+          document.getElementById('m-video-url').value = dataUrl;
+          previewVideoUrl(dataUrl, duration);
+          if (status) status.innerHTML = `<span style="color:#10B981;"><i class="bi bi-check-circle-fill"></i> Clip de ${duration.toFixed(1)}s cargado con éxito. Listo para guardar.</span>`;
+        };
+        reader.readAsDataURL(file);
+      };
+
+      v.onerror = function() {
+        URL.revokeObjectURL(tempUrl);
+        if (status) status.innerHTML = '<span style="color:#EF4444;"><i class="bi bi-x-circle-fill"></i> Formato de video incompatible. Usá MP4 o WebM.</span>';
+      };
+    }
+
+    function removeModalVideo() {
+      const input = document.getElementById('m-video-url');
+      const fileInput = document.getElementById('m-video-file');
+      const status = document.getElementById('m-video-status');
+      if (input) input.value = '';
+      if (fileInput) fileInput.value = '';
+      if (status) status.textContent = '';
+      previewVideoUrl('');
+    }
+
     function closeModal() {
       document.getElementById('modal-overlay').classList.remove('open');
       editingId = null;
@@ -14338,6 +14484,7 @@
       const img = document.getElementById('m-img').value.trim();
       const img2 = document.getElementById('m-img2').value.trim();
       const img3 = document.getElementById('m-img3').value.trim();
+      const video_url = document.getElementById('m-video-url')?.value.trim() || '';
       const pills = Array.from(document.querySelectorAll('input[name="m-pills"]:checked'))
         .map(cb => cb.value).slice(0, 3).join(',');
 
@@ -14431,6 +14578,10 @@
         customOpts.packQty = parseInt(document.getElementById('m-pack-qty')?.value) || 1;
       }
 
+      if (video_url) {
+        customOpts.video_url = video_url;
+      }
+
       if (Object.keys(customOpts).length > 0) {
         textDetalle = textDetalle + ' ||| ' + JSON.stringify(customOpts);
       }
@@ -14441,7 +14592,7 @@
       if (editingId != null && editingId !== '') {
         const p = localProducts.find(x => String(x.id) === String(editingId));
         if (p) {
-          Object.assign(p, { name, codigo, cat, marca, price, currency, divisa, stock, emoji, origen, detalle: textDetalle, img, img2, img3, pills, weight_kg, options: customOpts.variants || [] });
+          Object.assign(p, { name, codigo, cat, marca, price, currency, divisa, stock, emoji, origen, detalle: textDetalle, img, img2, img3, video_url, pills, weight_kg, options: customOpts.variants || [] });
           if (isSupabaseRowId(editingId)) {
             try {
               await updateInSupabase('products', editingId, mapLocalProductToSupabaseRow(p));
@@ -14465,7 +14616,7 @@
           }
         }
       } else {
-        const draft = { name, codigo, cat, marca, price, currency, divisa, stock, emoji, origen, detalle: textDetalle, img, img2, img3, pills, weight_kg, options: customOpts.variants || [], hidden: false };
+        const draft = { name, codigo, cat, marca, price, currency, divisa, stock, emoji, origen, detalle: textDetalle, img, img2, img3, video_url, pills, weight_kg, options: customOpts.variants || [], hidden: false };
         try {
           const inserted = await postToSupabase('products', mapLocalProductToSupabaseRow(draft));
           const row0 = Array.isArray(inserted) ? inserted[0] : inserted;
@@ -21403,7 +21554,46 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
                 <input type="file" accept="image/*" style="display:none;" onchange="handleModalPhotoUpload(this,2)" />
               </label>
             </div>
-            <div id="m-img3-status" style="font-size:10px;margin-top:3px;min-height:12px;"></div>
+          <!-- Micro Video 5s (Enterprise & Testers) -->
+          <div id="m-video-container" style="margin-top:16px; margin-bottom:14px; padding:14px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:12px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+              <div style="font-size:12px; color:var(--white); font-weight:700; display:flex; align-items:center; gap:6px;">
+                <i class="bi bi-camera-reels-fill" style="color:#ef4444;"></i> Micro Video del Producto
+              </div>
+              <span class="badge" id="m-video-plan-badge" style="font-size:10.5px; font-weight:700; background:rgba(239,68,68,0.12); color:#ef4444; border:1px solid rgba(239,68,68,0.3); padding:2px 8px; border-radius:10px;">
+                ⭐ Máx. 5 seg · Enterprise & Testers
+              </span>
+            </div>
+
+            <!-- Bloqueado para planes inferiores -->
+            <div id="m-video-locked-msg" style="display:none; padding:12px; background:rgba(239,68,68,0.06); border:1px dashed rgba(239,68,68,0.25); border-radius:8px; font-size:12px; color:var(--silver); line-height:1.5;">
+              <i class="bi bi-lock-fill" style="color:var(--red); font-size:14px;"></i> 
+              Los <strong>micro-videos de 5 segundos</strong> permiten a tus clientes ver el producto en movimiento antes de pedir por WhatsApp. Esta función está reservada para membresías <strong>Enterprise</strong> y cuentas <strong>Tester</strong>.
+              <div style="margin-top:8px;">
+                <button type="button" onclick="showUpgradeModal('Micro Videos de 5 segundos', 'Mostrá tus productos en movimiento con clips de 5 segundos estilo Reels/TikTok en tu catálogo. Disponible en plan Enterprise y cuentas tester.');" style="background:var(--red); border:none; color:#fff; font-size:11px; font-weight:700; padding:6px 12px; border-radius:6px; cursor:pointer;">
+                  <i class="bi bi-stars"></i> Solicitar Upgrade a Enterprise
+                </button>
+              </div>
+            </div>
+
+            <!-- Controles habilitados -->
+            <div id="m-video-controls">
+              <div style="display:flex; gap:8px; align-items:flex-start;">
+                <input class="ctrl-input" id="m-video-url" placeholder="https://... o /videos/... (URL de video MP4 o WebM)" style="flex:1;" oninput="handleVideoUrlInput(this.value)" />
+                <label style="flex-shrink:0; cursor:pointer; display:flex; align-items:center; gap:6px; padding:8px 12px; background:var(--iron); border:1px solid var(--zinc); border-radius:8px; font-size:11px; font-weight:600; color:var(--fog); transition:all .15s; white-space:nowrap;" title="Cargar archivo de video (máx 5 seg)">
+                  <i class="bi bi-file-earmark-play"></i> Subir clip
+                  <input type="file" id="m-video-file" accept="video/mp4,video/webm,video/quicktime" style="display:none;" onchange="handleModalVideoUpload(this)" />
+                </label>
+              </div>
+              <div id="m-video-status" style="font-size:11px; margin-top:4px; min-height:14px; color:var(--silver);"></div>
+              <div id="m-video-preview-wrap" style="display:none; margin-top:10px; border-radius:10px; overflow:hidden; max-width:240px; border:1px solid rgba(255,255,255,0.15); background:#000; position:relative;">
+                <video id="m-video-preview" muted loop playsinline controls style="width:100%; max-height:180px; object-fit:contain; display:block;"></video>
+                <button type="button" onclick="removeModalVideo()" style="position:absolute; top:6px; right:6px; background:rgba(0,0,0,0.75); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:50%; width:24px; height:24px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:12px;" title="Quitar video"><i class="bi bi-trash3"></i></button>
+                <div style="position:absolute; bottom:6px; left:6px; background:rgba(0,0,0,0.7); backdrop-filter:blur(4px); color:#fff; font-size:9.5px; font-weight:700; padding:2px 6px; border-radius:4px;">
+                  ⏱️ <span id="m-video-duration-label">0.0s</span> / 5.0s
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="form-hint">Subí desde tu dispositivo (Cloudinary) o pegá URLs directas. Marca de agua aplicada automáticamente.</div>
