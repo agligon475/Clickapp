@@ -1202,7 +1202,7 @@ a.logo{
 <div class="drawer" id="drawer">
   <div class="drawer-head">
     <span class="drawer-title">Tu Carrito</span>
-    <button class="drawer-close" onclick="closeCart()"><i class="bi bi-x"></i></button>
+    <button class="drawer-close" onclick="closeCart()" aria-label="Cerrar carrito de compras"><i class="bi bi-x"></i></button>
   </div>
 
   <div class="drawer-items" id="drawer-items">
@@ -1244,7 +1244,7 @@ a.logo{
     <!-- Coupon Section -->
     <div id="coupon-section" style="margin-bottom:12px; padding:10px; background:rgba(255,255,255,0.03); border:1px dashed var(--border); border-radius:8px;">
       <div id="coupon-input-box" style="display:flex; gap:6px;">
-        <input type="text" id="coupon-code-input" placeholder="¿Tenés un cupón?" style="flex:1; background:var(--body); border:1px solid var(--border); color:var(--text); padding:6px 10px; border-radius:6px; font-size:12px; text-transform:uppercase;" oninput="this.value = this.value.toUpperCase().replace(/\s+/g, '')" />
+        <input type="text" id="coupon-code-input" aria-label="Código de cupón de descuento" placeholder="¿Tenés un cupón?" style="flex:1; background:var(--body); border:1px solid var(--border); color:var(--text); padding:6px 10px; border-radius:6px; font-size:12px; text-transform:uppercase;" oninput="this.value = this.value.toUpperCase().replace(/\s+/g, '')" />
         <button type="button" onclick="applyCoupon()" style="padding:6px 14px; background:var(--accent); color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px;">
           <i class="bi bi-ticket-perforated"></i> Aplicar
         </button>
@@ -1254,7 +1254,7 @@ a.logo{
           <i class="bi bi-tag-fill"></i>
           <span id="coupon-applied-info">Cupón APLICADO</span>
         </div>
-        <button type="button" onclick="removeCoupon()" title="Quitar cupón" style="background:none; border:none; color:var(--muted); cursor:pointer; font-size:14px;">
+        <button type="button" onclick="removeCoupon()" title="Quitar cupón" aria-label="Quitar cupón aplicado" style="background:none; border:none; color:var(--muted); cursor:pointer; font-size:14px;">
           <i class="bi bi-x-circle-fill"></i>
         </button>
       </div>
@@ -1282,17 +1282,17 @@ a.logo{
     <div class="checkout-form" id="checkout-form">
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Nombre y apellido *</label>
-          <input class="form-control" id="f-nombre" placeholder="Juan García" required/>
+          <label class="form-label" for="f-nombre">Nombre y apellido *</label>
+          <input class="form-control" id="f-nombre" aria-label="Nombre y apellido completo" placeholder="Juan García" required/>
         </div>
         <div class="form-group">
-          <label class="form-label">DNI *</label>
-          <input class="form-control" id="f-dni" placeholder="30.123.456" required/>
+          <label class="form-label" for="f-dni">DNI *</label>
+          <input class="form-control" id="f-dni" aria-label="Número de DNI o CUIT" placeholder="30.123.456" required/>
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label">Forma de pago *</label>
-        <select class="form-control" id="f-pago">
+        <label class="form-label" for="f-pago">Forma de pago *</label>
+        <select class="form-control" id="f-pago" aria-label="Seleccionar forma de pago">
           <option value="">Seleccioná...</option>
           <option>Efectivo</option>
           <option>Transferencia bancaria</option>
@@ -1301,20 +1301,20 @@ a.logo{
         </select>
       </div>
       <div class="form-group">
-        <label class="form-label">Logística *</label>
-        <select class="form-control" id="f-logistica" onchange="toggleDireccion(this.value)">
+        <label class="form-label" for="f-logistica">Logística *</label>
+        <select class="form-control" id="f-logistica" aria-label="Seleccionar método de logística" onchange="toggleDireccion(this.value)">
           <option value="">Seleccioná...</option>
           <option>Retiro por la tienda</option>
           <option>Envío a domicilio</option>
         </select>
       </div>
       <div class="form-group" id="f-dir-wrap" style="display:none;">
-        <label class="form-label">Dirección de envío</label>
-        <input class="form-control" id="f-direccion" placeholder="Calle 123, CABA"/>
+        <label class="form-label" for="f-direccion">Dirección de envío</label>
+        <input class="form-control" id="f-direccion" aria-label="Dirección de entrega a domicilio" placeholder="Calle 123, CABA"/>
       </div>
       <div class="form-group" style="margin-top:14px;margin-bottom:8px;background:rgba(255,255,255,0.03);padding:10px 12px;border-radius:8px;border:1px solid var(--zinc);">
         <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:var(--text);line-height:1.4;user-select:none;margin:0;">
-          <input type="checkbox" id="f-optin-wapp" checked style="width:18px;height:18px;margin-top:1px;accent-color:var(--red);cursor:pointer;flex-shrink:0;" />
+          <input type="checkbox" id="f-optin-wapp" aria-label="Aceptar recibir novedades, ofertas y promociones vía WhatsApp" checked style="width:18px;height:18px;margin-top:1px;accent-color:var(--red);cursor:pointer;flex-shrink:0;" />
           <span>Aceptar recibir novedades, ofertas y promociones vía WhatsApp</span>
         </label>
       </div>

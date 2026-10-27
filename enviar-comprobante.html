@@ -309,7 +309,7 @@
 
     <!-- FORMULARIO -->
     <div id="form-container">
-      <div class="title">Adjuntar Comprobante de Pago</div>
+      <h1 class="title">Adjuntar Comprobante de Pago</h1>
       <div class="subtitle">Ingresá los datos de tu tienda y subí la foto/PDF del comprobante para activar tu plan.</div>
 
       <!-- Datos de Transferencia -->
@@ -328,18 +328,18 @@
       <form id="receipt-form" onsubmit="handleFormSubmit(event)">
         
         <div class="form-group">
-          <label class="label">Identificador o Nombre de la Tienda</label>
-          <input type="text" id="store-id" class="input-ctrl" placeholder="Ej: mi-tienda" required>
+          <label class="label" for="store-id">Identificador o Nombre de la Tienda</label>
+          <input type="text" id="store-id" class="input-ctrl" aria-label="Identificador o Nombre de la Tienda" placeholder="Ej: mi-tienda" required>
         </div>
 
         <div class="form-group">
-          <label class="label">Correo Electrónico de Contacto</label>
-          <input type="email" id="store-email" class="input-ctrl" placeholder="ejemplo@email.com" required>
+          <label class="label" for="store-email">Correo Electrónico de Contacto</label>
+          <input type="email" id="store-email" class="input-ctrl" aria-label="Correo Electrónico de Contacto" placeholder="ejemplo@email.com" required>
         </div>
 
         <div class="form-group">
-          <label class="label">Plan Contratado / Seleccionado</label>
-          <select id="plan-select" class="select-ctrl" onchange="updateAmountDisplay()" required>
+          <label class="label" for="plan-select">Plan Contratado / Seleccionado</label>
+          <select id="plan-select" class="select-ctrl" aria-label="Plan Contratado / Seleccionado" onchange="updateAmountDisplay()" required>
             <option value="starter_mensual">Plan STARTER — Mensual ($19.900 / mes)</option>
             <option value="starter_anual">Plan STARTER — Anual ($199.000 / año - 2 meses gratis)</option>
             <option value="pro_mensual">Plan PRO — Mensual ($29.900 / mes)</option>
@@ -350,17 +350,17 @@
         </div>
 
         <div class="form-group">
-          <label class="label">Monto Abonado</label>
-          <input type="text" id="plan-amount" class="input-ctrl" value="$19.900" readonly style="color:var(--green); font-weight:800; font-size:16px;">
+          <label class="label" for="plan-amount">Monto Abonado</label>
+          <input type="text" id="plan-amount" class="input-ctrl" aria-label="Monto Abonado" value="$19.900" readonly style="color:var(--green); font-weight:800; font-size:16px;">
         </div>
 
         <div class="form-group">
-          <label class="label">Adjuntar Comprobante (JPG, PNG, PDF)</label>
+          <label class="label" for="file-input">Adjuntar Comprobante (JPG, PNG, PDF)</label>
           <div class="upload-zone" onclick="document.getElementById('file-input').click()">
             <i class="bi bi-cloud-arrow-up upload-icon"></i>
             <div class="upload-text">Seleccionar o arrastrar comprobante</div>
             <div class="upload-hint">Formatos soportados: JPG, PNG, WEBP o PDF (máx. 10MB)</div>
-            <input type="file" id="file-input" accept="image/*,application/pdf" style="display:none;" onchange="handleFileChange(event)">
+            <input type="file" id="file-input" aria-label="Adjuntar comprobante de pago" accept="image/*,application/pdf" style="display:none;" onchange="handleFileChange(event)">
           </div>
 
           <div id="file-preview" class="file-preview">
@@ -373,8 +373,8 @@
         </div>
 
         <div class="form-group">
-          <label class="label">Observaciones / Comentarios (Opcional)</label>
-          <input type="text" id="notes" class="input-ctrl" placeholder="Ej: Pago realizado desde cuenta de Santander">
+          <label class="label" for="notes">Observaciones / Comentarios (Opcional)</label>
+          <input type="text" id="notes" class="input-ctrl" aria-label="Observaciones o comentarios adicionales" placeholder="Ej: Pago realizado desde cuenta de Santander">
         </div>
 
         <button type="submit" id="btn-submit" class="btn-submit">

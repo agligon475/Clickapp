@@ -1,0 +1,202 @@
+{
+  "connectivity": [
+    {
+      "item": "Supabase REST Root Endpoint",
+      "status": "WARN",
+      "detail": "HTTP 401 (235ms) - URL: https://iaylgsthwildjkiiwgfd.supabase.co"
+    },
+    {
+      "item": "Tabla DB: company_settings",
+      "status": "PASS",
+      "detail": "HTTP 200 (281ms) - Filas retornadas: 3"
+    },
+    {
+      "item": "Tabla DB: products",
+      "status": "PASS",
+      "detail": "HTTP 200 (252ms) - Filas retornadas: 3"
+    },
+    {
+      "item": "Tabla DB: categories",
+      "status": "PASS",
+      "detail": "HTTP 200 (231ms) - Filas retornadas: 3"
+    },
+    {
+      "item": "Tabla DB: orders",
+      "status": "PASS",
+      "detail": "HTTP 200 (246ms) - Filas retornadas: 0"
+    },
+    {
+      "item": "Tabla DB: faqs",
+      "status": "PASS",
+      "detail": "HTTP 200 (227ms) - Filas retornadas: 0"
+    },
+    {
+      "item": "Supabase Storage Buckets",
+      "status": "PASS",
+      "detail": "HTTP 200 (260ms) - Buckets encontrados: []"
+    },
+    {
+      "item": "Dale!QueVoy Shared DB (Logística)",
+      "status": "WARN",
+      "detail": "HTTP 401 (129ms) - URL: https://ppqfvnexetuwldovpjlq.supabase.co"
+    }
+  ],
+  "functionality": [
+    {
+      "item": "Sintaxis API: api/auth.js",
+      "status": "PASS",
+      "detail": "Export por defecto: function"
+    },
+    {
+      "item": "Sintaxis API: api/email-templates.js",
+      "status": "PASS",
+      "detail": "Export por defecto: undefined"
+    },
+    {
+      "item": "Sintaxis API: api/gemini.js",
+      "status": "PASS",
+      "detail": "Export por defecto: function"
+    },
+    {
+      "item": "Sintaxis API: api/helper.js",
+      "status": "PASS",
+      "detail": "Export por defecto: function"
+    },
+    {
+      "item": "Sintaxis API: api/image-search.js",
+      "status": "PASS",
+      "detail": "Export por defecto: function"
+    },
+    {
+      "item": "Sintaxis API: api/jaime.js",
+      "status": "PASS",
+      "detail": "Export por defecto: function"
+    },
+    {
+      "item": "Sintaxis API: api/qr.js",
+      "status": "PASS",
+      "detail": "Export por defecto: function"
+    },
+    {
+      "item": "Funcionalidad api/qr.js (generador QR)",
+      "status": "PASS",
+      "detail": "HTTP 200 - PNG generado: 7148 bytes"
+    },
+    {
+      "item": "Sintaxis API: api/security.js",
+      "status": "PASS",
+      "detail": "Export por defecto: undefined"
+    },
+    {
+      "item": "Sintaxis API: api/store.js",
+      "status": "PASS",
+      "detail": "Export por defecto: function"
+    },
+    {
+      "item": "Funcionalidad api/store.js (SSR /bighouse)",
+      "status": "PASS",
+      "detail": "HTTP 200 - HTML entregado: 167319 chars"
+    },
+    {
+      "item": "Sintaxis API: api/super-admin.js",
+      "status": "PASS",
+      "detail": "Export por defecto: function"
+    },
+    {
+      "item": "Seguridad api/super-admin.js (Token Auth Gate)",
+      "status": "PASS",
+      "detail": "HTTP 403 al invocar sin auth header (Esperado: 401/403)"
+    },
+    {
+      "item": "Sintaxis API: api/welcome-email.js",
+      "status": "PASS",
+      "detail": "Export por defecto: function"
+    }
+  ],
+  "accessibility": [
+    {
+      "file": "landing.html",
+      "hasLang": true,
+      "hasViewport": true,
+      "h1Count": 1,
+      "imgTotal": 11,
+      "imgWithoutAlt": 0,
+      "btnTotal": 36,
+      "emptyBtns": 0,
+      "inputTotal": 9,
+      "unlabelledInputs": 0
+    },
+    {
+      "file": "tienda.html",
+      "hasLang": true,
+      "hasViewport": true,
+      "h1Count": 1,
+      "imgTotal": 12,
+      "imgWithoutAlt": 0,
+      "btnTotal": 32,
+      "emptyBtns": 0,
+      "inputTotal": 8,
+      "unlabelledInputs": 2
+    },
+    {
+      "file": "dashboard.html",
+      "hasLang": true,
+      "hasViewport": true,
+      "h1Count": 1,
+      "imgTotal": 32,
+      "imgWithoutAlt": 5,
+      "btnTotal": 290,
+      "emptyBtns": 19,
+      "inputTotal": 188,
+      "unlabelledInputs": 72
+    },
+    {
+      "file": "super-admin-secret-dashboard.html",
+      "hasLang": true,
+      "hasViewport": true,
+      "h1Count": 1,
+      "imgTotal": 5,
+      "imgWithoutAlt": 0,
+      "btnTotal": 54,
+      "emptyBtns": 0,
+      "inputTotal": 30,
+      "unlabelledInputs": 13
+    },
+    {
+      "file": "alta-usuario.html",
+      "hasLang": true,
+      "hasViewport": true,
+      "h1Count": 2,
+      "imgTotal": 1,
+      "imgWithoutAlt": 0,
+      "btnTotal": 22,
+      "emptyBtns": 0,
+      "inputTotal": 16,
+      "unlabelledInputs": 0
+    },
+    {
+      "file": "kit-imprimible.html",
+      "hasLang": true,
+      "hasViewport": true,
+      "h1Count": 2,
+      "imgTotal": 14,
+      "imgWithoutAlt": 0,
+      "btnTotal": 6,
+      "emptyBtns": 0,
+      "inputTotal": 0,
+      "unlabelledInputs": 0
+    },
+    {
+      "file": "enviar-comprobante.html",
+      "hasLang": true,
+      "hasViewport": true,
+      "h1Count": 1,
+      "imgTotal": 2,
+      "imgWithoutAlt": 0,
+      "btnTotal": 1,
+      "emptyBtns": 0,
+      "inputTotal": 5,
+      "unlabelledInputs": 0
+    }
+  ]
+}
