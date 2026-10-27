@@ -1510,9 +1510,9 @@
           </div>
 
           <div class="card">
-            <div class="card-title" style="color:#60A5FA;"><i class="bi bi-cpu-fill"></i> Funcionalidad & Aislamiento Multi-Tenant</div>
+            <div class="card-title" style="color:#60A5FA;"><i class="bi bi-cpu-fill"></i> Funcionalidad & Aislamiento Multi-Tenant Estricto</div>
             <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
-              Blindaje estricto multi-tenant: aislamiento total de pedidos y repartidores por <code>storeapp_orders_${STORE_ID}</code> (eliminación de fallbacks globales que mezclaban clientes), inclusión mandataria de <code>store_id</code> en todas las consultas Supabase y purga de accesos/botones residuales de demo en la UI comercial.
+              Blindaje integral multi-tenant: aislamiento total de productos en ABM (<code>storeapp_local_products_${STORE_ID}</code>), pedidos (<code>storeapp_orders_${STORE_ID}</code>), configuraciones (<code>storeapp_cfg_${STORE_ID}</code>), banners y logos. Purga automática de 10 claves globales legacy en arranque de sesión para garantizar que ninguna tienda comparta ni herede productos o datos de otras marcas en el navegador o en la nube.
             </p>
           </div>
 

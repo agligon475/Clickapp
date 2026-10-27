@@ -1765,6 +1765,19 @@ function renderSuspendedStoreScreen(storeName) {
 /* ═══════════════════════════════════════════ LOAD */
 async function loadSheet() {
   try {
+    // Purgar inmediatamente claves globales compartidas sin aislamiento multi-tenant
+    try {
+      localStorage.removeItem('storeapp_local_products');
+      localStorage.removeItem('storeapp_abm_active');
+      localStorage.removeItem('storeapp_cfg');
+      localStorage.removeItem('storeapp_banners');
+      localStorage.removeItem('storeapp_horarios');
+      localStorage.removeItem('storeapp_orders');
+      localStorage.removeItem('storeapp_webhook');
+      localStorage.removeItem('storeapp_logo');
+      localStorage.removeItem('storeapp_hero_img');
+    } catch(e) {}
+
     // 1. Cargar configuración primero para verificar estado de suspensión con fetchSupabase (reintentos automáticos)
     let configData = null;
     try {
@@ -1877,7 +1890,7 @@ async function loadSheet() {
 
       let localBannerData = null;
       try {
-        const storedBanners = localStorage.getItem(`storeapp_banners_${STORE_ID}`) || localStorage.getItem('storeapp_banners');
+        const storedBanners = localStorage.getItem(`storeapp_banners_${STORE_ID}`);
         if (storedBanners) localBannerData = JSON.parse(storedBanners);
       } catch(e) {}
 
@@ -1923,7 +1936,7 @@ async function loadSheet() {
       let rawHorarios = cfg.horarios_data || parsedDesign.horarios_data;
       if (!rawHorarios) {
         try {
-          rawHorarios = JSON.parse(localStorage.getItem(`storeapp_horarios_${STORE_ID}`) || localStorage.getItem('storeapp_horarios') || 'null');
+          rawHorarios = JSON.parse(localStorage.getItem(`storeapp_horarios_${STORE_ID}`) || 'null');
         } catch(e) {}
       }
       if (typeof rawHorarios === 'string') {
@@ -1955,8 +1968,8 @@ async function loadSheet() {
     }
     
     // Aplicar diseño visual tras cargar config en la nube
-    localStorage.setItem('storeapp_cfg', JSON.stringify(CFG));
     localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(CFG));
+    try { localStorage.removeItem('storeapp_cfg'); } catch(e) {}
     applyStoredConfig();
     updateStoreScheduleUI();
 
@@ -2903,7 +2916,7 @@ async function registrarPedido(pedido) {
 
   // ── 1. Guardar en localStorage (misma key que usa el dashboard) ──
   try {
-    const existing = JSON.parse(localStorage.getItem(`storeapp_orders_${STORE_ID}`) || localStorage.getItem('storeapp_orders') || '[]');
+    const existing = JSON.parse(localStorage.getItem(`storeapp_orders_${STORE_ID}`) || '[]');
     existing.unshift(order);
     localStorage.setItem(`storeapp_orders_${STORE_ID}`, JSON.stringify(existing));
   } catch(e) {
@@ -2912,7 +2925,7 @@ async function registrarPedido(pedido) {
 
   // ── 2. Enviar al Sheet vía webhook si está configurado ───────────
   let wh = {};
-  try { wh = JSON.parse(localStorage.getItem(`storeapp_webhook_${STORE_ID}`) || localStorage.getItem('storeapp_webhook') || '{}'); } catch(e) {}
+  try { wh = JSON.parse(localStorage.getItem(`storeapp_webhook_${STORE_ID}`) || '{}'); } catch(e) {}
   if (!wh.url || !wh.token) return;
 
   try {
@@ -3546,7 +3559,7 @@ function closePagesDrawer() {
 // ── Apply config saved from dashboard ──────────────
 function applyStoredConfig() {
   let cfg = {};
-  try { cfg = JSON.parse(localStorage.getItem(`storeapp_cfg_${STORE_ID}`) || localStorage.getItem('storeapp_cfg') || '{}'); } catch(e) {}
+  try { cfg = JSON.parse(localStorage.getItem(`storeapp_cfg_${STORE_ID}`) || '{}'); } catch(e) {}
 
   const accent = cfg.color || '#F60000';
   const theme  = cfg.theme || 'light';
@@ -3605,9 +3618,9 @@ function applyStoredConfig() {
   if (cfg.fontBody) root.setProperty('--font-body', `'${cfg.fontBody}', sans-serif`);
 
   // Logo image takes priority over emoji
-  const logoImg = cfg.logo || cfg.logo_url || localStorage.getItem(`storeapp_logo_${STORE_ID}`) || localStorage.getItem('storeapp_logo');
+  const logoImg = cfg.logo || cfg.logo_url || localStorage.getItem(`storeapp_logo_${STORE_ID}`);
   const logoEl  = document.querySelector('.logo');
-  const storeName = cfg.name || (typeof CFG !== 'undefined' ? CFG.name : '') || 'BigHouse';
+  const storeName = cfg.name || (typeof CFG !== 'undefined' ? CFG.name : '') || STORE_ID;
   if (logoEl) {
     let logoImgEl = document.getElementById('logo-img');
     let logoIconEl = document.getElementById('logo-icon');
@@ -3671,8 +3684,8 @@ function applyStoredConfig() {
   const heroBg = document.getElementById('hero-img-bg');
   const heroOverlay = document.getElementById('hero-overlay');
   const heroStripes = document.getElementById('hero-stripes');
-  const heroImgUrl = (localStorage.getItem(`storeapp_hero_img_${STORE_ID}`) || localStorage.getItem('storeapp_hero_img') || cfg.bg || CFG.bg || '').trim();
-  const heroMobileImgUrl = (localStorage.getItem(`storeapp_hero_mobile_img_${STORE_ID}`) || localStorage.getItem('storeapp_hero_mobile_img') || cfg.banner_mobile_img || CFG.bannerMobileImg || '').trim();
+  const heroImgUrl = (localStorage.getItem(`storeapp_hero_img_${STORE_ID}`) || cfg.bg || CFG.bg || '').trim();
+  const heroMobileImgUrl = (localStorage.getItem(`storeapp_hero_mobile_img_${STORE_ID}`) || cfg.banner_mobile_img || CFG.bannerMobileImg || '').trim();
   const heroBgColor = cfg.heroBgColor || CFG.heroBgColor || '#0E0E0E';
   const heroImgOpacity = (cfg.heroImgOpacity != null ? Number(cfg.heroImgOpacity) : (CFG.heroImgOpacity != null ? Number(CFG.heroImgOpacity) : 100)) / 100;
 
@@ -3765,7 +3778,7 @@ function applyStoredConfig() {
     CFG.horarios_data = cfg.horarios_data;
   } else {
     try {
-      const hData = JSON.parse(localStorage.getItem(`storeapp_horarios_${STORE_ID}`) || localStorage.getItem('storeapp_horarios') || 'null');
+      const hData = JSON.parse(localStorage.getItem(`storeapp_horarios_${STORE_ID}`) || 'null');
       if (Array.isArray(hData) && hData.length > 0 && hData[0].day !== undefined) {
         CFG.horarios_data = hData;
       }
