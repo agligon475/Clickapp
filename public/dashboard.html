@@ -9840,11 +9840,22 @@
       }
 
       if (tabla === 'products' && typeof data === 'object' && data !== null) {
+        const cleanProductPayload = (item) => {
+          if (!item || typeof item !== 'object') return;
+          delete item.currency;
+          delete item.divisa;
+          delete item.options;
+          delete item.weight_kg;
+          delete item.codigo;
+          delete item.name;
+          delete item.price;
+          delete item.cat;
+          delete item.hidden;
+        };
         if (Array.isArray(data)) {
-          data.forEach(item => { delete item.currency; delete item.divisa; });
+          data.forEach(cleanProductPayload);
         } else {
-          delete data.currency;
-          delete data.divisa;
+          cleanProductPayload(data);
         }
       }
 
@@ -9913,6 +9924,14 @@
         if (tabla === 'products' && typeof data === 'object' && data !== null) {
           delete data.currency;
           delete data.divisa;
+          delete data.options;
+          delete data.weight_kg;
+          delete data.codigo;
+          delete data.name;
+          delete data.price;
+          delete data.cat;
+          delete data.hidden;
+          delete data.id;
         }
 
         const response = await fetch(url, {
@@ -10027,9 +10046,21 @@
         }
       }
 
+      // Consolidar opciones, peso y video en el objeto JSON de variants
+      if (p.video_url || (p.options && Array.isArray(p.options) && p.options.length > 0) || p.weight_kg !== undefined) {
+        if (!jsonVariants || typeof jsonVariants !== 'object') jsonVariants = {};
+      }
+
       if (p.video_url) {
-        if (!jsonVariants) jsonVariants = {};
         jsonVariants.video_url = p.video_url;
+      }
+
+      if (p.options && Array.isArray(p.options) && p.options.length > 0) {
+        jsonVariants.variants = p.options;
+      }
+
+      if (p.weight_kg !== undefined) {
+        jsonVariants.weight_kg = Number(p.weight_kg);
       }
 
       const fullDetalles = jsonVariants ? `${textDetalles} ||| ${JSON.stringify(jsonVariants)}` : textDetalles;
@@ -10046,10 +10077,9 @@
         marca: p.marca || null,
         detalles: fullDetalles,
         variants: jsonVariants,
-        options: jsonVariants?.variants || p.options || [],
-        weight_kg: p.weight_kg !== undefined ? Number(p.weight_kg) : 0.5,
         origen: p.origen || null,
-        oculto: !!p.hidden
+        oculto: !!p.hidden,
+        pills: p.pills || null
       };
     }
     /* NAV */
