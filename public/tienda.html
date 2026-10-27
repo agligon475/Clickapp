@@ -2817,6 +2817,7 @@ function enviarWhatsApp() {
   const pago   = document.getElementById('f-pago').value;
   const logis  = document.getElementById('f-logistica').value;
   const dir    = document.getElementById('f-direccion').value.trim();
+  const optInWapp = document.getElementById('f-optin-wapp') ? document.getElementById('f-optin-wapp').checked : true;
 
   if (!nombre||!dni||!pago||!logis) { showToast('⚠ Completá todos los campos'); return; }
   if (logis==='Envío a domicilio'&&!dir) { showToast('⚠ Ingresá la dirección de envío'); return; }
