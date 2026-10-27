@@ -1960,87 +1960,127 @@ async function enviarWhatsApp() {
 
   const total = cartTotal();
 
-  // ── Generar ID del pedido ────────────────────────
-  const pedidoId = 'PED-' + Date.now().toString(36).toUpperCase();
+  // ── Generar ID del pedido oficial (ej. TP-XXXX) ──
+  const pedidoId = `TP-${Math.floor(1000 + Math.random() * 9000)}`;
 
-  // ── 1. Mensaje al dueño por WhatsApp ─────────────
-  const lines = items.map(i=>`  • ${i.nombre} ×${i.cantidad}  →  $${i.subtotal.toLocaleString('es-AR')}`);
-  const msg = [
-    `🛒 *Nuevo pedido ${pedidoId}*`,
-    ``,
-    ...lines,
-    ``,
-    `💰 *Total:* $${total.toLocaleString('es-AR')}`,
-    `💳 *Pago:* ${pago}`,
-    comprobanteUrl ? `📎 *Comprobante:* ${comprobanteUrl}` : '',
-    `🚚 *Logística:* ${logis}`,
-    logis === 'Retiro por la tienda' ? `📝 *Instrucciones para retirar:*\n  - Vení a nuestro local de Lunes a Viernes de 9 a 18hs\n  - Presentá tu código: ${pedidoId.slice(-4)}` : '',
-    dir ? `📍 *Dirección:* ${dir}` : '',
-    ``,
-    `👤 *Cliente:* ${nombre}`,
-    `🪪 *DNI:* ${dni}`,
-  ].filter(l=>l!==undefined && l!=='').join('\n');
+  try {
+    // ── 1. Persistencia Obligatoria en Supabase (antes de redirección externa) ──
+    const orderPayload = {
+      order_number: pedidoId,
+      store_id: STORE_ID,
+      customer_name: nombre,
+      customer_phone: dni,
+      customer_address: dir || null,
+      delivery_type: logis === 'Envío a domicilio' ? 'delivery' : 'retiro',
+      items: items,
+      total_amount: total,
+      notes: `DNI: ${dni} | Pago: ${pago}${comprobanteUrl ? ' | Comprobante: ' + comprobanteUrl : ''}`,
+      status: 'confirmar',
+      created_at: new Date().toISOString()
+    };
 
-  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+    const res = await fetchSupabase('/rest/v1/orders', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify(orderPayload)
+    });
 
-  // ── 2. Registrar pedido ──────────────────────────
-  registrarPedido({ id: pedidoId, nombre, dni, pago, logistica: logis, direccion: dir, items, total, comprobante: comprobanteUrl });
+    if (!res || !res.ok) {
+      const errText = res ? await res.text() : 'Sin conexión al servidor';
+      throw new Error(`Error ${res ? res.status : 0}: ${errText}`);
+    }
 
-  // ── 3. Limpiar carrito ───────────────────────────
-  cart = {};
-  updateCartUI();
-  closeCart();
-  showToast(`✓ Pedido ${pedidoId} enviado por WhatsApp`);
+    // ── 2. Guardar en localStorage ──
+    const fecha = new Date().toLocaleString('es-AR', {
+      day:'2-digit', month:'2-digit', year:'numeric',
+      hour:'2-digit', minute:'2-digit'
+    });
+
+    const order = {
+      id: pedidoId,
+      fecha,
+      cliente: nombre,
+      dni,
+      productos: items.map(i=>`${i.nombre} ×${i.cantidad}`).join(' | '),
+      detalle: JSON.stringify(items),
+      pago,
+      comprobante: comprobanteUrl || '',
+      logistica: logis,
+      direccion: dir || '',
+      total,
+      estado: 'confirmar',
+      store_id: STORE_ID
+    };
+
+    try {
+      const existing = JSON.parse(localStorage.getItem(`storeapp_orders_${STORE_ID}`) || '[]');
+      const cleanList = existing.filter(o => o && o.store_id === STORE_ID);
+      cleanList.unshift(order);
+      localStorage.setItem(`storeapp_orders_${STORE_ID}`, JSON.stringify(cleanList));
+    } catch(e) {
+      console.warn('No se pudo guardar el pedido localmente:', e.message);
+    }
+
+    // Webhook si está configurado
+    let wh = {};
+    try { wh = JSON.parse(localStorage.getItem(`storeapp_webhook_${STORE_ID}`) || '{}'); } catch(e) {}
+    if (wh.url && wh.token) {
+      fetch(wh.url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action:'pedido', token: wh.token, pedido: {...order, estado:'A confirmar'} }),
+        mode: 'no-cors'
+      }).catch(() => {});
+    }
+
+    // ── 3. Limpiar carrito (Solo tras confirmación de inserción) ──
+    cart = {};
+    updateCartUI();
+    closeCart();
+    showToast(`✓ Pedido #${pedidoId} registrado con éxito`);
+
+    // ── 4. Redirección Segura a WhatsApp ──
+    const lines = items.map(i=>`  • ${i.nombre} ×${i.cantidad}  →  $${i.subtotal.toLocaleString('es-AR')}`);
+    const msg = [
+      `🛒 *Nuevo pedido #${pedidoId}*`,
+      ``,
+      ...lines,
+      ``,
+      `💰 *Total:* $${total.toLocaleString('es-AR')}`,
+      `💳 *Pago:* ${pago}`,
+      comprobanteUrl ? `📎 *Comprobante:* ${comprobanteUrl}` : '',
+      `🚚 *Logística:* ${logis}`,
+      logis === 'Retiro por la tienda' ? `📝 *Instrucciones para retirar:*\n  - Vení a nuestro local de Lunes a Viernes de 9 a 18hs\n  - Presentá tu código: ${pedidoId.slice(-4)}` : '',
+      dir ? `📍 *Dirección:* ${dir}` : '',
+      ``,
+      `👤 *Cliente:* ${nombre}`,
+      `🪪 *DNI:* ${dni}`,
+    ].filter(l=>l!==undefined && l!=='').join('\n');
+
+    const wappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+    const opened = window.open(wappUrl, '_blank');
+    if (!opened || opened.closed || typeof opened.closed === 'undefined') {
+      window.location.href = wappUrl;
+    }
+
+  } catch(e) {
+    console.error('Error al persistir pedido:', e);
+    showToast('❌ Error al procesar el pedido. Por favor intentá nuevamente.');
+  } finally {
+    if (btn) {
+      btn.innerHTML = '<i class="bi bi-clipboard-check"></i> Completar pedido';
+      btn.disabled = false;
+    }
+  }
 }
 
+const confirmarPedido = enviarWhatsApp;
+const handleCheckout = enviarWhatsApp;
 async function registrarPedido(pedido) {
-  const id    = pedido.id || ('PED-' + Date.now().toString(36).toUpperCase());
-  const fecha = new Date().toLocaleString('es-AR', {
-    day:'2-digit', month:'2-digit', year:'numeric',
-    hour:'2-digit', minute:'2-digit'
-  });
-
-  const order = {
-    id,
-    fecha,
-    cliente:   pedido.nombre,
-    dni:       pedido.dni,
-    productos: pedido.items.map(i=>`${i.nombre} ×${i.cantidad}`).join(' | '),
-    detalle:   JSON.stringify(pedido.items),
-    pago:      pedido.pago,
-    comprobante: pedido.comprobante || '',
-    logistica: pedido.logistica,
-    direccion: pedido.direccion || '',
-    total:     pedido.total,
-    estado:    'confirmar',
-    store_id:  STORE_ID
-  };
-
-  // ── 1. Guardar en localStorage (misma key que usa el dashboard) ──
-  try {
-    const existing = JSON.parse(localStorage.getItem(`storeapp_orders_${STORE_ID}`) || '[]');
-    const cleanList = existing.filter(o => o && o.store_id === STORE_ID);
-    cleanList.unshift(order);
-    localStorage.setItem(`storeapp_orders_${STORE_ID}`, JSON.stringify(cleanList));
-  } catch(e) {
-    console.warn('No se pudo guardar el pedido localmente:', e.message);
-  }
-
-  // ── 2. Enviar al Sheet vía webhook si está configurado ───────────
-  let wh = {};
-  try { wh = JSON.parse(localStorage.getItem(`storeapp_webhook_${STORE_ID}`) || '{}'); } catch(e) {}
-  if (!wh.url || !wh.token) return;
-
-  try {
-    await fetch(wh.url, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ action:'pedido', token: wh.token, pedido: {...order, estado:'A confirmar'} }),
-      mode:    'no-cors',
-    });
-  } catch(e) {
-    console.warn('Webhook no disponible, pedido guardado solo localmente:', e.message);
-  }
+  return enviarWhatsApp();
 }
 
 /* ═══════════════════════════════════════════ TOAST */

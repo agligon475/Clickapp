@@ -2811,7 +2811,10 @@ function confirmNightGuardOrder() {
   }, 250);
 }
 
-function enviarWhatsApp() {
+async function enviarWhatsApp() {
+  const btn = document.querySelector('.btn-checkout');
+  if (btn && btn.disabled) return;
+
   const nombre = document.getElementById('f-nombre').value.trim();
   const dni    = document.getElementById('f-dni').value.trim();
   const pago   = document.getElementById('f-pago').value;
@@ -2821,6 +2824,7 @@ function enviarWhatsApp() {
 
   if (!nombre||!dni||!pago||!logis) { showToast('⚠ Completá todos los campos'); return; }
   if (logis==='Envío a domicilio'&&!dir) { showToast('⚠ Ingresá la dirección de envío'); return; }
+  if (!cart || Object.keys(cart).length === 0) { showToast('⚠ Tu carrito está vacío'); return; }
 
   // Check store schedule status
   const sched = getStoreScheduleStatus(CFG);
@@ -2837,205 +2841,219 @@ function enviarWhatsApp() {
 
   const isNightGuardOrder = !sched.isOpen && sched.serenoActive;
 
-  // Build order items with weight_kg for multimodal logistics
-  const items = Object.entries(cart).map(([id,q])=>{
-    const p = findProduct(id);
-    if (!p) return null;
-    const price = cartDetails[id] ? cartDetails[id].price : p.price;
-    const name = cartDetails[id] ? `${p.name} (${cartDetails[id].optionsText})` : p.name;
-    const curr = p.currency || p.divisa || 'ARS';
-    const weight_kg = Number(p.weight_kg !== undefined ? p.weight_kg : 0.5);
-    return { id, nombre: name, cantidad: q, precio_unitario: price, subtotal: price*q, currency: curr, weight_kg };
-  }).filter(Boolean);
-
-  const totalsByCurrency = {};
-  items.forEach(i => {
-    totalsByCurrency[i.currency] = (totalsByCurrency[i.currency] || 0) + i.subtotal;
-  });
-  const totalFormatted = Object.entries(totalsByCurrency)
-    .map(([curr, amt]) => `${getCurrencySymbol(curr)}${amt.toLocaleString('es-AR')}`)
-    .join(' + ') || '$0';
-
-  // ── Generar ID del pedido & Cálculo Logístico Multimodal (Dale!QueVoy) ──
-  const pedidoId = 'PED-' + Date.now().toString(36).toUpperCase();
-  
-  let pinCode = null;
-  let totalWeightKg = 0;
-  let logisticsInfo = null;
-
-  if (logis === 'Envío a domicilio') {
-    if (window.DaleLogistics) {
-      logisticsInfo = window.DaleLogistics.calculateOrderMetrics(items, CFG.business_type || CFG.rubro);
-      totalWeightKg = logisticsInfo.totalWeightKg;
-      pinCode = window.DaleLogistics.generateSecurityPin();
-    } else {
-      totalWeightKg = items.reduce((sum, it) => sum + ((it.weight_kg || 0.5) * it.cantidad), 0);
-      totalWeightKg = Math.round(totalWeightKg * 100) / 100;
-      pinCode = Math.floor(1000 + Math.random() * 9000).toString();
-    }
+  // ── 1. Estado de Carga (isSubmitting = true) ──
+  const originalBtnHtml = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.style.opacity = '0.75';
+    btn.style.cursor = 'not-allowed';
+    btn.innerHTML = `
+      <span style="display:inline-block; width:16px; height:16px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:8px; vertical-align:middle;"></span>
+      <span>Procesando pedido...</span>
+    `;
   }
 
-  // ── 1. Mensaje al dueño por WhatsApp ─────────────
-  const serenoHeader = isNightGuardOrder
-    ? `🌙 *[PEDIDO FUERA DE HORARIO - MODO SERENO]*\n_Este pedido fue generado fuera del horario comercial y queda en espera para su confirmación al abrir._\n\n`
-    : '';
+  try {
+    // ── Build order items with weight_kg for multimodal logistics ──
+    const items = Object.entries(cart).map(([id,q])=>{
+      const p = findProduct(id);
+      if (!p) return null;
+      const price = cartDetails[id] ? cartDetails[id].price : p.price;
+      const name = cartDetails[id] ? `${p.name} (${cartDetails[id].optionsText})` : p.name;
+      const curr = p.currency || p.divisa || 'ARS';
+      const weight_kg = Number(p.weight_kg !== undefined ? p.weight_kg : 0.5);
+      return { id, nombre: name, cantidad: q, precio_unitario: price, subtotal: price*q, currency: curr, weight_kg };
+    }).filter(Boolean);
 
-  const lines = items.map(i => `  • ${i.nombre} ×${i.cantidad}  →  ${getCurrencySymbol(i.currency)}${i.subtotal.toLocaleString('es-AR')}`);
-  const msg = serenoHeader + [
-    `🛒 *Nuevo pedido ${pedidoId}*`,
-    ``,
-    ...lines,
-    ``,
-    window.APPLIED_COUPON ? `🎁 *Cupón:* ${window.APPLIED_COUPON.code} (-${window.APPLIED_COUPON.discount_percentage}%) → Ahorro: -${getCartDiscountAmount().toLocaleString('es-AR')}` : null,
-    `💰 *Total:* ${totalFormatted}`,
-    `💳 *Pago:* ${pago}`,
-    `🚚 *Logística:* ${logis}`,
-    dir ? `📍 *Dirección:* ${dir}` : '',
-    totalWeightKg > 0 ? `⚖️ *Carga aprox:* ${totalWeightKg} kg ${logisticsInfo ? '(' + logisticsInfo.suggestedVehicleIcon + ' ' + logisticsInfo.suggestedVehicle + ')' : ''}` : null,
-    pinCode ? `🔒 *PIN de Recepción Segura:* ${pinCode}\n_(El cliente dictará este PIN de 4 dígitos al repartidor de Dale!QueVoy al recibir su paquete)_` : null,
-    ``,
-    `👤 *Cliente:* ${nombre}`,
-    `🪪 *DNI:* ${dni}`,
-    `📢 *Novedades por WhatsApp:* ${optInWapp ? '✅ Sí (Aceptó recibir novedades)' : '❌ No'}`,
-  ].filter(l=>l!==undefined).join('\n');
+    const totalsByCurrency = {};
+    items.forEach(i => {
+      totalsByCurrency[i.currency] = (totalsByCurrency[i.currency] || 0) + i.subtotal;
+    });
+    const totalFormatted = Object.entries(totalsByCurrency)
+      .map(([curr, amt]) => `${getCurrencySymbol(curr)}${amt.toLocaleString('es-AR')}`)
+      .join(' + ') || '$0';
 
-  if (window.APPLIED_COUPON && window.STORE_COUPONS) {
-    const cObj = window.STORE_COUPONS.find(c => c.id === window.APPLIED_COUPON.id);
-    if (cObj) {
-      cObj.used_count = (parseInt(cObj.used_count) || 0) + 1;
-      try {
+    const rawTotal = (totalsByCurrency['ARS'] !== undefined)
+      ? totalsByCurrency['ARS']
+      : (Object.values(totalsByCurrency)[0] || 0);
+
+    // ── Generar ID del pedido oficial (ej. TP-XXXX) & Cálculo Logístico Multimodal ──
+    const pedidoId = `TP-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    let pinCode = null;
+    let totalWeightKg = 0;
+    let logisticsInfo = null;
+
+    if (logis === 'Envío a domicilio') {
+      if (window.DaleLogistics) {
+        logisticsInfo = window.DaleLogistics.calculateOrderMetrics(items, CFG.business_type || CFG.rubro);
+        totalWeightKg = logisticsInfo.totalWeightKg;
+        pinCode = window.DaleLogistics.generateSecurityPin();
+      } else {
+        totalWeightKg = items.reduce((sum, it) => sum + ((it.weight_kg || 0.5) * it.cantidad), 0);
+        totalWeightKg = Math.round(totalWeightKg * 100) / 100;
+        pinCode = Math.floor(1000 + Math.random() * 9000).toString();
+      }
+    }
+
+    // ── 2. Persistencia Obligatoria en Supabase (antes de redirección externa) ──
+    const orderPayload = {
+      order_number: pedidoId,
+      store_id: STORE_ID,
+      customer_name: nombre,
+      customer_phone: dni,
+      customer_address: dir || null,
+      delivery_type: logis === 'Envío a domicilio' ? 'delivery' : 'retiro',
+      items: items,
+      total_amount: rawTotal,
+      notes: `DNI: ${dni} | Pago: ${pago} | PIN: ${pinCode || '—'} | Opt-in Wapp: ${optInWapp ? 'Sí' : 'No'}`,
+      status: 'confirmar',
+      created_at: new Date().toISOString()
+    };
+
+    const res = await fetchSupabase('/rest/v1/orders', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify(orderPayload)
+    });
+
+    if (!res || !res.ok) {
+      const errText = res ? await res.text() : 'Sin conexión al servidor';
+      throw new Error(`Error ${res ? res.status : 0}: ${errText}`);
+    }
+
+    // ── 3. Guardado en LocalStorage (espejo local para rendimiento y offline) ──
+    const fecha = new Date().toLocaleString('es-AR', {
+      day:'2-digit', month:'2-digit', year:'numeric',
+      hour:'2-digit', minute:'2-digit'
+    });
+
+    const localOrder = {
+      id: pedidoId,
+      store_id: STORE_ID,
+      fecha,
+      cliente: nombre,
+      dni,
+      productos: items.map(i=>`${i.nombre} ×${i.cantidad}`).join(' | '),
+      detalle: JSON.stringify(items),
+      pago,
+      logistica: logis,
+      direccion: dir || '',
+      total: rawTotal,
+      estado: 'confirmar',
+      is_night_guard: isNightGuardOrder,
+      opt_in_whatsapp: optInWapp,
+      pin_code: pinCode,
+      weight_kg: totalWeightKg,
+      category: logisticsInfo?.resolvedCategory || 'SMALL_BOX'
+    };
+
+    try {
+      const existing = JSON.parse(localStorage.getItem(`storeapp_orders_${STORE_ID}`) || '[]');
+      const cleanList = existing.filter(o => o && o.store_id === STORE_ID);
+      cleanList.unshift(localOrder);
+      localStorage.setItem(`storeapp_orders_${STORE_ID}`, JSON.stringify(cleanList));
+    } catch(e) {
+      console.warn('Advertencia al guardar orden en localStorage:', e.message);
+    }
+
+    // Aplicar descuento de cupón en base de datos si corresponde
+    if (window.APPLIED_COUPON && window.STORE_COUPONS) {
+      const cObj = window.STORE_COUPONS.find(c => c.id === window.APPLIED_COUPON.id);
+      if (cObj) {
+        cObj.used_count = (parseInt(cObj.used_count) || 0) + 1;
         fetchSupabase(`/rest/v1/company_settings?store_id=eq.${encodeURIComponent(STORE_ID)}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ billing_info: { coupons: window.STORE_COUPONS } })
         }).catch(() => {});
-      } catch(e) {}
+      }
+    }
+
+    // Enviar al Sheet vía webhook si está configurado
+    let wh = {};
+    try { wh = JSON.parse(localStorage.getItem(`storeapp_webhook_${STORE_ID}`) || '{}'); } catch(e) {}
+    if (wh.url && wh.token) {
+      fetch(wh.url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action:'pedido', token: wh.token, pedido: {...localOrder, estado:'A confirmar'} }),
+        mode: 'no-cors'
+      }).catch(() => {});
+    }
+
+    // ── 4. Limpieza de Estado Local (Tras confirmación exitosa de inserción) ──
+    window.SERENO_ORDER_CONFIRMED = false;
+    cart = {};
+    cartDetails = {};
+    updateCartUI();
+    closeCart();
+
+    // Mostrar Modal PIN si es entrega a domicilio
+    if (pinCode) {
+      const pinEl = document.getElementById('dale-pin-modal-code');
+      const weightEl = document.getElementById('dale-pin-modal-weight');
+      const vehicleEl = document.getElementById('dale-pin-modal-vehicle');
+      if (pinEl) pinEl.textContent = pinCode;
+      if (weightEl) weightEl.textContent = `${totalWeightKg} kg`;
+      if (vehicleEl && logisticsInfo) vehicleEl.textContent = `${logisticsInfo.suggestedVehicleIcon} ${logisticsInfo.suggestedVehicle}`;
+      const modalEl = document.getElementById('dale-pin-modal');
+      if (modalEl) modalEl.style.display = 'flex';
+    }
+
+    showToast(isNightGuardOrder ? `✓ Pedido #${pedidoId} registrado (Modo Sereno)` : `✓ Pedido #${pedidoId} registrado con éxito`);
+
+    // ── 5. Redirección Segura a WhatsApp (Garantizada post-inserción) ──
+    const serenoHeader = isNightGuardOrder
+      ? `🌙 *[PEDIDO FUERA DE HORARIO - MODO SERENO]*\n_Este pedido fue generado fuera del horario comercial y queda en espera para su confirmación al abrir._\n\n`
+      : '';
+
+    const lines = items.map(i => `  • ${i.nombre} ×${i.cantidad}  →  ${getCurrencySymbol(i.currency)}${i.subtotal.toLocaleString('es-AR')}`);
+    const msg = serenoHeader + [
+      `🛒 *Nuevo pedido #${pedidoId}*`,
+      ``,
+      ...lines,
+      ``,
+      window.APPLIED_COUPON ? `🎁 *Cupón:* ${window.APPLIED_COUPON.code} (-${window.APPLIED_COUPON.discount_percentage}%) → Ahorro: -${getCartDiscountAmount().toLocaleString('es-AR')}` : null,
+      `💰 *Total:* ${totalFormatted}`,
+      `💳 *Pago:* ${pago}`,
+      `🚚 *Logística:* ${logis}`,
+      dir ? `📍 *Dirección:* ${dir}` : '',
+      totalWeightKg > 0 ? `⚖️ *Carga aprox:* ${totalWeightKg} kg ${logisticsInfo ? '(' + logisticsInfo.suggestedVehicleIcon + ' ' + logisticsInfo.suggestedVehicle + ')' : ''}` : null,
+      pinCode ? `🔒 *PIN de Recepción Segura:* ${pinCode}\n_(El cliente dictará este PIN de 4 dígitos al repartidor de Dale!QueVoy al recibir su paquete)_` : null,
+      ``,
+      `👤 *Cliente:* ${nombre}`,
+      `🪪 *DNI:* ${dni}`,
+      `📢 *Novedades por WhatsApp:* ${optInWapp ? '✅ Sí (Aceptó recibir novedades)' : '❌ No'}`,
+    ].filter(l=>l!==undefined).join('\n');
+
+    const wappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+    const opened = window.open(wappUrl, '_blank');
+    if (!opened || opened.closed || typeof opened.closed === 'undefined') {
+      window.location.href = wappUrl;
+    }
+
+  } catch(err) {
+    console.error('Error al persistir el pedido en Supabase:', err);
+    showToast('❌ Error al registrar el pedido en el servidor. Por favor intentá nuevamente.');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.style.cursor = 'pointer';
+      btn.innerHTML = originalBtnHtml;
     }
   }
-
-  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
-
-  // ── 2. Registrar pedido ──────────────────────────
-  registrarPedido({ 
-    id: pedidoId, 
-    nombre, 
-    dni, 
-    pago, 
-    logistica: logis, 
-    direccion: dir, 
-    items, 
-    total: totalFormatted, 
-    is_night_guard: isNightGuardOrder, 
-    opt_in_whatsapp: optInWapp,
-    pin_code: pinCode,
-    weight_kg: totalWeightKg,
-    category: logisticsInfo?.resolvedCategory || 'SMALL_BOX'
-  });
-
-  // ── 3. Mostrar Modal PIN si es entrega a domicilio ──────────────────
-  if (pinCode) {
-    const pinEl = document.getElementById('dale-pin-modal-code');
-    const weightEl = document.getElementById('dale-pin-modal-weight');
-    const vehicleEl = document.getElementById('dale-pin-modal-vehicle');
-    if (pinEl) pinEl.textContent = pinCode;
-    if (weightEl) weightEl.textContent = `${totalWeightKg} kg`;
-    if (vehicleEl && logisticsInfo) vehicleEl.textContent = `${logisticsInfo.suggestedVehicleIcon} ${logisticsInfo.suggestedVehicle}`;
-    const modalEl = document.getElementById('dale-pin-modal');
-    if (modalEl) modalEl.style.display = 'flex';
-  }
-
-  // ── 4. Limpiar carrito ───────────────────────────
-  window.SERENO_ORDER_CONFIRMED = false;
-  cart = {};
-  cartDetails = {};
-  updateCartUI();
-  closeCart();
-  showToast(isNightGuardOrder ? `✓ Pedido ${pedidoId} registrado (Modo Sereno)` : `✓ Pedido ${pedidoId} enviado por WhatsApp`);
 }
 
+// Aliases para integración modular
+const confirmarPedido = enviarWhatsApp;
+const handleCheckout = enviarWhatsApp;
 async function registrarPedido(pedido) {
-  const id    = pedido.id || ('PED-' + Date.now().toString(36).toUpperCase());
-  const fecha = new Date().toLocaleString('es-AR', {
-    day:'2-digit', month:'2-digit', year:'numeric',
-    hour:'2-digit', minute:'2-digit'
-  });
-
-  const order = {
-    id,
-    store_id:  STORE_ID,
-    fecha,
-    cliente:   pedido.nombre,
-    dni:       pedido.dni,
-    productos: pedido.items.map(i=>`${i.nombre} ×${i.cantidad}`).join(' | '),
-    detalle:   JSON.stringify(pedido.items),
-    pago:      pedido.pago,
-    logistica: pedido.logistica,
-    direccion: pedido.direccion || '',
-    total:     pedido.total,
-    estado:    'confirmar',
-    is_night_guard: !!pedido.is_night_guard,
-    opt_in_whatsapp: !!pedido.opt_in_whatsapp,
-    pin_code:  pedido.pin_code || null,
-    weight_kg: pedido.weight_kg || 0.5,
-    category:  pedido.category || 'SMALL_BOX'
-  };
-
-  // ── 1. Guardar en localStorage (misma key que usa el dashboard) ──
-  try {
-    const existing = JSON.parse(localStorage.getItem(`storeapp_orders_${STORE_ID}`) || '[]');
-    // Asegurar que ningún pedido previo ajeno contamine esta lista
-    const cleanList = existing.filter(o => o && o.store_id === STORE_ID);
-    cleanList.unshift(order);
-    localStorage.setItem(`storeapp_orders_${STORE_ID}`, JSON.stringify(cleanList));
-  } catch(e) {
-    console.warn('No se pudo guardar el pedido localmente:', e.message);
-  }
-
-  // ── 1.b. Respaldar en la tabla orders de Supabase si está disponible ──
-  try {
-    const rawTotal = typeof pedido.total === 'number'
-      ? pedido.total
-      : parseFloat(String(pedido.total || '0').replace(/[^0-9.]/g, '')) || 0;
-
-    fetchSupabase('/rest/v1/orders', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Prefer: 'return=minimal'
-      },
-      body: JSON.stringify({
-        order_number: order.id,
-        store_id: STORE_ID,
-        customer_name: order.cliente,
-        customer_phone: null,
-        customer_address: order.direccion || null,
-        delivery_type: order.logistica === 'Envío a domicilio' ? 'delivery' : 'retiro',
-        items: pedido.items || [],
-        total_amount: rawTotal,
-        notes: `DNI: ${order.dni || '—'} | Pago: ${order.pago || '—'} | PIN: ${order.pin_code || '—'} | Opt-in Wapp: ${order.opt_in_whatsapp ? 'Sí' : 'No'}`,
-        status: 'confirmar',
-        created_at: new Date().toISOString()
-      })
-    }).catch(err => {
-      console.warn('Error al respaldar pedido en Supabase:', err.message);
-    });
-  } catch(e) {}
-
-  // ── 2. Enviar al Sheet vía webhook si está configurado ───────────
-  let wh = {};
-  try { wh = JSON.parse(localStorage.getItem(`storeapp_webhook_${STORE_ID}`) || '{}'); } catch(e) {}
-  if (!wh.url || !wh.token) return;
-
-  try {
-    await fetch(wh.url, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ action:'pedido', token: wh.token, pedido: {...order, estado:'A confirmar'} }),
-      mode:    'no-cors',
-    });
-  } catch(e) {
-    console.warn('Webhook no disponible, pedido guardado solo localmente:', e.message);
-  }
+  return enviarWhatsApp();
 }
 
 /* ═══════════════════════════════════════════ TOAST */

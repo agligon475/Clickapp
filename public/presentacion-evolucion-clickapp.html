@@ -1697,38 +1697,38 @@
         </div>
       </section>
 
-      <!-- SLIDE 27: SINCRONIZACIÓN OMNICANAL DE PEDIDOS EN TIEMPO REAL & SUPABASE -->
+      <!-- SLIDE 27: PERSISTENCIA OBLIGATORIA EN SUPABASE & FLUJO SEGURO A WHATSAPP -->
       <section class="slide" id="slide-27">
-        <span class="slide-badge" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4);color:#10B981;"><i class="bi bi-arrow-repeat"></i> Etapa 27 · Release 27 de Octubre 2026</span>
-        <h2 class="slide-title">Sincronización Omnicanal de Pedidos en Tiempo Real & Respaldo Supabase</h2>
-        <p class="slide-desc">Integración bidireccional entre storefront y panel de administración: persistencia en la tabla <code>orders</code> de Supabase, reactividad instantánea multi-pestaña y sanitización contable sin recargas.</p>
+        <span class="slide-badge" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4);color:#10B981;"><i class="bi bi-shield-check"></i> Etapa 27 · Release 27 de Octubre 2026</span>
+        <h2 class="slide-title">Persistencia Obligatoria en Supabase & Flujo Secuencial hacia WhatsApp</h2>
+        <p class="slide-desc">Resolución del bug de congelamiento en móviles: la orden se persiste obligatoriamente en <code>public.orders</code> con estado de carga antes de cualquier redirección externa, blindando el registro en tiempo real.</p>
 
         <div class="grid-2" style="margin-top:16px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px;">
           <div class="card">
-            <div class="card-title" style="color:#10B981;"><i class="bi bi-cloud-check-fill"></i> Respaldo Automático en Nube Supabase</div>
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-clock-history"></i> Estado de Carga (isSubmitting) & Anti-Double-Click</div>
             <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
-              Cada pedido completado desde la tienda se registra automáticamente en la tabla <code>orders</code> de Supabase con esquema normalizado (<code>order_number</code>, <code>store_id</code>, <code>customer_name</code>, desglose de ítems, totales e indicador de entrega), asegurando resiliencia ante limpiezas de caché local.
+              Al confirmar el checkout, el botón de compra se bloquea inmediatamente (<code>disabled = true</code>) y despliega un spinner con texto <em>"Procesando pedido..."</em>, imposibilitando órdenes duplicadas mientras se procesa la solicitud.
             </p>
           </div>
 
           <div class="card">
-            <div class="card-title" style="color:#3B82F6;"><i class="bi bi-broadcast-pin"></i> Reactividad Multi-Pestaña y Auto-Focus</div>
+            <div class="card-title" style="color:#3B82F6;"><i class="bi bi-database-check"></i> Persistencia Await en <code>public.orders</code></div>
             <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
-              Listeners automáticos en el Dashboard sobre el evento <code>storage</code> y <code>window.focus</code>: si el cliente genera un pedido en una pestaña o dispositivo, el panel del comerciante lo incorpora y renderiza de inmediato en el tablero Kanban sin requerir F5 manual.
+              Se erradicó la redirección prematura: <code>fetchSupabase</code> realiza el <code>INSERT</code> asincrónico y espera la confirmación (<code>HTTP 201</code>). Esto previene que el navegador móvil congele la ejecución de JavaScript al abrir WhatsApp.
             </p>
           </div>
 
           <div class="card">
-            <div class="card-title" style="color:#F59E0B;"><i class="bi bi-kanban-fill"></i> Fusión Híbrida & Tablero Kanban Unificado</div>
+            <div class="card-title" style="color:#EF4444;"><i class="bi bi-shield-exclamation"></i> Aborto Seguro ante Errores de Red o Base de Datos</div>
             <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
-              Algoritmo de unión inteligente entre <code>localStorage</code> y Supabase con deduplicación por <code>order_number</code>. Preserva los cambios de estado operativos que realice el comerciante y actualiza en tiempo real las tarjetas de KPI y el gráfico de ventas acumuladas.
+              Si la inserción en Supabase falla por cualquier causa, el bloque <code>catch</code> restaura el botón al estado activo y muestra un toast descriptivo. <strong>Bajo ningún concepto se redirige a WhatsApp si la orden no quedó guardada en el backend.</strong>
             </p>
           </div>
 
           <div class="card">
-            <div class="card-title" style="color:#8B5CF6;"><i class="bi bi-hash"></i> Navegación por Hash <code>#pedidos</code> & Blindaje de Formato</div>
+            <div class="card-title" style="color:#8B5CF6;"><i class="bi bi-whatsapp"></i> Limpieza Atómica & Redirección Formateada</div>
             <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
-              Enrutamiento semántico que mapea enlaces directos <code>#pedidos</code> a la vista <code>orders</code>, con normalización robusta de importes monetarios para prevenir valores <code>NaN</code> en las tarjetas de totales y comanda térmica.
+              Únicamente tras la respuesta exitosa del servidor se vacía el carrito en memoria/localStorage y se abre WhatsApp con el identificador oficial <code>#TP-XXXX</code>, incorporando fallback automático a <code>location.href</code> ante bloqueadores de popups móviles.
             </p>
           </div>
         </div>

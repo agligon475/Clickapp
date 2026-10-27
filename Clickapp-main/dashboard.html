@@ -16138,7 +16138,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
                 logistica: o.delivery_type === 'delivery' ? 'Envío a domicilio' : 'Retiro por la tienda',
                 direccion: o.customer_address || '',
                 total: rawAmt,
-                estado: o.status || 'confirmar',
+                estado: (o.status === 'RECEIVED' ? 'confirmar' : (o.status || 'confirmar')),
                 opt_in_whatsapp: optInVal,
                 pin_code: pinVal,
                 weight_kg: 0.5,
