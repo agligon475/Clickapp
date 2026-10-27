@@ -293,23 +293,40 @@ export default async function handler(req, res) {
                 const symbol = (p.divisa || p.currency) === 'USD' ? 'US$' : '$';
                 const priceVal = parseFloat(p.precio != null ? p.precio : p.price);
                 const priceFormatted = !isNaN(priceVal) && priceVal > 0 ? `${symbol}${priceVal.toLocaleString('es-AR')}` : '';
-                const prodDesc = (p.detalles || p.detalle || p.desc || p.descripcion || '').trim();
+                const cleanProdDesc = (p.detalles || p.detalle || p.desc || p.descripcion || '').split('|||')[0].trim();
 
-                // "Lo ideal sería que tome el nombre del articulo seguido del nombre de la tienda"
+                // Detección de precio anterior y oferta
+                let prevPriceVal = p.precio_anterior || p.price_prev;
+                if (!prevPriceVal && p.variants) {
+                  try {
+                    const vObj = typeof p.variants === 'string' ? JSON.parse(p.variants) : p.variants;
+                    if (vObj) prevPriceVal = vObj.price_prev || vObj.precio_anterior;
+                  } catch(e) {}
+                }
+                if (!prevPriceVal && (p.detalles || p.detalle || '').includes('|||')) {
+                  try {
+                    const vObj = JSON.parse((p.detalles || p.detalle).split('|||')[1].trim());
+                    if (vObj) prevPriceVal = vObj.price_prev || vObj.precio_anterior;
+                  } catch(e) {}
+                }
+
                 if (prodName) {
                   title = `${prodName} — ${storeName}`;
                 }
 
-                // "en la descripcion que aparezca la descripcion del producto, y si es posible, el precio"
-                if (prodDesc && priceFormatted) {
-                  desc = `${priceFormatted} • ${prodDesc}`;
-                } else if (prodDesc) {
-                  desc = prodDesc;
+                if (cleanProdDesc && priceFormatted) {
+                  if (prevPriceVal && prevPriceVal > priceVal) {
+                    desc = `🔥 ${priceFormatted} (Antes: ${symbol}${Number(prevPriceVal).toLocaleString('es-AR')}) • ${cleanProdDesc}`;
+                  } else {
+                    desc = `${priceFormatted} • ${cleanProdDesc}`;
+                  }
+                } else if (cleanProdDesc) {
+                  desc = cleanProdDesc;
                 } else if (priceFormatted) {
                   desc = `Precio: ${priceFormatted} • Pedilo directo por WhatsApp en ${storeName}.`;
                 }
 
-                // "El orden de importancia para uso de imagen deberia ser Imagen destacada del producto, o logo de la empresa, o como ultimo recurso, el favicon de DaleTePido"
+                // Imagen destacada del producto (primera imagen disponible)
                 const prodImg = p.img || p.img2 || p.img3 || '';
                 if (prodImg) {
                   selectedImg = prodImg;
@@ -332,6 +349,9 @@ export default async function handler(req, res) {
 <meta property="og:description" content="${escapeAttr(desc)}" />
 <meta property="og:image" content="${escapeAttr(finalImage)}" />
 <meta property="og:image:secure_url" content="${escapeAttr(finalImage)}" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:type" content="image/jpeg" />
 <meta property="og:image:alt" content="${escapeAttr(title)}" />
 <meta property="og:url" content="${escapeAttr(url)}" />
 <meta property="og:type" content="${productId ? 'product' : 'website'}" />

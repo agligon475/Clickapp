@@ -412,7 +412,7 @@
       <div class="topbar-brand">
         <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" onerror="this.src='/img-default/daletepido-logo-white-hq.png'" alt="Dale! Te Pido" class="topbar-logo" />
         <span class="topbar-tag"><i class="bi bi-clock-history"></i> RETROSPECTIVA HISTÓRICA</span>
-        <span class="topbar-tag" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.35); color: #10B981;"><i class="bi bi-calendar-check"></i> ACTUALIZADO: 23 OCTUBRE 2026</span>
+        <span class="topbar-tag" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.35); color: #10B981;"><i class="bi bi-calendar-check"></i> ACTUALIZADO: 27 OCTUBRE 2026</span>
       </div>
       <div class="topbar-actions">
         <a href="super-admin-secret-dashboard.html" class="nav-btn" title="Regresar al panel general">
@@ -1534,6 +1534,45 @@
         </div>
       </section>
 
+      <!-- SLIDE 23: PRECIOS DE OFERTA, DESCUENTOS % Y OPEN GRAPH -->
+      <section class="slide" id="slide-23">
+        <span class="slide-badge" style="background:rgba(245,158,11,0.15);border-color:rgba(245,158,11,0.4);color:#F59E0B;"><i class="bi bi-tag-fill"></i> Etapa 23 · Release 27 de Octubre 2026</span>
+        <h2 class="slide-title">Precios con Descuento (% OFF), Precios Anteriores Tachados y Open Graph Dinámico</h2>
+        <p class="slide-desc">Despliegue transversal para todas las tiendas (actuales y futuras) de una suite de promociones en ABM, visualización de ofertas en catálogo e interoperabilidad social al compartir productos por WhatsApp.</p>
+
+        <div class="grid-3" style="margin-top:16px;">
+          <div class="card">
+            <div class="card-title" style="color:#F59E0B;"><i class="bi bi-calculator"></i> Motor Bidireccional de Precios en ABM</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Incorporación en el modal de producto de tres controles sincronizados: <code>Precio Actual</code> (venta por defecto), <code>Precio Anterior</code> (referencia tachada) y <code>Descuento % OFF</code>. Si el comerciante ingresa un 20% de oferta, se calcula automáticamente el precio de venta final y la insignia promocional interactiva.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-shop"></i> Experiencia Visual de Tienda & Despeje UX</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Tanto en las tarjetas de producto como en el drawer de detalles, se exhibe el valor anterior tachado (<code>&lt;s&gt;$ 300.000&lt;/s&gt;</code>) junto a la insignia de descuento (<code>-20% OFF</code>) y el valor actual destacado. Se reubicó además el chip de stock en la esquina inferior izquierda con sombra y contraste para no colisionar jamás con el botón de compartir.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#60A5FA;"><i class="bi bi-whatsapp"></i> Open Graph & Compartir Enriquecido</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Optimización del micro-servicio SSR (<code>api/store.js</code>) y del cliente frontend: al compartir un producto en WhatsApp o redes sociales, se inyectan metadatos <code>og:image</code> en alta resolución (1200x630), título limpio, precio con oferta formateada (<code>🔥 $240.000 Antes: $300.000</code>) y descripción limpia sin código técnico.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <a href="/tienda.html?store=bighouse" target="_blank" class="nav-btn primary" style="padding:10px 22px; font-size:13px; background:linear-gradient(135deg, #F59E0B 0%, #D97706 100%);">
+            <i class="bi bi-tag"></i> Ver Ofertas en Catálogo
+          </a>
+          <a href="/dashboard.html?store=bighouse" target="_blank" class="nav-btn secondary" style="padding:10px 22px; font-size:13px;">
+            <i class="bi bi-pencil-square"></i> Probar ABM de Precios y % OFF
+          </a>
+        </div>
+      </section>
+
     </main>
 
     <!-- BOTTOMBAR -->
@@ -1545,7 +1584,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 4.4 Auditoría & Blindaje Accesible (UI/Backend/DB) · Actualizado 26/10/2026
+        Dale! Te Pido © 2026 · Versión 4.5 Precios con Descuento, Ofertas Tachadas & Open Graph Dinámico · Actualizado 27/10/2026
       </div>
     </footer>
 
@@ -1554,7 +1593,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 22;
+  const totalSlides = 23;
 
   function showSlide(index) {
     if (index < 1) index = 1;

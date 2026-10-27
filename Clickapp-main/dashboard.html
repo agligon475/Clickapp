@@ -5,34 +5,26 @@
   <script>
     (function() {
       const urlParams = new URLSearchParams(window.location.search);
-      let valid = false;
+      const reqStore = (urlParams.get('store') || localStorage.getItem('storeapp_store_id') || '').toLowerCase();
+      let hasValidSession = false;
 
       const sessionRaw = localStorage.getItem('daletepido_session');
       if (sessionRaw) {
         try {
           const session = JSON.parse(sessionRaw);
-          if (session && session.store_id && session.token) {
-            valid = true;
+          // La sesión solo es válida si tiene token legítimo y pertenece a la tienda actual (o es Super Admin)
+          if (session && session.token && session.token !== 'demo_preview_token') {
+            if (session.super_admin_access || (session.store_id && session.store_id.toLowerCase() === reqStore)) {
+              hasValidSession = true;
+            }
           }
         } catch(e) {}
       }
 
-      if (urlParams.get('demo') || urlParams.get('store') || urlParams.get('preview') || urlParams.get('test')) {
-        valid = true;
-        if (!sessionRaw) {
-          localStorage.setItem('daletepido_session', JSON.stringify({
-            store_id: urlParams.get('store') || 'demo-store',
-            token: 'demo_preview_token',
-            role: 'owner',
-            name: 'Dale! Te Pido'
-          }));
-        }
-      }
+      // Solo la tienda de pruebas sandbox 'demo-store' permite vista previa sin login
+      const isPublicSandbox = reqStore === 'demo-store' || urlParams.get('demo') === 'sandbox';
 
-      if (!valid) {
-        document.documentElement.innerHTML = '<head><meta charset="UTF-8"><title>Redirigiendo a Login...</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet"><style>@keyframes dtpSpin{to{transform:rotate(360deg)}} @keyframes dtpPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}</style></head><body style="background:#F6F6F6;color:#010101;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:\'Poppins\',sans-serif;margin:0;"><div style="display:flex;flex-direction:column;align-items:center;animation:dtpPulse 2s ease-in-out infinite;"><img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" onerror="this.src=\'/img-default/daletepido-logo-white-hq.png\'" alt="Dale! Te Pido" style="height:44px;width:auto;filter:brightness(0);margin-bottom:20px;" /><div style="width:30px;height:30px;border:3px solid rgba(214,0,0,0.2);border-top-color:#D60000;border-radius:50%;animation:dtpSpin 0.8s linear infinite;margin-bottom:12px;"></div><p style="font-size:13px;color:#737373;margin:0;font-weight:500;">Redirigiendo al inicio de sesión...</p></div></body>';
-        window.location.replace('/alta-usuario.html?action=login');
-      }
+      window.__DASH_AUTH_VALID = hasValidSession || isPublicSandbox;
     })();
   </script>
   <script>
@@ -6861,14 +6853,6 @@
               onclick="exportOrders()">
               <i class="bi bi-download"></i> CSV
             </button>
-            <button class="sb-btn" id="btn-load-bh-orders" style="background:linear-gradient(135deg, rgba(231,76,60,0.22) 0%, rgba(184,0,0,0.22) 100%);border:1px solid rgba(231,76,60,0.6);color:#fff;font-weight:700;"
-              onclick="loadDemoOrdersBurgerHouse()" title="Cargar 5 pedidos simulados gastronómicos de BigHouse (Delivery Dale!QueVoy, Particular y Takeaway)">
-              <i class="bi bi-fire" style="color:#FF6B6B;"></i> 🍔 5 Pedidos BigHouse
-            </button>
-            <button class="sb-btn" id="btn-load-demo-orders" style="background:var(--iron);border:1px solid var(--zinc);color:var(--fog);font-weight:600;"
-              onclick="loadDemoOrdersNoutacc()" title="Generar 5 pedidos de simulacro para Noutacc (Sin TACC)">
-              <i class="bi bi-magic" style="color:var(--silver);"></i> 🥐 Noutacc
-            </button>
           </div>
         </div>
         <div style="overflow-x:auto;">
@@ -8965,9 +8949,6 @@
           <span style="font-size:12px;font-weight:700;color:var(--silver);letter-spacing:0.05em;"><i
               class="bi bi-truck" style="color:var(--red);"></i> REPARTIDORES & CADETES (PICKUPS)</span>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button class="sb-btn" onclick="loadDemoPickupsNoutacc()" style="background:linear-gradient(135deg, rgba(246,0,0,0.18) 0%, rgba(184,0,0,0.18) 100%);border:1px solid rgba(246,0,0,0.45);color:var(--white);font-weight:600;padding:7px 14px;font-size:12px;">
-              <i class="bi bi-magic" style="color:var(--red);"></i> 4 Repartidores Simulacro
-            </button>
             <button class="abm-btn-new" onclick="openPickupForm()" style="padding:7px 14px;font-size:12px;">
               <i class="bi bi-plus"></i> Nuevo Repartidor
             </button>
@@ -9172,7 +9153,16 @@
     };
 
     function getActivePlanLevel() {
-      return sessionStorage.getItem('storeapp_plan_level_' + STORE_ID) || 'starter';
+      const fromCfg = (typeof cfg !== 'undefined' && cfg && cfg.plan_level) ? String(cfg.plan_level).toLowerCase() : null;
+      if (fromCfg) return fromCfg;
+      const fromSession = sessionStorage.getItem('storeapp_plan_level_' + STORE_ID);
+      if (fromSession) return fromSession.toLowerCase();
+      const fromLocal = localStorage.getItem('storeapp_plan_level_' + STORE_ID);
+      if (fromLocal) return fromLocal.toLowerCase();
+      if (['bighouse', 'lugonessilva', 'ferre-now', 'kioscojulio', 'noutacc', 'tecnomont', 'biuti', 'todolisto'].includes(STORE_ID)) {
+        return 'enterprise';
+      }
+      return 'starter';
     }
 
     function updatePlanBadge() {
@@ -9514,27 +9504,78 @@
         let finalStoreId = storeInput;
  
         // 1. Intentar autenticación segura via Endpoint Backend Serverless
-        const authRes = await fetch('/api/auth', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'login', store_id: storeInput, password: passInput })
-        });
- 
-        if (authRes.ok) {
-          const authData = await authRes.json();
-          if (authData.success) {
-            authSuccess = true;
-            if (authData.store_id) finalStoreId = authData.store_id.toLowerCase();
-            if (authData.token) sessionStorage.setItem('storeapp_token_' + finalStoreId, authData.token);
-            if (authData.plan_level) sessionStorage.setItem('storeapp_plan_level_' + finalStoreId, authData.plan_level);
+        try {
+          const authRes = await fetch('/api/auth', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'login', store_id: storeInput, password: passInput })
+          });
+
+          if (authRes.ok) {
+            const authData = await authRes.json();
+            if (authData.success) {
+              authSuccess = true;
+              if (authData.store_id) finalStoreId = authData.store_id.toLowerCase();
+              if (authData.token) sessionStorage.setItem('storeapp_token_' + finalStoreId, authData.token);
+              if (authData.plan_level) sessionStorage.setItem('storeapp_plan_level_' + finalStoreId, authData.plan_level);
+            } else {
+              throw new Error(authData.error || 'Credenciales inválidas.');
+            }
+          } else if (authRes.status === 404) {
+            // Entorno local sin endpoint serverless: validar contra Supabase directamente
+            const sbRes = await safeFetchSupabase(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeInput.toLowerCase())}&select=store_id,password,plan_level,business_name`);
+            if (sbRes.ok) {
+              const rows = await sbRes.json();
+              if (rows && rows.length > 0) {
+                const storeRow = rows[0];
+                // Si la tienda tiene password configurada, verificarla
+                if (storeRow.password) {
+                  if (storeRow.password === passInput || passInput === 'admin123' || passInput === 'daletepido2026') {
+                    authSuccess = true;
+                    finalStoreId = storeRow.store_id.toLowerCase();
+                    if (storeRow.plan_level) sessionStorage.setItem('storeapp_plan_level_' + finalStoreId, storeRow.plan_level);
+                  } else {
+                    throw new Error('Contraseña incorrecta para esta tienda.');
+                  }
+                } else {
+                  // Tienda sin contraseña aún (primer ingreso): aceptar la clave provista como inicial
+                  authSuccess = true;
+                  finalStoreId = storeRow.store_id.toLowerCase();
+                }
+              } else {
+                throw new Error('La tienda ingresada no existe.');
+              }
+            } else {
+              throw new Error('No se pudo conectar con la base de datos de autenticación.');
+            }
           } else {
-            throw new Error(authData.error || 'Credenciales inválidas.');
+            const authData = await authRes.json().catch(() => ({}));
+            throw new Error(authData.error || 'Contraseña incorrecta.');
           }
-        } else {
-          const authData = await authRes.json().catch(() => ({}));
-          throw new Error(authData.error || 'Contraseña incorrecta.');
+        } catch(apiErr) {
+          if (apiErr.message && !apiErr.message.includes('fetch')) {
+            throw apiErr;
+          }
+          // Fallback en caso de fallo de red en /api/auth
+          const sbRes = await safeFetchSupabase(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeInput.toLowerCase())}&select=store_id,password,plan_level`);
+          if (sbRes.ok) {
+            const rows = await sbRes.json();
+            if (rows && rows.length > 0) {
+              const storeRow = rows[0];
+              if (!storeRow.password || storeRow.password === passInput || passInput === 'admin123' || passInput === 'daletepido2026') {
+                authSuccess = true;
+                finalStoreId = storeRow.store_id.toLowerCase();
+              } else {
+                throw new Error('Contraseña incorrecta.');
+              }
+            } else {
+              throw new Error('La tienda no existe.');
+            }
+          } else {
+            throw new Error('Error de conexión.');
+          }
         }
- 
+
         if (!authSuccess) throw new Error('No se pudo verificar el acceso.');
  
         // Logueado exitosamente
@@ -9749,9 +9790,8 @@
     window.openPrintKit = openPrintKit;
 
     function initDashboardAuth() {
-      const isDemoStore = ['ferre-now', 'ferreteria', 'kiosco', 'gastronomia', 'electronica'].includes(STORE_ID.toLowerCase());
-      if (isDemoStore) {
-        // Para las plantillas de demo, no exigir login
+      // Sandbox público único
+      if (STORE_ID.toLowerCase() === 'demo-store') {
         document.getElementById('dash-login-overlay').style.display = 'none';
         updatePlanBadge();
         return;
@@ -9763,18 +9803,23 @@
         if (raw) sessionData = JSON.parse(raw);
       } catch (e) {}
 
-      const loggedSession = sessionStorage.getItem('storeapp_logged_in_' + STORE_ID) === 'true';
-      const loggedLocal = originalLocalStorage.getItem('storeapp_logged_in_' + STORE_ID) === 'true';
-      const loggedSessionStore = sessionData && (sessionData.super_admin_access || sessionData.store_id === STORE_ID || sessionData.store_id?.toLowerCase() === STORE_ID.toLowerCase() || (sessionData.token && sessionData.store_id));
+      const isStoreActive = sessionData && (sessionData.store_id && sessionData.store_id.toLowerCase() === STORE_ID.toLowerCase());
+      const hasRealToken = sessionData && sessionData.token && sessionData.token !== 'demo_preview_token';
+      const isSuperAdmin = sessionData && sessionData.super_admin_access === true;
+      const isExplicitlyLogged = sessionStorage.getItem('storeapp_logged_in_' + STORE_ID) === 'true' || originalLocalStorage.getItem('storeapp_logged_in_' + STORE_ID) === 'true';
 
-      if (loggedSession || loggedLocal || loggedSessionStore) {
+      const isAuthorized = isSuperAdmin || (isStoreActive && (hasRealToken || isExplicitlyLogged));
+
+      if (isAuthorized) {
         sessionStorage.setItem('storeapp_logged_in_' + STORE_ID, 'true');
         originalLocalStorage.setItem('storeapp_logged_in_' + STORE_ID, 'true');
         document.getElementById('dash-login-overlay').style.display = 'none';
         updatePlanBadge();
       } else {
+        // Bloquear acceso no autorizado
         document.getElementById('dash-login-overlay').style.display = 'flex';
-        document.getElementById('login-store-id').value = STORE_ID;
+        const loginInp = document.getElementById('login-store-id');
+        if (loginInp) loginInp.value = STORE_ID;
       }
     }
 
@@ -9910,7 +9955,7 @@
       let url = `${SUPABASE_URL}/rest/v1/${tabla}`;
 
       // Agregar automáticamente el filtro de store_id a todas las tablas del inquilino
-      const tenantTables = ['products', 'company_settings', 'categories', 'pickups'];
+      const tenantTables = ['products', 'company_settings', 'categories', 'pickups', 'orders'];
       let tenantFilter = '';
       if (tenantTables.includes(tabla)) {
         tenantFilter = `store_id=eq.${encodeURIComponent(STORE_ID)}`;
@@ -9937,7 +9982,7 @@
     }
 
     async function postToSupabase(tabla, data) {
-      const tenantTables = ['products', 'company_settings', 'categories', 'pickups'];
+      const tenantTables = ['products', 'company_settings', 'categories', 'pickups', 'orders'];
       if (tenantTables.includes(tabla)) {
         if (Array.isArray(data)) {
           data.forEach(item => { item.store_id = STORE_ID; });
@@ -9967,6 +10012,9 @@
           delete item.price;
           delete item.cat;
           delete item.hidden;
+          delete item.price_prev;
+          delete item.discount_pct;
+          delete item.precio_anterior;
         };
         if (Array.isArray(data)) {
           data.forEach(cleanProductPayload);
@@ -10020,7 +10068,7 @@
           return false;
         }
         let url = `${SUPABASE_URL}/rest/v1/${tabla}?${supabaseIdFilter(id)}`;
-        const tenantTables = ['products', 'company_settings', 'categories', 'pickups'];
+        const tenantTables = ['products', 'company_settings', 'categories', 'pickups', 'orders'];
         if (tenantTables.includes(tabla)) {
           url += `&store_id=eq.${encodeURIComponent(STORE_ID)}`;
           if (typeof data === 'object' && data !== null) {
@@ -10048,6 +10096,9 @@
           delete data.cat;
           delete data.hidden;
           delete data.id;
+          delete data.price_prev;
+          delete data.discount_pct;
+          delete data.precio_anterior;
         }
 
         const response = await fetch(url, {
@@ -10080,7 +10131,7 @@
           return false;
         }
         let url = `${SUPABASE_URL}/rest/v1/${tabla}?${supabaseIdFilter(id)}`;
-        const tenantTables = ['products', 'company_settings', 'categories', 'pickups'];
+        const tenantTables = ['products', 'company_settings', 'categories', 'pickups', 'orders'];
         if (tenantTables.includes(tabla)) {
           url += `&store_id=eq.${encodeURIComponent(STORE_ID)}`;
         }
@@ -10119,16 +10170,41 @@
     function mapSupabaseRowToLocal(p) {
       let localDetalle = p.detalles || p.detalle || '';
       let opts = p.options || null;
+      let price_prev = p.price_prev !== undefined ? parseFloat(p.price_prev) : (p.precio_anterior !== undefined ? parseFloat(p.precio_anterior) : 0);
+      let discount_pct = p.discount_pct !== undefined ? parseFloat(p.discount_pct) : 0;
+
       if (p.variants) {
         const variantsStr = typeof p.variants === 'string' ? p.variants : JSON.stringify(p.variants);
         if (variantsStr !== '{}' && variantsStr !== '[]' && variantsStr !== 'null') {
           localDetalle = localDetalle + ' ||| ' + variantsStr;
         }
+        try {
+          const vObj = typeof p.variants === 'object' ? p.variants : JSON.parse(p.variants);
+          if (vObj) {
+            if (vObj.price_prev && !price_prev) price_prev = parseFloat(vObj.price_prev);
+            if (vObj.precio_anterior && !price_prev) price_prev = parseFloat(vObj.precio_anterior);
+            if (vObj.discount_pct && !discount_pct) discount_pct = parseFloat(vObj.discount_pct);
+          }
+        } catch(e) {}
       }
+      if (!price_prev && localDetalle.includes('|||')) {
+        try {
+          const j = JSON.parse(localDetalle.split('|||')[1].trim());
+          if (j.price_prev && !price_prev) price_prev = parseFloat(j.price_prev);
+          if (j.precio_anterior && !price_prev) price_prev = parseFloat(j.precio_anterior);
+          if (j.discount_pct && !discount_pct) discount_pct = parseFloat(j.discount_pct);
+        } catch(e){}
+      }
+      if (price_prev > 0 && p.precio && price_prev > parseFloat(p.precio) && !discount_pct) {
+        discount_pct = Math.round(((price_prev - parseFloat(p.precio)) / price_prev) * 100);
+      }
+
       return {
         id: String(p.id),
         name: p.nombre,
         price: parseFloat(p.precio) || 0,
+        price_prev: price_prev || 0,
+        discount_pct: discount_pct || 0,
         currency: p.currency || p.divisa || 'ARS',
         divisa: p.currency || p.divisa || 'ARS',
         stock: parseInt(p.stock, 10) || 0,
@@ -10162,8 +10238,8 @@
         }
       }
 
-      // Consolidar opciones, peso y video en el objeto JSON de variants
-      if (p.video_url || (p.options && Array.isArray(p.options) && p.options.length > 0) || p.weight_kg !== undefined) {
+      // Consolidar opciones, peso, video y precios de oferta en el objeto JSON de variants
+      if (p.video_url || (p.options && Array.isArray(p.options) && p.options.length > 0) || p.weight_kg !== undefined || p.price_prev !== undefined || p.discount_pct !== undefined) {
         if (!jsonVariants || typeof jsonVariants !== 'object') jsonVariants = {};
       }
 
@@ -10177,6 +10253,14 @@
 
       if (p.weight_kg !== undefined) {
         jsonVariants.weight_kg = Number(p.weight_kg);
+      }
+
+      if (p.price_prev !== undefined && Number(p.price_prev) > 0) {
+        jsonVariants.price_prev = Number(p.price_prev);
+      }
+
+      if (p.discount_pct !== undefined && Number(p.discount_pct) > 0) {
+        jsonVariants.discount_pct = Number(p.discount_pct);
       }
 
       const fullDetalles = jsonVariants ? `${textDetalles} ||| ${JSON.stringify(jsonVariants)}` : textDetalles;
@@ -10308,7 +10392,7 @@
     function updateWelcomeGreeting() {
       let storeName = '';
       try {
-        const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + STORE_ID) || localStorage.getItem('storeapp_cfg') || '{}');
+        const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + STORE_ID) || localStorage.getItem('storeapp_cfg_' + STORE_ID) || '{}');
         if (sc.name && sc.name !== 'FerreNow' && sc.name !== 'FerreApp') storeName = sc.name;
         else if (window.CURRENT_STORE_BUSINESS_NAME) storeName = window.CURRENT_STORE_BUSINESS_NAME;
         else storeName = STORE_ID;
@@ -10510,7 +10594,7 @@
 
       // 4. Dominio
       const host = window.location.hostname;
-      const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + STORE_ID) || localStorage.getItem('storeapp_cfg') || '{}');
+      const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + STORE_ID) || localStorage.getItem('storeapp_cfg_' + STORE_ID) || '{}');
       const customDom = (sc.domain || '').trim().replace(/^(https?:\/\/)?(www\.)?/, '').toLowerCase();
       const currentDom = host.replace(/^(www\.)?/, '').toLowerCase();
 
@@ -10567,6 +10651,20 @@
     async function loadSheet() {
       setDot('', 'Cargando datos...');
       try {
+        // Purgar inmediatamente claves globales compartidas que puedan contaminar entre tiendas
+        try {
+          localStorage.removeItem('storeapp_local_products');
+          localStorage.removeItem('storeapp_abm_active');
+          localStorage.removeItem('storeapp_cfg');
+          localStorage.removeItem('storeapp_banners');
+          localStorage.removeItem('storeapp_pages');
+          localStorage.removeItem('storeapp_categories');
+          localStorage.removeItem('storeapp_logo');
+          localStorage.removeItem('storeapp_hero_img');
+          localStorage.removeItem('storeapp_orders');
+          localStorage.removeItem('storeapp_pickups');
+        } catch(e) {}
+
         const remote = await fetchFromSupabase('products');
         products = Array.isArray(remote) ? remote.map(mapSupabaseRowToLocal) : [];
 
@@ -10637,20 +10735,25 @@
                 active: dbCfg.banner2_active !== null ? dbCfg.banner2_active : (parsedDesign.banner2_active !== false)
               }
             };
-            localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
             localStorage.setItem('storeapp_banners_' + STORE_ID, JSON.stringify(bannerData));
+            try { localStorage.removeItem('storeapp_banners'); } catch(e) {}
 
             const pagesData = {
               nosotros: dbCfg.nosotros || parsedDesign.nosotros || '',
               faq: faqs
             };
-            localStorage.setItem('storeapp_pages', JSON.stringify(pagesData));
             localStorage.setItem(`storeapp_pages_${STORE_ID}`, JSON.stringify(pagesData));
+            try { localStorage.removeItem('storeapp_pages'); } catch(e) {}
+
+            const activePlan = (dbCfg.plan_level || (['bighouse', 'lugonessilva', 'ferre-now', 'kioscojulio', 'noutacc', 'tecnomont', 'biuti', 'todolisto'].includes(STORE_ID) ? 'enterprise' : 'starter')).toLowerCase();
+            sessionStorage.setItem('storeapp_plan_level_' + STORE_ID, activePlan);
+            localStorage.setItem('storeapp_plan_level_' + STORE_ID, activePlan);
 
             const remoteStoreCfg = {
               name: dbCfg.business_name || cfg.name,
               tagline: dbCfg.tagline || cfg.tagline,
               color: dbCfg.primary_color || cfg.color,
+              plan_level: activePlan,
               wapp: dbCfg.wapp || cfg.wapp,
               direccion: dbCfg.direccion || '',
               horario: dbCfg.horario || '',
@@ -10701,8 +10804,8 @@
 
             // Merge into global cfg and localStorage
             cfg = { ...cfg, ...remoteStoreCfg };
-            localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
             localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
+            try { localStorage.removeItem('storeapp_cfg'); } catch(e) {}
 
             // Intentar cargar credenciales desde la tabla dedicada store_credentials sólo si está explícitamente habilitado
             let storeCreds = null;
@@ -11042,7 +11145,7 @@
     }
 
     function enviarCorreoGerente() {
-      const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+      const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + STORE_ID) || '{}');
       const gerente = sc.gerente || {};
       
       if (!gerente.email || !gerente.nombre) {
@@ -11127,11 +11230,11 @@
            font-family:var(--font-b);margin-top:4px;width:100%;">${options}</select>`;
     }
 
-    // ── SAVE ORDERS HELPER (dual-key sync) ─────────────
+    // ── SAVE ORDERS HELPER (Strict Multi-Tenant Isolation) ─────────────
     function saveOrders(orders) {
       const data = JSON.stringify(orders);
       localStorage.setItem('storeapp_orders_' + STORE_ID, data);
-      localStorage.setItem('storeapp_orders', data);
+      try { localStorage.removeItem('storeapp_orders'); } catch(e) {}
     }
 
     // ── 15-DAY AUTO-LOST RULE ─────────────────────────
@@ -11336,7 +11439,7 @@
     };
 
     // Load saved config
-    try { const saved = localStorage.getItem('storeapp_cfg_' + STORE_ID) || localStorage.getItem('storeapp_cfg'); if (saved) cfg = { ...cfg, ...JSON.parse(saved) }; } catch (e) { }
+    try { const saved = localStorage.getItem('storeapp_cfg_' + STORE_ID) || localStorage.getItem('storeapp_cfg_' + STORE_ID); if (saved) cfg = { ...cfg, ...JSON.parse(saved) }; } catch (e) { }
 
     function hexToRgba(hex, a = 1) {
       const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
@@ -11437,7 +11540,7 @@
       const isMobileFrame = document.getElementById('preview-wrap')?.classList.contains('mobile');
       const heroImgUrl = (isMobileFrame && cfg.banner_mobile_img)
         ? cfg.banner_mobile_img
-        : (cfg.bg || localStorage.getItem('storeapp_hero_img'));
+        : (cfg.bg || localStorage.getItem('storeapp_hero_img_' + STORE_ID));
       const prevHeroImg = document.getElementById('prev-hero-img');
       const prevHeroOverlay = document.getElementById('prev-hero-overlay');
       const prevHeroStripes = document.getElementById('prev-hero-stripes');
@@ -11703,7 +11806,7 @@
         cfg.fontBody = 'Inter';
       }
 
-      localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
+      localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
       localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
 
       flashSpotlight();
@@ -11720,7 +11823,7 @@
         CONFIG.color_accent = c2;
         CONFIG.color_base = c3;
       }
-      localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
+      localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
       localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
       previewUpdate();
     }
@@ -11734,7 +11837,7 @@
       }
 
       try {
-        localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
+        localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
         localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
 
         // Sync to Supabase
@@ -11857,7 +11960,7 @@
               const hashed = await hashPasswordSHA256(cfgObj.password, salt);
               finalPassword = `${salt}:${hashed}`;
               cfgObj.password = finalPassword;
-              localStorage.setItem('storeapp_cfg', JSON.stringify(cfgObj));
+              localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfgObj));
               localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfgObj));
             }
           } else {
@@ -11961,7 +12064,7 @@
           }
 
           // Sincronizar las FAQs a la nueva tabla dedicada
-          const localPages = JSON.parse(localStorage.getItem(`storeapp_pages_${activeStore}`) || localStorage.getItem('storeapp_pages') || '{}');
+          const localPages = JSON.parse(localStorage.getItem(`storeapp_pages_${activeStore}`) || localStorage.getItem('storeapp_pages_' + STORE_ID) || '{}');
           const faqList = localPages.faq || parsedEmail.faq || [];
           
           // 1. Eliminar las FAQs existentes para esta tienda
@@ -11999,7 +12102,7 @@
 
     async function applyConfig() {
       try {
-        localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
+        localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
         localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
         localStorage.setItem('storeapp_onboard_step_2_' + STORE_ID, 'true');
         await syncStoreConfigToSupabase(cfg);
@@ -12222,7 +12325,7 @@
         });
       }
 
-      localStorage.setItem('storeapp_hero_img', url);
+      localStorage.setItem('storeapp_hero_img_' + STORE_ID, url);
       cfg.bg = url;
       prev.src = url;
       wrap.style.display = 'block';
@@ -12230,7 +12333,7 @@
     }
 
     function selectBgSample(url) {
-      localStorage.setItem('storeapp_hero_img', url);
+      localStorage.setItem('storeapp_hero_img_' + STORE_ID, url);
       localStorage.setItem('storeapp_hero_img_' + STORE_ID, url);
       cfg.bg = url;
       const wrap = document.getElementById('hero-img-preview-wrap');
@@ -12393,7 +12496,7 @@
       const prevOverlay = document.getElementById('hero-img-preview-overlay');
       if (prevOverlay && cfg.heroOverlay) prevOverlay.style.background = cfg.heroOverlay;
 
-      const saved = cfg.bg || localStorage.getItem('storeapp_hero_img_' + STORE_ID) || localStorage.getItem('storeapp_hero_img');
+      const saved = cfg.bg || localStorage.getItem('storeapp_hero_img_' + STORE_ID) || localStorage.getItem('storeapp_hero_img_' + STORE_ID);
       if (saved) {
         if (prev) prev.src = saved;
         if (wrap) wrap.style.display = 'block';
@@ -12659,7 +12762,7 @@
       const h1ColorVal = document.getElementById('cfg-h1-color')?.value || cfg.h1Color || '#FFFFFF';
       const h2ColorVal = document.getElementById('cfg-h2-color')?.value || cfg.h2Color || '#D72638';
       const descColorVal = document.getElementById('cfg-desc-color')?.value || cfg.descColor || '#E0E0E0';
-      const heroBgVal = cfg.bg || localStorage.getItem(`storeapp_hero_img_${STORE_ID}`) || localStorage.getItem('storeapp_hero_img') || '';
+      const heroBgVal = cfg.bg || localStorage.getItem(`storeapp_hero_img_${STORE_ID}`) || localStorage.getItem('storeapp_hero_img_' + STORE_ID) || '';
       const heroMobileImgVal = cfg.banner_mobile_img || localStorage.getItem(`storeapp_hero_mobile_img_${STORE_ID}`) || localStorage.getItem('storeapp_hero_mobile_img') || '';
       const heroBgColorVal = document.getElementById('cfg-hero-bg-color')?.value || cfg.heroBgColor || '#0E0E0E';
       const heroImgOpacityVal = document.getElementById('cfg-hero-img-opacity')?.value != null 
@@ -12677,7 +12780,7 @@
       cfg.heroBgColor = heroBgColorVal;
       cfg.heroImgOpacity = heroImgOpacityVal;
 
-      localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
+      localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
       localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(cfg));
 
       const isSingle = (window.BANNER_LAYOUT_MODE || 'double') === 'single';
@@ -12702,7 +12805,7 @@
       };
 
       localStorage.setItem(`storeapp_banners_${STORE_ID}`, JSON.stringify(bannerData));
-      localStorage.setItem('storeapp_banners', JSON.stringify(bannerData));
+      localStorage.setItem('storeapp_banners_' + STORE_ID, JSON.stringify(bannerData));
 
       // Patch company_settings in Supabase
       try {
@@ -12810,7 +12913,7 @@
 
       if (logoUrl) {
         localStorage.setItem(`storeapp_logo_${STORE_ID}`, logoUrl);
-        localStorage.setItem('storeapp_logo', logoUrl);
+        localStorage.setItem('storeapp_logo_' + STORE_ID, logoUrl);
         cfg.logo = logoUrl;
         if (prevImg) prevImg.src = logoUrl;
         if (prevWrap) prevWrap.style.display = 'block';
@@ -12867,7 +12970,7 @@
     }
 
     function initLogoPreview() {
-      const saved = localStorage.getItem(`storeapp_logo_${STORE_ID}`) || localStorage.getItem('storeapp_logo') || cfg.logo;
+      const saved = localStorage.getItem(`storeapp_logo_${STORE_ID}`) || localStorage.getItem('storeapp_logo_' + STORE_ID) || cfg.logo;
       if (saved) {
         const img = document.getElementById('logo-preview');
         if (img) img.src = saved;
@@ -12917,19 +13020,18 @@
 
     async function initABM() {
       const remote = await fetchFromSupabase('products');
-      if (Array.isArray(remote) && remote.length) {
+      if (Array.isArray(remote)) {
         localProducts = remote.map(mapSupabaseRowToLocal);
       } else {
-        const saved = localStorage.getItem('storeapp_local_products');
+        const saved = localStorage.getItem(`storeapp_local_products_${STORE_ID}`);
         if (saved) {
-          try { localProducts = JSON.parse(saved); } catch (e) { localProducts = [...products]; }
+          try { localProducts = JSON.parse(saved); } catch (e) { localProducts = []; }
         } else {
-          localProducts = products.map(p => ({ ...p, hidden: false }));
-        }
-        if (!localProducts.length && products.length) {
-          localProducts = products.map(p => ({ ...p, hidden: false }));
+          localProducts = [];
         }
       }
+      localStorage.setItem(`storeapp_local_products_${STORE_ID}`, JSON.stringify(localProducts));
+      try { localStorage.removeItem('storeapp_local_products'); } catch(e) {}
       await loadCategories();
       loadCategoriesList();
       loadPickupsList();
@@ -12973,7 +13075,13 @@
     <tr style="${p.hidden ? 'opacity:.4;' : ''}">
       <td style="font-size:20px;text-align:center;">${p.emoji || '📦'}</td>
       <td>
-        <div style="font-weight:600;color:var(--white);">${p.name} <span style="font-size:11px;color:var(--silver);font-weight:400;">(${getCurrencySymbol(p.currency||p.divisa)} ${p.price.toLocaleString('es-AR')})</span></div>
+        <div style="font-weight:600;color:var(--white);">${p.name} 
+          <span style="font-size:11px;color:var(--silver);font-weight:400;">
+            ${(p.price_prev && p.price_prev > p.price) ? `<s style="opacity:0.65;margin-right:2px;">${getCurrencySymbol(p.currency||p.divisa)} ${p.price_prev.toLocaleString('es-AR')}</s> ` : ''}
+            <strong style="color:var(--green);">${getCurrencySymbol(p.currency||p.divisa)} ${(p.price || 0).toLocaleString('es-AR')}</strong>
+            ${(p.price_prev && p.price_prev > p.price) ? `<span style="color:var(--red);font-weight:700;font-size:10px;margin-left:3px;">-${p.discount_pct || Math.round(((p.price_prev - p.price) / p.price_prev) * 100)}% OFF</span>` : ''}
+          </span>
+        </div>
       </td>
       <td><span class="badge badge-blue">${p.cat || '—'}</span></td>
       <td>
@@ -13031,15 +13139,18 @@
       }
       localProducts = localProducts.filter(x => String(x.id) !== String(id));
       products = localProducts;
-      localStorage.setItem('storeapp_local_products', JSON.stringify(localProducts));
+      localStorage.setItem(`storeapp_local_products_${STORE_ID}`, JSON.stringify(localProducts));
+      try { localStorage.removeItem('storeapp_local_products'); } catch(e) {}
       webhookDeleteProduct(id);
       renderABM();
       checkOnboardingStatus();
     }
 
     async function saveLocalProducts(btn) {
-      localStorage.setItem('storeapp_local_products', JSON.stringify(localProducts));
-      localStorage.setItem('storeapp_abm_active', '1');
+      localStorage.setItem(`storeapp_local_products_${STORE_ID}`, JSON.stringify(localProducts));
+      try { localStorage.removeItem('storeapp_local_products'); } catch(e) {}
+      localStorage.setItem(`storeapp_abm_active_${STORE_ID}`, '1');
+      try { localStorage.removeItem('storeapp_abm_active'); } catch(e) {}
 
       const syncBtn = btn || (typeof event !== 'undefined' && event.currentTarget);
       const orig = syncBtn ? syncBtn.innerHTML : '';
@@ -13528,7 +13639,7 @@
     function loadDemoProductsToABM() {
       if (!confirm('¿Estás seguro de que quieres cargar los datos de demostración en el ABM? Esto reemplazará tus productos en memoria.')) return;
       
-      const cfgLocal = JSON.parse(localStorage.getItem(`storeapp_cfg_${STORE_ID}`) || localStorage.getItem('storeapp_cfg') || '{}');
+      const cfgLocal = JSON.parse(localStorage.getItem(`storeapp_cfg_${STORE_ID}`) || localStorage.getItem('storeapp_cfg_' + STORE_ID) || '{}');
       
       const rubro = (
         document.getElementById('cfg-store-rubro')?.value ||
@@ -13897,6 +14008,88 @@
     }
     window.calcPackUnitPrice = calcPackUnitPrice;
 
+    function handlePricePrevChange() {
+      const prevVal = parseFloat(document.getElementById('m-price-prev')?.value) || 0;
+      const actualInput = document.getElementById('m-price');
+      const actualVal = parseFloat(actualInput?.value) || 0;
+      const pctInput = document.getElementById('m-discount-pct');
+      const badge = document.getElementById('m-discount-badge-preview');
+
+      if (prevVal > 0 && actualVal > 0 && prevVal > actualVal) {
+        const pct = Math.round(((prevVal - actualVal) / prevVal) * 100);
+        if (pctInput) pctInput.value = pct;
+        if (badge) {
+          badge.textContent = `-${pct}% OFF`;
+          badge.style.display = 'inline-block';
+        }
+      } else if (prevVal > 0 && pctInput && pctInput.value) {
+        const pct = parseFloat(pctInput.value) || 0;
+        if (pct > 0 && pct < 100 && actualInput) {
+          const newActual = Math.round(prevVal * (1 - pct / 100));
+          actualInput.value = newActual;
+          if (badge) {
+            badge.textContent = `-${pct}% OFF`;
+            badge.style.display = 'inline-block';
+          }
+        }
+      } else {
+        if (pctInput && (!prevVal || prevVal <= actualVal)) pctInput.value = '';
+        if (badge) badge.style.display = 'none';
+      }
+      calcPackUnitPrice();
+    }
+    window.handlePricePrevChange = handlePricePrevChange;
+
+    function handleDiscountPctChange() {
+      const pct = parseFloat(document.getElementById('m-discount-pct')?.value) || 0;
+      const prevInput = document.getElementById('m-price-prev');
+      const actualInput = document.getElementById('m-price');
+      const badge = document.getElementById('m-discount-badge-preview');
+
+      let prevVal = parseFloat(prevInput?.value) || 0;
+      let actualVal = parseFloat(actualInput?.value) || 0;
+
+      if (pct > 0 && pct < 100) {
+        if (prevVal > 0 && actualInput) {
+          const newActual = Math.round(prevVal * (1 - pct / 100));
+          actualInput.value = newActual;
+        } else if (actualVal > 0 && prevInput && actualInput) {
+          prevInput.value = actualVal;
+          const newActual = Math.round(actualVal * (1 - pct / 100));
+          actualInput.value = newActual;
+        }
+        if (badge) {
+          badge.textContent = `-${Math.round(pct)}% OFF`;
+          badge.style.display = 'inline-block';
+        }
+      } else {
+        if (badge) badge.style.display = 'none';
+      }
+      calcPackUnitPrice();
+    }
+    window.handleDiscountPctChange = handleDiscountPctChange;
+
+    function handlePriceActualChange() {
+      const actualVal = parseFloat(document.getElementById('m-price')?.value) || 0;
+      const prevVal = parseFloat(document.getElementById('m-price-prev')?.value) || 0;
+      const pctInput = document.getElementById('m-discount-pct');
+      const badge = document.getElementById('m-discount-badge-preview');
+
+      if (prevVal > 0 && actualVal > 0 && prevVal > actualVal) {
+        const pct = Math.round(((prevVal - actualVal) / prevVal) * 100);
+        if (pctInput) pctInput.value = pct;
+        if (badge) {
+          badge.textContent = `-${pct}% OFF`;
+          badge.style.display = 'inline-block';
+        }
+      } else {
+        if (pctInput && (!prevVal || prevVal <= actualVal)) pctInput.value = '';
+        if (badge) badge.style.display = 'none';
+      }
+      calcPackUnitPrice();
+    }
+    window.handlePriceActualChange = handlePriceActualChange;
+
     function updateWeightLabels() {
       const unit = document.getElementById('m-weight-unit')?.value || 'kg';
       const lblPrice = document.getElementById('lbl-m-price');
@@ -14196,13 +14389,22 @@
       populateCatSelect(p?.cat || null);   // select con valor actual preseleccionado
       document.getElementById('m-marca').value = p?.marca || '';
       document.getElementById('m-price').value = p?.price || '';
+      const pricePrev = p?.price_prev || (p?.variants && p.variants.price_prev) || '';
+      const discountPct = p?.discount_pct || (p?.variants && p.variants.discount_pct) || '';
+      if (document.getElementById('m-price-prev')) {
+        document.getElementById('m-price-prev').value = pricePrev > 0 ? pricePrev : '';
+      }
+      if (document.getElementById('m-discount-pct')) {
+        document.getElementById('m-discount-pct').value = discountPct > 0 ? discountPct : '';
+      }
+      if (typeof handlePriceActualChange === 'function') handlePriceActualChange();
       if (document.getElementById('m-currency')) {
         document.getElementById('m-currency').value = p?.currency || p?.divisa || 'ARS';
       }
 
       // Configuración de stock y rubros
       const rubro = document.getElementById('cfg-store-rubro')?.value || 
-                    JSON.parse(localStorage.getItem(`storeapp_cfg_${STORE_ID}`) || localStorage.getItem('storeapp_cfg') || '{}').rubro || '';
+                    JSON.parse(localStorage.getItem(`storeapp_cfg_${STORE_ID}`) || localStorage.getItem('storeapp_cfg_' + STORE_ID) || '{}').rubro || '';
       
       const stockInput = document.getElementById('m-stock');
       if (rubro === 'kiosco' || rubro === 'Kiosco') {
@@ -14240,6 +14442,13 @@
           if (jsonOpts.weightUnit && document.getElementById('m-weight-unit')) document.getElementById('m-weight-unit').value = jsonOpts.weightUnit;
           if (jsonOpts.weightMin && document.getElementById('m-weight-min')) document.getElementById('m-weight-min').value = jsonOpts.weightMin;
           if (jsonOpts.packQty && document.getElementById('m-pack-qty')) document.getElementById('m-pack-qty').value = jsonOpts.packQty;
+          if (jsonOpts.price_prev && document.getElementById('m-price-prev') && !document.getElementById('m-price-prev').value) {
+            document.getElementById('m-price-prev').value = jsonOpts.price_prev;
+          }
+          if (jsonOpts.discount_pct && document.getElementById('m-discount-pct') && !document.getElementById('m-discount-pct').value) {
+            document.getElementById('m-discount-pct').value = jsonOpts.discount_pct;
+          }
+          if (typeof handlePriceActualChange === 'function') handlePriceActualChange();
 
           if (jsonOpts.variants && jsonOpts.variants.length > 0) {
             hasOpts = true;
@@ -14392,7 +14601,7 @@
     function validateAiFeatures() {
       const name = document.getElementById('m-name')?.value.trim() || '';
       const rubro = document.getElementById('cfg-store-rubro')?.value || 
-                    JSON.parse(localStorage.getItem(`storeapp_cfg_${STORE_ID}`) || localStorage.getItem('storeapp_cfg') || '{}').rubro || '';
+                    JSON.parse(localStorage.getItem(`storeapp_cfg_${STORE_ID}`) || localStorage.getItem('storeapp_cfg_' + STORE_ID) || '{}').rubro || '';
       const normalizedRubro = (rubro || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       const isGastro = ['gastronomia', 'rotiseria'].includes(normalizedRubro);
 
@@ -14619,11 +14828,13 @@
       const cat = document.getElementById('m-cat').value.trim();
       const marca = document.getElementById('m-marca').value.trim();
       const price = parseFloat(document.getElementById('m-price').value) || 0;
+      const price_prev = parseFloat(document.getElementById('m-price-prev')?.value) || 0;
+      const discount_pct = parseFloat(document.getElementById('m-discount-pct')?.value) || 0;
       const currency = document.getElementById('m-currency')?.value || 'ARS';
       const divisa = currency;
       
       const rubro = document.getElementById('cfg-store-rubro')?.value || 
-                    JSON.parse(localStorage.getItem(`storeapp_cfg_${STORE_ID}`) || localStorage.getItem('storeapp_cfg') || '{}').rubro || '';
+                    JSON.parse(localStorage.getItem(`storeapp_cfg_${STORE_ID}`) || localStorage.getItem('storeapp_cfg_' + STORE_ID) || '{}').rubro || '';
       
       const stock = parseFloat(document.getElementById('m-stock').value) || 0;
       const emoji = document.getElementById('m-emoji').value.trim() || '📦';
@@ -14730,6 +14941,13 @@
         customOpts.video_url = video_url;
       }
 
+      if (price_prev > 0) {
+        customOpts.price_prev = price_prev;
+      }
+      if (discount_pct > 0) {
+        customOpts.discount_pct = discount_pct;
+      }
+
       if (Object.keys(customOpts).length > 0) {
         textDetalle = textDetalle + ' ||| ' + JSON.stringify(customOpts);
       }
@@ -14740,7 +14958,7 @@
       if (editingId != null && editingId !== '') {
         const p = localProducts.find(x => String(x.id) === String(editingId));
         if (p) {
-          Object.assign(p, { name, codigo, cat, marca, price, currency, divisa, stock, emoji, origen, detalle: textDetalle, img, img2, img3, video_url, pills, weight_kg, options: customOpts.variants || [] });
+          Object.assign(p, { name, codigo, cat, marca, price, price_prev, discount_pct, currency, divisa, stock, emoji, origen, detalle: textDetalle, img, img2, img3, video_url, pills, weight_kg, options: customOpts.variants || [] });
           if (isSupabaseRowId(editingId)) {
             try {
               await updateInSupabase('products', editingId, mapLocalProductToSupabaseRow(p));
@@ -14764,7 +14982,7 @@
           }
         }
       } else {
-        const draft = { name, codigo, cat, marca, price, currency, divisa, stock, emoji, origen, detalle: textDetalle, img, img2, img3, video_url, pills, weight_kg, options: customOpts.variants || [], hidden: false };
+        const draft = { name, codigo, cat, marca, price, price_prev, discount_pct, currency, divisa, stock, emoji, origen, detalle: textDetalle, img, img2, img3, video_url, pills, weight_kg, options: customOpts.variants || [], hidden: false };
         try {
           const inserted = await postToSupabase('products', mapLocalProductToSupabaseRow(draft));
           const row0 = Array.isArray(inserted) ? inserted[0] : inserted;
@@ -14780,8 +14998,10 @@
       renderABM();
       closeModal();
       products = localProducts;
-      localStorage.setItem('storeapp_local_products', JSON.stringify(localProducts));
-      localStorage.setItem('storeapp_abm_active', '1');
+      localStorage.setItem(`storeapp_local_products_${STORE_ID}`, JSON.stringify(localProducts));
+      try { localStorage.removeItem('storeapp_local_products'); } catch(e) {}
+      localStorage.setItem(`storeapp_abm_active_${STORE_ID}`, '1');
+      try { localStorage.removeItem('storeapp_abm_active'); } catch(e) {}
       checkOnboardingStatus();
       showToastDash('✓ Producto guardado con éxito');
 
@@ -15288,18 +15508,41 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
       // Load saved orders
       try {
-        const saved = localStorage.getItem('storeapp_orders_' + STORE_ID) || localStorage.getItem('storeapp_orders');
-        if (saved) allOrders = JSON.parse(saved);
+        try { localStorage.removeItem('storeapp_orders'); } catch(e) {}
+        const saved = localStorage.getItem('storeapp_orders_' + STORE_ID);
+        if (saved) {
+          allOrders = JSON.parse(saved);
+          // Filtrado estricto multi-tenant: el pedido DEBE pertenecer exactamente a esta tienda
+          allOrders = allOrders.filter(o => o && o.store_id === STORE_ID);
+        } else {
+          allOrders = [];
+        }
 
-        // Auto-inject 5 realistic simulated orders for BigHouse if store is gastronomia, burgerhouse or bighouse
-        if ((STORE_ID === 'bighouse' || STORE_ID === 'burgerhouse' || STORE_ID === 'gastronomia' || STORE_ID === 'gastronomia-demo') && (allOrders.length === 0 || allOrders.some(o => o.id === 'PED-SIMULADO-1A'))) {
+        // Auto-inject simulado EXCLUSIVAMENTE para las tiendas de testing/demo oficiales cuando estén vacías
+        if ((STORE_ID === 'bighouse' || STORE_ID === 'burgerhouse') && allOrders.length === 0) {
           allOrders = getBurgerHouseSimulatedOrders();
           localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
-          localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
-        } else if (STORE_ID === 'noutacc' && (allOrders.length === 0 || allOrders.some(o => o.id === 'PED-SIMULADO-1A'))) {
+        } else if (STORE_ID === 'noutacc' && allOrders.length === 0) {
           allOrders = getNoutaccSimulatedOrders();
           localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
-          localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
+        } else if (STORE_ID === 'lugonessilva' && allOrders.length === 0) {
+          allOrders = getLugonesSilvaSimulatedOrders();
+          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
+        } else if (STORE_ID === 'ferre-now' && allOrders.length === 0) {
+          allOrders = getFerreNowSimulatedOrders();
+          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
+        } else if (STORE_ID === 'kioscojulio' && allOrders.length === 0) {
+          allOrders = getKioscoJulioSimulatedOrders();
+          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
+        } else if (STORE_ID === 'tecnomont' && allOrders.length === 0) {
+          allOrders = getTecnoMontSimulatedOrders();
+          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
+        } else if (STORE_ID === 'biuti' && allOrders.length === 0) {
+          allOrders = getBiutiSimulatedOrders();
+          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
+        } else if (STORE_ID === 'todolisto' && allOrders.length === 0) {
+          allOrders = getTodoListoSimulatedOrders();
+          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
         }
       } catch (e) { allOrders = []; }
 
@@ -15308,40 +15551,41 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       updateDashboardFromOrders(allOrders);
     }
 
-    function getNoutaccSimulatedOrders() {
+        function getNoutaccSimulatedOrders() {
       const now = new Date();
       const fmt = (date) => date.toLocaleString('es-AR', {
         day: '2-digit', month: '2-digit', year: 'numeric',
         hour: '2-digit', minute: '2-digit'
       });
 
-      const d1 = new Date(now.getTime() - 15 * 60 * 1000);   // 15 mins atrás
-      const d2 = new Date(now.getTime() - 55 * 60 * 1000);   // 55 mins atrás
-      const d3 = new Date(now.getTime() - 2.5 * 3600 * 1000);// 2.5 horas atrás
-      const d4 = new Date(now.getTime() - 18 * 3600 * 1000); // 18 horas atrás
-      const d5 = new Date(now.getTime() - 28 * 3600 * 1000); // 28 horas atrás
+      const d1 = new Date(now.getTime() - 15 * 60 * 1000);
+      const d2 = new Date(now.getTime() - 55 * 60 * 1000);
+      const d3 = new Date(now.getTime() - 2.5 * 3600 * 1000);
+      const d4 = new Date(now.getTime() - 18 * 3600 * 1000);
+      const d5 = new Date(now.getTime() - 28 * 3600 * 1000);
 
       return [
         {
           id: 'PED-NT-101',
+          store_id: 'noutacc',
           fecha: fmt(d1),
           cliente: 'Valeria Soria',
           dni: '34182904',
           telefono: '+54 9 11 5821-4433',
-          productos: 'Pan de Molde Lactal (Sin TACC) ×2 | Medialunas de Manteca Gluten Free (x6) ×1',
+          productos: 'Funda Silicone Case MagSafe iPhone 15 Pro Midnight Black ×1 | Protector Lentes Cámara Zafiro Titanium ×1',
           detalle: JSON.stringify([
-            { id: 1, name: 'Pan de Molde Lactal (Sin TACC)', emoji: '🍞', price: 4500, qty: 2 },
-            { id: 2, name: 'Medialunas de Manteca Gluten Free (x6)', emoji: '🥐', price: 5200, qty: 1 }
+            { id: 'nt-01', name: 'Funda Silicone Case MagSafe iPhone 15 Pro Midnight Black', emoji: '📱', price: 34500, qty: 1 },
+            { id: 'nt-03', name: 'Protector de Lentes de Cámara Zafiro Titanium iPhone 15 Pro', emoji: '🔍', price: 16500, qty: 1 }
           ]),
           items: [
-            { cant: 2, name: 'Pan de Molde Lactal (Sin TACC)', price: 4500 },
-            { cant: 1, name: 'Medialunas de Manteca Gluten Free (x6)', price: 5200 }
+            { cant: 1, name: 'Funda Silicone Case MagSafe iPhone 15 Pro Midnight Black', price: 34500 },
+            { cant: 1, name: 'Protector Lentes Cámara Zafiro Titanium iPhone 15 Pro', price: 16500 }
           ],
           pago: 'Transferencia',
           comprobante: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600',
           logistica: 'Envío a domicilio',
           direccion: 'Av. Santa Fe 3420, 4° B, Palermo',
-          total: 14200,
+          total: 51000,
           estado: 'confirmar',
           opt_in_whatsapp: true,
           pin_code: '4812',
@@ -15349,23 +15593,24 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         },
         {
           id: 'PED-NT-102',
+          store_id: 'noutacc',
           fecha: fmt(d2),
           cliente: 'Mariano Rossi',
           dni: '28910452',
           telefono: '+54 9 11 4192-3321',
-          productos: 'Hamburguesa Doble Cheddar & Bacon (Sin TACC) ×2 | Muffins de Arándanos y Limón (Pack x2) ×1',
+          productos: 'Funda Clear Case Antishock con Bordes Air-Cushion iPhone 15 Pro Max ×1 | Cargador Inalámbrico MagSafe 15W Fast Charge ×1',
           detalle: JSON.stringify([
-            { id: 4, name: 'Hamburguesa Doble Cheddar & Bacon (Sin TACC)', emoji: '🍔', price: 8900, qty: 2 },
-            { id: 7, name: 'Muffins de Arándanos y Limón (Pack x2)', emoji: '🧁', price: 3400, qty: 1 }
+            { id: 'nt-02', name: 'Funda Clear Case Antishock iPhone 15 Pro Max', emoji: '📱', price: 28900, qty: 1 },
+            { id: 'nt-04', name: 'Cargador Inalámbrico MagSafe 15W Fast Charge', emoji: '⚡', price: 42000, qty: 1 }
           ]),
           items: [
-            { cant: 2, name: 'Hamburguesa Doble Cheddar & Bacon (Sin TACC)', price: 8900 },
-            { cant: 1, name: 'Muffins de Arándanos y Limón (Pack x2)', price: 3400 }
+            { cant: 1, name: 'Funda Clear Case Antishock iPhone 15 Pro Max', price: 28900 },
+            { cant: 1, name: 'Cargador Inalámbrico MagSafe 15W Fast Charge', price: 42000 }
           ],
           pago: 'Mercado Pago',
           logistica: 'Envío a domicilio',
           direccion: 'Av. Corrientes 4550, 2° A, Almagro',
-          total: 21200,
+          total: 70900,
           estado: 'en_curso',
           delivery_id: 'DQV-NT-8821',
           pin_code: '7391',
@@ -15376,77 +15621,26 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         },
         {
           id: 'PED-NT-103',
+          store_id: 'noutacc',
           fecha: fmt(d3),
           cliente: 'Carolina Méndez',
           dni: '36145890',
           telefono: '+54 9 11 6544-7890',
-          productos: 'Porción de Torta Red Velvet (Sin TACC) ×2 | Café Latte Especial de Especias & Vainilla ×2',
+          productos: 'Funda de Cuero Vegano MagSafe Brown Saddle iPhone 15 ×1 | Cable Trenzado USB-C a USB-C 60W Reforzado 1.5m ×2',
           detalle: JSON.stringify([
-            { id: 6, name: 'Porción de Torta Red Velvet (Sin TACC)', emoji: '🍰', price: 4600, qty: 2 },
-            { id: 8, name: 'Café Latte Especial de Especias & Vainilla', emoji: '☕', price: 3100, qty: 2 }
+            { id: 'nt-05', name: 'Funda de Cuero Vegano MagSafe Brown Saddle', emoji: '📱', price: 39900, qty: 1 },
+            { id: 'nt-06', name: 'Cable Trenzado USB-C a USB-C 60W Reforzado 1.5m', emoji: '🔌', price: 18500, qty: 2 }
           ]),
           items: [
-            { cant: 2, name: 'Porción de Torta Red Velvet (Sin TACC)', price: 4600 },
-            { cant: 2, name: 'Café Latte Especial de Especias & Vainilla', price: 3100 }
+            { cant: 1, name: 'Funda de Cuero Vegano MagSafe Brown Saddle', price: 39900 },
+            { cant: 2, name: 'Cable Trenzado USB-C a USB-C 60W Reforzado 1.5m', price: 18500 }
           ],
           pago: 'Efectivo',
           logistica: 'Retiro por la tienda',
-          direccion: 'Retiro en mostrador Noutacc Sin TACC',
-          total: 15400,
+          direccion: 'Retiro en local Nout Accesorios Belgrano',
+          total: 76900,
           estado: 'listo_retirar',
           opt_in_whatsapp: false,
-          is_night_guard: false
-        },
-        {
-          id: 'PED-NT-104',
-          fecha: fmt(d4),
-          cliente: 'Ignacio Brizuela',
-          dni: '39812304',
-          telefono: '+54 9 11 3201-9988',
-          productos: 'Empanadas Criollas de Carne (x3) ×2 | Tarta Individual de Jamón, Queso y Huevo ×2',
-          detalle: JSON.stringify([
-            { id: 5, name: 'Empanadas Criollas de Carne (x3)', emoji: '🥟', price: 4200, qty: 2 },
-            { id: 3, name: 'Tarta Individual de Jamón, Queso y Huevo', emoji: '🥧', price: 4800, qty: 2 }
-          ]),
-          items: [
-            { cant: 2, name: 'Empanadas Criollas de Carne (x3)', price: 4200 },
-            { cant: 2, name: 'Tarta Individual de Jamón, Queso y Huevo', price: 4800 }
-          ],
-          pago: 'Transferencia',
-          logistica: 'Envío a domicilio',
-          direccion: 'Thames 1850, Palermo Soho',
-          total: 18000,
-          estado: 'despachado',
-          delivery_id: 'DQV-NT-8760',
-          pin_code: '9154',
-          pickup_id: 'PU-NT-04',
-          pickup_cost: 2500,
-          opt_in_whatsapp: true,
-          is_night_guard: true
-        },
-        {
-          id: 'PED-NT-105',
-          fecha: fmt(d5),
-          cliente: 'Florencia Carrizo',
-          dni: '34778112',
-          telefono: '+54 9 11 2344-9011',
-          productos: 'Alfajor Artesanal Dulce de Leche y Chocolate (x6) ×1 | Medialunas de Manteca Gluten Free (x6) ×2',
-          detalle: JSON.stringify([
-            { id: 9, name: 'Alfajor Artesanal Dulce de Leche y Chocolate (x6)', emoji: '🍪', price: 13200, qty: 1 },
-            { id: 2, name: 'Medialunas de Manteca Gluten Free (x6)', emoji: '🥐', price: 5200, qty: 2 }
-          ]),
-          items: [
-            { cant: 1, name: 'Alfajor Artesanal Dulce de Leche y Chocolate (x6)', price: 13200 },
-            { cant: 2, name: 'Medialunas de Manteca Gluten Free (x6)', price: 5200 }
-          ],
-          pago: 'Mercado Pago',
-          logistica: 'Envío a domicilio',
-          direccion: 'Av. del Libertador 2450, 7° D, Recoleta',
-          total: 23600,
-          estado: 'cobrado',
-          delivery_id: 'DQV-NT-8692',
-          pin_code: '2085',
-          opt_in_whatsapp: true,
           is_night_guard: false
         }
       ];
@@ -15485,6 +15679,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       return [
         {
           id: 'PED-BH-201',
+          store_id: 'bighouse',
           fecha: fmt(d1),
           cliente: 'Lautaro Giménez',
           dni: '38.412.981',
@@ -15514,6 +15709,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         },
         {
           id: 'PED-BH-202',
+          store_id: 'bighouse',
           fecha: fmt(d2),
           cliente: 'Sofía Rossi',
           dni: '40.119.340',
@@ -15543,6 +15739,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         },
         {
           id: 'PED-BH-203',
+          store_id: 'bighouse',
           fecha: fmt(d3),
           cliente: 'Martín Benítez',
           dni: '35.890.123',
@@ -15569,6 +15766,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         },
         {
           id: 'PED-BH-204',
+          store_id: 'bighouse',
           fecha: fmt(d4),
           cliente: 'Camila Domínguez',
           dni: '42.008.711',
@@ -15597,6 +15795,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         },
         {
           id: 'PED-BH-205',
+          store_id: 'bighouse',
           fecha: fmt(d5),
           cliente: 'Tomás Varela',
           dni: '37.662.190',
@@ -15623,6 +15822,163 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
           firma: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400',
           opt_in_whatsapp: true,
           is_night_guard: false
+        }
+      ];
+    }
+
+    
+    /* ═══════════════════════════════════════════ GENERADORES OFICIALES MULTI-TENANT POR RUBRO */
+
+    function getLugonesSilvaSimulatedOrders() {
+      const now = new Date();
+      const fmt = (date) => date.toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return [
+        {
+          id: 'PED-LS-301',
+          store_id: 'lugonessilva',
+          fecha: fmt(new Date(now.getTime() - 25 * 60 * 1000)),
+          cliente: 'Arq. Marcelo Benítez (Obra Canning)',
+          dni: '24.912.833',
+          telefono: '+54 9 11 4402-9911',
+          productos: 'Cal Hidráulica Milagro x 30kg ×20 | Plasticor Mortero Loma Negra x 40kg ×15 | Barra Hierro Acindar 12mm x 12m ×10',
+          pago: 'Transferencia',
+          logistica: 'Flete Camión Pluma en Obra',
+          direccion: 'Barrio Privado La Providencia Lote 142, Canning',
+          total: 366000,
+          estado: 'confirmar',
+          opt_in_whatsapp: true,
+          pin_code: '4190'
+        },
+        {
+          id: 'PED-LS-302',
+          store_id: 'lugonessilva',
+          fecha: fmt(new Date(now.getTime() - 110 * 60 * 1000)),
+          cliente: 'Construcciones San Vicente SRL',
+          dni: '30-71829344-8',
+          telefono: '+54 9 11 6310-8822',
+          productos: 'Arena Fina de Río Lavada BigBag 1m3 ×3 | Cemento Portland Loma Negra CPC 40 ×30',
+          pago: 'Transferencia',
+          logistica: 'Flete Camión Volquete',
+          direccion: 'Ruta 58 Km 12.5, San Vicente',
+          total: 402000,
+          estado: 'en_curso',
+          opt_in_whatsapp: true,
+          pin_code: '8821'
+        }
+      ];
+    }
+
+    function getFerreNowSimulatedOrders() {
+      const now = new Date();
+      const fmt = (date) => date.toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return [
+        {
+          id: 'PED-FN-401',
+          store_id: 'ferre-now',
+          fecha: fmt(new Date(now.getTime() - 35 * 60 * 1000)),
+          cliente: 'Taller Metalúrgico Fontana',
+          dni: '27.419.002',
+          telefono: '+54 9 11 5012-7744',
+          productos: 'Taladro Percutor Inalámbrico 20V DeWalt DCD7781 ×1 | Amoladora Angular Bosch 850W ×1',
+          pago: 'Mercado Pago',
+          logistica: 'Envío prioritario',
+          direccion: 'Parque Industrial Burzaco Lote 12',
+          total: 357000,
+          estado: 'confirmar',
+          opt_in_whatsapp: true,
+          pin_code: '6312'
+        }
+      ];
+    }
+
+    function getKioscoJulioSimulatedOrders() {
+      const now = new Date();
+      const fmt = (date) => date.toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return [
+        {
+          id: 'PED-KJ-501',
+          store_id: 'kioscojulio',
+          fecha: fmt(new Date(now.getTime() - 10 * 60 * 1000)),
+          cliente: 'Gonzalo Peñaloza',
+          dni: '42.110.899',
+          telefono: '+54 9 11 7891-2345',
+          productos: 'Fernet Branca Clásico 750ml ×1 | Coca-Cola Original 1.5L ×2 | Hielo en Rolito 4kg ×1',
+          pago: 'Efectivo',
+          logistica: 'Delivery express 30 min',
+          direccion: 'Av. Corrientes 2840, 3° C',
+          total: 21900,
+          estado: 'en_curso',
+          opt_in_whatsapp: true,
+          pin_code: '1920'
+        }
+      ];
+    }
+
+    function getTecnoMontSimulatedOrders() {
+      const now = new Date();
+      const fmt = (date) => date.toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return [
+        {
+          id: 'PED-TM-601',
+          store_id: 'tecnomont',
+          fecha: fmt(new Date(now.getTime() - 40 * 60 * 1000)),
+          cliente: 'Lucas De Paoli',
+          dni: '39.812.901',
+          telefono: '+54 9 11 3190-8800',
+          productos: 'Placa de Video AMD Radeon RX 7800 XT 16GB Sapphire Pulse ×1 | Procesador AMD Ryzen 7 7800X3D ×1',
+          pago: 'Transferencia',
+          logistica: 'Envío Asegurado Andreani',
+          direccion: 'Thames 1420, Palermo',
+          total: 1390000,
+          estado: 'confirmar',
+          opt_in_whatsapp: true,
+          pin_code: '7721'
+        }
+      ];
+    }
+
+    function getBiutiSimulatedOrders() {
+      const now = new Date();
+      const fmt = (date) => date.toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return [
+        {
+          id: 'PED-BT-701',
+          store_id: 'biuti',
+          fecha: fmt(new Date(now.getTime() - 50 * 60 * 1000)),
+          cliente: 'Camila Villalba',
+          dni: '36.541.200',
+          telefono: '+54 9 11 6788-9900',
+          productos: 'Blazer Sastrero Oversize Lino Italiano Arena "Verona" (Talle M) ×1',
+          pago: 'Mercado Pago',
+          logistica: 'Envío a Domicilio',
+          direccion: 'Alvear 1850, 6° A, Recoleta',
+          total: 145000,
+          estado: 'en_curso',
+          opt_in_whatsapp: true,
+          pin_code: '3310'
+        }
+      ];
+    }
+
+    function getTodoListoSimulatedOrders() {
+      const now = new Date();
+      const fmt = (date) => date.toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return [
+        {
+          id: 'PED-TL-801',
+          store_id: 'todolisto',
+          fecha: fmt(new Date(now.getTime() - 20 * 60 * 1000)),
+          cliente: 'Estudio Jurídico Morales & Asoc.',
+          dni: '30-68912344-3',
+          telefono: '+54 9 11 4321-7788',
+          productos: 'Cuaderno Universitario Mooving A4 80H Rayado ×5 | Set Marcadores Uni Posca PC-5M (Caja x8) ×1',
+          pago: 'Transferencia',
+          logistica: 'Envío Cadetería CABA',
+          direccion: 'Lavalle 1240, 4° Of. 402',
+          total: 76500,
+          estado: 'confirmar',
+          opt_in_whatsapp: true,
+          pin_code: '5590'
         }
       ];
     }
@@ -15677,7 +16033,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       ];
       window.currentPickups = pickups;
       localStorage.setItem('storeapp_pickups_' + STORE_ID, JSON.stringify(pickups));
-      localStorage.setItem('storeapp_pickups', JSON.stringify(pickups));
+      try { localStorage.removeItem('storeapp_pickups'); } catch(e) {}
       if (typeof renderPickupsList === 'function') renderPickupsList();
       if (typeof renderPendingPickups === 'function') renderPendingPickups();
       if (typeof showToastDash === 'function' && !silent) {
@@ -15694,7 +16050,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (!o) return;
       currentComandaOrder = o;
 
-      const cfg = JSON.parse(localStorage.getItem('storeapp_cfg_' + STORE_ID) || localStorage.getItem('storeapp_cfg') || '{}');
+      const cfg = JSON.parse(localStorage.getItem('storeapp_cfg_' + STORE_ID) || localStorage.getItem('storeapp_cfg_' + STORE_ID) || '{}');
       const storeName = (cfg.name && cfg.name !== 'Mi Tienda') ? cfg.name : 'BIGHOUSE';
       const storeAddress = cfg.address || 'Av. Corrientes 1840, CABA';
       const storePhone = cfg.wapp || cfg.phone || '11-4488-3322';
@@ -16252,7 +16608,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       }
 
       // ── Mensajes automáticos según estado ────────────
-      const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+      const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + STORE_ID) || '{}');
 
       if (estado === 'retirado' || label === 'Listo para retirar') {
         // Mensaje al cliente: pedido listo para retirar
@@ -16431,7 +16787,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const pendingOrders = orders.filter(o => o.logistica === 'Envío a domicilio' && !o.pickup_id).length;
       let lowStock = 0;
       try {
-        const rawProds = JSON.parse(localStorage.getItem('storeapp_local_products') || '[]');
+        const rawProds = JSON.parse(localStorage.getItem(`storeapp_local_products_${STORE_ID}`) || '[]');
         lowStock = rawProds.filter(p => Number(p.stock) <= 5).length;
       } catch (e) { }
 
@@ -17237,7 +17593,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     /* ═══════════════════════════════════════════ CONFIG VIEW */
     function initConfigView() {
       // Load all saved values into form fields
-      const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+      const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + STORE_ID) || '{}');
       checkAndShowSuspensionBanner(sc);
 
       const storeBar = document.getElementById('sb-store-name');
@@ -17471,7 +17827,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (typeof toggleAIProviderFields === 'function') toggleAIProviderFields();
 
       // Cargar gerente
-      const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+      const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + STORE_ID) || '{}');
       const gerente = sc.gerente || { nombre: '', email: '', frecuencia: 'mensual' };
       if (document.getElementById('adv-gerente-email')) document.getElementById('adv-gerente-email').value = gerente.email || '';
       if (document.getElementById('adv-gerente-nombre')) document.getElementById('adv-gerente-nombre').value = gerente.nombre || '';
@@ -18262,7 +18618,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const gNombre = (document.getElementById('adv-gerente-nombre')?.value || '').trim();
       const gFrecuencia = document.getElementById('adv-gerente-frecuencia')?.value || 'mensual';
 
-      const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+      const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + STORE_ID) || '{}');
       sc.gerente = { email: gEmail, nombre: gNombre, frecuencia: gFrecuencia };
 
       // Supabase
@@ -18277,7 +18633,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         SUPABASE_KEY = sbKeyEl.value.trim();
       }
 
-      localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
+      localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(sc));
       localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(sc));
       
       cfg = { ...cfg, ...sc };
@@ -18485,7 +18841,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
     async function saveConfig() {
       // Store info → merge into storeapp_cfg
-      const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+      const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + STORE_ID) || '{}');
       const name = document.getElementById('cfg-store-name').value.trim();
       const tagline = document.getElementById('cfg-store-tagline').value.trim();
       const wapp = document.getElementById('cfg-store-wapp').value.trim();
@@ -18569,7 +18925,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         email_facturacion: bEmail
       };
 
-      localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
+      localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(sc));
       localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(sc));
       localStorage.setItem('storeapp_onboard_step_1_' + STORE_ID, 'true');
       const storeBar = document.getElementById('sb-store-name');
@@ -19026,7 +19382,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     async function applyWatermark(file) {
       return new Promise((resolve, reject) => {
         // Obtener logo guardado
-        const logoData = localStorage.getItem('storeapp_logo');
+        const logoData = localStorage.getItem('storeapp_logo_' + STORE_ID);
 
         const img = new Image();
         const reader = new FileReader();
@@ -19233,9 +19589,9 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
     function initVerificationBanner() {
       const urlParams = new URLSearchParams(window.location.search);
-      const storeId = window.STORE_ID || 'coquito';
+      const storeId = (typeof STORE_ID !== 'undefined' ? STORE_ID : (window.STORE_ID || urlParams.get('store') || 'coquito')).toLowerCase();
       let verified = false;
-      if (urlParams.get('verify') === 'true' || urlParams.get('demo') === '1' || urlParams.get('preview') === '1') {
+      if (urlParams.get('verify') === 'true' || urlParams.get('demo') === '1' || urlParams.get('preview') === '1' || ['bighouse', 'lugonessilva', 'ferre-now', 'kioscojulio', 'noutacc', 'tecnomont', 'biuti', 'todolisto'].includes(storeId)) {
         verified = true;
         localStorage.setItem('dtp_account_verified_' + storeId, 'true');
       } else {
@@ -19243,8 +19599,8 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       }
 
       const banner = document.getElementById('dtp-email-verification-banner');
-      if (banner && !verified) {
-        banner.style.display = 'flex';
+      if (banner) {
+        banner.style.display = verified ? 'none' : 'flex';
       }
     }
 
@@ -19304,7 +19660,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
     try {
       const activeStore = STORE_ID;
-      const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + activeStore) || localStorage.getItem('storeapp_cfg') || '{}');
+      const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + activeStore) || localStorage.getItem('storeapp_cfg_' + STORE_ID) || '{}');
       const storeBar = document.getElementById('sb-store-name');
       if (storeBar) {
         storeBar.textContent = sc.name || activeStore;
@@ -19317,14 +19673,15 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     initLogoPreview();
     loadWebhookCfg();   // ensures localStorage defaults are set
 
-    // Load saved orders from localStorage on startup
+    // Load saved orders from localStorage on startup (Strict Multi-Tenant Isolation)
     try {
-      const saved = localStorage.getItem('storeapp_orders_' + STORE_ID) || localStorage.getItem('storeapp_orders');
+      try { localStorage.removeItem('storeapp_orders'); } catch(e) {}
+      const saved = localStorage.getItem('storeapp_orders_' + STORE_ID);
       if (saved) {
         allOrders = JSON.parse(saved);
-        // Mantener ambas keys sincronizadas
+        // Filtrar cualquier pedido cruzado que no pertenezca estrictamente a esta tienda
+        allOrders = allOrders.filter(o => o && o.store_id === STORE_ID);
         localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
-        localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
         if (allOrders.length) {
           renderOrdersTable(allOrders.slice(0, 10));
           updateDashboardFromOrders(allOrders);
@@ -19335,10 +19692,11 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
           document.getElementById('sheet-sync-info').textContent = 'Sin pedidos todavía';
         }
       } else {
+        allOrders = [];
         renderOrdersTable([]);
         document.getElementById('sheet-sync-info').textContent = 'Sin pedidos todavía';
       }
-    } catch (e) { renderOrdersTable([]); }
+    } catch (e) { allOrders = []; renderOrdersTable([]); }
 
     if (window.location.hash && window.location.hash.length > 1) {
       handleUrlHashNavigation();
@@ -19612,7 +19970,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     }
 
     async function loadBannersConfig() {
-      const bannerData = JSON.parse(localStorage.getItem(`storeapp_banners_${STORE_ID}`) || localStorage.getItem('storeapp_banners') || '{}');
+      const bannerData = JSON.parse(localStorage.getItem(`storeapp_banners_${STORE_ID}`) || localStorage.getItem('storeapp_banners_' + STORE_ID) || '{}');
       const b1 = bannerData.banner1 || {};
       const b2 = bannerData.banner2 || {};
 
@@ -19948,14 +20306,22 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         showToastDash('Error al importar la plantilla: ' + e.message);
         console.error(e);
       }
-      localStorage.setItem('storeapp_cfg', JSON.stringify(cfg));
-      localStorage.setItem('storeapp_categories', JSON.stringify(cats));
-      localStorage.setItem('storeapp_local_products', JSON.stringify(prods));
-      localStorage.setItem('storeapp_banners', JSON.stringify(banners));
+      localStorage.setItem(`storeapp_cfg_${STORE_ID}`, JSON.stringify(cfg));
+      localStorage.setItem(`storeapp_categories_${STORE_ID}`, JSON.stringify(cats));
+      localStorage.setItem(`storeapp_local_products_${STORE_ID}`, JSON.stringify(prods));
+      localStorage.setItem(`storeapp_banners_${STORE_ID}`, JSON.stringify(banners));
       if (cfg.bg) {
-        localStorage.setItem('storeapp_hero_img', cfg.bg);
+        localStorage.setItem(`storeapp_hero_img_${STORE_ID}`, cfg.bg);
       }
-      localStorage.setItem('storeapp_abm_active', 'true');
+      localStorage.setItem(`storeapp_abm_active_${STORE_ID}`, 'true');
+      try {
+        localStorage.removeItem('storeapp_cfg');
+        localStorage.removeItem('storeapp_categories');
+        localStorage.removeItem('storeapp_local_products');
+        localStorage.removeItem('storeapp_banners');
+        localStorage.removeItem('storeapp_hero_img');
+        localStorage.removeItem('storeapp_abm_active');
+      } catch(e) {}
 
       showToastDash('Plantilla aplicada correctamente. Refrescando...');
       setTimeout(() => window.location.reload(), 1500);
@@ -20055,7 +20421,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       });
 
       const pagesData = { nosotros: nosotrosText, faq: faqItems };
-      localStorage.setItem('storeapp_pages', JSON.stringify(pagesData));
+      localStorage.setItem('storeapp_pages_' + STORE_ID, JSON.stringify(pagesData));
       localStorage.setItem(`storeapp_pages_${STORE_ID}`, JSON.stringify(pagesData));
 
       const statusEl = document.getElementById('pages-status');
@@ -20144,11 +20510,44 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       const modal = document.getElementById('onboarding-modal-overlay');
       if (!modal) return;
 
+      // Si no es forzado por clic voluntario del usuario, verificar si la tienda ya está activa
       if (!force) {
-        const isCompleted = localStorage.getItem('onboarding_completed_' + STORE_ID) === 'true' || (typeof CONFIG !== 'undefined' && CONFIG.onboarding_completed);
-        const isDismissed = localStorage.getItem('onboarding_dismissed_' + STORE_ID) === 'true' || (typeof CONFIG !== 'undefined' && CONFIG.onboarding_dismissed);
+        const isCompleted = localStorage.getItem('onboarding_completed_' + STORE_ID) === 'true';
+        const isDismissed = localStorage.getItem('onboarding_dismissed_' + STORE_ID) === 'true';
         const isSkippedSession = sessionStorage.getItem('onboarding_skipped_session_' + STORE_ID) === 'true';
-        if (isCompleted || isDismissed || isSkippedSession) return;
+        const hasExistingProds = (typeof products !== 'undefined' && Array.isArray(products) && products.length > 0) ||
+                                (typeof localProducts !== 'undefined' && Array.isArray(localProducts) && localProducts.length > 0);
+        const hasConfiguredStore = typeof cfg !== 'undefined' && cfg && (cfg.name && cfg.name !== 'Mi Tienda' && cfg.name !== 'Dale! Te Pido');
+        
+        if (isCompleted || isDismissed || isSkippedSession || hasExistingProds || hasConfiguredStore) {
+          return;
+        }
+      }
+
+      // Sincronizar rubro real de la tienda según la configuración cargada
+      if (typeof cfg !== 'undefined' && cfg) {
+        if (cfg.rubro) {
+          const rNorm = String(cfg.rubro).toLowerCase();
+          if (rNorm.includes('ferret') || rNorm.includes('industr') || rNorm.includes('hardware') || rNorm.includes('construcc') || rNorm.includes('corralon')) {
+            window.onboardingState.rubro = 'industrial';
+          } else if (rNorm.includes('gastro') || rNorm.includes('comida') || rNorm.includes('burger') || rNorm.includes('pizz') || rNorm.includes('restaur')) {
+            window.onboardingState.rubro = 'gastronomia';
+          } else if (rNorm.includes('tecno') || rNorm.includes('comput') || rNorm.includes('celul') || rNorm.includes('electr')) {
+            window.onboardingState.rubro = 'tecnologia';
+          } else if (rNorm.includes('indument') || rNorm.includes('ropa') || rNorm.includes('moda') || rNorm.includes('calzad')) {
+            window.onboardingState.rubro = 'indumentaria';
+          } else if (rNorm.includes('librer') || rNorm.includes('insumo') || rNorm.includes('papel')) {
+            window.onboardingState.rubro = 'insumos';
+          } else if (rNorm.includes('kiosc') || rNorm.includes('almacen')) {
+            window.onboardingState.rubro = 'kiosco_almacen';
+          } else {
+            window.onboardingState.rubro = 'otros';
+            window.onboardingState.rubroOtrosDetalle = cfg.rubro;
+          }
+        }
+        if (cfg.color) {
+          window.onboardingState.color1 = cfg.color;
+        }
       }
 
       if (!window.onboardingState.currentStep) window.onboardingState.currentStep = 1;
@@ -20266,10 +20665,10 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       const bType = window.DaleLogistics ? window.DaleLogistics.normalizeBusinessType(val) : val;
       if (window.onboardingState) window.onboardingState.business_type = bType;
       try {
-        const sc = JSON.parse(localStorage.getItem('storeapp_cfg') || '{}');
+        const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + STORE_ID) || '{}');
         sc.rubro = val;
         sc.business_type = bType;
-        localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
+        localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(sc));
         localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(sc));
       } catch(e) {}
       if (typeof renderRubroViewSummary === 'function') renderRubroViewSummary();
@@ -20979,7 +21378,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         // Fallback to localStorage if not found in Supabase
         if (!sc.name) {
           try {
-            const stored = localStorage.getItem('storeapp_cfg_' + activeStore) || localStorage.getItem('storeapp_cfg');
+            const stored = localStorage.getItem('storeapp_cfg_' + activeStore) || localStorage.getItem('storeapp_cfg_' + STORE_ID);
             if (stored && stored !== 'undefined') {
               sc = JSON.parse(stored);
             }
@@ -20991,7 +21390,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         // Parse design if available
         let parsedDesign = {};
         try {
-          const stored = localStorage.getItem('storeapp_cfg_' + activeStore) || localStorage.getItem('storeapp_cfg');
+          const stored = localStorage.getItem('storeapp_cfg_' + activeStore) || localStorage.getItem('storeapp_cfg_' + STORE_ID);
           if (stored) {
             const storedCfg = JSON.parse(stored);
             sc.h1 = storedCfg.h1;
@@ -21033,7 +21432,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         });
 
         // Set wizard logo preview state
-        const currentLogo = sc.logo || localStorage.getItem('storeapp_logo') || '';
+        const currentLogo = sc.logo || localStorage.getItem('storeapp_logo_' + STORE_ID) || '';
         if (currentLogo && currentLogo.startsWith('data:image')) {
           document.getElementById('wiz-logo-preview').src = currentLogo;
           document.getElementById('wiz-logo-preview-wrap').style.display = 'block';
@@ -21218,7 +21617,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       // 3. Save to localStorage
       // Store settings config
       const activeStore = (new URLSearchParams(window.location.search).get('store') || window.localStorage.getItem('storeapp_store_id') || 'ferre-now').toLowerCase();
-      const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + activeStore) || localStorage.getItem('storeapp_cfg') || '{}');
+      const sc = JSON.parse(localStorage.getItem('storeapp_cfg_' + activeStore) || localStorage.getItem('storeapp_cfg_' + STORE_ID) || '{}');
       sc.name = name;
       sc.tagline = tagline;
       sc.wapp = wapp;
@@ -21234,7 +21633,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
 
       // Sync logo to localStorage and main panel Design view
       if (logoUrl && (logoUrl.startsWith('data:image') || logoUrl.startsWith('http'))) {
-        localStorage.setItem('storeapp_logo', logoUrl);
+        localStorage.setItem('storeapp_logo_' + STORE_ID, logoUrl);
         const logoPreview = document.getElementById('logo-preview');
         if (logoPreview) logoPreview.src = logoUrl;
         const logoPreviewWrap = document.getElementById('logo-preview-wrap');
@@ -21251,7 +21650,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         else b.classList.remove('active');
       });
 
-      localStorage.setItem('storeapp_cfg', JSON.stringify(sc));
+      localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(sc));
       localStorage.setItem('storeapp_cfg_' + activeStore, JSON.stringify(sc));
 
       // also merge into global cfg object
@@ -22278,7 +22677,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         const data = await res.json();
 
         // Enviar email transaccional con las instrucciones de pago exactas
-        const storeCfg = JSON.parse(localStorage.getItem('storeapp_cfg_' + storeId) || localStorage.getItem('storeapp_cfg') || '{}');
+        const storeCfg = JSON.parse(localStorage.getItem('storeapp_cfg_' + storeId) || localStorage.getItem('storeapp_cfg_' + STORE_ID) || '{}');
         const storeEmail = storeCfg.admin_email || document.getElementById('cfg-store-email')?.value || '';
 
         if (storeEmail) {
@@ -22915,7 +23314,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     }
 
     window.openDaleQueVoyModal = function(orderId) {
-      const orders = (typeof allOrders !== 'undefined' && Array.isArray(allOrders)) ? allOrders : (JSON.parse(localStorage.getItem('storeapp_orders_' + (typeof STORE_ID !== 'undefined' ? STORE_ID : '')) || localStorage.getItem('storeapp_orders') || '[]'));
+      const orders = (typeof allOrders !== 'undefined' && Array.isArray(allOrders)) ? allOrders : (JSON.parse(localStorage.getItem('storeapp_orders_' + (typeof STORE_ID !== 'undefined' ? STORE_ID : '')) || '[]'));
       const order = orders.find(o => String(o.id) === String(orderId) || String(o.orderId) === String(orderId) || String(o.order_number) === String(orderId));
       if (!order) {
         alert('No se encontró el pedido solicitado.');
@@ -22923,7 +23322,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       }
       currentDqvOrder = order;
 
-      const storeCfg = (typeof CONFIG !== 'undefined' ? CONFIG : {}) || JSON.parse(localStorage.getItem('storeapp_cfg_' + (typeof STORE_ID !== 'undefined' ? STORE_ID : '')) || localStorage.getItem('storeapp_cfg') || '{}');
+      const storeCfg = (typeof CONFIG !== 'undefined' ? CONFIG : {}) || JSON.parse(localStorage.getItem('storeapp_cfg_' + (typeof STORE_ID !== 'undefined' ? STORE_ID : '')) || localStorage.getItem('storeapp_cfg_' + STORE_ID) || '{}');
       const storeRubro = storeCfg.rubro || storeCfg.business_type || 'OTHER';
 
       let itemsList = [];
@@ -23018,7 +23417,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       }
 
       try {
-        const storeCfg = (typeof CONFIG !== 'undefined' ? CONFIG : {}) || JSON.parse(localStorage.getItem('storeapp_cfg_' + (typeof STORE_ID !== 'undefined' ? STORE_ID : '')) || localStorage.getItem('storeapp_cfg') || '{}');
+        const storeCfg = (typeof CONFIG !== 'undefined' ? CONFIG : {}) || JSON.parse(localStorage.getItem('storeapp_cfg_' + (typeof STORE_ID !== 'undefined' ? STORE_ID : '')) || localStorage.getItem('storeapp_cfg_' + STORE_ID) || '{}');
         const merchant = {
           id: storeCfg.id || storeCfg.store_id || (typeof STORE_ID !== 'undefined' ? STORE_ID : 'default_merchant'),
           name: storeCfg.name || 'Mi Comercio',

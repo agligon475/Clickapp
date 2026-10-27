@@ -10012,6 +10012,9 @@
           delete item.price;
           delete item.cat;
           delete item.hidden;
+          delete item.price_prev;
+          delete item.discount_pct;
+          delete item.precio_anterior;
         };
         if (Array.isArray(data)) {
           data.forEach(cleanProductPayload);
@@ -10093,6 +10096,9 @@
           delete data.cat;
           delete data.hidden;
           delete data.id;
+          delete data.price_prev;
+          delete data.discount_pct;
+          delete data.precio_anterior;
         }
 
         const response = await fetch(url, {
@@ -10164,16 +10170,41 @@
     function mapSupabaseRowToLocal(p) {
       let localDetalle = p.detalles || p.detalle || '';
       let opts = p.options || null;
+      let price_prev = p.price_prev !== undefined ? parseFloat(p.price_prev) : (p.precio_anterior !== undefined ? parseFloat(p.precio_anterior) : 0);
+      let discount_pct = p.discount_pct !== undefined ? parseFloat(p.discount_pct) : 0;
+
       if (p.variants) {
         const variantsStr = typeof p.variants === 'string' ? p.variants : JSON.stringify(p.variants);
         if (variantsStr !== '{}' && variantsStr !== '[]' && variantsStr !== 'null') {
           localDetalle = localDetalle + ' ||| ' + variantsStr;
         }
+        try {
+          const vObj = typeof p.variants === 'object' ? p.variants : JSON.parse(p.variants);
+          if (vObj) {
+            if (vObj.price_prev && !price_prev) price_prev = parseFloat(vObj.price_prev);
+            if (vObj.precio_anterior && !price_prev) price_prev = parseFloat(vObj.precio_anterior);
+            if (vObj.discount_pct && !discount_pct) discount_pct = parseFloat(vObj.discount_pct);
+          }
+        } catch(e) {}
       }
+      if (!price_prev && localDetalle.includes('|||')) {
+        try {
+          const j = JSON.parse(localDetalle.split('|||')[1].trim());
+          if (j.price_prev && !price_prev) price_prev = parseFloat(j.price_prev);
+          if (j.precio_anterior && !price_prev) price_prev = parseFloat(j.precio_anterior);
+          if (j.discount_pct && !discount_pct) discount_pct = parseFloat(j.discount_pct);
+        } catch(e){}
+      }
+      if (price_prev > 0 && p.precio && price_prev > parseFloat(p.precio) && !discount_pct) {
+        discount_pct = Math.round(((price_prev - parseFloat(p.precio)) / price_prev) * 100);
+      }
+
       return {
         id: String(p.id),
         name: p.nombre,
         price: parseFloat(p.precio) || 0,
+        price_prev: price_prev || 0,
+        discount_pct: discount_pct || 0,
         currency: p.currency || p.divisa || 'ARS',
         divisa: p.currency || p.divisa || 'ARS',
         stock: parseInt(p.stock, 10) || 0,
@@ -10207,8 +10238,8 @@
         }
       }
 
-      // Consolidar opciones, peso y video en el objeto JSON de variants
-      if (p.video_url || (p.options && Array.isArray(p.options) && p.options.length > 0) || p.weight_kg !== undefined) {
+      // Consolidar opciones, peso, video y precios de oferta en el objeto JSON de variants
+      if (p.video_url || (p.options && Array.isArray(p.options) && p.options.length > 0) || p.weight_kg !== undefined || p.price_prev !== undefined || p.discount_pct !== undefined) {
         if (!jsonVariants || typeof jsonVariants !== 'object') jsonVariants = {};
       }
 
@@ -10222,6 +10253,14 @@
 
       if (p.weight_kg !== undefined) {
         jsonVariants.weight_kg = Number(p.weight_kg);
+      }
+
+      if (p.price_prev !== undefined && Number(p.price_prev) > 0) {
+        jsonVariants.price_prev = Number(p.price_prev);
+      }
+
+      if (p.discount_pct !== undefined && Number(p.discount_pct) > 0) {
+        jsonVariants.discount_pct = Number(p.discount_pct);
       }
 
       const fullDetalles = jsonVariants ? `${textDetalles} ||| ${JSON.stringify(jsonVariants)}` : textDetalles;
@@ -13036,7 +13075,13 @@
     <tr style="${p.hidden ? 'opacity:.4;' : ''}">
       <td style="font-size:20px;text-align:center;">${p.emoji || '📦'}</td>
       <td>
-        <div style="font-weight:600;color:var(--white);">${p.name} <span style="font-size:11px;color:var(--silver);font-weight:400;">(${getCurrencySymbol(p.currency||p.divisa)} ${p.price.toLocaleString('es-AR')})</span></div>
+        <div style="font-weight:600;color:var(--white);">${p.name} 
+          <span style="font-size:11px;color:var(--silver);font-weight:400;">
+            ${(p.price_prev && p.price_prev > p.price) ? `<s style="opacity:0.65;margin-right:2px;">${getCurrencySymbol(p.currency||p.divisa)} ${p.price_prev.toLocaleString('es-AR')}</s> ` : ''}
+            <strong style="color:var(--green);">${getCurrencySymbol(p.currency||p.divisa)} ${(p.price || 0).toLocaleString('es-AR')}</strong>
+            ${(p.price_prev && p.price_prev > p.price) ? `<span style="color:var(--red);font-weight:700;font-size:10px;margin-left:3px;">-${p.discount_pct || Math.round(((p.price_prev - p.price) / p.price_prev) * 100)}% OFF</span>` : ''}
+          </span>
+        </div>
       </td>
       <td><span class="badge badge-blue">${p.cat || '—'}</span></td>
       <td>
@@ -13963,6 +14008,88 @@
     }
     window.calcPackUnitPrice = calcPackUnitPrice;
 
+    function handlePricePrevChange() {
+      const prevVal = parseFloat(document.getElementById('m-price-prev')?.value) || 0;
+      const actualInput = document.getElementById('m-price');
+      const actualVal = parseFloat(actualInput?.value) || 0;
+      const pctInput = document.getElementById('m-discount-pct');
+      const badge = document.getElementById('m-discount-badge-preview');
+
+      if (prevVal > 0 && actualVal > 0 && prevVal > actualVal) {
+        const pct = Math.round(((prevVal - actualVal) / prevVal) * 100);
+        if (pctInput) pctInput.value = pct;
+        if (badge) {
+          badge.textContent = `-${pct}% OFF`;
+          badge.style.display = 'inline-block';
+        }
+      } else if (prevVal > 0 && pctInput && pctInput.value) {
+        const pct = parseFloat(pctInput.value) || 0;
+        if (pct > 0 && pct < 100 && actualInput) {
+          const newActual = Math.round(prevVal * (1 - pct / 100));
+          actualInput.value = newActual;
+          if (badge) {
+            badge.textContent = `-${pct}% OFF`;
+            badge.style.display = 'inline-block';
+          }
+        }
+      } else {
+        if (pctInput && (!prevVal || prevVal <= actualVal)) pctInput.value = '';
+        if (badge) badge.style.display = 'none';
+      }
+      calcPackUnitPrice();
+    }
+    window.handlePricePrevChange = handlePricePrevChange;
+
+    function handleDiscountPctChange() {
+      const pct = parseFloat(document.getElementById('m-discount-pct')?.value) || 0;
+      const prevInput = document.getElementById('m-price-prev');
+      const actualInput = document.getElementById('m-price');
+      const badge = document.getElementById('m-discount-badge-preview');
+
+      let prevVal = parseFloat(prevInput?.value) || 0;
+      let actualVal = parseFloat(actualInput?.value) || 0;
+
+      if (pct > 0 && pct < 100) {
+        if (prevVal > 0 && actualInput) {
+          const newActual = Math.round(prevVal * (1 - pct / 100));
+          actualInput.value = newActual;
+        } else if (actualVal > 0 && prevInput && actualInput) {
+          prevInput.value = actualVal;
+          const newActual = Math.round(actualVal * (1 - pct / 100));
+          actualInput.value = newActual;
+        }
+        if (badge) {
+          badge.textContent = `-${Math.round(pct)}% OFF`;
+          badge.style.display = 'inline-block';
+        }
+      } else {
+        if (badge) badge.style.display = 'none';
+      }
+      calcPackUnitPrice();
+    }
+    window.handleDiscountPctChange = handleDiscountPctChange;
+
+    function handlePriceActualChange() {
+      const actualVal = parseFloat(document.getElementById('m-price')?.value) || 0;
+      const prevVal = parseFloat(document.getElementById('m-price-prev')?.value) || 0;
+      const pctInput = document.getElementById('m-discount-pct');
+      const badge = document.getElementById('m-discount-badge-preview');
+
+      if (prevVal > 0 && actualVal > 0 && prevVal > actualVal) {
+        const pct = Math.round(((prevVal - actualVal) / prevVal) * 100);
+        if (pctInput) pctInput.value = pct;
+        if (badge) {
+          badge.textContent = `-${pct}% OFF`;
+          badge.style.display = 'inline-block';
+        }
+      } else {
+        if (pctInput && (!prevVal || prevVal <= actualVal)) pctInput.value = '';
+        if (badge) badge.style.display = 'none';
+      }
+      calcPackUnitPrice();
+    }
+    window.handlePriceActualChange = handlePriceActualChange;
+
     function updateWeightLabels() {
       const unit = document.getElementById('m-weight-unit')?.value || 'kg';
       const lblPrice = document.getElementById('lbl-m-price');
@@ -14262,6 +14389,15 @@
       populateCatSelect(p?.cat || null);   // select con valor actual preseleccionado
       document.getElementById('m-marca').value = p?.marca || '';
       document.getElementById('m-price').value = p?.price || '';
+      const pricePrev = p?.price_prev || (p?.variants && p.variants.price_prev) || '';
+      const discountPct = p?.discount_pct || (p?.variants && p.variants.discount_pct) || '';
+      if (document.getElementById('m-price-prev')) {
+        document.getElementById('m-price-prev').value = pricePrev > 0 ? pricePrev : '';
+      }
+      if (document.getElementById('m-discount-pct')) {
+        document.getElementById('m-discount-pct').value = discountPct > 0 ? discountPct : '';
+      }
+      if (typeof handlePriceActualChange === 'function') handlePriceActualChange();
       if (document.getElementById('m-currency')) {
         document.getElementById('m-currency').value = p?.currency || p?.divisa || 'ARS';
       }
@@ -14306,6 +14442,13 @@
           if (jsonOpts.weightUnit && document.getElementById('m-weight-unit')) document.getElementById('m-weight-unit').value = jsonOpts.weightUnit;
           if (jsonOpts.weightMin && document.getElementById('m-weight-min')) document.getElementById('m-weight-min').value = jsonOpts.weightMin;
           if (jsonOpts.packQty && document.getElementById('m-pack-qty')) document.getElementById('m-pack-qty').value = jsonOpts.packQty;
+          if (jsonOpts.price_prev && document.getElementById('m-price-prev') && !document.getElementById('m-price-prev').value) {
+            document.getElementById('m-price-prev').value = jsonOpts.price_prev;
+          }
+          if (jsonOpts.discount_pct && document.getElementById('m-discount-pct') && !document.getElementById('m-discount-pct').value) {
+            document.getElementById('m-discount-pct').value = jsonOpts.discount_pct;
+          }
+          if (typeof handlePriceActualChange === 'function') handlePriceActualChange();
 
           if (jsonOpts.variants && jsonOpts.variants.length > 0) {
             hasOpts = true;
@@ -14685,6 +14828,8 @@
       const cat = document.getElementById('m-cat').value.trim();
       const marca = document.getElementById('m-marca').value.trim();
       const price = parseFloat(document.getElementById('m-price').value) || 0;
+      const price_prev = parseFloat(document.getElementById('m-price-prev')?.value) || 0;
+      const discount_pct = parseFloat(document.getElementById('m-discount-pct')?.value) || 0;
       const currency = document.getElementById('m-currency')?.value || 'ARS';
       const divisa = currency;
       
@@ -14796,6 +14941,13 @@
         customOpts.video_url = video_url;
       }
 
+      if (price_prev > 0) {
+        customOpts.price_prev = price_prev;
+      }
+      if (discount_pct > 0) {
+        customOpts.discount_pct = discount_pct;
+      }
+
       if (Object.keys(customOpts).length > 0) {
         textDetalle = textDetalle + ' ||| ' + JSON.stringify(customOpts);
       }
@@ -14806,7 +14958,7 @@
       if (editingId != null && editingId !== '') {
         const p = localProducts.find(x => String(x.id) === String(editingId));
         if (p) {
-          Object.assign(p, { name, codigo, cat, marca, price, currency, divisa, stock, emoji, origen, detalle: textDetalle, img, img2, img3, video_url, pills, weight_kg, options: customOpts.variants || [] });
+          Object.assign(p, { name, codigo, cat, marca, price, price_prev, discount_pct, currency, divisa, stock, emoji, origen, detalle: textDetalle, img, img2, img3, video_url, pills, weight_kg, options: customOpts.variants || [] });
           if (isSupabaseRowId(editingId)) {
             try {
               await updateInSupabase('products', editingId, mapLocalProductToSupabaseRow(p));
@@ -14830,7 +14982,7 @@
           }
         }
       } else {
-        const draft = { name, codigo, cat, marca, price, currency, divisa, stock, emoji, origen, detalle: textDetalle, img, img2, img3, video_url, pills, weight_kg, options: customOpts.variants || [], hidden: false };
+        const draft = { name, codigo, cat, marca, price, price_prev, discount_pct, currency, divisa, stock, emoji, origen, detalle: textDetalle, img, img2, img3, video_url, pills, weight_kg, options: customOpts.variants || [], hidden: false };
         try {
           const inserted = await postToSupabase('products', mapLocalProductToSupabaseRow(draft));
           const row0 = Array.isArray(inserted) ? inserted[0] : inserted;

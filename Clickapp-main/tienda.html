@@ -546,18 +546,23 @@ a.logo{
 .product-img-fallback{font-size:44px;}
 
 .stock-chip{
-  position:absolute;top:8px;right:8px;
+  position:absolute;bottom:8px;left:8px;
   background:#FFFFFF;
   border:1px solid var(--zinc);
   border-radius:20px;padding:3px 10px;
   font-size:11px;font-weight:600;
   color:#16A34A !important;
-  box-shadow:0 2px 6px rgba(0,0,0,0.04);
-  z-index:2;
+  box-shadow:0 2px 8px rgba(0,0,0,0.12);
+  z-index:3;
   display:inline-flex;
   align-items:center;
   gap:5px;
   line-height:1.2;
+}
+body:not(.light-theme) .stock-chip {
+  background: rgba(18,18,20,0.88);
+  backdrop-filter: blur(4px);
+  border-color: rgba(255,255,255,0.15);
 }
 .stock-chip::before{
   content:'';
@@ -601,6 +606,35 @@ a.logo{
   font-size:11px;color:var(--silver);
   font-family:var(--font-body);
   font-weight:500;margin-right:2px;
+}
+.product-price-prev-row{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  line-height:1.2;
+  margin-bottom:3px;
+  flex-wrap:wrap;
+}
+.product-price-prev{
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  font-weight:500;
+  color:var(--silver);
+  text-decoration:line-through;
+  opacity:0.85;
+}
+.product-discount-badge{
+  font-family:var(--font-body);
+  font-size:9.5px;
+  font-weight:800;
+  color:#fff;
+  background:var(--red, #D72638);
+  padding:1px 5px;
+  border-radius:4px;
+  text-transform:uppercase;
+  letter-spacing:0.02em;
+  display:inline-block;
+  line-height:1.3;
 }
 
 /* ── PRODUCT CARD BUTTONS & QUANTITY COUNTER ─────── */
@@ -1765,6 +1799,19 @@ function renderSuspendedStoreScreen(storeName) {
 /* ═══════════════════════════════════════════ LOAD */
 async function loadSheet() {
   try {
+    // Purgar inmediatamente claves globales compartidas sin aislamiento multi-tenant
+    try {
+      localStorage.removeItem('storeapp_local_products');
+      localStorage.removeItem('storeapp_abm_active');
+      localStorage.removeItem('storeapp_cfg');
+      localStorage.removeItem('storeapp_banners');
+      localStorage.removeItem('storeapp_horarios');
+      localStorage.removeItem('storeapp_orders');
+      localStorage.removeItem('storeapp_webhook');
+      localStorage.removeItem('storeapp_logo');
+      localStorage.removeItem('storeapp_hero_img');
+    } catch(e) {}
+
     // 1. Cargar configuración primero para verificar estado de suspensión con fetchSupabase (reintentos automáticos)
     let configData = null;
     try {
@@ -1877,7 +1924,7 @@ async function loadSheet() {
 
       let localBannerData = null;
       try {
-        const storedBanners = localStorage.getItem(`storeapp_banners_${STORE_ID}`) || localStorage.getItem('storeapp_banners');
+        const storedBanners = localStorage.getItem(`storeapp_banners_${STORE_ID}`);
         if (storedBanners) localBannerData = JSON.parse(storedBanners);
       } catch(e) {}
 
@@ -1923,7 +1970,7 @@ async function loadSheet() {
       let rawHorarios = cfg.horarios_data || parsedDesign.horarios_data;
       if (!rawHorarios) {
         try {
-          rawHorarios = JSON.parse(localStorage.getItem(`storeapp_horarios_${STORE_ID}`) || localStorage.getItem('storeapp_horarios') || 'null');
+          rawHorarios = JSON.parse(localStorage.getItem(`storeapp_horarios_${STORE_ID}`) || 'null');
         } catch(e) {}
       }
       if (typeof rawHorarios === 'string') {
@@ -1955,8 +2002,8 @@ async function loadSheet() {
     }
     
     // Aplicar diseño visual tras cargar config en la nube
-    localStorage.setItem('storeapp_cfg', JSON.stringify(CFG));
     localStorage.setItem('storeapp_cfg_' + STORE_ID, JSON.stringify(CFG));
+    try { localStorage.removeItem('storeapp_cfg'); } catch(e) {}
     applyStoredConfig();
     updateStoreScheduleUI();
 
@@ -1969,6 +2016,8 @@ async function loadSheet() {
         let variants = null;
         let modifiers = null;
         let video_url = p.video_url || p.video || '';
+        let price_prev = p.price_prev !== undefined ? parseFloat(p.price_prev) : (p.precio_anterior !== undefined ? parseFloat(p.precio_anterior) : 0);
+        let discount_pct = p.discount_pct !== undefined ? parseFloat(p.discount_pct) : 0;
 
         if (p.variants) {
           try {
@@ -1976,6 +2025,9 @@ async function loadSheet() {
             if (parsedOpts.variants) variants = parsedOpts.variants;
             if (parsedOpts.modifiers) modifiers = parsedOpts.modifiers;
             if (parsedOpts.video_url && !video_url) video_url = parsedOpts.video_url;
+            if (parsedOpts.price_prev && !price_prev) price_prev = parseFloat(parsedOpts.price_prev);
+            if (parsedOpts.precio_anterior && !price_prev) price_prev = parseFloat(parsedOpts.precio_anterior);
+            if (parsedOpts.discount_pct && !discount_pct) discount_pct = parseFloat(parsedOpts.discount_pct);
           } catch (e) {
             console.error("Error parsing JSON variants in tienda load:", e);
           }
@@ -1987,9 +2039,16 @@ async function loadSheet() {
             if (parsedOpts.variants) variants = parsedOpts.variants;
             if (parsedOpts.modifiers) modifiers = parsedOpts.modifiers;
             if (parsedOpts.video_url && !video_url) video_url = parsedOpts.video_url;
+            if (parsedOpts.price_prev && !price_prev) price_prev = parseFloat(parsedOpts.price_prev);
+            if (parsedOpts.precio_anterior && !price_prev) price_prev = parseFloat(parsedOpts.precio_anterior);
+            if (parsedOpts.discount_pct && !discount_pct) discount_pct = parseFloat(parsedOpts.discount_pct);
           } catch (e) {
             console.error("Error parsing JSON options in tienda load:", e);
           }
+        }
+
+        if (price_prev > 0 && p.precio && price_prev > parseFloat(p.precio) && !discount_pct) {
+          discount_pct = Math.round(((price_prev - parseFloat(p.precio)) / price_prev) * 100);
         }
 
         let options = p.options || null;
@@ -2003,6 +2062,8 @@ async function loadSheet() {
               if (parsedOpts.modifiers) modifiers = parsedOpts.modifiers;
             }
             if (parsedOpts && parsedOpts.video_url && !video_url) video_url = parsedOpts.video_url;
+            if (parsedOpts && parsedOpts.price_prev && !price_prev) price_prev = parseFloat(parsedOpts.price_prev);
+            if (parsedOpts && parsedOpts.discount_pct && !discount_pct) discount_pct = parseFloat(parsedOpts.discount_pct);
           } catch(e) {}
         }
 
@@ -2010,6 +2071,8 @@ async function loadSheet() {
           id: (p.id != null && p.id !== '') ? String(p.id) : String(i + 1),
           name: p.nombre,
           price: parseFloat(p.precio) || 0,
+          price_prev: price_prev,
+          discount_pct: discount_pct,
           currency: p.divisa || p.currency || 'ARS',
           divisa: p.divisa || p.currency || 'ARS',
           stock: parseInt(p.stock) || 0,
@@ -2125,8 +2188,14 @@ function render() {
         ${p.marca?`<div style="font-size:10px;color:var(--silver);margin-bottom:2px;">${p.marca}</div>`:''}
         <div class="product-name">${p.name}</div>
         <div>
+          ${(p.price_prev && p.price_prev > p.price) ? `
+            <div class="product-price-prev-row">
+              <span class="product-price-prev">${getCurrencySymbol(p.currency || p.divisa)} ${p.price_prev.toLocaleString('es-AR')}</span>
+              <span class="product-discount-badge">-${p.discount_pct || Math.round(((p.price_prev - p.price) / p.price_prev) * 100)}% OFF</span>
+            </div>
+          ` : ''}
           <span class="product-price-label">${getCurrencySymbol(p.currency || p.divisa)}</span>
-          <span class="product-price">${p.price.toLocaleString('es-AR')}</span>
+          <span class="product-price">${(p.price || 0).toLocaleString('es-AR')}</span>
         </div>
         ${p.stock > 0
           ? ((p.variants && p.variants.length > 0) || (p.modifiers && p.modifiers.length > 0)
@@ -2884,6 +2953,7 @@ async function registrarPedido(pedido) {
 
   const order = {
     id,
+    store_id:  STORE_ID,
     fecha,
     cliente:   pedido.nombre,
     dni:       pedido.dni,
@@ -2903,16 +2973,44 @@ async function registrarPedido(pedido) {
 
   // ── 1. Guardar en localStorage (misma key que usa el dashboard) ──
   try {
-    const existing = JSON.parse(localStorage.getItem(`storeapp_orders_${STORE_ID}`) || localStorage.getItem('storeapp_orders') || '[]');
-    existing.unshift(order);
-    localStorage.setItem(`storeapp_orders_${STORE_ID}`, JSON.stringify(existing));
+    const existing = JSON.parse(localStorage.getItem(`storeapp_orders_${STORE_ID}`) || '[]');
+    // Asegurar que ningún pedido previo ajeno contamine esta lista
+    const cleanList = existing.filter(o => o && o.store_id === STORE_ID);
+    cleanList.unshift(order);
+    localStorage.setItem(`storeapp_orders_${STORE_ID}`, JSON.stringify(cleanList));
   } catch(e) {
     console.warn('No se pudo guardar el pedido localmente:', e.message);
   }
 
+  // ── 1.b. Respaldar en la tabla orders de Supabase si está disponible ──
+  try {
+    fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        Prefer: 'return=minimal'
+      },
+      body: JSON.stringify({
+        id: order.id,
+        store_id: STORE_ID,
+        cliente: order.cliente,
+        dni: order.dni,
+        productos: order.productos,
+        total: order.total,
+        pago: order.pago,
+        logistica: order.logistica,
+        direccion: order.direccion,
+        estado: 'confirmar',
+        created_at: new Date().toISOString()
+      })
+    }).catch(() => {});
+  } catch(e) {}
+
   // ── 2. Enviar al Sheet vía webhook si está configurado ───────────
   let wh = {};
-  try { wh = JSON.parse(localStorage.getItem(`storeapp_webhook_${STORE_ID}`) || localStorage.getItem('storeapp_webhook') || '{}'); } catch(e) {}
+  try { wh = JSON.parse(localStorage.getItem(`storeapp_webhook_${STORE_ID}`) || '{}'); } catch(e) {}
   if (!wh.url || !wh.token) return;
 
   try {
@@ -3041,8 +3139,14 @@ function openProductDrawer(id) {
       <button type="button" class="pdrawer-share-btn" onclick="shareProduct('${p.id}')" title="Compartir enlace de este producto" style="margin-left:auto;background:var(--zinc);border:1px solid rgba(255,255,255,0.15);color:var(--white);border-radius:12px;padding:4px 10px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer;"><i class="bi bi-share"></i> Compartir</button>
     </div>
     <div class="pdrawer-name">${p.name}</div>
-    <div class="pdrawer-price" id="pdrawer-price-display" data-base-price="${p.price}" data-currency="${p.currency||p.divisa||'ARS'}"><small>${currSymbol}</small>${p.price.toLocaleString('es-AR')}</div>
-    ${(p.detalles||p.detalle)?`<div class="pdrawer-detalle"><strong style="display:block;font-size:11px;color:var(--silver);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Especificaciones</strong>${p.detalles||p.detalle}</div>`:''}
+    ${(p.price_prev && p.price_prev > p.price) ? `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <span style="font-size:15px;color:var(--silver);text-decoration:line-through;font-family:var(--font-mono);">${currSymbol} ${p.price_prev.toLocaleString('es-AR')}</span>
+        <span style="background:var(--red, #D72638);color:#fff;font-size:11px;font-weight:800;padding:2px 7px;border-radius:4px;letter-spacing:0.02em;">-${p.discount_pct || Math.round(((p.price_prev - p.price) / p.price_prev) * 100)}% OFF</span>
+      </div>
+    ` : ''}
+    <div class="pdrawer-price" id="pdrawer-price-display" data-base-price="${p.price}" data-currency="${p.currency||p.divisa||'ARS'}"><small>${currSymbol}</small>${(p.price || 0).toLocaleString('es-AR')}</div>
+    ${(p.detalles||p.detalle)?`<div class="pdrawer-detalle"><strong style="display:block;font-size:11px;color:var(--silver);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Especificaciones</strong>${(p.detalles||p.detalle).split('|||')[0].trim()}</div>`:''}
     ${p.marca?`<div class="pdrawer-row"><strong>Marca</strong> ${p.marca}</div>`:''}
     ${originName?`<div class="pdrawer-row"><strong>Origen</strong> ${flag} ${originName}</div>`:''}
     <div id="pdrawer-options"></div>
@@ -3395,30 +3499,43 @@ function shareProduct(id) {
   url.searchParams.set('p', p.id);
   const shareUrl = url.toString();
   const storeName = CFG.name || 'Dale! Te Pido';
-  const title = `${p.name} — ${storeName}`;
   const curr = getCurrencySymbol(p.currency || p.divisa);
-  const priceStr = p.price ? `${curr}${p.price.toLocaleString('es-AR')}` : '';
-  const text = `${p.name}${priceStr ? ' (' + priceStr + ')' : ''} — ${storeName}`;
+  
+  // Limpiar descripcion quitando JSON tecnico |||
+  let rawDesc = (p.detalles || p.detalle || '').split('|||')[0].trim();
+  if (rawDesc.length > 140) rawDesc = rawDesc.slice(0, 137) + '...';
 
-  if (navigator.share && (!navigator.canShare || navigator.canShare({ title, text, url: shareUrl }))) {
+  // Formato de precio y descuento
+  let priceLine = `${curr}${p.price.toLocaleString('es-AR')}`;
+  if (p.price_prev && p.price_prev > p.price) {
+    const pct = p.discount_pct || Math.round(((p.price_prev - p.price) / p.price_prev) * 100);
+    priceLine = `🔥 *${curr}${p.price.toLocaleString('es-AR')}* ~${curr}${p.price_prev.toLocaleString('es-AR')}~ (-${pct}% OFF)`;
+  } else {
+    priceLine = `💰 *${priceLine}*`;
+  }
+
+  const title = `${p.name} — ${storeName}`;
+  const shareMessage = `🛍️ *${p.name}* en ${storeName}\n${priceLine}${rawDesc ? `\n\n${rawDesc}` : ''}\n\n👉 *Miralo y pedilo acá:*\n${shareUrl}`;
+
+  if (navigator.share && (!navigator.canShare || navigator.canShare({ title, text: shareMessage, url: shareUrl }))) {
     navigator.share({
       title: title,
-      text: text,
+      text: shareMessage,
       url: shareUrl
     }).catch(err => {
       if (err && err.name !== 'AbortError') {
-        copyToClipboardFallback(shareUrl);
+        copyToClipboardFallback(shareMessage);
       }
     });
   } else {
-    copyToClipboardFallback(shareUrl);
+    copyToClipboardFallback(shareMessage);
   }
 }
 
 function copyToClipboardFallback(text) {
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(text).then(() => {
-      showToast('🔗 ¡Enlace del producto copiado!');
+      showToast('📋 ¡Detalles y enlace del producto copiados para compartir!');
     }).catch(() => {
       promptCopyFallback(text);
     });
@@ -3546,7 +3663,7 @@ function closePagesDrawer() {
 // ── Apply config saved from dashboard ──────────────
 function applyStoredConfig() {
   let cfg = {};
-  try { cfg = JSON.parse(localStorage.getItem(`storeapp_cfg_${STORE_ID}`) || localStorage.getItem('storeapp_cfg') || '{}'); } catch(e) {}
+  try { cfg = JSON.parse(localStorage.getItem(`storeapp_cfg_${STORE_ID}`) || '{}'); } catch(e) {}
 
   const accent = cfg.color || '#F60000';
   const theme  = cfg.theme || 'light';
@@ -3605,9 +3722,9 @@ function applyStoredConfig() {
   if (cfg.fontBody) root.setProperty('--font-body', `'${cfg.fontBody}', sans-serif`);
 
   // Logo image takes priority over emoji
-  const logoImg = cfg.logo || cfg.logo_url || localStorage.getItem(`storeapp_logo_${STORE_ID}`) || localStorage.getItem('storeapp_logo');
+  const logoImg = cfg.logo || cfg.logo_url || localStorage.getItem(`storeapp_logo_${STORE_ID}`);
   const logoEl  = document.querySelector('.logo');
-  const storeName = cfg.name || (typeof CFG !== 'undefined' ? CFG.name : '') || 'BigHouse';
+  const storeName = cfg.name || (typeof CFG !== 'undefined' ? CFG.name : '') || STORE_ID;
   if (logoEl) {
     let logoImgEl = document.getElementById('logo-img');
     let logoIconEl = document.getElementById('logo-icon');
@@ -3671,8 +3788,8 @@ function applyStoredConfig() {
   const heroBg = document.getElementById('hero-img-bg');
   const heroOverlay = document.getElementById('hero-overlay');
   const heroStripes = document.getElementById('hero-stripes');
-  const heroImgUrl = (localStorage.getItem(`storeapp_hero_img_${STORE_ID}`) || localStorage.getItem('storeapp_hero_img') || cfg.bg || CFG.bg || '').trim();
-  const heroMobileImgUrl = (localStorage.getItem(`storeapp_hero_mobile_img_${STORE_ID}`) || localStorage.getItem('storeapp_hero_mobile_img') || cfg.banner_mobile_img || CFG.bannerMobileImg || '').trim();
+  const heroImgUrl = (localStorage.getItem(`storeapp_hero_img_${STORE_ID}`) || cfg.bg || CFG.bg || '').trim();
+  const heroMobileImgUrl = (localStorage.getItem(`storeapp_hero_mobile_img_${STORE_ID}`) || cfg.banner_mobile_img || CFG.bannerMobileImg || '').trim();
   const heroBgColor = cfg.heroBgColor || CFG.heroBgColor || '#0E0E0E';
   const heroImgOpacity = (cfg.heroImgOpacity != null ? Number(cfg.heroImgOpacity) : (CFG.heroImgOpacity != null ? Number(CFG.heroImgOpacity) : 100)) / 100;
 
@@ -3765,7 +3882,7 @@ function applyStoredConfig() {
     CFG.horarios_data = cfg.horarios_data;
   } else {
     try {
-      const hData = JSON.parse(localStorage.getItem(`storeapp_horarios_${STORE_ID}`) || localStorage.getItem('storeapp_horarios') || 'null');
+      const hData = JSON.parse(localStorage.getItem(`storeapp_horarios_${STORE_ID}`) || 'null');
       if (Array.isArray(hData) && hData.length > 0 && hData[0].day !== undefined) {
         CFG.horarios_data = hData;
       }
