@@ -1573,6 +1573,45 @@
         </div>
       </section>
 
+      <!-- SLIDE 24: VISTA DUAL EN ABM DE PRODUCTOS -->
+      <section class="slide" id="slide-24">
+        <span class="slide-badge" style="background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.4);color:#60A5FA;"><i class="bi bi-layout-split"></i> Etapa 24 · Release 27 de Octubre 2026</span>
+        <h2 class="slide-title">Selector de Vista Dual en ABM: Lista Clásica y Cuadrícula con Fotos</h2>
+        <p class="slide-desc">Incorporación de un control de permutación de interfaz que permite al comerciante alternar de forma instantánea entre la vista tabular tradicional y una galería visual con imágenes reales de alta resolución.</p>
+
+        <div class="grid-3" style="margin-top:16px;">
+          <div class="card">
+            <div class="card-title" style="color:#60A5FA;"><i class="bi bi-toggles"></i> Control Segmentado e Interactivo</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Ubicado en la barra superior de filtros del ABM, el gestor dispone de dos botones integrados: <code>Formato actual</code> (tabla compacta) y <code>Con foto</code> (cuadrícula visual). La selección se persiste automáticamente en <code>localStorage</code> para recordar la preferencia del usuario entre sesiones.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-images"></i> Galería Visual con Fotos de Producto</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              La vista con fotos despliega tarjetas responsivas con portada panorámica (aspect-ratio 4:3), badge de visibilidad (Visible/Oculto), chip de stock, categoría, marca, precio de oferta tachado con badge de descuento y precio de venta en verde destacado.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#F59E0B;"><i class="bi bi-lightning-charge"></i> Gestión Rápida y Edición Ágil</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Tanto al hacer clic en la fotografía como en el título de la tarjeta se abre inmediatamente el modal de edición del producto. Además, cada tarjeta integra los accesos directos para clonar, alternar visibilidad y eliminar con confirmación de seguridad.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <a href="/dashboard.html?store=bighouse#abm" target="_blank" class="nav-btn primary" style="padding:10px 22px; font-size:13px; background:linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);">
+            <i class="bi bi-grid-fill"></i> Probar Vista Con Fotos en ABM
+          </a>
+          <a href="/tienda.html?store=bighouse" target="_blank" class="nav-btn secondary" style="padding:10px 22px; font-size:13px;">
+            <i class="bi bi-shop"></i> Ver Catálogo Público
+          </a>
+        </div>
+      </section>
+
     </main>
 
     <!-- BOTTOMBAR -->
@@ -1584,7 +1623,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 4.5 Precios con Descuento, Ofertas Tachadas & Open Graph Dinámico · Actualizado 27/10/2026
+        Dale! Te Pido © 2026 · Versión 4.6 Vista Dual en ABM (Lista Clásica / Galería con Fotos) · Actualizado 27/10/2026
       </div>
     </footer>
 
@@ -1593,7 +1632,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 23;
+  const totalSlides = 24;
 
   function showSlide(index) {
     if (index < 1) index = 1;
