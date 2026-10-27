@@ -15313,8 +15313,8 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         const saved = localStorage.getItem('storeapp_orders_' + STORE_ID);
         if (saved) {
           allOrders = JSON.parse(saved);
-          // Filtrado estricto multi-tenant: si un pedido tiene store_id definido, debe coincidir con la tienda actual
-          allOrders = allOrders.filter(o => !o.store_id || o.store_id === STORE_ID);
+          // Filtrado estricto multi-tenant: el pedido DEBE pertenecer exactamente a esta tienda
+          allOrders = allOrders.filter(o => o && o.store_id === STORE_ID);
         } else {
           allOrders = [];
         }
@@ -15326,6 +15326,24 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         } else if (STORE_ID === 'noutacc' && allOrders.length === 0) {
           allOrders = getNoutaccSimulatedOrders();
           localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
+        } else if (STORE_ID === 'lugonessilva' && allOrders.length === 0) {
+          allOrders = getLugonesSilvaSimulatedOrders();
+          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
+        } else if (STORE_ID === 'ferre-now' && allOrders.length === 0) {
+          allOrders = getFerreNowSimulatedOrders();
+          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
+        } else if (STORE_ID === 'kioscojulio' && allOrders.length === 0) {
+          allOrders = getKioscoJulioSimulatedOrders();
+          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
+        } else if (STORE_ID === 'tecnomont' && allOrders.length === 0) {
+          allOrders = getTecnoMontSimulatedOrders();
+          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
+        } else if (STORE_ID === 'biuti' && allOrders.length === 0) {
+          allOrders = getBiutiSimulatedOrders();
+          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
+        } else if (STORE_ID === 'todolisto' && allOrders.length === 0) {
+          allOrders = getTodoListoSimulatedOrders();
+          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
         }
       } catch (e) { allOrders = []; }
 
@@ -15334,40 +15352,41 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       updateDashboardFromOrders(allOrders);
     }
 
-    function getNoutaccSimulatedOrders() {
+        function getNoutaccSimulatedOrders() {
       const now = new Date();
       const fmt = (date) => date.toLocaleString('es-AR', {
         day: '2-digit', month: '2-digit', year: 'numeric',
         hour: '2-digit', minute: '2-digit'
       });
 
-      const d1 = new Date(now.getTime() - 15 * 60 * 1000);   // 15 mins atrás
-      const d2 = new Date(now.getTime() - 55 * 60 * 1000);   // 55 mins atrás
-      const d3 = new Date(now.getTime() - 2.5 * 3600 * 1000);// 2.5 horas atrás
-      const d4 = new Date(now.getTime() - 18 * 3600 * 1000); // 18 horas atrás
-      const d5 = new Date(now.getTime() - 28 * 3600 * 1000); // 28 horas atrás
+      const d1 = new Date(now.getTime() - 15 * 60 * 1000);
+      const d2 = new Date(now.getTime() - 55 * 60 * 1000);
+      const d3 = new Date(now.getTime() - 2.5 * 3600 * 1000);
+      const d4 = new Date(now.getTime() - 18 * 3600 * 1000);
+      const d5 = new Date(now.getTime() - 28 * 3600 * 1000);
 
       return [
         {
           id: 'PED-NT-101',
+          store_id: 'noutacc',
           fecha: fmt(d1),
           cliente: 'Valeria Soria',
           dni: '34182904',
           telefono: '+54 9 11 5821-4433',
-          productos: 'Pan de Molde Lactal (Sin TACC) ×2 | Medialunas de Manteca Gluten Free (x6) ×1',
+          productos: 'Funda Silicone Case MagSafe iPhone 15 Pro Midnight Black ×1 | Protector Lentes Cámara Zafiro Titanium ×1',
           detalle: JSON.stringify([
-            { id: 1, name: 'Pan de Molde Lactal (Sin TACC)', emoji: '🍞', price: 4500, qty: 2 },
-            { id: 2, name: 'Medialunas de Manteca Gluten Free (x6)', emoji: '🥐', price: 5200, qty: 1 }
+            { id: 'nt-01', name: 'Funda Silicone Case MagSafe iPhone 15 Pro Midnight Black', emoji: '📱', price: 34500, qty: 1 },
+            { id: 'nt-03', name: 'Protector de Lentes de Cámara Zafiro Titanium iPhone 15 Pro', emoji: '🔍', price: 16500, qty: 1 }
           ]),
           items: [
-            { cant: 2, name: 'Pan de Molde Lactal (Sin TACC)', price: 4500 },
-            { cant: 1, name: 'Medialunas de Manteca Gluten Free (x6)', price: 5200 }
+            { cant: 1, name: 'Funda Silicone Case MagSafe iPhone 15 Pro Midnight Black', price: 34500 },
+            { cant: 1, name: 'Protector Lentes Cámara Zafiro Titanium iPhone 15 Pro', price: 16500 }
           ],
           pago: 'Transferencia',
           comprobante: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600',
           logistica: 'Envío a domicilio',
           direccion: 'Av. Santa Fe 3420, 4° B, Palermo',
-          total: 14200,
+          total: 51000,
           estado: 'confirmar',
           opt_in_whatsapp: true,
           pin_code: '4812',
@@ -15375,23 +15394,24 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         },
         {
           id: 'PED-NT-102',
+          store_id: 'noutacc',
           fecha: fmt(d2),
           cliente: 'Mariano Rossi',
           dni: '28910452',
           telefono: '+54 9 11 4192-3321',
-          productos: 'Hamburguesa Doble Cheddar & Bacon (Sin TACC) ×2 | Muffins de Arándanos y Limón (Pack x2) ×1',
+          productos: 'Funda Clear Case Antishock con Bordes Air-Cushion iPhone 15 Pro Max ×1 | Cargador Inalámbrico MagSafe 15W Fast Charge ×1',
           detalle: JSON.stringify([
-            { id: 4, name: 'Hamburguesa Doble Cheddar & Bacon (Sin TACC)', emoji: '🍔', price: 8900, qty: 2 },
-            { id: 7, name: 'Muffins de Arándanos y Limón (Pack x2)', emoji: '🧁', price: 3400, qty: 1 }
+            { id: 'nt-02', name: 'Funda Clear Case Antishock iPhone 15 Pro Max', emoji: '📱', price: 28900, qty: 1 },
+            { id: 'nt-04', name: 'Cargador Inalámbrico MagSafe 15W Fast Charge', emoji: '⚡', price: 42000, qty: 1 }
           ]),
           items: [
-            { cant: 2, name: 'Hamburguesa Doble Cheddar & Bacon (Sin TACC)', price: 8900 },
-            { cant: 1, name: 'Muffins de Arándanos y Limón (Pack x2)', price: 3400 }
+            { cant: 1, name: 'Funda Clear Case Antishock iPhone 15 Pro Max', price: 28900 },
+            { cant: 1, name: 'Cargador Inalámbrico MagSafe 15W Fast Charge', price: 42000 }
           ],
           pago: 'Mercado Pago',
           logistica: 'Envío a domicilio',
           direccion: 'Av. Corrientes 4550, 2° A, Almagro',
-          total: 21200,
+          total: 70900,
           estado: 'en_curso',
           delivery_id: 'DQV-NT-8821',
           pin_code: '7391',
@@ -15402,77 +15422,26 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         },
         {
           id: 'PED-NT-103',
+          store_id: 'noutacc',
           fecha: fmt(d3),
           cliente: 'Carolina Méndez',
           dni: '36145890',
           telefono: '+54 9 11 6544-7890',
-          productos: 'Porción de Torta Red Velvet (Sin TACC) ×2 | Café Latte Especial de Especias & Vainilla ×2',
+          productos: 'Funda de Cuero Vegano MagSafe Brown Saddle iPhone 15 ×1 | Cable Trenzado USB-C a USB-C 60W Reforzado 1.5m ×2',
           detalle: JSON.stringify([
-            { id: 6, name: 'Porción de Torta Red Velvet (Sin TACC)', emoji: '🍰', price: 4600, qty: 2 },
-            { id: 8, name: 'Café Latte Especial de Especias & Vainilla', emoji: '☕', price: 3100, qty: 2 }
+            { id: 'nt-05', name: 'Funda de Cuero Vegano MagSafe Brown Saddle', emoji: '📱', price: 39900, qty: 1 },
+            { id: 'nt-06', name: 'Cable Trenzado USB-C a USB-C 60W Reforzado 1.5m', emoji: '🔌', price: 18500, qty: 2 }
           ]),
           items: [
-            { cant: 2, name: 'Porción de Torta Red Velvet (Sin TACC)', price: 4600 },
-            { cant: 2, name: 'Café Latte Especial de Especias & Vainilla', price: 3100 }
+            { cant: 1, name: 'Funda de Cuero Vegano MagSafe Brown Saddle', price: 39900 },
+            { cant: 2, name: 'Cable Trenzado USB-C a USB-C 60W Reforzado 1.5m', price: 18500 }
           ],
           pago: 'Efectivo',
           logistica: 'Retiro por la tienda',
-          direccion: 'Retiro en mostrador Noutacc Sin TACC',
-          total: 15400,
+          direccion: 'Retiro en local Nout Accesorios Belgrano',
+          total: 76900,
           estado: 'listo_retirar',
           opt_in_whatsapp: false,
-          is_night_guard: false
-        },
-        {
-          id: 'PED-NT-104',
-          fecha: fmt(d4),
-          cliente: 'Ignacio Brizuela',
-          dni: '39812304',
-          telefono: '+54 9 11 3201-9988',
-          productos: 'Empanadas Criollas de Carne (x3) ×2 | Tarta Individual de Jamón, Queso y Huevo ×2',
-          detalle: JSON.stringify([
-            { id: 5, name: 'Empanadas Criollas de Carne (x3)', emoji: '🥟', price: 4200, qty: 2 },
-            { id: 3, name: 'Tarta Individual de Jamón, Queso y Huevo', emoji: '🥧', price: 4800, qty: 2 }
-          ]),
-          items: [
-            { cant: 2, name: 'Empanadas Criollas de Carne (x3)', price: 4200 },
-            { cant: 2, name: 'Tarta Individual de Jamón, Queso y Huevo', price: 4800 }
-          ],
-          pago: 'Transferencia',
-          logistica: 'Envío a domicilio',
-          direccion: 'Thames 1850, Palermo Soho',
-          total: 18000,
-          estado: 'despachado',
-          delivery_id: 'DQV-NT-8760',
-          pin_code: '9154',
-          pickup_id: 'PU-NT-04',
-          pickup_cost: 2500,
-          opt_in_whatsapp: true,
-          is_night_guard: true
-        },
-        {
-          id: 'PED-NT-105',
-          fecha: fmt(d5),
-          cliente: 'Florencia Carrizo',
-          dni: '34778112',
-          telefono: '+54 9 11 2344-9011',
-          productos: 'Alfajor Artesanal Dulce de Leche y Chocolate (x6) ×1 | Medialunas de Manteca Gluten Free (x6) ×2',
-          detalle: JSON.stringify([
-            { id: 9, name: 'Alfajor Artesanal Dulce de Leche y Chocolate (x6)', emoji: '🍪', price: 13200, qty: 1 },
-            { id: 2, name: 'Medialunas de Manteca Gluten Free (x6)', emoji: '🥐', price: 5200, qty: 2 }
-          ]),
-          items: [
-            { cant: 1, name: 'Alfajor Artesanal Dulce de Leche y Chocolate (x6)', price: 13200 },
-            { cant: 2, name: 'Medialunas de Manteca Gluten Free (x6)', price: 5200 }
-          ],
-          pago: 'Mercado Pago',
-          logistica: 'Envío a domicilio',
-          direccion: 'Av. del Libertador 2450, 7° D, Recoleta',
-          total: 23600,
-          estado: 'cobrado',
-          delivery_id: 'DQV-NT-8692',
-          pin_code: '2085',
-          opt_in_whatsapp: true,
           is_night_guard: false
         }
       ];
@@ -15511,6 +15480,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       return [
         {
           id: 'PED-BH-201',
+          store_id: 'bighouse',
           fecha: fmt(d1),
           cliente: 'Lautaro Giménez',
           dni: '38.412.981',
@@ -15540,6 +15510,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         },
         {
           id: 'PED-BH-202',
+          store_id: 'bighouse',
           fecha: fmt(d2),
           cliente: 'Sofía Rossi',
           dni: '40.119.340',
@@ -15569,6 +15540,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         },
         {
           id: 'PED-BH-203',
+          store_id: 'bighouse',
           fecha: fmt(d3),
           cliente: 'Martín Benítez',
           dni: '35.890.123',
@@ -15595,6 +15567,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         },
         {
           id: 'PED-BH-204',
+          store_id: 'bighouse',
           fecha: fmt(d4),
           cliente: 'Camila Domínguez',
           dni: '42.008.711',
@@ -15623,6 +15596,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         },
         {
           id: 'PED-BH-205',
+          store_id: 'bighouse',
           fecha: fmt(d5),
           cliente: 'Tomás Varela',
           dni: '37.662.190',
@@ -15649,6 +15623,163 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
           firma: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400',
           opt_in_whatsapp: true,
           is_night_guard: false
+        }
+      ];
+    }
+
+    
+    /* ═══════════════════════════════════════════ GENERADORES OFICIALES MULTI-TENANT POR RUBRO */
+
+    function getLugonesSilvaSimulatedOrders() {
+      const now = new Date();
+      const fmt = (date) => date.toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return [
+        {
+          id: 'PED-LS-301',
+          store_id: 'lugonessilva',
+          fecha: fmt(new Date(now.getTime() - 25 * 60 * 1000)),
+          cliente: 'Arq. Marcelo Benítez (Obra Canning)',
+          dni: '24.912.833',
+          telefono: '+54 9 11 4402-9911',
+          productos: 'Cal Hidráulica Milagro x 30kg ×20 | Plasticor Mortero Loma Negra x 40kg ×15 | Barra Hierro Acindar 12mm x 12m ×10',
+          pago: 'Transferencia',
+          logistica: 'Flete Camión Pluma en Obra',
+          direccion: 'Barrio Privado La Providencia Lote 142, Canning',
+          total: 366000,
+          estado: 'confirmar',
+          opt_in_whatsapp: true,
+          pin_code: '4190'
+        },
+        {
+          id: 'PED-LS-302',
+          store_id: 'lugonessilva',
+          fecha: fmt(new Date(now.getTime() - 110 * 60 * 1000)),
+          cliente: 'Construcciones San Vicente SRL',
+          dni: '30-71829344-8',
+          telefono: '+54 9 11 6310-8822',
+          productos: 'Arena Fina de Río Lavada BigBag 1m3 ×3 | Cemento Portland Loma Negra CPC 40 ×30',
+          pago: 'Transferencia',
+          logistica: 'Flete Camión Volquete',
+          direccion: 'Ruta 58 Km 12.5, San Vicente',
+          total: 402000,
+          estado: 'en_curso',
+          opt_in_whatsapp: true,
+          pin_code: '8821'
+        }
+      ];
+    }
+
+    function getFerreNowSimulatedOrders() {
+      const now = new Date();
+      const fmt = (date) => date.toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return [
+        {
+          id: 'PED-FN-401',
+          store_id: 'ferre-now',
+          fecha: fmt(new Date(now.getTime() - 35 * 60 * 1000)),
+          cliente: 'Taller Metalúrgico Fontana',
+          dni: '27.419.002',
+          telefono: '+54 9 11 5012-7744',
+          productos: 'Taladro Percutor Inalámbrico 20V DeWalt DCD7781 ×1 | Amoladora Angular Bosch 850W ×1',
+          pago: 'Mercado Pago',
+          logistica: 'Envío prioritario',
+          direccion: 'Parque Industrial Burzaco Lote 12',
+          total: 357000,
+          estado: 'confirmar',
+          opt_in_whatsapp: true,
+          pin_code: '6312'
+        }
+      ];
+    }
+
+    function getKioscoJulioSimulatedOrders() {
+      const now = new Date();
+      const fmt = (date) => date.toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return [
+        {
+          id: 'PED-KJ-501',
+          store_id: 'kioscojulio',
+          fecha: fmt(new Date(now.getTime() - 10 * 60 * 1000)),
+          cliente: 'Gonzalo Peñaloza',
+          dni: '42.110.899',
+          telefono: '+54 9 11 7891-2345',
+          productos: 'Fernet Branca Clásico 750ml ×1 | Coca-Cola Original 1.5L ×2 | Hielo en Rolito 4kg ×1',
+          pago: 'Efectivo',
+          logistica: 'Delivery express 30 min',
+          direccion: 'Av. Corrientes 2840, 3° C',
+          total: 21900,
+          estado: 'en_curso',
+          opt_in_whatsapp: true,
+          pin_code: '1920'
+        }
+      ];
+    }
+
+    function getTecnoMontSimulatedOrders() {
+      const now = new Date();
+      const fmt = (date) => date.toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return [
+        {
+          id: 'PED-TM-601',
+          store_id: 'tecnomont',
+          fecha: fmt(new Date(now.getTime() - 40 * 60 * 1000)),
+          cliente: 'Lucas De Paoli',
+          dni: '39.812.901',
+          telefono: '+54 9 11 3190-8800',
+          productos: 'Placa de Video AMD Radeon RX 7800 XT 16GB Sapphire Pulse ×1 | Procesador AMD Ryzen 7 7800X3D ×1',
+          pago: 'Transferencia',
+          logistica: 'Envío Asegurado Andreani',
+          direccion: 'Thames 1420, Palermo',
+          total: 1390000,
+          estado: 'confirmar',
+          opt_in_whatsapp: true,
+          pin_code: '7721'
+        }
+      ];
+    }
+
+    function getBiutiSimulatedOrders() {
+      const now = new Date();
+      const fmt = (date) => date.toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return [
+        {
+          id: 'PED-BT-701',
+          store_id: 'biuti',
+          fecha: fmt(new Date(now.getTime() - 50 * 60 * 1000)),
+          cliente: 'Camila Villalba',
+          dni: '36.541.200',
+          telefono: '+54 9 11 6788-9900',
+          productos: 'Blazer Sastrero Oversize Lino Italiano Arena "Verona" (Talle M) ×1',
+          pago: 'Mercado Pago',
+          logistica: 'Envío a Domicilio',
+          direccion: 'Alvear 1850, 6° A, Recoleta',
+          total: 145000,
+          estado: 'en_curso',
+          opt_in_whatsapp: true,
+          pin_code: '3310'
+        }
+      ];
+    }
+
+    function getTodoListoSimulatedOrders() {
+      const now = new Date();
+      const fmt = (date) => date.toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return [
+        {
+          id: 'PED-TL-801',
+          store_id: 'todolisto',
+          fecha: fmt(new Date(now.getTime() - 20 * 60 * 1000)),
+          cliente: 'Estudio Jurídico Morales & Asoc.',
+          dni: '30-68912344-3',
+          telefono: '+54 9 11 4321-7788',
+          productos: 'Cuaderno Universitario Mooving A4 80H Rayado ×5 | Set Marcadores Uni Posca PC-5M (Caja x8) ×1',
+          pago: 'Transferencia',
+          logistica: 'Envío Cadetería CABA',
+          direccion: 'Lavalle 1240, 4° Of. 402',
+          total: 76500,
+          estado: 'confirmar',
+          opt_in_whatsapp: true,
+          pin_code: '5590'
         }
       ];
     }
@@ -19349,8 +19480,8 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const saved = localStorage.getItem('storeapp_orders_' + STORE_ID);
       if (saved) {
         allOrders = JSON.parse(saved);
-        // Filtrar cualquier pedido cruzado que pertenezca a otra tienda
-        allOrders = allOrders.filter(o => !o.store_id || o.store_id === STORE_ID);
+        // Filtrar cualquier pedido cruzado que no pertenezca estrictamente a esta tienda
+        allOrders = allOrders.filter(o => o && o.store_id === STORE_ID);
         localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
         if (allOrders.length) {
           renderOrdersTable(allOrders.slice(0, 10));

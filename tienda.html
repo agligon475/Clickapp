@@ -2897,6 +2897,7 @@ async function registrarPedido(pedido) {
 
   const order = {
     id,
+    store_id:  STORE_ID,
     fecha,
     cliente:   pedido.nombre,
     dni:       pedido.dni,
@@ -2917,11 +2918,39 @@ async function registrarPedido(pedido) {
   // ── 1. Guardar en localStorage (misma key que usa el dashboard) ──
   try {
     const existing = JSON.parse(localStorage.getItem(`storeapp_orders_${STORE_ID}`) || '[]');
-    existing.unshift(order);
-    localStorage.setItem(`storeapp_orders_${STORE_ID}`, JSON.stringify(existing));
+    // Asegurar que ningún pedido previo ajeno contamine esta lista
+    const cleanList = existing.filter(o => o && o.store_id === STORE_ID);
+    cleanList.unshift(order);
+    localStorage.setItem(`storeapp_orders_${STORE_ID}`, JSON.stringify(cleanList));
   } catch(e) {
     console.warn('No se pudo guardar el pedido localmente:', e.message);
   }
+
+  // ── 1.b. Respaldar en la tabla orders de Supabase si está disponible ──
+  try {
+    fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        Prefer: 'return=minimal'
+      },
+      body: JSON.stringify({
+        id: order.id,
+        store_id: STORE_ID,
+        cliente: order.cliente,
+        dni: order.dni,
+        productos: order.productos,
+        total: order.total,
+        pago: order.pago,
+        logistica: order.logistica,
+        direccion: order.direccion,
+        estado: 'confirmar',
+        created_at: new Date().toISOString()
+      })
+    }).catch(() => {});
+  } catch(e) {}
 
   // ── 2. Enviar al Sheet vía webhook si está configurado ───────────
   let wh = {};

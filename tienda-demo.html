@@ -2013,20 +2013,22 @@ async function registrarPedido(pedido) {
     direccion: pedido.direccion || '',
     total:     pedido.total,
     estado:    'confirmar',
+    store_id:  STORE_ID
   };
 
   // ── 1. Guardar en localStorage (misma key que usa el dashboard) ──
   try {
-    const existing = JSON.parse(localStorage.getItem(`storeapp_orders_${STORE_ID}`) || localStorage.getItem('storeapp_orders') || '[]');
-    existing.unshift(order);
-    localStorage.setItem(`storeapp_orders_${STORE_ID}`, JSON.stringify(existing));
+    const existing = JSON.parse(localStorage.getItem(`storeapp_orders_${STORE_ID}`) || '[]');
+    const cleanList = existing.filter(o => o && o.store_id === STORE_ID);
+    cleanList.unshift(order);
+    localStorage.setItem(`storeapp_orders_${STORE_ID}`, JSON.stringify(cleanList));
   } catch(e) {
     console.warn('No se pudo guardar el pedido localmente:', e.message);
   }
 
   // ── 2. Enviar al Sheet vía webhook si está configurado ───────────
   let wh = {};
-  try { wh = JSON.parse(localStorage.getItem(`storeapp_webhook_${STORE_ID}`) || localStorage.getItem('storeapp_webhook') || '{}'); } catch(e) {}
+  try { wh = JSON.parse(localStorage.getItem(`storeapp_webhook_${STORE_ID}`) || '{}'); } catch(e) {}
   if (!wh.url || !wh.token) return;
 
   try {
