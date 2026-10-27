@@ -1697,6 +1697,52 @@
         </div>
       </section>
 
+      <!-- SLIDE 27: SINCRONIZACIÓN OMNICANAL DE PEDIDOS EN TIEMPO REAL & SUPABASE -->
+      <section class="slide" id="slide-27">
+        <span class="slide-badge" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4);color:#10B981;"><i class="bi bi-arrow-repeat"></i> Etapa 27 · Release 27 de Octubre 2026</span>
+        <h2 class="slide-title">Sincronización Omnicanal de Pedidos en Tiempo Real & Respaldo Supabase</h2>
+        <p class="slide-desc">Integración bidireccional entre storefront y panel de administración: persistencia en la tabla <code>orders</code> de Supabase, reactividad instantánea multi-pestaña y sanitización contable sin recargas.</p>
+
+        <div class="grid-2" style="margin-top:16px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px;">
+          <div class="card">
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-cloud-check-fill"></i> Respaldo Automático en Nube Supabase</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Cada pedido completado desde la tienda se registra automáticamente en la tabla <code>orders</code> de Supabase con esquema normalizado (<code>order_number</code>, <code>store_id</code>, <code>customer_name</code>, desglose de ítems, totales e indicador de entrega), asegurando resiliencia ante limpiezas de caché local.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#3B82F6;"><i class="bi bi-broadcast-pin"></i> Reactividad Multi-Pestaña y Auto-Focus</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Listeners automáticos en el Dashboard sobre el evento <code>storage</code> y <code>window.focus</code>: si el cliente genera un pedido en una pestaña o dispositivo, el panel del comerciante lo incorpora y renderiza de inmediato en el tablero Kanban sin requerir F5 manual.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#F59E0B;"><i class="bi bi-kanban-fill"></i> Fusión Híbrida & Tablero Kanban Unificado</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Algoritmo de unión inteligente entre <code>localStorage</code> y Supabase con deduplicación por <code>order_number</code>. Preserva los cambios de estado operativos que realice el comerciante y actualiza en tiempo real las tarjetas de KPI y el gráfico de ventas acumuladas.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#8B5CF6;"><i class="bi bi-hash"></i> Navegación por Hash <code>#pedidos</code> & Blindaje de Formato</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Enrutamiento semántico que mapea enlaces directos <code>#pedidos</code> a la vista <code>orders</code>, con normalización robusta de importes monetarios para prevenir valores <code>NaN</code> en las tarjetas de totales y comanda térmica.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <a href="/dashboard.html?store=biuti#pedidos" target="_blank" class="nav-btn primary" style="padding:10px 22px; font-size:13px; background:linear-gradient(135deg, #10B981 0%, #059669 100%);">
+            <i class="bi bi-kanban"></i> Ver Pedidos en Dashboard Biuti
+          </a>
+          <a href="/tienda.html?store=biuti" target="_blank" class="nav-btn secondary" style="padding:10px 22px; font-size:13px;">
+            <i class="bi bi-cart-check"></i> Probar Realizar Pedido en Tienda
+          </a>
+        </div>
+      </section>
+
     </main>
 
     <!-- BOTTOMBAR -->
@@ -1708,7 +1754,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 4.9 Dropzones Multimedia & Blindaje de Checkout WhatsApp · Actualizado 27/10/2026
+        Dale! Te Pido © 2026 · Versión 4.10 Sincronización Omnicanal de Pedidos & Tiempo Real · Actualizado 27/10/2026
       </div>
     </footer>
 
@@ -1717,7 +1763,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 26;
+  const totalSlides = 27;
 
   function showSlide(index) {
     if (index < 1) index = 1;

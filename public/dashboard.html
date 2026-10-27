@@ -11684,7 +11684,7 @@
       <td style="color:var(--silver);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${o.productos}</td>
       <td>${o.pago}</td>
       <td>${o.logistica}</td>
-      <td style="font-family:var(--font-h);font-size:14px;font-weight:700;">$${Number(o.total || 0).toLocaleString('es-AR')}</td>
+      <td style="font-family:var(--font-h);font-size:14px;font-weight:700;">${typeof o.total === 'number' ? '$' + o.total.toLocaleString('es-AR') : (String(o.total || '').startsWith('$') ? o.total : '$' + (parseFloat(String(o.total || '0').replace(/[^0-9.-]+/g, '')) || 0).toLocaleString('es-AR'))}</td>
       <td>${badge(o.estado)}${stateSelect(o.id, o.estado)}</td>
     </tr>`).join('') ||
         `<tr><td colspan="7" style="text-align:center;color:var(--silver);padding:24px;">
@@ -16083,6 +16083,129 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     let orderItems = [];  // { id, name, emoji, price, qty }
     let allOrders = [];  // master list in memory
 
+    async function syncOrdersFromCloudAndStorage() {
+      // 1. Cargar pedidos desde LocalStorage
+      let localList = [];
+      try {
+        try { localStorage.removeItem('storeapp_orders'); } catch(e) {}
+        const saved = localStorage.getItem('storeapp_orders_' + STORE_ID);
+        if (saved) {
+          localList = JSON.parse(saved);
+          localList = Array.isArray(localList) ? localList.filter(o => o && o.store_id === STORE_ID) : [];
+        }
+      } catch (e) {
+        localList = [];
+      }
+
+      // 2. Sincronizar pedidos desde la base de datos Supabase
+      let cloudList = [];
+      try {
+        const res = await safeFetchSupabase(`${SUPABASE_URL}/rest/v1/orders?store_id=eq.${encodeURIComponent(STORE_ID)}&order=created_at.desc`);
+        if (res.ok) {
+          const rawCloud = await res.json();
+          if (Array.isArray(rawCloud)) {
+            cloudList = rawCloud.map(o => {
+              const itemsArr = Array.isArray(o.items) ? o.items : [];
+              const prodsText = itemsArr.map(it => `${it.nombre || it.name || 'Item'} ×${it.cantidad || it.qty || 1}`).join(' | ') || (o.items_text || 'Pedido');
+              const d = o.created_at ? new Date(o.created_at) : new Date();
+              const fechaStr = d.toLocaleDateString('es-AR', { day:'2-digit', month:'2-digit', year:'numeric' }) + ' ' + d.toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit' });
+              
+              let dniVal = '';
+              let pagoVal = 'Efectivo';
+              let optInVal = false;
+              let pinVal = null;
+              if (o.notes) {
+                const dniMatch = o.notes.match(/DNI:\s*([^|]+)/i);
+                if (dniMatch) dniVal = dniMatch[1].trim();
+                const pagoMatch = o.notes.match(/Pago:\s*([^|]+)/i);
+                if (pagoMatch) pagoVal = pagoMatch[1].trim();
+                const pinMatch = o.notes.match(/PIN:\s*([^|]+)/i);
+                if (pinMatch && pinMatch[1].trim() !== '—') pinVal = pinMatch[1].trim();
+                if (o.notes.includes('Opt-in Wapp: Sí')) optInVal = true;
+              }
+
+              const rawAmt = typeof o.total_amount === 'number' ? o.total_amount : (parseFloat(String(o.total_amount || o.total || '0').replace(/[^0-9.-]+/g, '')) || 0);
+
+              return {
+                id: o.order_number || o.id,
+                store_id: o.store_id || STORE_ID,
+                fecha: fechaStr,
+                cliente: o.customer_name || 'Cliente',
+                dni: dniVal,
+                productos: prodsText,
+                detalle: JSON.stringify(itemsArr),
+                pago: pagoVal,
+                logistica: o.delivery_type === 'delivery' ? 'Envío a domicilio' : 'Retiro por la tienda',
+                direccion: o.customer_address || '',
+                total: rawAmt,
+                estado: o.status || 'confirmar',
+                opt_in_whatsapp: optInVal,
+                pin_code: pinVal,
+                weight_kg: 0.5,
+                category: 'SMALL_BOX'
+              };
+            });
+          }
+        }
+      } catch (e) {
+        console.warn('Error al sincronizar pedidos de Supabase:', e.message);
+      }
+
+      // 3. Fusionar pedidos evitando duplicados por ID/order_number
+      const map = new Map();
+      localList.forEach(o => { if (o && o.id) map.set(o.id, o); });
+      cloudList.forEach(o => {
+        if (o && o.id) {
+          if (!map.has(o.id)) {
+            map.set(o.id, o);
+          } else {
+            const localObj = map.get(o.id);
+            map.set(o.id, { ...o, ...localObj });
+          }
+        }
+      });
+
+      let merged = Array.from(map.values());
+
+      // Auto-inject simulado EXCLUSIVAMENTE para tiendas demo cuando no hay ningún pedido
+      if (merged.length === 0) {
+        if ((STORE_ID === 'bighouse' || STORE_ID === 'burgerhouse')) {
+          merged = getBurgerHouseSimulatedOrders();
+        } else if (STORE_ID === 'noutacc') {
+          merged = getNoutaccSimulatedOrders();
+        } else if (STORE_ID === 'lugonessilva') {
+          merged = getLugonesSilvaSimulatedOrders();
+        } else if (STORE_ID === 'ferre-now') {
+          merged = getFerreNowSimulatedOrders();
+        } else if (STORE_ID === 'kioscojulio') {
+          merged = getKioscoJulioSimulatedOrders();
+        } else if (STORE_ID === 'tecnomont') {
+          merged = getTecnoMontSimulatedOrders();
+        } else if (STORE_ID === 'biuti') {
+          merged = getBiutiSimulatedOrders();
+        } else if (STORE_ID === 'todolisto') {
+          merged = getTodoListoSimulatedOrders();
+        }
+      }
+
+      allOrders = merged;
+      try {
+        localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
+      } catch(e) {}
+
+      // Actualizar vistas del dashboard
+      if (typeof renderAllOrders === 'function') renderAllOrders(allOrders);
+      if (typeof renderOrdersTable === 'function') renderOrdersTable(allOrders.slice(0, 10));
+      if (typeof updateDashboardFromOrders === 'function') updateDashboardFromOrders(allOrders);
+
+      const syncEl = document.getElementById('sheet-sync-info');
+      if (syncEl) {
+        syncEl.textContent = allOrders.length
+          ? `${allOrders.length} pedido${allOrders.length !== 1 ? 's' : ''} sincronizado${allOrders.length !== 1 ? 's' : ''}`
+          : 'Sin pedidos todavía';
+      }
+    }
+
     function initOrderForm() {
       // Populate product selector
       const sel = document.getElementById('of-prod-select');
@@ -16102,49 +16225,8 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
           .join('');
       }
 
-      // Load saved orders
-      try {
-        try { localStorage.removeItem('storeapp_orders'); } catch(e) {}
-        const saved = localStorage.getItem('storeapp_orders_' + STORE_ID);
-        if (saved) {
-          allOrders = JSON.parse(saved);
-          // Filtrado estricto multi-tenant: el pedido DEBE pertenecer exactamente a esta tienda
-          allOrders = allOrders.filter(o => o && o.store_id === STORE_ID);
-        } else {
-          allOrders = [];
-        }
-
-        // Auto-inject simulado EXCLUSIVAMENTE para las tiendas de testing/demo oficiales cuando estén vacías
-        if ((STORE_ID === 'bighouse' || STORE_ID === 'burgerhouse') && allOrders.length === 0) {
-          allOrders = getBurgerHouseSimulatedOrders();
-          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
-        } else if (STORE_ID === 'noutacc' && allOrders.length === 0) {
-          allOrders = getNoutaccSimulatedOrders();
-          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
-        } else if (STORE_ID === 'lugonessilva' && allOrders.length === 0) {
-          allOrders = getLugonesSilvaSimulatedOrders();
-          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
-        } else if (STORE_ID === 'ferre-now' && allOrders.length === 0) {
-          allOrders = getFerreNowSimulatedOrders();
-          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
-        } else if (STORE_ID === 'kioscojulio' && allOrders.length === 0) {
-          allOrders = getKioscoJulioSimulatedOrders();
-          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
-        } else if (STORE_ID === 'tecnomont' && allOrders.length === 0) {
-          allOrders = getTecnoMontSimulatedOrders();
-          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
-        } else if (STORE_ID === 'biuti' && allOrders.length === 0) {
-          allOrders = getBiutiSimulatedOrders();
-          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
-        } else if (STORE_ID === 'todolisto' && allOrders.length === 0) {
-          allOrders = getTodoListoSimulatedOrders();
-          localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
-        }
-      } catch (e) { allOrders = []; }
-
       buildStateFilter();
-      renderAllOrders(allOrders);
-      updateDashboardFromOrders(allOrders);
+      syncOrdersFromCloudAndStorage();
     }
 
         function getNoutaccSimulatedOrders() {
@@ -17025,7 +17107,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
               <div class="kc-client"><strong>${o.cliente}</strong> · <span style="font-size:10px;color:var(--silver);">${o.logistica || 'Mostrador'}</span></div>
               <div class="kc-prods" style="font-size:11px;color:var(--fog);margin:4px 0;">${o.productos}</div>
               <div class="kc-footer">
-                <span class="kc-total">$${Number(o.total || 0).toLocaleString('es-AR')}</span>
+                <span class="kc-total">${typeof o.total === 'number' ? '$' + o.total.toLocaleString('es-AR') : (String(o.total || '').startsWith('$') ? o.total : '$' + (parseFloat(String(o.total || '0').replace(/[^0-9.-]+/g, '')) || 0).toLocaleString('es-AR'))}</span>
                 <span class="kc-date">${(o.fecha || '').split(' ')[0]}</span>
               </div>
               <select onchange="changeOrderEstado('${o.id}',this.value)" class="kc-select">
@@ -17081,7 +17163,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
           : '<span style="color:var(--zinc);">Retira cliente</span>'}
       </td>
       <td style="white-space:nowrap;font-family:var(--font-h);font-size:15px;font-weight:700;">
-        $${Number(o.total || 0).toLocaleString('es-AR')}
+        ${typeof o.total === 'number' ? '$' + o.total.toLocaleString('es-AR') : (String(o.total || '').startsWith('$') ? o.total : '$' + (parseFloat(String(o.total || '0').replace(/[^0-9.-]+/g, '')) || 0).toLocaleString('es-AR'))}
       </td>
       <td>
         <div style="display:flex;flex-direction:column;gap:4px;">
@@ -17366,7 +17448,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     function updateDashboardFromOrders(orders) {
       if (!orders || !orders.length) return;
 
-      const total = orders.reduce((s, o) => s + Number(o.total || 0), 0);
+      const total = orders.reduce((s, o) => s + (typeof o.total === 'number' ? o.total : (parseFloat(String(o.total || '0').replace(/[^0-9.-]+/g, '')) || 0)), 0);
       const avg = Math.round(total / orders.length);
       const clientes = new Set(orders.map(o => o.dni || o.cliente).filter(Boolean)).size;
 
@@ -20261,7 +20343,9 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     }
 
     function handleUrlHashNavigation() {
-      const hash = window.location.hash.replace('#', '').trim();
+      let hash = window.location.hash.replace('#', '').trim();
+      if (hash === 'pedidos') hash = 'orders';
+      if (hash === 'productos') hash = 'products';
       if (hash && document.getElementById('view-' + hash)) {
         goToView(hash);
       }
@@ -20291,23 +20375,31 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (saved) {
         allOrders = JSON.parse(saved);
         // Filtrar cualquier pedido cruzado que no pertenezca estrictamente a esta tienda
-        allOrders = allOrders.filter(o => o && o.store_id === STORE_ID);
-        localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
+        allOrders = Array.isArray(allOrders) ? allOrders.filter(o => o && o.store_id === STORE_ID) : [];
         if (allOrders.length) {
           renderOrdersTable(allOrders.slice(0, 10));
+          if (typeof renderAllOrders === 'function') renderAllOrders(allOrders);
           updateDashboardFromOrders(allOrders);
-          document.getElementById('sheet-sync-info').textContent =
-            `${allOrders.length} pedido${allOrders.length !== 1 ? 's' : ''} guardado${allOrders.length !== 1 ? 's' : ''}`;
-        } else {
-          renderOrdersTable([]);
-          document.getElementById('sheet-sync-info').textContent = 'Sin pedidos todavía';
+          const syncInfoEl = document.getElementById('sheet-sync-info');
+          if (syncInfoEl) syncInfoEl.textContent = `${allOrders.length} pedido${allOrders.length !== 1 ? 's' : ''} guardado${allOrders.length !== 1 ? 's' : ''}`;
         }
-      } else {
-        allOrders = [];
-        renderOrdersTable([]);
-        document.getElementById('sheet-sync-info').textContent = 'Sin pedidos todavía';
       }
-    } catch (e) { allOrders = []; renderOrdersTable([]); }
+    } catch (e) { allOrders = []; }
+
+    // Sincronizar inmediatamente desde Supabase en la nube
+    syncOrdersFromCloudAndStorage();
+
+    // Sincronización reactiva en tiempo real al registrar pedidos en otra pestaña
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'storeapp_orders_' + STORE_ID) {
+        syncOrdersFromCloudAndStorage();
+      }
+    });
+
+    // Sincronizar al volver a enfocar la ventana/pestaña
+    window.addEventListener('focus', () => {
+      syncOrdersFromCloudAndStorage();
+    });
 
     if (window.location.hash && window.location.hash.length > 1) {
       handleUrlHashNavigation();

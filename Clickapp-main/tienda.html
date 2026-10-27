@@ -2817,6 +2817,7 @@ function enviarWhatsApp() {
   const pago   = document.getElementById('f-pago').value;
   const logis  = document.getElementById('f-logistica').value;
   const dir    = document.getElementById('f-direccion').value.trim();
+  const optInWapp = document.getElementById('f-optin-wapp') ? document.getElementById('f-optin-wapp').checked : true;
 
   if (!nombre||!dni||!pago||!logis) { showToast('⚠ Completá todos los campos'); return; }
   if (logis==='Envío a domicilio'&&!dir) { showToast('⚠ Ingresá la dirección de envío'); return; }
@@ -2992,28 +2993,32 @@ async function registrarPedido(pedido) {
 
   // ── 1.b. Respaldar en la tabla orders de Supabase si está disponible ──
   try {
-    fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+    const rawTotal = typeof pedido.total === 'number'
+      ? pedido.total
+      : parseFloat(String(pedido.total || '0').replace(/[^0-9.]/g, '')) || 0;
+
+    fetchSupabase('/rest/v1/orders', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`,
         Prefer: 'return=minimal'
       },
       body: JSON.stringify({
-        id: order.id,
+        order_number: order.id,
         store_id: STORE_ID,
-        cliente: order.cliente,
-        dni: order.dni,
-        productos: order.productos,
-        total: order.total,
-        pago: order.pago,
-        logistica: order.logistica,
-        direccion: order.direccion,
-        estado: 'confirmar',
+        customer_name: order.cliente,
+        customer_phone: null,
+        customer_address: order.direccion || null,
+        delivery_type: order.logistica === 'Envío a domicilio' ? 'delivery' : 'retiro',
+        items: pedido.items || [],
+        total_amount: rawTotal,
+        notes: `DNI: ${order.dni || '—'} | Pago: ${order.pago || '—'} | PIN: ${order.pin_code || '—'} | Opt-in Wapp: ${order.opt_in_whatsapp ? 'Sí' : 'No'}`,
+        status: 'confirmar',
         created_at: new Date().toISOString()
       })
-    }).catch(() => {});
+    }).catch(err => {
+      console.warn('Error al respaldar pedido en Supabase:', err.message);
+    });
   } catch(e) {}
 
   // ── 2. Enviar al Sheet vía webhook si está configurado ───────────
