@@ -1,4 +1,4 @@
-const CACHE_NAME = 'daletepido-v17';
+const CACHE_NAME = 'daletepido-v18';
 const ASSETS_TO_CACHE = [
   '/',
   '/landing',
@@ -60,13 +60,25 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Manejo de peticiones (Fetch) con soporte offline garantizado
+// Manejo de peticiones (Fetch) con soporte offline garantizado y sin bloquear peticiones externas
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
   const url = new URL(event.request.url);
   if (!url.protocol.startsWith('http')) return;
+
+  // Permitir que el navegador maneje de forma nativa peticiones a APIs dinámicas, Supabase, Cloudinary y extensiones
+  const isSameOrigin = (url.origin === self.location.origin);
+  if (!isSameOrigin) {
+    const isStaticCDN = url.hostname.includes('cdn.jsdelivr.net') ||
+                        url.hostname.includes('fonts.googleapis.com') ||
+                        url.hostname.includes('fonts.gstatic.com');
+    // Si no es un CDN estático aprobado, dejar pasar sin interceptar
+    if (!isStaticCDN) return;
+  }
+
   if (url.pathname.startsWith('/api/')) return;
+  if (url.pathname.includes('/rest/v1/')) return;
 
   // Manejo de navegación HTML (Dashboard, Tienda, Login)
   if (event.request.mode === 'navigate') {
@@ -116,9 +128,9 @@ self.addEventListener('fetch', (event) => {
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
         // En segundo plano revalidar caché si hay conexión
-        fetch(url.href)
+        fetch(event.request)
           .then((networkResponse) => {
-            if (networkResponse && networkResponse.status === 200) {
+            if (networkResponse && (networkResponse.status === 200 || networkResponse.type === 'opaque')) {
               caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
             }
           })
@@ -126,7 +138,12 @@ self.addEventListener('fetch', (event) => {
         return cachedResponse;
       }
 
-      return fetch(event.request).catch(() => Response.error());
+      // Si no está en caché, traer de la red; si falla, responder con fallback limpio sin invocar Response.error()
+      return fetch(event.request).catch(async () => {
+        const fallback = await caches.match(event.request);
+        if (fallback) return fallback;
+        return new Response('', { status: 404, statusText: 'Not Found Offline' });
+      });
     })
   );
 });

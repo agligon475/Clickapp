@@ -1612,11 +1612,11 @@
         </div>
       </section>
 
-      <!-- SLIDE 25: ROBUSTEZ EN MODAL DE PRODUCTOS Y NORMALIZACIÓN DE IMÁGENES -->
+      <!-- SLIDE 25: ROBUSTEZ EN MODAL DE PRODUCTOS, NORMALIZACIÓN DE IMÁGENES Y RESILIENCIA SERVICE WORKER -->
       <section class="slide" id="slide-25">
         <span class="slide-badge" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4);color:#10B981;"><i class="bi bi-shield-check"></i> Etapa 25 · Release 27 de Octubre 2026</span>
-        <h2 class="slide-title">Blindaje en Apertura de Modal y Normalización Inteligente de Imágenes</h2>
-        <p class="slide-desc">Resolución integral de fallos en apertura de modal y prevención proactiva de errores 404 en recursos multimedia en todos los comercios del ecosistema Dale! Te Pido (incluyendo cuentas demo como Biuti).</p>
+        <h2 class="slide-title">Blindaje en Modal de Productos, Normalización CDN y Service Worker PWA v18</h2>
+        <p class="slide-desc">Resolución integral de fallos en apertura de modal, prevención proactiva de errores 404 multimedia y resiliencia en el Service Worker para evitar bloqueos FetchEvent/net::ERR_FAILED ante peticiones externas.</p>
 
         <div class="grid-3" style="margin-top:16px;">
           <div class="card">
@@ -1634,9 +1634,9 @@
           </div>
 
           <div class="card">
-            <div class="card-title" style="color:#F59E0B;"><i class="bi bi-person-check-fill"></i> Acceso Fluido a Tiendas Demo</div>
+            <div class="card-title" style="color:#F59E0B;"><i class="bi bi-cpu-fill"></i> Service Worker PWA v18 Sin Errores Fetch</div>
             <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
-              Inicialización transparente de credenciales para todas las tiendas de demostración oficial (Biuti, BigHouse, FerreNow, Kiosco Julio, Noutacc, TecnoMont, TodoListo, Lugones Silva), permitiendo inspeccionar y editar catálogos sin fricciones de inicio de sesión.
+              Actualización de <code>sw.js</code> a v18: se eliminó <code>Response.error()</code> que disparaba advertencias de FetchEvent en Chrome y se desacoplaron llamadas de terceros y APIs dinámicas para que el navegador las resuelva de forma nativa sin generar <code>ERR_FAILED</code>.
             </p>
           </div>
         </div>
