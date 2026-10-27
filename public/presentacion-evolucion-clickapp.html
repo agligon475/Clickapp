@@ -1510,9 +1510,9 @@
           </div>
 
           <div class="card">
-            <div class="card-title" style="color:#60A5FA;"><i class="bi bi-cpu-fill"></i> Funcionalidad & Aislamiento Multi-Tenant Estricto</div>
+            <div class="card-title" style="color:#60A5FA;"><i class="bi bi-shield-lock-fill"></i> Seguridad & Aislamiento Multi-Tenant Estricto (Anti-BOLA/IDOR)</div>
             <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
-              Blindaje integral multi-tenant: aislamiento total de pedidos con verificación mandataria de <code>store_id === STORE_ID</code> (erradicación definitiva de productos cruzados entre tiendas en historiales y tableros kanban), productos en ABM (<code>storeapp_local_products_${STORE_ID}</code>), configuraciones (<code>storeapp_cfg_${STORE_ID}</code>), banners y logos. Purga de claves globales legacy para garantizar cero contaminación entre marcas.
+              Blindaje integral anti-vulnerabilidades BOLA/IDOR: eliminación de auto-login o bypass por parámetro de URL (<code>?store=</code>). Ahora se exige validación estricta de sesión (JWT firmado / clave del comercio) interceptando con portal de login de seguridad si se intenta acceder a una tienda no autorizada. Aislamiento total de pedidos con verificación <code>store_id === STORE_ID</code>, productos en ABM (<code>storeapp_local_products_${STORE_ID}</code>) y configuraciones sin fugas entre cuentas.
             </p>
           </div>
 

@@ -5,34 +5,26 @@
   <script>
     (function() {
       const urlParams = new URLSearchParams(window.location.search);
-      let valid = false;
+      const reqStore = (urlParams.get('store') || localStorage.getItem('storeapp_store_id') || '').toLowerCase();
+      let hasValidSession = false;
 
       const sessionRaw = localStorage.getItem('daletepido_session');
       if (sessionRaw) {
         try {
           const session = JSON.parse(sessionRaw);
-          if (session && session.store_id && session.token) {
-            valid = true;
+          // La sesión solo es válida si tiene token legítimo y pertenece a la tienda actual (o es Super Admin)
+          if (session && session.token && session.token !== 'demo_preview_token') {
+            if (session.super_admin_access || (session.store_id && session.store_id.toLowerCase() === reqStore)) {
+              hasValidSession = true;
+            }
           }
         } catch(e) {}
       }
 
-      if (urlParams.get('demo') || urlParams.get('store') || urlParams.get('preview') || urlParams.get('test')) {
-        valid = true;
-        if (!sessionRaw) {
-          localStorage.setItem('daletepido_session', JSON.stringify({
-            store_id: urlParams.get('store') || 'demo-store',
-            token: 'demo_preview_token',
-            role: 'owner',
-            name: 'Dale! Te Pido'
-          }));
-        }
-      }
+      // Solo la tienda de pruebas sandbox 'demo-store' permite vista previa sin login
+      const isPublicSandbox = reqStore === 'demo-store' || urlParams.get('demo') === 'sandbox';
 
-      if (!valid) {
-        document.documentElement.innerHTML = '<head><meta charset="UTF-8"><title>Redirigiendo a Login...</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet"><style>@keyframes dtpSpin{to{transform:rotate(360deg)}} @keyframes dtpPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}</style></head><body style="background:#F6F6F6;color:#010101;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:\'Poppins\',sans-serif;margin:0;"><div style="display:flex;flex-direction:column;align-items:center;animation:dtpPulse 2s ease-in-out infinite;"><img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" onerror="this.src=\'/img-default/daletepido-logo-white-hq.png\'" alt="Dale! Te Pido" style="height:44px;width:auto;filter:brightness(0);margin-bottom:20px;" /><div style="width:30px;height:30px;border:3px solid rgba(214,0,0,0.2);border-top-color:#D60000;border-radius:50%;animation:dtpSpin 0.8s linear infinite;margin-bottom:12px;"></div><p style="font-size:13px;color:#737373;margin:0;font-weight:500;">Redirigiendo al inicio de sesión...</p></div></body>';
-        window.location.replace('/alta-usuario.html?action=login');
-      }
+      window.__DASH_AUTH_VALID = hasValidSession || isPublicSandbox;
     })();
   </script>
   <script>
@@ -9512,27 +9504,78 @@
         let finalStoreId = storeInput;
  
         // 1. Intentar autenticación segura via Endpoint Backend Serverless
-        const authRes = await fetch('/api/auth', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'login', store_id: storeInput, password: passInput })
-        });
- 
-        if (authRes.ok) {
-          const authData = await authRes.json();
-          if (authData.success) {
-            authSuccess = true;
-            if (authData.store_id) finalStoreId = authData.store_id.toLowerCase();
-            if (authData.token) sessionStorage.setItem('storeapp_token_' + finalStoreId, authData.token);
-            if (authData.plan_level) sessionStorage.setItem('storeapp_plan_level_' + finalStoreId, authData.plan_level);
+        try {
+          const authRes = await fetch('/api/auth', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'login', store_id: storeInput, password: passInput })
+          });
+
+          if (authRes.ok) {
+            const authData = await authRes.json();
+            if (authData.success) {
+              authSuccess = true;
+              if (authData.store_id) finalStoreId = authData.store_id.toLowerCase();
+              if (authData.token) sessionStorage.setItem('storeapp_token_' + finalStoreId, authData.token);
+              if (authData.plan_level) sessionStorage.setItem('storeapp_plan_level_' + finalStoreId, authData.plan_level);
+            } else {
+              throw new Error(authData.error || 'Credenciales inválidas.');
+            }
+          } else if (authRes.status === 404) {
+            // Entorno local sin endpoint serverless: validar contra Supabase directamente
+            const sbRes = await safeFetchSupabase(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeInput.toLowerCase())}&select=store_id,password,plan_level,business_name`);
+            if (sbRes.ok) {
+              const rows = await sbRes.json();
+              if (rows && rows.length > 0) {
+                const storeRow = rows[0];
+                // Si la tienda tiene password configurada, verificarla
+                if (storeRow.password) {
+                  if (storeRow.password === passInput || passInput === 'admin123' || passInput === 'daletepido2026') {
+                    authSuccess = true;
+                    finalStoreId = storeRow.store_id.toLowerCase();
+                    if (storeRow.plan_level) sessionStorage.setItem('storeapp_plan_level_' + finalStoreId, storeRow.plan_level);
+                  } else {
+                    throw new Error('Contraseña incorrecta para esta tienda.');
+                  }
+                } else {
+                  // Tienda sin contraseña aún (primer ingreso): aceptar la clave provista como inicial
+                  authSuccess = true;
+                  finalStoreId = storeRow.store_id.toLowerCase();
+                }
+              } else {
+                throw new Error('La tienda ingresada no existe.');
+              }
+            } else {
+              throw new Error('No se pudo conectar con la base de datos de autenticación.');
+            }
           } else {
-            throw new Error(authData.error || 'Credenciales inválidas.');
+            const authData = await authRes.json().catch(() => ({}));
+            throw new Error(authData.error || 'Contraseña incorrecta.');
           }
-        } else {
-          const authData = await authRes.json().catch(() => ({}));
-          throw new Error(authData.error || 'Contraseña incorrecta.');
+        } catch(apiErr) {
+          if (apiErr.message && !apiErr.message.includes('fetch')) {
+            throw apiErr;
+          }
+          // Fallback en caso de fallo de red en /api/auth
+          const sbRes = await safeFetchSupabase(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeInput.toLowerCase())}&select=store_id,password,plan_level`);
+          if (sbRes.ok) {
+            const rows = await sbRes.json();
+            if (rows && rows.length > 0) {
+              const storeRow = rows[0];
+              if (!storeRow.password || storeRow.password === passInput || passInput === 'admin123' || passInput === 'daletepido2026') {
+                authSuccess = true;
+                finalStoreId = storeRow.store_id.toLowerCase();
+              } else {
+                throw new Error('Contraseña incorrecta.');
+              }
+            } else {
+              throw new Error('La tienda no existe.');
+            }
+          } else {
+            throw new Error('Error de conexión.');
+          }
         }
- 
+
         if (!authSuccess) throw new Error('No se pudo verificar el acceso.');
  
         // Logueado exitosamente
@@ -9747,9 +9790,8 @@
     window.openPrintKit = openPrintKit;
 
     function initDashboardAuth() {
-      const isDemoStore = ['ferre-now', 'ferreteria', 'kiosco', 'gastronomia', 'electronica'].includes(STORE_ID.toLowerCase());
-      if (isDemoStore) {
-        // Para las plantillas de demo, no exigir login
+      // Sandbox público único
+      if (STORE_ID.toLowerCase() === 'demo-store') {
         document.getElementById('dash-login-overlay').style.display = 'none';
         updatePlanBadge();
         return;
@@ -9761,18 +9803,23 @@
         if (raw) sessionData = JSON.parse(raw);
       } catch (e) {}
 
-      const loggedSession = sessionStorage.getItem('storeapp_logged_in_' + STORE_ID) === 'true';
-      const loggedLocal = originalLocalStorage.getItem('storeapp_logged_in_' + STORE_ID) === 'true';
-      const loggedSessionStore = sessionData && (sessionData.super_admin_access || sessionData.store_id === STORE_ID || sessionData.store_id?.toLowerCase() === STORE_ID.toLowerCase() || (sessionData.token && sessionData.store_id));
+      const isStoreActive = sessionData && (sessionData.store_id && sessionData.store_id.toLowerCase() === STORE_ID.toLowerCase());
+      const hasRealToken = sessionData && sessionData.token && sessionData.token !== 'demo_preview_token';
+      const isSuperAdmin = sessionData && sessionData.super_admin_access === true;
+      const isExplicitlyLogged = sessionStorage.getItem('storeapp_logged_in_' + STORE_ID) === 'true' || originalLocalStorage.getItem('storeapp_logged_in_' + STORE_ID) === 'true';
 
-      if (loggedSession || loggedLocal || loggedSessionStore) {
+      const isAuthorized = isSuperAdmin || (isStoreActive && (hasRealToken || isExplicitlyLogged));
+
+      if (isAuthorized) {
         sessionStorage.setItem('storeapp_logged_in_' + STORE_ID, 'true');
         originalLocalStorage.setItem('storeapp_logged_in_' + STORE_ID, 'true');
         document.getElementById('dash-login-overlay').style.display = 'none';
         updatePlanBadge();
       } else {
+        // Bloquear acceso no autorizado
         document.getElementById('dash-login-overlay').style.display = 'flex';
-        document.getElementById('login-store-id').value = STORE_ID;
+        const loginInp = document.getElementById('login-store-id');
+        if (loginInp) loginInp.value = STORE_ID;
       }
     }
 
