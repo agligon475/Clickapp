@@ -3840,6 +3840,200 @@
       text-overflow: ellipsis;
     }
 
+    /* ═════════ MODERN PRODUCT MEDIA DROPZONES & GEMINI ALERT ═════════ */
+    .pw-dropzones-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .pw-dropzone-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--zinc);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+    .pw-dz-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .pw-dropzone-main {
+      border: 2px dashed rgba(255, 255, 255, 0.18);
+      border-radius: 12px;
+      background: var(--iron);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 18px 14px;
+    }
+    .pw-dropzone-main:hover, .pw-dropzone-main.dragover {
+      border-color: var(--red);
+      background: rgba(246, 0, 0, 0.06);
+      transform: translateY(-1px);
+    }
+    .pw-dz-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+    .pw-dz-icon-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(246, 0, 0, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--red);
+      font-size: 22px;
+      margin-bottom: 8px;
+      transition: transform 0.2s ease;
+    }
+    .pw-dropzone-main:hover .pw-dz-icon-circle {
+      transform: scale(1.1);
+    }
+    .pw-dz-main-text {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .pw-dz-sub-text {
+      font-size: 10.5px;
+      color: var(--silver);
+      margin-bottom: 10px;
+      max-width: 320px;
+      line-height: 1.4;
+    }
+    .pw-dz-browse-btn {
+      background: var(--steel);
+      border: 1px solid var(--zinc);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .pw-dz-browse-btn:hover {
+      background: var(--zinc);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    .pw-dropzone-secondary-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .pw-dropzone-sub {
+      border: 1.5px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      background: var(--iron);
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 10px;
+    }
+    .pw-dropzone-sub:hover, .pw-dropzone-sub.dragover {
+      border-color: var(--red);
+      background: rgba(246, 0, 0, 0.05);
+    }
+    .pw-dropzone-filled-wrap {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      background: #000;
+    }
+    .pw-dropzone-filled-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .pw-dropzone-overlay-actions {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      backdrop-filter: blur(2px);
+    }
+    .pw-dropzone-main:hover .pw-dropzone-overlay-actions,
+    .pw-dropzone-sub:hover .pw-dropzone-overlay-actions {
+      opacity: 1;
+    }
+    .pw-dz-btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: none;
+      transition: all 0.15s;
+    }
+    .pw-dz-btn.change {
+      background: #fff;
+      color: #000;
+    }
+    .pw-dz-btn.change:hover {
+      background: #e5e5e5;
+    }
+    .pw-dz-btn.del {
+      background: rgba(215, 38, 56, 0.9);
+      color: #fff;
+    }
+    .pw-dz-btn.del:hover {
+      background: #d72638;
+    }
+    .gemini-warning-box {
+      display: none;
+      align-items: flex-start;
+      gap: 9px;
+      margin-top: 8px;
+      padding: 9px 12px;
+      background: rgba(245, 158, 11, 0.09);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 8px;
+      font-size: 11px;
+      color: #FCD34D;
+      line-height: 1.4;
+      text-align: left;
+    }
+
     /* ══ SLIM ALERTS (NOTIFICACIONES DELGADAS Y COMPACTAS) ══ */
     .dtp-slim-alert {
       display: flex;
@@ -14832,6 +15026,7 @@
       previewImgUrl(p?.img || '', 0);
       previewImgUrl(p?.img2 || '', 1);
       previewImgUrl(p?.img3 || '', 2);
+      setupDropzoneEvents();
 
       // Micro Video 5s (Enterprise & Testers)
       const currentPlan = getActivePlanLevel();
@@ -14986,39 +15181,128 @@
       }
     }
 
+    function isTemporaryOrAiUrl(url) {
+      if (!url || typeof url !== 'string') return false;
+      const lower = url.toLowerCase();
+      if (lower.includes('googleusercontent.com') ||
+          lower.includes('generativelanguage.googleapis.com') ||
+          lower.includes('gemini.google.com') ||
+          lower.includes('bard.google.com') ||
+          lower.includes('chatgpt.com') ||
+          lower.includes('oaistatic.com') ||
+          lower.includes('oaiusercontent.com') ||
+          lower.includes('claude.ai') ||
+          lower.includes('anthropic.com/usercontent')) {
+        return true;
+      }
+      if (lower.startsWith('blob:')) {
+        return true;
+      }
+      if ((lower.includes('expires=') || lower.includes('expiration=') || lower.includes('se=')) &&
+          (lower.includes('signature=') || lower.includes('sig=') || lower.includes('token='))) {
+        return true;
+      }
+      return false;
+    }
+
+    function checkGeminiUrlWarning(url, index = 0) {
+      const warnEl = document.getElementById(`gemini-warn-${index}`);
+      if (!warnEl) return;
+      if (isTemporaryOrAiUrl(url)) {
+        warnEl.style.display = 'flex';
+      } else {
+        warnEl.style.display = 'none';
+      }
+    }
+
+    function triggerModalFileInput(index = 0) {
+      const fileInp = document.getElementById(`m-file-input-${index}`);
+      if (fileInp) fileInp.click();
+    }
+
+    function clearProductImage(index = 0) {
+      const inputIds = ['m-img', 'm-img2', 'm-img3'];
+      const statusIds = ['m-img-status', 'm-img2-status', 'm-img3-status'];
+      const inp = document.getElementById(inputIds[index]);
+      if (inp) inp.value = '';
+      const st = document.getElementById(statusIds[index]);
+      if (st) st.textContent = '';
+      const fileInp = document.getElementById(`m-file-input-${index}`);
+      if (fileInp) fileInp.value = '';
+      previewImgUrl('', index);
+    }
+
+    function toggleManualUrlInputs() {
+      const container = document.getElementById('m-manual-urls-container');
+      const icon = document.getElementById('icon-manual-urls');
+      if (!container) return;
+      const isHidden = container.style.display === 'none' || !container.style.display;
+      container.style.display = isHidden ? 'block' : 'none';
+      if (icon) {
+        icon.className = isHidden ? 'bi bi-chevron-up' : 'bi bi-chevron-down';
+      }
+    }
+
+    function setupDropzoneEvents() {
+      [0, 1, 2].forEach(index => {
+        const dz = document.getElementById(`pw-dropzone-${index}`);
+        if (!dz || dz.dataset.dzBound === 'true') return;
+        dz.dataset.dzBound = 'true';
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+          dz.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dz.classList.add('dragover');
+          }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+          dz.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dz.classList.remove('dragover');
+          }, false);
+        });
+
+        dz.addEventListener('drop', (e) => {
+          const dt = e.dataTransfer;
+          const files = dt ? dt.files : null;
+          if (files && files.length > 0) {
+            handleModalPhotoUpload(files[0], index);
+          }
+        }, false);
+      });
+    }
+
     function previewImgUrl(url, index = 0) {
       const ids = ['m-img-preview', 'm-img2-preview', 'm-img3-preview'];
       const wrapIds = ['m-img-preview-wrap', 'm-img2-preview-wrap', 'm-img3-preview-wrap'];
+      const emptyIds = ['pw-dz-empty-0', 'pw-dz-empty-1', 'pw-dz-empty-2'];
 
       url = normalizeImgUrl(url);
 
-      // Crear elementos si no existen
-      if (!document.getElementById(ids[index])) {
-        const wrap = document.createElement('div');
-        wrap.id = wrapIds[index];
-        wrap.style.cssText = 'display:none;margin-bottom:10px;position:relative;border-radius:10px;overflow:hidden;background:var(--iron);height:120px;';
-        const img = document.createElement('img');
-        img.id = ids[index];
-        img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
-        wrap.appendChild(img);
-        const container = document.querySelector('[style*="grid-column:1/-1"]');
-        if (container && container.previousElementSibling) {
-          container.parentNode.insertBefore(wrap, container);
+      const prev = document.getElementById(ids[index]);
+      const wrap = document.getElementById(wrapIds[index]);
+      const empty = document.getElementById(emptyIds[index]);
+
+      if (prev) {
+        if (url && (url.startsWith('http') || url.startsWith('data:') || url.startsWith('/'))) {
+          prev.src = url;
+          if (wrap) wrap.style.display = 'block';
+          if (empty) empty.style.display = 'none';
+          prev.onerror = () => {
+            if (wrap) wrap.style.display = 'none';
+            if (empty) empty.style.display = 'flex';
+          };
+        } else {
+          prev.src = '';
+          if (wrap) wrap.style.display = 'none';
+          if (empty) empty.style.display = 'flex';
         }
       }
 
-      const prev = document.getElementById(ids[index]);
-      const wrap = document.getElementById(wrapIds[index]);
-
-      if (!prev || !wrap) return;
-
-      if (url && (url.startsWith('http') || url.startsWith('data:') || url.startsWith('/'))) {
-        prev.src = url;
-        wrap.style.display = 'block';
-        prev.onerror = () => { wrap.style.display = 'none'; };
-      } else {
-        wrap.style.display = 'none';
-      }
+      checkGeminiUrlWarning(url, index);
     }
 
     /* ═══════════════════════════════════════════ MICRO VIDEOS 5s (Enterprise & Testers) */
@@ -19538,8 +19822,13 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     }
 
     /* ═══════════════════════════════════════════ PHOTO UPLOAD IN ABM MODAL */
-    async function handleModalPhotoUpload(input, index = 0) {
-      const file = input.files[0];
+    async function handleModalPhotoUpload(inputOrFile, index = 0) {
+      let file = null;
+      if (typeof File !== 'undefined' && inputOrFile instanceof File) {
+        file = inputOrFile;
+      } else if (inputOrFile && inputOrFile.files && inputOrFile.files[0]) {
+        file = inputOrFile.files[0];
+      }
       if (!file) return;
 
       const statusIds = ['m-img-status', 'm-img2-status', 'm-img3-status'];
@@ -19548,7 +19837,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const el = document.getElementById(statusIds[index]);
       if (el) {
         el.style.color = 'var(--silver)';
-        el.textContent = 'Subiendo imagen...';
+        el.textContent = 'Subiendo imagen y aplicando marca de agua...';
       }
 
       try {
@@ -22370,39 +22659,20 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
 
         <!-- ════════ PASO 4: FOTOS & MULTIMEDIA ════════ -->
         <div class="product-wizard-step" id="pw-step-4">
-          <!-- Preview de imágenes (hasta 3) -->
-          <div id="m-img-preview-wrap" style="display:none;margin-bottom:14px;gap:8px;">
-            <div style="position:relative;border-radius:10px;overflow:hidden;background:var(--iron);height:140px;flex:1;">
-              <img id="m-img-preview" src="" alt="" style="width:100%;height:100%;object-fit:cover;" />
-            </div>
-            <div id="m-img2-preview-wrap"
-              style="display:none;position:relative;border-radius:10px;overflow:hidden;background:var(--iron);height:140px;flex:1;">
-              <img id="m-img2-preview" src="" alt="" style="width:100%;height:100%;object-fit:cover;" />
-            </div>
-            <div id="m-img3-preview-wrap"
-              style="display:none;position:relative;border-radius:10px;overflow:hidden;background:var(--iron);height:140px;flex:1;">
-              <img id="m-img3-preview" src="" alt="" style="width:100%;height:100%;object-fit:cover;" />
-            </div>
-          </div>
-
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:6px;">
-            <label class="ctrl-label" style="margin:0;">Imágenes del producto (hasta 3)</label>
+            <label class="ctrl-label" style="margin:0; font-size:13px; font-weight:700; color:var(--white); display:flex; align-items:center; gap:6px;">
+              <i class="bi bi-images" style="color:var(--red);"></i> Fotos del producto (hasta 3)
+            </label>
             <button type="button" id="btn-buscar-fotos-ia" onclick="buscarFotosIA()"
               style="font-size: 11px; padding: 5px 12px; background: linear-gradient(135deg, var(--red) 0%, #A81D2A 100%); border: none; border-radius: 6px; color: #fff; cursor: pointer; font-family: var(--font-b); display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 5px rgba(215,38,56,0.2); transition: all 0.2s; margin: 0;">
-              <i class="bi bi-image"></i> Buscar con IA
+              <i class="bi bi-stars"></i> Buscar con IA
             </button>
           </div>
 
-          <div style="background:rgba(255,255,255,0.02); border:1px solid var(--zinc); border-radius:8px; padding:10px 12px; margin-bottom:14px; font-size:11px; color:var(--silver); line-height:1.5;">
-            <div style="display:flex; align-items:center; gap:6px; color:var(--white); font-weight:600; margin-bottom:4px;">
-              <i class="bi bi-info-circle" style="color:var(--red);"></i> Especificaciones recomendadas para fotos de producto:
-            </div>
-            <ul style="margin:0; padding-left:16px; color:var(--fog);">
-              <li><strong>Dimensiones recomendadas:</strong> 800×800 px o 1000×1000 px (proporción cuadrada 1:1 para catálogo homogéneo).</li>
-              <li><strong>Formatos permitidos:</strong> JPG, PNG, WEBP (se recomienda fondo limpio o blanco).</li>
-              <li><strong>Peso máximo sugerido:</strong> hasta 5 MB por archivo.</li>
-            </ul>
-          </div>
+          <!-- Hidden File Inputs -->
+          <input type="file" id="m-file-input-0" accept="image/*" style="display:none;" onchange="handleModalPhotoUpload(this,0)" />
+          <input type="file" id="m-file-input-1" accept="image/*" style="display:none;" onchange="handleModalPhotoUpload(this,1)" />
+          <input type="file" id="m-file-input-2" accept="image/*" style="display:none;" onchange="handleModalPhotoUpload(this,2)" />
 
           <!-- Panel de Resultados de Imágenes IA -->
           <div id="ai-images-results" style="display:none; flex-direction:column; gap:8px; margin-bottom:12px; background:var(--steel); border:1px solid var(--zinc); border-radius:8px; padding:12px;">
@@ -22415,55 +22685,142 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
             </div>
           </div>
 
-          <!-- Imagen 1 -->
-          <div style="margin-bottom:12px;">
-            <div style="font-size:11px;color:var(--silver);margin-bottom:4px;font-weight:600;">Imagen principal</div>
-            <div style="display:flex;gap:8px;align-items:flex-start;">
-              <input class="ctrl-input" id="m-img" placeholder="https://... (URL de la imagen)" style="flex:1;"
-                oninput="previewImgUrl(this.value,0)" />
-              <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;
-              padding:8px 12px;background:var(--iron);border:1px solid var(--zinc);border-radius:8px;
-              font-size:11px;font-weight:600;color:var(--fog);transition:all .15s;white-space:nowrap;"
-                title="Subir foto a Cloudinary">
-                <i class="bi bi-cloud-arrow-up"></i> Subir
-                <input type="file" accept="image/*" style="display:none;" onchange="handleModalPhotoUpload(this,0)" />
-              </label>
+          <!-- ══════ ZONA DE CARGA PROTAGONISTA (DROPZONES) ══════ -->
+          <div class="pw-dropzones-container">
+            <!-- Dropzone 0: Foto Principal (Protagonista) -->
+            <div class="pw-dropzone-card">
+              <div class="pw-dz-label">
+                <span><i class="bi bi-star-fill" style="color:var(--yellow); font-size:11px; margin-right:4px;"></i> Foto Principal (Portada de catálogo)</span>
+                <span style="font-size:10.5px; color:var(--silver); font-weight:400;">Requerida para destacar</span>
+              </div>
+              
+              <div class="pw-dropzone-main" id="pw-dropzone-0" onclick="triggerModalFileInput(0)">
+                <!-- Estado Vacío -->
+                <div class="pw-dz-empty" id="pw-dz-empty-0">
+                  <div class="pw-dz-icon-circle">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                  </div>
+                  <div class="pw-dz-main-text">Arrastrá y soltá la imagen principal aquí</div>
+                  <div class="pw-dz-sub-text">O hacé click para seleccionar un archivo desde tu dispositivo · JPG, PNG, WEBP (se optimiza y marca de agua al instante)</div>
+                  <button type="button" class="pw-dz-browse-btn" onclick="event.stopPropagation(); triggerModalFileInput(0);">
+                    <i class="bi bi-folder2-open"></i> Explorar archivos
+                  </button>
+                </div>
+
+                <!-- Estado Cargado (Preview) -->
+                <div class="pw-dropzone-filled-wrap" id="m-img-preview-wrap">
+                  <img id="m-img-preview" src="" alt="Portada" />
+                  <div class="pw-dropzone-overlay-actions">
+                    <button type="button" class="pw-dz-btn change" onclick="event.stopPropagation(); triggerModalFileInput(0);">
+                      <i class="bi bi-arrow-repeat"></i> Cambiar
+                    </button>
+                    <button type="button" class="pw-dz-btn del" onclick="event.stopPropagation(); clearProductImage(0);">
+                      <i class="bi bi-trash3"></i> Quitar
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Status subida -->
+              <div id="m-img-status" style="font-size:10.5px; margin-top:5px; min-height:14px; font-weight:600;"></div>
+
+              <!-- Alerta inteligente Gemini / enlace temporal -->
+              <div id="gemini-warn-0" class="gemini-warning-box">
+                <i class="bi bi-exclamation-triangle-fill" style="font-size:15px; flex-shrink:0; color:#F59E0B; margin-top:2px;"></i>
+                <div style="flex:1;">
+                  <strong style="color:#FBBF24;">¡Atención! Enlace temporal detectado:</strong>
+                  Esta URL proviene de Gemini o Google AI con un token de sesión temporal. Dejará de verse en poco tiempo.
+                  <div style="margin-top:4px;">
+                    <a href="javascript:void(0)" onclick="triggerModalFileInput(0)" style="color:#FDE68A; font-weight:700; text-decoration:underline;">Subí el archivo directamente desde tu equipo</a> para guardarla de forma permanente con marca de agua.
+                  </div>
+                </div>
+              </div>
             </div>
-            <div id="m-img-status" style="font-size:10px;margin-top:3px;min-height:12px;"></div>
+
+            <!-- Fila Secundaria: Fotos complementarias 2 y 3 -->
+            <div class="pw-dropzone-secondary-row">
+              <!-- Dropzone 1 (Foto 2) -->
+              <div class="pw-dropzone-card" style="padding:10px;">
+                <div class="pw-dz-label" style="font-size:11px; margin-bottom:6px;">
+                  <span>Foto 2 <small style="color:var(--silver); font-weight:400;">(opcional)</small></span>
+                </div>
+                <div class="pw-dropzone-sub" id="pw-dropzone-1" onclick="triggerModalFileInput(1)">
+                  <div class="pw-dz-empty" id="pw-dz-empty-1">
+                    <i class="bi bi-image" style="font-size:22px; color:var(--silver); margin-bottom:4px;"></i>
+                    <div style="font-size:11px; font-weight:600; color:var(--white);">Subir foto 2</div>
+                    <div style="font-size:9.5px; color:var(--silver);">Arrastrá o click</div>
+                  </div>
+                  <div class="pw-dropzone-filled-wrap" id="m-img2-preview-wrap">
+                    <img id="m-img2-preview" src="" alt="Foto 2" />
+                    <div class="pw-dropzone-overlay-actions">
+                      <button type="button" class="pw-dz-btn change" onclick="event.stopPropagation(); triggerModalFileInput(1);" title="Cambiar"><i class="bi bi-arrow-repeat"></i></button>
+                      <button type="button" class="pw-dz-btn del" onclick="event.stopPropagation(); clearProductImage(1);" title="Quitar"><i class="bi bi-trash3"></i></button>
+                    </div>
+                  </div>
+                </div>
+                <div id="m-img2-status" style="font-size:10px; margin-top:4px; min-height:12px; font-weight:600;"></div>
+                <div id="gemini-warn-1" class="gemini-warning-box">
+                  <i class="bi bi-exclamation-triangle-fill" style="font-size:13px; color:#F59E0B;"></i>
+                  <div style="font-size:10px;">Enlace temporal de Gemini. <a href="javascript:void(0)" onclick="triggerModalFileInput(1)" style="color:#FDE68A; text-decoration:underline;">Subí el archivo</a>.</div>
+                </div>
+              </div>
+
+              <!-- Dropzone 2 (Foto 3) -->
+              <div class="pw-dropzone-card" style="padding:10px;">
+                <div class="pw-dz-label" style="font-size:11px; margin-bottom:6px;">
+                  <span>Foto 3 <small style="color:var(--silver); font-weight:400;">(opcional)</small></span>
+                </div>
+                <div class="pw-dropzone-sub" id="pw-dropzone-2" onclick="triggerModalFileInput(2)">
+                  <div class="pw-dz-empty" id="pw-dz-empty-2">
+                    <i class="bi bi-image" style="font-size:22px; color:var(--silver); margin-bottom:4px;"></i>
+                    <div style="font-size:11px; font-weight:600; color:var(--white);">Subir foto 3</div>
+                    <div style="font-size:9.5px; color:var(--silver);">Arrastrá o click</div>
+                  </div>
+                  <div class="pw-dropzone-filled-wrap" id="m-img3-preview-wrap">
+                    <img id="m-img3-preview" src="" alt="Foto 3" />
+                    <div class="pw-dropzone-overlay-actions">
+                      <button type="button" class="pw-dz-btn change" onclick="event.stopPropagation(); triggerModalFileInput(2);" title="Cambiar"><i class="bi bi-arrow-repeat"></i></button>
+                      <button type="button" class="pw-dz-btn del" onclick="event.stopPropagation(); clearProductImage(2);" title="Quitar"><i class="bi bi-trash3"></i></button>
+                    </div>
+                  </div>
+                </div>
+                <div id="m-img3-status" style="font-size:10px; margin-top:4px; min-height:12px; font-weight:600;"></div>
+                <div id="gemini-warn-2" class="gemini-warning-box">
+                  <i class="bi bi-exclamation-triangle-fill" style="font-size:13px; color:#F59E0B;"></i>
+                  <div style="font-size:10px;">Enlace temporal de Gemini. <a href="javascript:void(0)" onclick="triggerModalFileInput(2)" style="color:#FDE68A; text-decoration:underline;">Subí el archivo</a>.</div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <!-- Imagen 2 -->
-          <div style="margin-bottom:12px;">
-            <div style="font-size:11px;color:var(--silver);margin-bottom:4px;font-weight:600;">Imagen 2 (opcional)</div>
-            <div style="display:flex;gap:8px;align-items:flex-start;">
-              <input class="ctrl-input" id="m-img2" placeholder="https://... (URL de la imagen)" style="flex:1;"
-                oninput="previewImgUrl(this.value,1)" />
-              <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;
-              padding:8px 12px;background:var(--iron);border:1px solid var(--zinc);border-radius:8px;
-              font-size:11px;font-weight:600;color:var(--fog);transition:all .15s;white-space:nowrap;"
-                title="Subir foto a Cloudinary">
-                <i class="bi bi-cloud-arrow-up"></i> Subir
-                <input type="file" accept="image/*" style="display:none;" onchange="handleModalPhotoUpload(this,1)" />
-              </label>
-            </div>
-            <div id="m-img2-status" style="font-size:10px;margin-top:3px;min-height:12px;"></div>
-          </div>
+          <!-- Opción Secundaria Colapsable: Ingreso manual de URLs -->
+          <div style="margin-top:10px; margin-bottom:14px;">
+            <button type="button" id="btn-toggle-manual-urls" onclick="toggleManualUrlInputs()" 
+              style="background:none; border:none; color:var(--silver); font-size:11px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; padding:4px 0; text-decoration:underline;">
+              <i class="bi bi-link-45deg" style="font-size:13px;"></i> 
+              <span id="lbl-toggle-manual-urls">¿Preferís ingresar enlaces directos (URLs de la web)?</span> 
+              <i class="bi bi-chevron-down" id="icon-manual-urls" style="font-size:10px;"></i>
+            </button>
 
-          <!-- Imagen 3 -->
-          <div style="margin-bottom:12px;">
-            <div style="font-size:11px;color:var(--silver);margin-bottom:4px;font-weight:600;">Imagen 3 (opcional)</div>
-            <div style="display:flex;gap:8px;align-items:flex-start;">
-              <input class="ctrl-input" id="m-img3" placeholder="https://... (URL de la imagen)" style="flex:1;"
-                oninput="previewImgUrl(this.value,2)" />
-              <label style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;gap:6px;
-              padding:8px 12px;background:var(--iron);border:1px solid var(--zinc);border-radius:8px;
-              font-size:11px;font-weight:600;color:var(--fog);transition:all .15s;white-space:nowrap;"
-                title="Subir foto a Cloudinary">
-                <i class="bi bi-cloud-arrow-up"></i> Subir
-                <input type="file" accept="image/*" style="display:none;" onchange="handleModalPhotoUpload(this,2)" />
-              </label>
+            <div id="m-manual-urls-container" style="display:none; margin-top:8px; background:rgba(0,0,0,0.22); border:1px solid var(--zinc); border-radius:10px; padding:12px 14px;">
+              <div style="font-size:10.5px; color:var(--silver); margin-bottom:10px; line-height:1.4;">
+                <i class="bi bi-info-circle" style="color:var(--silver);"></i> Si tenés las fotos alojadas en tu servidor o catálogo de proveedor, podés pegar los enlaces directos aquí:
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <div>
+                  <div style="font-size:10px; color:var(--silver); margin-bottom:2px;">URL Foto Principal</div>
+                  <input class="ctrl-input" id="m-img" placeholder="https://... (URL directa)" style="width:100%; font-size:11px;" oninput="previewImgUrl(this.value,0)" />
+                </div>
+                <div>
+                  <div style="font-size:10px; color:var(--silver); margin-bottom:2px;">URL Foto 2</div>
+                  <input class="ctrl-input" id="m-img2" placeholder="https://... (URL directa)" style="width:100%; font-size:11px;" oninput="previewImgUrl(this.value,1)" />
+                </div>
+                <div>
+                  <div style="font-size:10px; color:var(--silver); margin-bottom:2px;">URL Foto 3</div>
+                  <input class="ctrl-input" id="m-img3" placeholder="https://... (URL directa)" style="width:100%; font-size:11px;" oninput="previewImgUrl(this.value,2)" />
+                </div>
+              </div>
             </div>
-            <div id="m-img3-status" style="font-size:10px;margin-top:3px;min-height:12px;"></div>
           </div>
           <!-- Micro Video 5s (Enterprise & Testers) -->
           <div id="m-video-container" style="margin-top:16px; margin-bottom:14px; padding:14px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:12px;">
