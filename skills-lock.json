@@ -13,6 +13,12 @@
       "skillPath": "skills/abusing-shadow-credentials-for-privesc/SKILL.md",
       "computedHash": "99b8fc119c33367c6c58531e5efe3cd34306a8c7b2b68a3c60f7d86f98c4309f"
     },
+    "accessibility-scan": {
+      "source": "AccessLint/claude-marketplace",
+      "sourceType": "github",
+      "skillPath": "plugins/accesslint/skills/accessibility-scan/SKILL.md",
+      "computedHash": "26960081c35e33ebf7957a08504ad6a4a4f13fd13f9d85e6e06577ae5a722b7e"
+    },
     "achieving-cmmc-level-2-compliance": {
       "source": "mukul975/Anthropic-Cybersecurity-Skills",
       "sourceType": "github",
@@ -24,6 +30,12 @@
       "sourceType": "github",
       "skillPath": "skills/acquiring-disk-image-with-dd-and-dcfldd/SKILL.md",
       "computedHash": "d2c2cc9430c446a12ed2f85a6711be7ee1ab7ad5977f1b4aa1912255daf2ba1d"
+    },
+    "agent-browser": {
+      "source": "vercel-labs/agent-browser",
+      "sourceType": "github",
+      "skillPath": "skills/agent-browser/SKILL.md",
+      "computedHash": "80161e6836b3b40f4e83730a290deb40ac14d877d38c97ad5f6d71be37ce74c3"
     },
     "aiq-deploy": {
       "source": "NVIDIA/skills",
@@ -564,6 +576,18 @@
       "sourceType": "github",
       "skillPath": "skills/benchmarking-kubernetes-with-kube-bench/SKILL.md",
       "computedHash": "f15d13f1fa1b0429d2d1b42fc40f3d1532b2e3d42f17049b8e0273f1d65bdae6"
+    },
+    "better-colors": {
+      "source": "RustamG16/convenium.design",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/better-colors/SKILL.md",
+      "computedHash": "a6b37708e6599d6d9ca27a71da5d9d77320d096c062f32d76f8486dff7fd92f9"
+    },
+    "browser-use": {
+      "source": "browser-use/browser-use",
+      "sourceType": "github",
+      "skillPath": "skills/browser-use/SKILL.md",
+      "computedHash": "6a1bfb5049a851c4c4dae9fc6b586d9801865c79d87595d8bddbec21c41c8b5d"
     },
     "building-adversary-infrastructure-tracking-system": {
       "source": "mukul975/Anthropic-Cybersecurity-Skills",
@@ -3403,6 +3427,12 @@
       "skillPath": "skills/investigating-ransomware-attack-artifacts/SKILL.md",
       "computedHash": "21742595f87083cfd9af9a68d16318c5db59bbc5bd24800f26c2bed88100c68b"
     },
+    "kortix-design-system": {
+      "source": "kortix-ai/suna",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/kortix-design-system/SKILL.md",
+      "computedHash": "0ced2d40e6317347b2aa37e7125f64d504780ef05a1d951daeca37fbe2538ca1"
+    },
     "managing-cloud-identity-with-okta": {
       "source": "mukul975/Anthropic-Cybersecurity-Skills",
       "sourceType": "github",
@@ -4542,6 +4572,12 @@
       "sourceType": "github",
       "skillPath": "skills/performing-yara-rule-development-for-detection/SKILL.md",
       "computedHash": "37a059d48df2ffece630a768df18e2215201a8c603199f19764d6a77641b8b7d"
+    },
+    "popular-web-designs": {
+      "source": "NousResearch/hermes-agent",
+      "sourceType": "github",
+      "skillPath": "skills/creative/popular-web-designs/SKILL.md",
+      "computedHash": "af0935d46d78d93443c7cd775bfb2038c24f793bd874d8502e1c0f13ee8fe66c"
     },
     "post-exploiting-microsoft-graph-with-graphrunner": {
       "source": "mukul975/Anthropic-Cybersecurity-Skills",

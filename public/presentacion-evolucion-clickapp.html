@@ -1612,6 +1612,45 @@
         </div>
       </section>
 
+      <!-- SLIDE 25: ROBUSTEZ EN MODAL DE PRODUCTOS Y NORMALIZACIÓN DE IMÁGENES -->
+      <section class="slide" id="slide-25">
+        <span class="slide-badge" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4);color:#10B981;"><i class="bi bi-shield-check"></i> Etapa 25 · Release 27 de Octubre 2026</span>
+        <h2 class="slide-title">Blindaje en Apertura de Modal y Normalización Inteligente de Imágenes</h2>
+        <p class="slide-desc">Resolución integral de fallos en apertura de modal y prevención proactiva de errores 404 en recursos multimedia en todos los comercios del ecosistema Dale! Te Pido (incluyendo cuentas demo como Biuti).</p>
+
+        <div class="grid-3" style="margin-top:16px;">
+          <div class="card">
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-check-circle-fill"></i> Protección Anti-Null en Modal de Producto</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Corrección del error <code>TypeError: Cannot set properties of null</code> al abrir el formulario de creación o edición. Se incorporó el elemento faltante <code>m-img3-status</code> y se blindó el acceso a todos los elementos del DOM con verificaciones defensivas.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#60A5FA;"><i class="bi bi-link-45deg"></i> Normalizador Global de URLs Unsplash</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Función <code>normalizeImgUrl</code> en dashboard y storefront: detecta identificadores planos (ej. <code>photo-1548624149...</code>) y los transforma automáticamente en URLs absolutas CDN seguras con optimización WebP, evitando errores 404 locales.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#F59E0B;"><i class="bi bi-person-check-fill"></i> Acceso Fluido a Tiendas Demo</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Inicialización transparente de credenciales para todas las tiendas de demostración oficial (Biuti, BigHouse, FerreNow, Kiosco Julio, Noutacc, TecnoMont, TodoListo, Lugones Silva), permitiendo inspeccionar y editar catálogos sin fricciones de inicio de sesión.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <a href="/dashboard.html?store=biuti#abm" target="_blank" class="nav-btn primary" style="padding:10px 22px; font-size:13px; background:linear-gradient(135deg, #10B981 0%, #059669 100%);">
+            <i class="bi bi-pencil-square"></i> Probar Edición en Biuti
+          </a>
+          <a href="/tienda.html?store=biuti" target="_blank" class="nav-btn secondary" style="padding:10px 22px; font-size:13px;">
+            <i class="bi bi-shop"></i> Ver Tienda Biuti
+          </a>
+        </div>
+      </section>
+
     </main>
 
     <!-- BOTTOMBAR -->
@@ -1623,7 +1662,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 4.6 Vista Dual en ABM (Lista Clásica / Galería con Fotos) · Actualizado 27/10/2026
+        Dale! Te Pido © 2026 · Versión 4.7 Blindaje Modal & Normalización de Imágenes · Actualizado 27/10/2026
       </div>
     </footer>
 
@@ -1632,7 +1671,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 24;
+  const totalSlides = 25;
 
   function showSlide(index) {
     if (index < 1) index = 1;

@@ -1570,7 +1570,15 @@ function lighten(hex,pct=90){
 }
 
 function optimizeImg(url, width = null, height = null) {
+  if (!url || typeof url !== 'string') return '';
+  url = url.trim();
   if (!url) return '';
+  if (url.startsWith('photo-')) {
+    url = 'https://images.unsplash.com/' + url + (url.includes('?') ? '' : '?auto=format&fit=crop&w=700&q=80');
+  }
+  if (url.startsWith('//')) {
+    url = 'https:' + url;
+  }
   if (url.includes('res.cloudinary.com') && url.includes('/upload/')) {
     if (!url.includes('/upload/f_')) {
       let params = 'f_webp,q_auto';
