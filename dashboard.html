@@ -9161,7 +9161,16 @@
     };
 
     function getActivePlanLevel() {
-      return sessionStorage.getItem('storeapp_plan_level_' + STORE_ID) || 'starter';
+      const fromCfg = (typeof cfg !== 'undefined' && cfg && cfg.plan_level) ? String(cfg.plan_level).toLowerCase() : null;
+      if (fromCfg) return fromCfg;
+      const fromSession = sessionStorage.getItem('storeapp_plan_level_' + STORE_ID);
+      if (fromSession) return fromSession.toLowerCase();
+      const fromLocal = localStorage.getItem('storeapp_plan_level_' + STORE_ID);
+      if (fromLocal) return fromLocal.toLowerCase();
+      if (['bighouse', 'lugonessilva', 'ferre-now', 'kioscojulio', 'noutacc', 'tecnomont', 'biuti', 'todolisto'].includes(STORE_ID)) {
+        return 'enterprise';
+      }
+      return 'starter';
     }
 
     function updatePlanBadge() {
@@ -10650,10 +10659,15 @@
             localStorage.setItem(`storeapp_pages_${STORE_ID}`, JSON.stringify(pagesData));
             try { localStorage.removeItem('storeapp_pages'); } catch(e) {}
 
+            const activePlan = (dbCfg.plan_level || (['bighouse', 'lugonessilva', 'ferre-now', 'kioscojulio', 'noutacc', 'tecnomont', 'biuti', 'todolisto'].includes(STORE_ID) ? 'enterprise' : 'starter')).toLowerCase();
+            sessionStorage.setItem('storeapp_plan_level_' + STORE_ID, activePlan);
+            localStorage.setItem('storeapp_plan_level_' + STORE_ID, activePlan);
+
             const remoteStoreCfg = {
               name: dbCfg.business_name || cfg.name,
               tagline: dbCfg.tagline || cfg.tagline,
               color: dbCfg.primary_color || cfg.color,
+              plan_level: activePlan,
               wapp: dbCfg.wapp || cfg.wapp,
               direccion: dbCfg.direccion || '',
               horario: dbCfg.horario || '',
@@ -19245,9 +19259,9 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
     function initVerificationBanner() {
       const urlParams = new URLSearchParams(window.location.search);
-      const storeId = window.STORE_ID || 'coquito';
+      const storeId = (typeof STORE_ID !== 'undefined' ? STORE_ID : (window.STORE_ID || urlParams.get('store') || 'coquito')).toLowerCase();
       let verified = false;
-      if (urlParams.get('verify') === 'true' || urlParams.get('demo') === '1' || urlParams.get('preview') === '1') {
+      if (urlParams.get('verify') === 'true' || urlParams.get('demo') === '1' || urlParams.get('preview') === '1' || ['bighouse', 'lugonessilva', 'ferre-now', 'kioscojulio', 'noutacc', 'tecnomont', 'biuti', 'todolisto'].includes(storeId)) {
         verified = true;
         localStorage.setItem('dtp_account_verified_' + storeId, 'true');
       } else {
@@ -19255,8 +19269,8 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       }
 
       const banner = document.getElementById('dtp-email-verification-banner');
-      if (banner && !verified) {
-        banner.style.display = 'flex';
+      if (banner) {
+        banner.style.display = verified ? 'none' : 'flex';
       }
     }
 
@@ -20166,11 +20180,44 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       const modal = document.getElementById('onboarding-modal-overlay');
       if (!modal) return;
 
+      // Si no es forzado por clic voluntario del usuario, verificar si la tienda ya está activa
       if (!force) {
-        const isCompleted = localStorage.getItem('onboarding_completed_' + STORE_ID) === 'true' || (typeof CONFIG !== 'undefined' && CONFIG.onboarding_completed);
-        const isDismissed = localStorage.getItem('onboarding_dismissed_' + STORE_ID) === 'true' || (typeof CONFIG !== 'undefined' && CONFIG.onboarding_dismissed);
+        const isCompleted = localStorage.getItem('onboarding_completed_' + STORE_ID) === 'true';
+        const isDismissed = localStorage.getItem('onboarding_dismissed_' + STORE_ID) === 'true';
         const isSkippedSession = sessionStorage.getItem('onboarding_skipped_session_' + STORE_ID) === 'true';
-        if (isCompleted || isDismissed || isSkippedSession) return;
+        const hasExistingProds = (typeof products !== 'undefined' && Array.isArray(products) && products.length > 0) ||
+                                (typeof localProducts !== 'undefined' && Array.isArray(localProducts) && localProducts.length > 0);
+        const hasConfiguredStore = typeof cfg !== 'undefined' && cfg && (cfg.name && cfg.name !== 'Mi Tienda' && cfg.name !== 'Dale! Te Pido');
+        
+        if (isCompleted || isDismissed || isSkippedSession || hasExistingProds || hasConfiguredStore) {
+          return;
+        }
+      }
+
+      // Sincronizar rubro real de la tienda según la configuración cargada
+      if (typeof cfg !== 'undefined' && cfg) {
+        if (cfg.rubro) {
+          const rNorm = String(cfg.rubro).toLowerCase();
+          if (rNorm.includes('ferret') || rNorm.includes('industr') || rNorm.includes('hardware') || rNorm.includes('construcc') || rNorm.includes('corralon')) {
+            window.onboardingState.rubro = 'industrial';
+          } else if (rNorm.includes('gastro') || rNorm.includes('comida') || rNorm.includes('burger') || rNorm.includes('pizz') || rNorm.includes('restaur')) {
+            window.onboardingState.rubro = 'gastronomia';
+          } else if (rNorm.includes('tecno') || rNorm.includes('comput') || rNorm.includes('celul') || rNorm.includes('electr')) {
+            window.onboardingState.rubro = 'tecnologia';
+          } else if (rNorm.includes('indument') || rNorm.includes('ropa') || rNorm.includes('moda') || rNorm.includes('calzad')) {
+            window.onboardingState.rubro = 'indumentaria';
+          } else if (rNorm.includes('librer') || rNorm.includes('insumo') || rNorm.includes('papel')) {
+            window.onboardingState.rubro = 'insumos';
+          } else if (rNorm.includes('kiosc') || rNorm.includes('almacen')) {
+            window.onboardingState.rubro = 'kiosco_almacen';
+          } else {
+            window.onboardingState.rubro = 'otros';
+            window.onboardingState.rubroOtrosDetalle = cfg.rubro;
+          }
+        }
+        if (cfg.color) {
+          window.onboardingState.color1 = cfg.color;
+        }
       }
 
       if (!window.onboardingState.currentStep) window.onboardingState.currentStep = 1;
