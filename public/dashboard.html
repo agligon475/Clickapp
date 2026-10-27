@@ -6861,14 +6861,6 @@
               onclick="exportOrders()">
               <i class="bi bi-download"></i> CSV
             </button>
-            <button class="sb-btn" id="btn-load-bh-orders" style="background:linear-gradient(135deg, rgba(231,76,60,0.22) 0%, rgba(184,0,0,0.22) 100%);border:1px solid rgba(231,76,60,0.6);color:#fff;font-weight:700;"
-              onclick="loadDemoOrdersBurgerHouse()" title="Cargar 5 pedidos simulados gastronómicos de BigHouse (Delivery Dale!QueVoy, Particular y Takeaway)">
-              <i class="bi bi-fire" style="color:#FF6B6B;"></i> 🍔 5 Pedidos BigHouse
-            </button>
-            <button class="sb-btn" id="btn-load-demo-orders" style="background:var(--iron);border:1px solid var(--zinc);color:var(--fog);font-weight:600;"
-              onclick="loadDemoOrdersNoutacc()" title="Generar 5 pedidos de simulacro para Noutacc (Sin TACC)">
-              <i class="bi bi-magic" style="color:var(--silver);"></i> 🥐 Noutacc
-            </button>
           </div>
         </div>
         <div style="overflow-x:auto;">
@@ -8965,9 +8957,6 @@
           <span style="font-size:12px;font-weight:700;color:var(--silver);letter-spacing:0.05em;"><i
               class="bi bi-truck" style="color:var(--red);"></i> REPARTIDORES & CADETES (PICKUPS)</span>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button class="sb-btn" onclick="loadDemoPickupsNoutacc()" style="background:linear-gradient(135deg, rgba(246,0,0,0.18) 0%, rgba(184,0,0,0.18) 100%);border:1px solid rgba(246,0,0,0.45);color:var(--white);font-weight:600;padding:7px 14px;font-size:12px;">
-              <i class="bi bi-magic" style="color:var(--red);"></i> 4 Repartidores Simulacro
-            </button>
             <button class="abm-btn-new" onclick="openPickupForm()" style="padding:7px 14px;font-size:12px;">
               <i class="bi bi-plus"></i> Nuevo Repartidor
             </button>
@@ -9910,7 +9899,7 @@
       let url = `${SUPABASE_URL}/rest/v1/${tabla}`;
 
       // Agregar automáticamente el filtro de store_id a todas las tablas del inquilino
-      const tenantTables = ['products', 'company_settings', 'categories', 'pickups'];
+      const tenantTables = ['products', 'company_settings', 'categories', 'pickups', 'orders'];
       let tenantFilter = '';
       if (tenantTables.includes(tabla)) {
         tenantFilter = `store_id=eq.${encodeURIComponent(STORE_ID)}`;
@@ -9937,7 +9926,7 @@
     }
 
     async function postToSupabase(tabla, data) {
-      const tenantTables = ['products', 'company_settings', 'categories', 'pickups'];
+      const tenantTables = ['products', 'company_settings', 'categories', 'pickups', 'orders'];
       if (tenantTables.includes(tabla)) {
         if (Array.isArray(data)) {
           data.forEach(item => { item.store_id = STORE_ID; });
@@ -10020,7 +10009,7 @@
           return false;
         }
         let url = `${SUPABASE_URL}/rest/v1/${tabla}?${supabaseIdFilter(id)}`;
-        const tenantTables = ['products', 'company_settings', 'categories', 'pickups'];
+        const tenantTables = ['products', 'company_settings', 'categories', 'pickups', 'orders'];
         if (tenantTables.includes(tabla)) {
           url += `&store_id=eq.${encodeURIComponent(STORE_ID)}`;
           if (typeof data === 'object' && data !== null) {
@@ -10080,7 +10069,7 @@
           return false;
         }
         let url = `${SUPABASE_URL}/rest/v1/${tabla}?${supabaseIdFilter(id)}`;
-        const tenantTables = ['products', 'company_settings', 'categories', 'pickups'];
+        const tenantTables = ['products', 'company_settings', 'categories', 'pickups', 'orders'];
         if (tenantTables.includes(tabla)) {
           url += `&store_id=eq.${encodeURIComponent(STORE_ID)}`;
         }
@@ -11127,11 +11116,11 @@
            font-family:var(--font-b);margin-top:4px;width:100%;">${options}</select>`;
     }
 
-    // ── SAVE ORDERS HELPER (dual-key sync) ─────────────
+    // ── SAVE ORDERS HELPER (Strict Multi-Tenant Isolation) ─────────────
     function saveOrders(orders) {
       const data = JSON.stringify(orders);
       localStorage.setItem('storeapp_orders_' + STORE_ID, data);
-      localStorage.setItem('storeapp_orders', data);
+      try { localStorage.removeItem('storeapp_orders'); } catch(e) {}
     }
 
     // ── 15-DAY AUTO-LOST RULE ─────────────────────────
@@ -15288,18 +15277,23 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
       // Load saved orders
       try {
-        const saved = localStorage.getItem('storeapp_orders_' + STORE_ID) || localStorage.getItem('storeapp_orders');
-        if (saved) allOrders = JSON.parse(saved);
+        try { localStorage.removeItem('storeapp_orders'); } catch(e) {}
+        const saved = localStorage.getItem('storeapp_orders_' + STORE_ID);
+        if (saved) {
+          allOrders = JSON.parse(saved);
+          // Filtrado estricto multi-tenant: si un pedido tiene store_id definido, debe coincidir con la tienda actual
+          allOrders = allOrders.filter(o => !o.store_id || o.store_id === STORE_ID);
+        } else {
+          allOrders = [];
+        }
 
-        // Auto-inject 5 realistic simulated orders for BigHouse if store is gastronomia, burgerhouse or bighouse
-        if ((STORE_ID === 'bighouse' || STORE_ID === 'burgerhouse' || STORE_ID === 'gastronomia' || STORE_ID === 'gastronomia-demo') && (allOrders.length === 0 || allOrders.some(o => o.id === 'PED-SIMULADO-1A'))) {
+        // Auto-inject simulado EXCLUSIVAMENTE para las tiendas de testing/demo oficiales cuando estén vacías
+        if ((STORE_ID === 'bighouse' || STORE_ID === 'burgerhouse') && allOrders.length === 0) {
           allOrders = getBurgerHouseSimulatedOrders();
           localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
-          localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
-        } else if (STORE_ID === 'noutacc' && (allOrders.length === 0 || allOrders.some(o => o.id === 'PED-SIMULADO-1A'))) {
+        } else if (STORE_ID === 'noutacc' && allOrders.length === 0) {
           allOrders = getNoutaccSimulatedOrders();
           localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
-          localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
         }
       } catch (e) { allOrders = []; }
 
@@ -15677,7 +15671,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       ];
       window.currentPickups = pickups;
       localStorage.setItem('storeapp_pickups_' + STORE_ID, JSON.stringify(pickups));
-      localStorage.setItem('storeapp_pickups', JSON.stringify(pickups));
+      try { localStorage.removeItem('storeapp_pickups'); } catch(e) {}
       if (typeof renderPickupsList === 'function') renderPickupsList();
       if (typeof renderPendingPickups === 'function') renderPendingPickups();
       if (typeof showToastDash === 'function' && !silent) {
@@ -19317,14 +19311,15 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     initLogoPreview();
     loadWebhookCfg();   // ensures localStorage defaults are set
 
-    // Load saved orders from localStorage on startup
+    // Load saved orders from localStorage on startup (Strict Multi-Tenant Isolation)
     try {
-      const saved = localStorage.getItem('storeapp_orders_' + STORE_ID) || localStorage.getItem('storeapp_orders');
+      try { localStorage.removeItem('storeapp_orders'); } catch(e) {}
+      const saved = localStorage.getItem('storeapp_orders_' + STORE_ID);
       if (saved) {
         allOrders = JSON.parse(saved);
-        // Mantener ambas keys sincronizadas
+        // Filtrar cualquier pedido cruzado que pertenezca a otra tienda
+        allOrders = allOrders.filter(o => !o.store_id || o.store_id === STORE_ID);
         localStorage.setItem('storeapp_orders_' + STORE_ID, JSON.stringify(allOrders));
-        localStorage.setItem('storeapp_orders', JSON.stringify(allOrders));
         if (allOrders.length) {
           renderOrdersTable(allOrders.slice(0, 10));
           updateDashboardFromOrders(allOrders);
@@ -19335,10 +19330,11 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
           document.getElementById('sheet-sync-info').textContent = 'Sin pedidos todavía';
         }
       } else {
+        allOrders = [];
         renderOrdersTable([]);
         document.getElementById('sheet-sync-info').textContent = 'Sin pedidos todavía';
       }
-    } catch (e) { renderOrdersTable([]); }
+    } catch (e) { allOrders = []; renderOrdersTable([]); }
 
     if (window.location.hash && window.location.hash.length > 1) {
       handleUrlHashNavigation();
@@ -22915,7 +22911,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     }
 
     window.openDaleQueVoyModal = function(orderId) {
-      const orders = (typeof allOrders !== 'undefined' && Array.isArray(allOrders)) ? allOrders : (JSON.parse(localStorage.getItem('storeapp_orders_' + (typeof STORE_ID !== 'undefined' ? STORE_ID : '')) || localStorage.getItem('storeapp_orders') || '[]'));
+      const orders = (typeof allOrders !== 'undefined' && Array.isArray(allOrders)) ? allOrders : (JSON.parse(localStorage.getItem('storeapp_orders_' + (typeof STORE_ID !== 'undefined' ? STORE_ID : '')) || '[]'));
       const order = orders.find(o => String(o.id) === String(orderId) || String(o.orderId) === String(orderId) || String(o.order_number) === String(orderId));
       if (!order) {
         alert('No se encontró el pedido solicitado.');
