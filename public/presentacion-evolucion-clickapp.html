@@ -421,7 +421,7 @@
         <button class="nav-btn" onclick="prevSlide()" title="Diapositiva Anterior (←)">
           <i class="bi bi-chevron-left"></i>
         </button>
-        <span id="slide-indicator" style="font-family: var(--font-mono); font-size: 12px; font-weight:700; color: #FFFFFF; min-width: 48px; text-align: center;">1 / 28</span>
+        <span id="slide-indicator" style="font-family: var(--font-mono); font-size: 12px; font-weight:700; color: #FFFFFF; min-width: 48px; text-align: center;">1 / 29</span>
         <button class="nav-btn primary" onclick="nextSlide()" title="Siguiente Diapositiva (→ o Espacio)">
           <i class="bi bi-chevron-right"></i>
         </button>
@@ -1792,6 +1792,52 @@
         </div>
       </section>
 
+      <!-- SLIDE 29: AISLAMIENTO ESTRICTO RLS EN SUPABASE & MITIGACIÓN BOLA / IDOR -->
+      <section class="slide" id="slide-29">
+        <span class="slide-badge" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4);color:#10B981;"><i class="bi bi-shield-lock-fill"></i> Etapa 29 · Release 28 de Octubre 2026</span>
+        <h2 class="slide-title">Aislamiento Estricto RLS en Supabase (public.orders & public.pickups)</h2>
+        <p class="slide-desc">Blindaje definitivo contra Broken Object Level Authorization (BOLA / IDOR): inserción anónima segura sin exposición de lecturas (Zero-Read Insert) y control de acceso estricto para comercios autenticados.</p>
+
+        <div class="grid-2" style="margin-top:16px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px;">
+          <div class="card">
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-cart-plus-fill"></i> Inserción Anónima Segura (Zero-Read Insert)</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Los clientes en el storefront (<code>tienda.html</code>) cuentan con permiso exclusivo de <code>INSERT</code> con validación de <code>store_id</code> y estados iniciales permitidos. Se revocaron por completo los permisos de <code>SELECT</code>, <code>UPDATE</code> y <code>DELETE</code> para el rol anónimo.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#EF4444;"><i class="bi bi-shield-slash-fill"></i> Bloqueo Total de Fugas BOLA / IDOR con anon_key</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Cualquier consulta con la clave anónima hacia <code>/rest/v1/orders</code> o <code>/rest/v1/pickups</code> (incluso manipulando <code>?store_id=...</code> o <code>?id=...</code>) es bloqueada al 100% por PostgreSQL con <strong>0 filas devueltas</strong>, protegiendo datos personales de clientes.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#3B82F6;"><i class="bi bi-person-badge-fill"></i> Función Determinística get_auth_store_id()</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Se implementó la función <code>SECURITY DEFINER</code> en PostgreSQL que resuelve de manera infalsificable la identidad del comercio desde los claims JWT (<code>store_id</code>, <code>app_metadata</code> o email verificado), asegurando aislamiento multi-tenant estricto.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#F59E0B;"><i class="bi bi-bicycle"></i> Protección Integral de Cadetería (public.pickups)</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              La tabla de cadetes y puntos de entrega propios queda 100% oculta para usuarios anónimos. Solo el comercio titular autenticado puede visualizar, dar de alta y asignar sus repartidores y ubicaciones de retiro.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <a href="/dashboard.html?store=biuti#pedidos" target="_blank" class="nav-btn primary" style="padding:10px 22px; font-size:13px; background:linear-gradient(135deg, #10B981 0%, #059669 100%);">
+            <i class="bi bi-shield-check"></i> Verificar Aislamiento en Dashboard
+          </a>
+          <a href="/tienda.html?store=biuti" target="_blank" class="nav-btn secondary" style="padding:10px 22px; font-size:13px;">
+            <i class="bi bi-cart-check"></i> Probar Checkout Seguro en Tienda
+          </a>
+        </div>
+      </section>
+
     </main>
 
     <!-- BOTTOMBAR -->
@@ -1803,7 +1849,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 4.11 Blindaje SEO & Redirecciones Canónicas · Actualizado 27/10/2026
+        Dale! Te Pido © 2026 · Versión 4.12 Aislamiento Estricto RLS & Hardening BOLA/IDOR · Actualizado 28/10/2026
       </div>
     </footer>
 
@@ -1812,7 +1858,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 28;
+  const totalSlides = 29;
 
   function showSlide(index) {
     if (index < 1) index = 1;
