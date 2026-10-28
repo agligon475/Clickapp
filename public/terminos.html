@@ -653,6 +653,11 @@
         <p>Los comercios gastronómicos y locales que gestionan pedidos para cocina o mostrador cuentan con un motor de tickets térmicos estándar (58mm y 80mm ESC/POS). La plataforma permite configurar estados con el atributo de <strong>Imprimible</strong> (por ejemplo <em>"En cocina"</em> o <em>"En preparación"</em>), activando opcionalmente el auto-disparo de la comanda hacia la impresora local del establecimiento al cambiar el estado del pedido. El comercio es responsable de mantener configurada su impresora física y de garantizar la correcta custodia y descarte de las comandas impresas que contengan datos de entrega del cliente, respetando el principio de minimización de datos.</p>
       </div>
 
+      <div class="highlight-card" style="border-left-color: #3B82F6; margin-top: 14px;">
+        <h4>📍 Pantalla Pública de Seguimiento en Tiempo Real (Tracking WebSockets)</h4>
+        <p>La plataforma provee a los compradores y comercios un enlace público de seguimiento en vivo (<code>/tracking.html?order=...</code>) que sincroniza en tiempo real vía WebSockets el estado de preparación y despacho del pedido sin requerir recargar la pantalla. Dicho enlace exhibe exclusivamente el progreso operativo, el código PIN de validación para el repartidor y el detalle de la comanda, sin almacenar ni divulgar datos bancarios sensibles ni contraseñas de las partes.</p>
+      </div>
+
       <ul>
         <li>
           <div>

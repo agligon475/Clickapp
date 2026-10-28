@@ -2108,6 +2108,52 @@
         </div>
       </section>
 
+      <!-- SLIDE 36: TIEMPO REAL & ECORED LOGÍSTICA DALE!QUEVOY + CDN WEBP -->
+      <section class="slide" id="slide-36">
+        <span class="slide-badge" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4);color:#10B981;"><i class="bi bi-broadcast"></i> Etapa 36 · Release 28 de Octubre 2026</span>
+        <h2 class="slide-title">Tiempo Real Supabase WebSockets, Tracking Público & Optimización WebP</h2>
+        <p class="slide-desc">Despliegue de sincronización bidireccional en vivo para el Dashboard del comercio, pantalla pública de seguimiento en tiempo real para el comprador final y optimización de medios con compresión CDN al vuelo.</p>
+
+        <div class="grid-2" style="margin-top:16px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px;">
+          <div class="card">
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-arrow-repeat"></i> Sincronización Bidireccional en Vivo (supabase.channel)</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Conexión WebSocket activa en <code>dashboard.html</code> con filtrado por tienda. Cuando un repartidor de Dale!QueVoy valida el PIN de 4 dígitos o se actualiza un pedido en Supabase, la tarjeta se mueve sola de columna en el Kanban con micro-animación elástica y feedback auditivo, sin requerir recargar la pantalla (F5).
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#3B82F6;"><i class="bi bi-geo-alt-fill"></i> Tracking Público para Compradores (tracking.html)</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Pantalla pública ultra-rápida y adaptada a móviles con stepper interactivo de 4 etapas (Recibido ➔ En Preparación ➔ En Camino ➔ Entregado). Exhibe el código PIN seguro de entrega, detalle de productos y botón de WhatsApp, reduciendo drásticamente las consultas de "¿Dónde viene mi pedido?".
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:var(--red);"><i class="bi bi-speedometer2"></i> Compresión Dinámica WebP & Core Web Vitals</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Optimización al vuelo de imágenes en <code>tienda.html</code> mediante parámetros dinámicos de CDN (<code>auto=format&fit=crop&q=80</code>, Cloudinary <code>f_webp,q_auto</code> y Supabase render), combinados con dimensiones fijas, <code>loading="lazy"</code> y <code>decoding="async"</code> para acelerar la carga en redes móviles 4G/3G.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#F59E0B;"><i class="bi bi-clipboard-check"></i> Botón "Copiar Tracking" & Link en WhatsApp</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Integración de botón de un clic para copiar el enlace de seguimiento desde las tarjetas del Kanban y la tabla de pedidos del Dashboard. Además, el checkout de la tienda genera e incluye automáticamente la URL directa de tracking en el mensaje enviado por WhatsApp.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <a href="/tracking.html?order=PED-BH-201&store=bighouse" target="_blank" class="nav-btn primary" style="padding:10px 22px; font-size:13px; background:linear-gradient(135deg, #10B981 0%, #059669 100%);">
+            <i class="bi bi-geo-alt"></i> Probar Tracking en Vivo
+          </a>
+          <a href="/dashboard.html?store=bighouse" target="_blank" class="nav-btn secondary" style="padding:10px 22px; font-size:13px;">
+            <i class="bi bi-kanban"></i> Ver Kanban en Dashboard
+          </a>
+        </div>
+      </section>
+
     </main>
 
     <!-- BOTTOMBAR -->
@@ -2119,7 +2165,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 4.18 Seguridad OWASP & Experiencia Premium · Actualizado 28/10/2026
+        Dale! Te Pido © 2026 · Versión 4.19 Sincronización Realtime & Tracking Público · Actualizado 28/10/2026
       </div>
     </footer>
 
@@ -2128,7 +2174,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 35;
+  const totalSlides = 36;
 
   function showSlide(index) {
     if (index < 1) index = 1;

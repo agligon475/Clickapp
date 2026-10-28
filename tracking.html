@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Seguimiento de Pedido — Dale!TePido</title>
+  <meta name="description" content="Seguí el estado de tu pedido en tiempo real con Dale!TePido y Dale!QueVoy." />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#0F172A" />
+  <link rel="icon" href="/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --primary: #F60000;
+      --primary-dark: #D60000;
+      --primary-glow: rgba(246, 0, 0, 0.25);
+      --bg: #090D16;
+      --card-bg: rgba(24, 31, 47, 0.82);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+      --green: #10B981;
+      --green-glow: rgba(16, 185, 129, 0.25);
+      --amber: #F59E0B;
+      --blue: #3B82F6;
+      --font-h: 'Josefin Sans', sans-serif;
+      --font-b: 'Poppins', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(246, 0, 0, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.08) 0px, transparent 50%);
+      color: var(--text-main);
+      font-family: var(--font-b);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 12px 48px;
+    }
+
+    .tracking-container {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* Header & Brand */
+    .store-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+
+    .store-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .store-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      object-fit: cover;
+      background: #1E293B;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .store-name {
+      font-family: var(--font-h);
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+
+    .store-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .live-pulse {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: var(--green);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.7; }
+      50% { transform: scale(1.35); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.7; }
+    }
+
+    /* Card Box */
+    .card-box {
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--card-border);
+      border-radius: 22px;
+      padding: 22px 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .order-meta-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+    }
+
+    .order-id-tag {
+      font-family: var(--font-h);
+      font-size: 19px;
+      font-weight: 800;
+      color: #FFFFFF;
+      letter-spacing: 0.5px;
+    }
+
+    .order-time {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Stepper */
+    .stepper-container {
+      position: relative;
+      padding: 10px 0 14px;
+    }
+
+    .stepper-line {
+      position: absolute;
+      top: 36px;
+      left: 36px;
+      right: 36px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      z-index: 1;
+    }
+
+    .stepper-progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: linear-gradient(90deg, #F60000 0%, #10B981 100%);
+      border-radius: 999px;
+      transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      width: 0%;
+      box-shadow: 0 0 12px rgba(246, 0, 0, 0.5);
+    }
+
+    .stepper-steps {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 80px;
+      cursor: default;
+    }
+
+    .step-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #182234;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      transition: all 0.4s ease;
+    }
+
+    .step-item.active .step-circle {
+      background: var(--primary);
+      border-color: #FFA5A5;
+      color: #FFFFFF;
+      transform: scale(1.15);
+      box-shadow: 0 0 20px var(--primary-glow);
+      animation: pulseActive 2s infinite;
+    }
+
+    .step-item.completed .step-circle {
+      background: var(--green);
+      border-color: #6EE7B7;
+      color: #FFFFFF;
+      box-shadow: 0 0 15px var(--green-glow);
+    }
+
+    @keyframes pulseActive {
+      0%, 100% { box-shadow: 0 0 10px rgba(246,0,0,0.4); }
+      50% { box-shadow: 0 0 24px rgba(246,0,0,0.85); }
+    }
+
+    .step-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+      line-height: 1.2;
+    }
+
+    .step-item.active .step-label {
+      color: #FFFFFF;
+      font-weight: 700;
+    }
+
+    .step-item.completed .step-label {
+      color: #E2E8F0;
+    }
+
+    /* State Detail Banner */
+    .status-highlight-banner {
+      background: linear-gradient(135deg, rgba(246,0,0,0.12) 0%, rgba(255,255,255,0.03) 100%);
+      border: 1px solid rgba(246,0,0,0.3);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-top: 14px;
+      text-align: center;
+    }
+
+    .status-highlight-title {
+      font-family: var(--font-h);
+      font-size: 17px;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .status-highlight-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Dale!QueVoy PIN Security Banner */
+    .pin-security-card {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(16, 185, 129, 0.03) 100%);
+      border: 2px dashed rgba(16, 185, 129, 0.45);
+      border-radius: 18px;
+      padding: 18px 16px;
+      text-align: center;
+      margin-top: 16px;
+      position: relative;
+    }
+
+    .pin-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #34D399;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .pin-code-display {
+      font-family: var(--font-h);
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: 10px;
+      color: #FFFFFF;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 6px 16px;
+      border-radius: 12px;
+      display: inline-block;
+      margin: 4px 0 8px;
+      text-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
+    }
+
+    .pin-helper {
+      font-size: 11px;
+      color: var(--text-muted);
+      max-width: 340px;
+      margin: 0 auto;
+    }
+
+    /* Items Section */
+    .items-title {
+      font-family: var(--font-h);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .order-item-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 13px;
+    }
+
+    .order-item-line:last-child {
+      border-bottom: none;
+    }
+
+    .item-name-qty {
+      color: #E2E8F0;
+      font-weight: 500;
+      flex: 1;
+      padding-right: 12px;
+    }
+
+    .item-notes-sub {
+      font-size: 11px;
+      color: #FCD34D;
+      margin-top: 2px;
+    }
+
+    .item-price-val {
+      font-weight: 600;
+      color: #FFFFFF;
+      white-space: nowrap;
+    }
+
+    /* Logistics & Address */
+    .logistics-card {
+      display: flex;
+      gap: 12px;
+      background: rgba(255,255,255,0.03);
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.05);
+      margin-top: 14px;
+      font-size: 12px;
+    }
+
+    .logistics-icon {
+      font-size: 20px;
+      color: var(--primary);
+    }
+
+    .logistics-text strong {
+      color: #FFFFFF;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed rgba(255,255,255,0.15);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .total-val {
+      font-family: var(--font-h);
+      font-size: 24px;
+      font-weight: 900;
+      color: #FFFFFF;
+    }
+
+    /* Actions */
+    .action-btn-wapp {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+      color: #FFFFFF;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 14px;
+      border-radius: 14px;
+      margin-top: 12px;
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .action-btn-wapp:active {
+      transform: scale(0.98);
+    }
+
+    .action-btn-shop {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 12px;
+      border-radius: 14px;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+
+    .action-btn-shop:hover {
+      background: rgba(255,255,255,0.1);
+      color: #FFFFFF;
+    }
+
+    /* Skeleton Loading State */
+    .skeleton-box {
+      background: rgba(255,255,255,0.06);
+      border-radius: 8px;
+      animation: pulseSkeleton 1.5s infinite;
+    }
+
+    @keyframes pulseSkeleton {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.8; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="tracking-container">
+
+    <!-- Store Header -->
+    <header class="store-header">
+      <div class="store-info">
+        <img id="store-logo" class="store-logo" src="/apple-touch-icon.png" alt="Logo de la Tienda" />
+        <div>
+          <h1 id="store-name" class="store-name">Dale!TePido</h1>
+          <span id="store-tagline" class="store-subtitle">Seguimiento de Pedido</span>
+        </div>
+      </div>
+      <div class="live-pulse" title="Sincronización WebSockets en Vivo">
+        <span class="pulse-dot"></span>
+        <span>En Vivo</span>
+      </div>
+    </header>
+
+    <!-- Main Order Status Card -->
+    <main class="card-box" id="main-tracking-card">
+      <div class="order-meta-head">
+        <div>
+          <span style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);font-weight:700;">PEDIDO</span>
+          <div id="order-id" class="order-id-tag">Cargando...</div>
+        </div>
+        <div style="text-align:right;">
+          <span style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);font-weight:700;">FECHA</span>
+          <div id="order-date" class="order-time">—</div>
+        </div>
+      </div>
+
+      <!-- Stepper Progress -->
+      <div class="stepper-container">
+        <div class="stepper-line">
+          <div id="stepper-progress-bar" class="stepper-progress"></div>
+        </div>
+        <div class="stepper-steps">
+          <!-- Step 1 -->
+          <div class="step-item" id="step-1">
+            <div class="step-circle"><i class="bi bi-file-earmark-check"></i></div>
+            <span class="step-label">Recibido</span>
+          </div>
+          <!-- Step 2 -->
+          <div class="step-item" id="step-2">
+            <div class="step-circle"><i class="bi bi-fire"></i></div>
+            <span class="step-label">En Preparación</span>
+          </div>
+          <!-- Step 3 -->
+          <div class="step-item" id="step-3">
+            <div class="step-circle"><i class="bi bi-scooter"></i></div>
+            <span class="step-label" id="step-3-label">En Camino</span>
+          </div>
+          <!-- Step 4 -->
+          <div class="step-item" id="step-4">
+            <div class="step-circle"><i class="bi bi-check2-circle"></i></div>
+            <span class="step-label">Entregado</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- State Highlight Banner -->
+      <div class="status-highlight-banner" id="status-banner">
+        <div class="status-highlight-title" id="status-banner-title">
+          <i class="bi bi-hourglass-split"></i> <span>Verificando tu pedido...</span>
+        </div>
+        <p class="status-highlight-desc" id="status-banner-desc">
+          Conectando con el local para brindarte el estado más actualizado.
+        </p>
+      </div>
+
+      <!-- Dale!QueVoy PIN Security Card (Conditional) -->
+      <div class="pin-security-card" id="pin-card" style="display:none;">
+        <div class="pin-title"><i class="bi bi-shield-lock-fill"></i> PIN de Seguridad Dale!QueVoy</div>
+        <div class="pin-code-display" id="pin-code-text">0000</div>
+        <p class="pin-helper">
+          Mostrale este código de 4 dígitos al cadete al momento de la entrega en tu domicilio para validar tu paquete.
+        </p>
+      </div>
+    </main>
+
+    <!-- Order Items & Details Card -->
+    <section class="card-box">
+      <div class="items-title">
+        <span><i class="bi bi-bag-check"></i> Detalle de la compra</span>
+        <span id="items-count" style="font-size:11px;font-weight:600;color:var(--text-dim);">0 productos</span>
+      </div>
+
+      <div id="order-items-list">
+        <div class="skeleton-box" style="height:35px;margin-bottom:8px;"></div>
+        <div class="skeleton-box" style="height:35px;"></div>
+      </div>
+
+      <!-- Logistics details -->
+      <div class="logistics-card" id="logistics-box">
+        <div class="logistics-icon"><i class="bi bi-geo-alt-fill"></i></div>
+        <div class="logistics-text">
+          <strong id="logistics-type">Envío a domicilio</strong>
+          <span id="logistics-address" style="color:var(--text-muted);">Cargando dirección...</span>
+        </div>
+      </div>
+
+      <!-- Payment & Total -->
+      <div class="total-row">
+        <div>
+          <span style="font-size:11px;color:var(--text-dim);display:block;text-transform:uppercase;font-weight:700;">Forma de Pago</span>
+          <span id="payment-method" style="font-size:12px;color:var(--text-muted);font-weight:500;">—</span>
+        </div>
+        <div style="text-align:right;">
+          <span style="font-size:11px;color:var(--text-dim);display:block;text-transform:uppercase;font-weight:700;">Total</span>
+          <span id="order-total" class="total-val">$0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Action Buttons -->
+    <section>
+      <a id="btn-wapp-contact" href="#" target="_blank" class="action-btn-wapp">
+        <i class="bi bi-whatsapp" style="font-size:18px;"></i>
+        <span>Consultar por WhatsApp</span>
+      </a>
+      <a id="btn-back-shop" href="/" class="action-btn-shop">
+        <i class="bi bi-arrow-left"></i>
+        <span>Volver a la tienda</span>
+      </a>
+    </section>
+
+  </div>
+
+  <!-- Realtime & Tracking Script -->
+  <script>
+    (function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const orderParam = (urlParams.get('order') || '').trim();
+      const storeParam = (urlParams.get('store') || '').toLowerCase().trim();
+
+      const SUPABASE_URL = 'https://iaylgsthwildjkiiwgfd.supabase.co';
+      const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
+
+      let currentOrder = null;
+      let currentStoreCfg = null;
+      let supabaseClient = null;
+
+      function escapeHTML(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function initSupabase() {
+        if (window.supabase && typeof window.supabase.createClient === 'function') {
+          try {
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, ANON_KEY, {
+              realtime: { params: { eventsPerSecond: 10 } }
+            });
+          } catch(e) {
+            console.warn('[Tracking Realtime] Error init createClient:', e);
+          }
+        }
+      }
+
+      async function loadStoreConfig(storeId) {
+        let cfg = {};
+        // 1. Intentar desde localStorage local de prueba
+        try {
+          const raw = localStorage.getItem('storeapp_cfg_' + storeId);
+          if (raw) cfg = JSON.parse(raw);
+        } catch(e) {}
+
+        // 2. Si falta info, consultar company_settings en Supabase
+        if (!cfg.name || cfg.name === 'Mi Tienda') {
+          try {
+            const res = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}&select=*`, {
+              headers: { 'apikey': ANON_KEY, 'Authorization': `Bearer ${ANON_KEY}` }
+            });
+            if (res.ok) {
+              const rows = await res.json();
+              if (rows && rows[0]) {
+                const r = rows[0];
+                cfg = {
+                  name: r.business_name || r.store_name || cfg.name,
+                  logo: r.logo_url || cfg.logo,
+                  tagline: r.tagline || cfg.tagline,
+                  wapp: r.whatsapp || r.phone || cfg.wapp
+                };
+              }
+            }
+          } catch(e) {}
+        }
+
+        // Fallbacks inteligentes por rubro conocido
+        if (!cfg.name) {
+          if (storeId === 'bighouse' || storeId === 'burgerhouse') cfg.name = 'BIGHOUSE';
+          else if (storeId === 'noutacc') cfg.name = 'NOUT ACCESORIOS';
+          else if (storeId === 'lugonessilva') cfg.name = 'LUGONES & SILVA';
+          else if (storeId === 'ferre-now') cfg.name = 'FERRE-NOW';
+          else cfg.name = storeId.toUpperCase() || 'Dale!TePido';
+        }
+
+        currentStoreCfg = cfg;
+        document.getElementById('store-name').textContent = cfg.name;
+        if (cfg.tagline) document.getElementById('store-tagline').textContent = cfg.tagline;
+        if (cfg.logo) document.getElementById('store-logo').src = cfg.logo;
+
+        // Botón volver a tienda
+        const btnShop = document.getElementById('btn-back-shop');
+        if (btnShop) btnShop.href = `/tienda.html?store=${encodeURIComponent(storeId)}`;
+
+        // Botón WhatsApp
+        updateWappButton(cfg.wapp);
+      }
+
+      function updateWappButton(phone) {
+        const btnWapp = document.getElementById('btn-wapp-contact');
+        if (!btnWapp) return;
+        const cleanPhone = (phone || '').replace(/[^0-9]+/g, '');
+        const orderId = currentOrder ? (currentOrder.order_number || currentOrder.id) : (orderParam || '');
+        const msg = encodeURIComponent(`Hola ${currentStoreCfg?.name || ''}, te consulto por mi pedido #${orderId} de Dale!TePido.`);
+        
+        if (cleanPhone) {
+          btnWapp.href = `https://wa.me/${cleanPhone}?text=${msg}`;
+        } else {
+          btnWapp.href = `https://wa.me/?text=${msg}`;
+        }
+      }
+
+      async function fetchOrder() {
+        if (!orderParam) {
+          showEmptyState('No se especificó un número de pedido en la URL.');
+          return;
+        }
+
+        // 1. Intentar buscar en Supabase por order_number o id
+        let found = null;
+        try {
+          const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?or=(order_number.eq.${encodeURIComponent(orderParam)},id.eq.${encodeURIComponent(orderParam)})&limit=1`, {
+            headers: { 'apikey': ANON_KEY, 'Authorization': `Bearer ${ANON_KEY}` }
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.length > 0) {
+              found = data[0];
+            }
+          }
+        } catch(e) {
+          console.warn('[Tracking] Error buscando en Supabase:', e);
+        }
+
+        // 2. Si no está en Supabase, buscar en localStorage si es demo o pedido reciente
+        if (!found && storeParam) {
+          try {
+            const saved = localStorage.getItem('storeapp_orders_' + storeParam);
+            if (saved) {
+              const list = JSON.parse(saved);
+              found = (list || []).find(o => o.id === orderParam || o.order_number === orderParam);
+            }
+          } catch(e) {}
+        }
+
+        if (found) {
+          renderOrder(found);
+          subscribeRealtime(found);
+        } else {
+          showEmptyState(`No encontramos el pedido #${orderParam}. Verificá el enlace o consultá al comercio.`);
+        }
+      }
+
+      function renderOrder(order) {
+        currentOrder = order;
+        const orderId = order.order_number || order.id;
+        document.getElementById('order-id').textContent = '#' + orderId;
+
+        // Fecha
+        const d = order.created_at ? new Date(order.created_at) : (order.fecha ? new Date() : new Date());
+        document.getElementById('order-date').textContent = order.fecha || d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) + ' hs';
+
+        // Mapear estado
+        const st = (order.status || order.estado || 'RECEIVED').toUpperCase();
+        updateStepper(st, order.order_type || order.logistica);
+
+        // PIN de entrega Dale!QueVoy
+        const pinCard = document.getElementById('pin-card');
+        const pinCodeText = document.getElementById('pin-code-text');
+        const pinVal = order.pin_code || (order.notes && order.notes.match(/PIN:\s*(\d{4})/i) ? order.notes.match(/PIN:\s*(\d{4})/i)[1] : null);
+
+        if (pinVal && pinVal !== '—') {
+          pinCard.style.display = 'block';
+          pinCodeText.textContent = pinVal;
+        } else {
+          pinCard.style.display = 'none';
+        }
+
+        // Items
+        renderItems(order);
+
+        // Logística y Dirección
+        const isDelivery = order.order_type === 'DELIVERY' || (order.logistica && order.logistica.toLowerCase().includes('domicilio'));
+        const logTypeEl = document.getElementById('logistics-type');
+        const logAddrEl = document.getElementById('logistics-address');
+        const step3Label = document.getElementById('step-3-label');
+
+        if (isDelivery) {
+          logTypeEl.textContent = 'Envío a domicilio (Dale!QueVoy)';
+          logAddrEl.textContent = order.delivery_address || order.customer_address || order.direccion || 'Dirección acordada';
+          step3Label.textContent = 'En Camino';
+        } else {
+          logTypeEl.textContent = 'Retiro en el local / Takeaway';
+          logAddrEl.textContent = currentStoreCfg?.address || order.direccion || 'Mostrador del comercio';
+          step3Label.textContent = 'Listo p/ Retirar';
+        }
+
+        // Pago y Total
+        const pago = order.payment_method || order.pago || 'A convenir';
+        document.getElementById('payment-method').textContent = pago;
+
+        const totalAmt = typeof order.total_amount === 'number' 
+          ? order.total_amount 
+          : (order.total_ars || (parseFloat(String(order.total || '0').replace(/[^0-9.-]+/g, '')) || 0));
+        document.getElementById('order-total').textContent = '$' + Number(totalAmt).toLocaleString('es-AR');
+
+        updateWappButton(currentStoreCfg?.wapp);
+      }
+
+      function updateStepper(st, orderType) {
+        const isDelivery = orderType === 'DELIVERY' || (orderType && orderType.toLowerCase().includes('domicilio'));
+        const progressBar = document.getElementById('stepper-progress-bar');
+        const s1 = document.getElementById('step-1');
+        const s2 = document.getElementById('step-2');
+        const s3 = document.getElementById('step-3');
+        const s4 = document.getElementById('step-4');
+
+        const titleEl = document.getElementById('status-banner-title');
+        const descEl = document.getElementById('status-banner-desc');
+
+        [s1, s2, s3, s4].forEach(s => s.classList.remove('active', 'completed'));
+
+        // Normalizar clave de estado
+        let level = 1;
+        if (st === 'RECEIVED' || st === 'CONFIRMAR' || st === 'PEND' || st === 'PENDIENTE') {
+          level = 1;
+        } else if (st === 'PREPARING' || st === 'EN_COCINA' || st === 'EN_CURSO') {
+          level = 2;
+        } else if (st === 'IN_TRANSIT' || st === 'READY_FOR_PICKUP' || st === 'DESPACHADO' || st === 'LISTO_RETIRAR' || st === 'SHIP') {
+          level = 3;
+        } else if (st === 'COMPLETED' || st === 'DELIVERED' || st === 'COBRADO' || st === 'RETIRADO' || st === 'OK') {
+          level = 4;
+        }
+
+        if (level === 1) {
+          s1.classList.add('active');
+          progressBar.style.width = '12%';
+          titleEl.innerHTML = '<i class="bi bi-file-earmark-check" style="color:var(--primary);"></i> <span>¡Pedido Recibido!</span>';
+          descEl.textContent = 'El local ya recibió tu orden y la está revisando para confirmarla.';
+        } else if (level === 2) {
+          s1.classList.add('completed');
+          s2.classList.add('active');
+          progressBar.style.width = '42%';
+          titleEl.innerHTML = '<i class="bi bi-fire" style="color:var(--amber);"></i> <span>En Preparación</span>';
+          descEl.textContent = 'El equipo está preparando tus productos cuidadosamente.';
+        } else if (level === 3) {
+          s1.classList.add('completed');
+          s2.classList.add('completed');
+          s3.classList.add('active');
+          progressBar.style.width = '75%';
+          if (isDelivery) {
+            titleEl.innerHTML = '<i class="bi bi-scooter" style="color:#60A5FA;"></i> <span>¡Tu pedido va en camino!</span>';
+            descEl.textContent = 'El repartidor está en viaje a tu domicilio. Tené a mano tu PIN de 4 dígitos.';
+          } else {
+            titleEl.innerHTML = '<i class="bi bi-bag-check" style="color:#60A5FA;"></i> <span>¡Listo para retirar!</span>';
+            descEl.textContent = 'Tu paquete está listo en el mostrador del local. Ya podés pasar a retirarlo.';
+          }
+        } else if (level === 4) {
+          s1.classList.add('completed');
+          s2.classList.add('completed');
+          s3.classList.add('completed');
+          s4.classList.add('completed');
+          progressBar.style.width = '100%';
+          titleEl.innerHTML = '<i class="bi bi-check2-circle" style="color:var(--green);"></i> <span>¡Pedido Entregado!</span>';
+          descEl.textContent = '¡Muchas gracias por tu compra! Esperamos que disfrutes tu pedido.';
+          try {
+            if (navigator.vibrate) navigator.vibrate([30, 60, 40]);
+          } catch(e) {}
+        }
+      }
+
+      function renderItems(order) {
+        const container = document.getElementById('order-items-list');
+        const countEl = document.getElementById('items-count');
+        let items = [];
+
+        try {
+          if (Array.isArray(order.items)) items = order.items;
+          else if (order.detalle) {
+            const d = typeof order.detalle === 'string' ? JSON.parse(order.detalle) : order.detalle;
+            if (Array.isArray(d)) items = d;
+          }
+        } catch(e) {}
+
+        if (!items.length && order.productos) {
+          const parts = order.productos.split('|').map(s => s.trim()).filter(Boolean);
+          items = parts.map(p => {
+            const match = p.match(/^(.*?)\s*×\s*(\d+)$/);
+            return {
+              name: match ? match[1] : p,
+              qty: match ? parseInt(match[2]) : 1,
+              price: 0
+            };
+          });
+        }
+
+        countEl.textContent = `${items.length} producto${items.length !== 1 ? 's' : ''}`;
+
+        if (!items.length) {
+          container.innerHTML = '<div style="font-size:12px;color:var(--text-dim);padding:8px 0;">No se pudo desglosar el detalle de los productos.</div>';
+          return;
+        }
+
+        container.innerHTML = items.map(it => {
+          const name = escapeHTML(it.nombre || it.name || 'Producto');
+          const qty = it.cantidad || it.qty || it.cant || 1;
+          const price = it.price || it.precio || 0;
+          const notes = it.notes || it.observaciones || '';
+          const variant = it.variant || it.opcion || '';
+
+          return `
+            <div class="order-item-line">
+              <div class="item-name-qty">
+                <span>${qty}x ${name}</span>
+                ${variant ? `<div class="item-notes-sub">Opción: ${escapeHTML(variant)}</div>` : ''}
+                ${notes ? `<div class="item-notes-sub"><i class="bi bi-info-circle"></i> ${escapeHTML(notes)}</div>` : ''}
+              </div>
+              <div class="item-price-val">
+                ${price > 0 ? '$' + Number(price * qty).toLocaleString('es-AR') : '—'}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function subscribeRealtime(order) {
+        if (!supabaseClient) return;
+        const orderId = order.id || order.order_number;
+
+        try {
+          supabaseClient
+            .channel(`public:orders:id=eq.${orderId}`)
+            .on('postgres_changes', {
+              event: 'UPDATE',
+              schema: 'public',
+              table: 'orders',
+              filter: `id=eq.${order.id}`
+            }, (payload) => {
+              console.log('[Tracking Realtime] Actualización en vivo recibida:', payload);
+              if (payload && payload.new) {
+                renderOrder(payload.new);
+              }
+            })
+            .subscribe();
+        } catch(e) {
+          console.warn('[Tracking Realtime] Error en suscripción:', e);
+        }
+      }
+
+      function showEmptyState(msg) {
+        const main = document.getElementById('main-tracking-card');
+        main.innerHTML = `
+          <div style="text-align:center;padding:36px 12px;">
+            <i class="bi bi-search" style="font-size:36px;color:var(--primary);display:block;margin-bottom:12px;"></i>
+            <h2 style="font-family:var(--font-h);font-size:18px;margin-bottom:8px;">No encontramos el pedido</h2>
+            <p style="font-size:13px;color:var(--text-muted);max-width:320px;margin:0 auto 16px;">${escapeHTML(msg)}</p>
+            <a href="/" class="action-btn-shop" style="max-width:200px;margin:0 auto;">Ir al inicio</a>
+          </div>
+        `;
+      }
+
+      // Inicio
+      initSupabase();
+      if (storeParam) loadStoreConfig(storeParam);
+      fetchOrder();
+    })();
+  </script>
+</body>
+</html>
