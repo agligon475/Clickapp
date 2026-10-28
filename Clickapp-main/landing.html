@@ -3558,22 +3558,7 @@
                     throw new Error(`Error en base de datos: ${await insertRes.text()}`);
                 }
 
-                const defaultCats = [
-                    { store_id: storeId, name: 'Productos Destacados', emoji: '⭐', display_order: 10, active: true, rubro: rubro },
-                    { store_id: storeId, name: 'Promociones', emoji: '🔥', display_order: 20, active: true, rubro: rubro },
-                    { store_id: storeId, name: 'Novedades', emoji: '✨', display_order: 30, active: true, rubro: rubro },
-                    { store_id: storeId, name: 'Catálogo General', emoji: '📦', display_order: 40, active: true, rubro: rubro }
-                ];
-
-                fetch(`${SUPABASE_URL}/rest/v1/categories`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`
-                    },
-                    body: JSON.stringify(defaultCats)
-                }).catch(err => console.warn('Error seeding categories:', err));
+                // El catálogo inicia 100% limpio y en blanco. Si el comerciante desea sugerencias estándar, puede generarlas con 1 clic desde el Dashboard (Categorías > Generar Categorías Iniciales).
 
                 await fetch('/api/welcome-email', {
                     method: 'POST',

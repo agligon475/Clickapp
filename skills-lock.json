@@ -493,6 +493,12 @@
       "skillPath": "skills/attacking-oauth-with-device-code-phishing/SKILL.md",
       "computedHash": "b9d24fb213a22f2fb18ee8ee8f0be941dca1af484111cefe03fea8421ea87ed5"
     },
+    "audit-the-list": {
+      "source": "vinta/awesome-python",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/audit-the-list/SKILL.md",
+      "computedHash": "242bb4e19b401bce606be4bf515aa41a03078e34b73dab019fd7caa9c8e7467b"
+    },
     "auditing-aws-s3-bucket-permissions": {
       "source": "mukul975/Anthropic-Cybersecurity-Skills",
       "sourceType": "github",
@@ -1764,6 +1770,12 @@
       "sourceType": "github",
       "skillPath": "skills/detecting-wmi-persistence/SKILL.md",
       "computedHash": "b243bdc35e709a947ace336891f47827e4e55f87a302699aa2c53fbfbfb42088"
+    },
+    "diagnosing-superpowers": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/diagnosing-superpowers/SKILL.md",
+      "computedHash": "3bb0beb4fce3731bb541bce94a629a053598c4cf3a43e5af992202f2bac729f1"
     },
     "dynamo-troubleshoot": {
       "source": "NVIDIA/skills",
@@ -4615,6 +4627,24 @@
       "skillPath": "skills/profiling-threat-actor-groups/SKILL.md",
       "computedHash": "4f6000f5b9bcfd6b0005be2c09854a7c01e0d3d3a9e2ef9318df59383eaaa0a0"
     },
+    "rea-analysis-optimization": {
+      "source": "morluto/rea",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/rea-analysis-optimization/SKILL.md",
+      "computedHash": "a7d0fcdf9aaf9dbf30724c78c1087cd5f78d09169d96796a8376ce9681a8fe4f"
+    },
+    "rea-ci-tests-audit": {
+      "source": "morluto/rea",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/rea-ci-tests-audit/SKILL.md",
+      "computedHash": "66bacc26230b7157e69add008656302b16b90df5c776130ce20fd6f5ef6ef8b6"
+    },
+    "rea-tool-design": {
+      "source": "morluto/rea",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/rea-tool-design/SKILL.md",
+      "computedHash": "b1dd54035bbd31a55196dba0ce78a55c9a548e7ac395ad3771f9fe8784a6fc6a"
+    },
     "recovering-deleted-files-with-photorec": {
       "source": "mukul975/Anthropic-Cybersecurity-Skills",
       "sourceType": "github",
@@ -4650,6 +4680,12 @@
       "sourceType": "github",
       "skillPath": "skills/remotion-to-hyperframes/SKILL.md",
       "computedHash": "17c26590575d28118b783f6a534288ac38df50fae5b95826ee9d4976328ad687"
+    },
+    "reverse-engineer-anything": {
+      "source": "morluto/rea",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/reverse-engineer-anything/SKILL.md",
+      "computedHash": "50795679f95c0bf8eba5ad533cf25a92615120087b8e1c2a65f80c1db1cbd38e"
     },
     "reverse-engineering-android-malware-with-jadx": {
       "source": "mukul975/Anthropic-Cybersecurity-Skills",
@@ -4812,6 +4848,12 @@
       "sourceType": "github",
       "skillPath": "skills/slideshow/SKILL.md",
       "computedHash": "fa178947b4cfe834d416c4d826d50cdd1f92dfb22395569032a40aa5d26819cc"
+    },
+    "subagent-driven-development": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/subagent-driven-development/SKILL.md",
+      "computedHash": "eb19d7078aeabe22efa59d74b1141d40a4e3d8be4f5c7a3a4f8d7998abf50f5b"
     },
     "talking-head-recut": {
       "source": "heygen-com/hyperframes",

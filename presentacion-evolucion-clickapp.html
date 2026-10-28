@@ -421,7 +421,7 @@
         <button class="nav-btn" onclick="prevSlide()" title="Diapositiva Anterior (←)">
           <i class="bi bi-chevron-left"></i>
         </button>
-        <span id="slide-indicator" style="font-family: var(--font-mono); font-size: 12px; font-weight:700; color: #FFFFFF; min-width: 48px; text-align: center;">1 / 33</span>
+        <span id="slide-indicator" style="font-family: var(--font-mono); font-size: 12px; font-weight:700; color: #FFFFFF; min-width: 48px; text-align: center;">1 / 34</span>
         <button class="nav-btn primary" onclick="nextSlide()" title="Siguiente Diapositiva (→ o Espacio)">
           <i class="bi bi-chevron-right"></i>
         </button>
@@ -2016,6 +2016,52 @@
         </div>
       </section>
 
+      <!-- SLIDE 34: CONTROL DE CATÁLOGO LIMPIO & ERRADICACIÓN DE CATEGORÍAS FANTASMA -->
+      <section class="slide" id="slide-34">
+        <span class="slide-badge" style="background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.4);color:#60A5FA;"><i class="bi bi-tags-fill"></i> Etapa 34 · Release 28 de Octubre 2026</span>
+        <h2 class="slide-title">Control de Catálogo Limpio & Erradicación de Categorías Fantasma en Altas</h2>
+        <p class="slide-desc">Resolución integral de precargas automáticas inconsultas de categorías en el registro de tiendas: catálogos 100% en blanco por defecto, casilla de verificación opt-in explícita, y saneamiento total del catálogo de pruebas LicaLic.</p>
+
+        <div class="grid-2" style="margin-top:16px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px;">
+          <div class="card">
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-trash3-fill"></i> Saneamiento Inmediato de LicaLic en Supabase</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Se purgaron de la base de datos las 5 categorías de ferretería inyectadas automáticamente por el antiguo script de registro. La cuenta <code>store_id: licalic</code> quedó en estado <strong>100% limpio y en blanco</strong> (0 productos, 0 categorías), lista para pruebas manuales paso a paso sin interferencias.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#3B82F6;"><i class="bi bi-check2-square"></i> Casilla Opt-in Explícita en Onboarding (alta-usuario.html)</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Se desactivó la ejecución forzada de <code>seedCategoriesForNewStore</code>. Ahora se exhibe un control claro: <em>"Precargar 5 categorías sugeridas para este rubro"</em>, <strong>desmarcado por defecto</strong>. Solo si el comerciante lo elige activamente se inyectarán sugerencias iniciales.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#F59E0B;"><i class="bi bi-shield-x"></i> Supresión de Inserciones Silenciosas en Landing</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              En <code>landing.html</code> se eliminó la inserción automática en segundo plano de categorías dummy (<em>Productos Destacados, Promociones, Novedades, Catálogo General</em>). Toda nueva cuenta registrada inicia de forma impecable sin registros no deseados.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#EC4899;"><i class="bi bi-lightning-charge-fill"></i> Generación Asistida Bajo Demanda en Dashboard</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Cuando una tienda tiene 0 categorías, el panel de control despliega un estado vacío intuitivo con accesos a <em>"Crear Categoría"</em> manual y <em>"Generar Categorías Iniciales"</em> con 1 solo clic, preservando la libertad total del usuario sin imponer datos predefinidos.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <a href="/dashboard.html?store=licalic#categories" target="_blank" class="nav-btn primary" style="padding:10px 22px; font-size:13px; background:linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);">
+            <i class="bi bi-tags"></i> Ver Categorías Limpias en LicaLic
+          </a>
+          <a href="/alta-usuario.html" target="_blank" class="nav-btn secondary" style="padding:10px 22px; font-size:13px;">
+            <i class="bi bi-person-plus-fill"></i> Probar Alta de Comercio Limpia
+          </a>
+        </div>
+      </section>
+
     </main>
 
     <!-- BOTTOMBAR -->
@@ -2027,7 +2073,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 4.16 Desacoplamiento Email Verificación & Blindaje Admin · Actualizado 28/10/2026
+        Dale! Te Pido © 2026 · Versión 4.17 Catálogo Limpio & Erradicación Categorías Fantasma · Actualizado 28/10/2026
       </div>
     </footer>
 
@@ -2036,7 +2082,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 33;
+  const totalSlides = 34;
 
   function showSlide(index) {
     if (index < 1) index = 1;
