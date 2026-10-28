@@ -1316,6 +1316,11 @@ body:not(.light-theme) .stock-chip {
 
     <!-- Checkout form -->
     <div class="checkout-form" id="checkout-form">
+      <!-- Campo Honeypot Oculto Anti-Spam / Anti-Bot (OWASP) -->
+      <div style="position:absolute;left:-9999px;top:-9999px;opacity:0;pointer-events:none;" aria-hidden="true">
+        <label for="f-website-hp">Dejar vacío</label>
+        <input type="text" id="f-website-hp" name="customer_security_website_hp" tabindex="-1" autocomplete="off" />
+      </div>
       <div class="form-row">
         <div class="form-group">
           <label class="form-label" for="f-nombre">Nombre y apellido *</label>
@@ -1505,6 +1510,18 @@ try {
 } catch(e) {}
 
 window.SERENO_ORDER_CONFIRMED = false;
+
+/* Sanitizador Universal Anti-XSS (OWASP A03 / SOC) */
+function escapeHTML(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+window.escapeHTML = escapeHTML;
 
 let storeNosotros = '';
 let storeFaqs = [];
@@ -2166,7 +2183,7 @@ function render() {
 
   if (!filtered.length) {
     document.getElementById('grid').innerHTML = `<div class="empty-state">
-      <i class="bi bi-search"></i><p>No se encontraron productos para "<strong>${searchTerm||activeCat}</strong>"</p>
+      <i class="bi bi-search"></i><p>No se encontraron productos para "<strong>${escapeHTML(searchTerm||activeCat)}</strong>"</p>
     </div>`;
     return;
   }
@@ -2187,16 +2204,16 @@ function render() {
           <video class="card-micro-video" src="${p.video_url}" muted loop playsinline preload="metadata" onmouseenter="this.play()" onmouseleave="this.pause();this.currentTime=0;" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:2;opacity:0;transition:opacity 0.25s ease;" onplay="this.style.opacity='1'" onpause="this.style.opacity='0'"></video>
         ` : ''}
         ${p.img
-          ? `<img src="${optimizeImg(p.img)}" alt="${p.name}" loading="lazy" class="main-img" onerror="this.style.display='none';this.parentElement.querySelector('.product-img-fallback').style.display='flex'"/>
-             ${p.img2 ? `<img src="${optimizeImg(p.img2)}" alt="${p.name} detalle" loading="lazy" class="hover-img"/>` : ''}
+          ? `<img src="${optimizeImg(p.img)}" alt="${escapeHTML(p.name)}" loading="lazy" class="main-img" onerror="this.style.display='none';this.parentElement.querySelector('.product-img-fallback').style.display='flex'"/>
+             ${p.img2 ? `<img src="${optimizeImg(p.img2)}" alt="${escapeHTML(p.name)} detalle" loading="lazy" class="hover-img"/>` : ''}
              <div class="product-img-fallback" style="display:none;width:100%;height:100%;align-items:center;justify-content:center;">${p.emoji}</div>`
           : `<div class="product-img-fallback">${p.emoji}</div>`}
         <span class="stock-chip ${p.stock===0?'out':''}">${p.stock===0?'Sin stock':`Stock: ${p.stock}`}</span>
       </div>
       <div class="product-body">
-        <div class="product-cat">${p.cat}${flag?' <span class="origen-flag">'+flag+'</span>':''}</div>
-        ${p.marca?`<div style="font-size:10px;color:var(--silver);margin-bottom:2px;">${p.marca}</div>`:''}
-        <div class="product-name">${p.name}</div>
+        <div class="product-cat">${escapeHTML(p.cat)}${flag?' <span class="origen-flag">'+flag+'</span>':''}</div>
+        ${p.marca?`<div style="font-size:10px;color:var(--silver);margin-bottom:2px;">${escapeHTML(p.marca)}</div>`:''}
+        <div class="product-name">${escapeHTML(p.name)}</div>
         <div>
           ${(p.price_prev && p.price_prev > p.price) ? `
             <div class="product-price-prev-row">
@@ -2816,6 +2833,22 @@ function confirmNightGuardOrder() {
 async function enviarWhatsApp() {
   const btn = document.querySelector('.btn-checkout');
   if (btn && btn.disabled) return;
+
+  // ── Verificación Anti-Bot (Honeypot) & Debounce Cooldown (OWASP) ──
+  const hp = document.getElementById('f-website-hp');
+  if (hp && hp.value) {
+    console.warn('Bot submission blocked via honeypot');
+    return;
+  }
+
+  const now = Date.now();
+  if (window._lastCheckoutTimestamp && (now - window._lastCheckoutTimestamp < 4000)) {
+    if (typeof showToast === 'function') {
+      showToast('⏳ Aguardá unos segundos antes de reenviar...');
+    }
+    return;
+  }
+  window._lastCheckoutTimestamp = now;
 
   const nombre = document.getElementById('f-nombre').value.trim();
   const dni    = document.getElementById('f-dni').value.trim();

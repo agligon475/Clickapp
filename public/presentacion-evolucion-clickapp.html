@@ -2062,6 +2062,52 @@
         </div>
       </section>
 
+      <!-- SLIDE 35: SEGURIDAD OWASP & SUITE UI/UX PREMIUM -->
+      <section class="slide" id="slide-35">
+        <span class="slide-badge" style="background:rgba(215,38,56,0.15);border-color:rgba(215,38,56,0.4);color:var(--red);"><i class="bi bi-shield-lock-fill"></i> Etapa 35 · Release 28 de Octubre 2026</span>
+        <h2 class="slide-title">Blindaje de Seguridad OWASP & Experiencia de Usuario Premium</h2>
+        <p class="slide-desc">Despliegue integral de sanitización universal Anti-XSS, cabeceras HTTP de seguridad estricta en Edge (CSP, HSTS, X-XSS-Protection), honeypot anti-bot en checkout, buscador global Command Palette (Ctrl+K), micro-feedback sonoro sintetizado y suite de cartelería QR para vidrieras y mostradores.</p>
+
+        <div class="grid-2" style="margin-top:16px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px;">
+          <div class="card">
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-shield-check"></i> Sanitización Universal Anti-XSS (escapeHTML)</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Implementación de la utilidad centralizada <code>escapeHTML(str)</code> en <code>dashboard.html</code> y <code>tienda.html</code>. Se neutralizó la posibilidad de inyecciones Stored XSS en nombres de clientes, direcciones, notas de pedido y campos de catálogo al renderizar tarjetas Kanban y tablas.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#3B82F6;"><i class="bi bi-lock-fill"></i> Headers Edge CSP, HSTS & Honeypot Anti-Bot</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Configuración en <code>vercel.json</code> de cabeceras de máxima protección: <em>Content-Security-Policy</em>, <em>Strict-Transport-Security</em> (HSTS preload) y <em>X-XSS-Protection</em>. En el checkout de la tienda se incorporó un honeypot oculto y debounce de 4s para repeler flooding de bots.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:var(--red);"><i class="bi bi-search"></i> Buscador Omnibox Command Palette (Ctrl + K)</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Paleta de comandos flotante accesible vía atajo de teclado <code>Ctrl + K</code> o botón en la barra superior. Búsqueda instantánea multi-criterio sobre pedidos (#ID, clientes), productos, cadetes de reparto y acceso directo a todas las vistas operativas del panel.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#F59E0B;"><i class="bi bi-qr-code-scan"></i> Audio Sintetizado, Hápticos & Kit QR Mostrador</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Micro-interacciones con Web Audio API sintetizada (clicks sutiles y timbre de caja registradora al mover pedidos en Kanban) con botón de muteo y feedback háptico. Acceso directo al generador de cartelería y códigos QR en resolución HD A4/A5 para vidrieras y mostradores.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <a href="/dashboard.html?store=ferrenow" target="_blank" class="nav-btn primary" style="padding:10px 22px; font-size:13px; background:linear-gradient(135deg, var(--red) 0%, #B51D2C 100%);">
+            <i class="bi bi-search"></i> Probar Command Palette (Ctrl + K)
+          </a>
+          <a href="/kit-imprimible.html?store=ferrenow" target="_blank" class="nav-btn secondary" style="padding:10px 22px; font-size:13px;">
+            <i class="bi bi-printer"></i> Ver Kit Imprimible QR A4/A5
+          </a>
+        </div>
+      </section>
+
     </main>
 
     <!-- BOTTOMBAR -->
@@ -2073,7 +2119,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 4.17 Catálogo Limpio & Erradicación Categorías Fantasma · Actualizado 28/10/2026
+        Dale! Te Pido © 2026 · Versión 4.18 Seguridad OWASP & Experiencia Premium · Actualizado 28/10/2026
       </div>
     </footer>
 
@@ -2082,7 +2128,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 34;
+  const totalSlides = 35;
 
   function showSlide(index) {
     if (index < 1) index = 1;

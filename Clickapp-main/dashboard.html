@@ -5175,6 +5175,188 @@
         transform: translateY(-1px);
       }
     }
+
+    /* ══════════════════════════════════════════════════════════════════════════
+       COMMAND PALETTE (CTRL + K) — OMNIBOX MOTOR PREMIUM
+       ══════════════════════════════════════════════════════════════════════════ */
+    .cmd-palette-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 12vh;
+      animation: cmdFadeIn 0.18s ease-out;
+    }
+    @keyframes cmdFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .cmd-palette-card {
+      width: min(620px, 94vw);
+      background: var(--steel);
+      border: 1px solid var(--zinc);
+      border-radius: 16px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      animation: cmdSlideDown 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes cmdSlideDown {
+      from { transform: translateY(-16px) scale(0.98); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .cmd-palette-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--zinc);
+    }
+    .cmd-palette-icon {
+      font-size: 17px;
+      color: var(--red);
+      flex-shrink: 0;
+    }
+    .cmd-palette-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: var(--font-b);
+      font-size: 15px;
+      color: var(--fog);
+    }
+    .cmd-palette-input::placeholder {
+      color: var(--silver);
+    }
+    .cmd-palette-kbd {
+      font-family: monospace;
+      font-size: 11px;
+      background: var(--iron);
+      border: 1px solid var(--zinc);
+      color: var(--silver);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .cmd-palette-body {
+      max-height: 380px;
+      overflow-y: auto;
+      padding: 8px 10px;
+    }
+    .cmd-section-title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--silver);
+      padding: 8px 10px 4px 10px;
+    }
+    .cmd-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      color: var(--fog);
+    }
+    .cmd-item:hover, .cmd-item.active {
+      background: var(--iron);
+      color: var(--white);
+      transform: translateX(2px);
+    }
+    .cmd-item.active {
+      border-left: 3px solid var(--red);
+      padding-left: 9px;
+    }
+    .cmd-item-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: rgba(246,0,0,0.1);
+      color: var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .cmd-item-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .cmd-item-title {
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cmd-item-sub {
+      font-size: 11px;
+      color: var(--silver);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cmd-item-badge {
+      font-size: 10.5px;
+      font-weight: 700;
+      font-family: var(--font-h);
+      color: var(--silver);
+      background: var(--iron);
+      border: 1px solid var(--zinc);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .cmd-palette-footer {
+      padding: 10px 18px;
+      background: var(--iron);
+      border-top: 1px solid var(--zinc);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--silver);
+    }
+    .cmd-palette-footer kbd {
+      background: var(--steel);
+      border: 1px solid var(--zinc);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-family: monospace;
+    }
+    .cmd-empty {
+      text-align: center;
+      padding: 32px 16px;
+      color: var(--silver);
+      font-size: 13px;
+    }
+
+    /* KANBAN MICRO-INTERACTIONS & MOTION */
+    @keyframes kanbanBounceIn {
+      0% { transform: scale(0.96); opacity: 0.8; }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .kc-just-moved {
+      animation: kanbanBounceIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 4px 16px rgba(246,0,0,0.2) !important;
+    }
+
+    @media (max-width: 640px) {
+      .topbar-search-text, .topbar-qr-text {
+        display: none !important;
+      }
+    }
   </style>
   <!-- Emoji Picker Element -->
   <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
@@ -6060,6 +6242,7 @@
         <div class="sb-item" onclick="showView('design-catalogo',this)"><i class="bi bi-image"></i> <span>Diseño de Catálogo</span></div>
         <div class="sb-item" onclick="showView('enlaces',this)"><i class="bi bi-link-45deg"></i> <span>Redes y Enlaces</span></div>
         <div class="sb-item" onclick="showView('pages-internas',this)"><i class="bi bi-file-text"></i> <span>Páginas (Nosotros & FAQs)</span></div>
+        <div class="sb-item" onclick="openPrintableKitModal()"><i class="bi bi-qr-code-scan"></i> <span>Carteles & QR Mostrador</span></div>
       </div>
     </div>
 
@@ -6552,6 +6735,21 @@
         <i class="bi bi-speedometer" style="margin-right:6px;"></i> Panel de Control
       </span>
       <div class="topbar-right">
+        <!-- Búsqueda Global Omnibox (Command Palette) -->
+        <button class="topbar-search-btn" onclick="openCommandPalette()" title="Búsqueda Global (Ctrl + K)" style="display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 10px; background:var(--iron); border:1px solid var(--zinc); border-radius:8px; color:var(--fog); font-size:11.5px; font-weight:600; cursor:pointer; transition:all 0.2s ease;">
+          <i class="bi bi-search" style="font-size:11px; color:var(--red);"></i>
+          <span class="topbar-search-text">Buscar</span>
+          <kbd style="background:var(--steel); border:1px solid var(--zinc); border-radius:4px; padding:1px 4px; font-size:9.5px; font-family:monospace; color:var(--silver);">Ctrl K</kbd>
+        </button>
+        <!-- Botón Carteles & QR Mostrador -->
+        <button class="topbar-qr-btn" onclick="openPrintableKitModal()" title="Carteles y Código QR para Vidriera y Mostrador" style="display:inline-flex; align-items:center; gap:5px; height:32px; padding:0 10px; background:var(--iron); border:1px solid var(--zinc); border-radius:8px; color:var(--fog); font-size:11.5px; font-weight:600; cursor:pointer; transition:all 0.2s ease;">
+          <i class="bi bi-qr-code-scan" style="color:var(--red);"></i>
+          <span class="topbar-qr-text">QR Vidriera</span>
+        </button>
+        <!-- Toggle Sonidos Táctiles / Caja -->
+        <button class="topbar-sound-btn" onclick="toggleDashboardSound()" id="dash-sound-btn" title="Silenciar / Activar sonidos táctiles y de caja" style="display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; background:var(--iron); border:1px solid var(--zinc); border-radius:8px; color:var(--fog); cursor:pointer; transition:all 0.2s ease;">
+          <i class="bi bi-volume-up-fill" id="dash-sound-icon" style="font-size:14px; color:var(--red);"></i>
+        </button>
         <!-- Botón Descargar App APK (Gestor) -->
         <button class="topbar-apk-btn app-download-trigger" data-apk-download="true" onclick="openAppDownloadModal()" title="Descargar App Móvil (.APK)" style="display:inline-flex; align-items:center; gap:5px; height:32px; padding:0 10px; background:linear-gradient(135deg, #D60000 0%, #A00000 100%); color:#fff; border:none; border-radius:8px; font-size:11.5px; font-weight:700; cursor:pointer; box-shadow:0 2px 8px rgba(214,0,0,0.3);">
           <i class="bi bi-phone-fill"></i>
@@ -6571,6 +6769,23 @@
         <div class="status-pill">
           <div class="dot" id="dot"></div>
           <span id="status-txt">Cargando...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ COMMAND PALETTE (CTRL + K) MODAL OMNIBOX ════ -->
+    <div id="cmd-palette-backdrop" class="cmd-palette-backdrop" style="display:none;" onclick="handleCmdBackdropClick(event)">
+      <div class="cmd-palette-card" role="dialog" aria-modal="true" aria-label="Búsqueda Global y Comandos">
+        <div class="cmd-palette-header">
+          <i class="bi bi-search cmd-palette-icon"></i>
+          <input type="text" id="cmd-palette-input" class="cmd-palette-input" placeholder="Buscar pedidos (#102, cliente), productos, cadetes, vistas..." autocomplete="off" spellcheck="false" oninput="handleCmdSearch(this.value)" onkeydown="handleCmdKeyDown(event)" />
+          <kbd class="cmd-palette-kbd" onclick="closeCommandPalette()" style="cursor:pointer;" title="Cerrar">ESC</kbd>
+        </div>
+        <div class="cmd-palette-body" id="cmd-palette-results"></div>
+        <div class="cmd-palette-footer">
+          <span><kbd>↑</kbd> <kbd>↓</kbd> Navegar</span>
+          <span><kbd>↵</kbd> Ejecutar / Abrir</span>
+          <span><kbd>ESC</kbd> Cerrar</span>
         </div>
       </div>
     </div>
@@ -9622,6 +9837,116 @@
   </main><!-- /main -->
 
   <script>
+    // ═════════════════════════════════════════════════════════════════════════
+    // 🛡️ SANITIZACIÓN UNIVERSAL ANTI-XSS (OWASP A03 / SOC)
+    // ═════════════════════════════════════════════════════════════════════════
+    function escapeHTML(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+    window.escapeHTML = escapeHTML;
+
+    // ═════════════════════════════════════════════════════════════════════════
+    // 🎵 WEB AUDIO SYNTHESIZER & HAPTICS (MICRO-INTERACCIONES PREMIUM)
+    // ═════════════════════════════════════════════════════════════════════════
+    let _dashAudioCtx = null;
+    function getDashAudioContext() {
+      if (!_dashAudioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) _dashAudioCtx = new AudioContext();
+      }
+      if (_dashAudioCtx && _dashAudioCtx.state === 'suspended') {
+        _dashAudioCtx.resume().catch(() => {});
+      }
+      return _dashAudioCtx;
+    }
+
+    function isDashSoundEnabled() {
+      return localStorage.getItem('storeapp_sound_enabled') !== 'false';
+    }
+
+    function toggleDashboardSound() {
+      const current = isDashSoundEnabled();
+      const next = !current;
+      localStorage.setItem('storeapp_sound_enabled', next ? 'true' : 'false');
+      updateDashSoundUI();
+      if (next) playDashSfx('click');
+      if (typeof showToastDash === 'function') {
+        showToastDash(next ? '🔊 Sonidos táctiles activados' : '🔇 Sonidos del panel silenciados');
+      }
+    }
+    window.toggleDashboardSound = toggleDashboardSound;
+
+    function updateDashSoundUI() {
+      const enabled = isDashSoundEnabled();
+      const icon = document.getElementById('dash-sound-icon');
+      if (icon) {
+        icon.className = enabled ? 'bi bi-volume-up-fill' : 'bi bi-volume-mute-fill';
+        icon.style.color = enabled ? 'var(--red)' : 'var(--silver)';
+      }
+    }
+    window.updateDashSoundUI = updateDashSoundUI;
+
+    function playDashSfx(type = 'click') {
+      if (!isDashSoundEnabled()) return;
+      try {
+        const ctx = getDashAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        if (type === 'click' || type === 'drop') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.exponentialRampToValueAtTime(160, now + 0.05);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.05);
+        } else if (type === 'success' || type === 'cash') {
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc1.type = 'sine';
+          osc2.type = 'triangle';
+          osc1.frequency.setValueAtTime(587.33, now);
+          osc1.frequency.setValueAtTime(880, now + 0.08);
+          osc2.frequency.setValueAtTime(1174.66, now + 0.08);
+          gain.gain.setValueAtTime(0.14, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(ctx.destination);
+          osc1.start(now);
+          osc2.start(now + 0.08);
+          osc1.stop(now + 0.35);
+          osc2.stop(now + 0.35);
+        }
+      } catch (e) {}
+    }
+    window.playDashSfx = playDashSfx;
+
+    function playDashHaptic(type = 'light') {
+      if (!navigator.vibrate) return;
+      try {
+        if (type === 'light') navigator.vibrate(15);
+        else if (type === 'medium') navigator.vibrate(28);
+        else if (type === 'success') navigator.vibrate([20, 40, 25]);
+      } catch (e) {}
+    }
+    window.playDashHaptic = playDashHaptic;
+
+    // Inicializar estado del ícono de sonido
+    setTimeout(updateDashSoundUI, 100);
+
     // Sobrescribir alert del navegador con una notificación flotante premium integrada en el sitio
     window.alert = function(msg) {
       const existing = document.getElementById('dash-toast-alert');
@@ -17348,8 +17673,8 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
                   <i class="bi bi-printer"></i> <span>Comanda</span>
                 </button>
               </div>
-              <div class="kc-client"><strong>${o.cliente}</strong> · <span style="font-size:10px;color:var(--silver);">${o.logistica || 'Mostrador'}</span></div>
-              <div class="kc-prods" style="font-size:11px;color:var(--fog);margin:4px 0;">${o.productos}</div>
+              <div class="kc-client"><strong>${escapeHTML(o.cliente)}</strong> · <span style="font-size:10px;color:var(--silver);">${escapeHTML(o.logistica || 'Mostrador')}</span></div>
+              <div class="kc-prods" style="font-size:11px;color:var(--fog);margin:4px 0;">${escapeHTML(o.productos)}</div>
               <div class="kc-footer">
                 <span class="kc-total">${typeof o.total === 'number' ? '$' + o.total.toLocaleString('es-AR') : (String(o.total || '').startsWith('$') ? o.total : '$' + (parseFloat(String(o.total || '0').replace(/[^0-9.-]+/g, '')) || 0).toLocaleString('es-AR'))}</span>
                 <span class="kc-date">${(o.fecha || '').split(' ')[0]}</span>
@@ -17380,21 +17705,21 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
       tbody.innerHTML = orders.map(o => `
     <tr>
-      <td style="font-size:10px;font-family:monospace;color:var(--silver);">${o.id}${o.is_night_guard ? '<br/><span title="Pedido fuera de horario (Modo Sereno)" style="background:rgba(129,140,248,0.2);color:#A5B4FC;border:1px solid rgba(129,140,248,0.4);padding:1px 5px;border-radius:4px;font-size:9px;font-weight:600;display:inline-block;margin-top:2px;">🌙 Sereno</span>' : ''}</td>
-      <td style="white-space:nowrap;font-size:11px;">${o.fecha}</td>
+      <td style="font-size:10px;font-family:monospace;color:var(--silver);">${escapeHTML(o.id)}${o.is_night_guard ? '<br/><span title="Pedido fuera de horario (Modo Sereno)" style="background:rgba(129,140,248,0.2);color:#A5B4FC;border:1px solid rgba(129,140,248,0.4);padding:1px 5px;border-radius:4px;font-size:9px;font-weight:600;display:inline-block;margin-top:2px;">🌙 Sereno</span>' : ''}</td>
+      <td style="white-space:nowrap;font-size:11px;">${escapeHTML(o.fecha)}</td>
       <td>
-        <strong style="color:var(--white);">${o.cliente}</strong><br/>
-        <span style="color:var(--silver);font-size:10px;">DNI: ${o.dni || '—'}</span>
+        <strong style="color:var(--white);">${escapeHTML(o.cliente)}</strong><br/>
+        <span style="color:var(--silver);font-size:10px;">DNI: ${escapeHTML(o.dni || '—')}</span>
         ${o.opt_in_whatsapp ? '<br/><span title="Aceptó recibir novedades por WhatsApp" style="background:rgba(37,211,102,0.15);color:#25D366;border:1px solid rgba(37,211,102,0.3);padding:1px 5px;border-radius:4px;font-size:9px;font-weight:700;display:inline-flex;align-items:center;gap:3px;margin-top:2px;"><i class="bi bi-whatsapp"></i> Recibe novedades</span>' : ''}
       </td>
       <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-                 color:var(--fog);font-size:11px;" title="${o.productos}">${o.productos}</td>
+                 color:var(--fog);font-size:11px;" title="${escapeHTML(o.productos)}">${escapeHTML(o.productos)}</td>
       <td style="white-space:nowrap;font-size:11px;">
-        ${o.pago}<br/>
-        ${o.comprobante ? `<a href="${o.comprobante}" target="_blank" style="color:var(--red);text-decoration:none;"><i class="bi bi-file-earmark-check"></i> Ver Comprob.</a>` : '<span style="color:var(--zinc);">Sin comprobante</span>'}
+        ${escapeHTML(o.pago)}<br/>
+        ${o.comprobante ? `<a href="${encodeURI(o.comprobante)}" target="_blank" style="color:var(--red);text-decoration:none;"><i class="bi bi-file-earmark-check"></i> Ver Comprob.</a>` : '<span style="color:var(--zinc);">Sin comprobante</span>'}
       </td>
       <td style="white-space:nowrap;font-size:11px;">
-        ${o.logistica}<br/>
+        ${escapeHTML(o.logistica)}<br/>
         ${o.logistica === 'Envío a domicilio' ?
           `<div style="display:flex; flex-direction:column; gap:4px; margin-top:4px;">
             <button type="button" onclick="openDaleQueVoyModal('${o.id}')" style="background:${o.delivery_id ? 'rgba(16,185,129,0.15)' : 'linear-gradient(135deg, #F60000 0%, #B80000 100%)'}; border:1px solid ${o.delivery_id ? 'rgba(16,185,129,0.4)' : '#F60000'}; color:${o.delivery_id ? '#10B981' : '#fff'}; font-size:10px; font-weight:700; padding:4px 8px; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:${o.delivery_id ? 'none' : '0 2px 8px rgba(246,0,0,0.3)'};">
@@ -17474,9 +17799,9 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       <tbody>
         ${pending.map(o => `
           <tr>
-            <td style="font-family:monospace;font-size:11px;padding-left:14px;">#${o.id.split('-')[0]}</td>
-            <td style="font-weight:600;font-size:12px;color:var(--fog);">${o.cliente}</td>
-            <td style="font-size:11px;color:var(--silver);">${o.direccion || '—'}</td>
+            <td style="font-family:monospace;font-size:11px;padding-left:14px;">#${escapeHTML(o.id.split('-')[0])}</td>
+            <td style="font-weight:600;font-size:12px;color:var(--fog);">${escapeHTML(o.cliente)}</td>
+            <td style="font-size:11px;color:var(--silver);">${escapeHTML(o.direccion || '—')}</td>
             <td style="font-family:var(--font-h);font-size:13px;font-weight:700;">$${Number(o.total || 0).toLocaleString('es-AR')}</td>
             <td style="padding-right:14px;">
               <div style="display:flex; align-items:center; gap:8px;">
@@ -17731,6 +18056,26 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const targetState = getStates().find(s => s.key === estado);
       const label = targetState?.label || estado;
       updateOrderEstado(id, label);
+
+      // Micro-feedback auditivo, háptico y animación elástica
+      if (previousEstado !== estado) {
+        if (typeof playDashSfx === 'function') {
+          if (estado === 'ok' || estado === 'retirado' || estado === 'despachado') {
+            playDashSfx('cash');
+            playDashHaptic('success');
+          } else {
+            playDashSfx('drop');
+            playDashHaptic('medium');
+          }
+        }
+        setTimeout(() => {
+          const card = document.getElementById(`kcard-${id}`);
+          if (card) {
+            card.classList.add('kc-just-moved');
+            setTimeout(() => card.classList.remove('kc-just-moved'), 1200);
+          }
+        }, 50);
+      }
 
       // Notificación toast de cambio de estado si no fue capturada por auto-impresión
       if (previousEstado !== estado && targetState && (!targetState.printable || !isAutoPrintOrdersEnabled())) {
@@ -24856,6 +25201,271 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
       const msg = encodeURIComponent(`Hola! 👋 Te avisamos de tu pedido #${orderNum}. Ya fue despachado con la red de repartidores Dale!QueVoy 🛵💨\n\nTu PIN de recepción seguro es: *${pin}*\nPor favor dictáselo al repartidor al momento de recibir el paquete.`);
       window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
     };
+
+    // ═════════════════════════════════════════════════════════════════════════
+    // 🔍 COMMAND PALETTE (CTRL + K / CMD + K) — OMNIBOX ENGINE
+    // ═════════════════════════════════════════════════════════════════════════
+    let cmdActiveIndex = 0;
+    let cmdFilteredItems = [];
+
+    const CMD_SYSTEM_ACTIONS = [
+      { id: 'view-orders', title: 'Ver Pedidos y Tablero Kanban', sub: 'Tablero en tiempo real, estados y comandas', icon: 'bi-receipt', action: () => goToView('orders') },
+      { id: 'view-abm', title: 'Catálogo de Productos (ABM)', sub: 'Crear, editar precios y stock de productos', icon: 'bi-pencil-square', action: () => goToView('abm') },
+      { id: 'view-categories', title: 'Gestión de Categorías', sub: 'Organizar rubros y secciones del catálogo', icon: 'bi-tags', action: () => goToView('categories') },
+      { id: 'view-coupons', title: 'Cupones de Descuento', sub: 'Crear promociones y códigos con vencimiento', icon: 'bi-ticket-perforated', action: () => goToView('coupons') },
+      { id: 'view-pickups', title: 'Cadetería & Zonas de Entrega', sub: 'Repartidores locales y Dale!QueVoy', icon: 'bi-truck', action: () => goToView('pickups') },
+      { id: 'view-reports', title: 'Analítica, Finanzas y Reportes', sub: 'Ventas, ticket promedio y gráficos', icon: 'bi-bar-chart-line', action: () => goToView('reports') },
+      { id: 'view-marca', title: 'Diseño, Marca y Estética', sub: 'Colores, tipografías, banners y logo', icon: 'bi-palette', action: () => goToView('marca') },
+      { id: 'action-qr', title: 'Carteles & QR para Vidriera y Mostrador', sub: 'Kit imprimible en alta definición A4/A5', icon: 'bi-qr-code-scan', action: () => openPrintableKitModal() },
+      { id: 'action-store', title: 'Abrir Tienda Online en Vivo', sub: 'Ver la experiencia del cliente final', icon: 'bi-shop', action: () => openStore() },
+      { id: 'action-theme', title: 'Cambiar Modo Claro / Oscuro', sub: 'Alternar tema de interfaz del panel', icon: 'bi-sun', action: () => toggleTheme() },
+      { id: 'action-sound', title: 'Activar / Silenciar Sonidos', sub: 'Micro-feedback auditivo táctil y de caja', icon: 'bi-volume-up', action: () => toggleDashboardSound() },
+      { id: 'action-jaime', title: 'Asistente jAIme 24/7', sub: 'Consultar ayuda operativa o sugerencias', icon: 'bi-robot', action: () => { if(typeof toggleJaime==='function') toggleJaime(); else if(typeof showJaimeCharacter==='function') showJaimeCharacter(); } },
+      { id: 'action-apk', title: 'Descargar App Móvil APK', sub: 'Instalar app dedicada para gestión rápida', icon: 'bi-phone', action: () => openAppDownloadModal() },
+    ];
+
+    function openCommandPalette() {
+      const backdrop = document.getElementById('cmd-palette-backdrop');
+      const input = document.getElementById('cmd-palette-input');
+      if (!backdrop || !input) return;
+
+      backdrop.style.display = 'flex';
+      input.value = '';
+      cmdActiveIndex = 0;
+      handleCmdSearch('');
+      setTimeout(() => input.focus(), 60);
+      if (typeof playDashSfx === 'function') playDashSfx('click');
+    }
+    window.openCommandPalette = openCommandPalette;
+
+    function closeCommandPalette() {
+      const backdrop = document.getElementById('cmd-palette-backdrop');
+      if (backdrop) backdrop.style.display = 'none';
+    }
+    window.closeCommandPalette = closeCommandPalette;
+
+    function handleCmdBackdropClick(e) {
+      if (e.target && e.target.id === 'cmd-palette-backdrop') {
+        closeCommandPalette();
+      }
+    }
+    window.handleCmdBackdropClick = handleCmdBackdropClick;
+
+    function handleCmdSearch(query) {
+      const q = (query || '').trim().toLowerCase();
+      const resultsContainer = document.getElementById('cmd-palette-results');
+      if (!resultsContainer) return;
+
+      cmdFilteredItems = [];
+
+      // 1. Pedidos coincidentes (hasta 5)
+      const matchedOrders = (allOrders || []).filter(o => {
+        if (!q) return false;
+        const idStr = String(o.id || '').toLowerCase();
+        const clientStr = String(o.cliente || '').toLowerCase();
+        const prodsStr = String(o.productos || '').toLowerCase();
+        const dirStr = String(o.direccion || '').toLowerCase();
+        return idStr.includes(q) || clientStr.includes(q) || prodsStr.includes(q) || dirStr.includes(q);
+      }).slice(0, 5);
+
+      matchedOrders.forEach(o => {
+        cmdFilteredItems.push({
+          type: 'order',
+          title: `Pedido #${o.id} — ${o.cliente}`,
+          sub: `${o.productos || 'Sin detalle'} · Total: $${Number(o.total || 0).toLocaleString('es-AR')}`,
+          badge: o.estado ? o.estado.toUpperCase() : 'PEDIDO',
+          icon: 'bi-receipt',
+          action: () => {
+            goToView('orders');
+            setTimeout(() => {
+              const card = document.getElementById(`kcard-${o.id}`);
+              if (card) {
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                card.classList.add('kc-just-moved');
+                setTimeout(() => card.classList.remove('kc-just-moved'), 1500);
+              }
+            }, 300);
+          }
+        });
+      });
+
+      // 2. Productos coincidentes (hasta 6)
+      const matchedProds = (window.products || []).filter(p => {
+        if (!q) return false;
+        const nameStr = String(p.name || '').toLowerCase();
+        const catStr = String(p.cat || '').toLowerCase();
+        const skuStr = String(p.id || '').toLowerCase();
+        return nameStr.includes(q) || catStr.includes(q) || skuStr.includes(q);
+      }).slice(0, 6);
+
+      matchedProds.forEach(p => {
+        cmdFilteredItems.push({
+          type: 'product',
+          title: p.name,
+          sub: `Categoría: ${p.cat || 'General'} · Stock: ${p.stock ?? '—'}`,
+          badge: `$${Number(p.price || 0).toLocaleString('es-AR')}`,
+          icon: 'bi-box-seam',
+          action: () => {
+            goToView('abm');
+            setTimeout(() => {
+              if (typeof openEditProductModal === 'function') openEditProductModal(p.id);
+            }, 300);
+          }
+        });
+      });
+
+      // 3. Cadetes coincidentes
+      const matchedPickups = (window.currentPickups || []).filter(pk => {
+        if (!q) return false;
+        return String(pk.name || '').toLowerCase().includes(q) || String(pk.phone || '').includes(q);
+      }).slice(0, 3);
+
+      matchedPickups.forEach(pk => {
+        cmdFilteredItems.push({
+          type: 'pickup',
+          title: `Cadete: ${pk.name}`,
+          sub: `Tel: ${pk.phone || 'Sin tel'} · ${pk.active ? 'Activo' : 'Inactivo'}`,
+          badge: 'CADETERÍA',
+          icon: 'bi-bicycle',
+          action: () => goToView('pickups')
+        });
+      });
+
+      // 4. Vistas y Acciones del Sistema
+      const matchedActions = CMD_SYSTEM_ACTIONS.filter(act => {
+        if (!q) return true;
+        return act.title.toLowerCase().includes(q) || act.sub.toLowerCase().includes(q);
+      });
+
+      matchedActions.forEach(act => {
+        cmdFilteredItems.push({
+          type: 'action',
+          title: act.title,
+          sub: act.sub,
+          badge: 'ACCESO',
+          icon: act.icon,
+          action: act.action
+        });
+      });
+
+      renderCmdResults();
+    }
+    window.handleCmdSearch = handleCmdSearch;
+
+    function renderCmdResults() {
+      const resultsContainer = document.getElementById('cmd-palette-results');
+      if (!resultsContainer) return;
+
+      if (!cmdFilteredItems.length) {
+        resultsContainer.innerHTML = `
+          <div class="cmd-empty">
+            <i class="bi bi-search" style="font-size:24px;display:block;margin-bottom:8px;opacity:0.3;"></i>
+            No se encontraron pedidos, productos o acciones para esta búsqueda.
+          </div>
+        `;
+        return;
+      }
+
+      if (cmdActiveIndex >= cmdFilteredItems.length) cmdActiveIndex = 0;
+      if (cmdActiveIndex < 0) cmdActiveIndex = cmdFilteredItems.length - 1;
+
+      let html = '';
+      let currentSection = '';
+
+      cmdFilteredItems.forEach((item, index) => {
+        let sectionHeader = '';
+        const secLabel = item.type === 'order' ? 'Pedidos Encontrados' :
+                         item.type === 'product' ? 'Productos del Catálogo' :
+                         item.type === 'pickup' ? 'Cadetes y Envíos' : 'Vistas y Comandos Rápidos';
+
+        if (secLabel !== currentSection) {
+          currentSection = secLabel;
+          sectionHeader = `<div class="cmd-section-title">${escapeHTML(currentSection)}</div>`;
+        }
+
+        const isActive = index === cmdActiveIndex;
+        html += `
+          ${sectionHeader}
+          <div class="cmd-item ${isActive ? 'active' : ''}" onclick="executeCmdItem(${index})" onmouseenter="setCmdActiveIndex(${index})">
+            <div class="cmd-item-icon"><i class="bi ${item.icon}"></i></div>
+            <div class="cmd-item-info">
+              <div class="cmd-item-title">${escapeHTML(item.title)}</div>
+              <div class="cmd-item-sub">${escapeHTML(item.sub)}</div>
+            </div>
+            ${item.badge ? `<div class="cmd-item-badge">${escapeHTML(item.badge)}</div>` : ''}
+          </div>
+        `;
+      });
+
+      resultsContainer.innerHTML = html;
+
+      const activeEl = resultsContainer.querySelector('.cmd-item.active');
+      if (activeEl) {
+        activeEl.scrollIntoView({ block: 'nearest' });
+      }
+    }
+
+    function setCmdActiveIndex(idx) {
+      cmdActiveIndex = idx;
+      const items = document.querySelectorAll('#cmd-palette-results .cmd-item');
+      items.forEach((el, i) => {
+        el.classList.toggle('active', i === idx);
+      });
+    }
+    window.setCmdActiveIndex = setCmdActiveIndex;
+
+    function executeCmdItem(idx) {
+      const item = cmdFilteredItems[idx];
+      if (item && typeof item.action === 'function') {
+        closeCommandPalette();
+        if (typeof playDashSfx === 'function') playDashSfx('click');
+        item.action();
+      }
+    }
+    window.executeCmdItem = executeCmdItem;
+
+    function handleCmdKeyDown(e) {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        cmdActiveIndex++;
+        if (cmdActiveIndex >= cmdFilteredItems.length) cmdActiveIndex = 0;
+        renderCmdResults();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        cmdActiveIndex--;
+        if (cmdActiveIndex < 0) cmdActiveIndex = Math.max(0, cmdFilteredItems.length - 1);
+        renderCmdResults();
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        executeCmdItem(cmdActiveIndex);
+      } else if (e.key === 'Escape') {
+        closeCommandPalette();
+      }
+    }
+    window.handleCmdKeyDown = handleCmdKeyDown;
+
+    // Atajo global de teclado: Ctrl + K o Cmd + K
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
+        e.preventDefault();
+        const backdrop = document.getElementById('cmd-palette-backdrop');
+        if (backdrop && backdrop.style.display !== 'none') {
+          closeCommandPalette();
+        } else {
+          openCommandPalette();
+        }
+      } else if (e.key === 'Escape') {
+        closeCommandPalette();
+      }
+    });
+
+    // Función de apertura del Kit Imprimible
+    function openPrintableKitModal() {
+      const store = (typeof STORE_ID !== 'undefined' ? STORE_ID : (new URLSearchParams(window.location.search).get('store') || localStorage.getItem('storeapp_store_id') || 'ferre-now')).toLowerCase();
+      if (typeof playDashSfx === 'function') playDashSfx('click');
+      window.open(`/kit-imprimible.html?store=${encodeURIComponent(store)}`, '_blank');
+    }
+    window.openPrintableKitModal = openPrintableKitModal;
   </script>
   <script src="/js/jaime-widget.js"></script>
 
