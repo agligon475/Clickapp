@@ -137,6 +137,37 @@ export function getWelcomeEmail({ storeName, storeId, planLevel = 'starter' }) {
 }
 
 /**
+ * 1b. Correo de Confirmación / Reenvío de Verificación de Email
+ */
+export function getVerificationEmail({ storeName, storeId }) {
+  const dashboardUrl = `${BASE_URL}/dashboard.html?store=${encodeURIComponent(storeId)}&verify=true`;
+  const title = `Confirmá tu correo electrónico - Dale! Te Pido`;
+
+  const bodyContent = `
+    <div class="greeting">¡Hola, ${storeName || storeId}! 👋</div>
+    <div class="badge badge-blue">🔐 Verificación de Cuenta Requerida</div>
+    <div class="text">
+      Te enviamos este enlace para verificar tu casilla de correo electrónico vinculada a la tienda <strong>${storeName || storeId}</strong>.
+      <br/><br/>
+      Confirmar tu email te permite asegurar tus accesos administrativos, recibir comprobantes de pago de tus clientes y activar todas las funciones operativas de la plataforma sin interrupciones.
+    </div>
+
+    <div class="btn-container">
+      <a href="${dashboardUrl}" target="_blank" class="btn-primary">✅ Verificar mi cuenta ahora</a>
+    </div>
+
+    <div class="box">
+      <div class="box-title">ℹ️ Información de Seguridad:</div>
+      <div style="font-size:12.5px;color:#64748b;line-height:1.5;">
+        Este enlace es personal e intransferible. Si no solicitaste este correo, podés desestimarlo de manera segura; tus accesos continuarán protegidos.
+      </div>
+    </div>
+  `;
+
+  return { subject: title, html: getEmailLayout({ title, bodyContent }) };
+}
+
+/**
  * 2. Correo de Restablecimiento de Contraseña
  */
 export function getResetPasswordEmail({ storeId, resetLink }) {

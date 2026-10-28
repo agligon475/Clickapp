@@ -412,7 +412,7 @@
       <div class="topbar-brand">
         <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" onerror="this.src='/img-default/daletepido-logo-white-hq.png'" alt="Dale! Te Pido" class="topbar-logo" />
         <span class="topbar-tag"><i class="bi bi-clock-history"></i> RETROSPECTIVA HISTÓRICA</span>
-        <span class="topbar-tag" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.35); color: #10B981;"><i class="bi bi-calendar-check"></i> ACTUALIZADO: 27 OCTUBRE 2026</span>
+        <span class="topbar-tag" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.35); color: #10B981;"><i class="bi bi-calendar-check"></i> ACTUALIZADO: 28 OCTUBRE 2026</span>
       </div>
       <div class="topbar-actions">
         <a href="super-admin-secret-dashboard.html" class="nav-btn" title="Regresar al panel general">
@@ -421,7 +421,7 @@
         <button class="nav-btn" onclick="prevSlide()" title="Diapositiva Anterior (←)">
           <i class="bi bi-chevron-left"></i>
         </button>
-        <span id="slide-indicator" style="font-family: var(--font-mono); font-size: 12px; font-weight:700; color: #FFFFFF; min-width: 48px; text-align: center;">1 / 32</span>
+        <span id="slide-indicator" style="font-family: var(--font-mono); font-size: 12px; font-weight:700; color: #FFFFFF; min-width: 48px; text-align: center;">1 / 33</span>
         <button class="nav-btn primary" onclick="nextSlide()" title="Siguiente Diapositiva (→ o Espacio)">
           <i class="bi bi-chevron-right"></i>
         </button>
@@ -1970,6 +1970,52 @@
         </div>
       </section>
 
+      <!-- SLIDE 33: DESACOPLAMIENTO DE VERIFICACIÓN DE EMAIL Y BLINDAJE DE ALERTAS ADMIN -->
+      <section class="slide" id="slide-33">
+        <span class="slide-badge" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4);color:#10B981;"><i class="bi bi-shield-check"></i> Etapa 33 · Release 28 de Octubre 2026</span>
+        <h2 class="slide-title">Desacoplamiento de Verificación de Email y Blindaje de Alertas SuperAdmin</h2>
+        <p class="slide-desc">Aislamiento estricto entre el reenvío de confirmación de correo para comercios y la alerta de nuevas tiendas a SuperAdmin (daletepido@gmail.com), plantilla transaccional dedicada, eliminación de fallbacks hardcodeados y feedback moderno con toasts no bloqueantes.</p>
+
+        <div class="grid-2" style="margin-top:16px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px;">
+          <div class="card">
+            <div class="card-title" style="color:#EF4444;"><i class="bi bi-bell-slash-fill"></i> Desacoplamiento de Alertas SuperAdmin</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              En <code>api/welcome-email.js</code>, el disparador <code>notifyAdminNewAccount</code> quedó estrictamente restringido a registros genuinos (<code>type === 'new_registration' || type === 'welcome'</code>). El reenvío de verificación jamás enviará alertas engañosas de "¡Nueva Cuenta Registrada!" a <code>daletepido@gmail.com</code> ni generará falsas alarmas sobre tiendas ya existentes.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-envelope-check-fill"></i> Plantilla Transaccional getVerificationEmail</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              En <code>api/email-templates.js</code>, se diseñó la plantilla oficial <code>getVerificationEmail</code> con el asunto <em>"Confirmá tu correo electrónico - Dale! Te Pido"</em>, enlace directo de verificación de un solo clic (<code>?verify=true</code>), tipografía limpia y diseño responsivo adaptado a clientes de correo modernos.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#3B82F6;"><i class="bi bi-database-check"></i> Limpieza de Fallbacks & Detección Dinámica</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              En <code>dashboard.html</code>, se eliminaron los fallbacks residuales que forzaban la tienda 'coquito' ante la ausencia de variables globales. Se introdujeron las funciones <code>getDashboardStoreId()</code> y <code>getDashboardAdminEmail()</code> que resuelven limpiamente desde URL, sesión y Supabase.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#F59E0B;"><i class="bi bi-chat-square-text-fill"></i> Notificaciones Toast UX No Bloqueantes</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Se erradicó el uso del diálogo invasivo <code>alert()</code> nativo del navegador, sustituyéndolo por un componente toast (<code>showToastVerification</code>) flotante, con desenfoque de fondo (backdrop blur), auto-cierre en 5 segundos y micro-animación en tiempo real.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <a href="/dashboard.html?store=coquito" target="_blank" class="nav-btn primary" style="padding:10px 22px; font-size:13px; background:linear-gradient(135deg, #10B981 0%, #059669 100%);">
+            <i class="bi bi-envelope-at-fill"></i> Probar Verificación en Dashboard
+          </a>
+          <a href="/dashboard.html?store=coquito&verify=true" target="_blank" class="nav-btn secondary" style="padding:10px 22px; font-size:13px;">
+            <i class="bi bi-check2-circle"></i> Simular Confirmación de Cuenta
+          </a>
+        </div>
+      </section>
+
     </main>
 
     <!-- BOTTOMBAR -->
@@ -1981,7 +2027,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 4.15 Drag & Drop Táctil en Kanban UX · Actualizado 28/10/2026
+        Dale! Te Pido © 2026 · Versión 4.16 Desacoplamiento Email Verificación & Blindaje Admin · Actualizado 28/10/2026
       </div>
     </footer>
 
@@ -1990,7 +2036,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 32;
+  const totalSlides = 33;
 
   function showSlide(index) {
     if (index < 1) index = 1;

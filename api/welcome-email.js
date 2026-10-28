@@ -1,5 +1,6 @@
 import {
   getWelcomeEmail,
+  getVerificationEmail,
   getPlanPaymentInstructionsEmail,
   getProspectEmail,
   getFollowUpDay2Email,
@@ -165,6 +166,10 @@ export default async function handler(req, res) {
       const emailObj = getFollowUpDay4Email({ storeName, storeId: store_id });
       emailSubject = emailObj.subject;
       htmlBody = emailObj.html;
+    } else if (type === 'verification' || type === 'resend_verification') {
+      const emailObj = getVerificationEmail({ storeName, storeId: store_id });
+      emailSubject = emailObj.subject;
+      htmlBody = emailObj.html;
     } else if (type === 'plan_instructions' || plan_key) {
       const emailObj = getPlanPaymentInstructionsEmail({ storeName, storeId: store_id, planKey: plan_key || 'starter_mensual' });
       emailSubject = emailObj.subject;
@@ -243,8 +248,9 @@ export default async function handler(req, res) {
       }
     }
 
-    // Notificar SIEMPRE al Super Admin por Push móvil (ntfy) / Email / Telegram si es una nueva cuenta
-    if (type !== 'prospect') {
+    // Notificar al Super Admin por Push móvil (ntfy) / Email / Telegram ÚNICAMENTE ante un nuevo registro de tienda
+    const isNewStoreRegistration = (!type || type === 'new_registration' || type === 'welcome') && type !== 'resend_verification' && type !== 'verification' && type !== 'plan_instructions' && type !== 'prospect' && !type?.startsWith('followup_');
+    if (isNewStoreRegistration) {
       try {
         await notifyAdminNewAccount({
           storeId: store_id,
@@ -261,7 +267,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       success: true,
-      message: 'Correo de bienvenida y notificación de admin procesados exitosamente',
+      message: (type === 'resend_verification' || type === 'verification') ? 'Correo de verificación enviado exitosamente' : 'Correo de bienvenida y notificación de admin procesados exitosamente',
       email_sent: clientEmailSent,
       email_id: clientEmailId,
       warning: clientEmailWarning,

@@ -1010,6 +1010,15 @@
       justify-content: center;
       font-size: 16px;
       margin-bottom: 12px;
+      background: var(--iron);
+      color: var(--white);
+      border: 1px solid var(--zinc);
+      transition: all 0.2s ease;
+    }
+
+    .metric:hover .metric-icon {
+      border-color: var(--red);
+      color: var(--red);
     }
 
     .metric-label {
@@ -2446,6 +2455,17 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
+      min-height: 130px;
+      padding: 4px;
+      border-radius: 8px;
+      transition: background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
+      border: 2px dashed transparent;
+    }
+
+    .kanban-cards.drag-over {
+      background: rgba(246, 0, 0, 0.08) !important;
+      border-color: var(--red) !important;
+      box-shadow: inset 0 0 14px rgba(246, 0, 0, 0.15);
     }
 
     .kanban-card {
@@ -2453,11 +2473,54 @@
       border: 1px solid var(--zinc);
       border-radius: 8px;
       padding: 10px 10px 8px;
-      transition: border-color .12s;
+      transition: transform .15s cubic-bezier(0.2, 0, 0, 1), box-shadow .15s ease, opacity .15s ease, border-color .12s;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: pan-y;
+      position: relative;
     }
 
     .kanban-card:hover {
       border-color: var(--fog);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    }
+
+    .kanban-card:active {
+      cursor: grabbing;
+    }
+
+    .kanban-card.kc-dragging {
+      opacity: 0.35 !important;
+      transform: scale(0.96) !important;
+      border: 1px dashed var(--red) !important;
+      box-shadow: none !important;
+    }
+
+    .kanban-card-touch-clone {
+      position: fixed;
+      z-index: 999999;
+      pointer-events: none;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7), 0 0 0 2px var(--red);
+      opacity: 0.95;
+      border-radius: 8px;
+      transform: rotate(2.5deg) scale(1.02);
+      transition: transform 0.04s ease;
+      background: var(--steel);
+    }
+
+    .kc-drag-handle {
+      cursor: grab;
+      color: var(--silver);
+      opacity: 0.65;
+      font-size: 13px;
+      transition: opacity .15s, color .15s;
+    }
+
+    .kanban-card:hover .kc-drag-handle {
+      opacity: 1;
+      color: var(--white);
     }
 
     .kc-id {
@@ -2712,6 +2775,24 @@
     body.light-mode .kanban-card {
       background: #FFFFFF !important;
       border: 1px solid #E5E5E5 !important;
+    }
+
+    body.light-mode .kanban-cards.drag-over {
+      background: rgba(215, 38, 56, 0.08) !important;
+      border-color: #D72638 !important;
+      box-shadow: inset 0 0 14px rgba(215, 38, 56, 0.12) !important;
+    }
+
+    body.light-mode .kanban-card.kc-dragging {
+      opacity: 0.35 !important;
+      background: #F8FAFC !important;
+      border: 1px dashed #D72638 !important;
+    }
+
+    body.light-mode .kanban-card-touch-clone {
+      background: #FFFFFF !important;
+      border: 1px solid #E2E8F0 !important;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.25), 0 0 0 2px #D72638 !important;
     }
 
     body.light-mode .kanban-col-head {
@@ -4490,10 +4571,19 @@
       font-size: 18px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      transition: transform 0.2s ease;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .sc-icon-wrap i {
+      font-size: 16px;
+      color: var(--white);
+      transition: color 0.15s ease;
     }
     .shortcut-card:hover .sc-icon-wrap {
       transform: scale(1.08);
+      border-color: rgba(246, 0, 0, 0.3);
+    }
+    .shortcut-card:hover .sc-icon-wrap i {
+      color: var(--red);
     }
     .sc-arrow-icon {
       font-size: 12px;
@@ -5834,7 +5924,7 @@
         <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; user-select: none;">
           <input type="checkbox" id="login-start-onboarding-chk" checked style="accent-color: var(--red); width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0;" />
           <div>
-            <span style="font-size: 12.5px; font-weight: 700; color: var(--white); display: block;">🚀 Iniciar Setup Guiado (8 pasos)</span>
+            <span style="font-size: 12.5px; font-weight: 700; color: var(--white); display: flex; align-items: center; gap: 6px;"><i class="bi bi-magic" style="color:var(--red);"></i> Iniciar Setup Guiado (8 pasos)</span>
             <span style="font-size: 11px; color: var(--silver); display: block; margin-top: 2px; line-height: 1.3;">Si es tu primera vez o querés configurar la tienda al ingresar. Si desmarcás, ingresarás directamente.</span>
           </div>
         </label>
@@ -6048,7 +6138,7 @@
             <div style="font-size:10px;color:#888;margin-top:6px;font-weight:600;">Escanear con la cámara</div>
           </div>
           <div>
-            <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:6px;">📸 ¿Estás desde tu computadora?</div>
+            <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:6px;display:flex;align-items:center;gap:6px;"><i class="bi bi-camera"></i> ¿Estás desde tu computadora?</div>
             <div style="font-size:12px;color:#bbb;line-height:1.5;margin-bottom:12px;">
               Abrí la cámara de tu celular, apuntá a este código QR y descargará la App al instante en 2 segundos.
             </div>
@@ -6094,7 +6184,7 @@
 
         <!-- GUÍA RÁPIDA DE 3 PASOS -->
         <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:16px;">
-          <div style="font-size:12px;font-weight:700;color:#ddd;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">⚡ Pasos para instalar en Android:</div>
+          <div style="font-size:12px;font-weight:700;color:#ddd;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;display:flex;align-items:center;gap:6px;"><i class="bi bi-android2"></i> Pasos para instalar en Android:</div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
             <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px;font-size:11px;color:#aaa;line-height:1.4;">
               <strong style="color:#fff;display:block;margin-bottom:4px;">1. Descargá el APK</strong>
@@ -6257,8 +6347,8 @@
               <span style="font-size:10px; color:#a1a1aa; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Orden a Despachar</span>
               <div id="dqv-order-title" style="font-family:'Josefin Sans', sans-serif; font-size:17px; font-weight:700; color:#fff;">Pedido #TP-0000</div>
             </div>
-            <div id="dqv-rubro-badge" style="font-size:11px; font-weight:700; background:rgba(246,0,0,0.15); border:1px solid rgba(246,0,0,0.3); color:#F60000; padding:4px 10px; border-radius:99px;">
-              🏪 Rubro General
+            <div id="dqv-rubro-badge" style="font-size:11px; font-weight:700; background:rgba(246,0,0,0.15); border:1px solid rgba(246,0,0,0.3); color:#F60000; padding:4px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;">
+              <i class="bi bi-shop"></i> <span>Rubro General</span>
             </div>
           </div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12.5px; color:#d4d4d8;">
@@ -6273,22 +6363,22 @@
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:12px;">
           <!-- Peso Acumulado -->
           <div style="background:#09090b; border:1px solid #27272a; border-radius:12px; padding:14px; text-align:center;">
-            <div style="font-size:11px; color:#a1a1aa; text-transform:uppercase; font-weight:700;">⚖️ Peso Acumulado</div>
+            <div style="font-size:11px; color:#a1a1aa; text-transform:uppercase; font-weight:700; display:flex; align-items:center; justify-content:center; gap:5px;"><i class="bi bi-speedometer2"></i> Peso Acumulado</div>
             <div id="dqv-calc-weight" style="font-family:'Josefin Sans', sans-serif; font-size:24px; font-weight:800; color:#fff; margin-top:4px;">0.5 kg</div>
             <div style="font-size:10px; color:#71717a; margin-top:2px;">Calculado por catálogo</div>
           </div>
 
           <!-- Categoría de Carga -->
           <div style="background:#09090b; border:1px solid #27272a; border-radius:12px; padding:14px; text-align:center;">
-            <div style="font-size:11px; color:#a1a1aa; text-transform:uppercase; font-weight:700;">📦 Categoría Carga</div>
+            <div style="font-size:11px; color:#a1a1aa; text-transform:uppercase; font-weight:700; display:flex; align-items:center; justify-content:center; gap:5px;"><i class="bi bi-box-seam"></i> Categoría Carga</div>
             <div id="dqv-calc-category" style="font-family:'Josefin Sans', sans-serif; font-size:16px; font-weight:700; color:#F60000; margin-top:6px;">SMALL_BOX</div>
             <div id="dqv-calc-cat-desc" style="font-size:10px; color:#71717a; margin-top:2px;">Paquete estándar</div>
           </div>
 
           <!-- Vehículo Sugerido -->
           <div style="background:#09090b; border:1px solid #27272a; border-radius:12px; padding:14px; text-align:center;">
-            <div style="font-size:11px; color:#a1a1aa; text-transform:uppercase; font-weight:700;">🚗 Flota Multimodal</div>
-            <div id="dqv-calc-vehicle" style="font-family:'Josefin Sans', sans-serif; font-size:16px; font-weight:700; color:#22c55e; margin-top:6px;">🛵 MOTO / BICI</div>
+            <div style="font-size:11px; color:#a1a1aa; text-transform:uppercase; font-weight:700; display:flex; align-items:center; justify-content:center; gap:5px;"><i class="bi bi-truck"></i> Flota Multimodal</div>
+            <div id="dqv-calc-vehicle" style="font-family:'Josefin Sans', sans-serif; font-size:16px; font-weight:700; color:#22c55e; margin-top:6px; display:flex; align-items:center; justify-content:center; gap:6px;"><i class="bi bi-bicycle"></i> MOTO / BICI</div>
             <div id="dqv-calc-vehicle-desc" style="font-size:10px; color:#71717a; margin-top:2px;">Ágil y veloz</div>
           </div>
         </div>
@@ -6319,8 +6409,8 @@
               SEARCHING
             </div>
           </div>
-          <div id="dqv-status-message" style="font-size:13px; font-weight:600; color:#fff; margin-bottom:8px;">
-            🔍 Buscando repartidor en la red multimodal...
+          <div id="dqv-status-message" style="font-size:13px; font-weight:600; color:#fff; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+            <i class="bi bi-search"></i> Buscando repartidor en la red multimodal...
           </div>
           <div style="width:100%; height:6px; background:#27272a; border-radius:3px; overflow:hidden;">
             <div id="dqv-progress-bar" style="width:25%; height:100%; background:linear-gradient(90deg, #F60000, #22c55e); transition:width 0.4s ease;"></div>
@@ -6518,13 +6608,13 @@
             Todas <span class="notif-filter-count" id="notif-count-all">0</span>
           </button>
           <button class="notif-filter-btn" data-filter="order" onclick="setNotifFilter('order', this)">
-            Pedidos 🛍️ <span class="notif-filter-count" id="notif-count-order">0</span>
+            <i class="bi bi-receipt"></i> Pedidos <span class="notif-filter-count" id="notif-count-order">0</span>
           </button>
           <button class="notif-filter-btn" data-filter="setup" onclick="setNotifFilter('setup', this)">
-            Configuración ⚙️ <span class="notif-filter-count" id="notif-count-setup">0</span>
+            <i class="bi bi-gear"></i> Configuración <span class="notif-filter-count" id="notif-count-setup">0</span>
           </button>
           <button class="notif-filter-btn" data-filter="system" onclick="setNotifFilter('system', this)">
-            Sistema 📢 <span class="notif-filter-count" id="notif-count-system">0</span>
+            <i class="bi bi-bell"></i> Sistema <span class="notif-filter-count" id="notif-count-system">0</span>
           </button>
         </div>
       </div>
@@ -6570,7 +6660,7 @@
           <!-- 1. Rubro -->
           <div class="rubro-card" onclick="openOnboardingStep(1)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-              <span style="font-size:24px;">🏪</span>
+              <i class="bi bi-shop" style="font-size:22px; color:var(--red);"></i>
               <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 1</span>
             </div>
             <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">1. Rubro de la Empresa</h3>
@@ -6580,7 +6670,7 @@
           <!-- 2. Tipos de Productos -->
           <div class="rubro-card" onclick="openOnboardingStep(2)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-              <span style="font-size:24px;">📦</span>
+              <i class="bi bi-box-seam" style="font-size:22px; color:var(--white);"></i>
               <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 2</span>
             </div>
             <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">2. Tipos de Productos</h3>
@@ -6590,7 +6680,7 @@
           <!-- 3. Medios de Pago -->
           <div class="rubro-card" onclick="openOnboardingStep(3)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-              <span style="font-size:24px;">💳</span>
+              <i class="bi bi-credit-card" style="font-size:22px; color:var(--white);"></i>
               <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 3</span>
             </div>
             <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">3. Medios de Pago</h3>
@@ -6600,7 +6690,7 @@
           <!-- 4. Delivery & PickUp -->
           <div class="rubro-card" onclick="openOnboardingStep(4)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-              <span style="font-size:24px;">🚚</span>
+              <i class="bi bi-truck" style="font-size:22px; color:var(--white);"></i>
               <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 4</span>
             </div>
             <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">4. Envíos y Delivery</h3>
@@ -6610,7 +6700,7 @@
           <!-- 5. Estilo Visual -->
           <div class="rubro-card" onclick="openOnboardingStep(5)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-              <span style="font-size:24px;">🎨</span>
+              <i class="bi bi-palette" style="font-size:22px; color:var(--white);"></i>
               <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 5</span>
             </div>
             <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">5. Estilo de Empresa</h3>
@@ -6634,7 +6724,7 @@
           <!-- 7. Tono -->
           <div class="rubro-card" onclick="openOnboardingStep(7)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-              <span style="font-size:24px;">🗣️</span>
+              <i class="bi bi-chat-quote" style="font-size:22px; color:var(--white);"></i>
               <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 7</span>
             </div>
             <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">7. Tono de Marca</h3>
@@ -6644,7 +6734,7 @@
           <!-- 8. Notificaciones -->
           <div class="rubro-card" onclick="openOnboardingStep(8)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-              <span style="font-size:24px;">🔔</span>
+              <i class="bi bi-bell" style="font-size:22px; color:var(--white);"></i>
               <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 8</span>
             </div>
             <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">8. Avisos a Clientes</h3>
@@ -6875,7 +6965,7 @@
         <!-- 1. Analítica -->
         <div class="shortcut-card" onclick="goToView('reports')">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">📊</div>
+            <div class="sc-icon-wrap"><i class="bi bi-bar-chart-line"></i></div>
             <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -6887,7 +6977,7 @@
         <!-- 2. Pedidos -->
         <div class="shortcut-card" onclick="goToView('orders')">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">📦</div>
+            <div class="sc-icon-wrap"><i class="bi bi-receipt"></i></div>
             <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -6899,7 +6989,7 @@
         <!-- 3. PickUp -->
         <div class="shortcut-card" onclick="goToView('pickups')">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">🚚</div>
+            <div class="sc-icon-wrap"><i class="bi bi-truck"></i></div>
             <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -6911,7 +7001,7 @@
         <!-- 4. Productos -->
         <div class="shortcut-card" onclick="goToView('products')">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">🛍️</div>
+            <div class="sc-icon-wrap"><i class="bi bi-grid-3x3-gap"></i></div>
             <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -6923,7 +7013,7 @@
         <!-- 5. ABM -->
         <div class="shortcut-card" onclick="goToView('abm')">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">✏️</div>
+            <div class="sc-icon-wrap"><i class="bi bi-pencil-square"></i></div>
             <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -6935,7 +7025,7 @@
         <!-- 6. Categorías -->
         <div class="shortcut-card" onclick="goToView('categories')">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">🏷️</div>
+            <div class="sc-icon-wrap"><i class="bi bi-tags"></i></div>
             <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -6947,7 +7037,7 @@
         <!-- 7. Diseño -->
         <div class="shortcut-card" onclick="goToView('marca')">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">🎨</div>
+            <div class="sc-icon-wrap"><i class="bi bi-palette"></i></div>
             <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -6959,7 +7049,7 @@
         <!-- 8. Configuración -->
         <div class="shortcut-card" onclick="goToView('config-basica')">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">⚙️</div>
+            <div class="sc-icon-wrap"><i class="bi bi-gear"></i></div>
             <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -6971,7 +7061,7 @@
         <!-- 9. Avanzado -->
         <div class="shortcut-card" onclick="goToView('config-avanzada')">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">🔒</div>
+            <div class="sc-icon-wrap"><i class="bi bi-shield-lock"></i></div>
             <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -6983,7 +7073,7 @@
         <!-- 10. Ver tienda -->
         <div class="shortcut-card" onclick="openStore()">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">🏪</div>
+            <div class="sc-icon-wrap"><i class="bi bi-shop"></i></div>
             <i class="bi bi-box-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -7012,25 +7102,25 @@
         <div style="flex:3;display:flex;flex-direction:column;gap:20px;min-width:320px;">
           <div class="metrics" id="metrics-row" style="margin-bottom:0;">
             <div class="metric">
-              <div class="metric-icon" style="background:rgba(215,38,56,.15);">📦</div>
+              <div class="metric-icon"><i class="bi bi-receipt"></i></div>
               <div class="metric-label">Pedidos</div>
               <div class="metric-val" id="m-ord">—</div>
               <div class="metric-delta up" id="m-ord-d"></div>
             </div>
             <div class="metric">
-              <div class="metric-icon" style="background:rgba(46,204,113,.15);">💰</div>
+              <div class="metric-icon"><i class="bi bi-currency-dollar"></i></div>
               <div class="metric-label">Facturado</div>
               <div class="metric-val" id="m-rev">—</div>
               <div class="metric-delta up" id="m-rev-d"></div>
             </div>
             <div class="metric">
-              <div class="metric-icon" style="background:rgba(52,152,219,.15);">🎯</div>
+              <div class="metric-icon"><i class="bi bi-bullseye"></i></div>
               <div class="metric-label">Ticket promedio</div>
               <div class="metric-val" id="m-avg">—</div>
               <div class="metric-delta dn" id="m-avg-d"></div>
             </div>
             <div class="metric">
-              <div class="metric-icon" style="background:rgba(243,156,18,.15);">👥</div>
+              <div class="metric-icon"><i class="bi bi-box-seam"></i></div>
               <div class="metric-label">Productos activos</div>
               <div class="metric-val" id="m-prods">—</div>
               <div class="metric-delta up" id="m-prods-d"></div>
@@ -7231,8 +7321,11 @@
       <!-- Kanban board -->
       <div class="card" style="margin-bottom:16px;">
         <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
             <span><i class="bi bi-kanban" style="color:var(--red);"></i> Tablero de estados</span>
+            <span style="font-size:11px;color:var(--silver);background:rgba(255,255,255,0.04);border:1px solid var(--zinc);padding:3px 9px;border-radius:6px;display:inline-flex;align-items:center;gap:5px;">
+              <i class="bi bi-arrows-move" style="color:var(--red);"></i> Arrastrá tarjetas entre columnas
+            </span>
             <label style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--fog);cursor:pointer;background:var(--iron);border:1px solid var(--zinc);padding:4px 10px;border-radius:6px;user-select:none;" title="Al mover un pedido a un estado con el check 'Imprimible' activo (ej: En cocina), se disparará automáticamente la impresión de la comanda térmica">
               <input type="checkbox" id="autoprint-orders-check" onchange="toggleAutoPrintOrders(this.checked)" checked style="accent-color:var(--red);cursor:pointer;width:14px;height:14px;" />
               <span><i class="bi bi-printer" style="color:var(--white);"></i> Auto-imprimir comanda (En cocina)</span>
@@ -7247,7 +7340,7 @@
         <div id="state-config"
           style="display:none;margin-bottom:16px;padding:16px;background:var(--iron);border-radius:10px;border:1px solid var(--zinc);position:relative;">
           <div style="font-size:11px;color:var(--silver);margin-bottom:12px;line-height:1.4;">
-            Editá los estados del tablero y selectores. Marcá la casilla <strong>🖨️ Imprimible</strong> en aquellos estados donde precises comandar el pedido (por ejemplo <em>En cocina</em> o <em>En preparación</em>) para enviar automáticamente el ticket térmico a la impresora.
+            Editá los estados del tablero y selectores. Marcá la casilla <strong><i class="bi bi-printer"></i> Imprimible</strong> en aquellos estados donde precises comandar el pedido (por ejemplo <em>En cocina</em> o <em>En preparación</em>) para enviar automáticamente el ticket térmico a la impresora.
           </div>
           <div id="state-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;"></div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
@@ -7334,9 +7427,9 @@
                   <div style="display:flex;align-items:center;gap:6px;color:var(--white);font-weight:700;">
                     <i class="bi bi-aspect-ratio" style="color:var(--red);"></i> Especificaciones recomendadas para el Logo:
                   </div>
-                  <div>📐 <strong>Dimensiones ideales:</strong> 500 × 500 px (cuadrado 1:1) o 400 × 120 px (horizontal). Mínimo 200 px.</div>
-                  <div>📁 <strong>Formatos permitidos:</strong> PNG (fondo transparente recomendado), SVG, WEBP o JPG.</div>
-                  <div>⚖️ <strong>Peso máximo:</strong> Hasta 2 MB para carga ultrarrápida en móviles.</div>
+                  <div><i class="bi bi-rulers"></i> <strong>Dimensiones ideales:</strong> 500 × 500 px (cuadrado 1:1) o 400 × 120 px (horizontal). Mínimo 200 px.</div>
+                  <div><i class="bi bi-file-earmark-image"></i> <strong>Formatos permitidos:</strong> PNG (fondo transparente recomendado), SVG, WEBP o JPG.</div>
+                  <div><i class="bi bi-speedometer2"></i> <strong>Peso máximo:</strong> Hasta 2 MB para carga ultrarrápida en móviles.</div>
                 </div>
               </div>
               <div class="ctrl-group">
@@ -7665,9 +7758,9 @@
                 <div style="display:flex;align-items:center;gap:6px;color:var(--white);font-weight:700;">
                   <i class="bi bi-aspect-ratio" style="color:var(--red);"></i> Especificaciones de Portada (Desktop / PC):
                 </div>
-                <div>📐 <strong>Dimensiones ideales:</strong> 1400 × 400 px o 1920 × 600 px (panorámica horizontal). Mínimo 1200 px de ancho.</div>
-                <div>📁 <strong>Formatos permitidos:</strong> JPG, WEBP o PNG (alta resolución).</div>
-                <div>⚖️ <strong>Peso recomendado:</strong> Menor a 3 MB. Podés mezclarla con el color de fondo regulando la opacidad abajo.</div>
+                <div><i class="bi bi-rulers"></i> <strong>Dimensiones ideales:</strong> 1400 × 400 px o 1920 × 600 px (panorámica horizontal). Mínimo 1200 px de ancho.</div>
+                <div><i class="bi bi-file-earmark-image"></i> <strong>Formatos permitidos:</strong> JPG, WEBP o PNG (alta resolución).</div>
+                <div><i class="bi bi-speedometer2"></i> <strong>Peso recomendado:</strong> Menor a 3 MB. Podés mezclarla con el color de fondo regulando la opacidad abajo.</div>
               </div>
 
               <!-- APARTADO BANNER MOBILE -->
@@ -7697,9 +7790,9 @@
                   <div style="display:flex;align-items:center;gap:6px;color:var(--white);font-weight:700;">
                     <i class="bi bi-aspect-ratio" style="color:var(--red);"></i> Medidas requeridas para el Banner Mobile:
                   </div>
-                  <div>📐 <strong>Medidas recomendadas:</strong> <strong>800 × 800 px (cuadrada 1:1)</strong> o <strong>1080 × 1350 px (vertical 4:5)</strong>. Mínimo 600 px de ancho.</div>
-                  <div>📱 <strong>Comportamiento inteligente:</strong> Se mostrará de manera automática a los clientes que naveguen desde celulares (pantallas de hasta 768px), impidiendo que el banner horizontal se recorte o deforme.</div>
-                  <div>📁 <strong>Formatos:</strong> JPG, WEBP o PNG (máx 3 MB).</div>
+                  <div><i class="bi bi-rulers"></i> <strong>Medidas recomendadas:</strong> <strong>800 × 800 px (cuadrada 1:1)</strong> o <strong>1080 × 1350 px (vertical 4:5)</strong>. Mínimo 600 px de ancho.</div>
+                  <div><i class="bi bi-phone"></i> <strong>Comportamiento inteligente:</strong> Se mostrará de manera automática a los clientes que naveguen desde celulares (pantallas de hasta 768px), impidiendo que el banner horizontal se recorte o deforme.</div>
+                  <div><i class="bi bi-file-earmark-image"></i> <strong>Formatos:</strong> JPG, WEBP o PNG (máx 3 MB).</div>
                 </div>
               </div>
 
@@ -8050,7 +8143,7 @@
                     <!-- prev topbar -->
                     <div id="prev-nav" style="display:flex;align-items:center;gap:8px;padding:12px 18px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);">
                       <div style="position:relative;display:inline-flex;">
-                        <div id="prev-icon" style="width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;background:#F60000;">🛍️</div>
+                        <div id="prev-icon" style="width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;background:#F60000;color:#fff;"><i class="bi bi-shop"></i></div>
                         <div class="prev-spotlight-label" id="spl-nav-icon">Ícono nav</div>
                       </div>
                       <span id="prev-name" style="font-weight:800;font-size:15px;color:#F5F5F0;">Dale! Te Pido</span>
@@ -9558,19 +9651,20 @@
         animation: toast-slide-in 0.3s ease forwards;
       `;
       
-      let icon = 'ℹ️';
+      let icon = '<i class="bi bi-info-circle-fill" style="color:var(--silver);font-size:16px;"></i>';
       if (msg.toLowerCase().includes('éxito') || msg.toLowerCase().includes('guardado') || msg.includes('✓') || msg.includes('¡') || msg.toLowerCase().includes('correcto')) {
-        icon = '✅';
+        icon = '<i class="bi bi-check-circle-fill" style="color:#10b981;font-size:16px;"></i>';
         el.style.borderLeftColor = '#10b981';
       } else if (msg.toLowerCase().includes('error') || msg.toLowerCase().includes('falló') || msg.includes('✕') || msg.toLowerCase().includes('fatal')) {
-        icon = '❌';
+        icon = '<i class="bi bi-x-circle-fill" style="color:#ef4444;font-size:16px;"></i>';
         el.style.borderLeftColor = '#ef4444';
       } else if (msg.toLowerCase().includes('advertencia') || msg.toLowerCase().includes('requerido') || msg.includes('⚠')) {
-        icon = '⚠️';
+        icon = '<i class="bi bi-exclamation-triangle-fill" style="color:#f59e0b;font-size:16px;"></i>';
         el.style.borderLeftColor = '#f59e0b';
       }
       
-      el.innerHTML = `<span>${icon}</span><span style="flex:1;">${msg}</span>`;
+      const cleanMsg = msg.replace(/^[ℹ️✅❌⚠️✓✕⚠]\s*/, '');
+      el.innerHTML = `<span style="display:flex;align-items:center;">${icon}</span><span style="flex:1;">${cleanMsg}</span>`;
       document.body.appendChild(el);
       
       if (!document.getElementById('toast-style')) {
@@ -9617,29 +9711,29 @@
       let bg = isLight ? '#F1F5F9' : 'rgba(255, 255, 255, 0.08)';
       let color = isLight ? '#1E293B' : '#E2E8F0';
       let border = isLight ? '#CBD5E1' : 'rgba(255, 255, 255, 0.15)';
-      let icon = '⚡';
+      let icon = '<i class="bi bi-lightning-charge"></i>';
 
       if (plan === 'pro') {
         text = 'PLAN PRO';
         bg = isLight ? '#FEF2F2' : 'rgba(215, 38, 56, 0.2)';
         color = isLight ? '#B91C1C' : '#FCA5A5';
         border = isLight ? '#FECACA' : 'rgba(252, 165, 165, 0.4)';
-        icon = '🚀';
+        icon = '<i class="bi bi-rocket-takeoff"></i>';
       } else if (plan === 'enterprise') {
         text = 'PLAN ENTERPRISE';
         bg = isLight ? '#EFF6FF' : 'rgba(59, 130, 246, 0.2)';
         color = isLight ? '#1D4ED8' : '#93C5FD';
         border = isLight ? '#93C5FD' : 'rgba(147, 197, 253, 0.4)';
-        icon = '👑';
+        icon = '<i class="bi bi-building"></i>';
       } else if (plan === 'exclusive') {
         text = 'PLAN EXCLUSIVE';
         bg = isLight ? '#FAF5FF' : 'rgba(168, 85, 247, 0.2)';
         color = isLight ? '#6B21A8' : '#E9D5FF';
         border = isLight ? '#E9D5FF' : 'rgba(233, 213, 255, 0.4)';
-        icon = '⭐';
+        icon = '<i class="bi bi-star"></i>';
       }
 
-      badge.innerHTML = `<span style="font-size: 12px; margin-right: 2px;">${icon}</span> ${text}`;
+      badge.innerHTML = `<span style="font-size: 12px; margin-right: 4px; display:inline-flex; align-items:center;">${icon}</span> ${text}`;
       badge.style.background = bg;
       badge.style.color = color;
       badge.style.border = `1px solid ${border}`;
@@ -9684,29 +9778,29 @@
       let text = 'PLAN STARTER';
       let bg = 'rgba(255, 255, 255, 0.08)';
       let color = 'var(--silver)';
-      let icon = '⚡';
+      let icon = '<i class="bi bi-lightning-charge"></i>';
       let isExclusive = false;
 
       if (plan === 'pro') {
         text = 'PLAN PRO';
         bg = 'rgba(215, 38, 56, 0.15)';
         color = 'var(--red)';
-        icon = '🚀';
+        icon = '<i class="bi bi-rocket-takeoff"></i>';
       } else if (plan === 'enterprise') {
         text = 'PLAN ENTERPRISE';
         bg = 'rgba(59, 130, 246, 0.15)';
         color = '#3b82f6';
-        icon = '👑';
+        icon = '<i class="bi bi-building"></i>';
       } else if (plan === 'exclusive') {
         text = 'PLAN EXCLUSIVE';
         bg = 'rgba(168, 85, 247, 0.15)';
         color = '#a855f7';
-        icon = '⭐';
+        icon = '<i class="bi bi-star"></i>';
         isExclusive = true;
       }
 
       if (planNameEl) {
-        planNameEl.innerHTML = `<span style="font-size: 14px; margin-right: 4px;">${icon}</span> ${text}`;
+        planNameEl.innerHTML = `<span style="font-size: 14px; margin-right: 6px; display:inline-flex; align-items:center;">${icon}</span> ${text}`;
         planNameEl.style.color = color;
       }
 
@@ -10126,7 +10220,7 @@
         if (statusEl) {
           statusEl.style.display = 'block';
           statusEl.style.color = '#ff6b6b';
-          statusEl.innerHTML = '⚠️ Por favor ingresá un correo electrónico válido.';
+          statusEl.innerHTML = '<i class="bi bi-exclamation-triangle"></i> Por favor ingresá un correo electrónico válido.';
         }
         return;
       }
@@ -10163,18 +10257,18 @@
         if (resp.ok && data.success) {
           if (statusEl) {
             statusEl.style.color = '#2ecc71';
-            statusEl.innerHTML = `✅ ${data.message || '¡Correo enviado con éxito! Revisá tu bandeja de entrada o spam.'}`;
+            statusEl.innerHTML = `<i class="bi bi-check-circle"></i> ${data.message || '¡Correo enviado con éxito! Revisá tu bandeja de entrada o spam.'}`;
           }
         } else {
           if (statusEl) {
             statusEl.style.color = '#ff6b6b';
-            statusEl.innerHTML = `❌ ${data.error || 'No se pudo enviar el correo en este momento.'}`;
+            statusEl.innerHTML = `<i class="bi bi-x-circle"></i> ${data.error || 'No se pudo enviar el correo en este momento.'}`;
           }
         }
       } catch(err) {
         if (statusEl) {
           statusEl.style.color = '#ff6b6b';
-          statusEl.innerHTML = '❌ Error de conexión al intentar enviar el correo.';
+          statusEl.innerHTML = '<i class="bi bi-wifi-off"></i> Error de conexión al intentar enviar el correo.';
         }
       } finally {
         btn.disabled = false;
@@ -14646,7 +14740,7 @@
       if (!calcEl) return;
       if (price > 0 && qty > 0) {
         const unitP = (price / qty).toFixed(2);
-        calcEl.innerHTML = `💡 Precio unitario: <b>$ ${parseFloat(unitP).toLocaleString('es-AR', {minimumFractionDigits: 2})}</b> por unidad`;
+        calcEl.innerHTML = `<i class="bi bi-lightbulb"></i> Precio unitario: <b>$ ${parseFloat(unitP).toLocaleString('es-AR', {minimumFractionDigits: 2})}</b> por unidad`;
       } else {
         calcEl.innerHTML = `Precio unitario estimado: $ 0.00`;
       }
@@ -17237,17 +17331,20 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         const allStates = getStates();
         kanban.innerHTML = allStates.map(st => {
           const cols = orders.filter(o => o.estado === st.key);
-          return `<div class="kanban-col" style="min-width: 220px; flex: 1;">
+          return `<div class="kanban-col" data-col-state="${st.key}" style="min-width: 220px; flex: 1;">
         <div class="kanban-col-head" style="border-top:3px solid ${st.text};">
           <span style="color:${st.text}; font-weight:700;"><i class="bi ${st.icon}"></i> ${st.label.toUpperCase()}${st.printable ? ' <i class="bi bi-printer" title="Estado imprimible (comanda automática activa)" style="font-size:10px;margin-left:3px;color:var(--fog);"></i>' : ''}</span>
           <span class="kanban-count" style="background:${st.bg}; color:${st.text}; font-weight:700;">${cols.length}</span>
         </div>
-        <div class="kanban-cards">
+        <div class="kanban-cards" data-col-state="${st.key}">
           ${cols.length ? cols.map(o => `
-            <div class="kanban-card" style="border-left:3px solid ${st.text}; position:relative;">
+            <div class="kanban-card" id="kcard-${o.id}" data-order-id="${o.id}" data-order-state="${st.key}" draggable="true" style="border-left:3px solid ${st.text}; position:relative;">
               <div class="kc-id" style="display:flex;justify-content:space-between;align-items:center;">
-                <span>${o.id}${o.is_night_guard ? ' <span title="Pedido fuera de horario (Modo Sereno)" style="background:rgba(129,140,248,0.2);color:#A5B4FC;border:1px solid rgba(129,140,248,0.4);padding:1px 4px;border-radius:4px;font-size:9px;font-weight:600;">🌙 Sereno</span>' : ''}</span>
-                <button type="button" onclick="printComanda('${o.id}')" title="🖨️ Imprimir Comanda Térmica (58/80mm)" style="background:transparent;border:1px solid var(--zinc);color:var(--fog);border-radius:5px;padding:2px 6px;font-size:10px;cursor:pointer;display:inline-flex;align-items:center;gap:3px;" onmouseover="this.style.color='#fff';this.style.borderColor='var(--fog)'" onmouseout="this.style.color='var(--fog)';this.style.borderColor='var(--zinc)'">
+                <span style="display:inline-flex;align-items:center;gap:4px;">
+                  <i class="bi bi-grip-vertical kc-drag-handle" title="Arrastrar tarjeta para cambiar estado"></i>
+                  <span>${o.id}${o.is_night_guard ? ' <span title="Pedido fuera de horario (Modo Sereno)" style="background:rgba(129,140,248,0.2);color:#A5B4FC;border:1px solid rgba(129,140,248,0.4);padding:1px 4px;border-radius:4px;font-size:9px;font-weight:600;"><i class="bi bi-moon-stars"></i> Sereno</span>' : ''}</span>
+                </span>
+                <button type="button" onclick="printComanda('${o.id}')" title="Imprimir Comanda Térmica (58/80mm)" style="background:transparent;border:1px solid var(--zinc);color:var(--fog);border-radius:5px;padding:2px 6px;font-size:10px;cursor:pointer;display:inline-flex;align-items:center;gap:3px;" onmouseover="this.style.color='#fff';this.style.borderColor='var(--fog)'" onmouseout="this.style.color='var(--fog)';this.style.borderColor='var(--zinc)'">
                   <i class="bi bi-printer"></i> <span>Comanda</span>
                 </button>
               </div>
@@ -17261,10 +17358,11 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
                 ${allStates.map(s => `<option value="${s.key}" ${o.estado === s.key ? 'selected' : ''}>${s.label}${s.printable ? ' 🖨️' : ''}</option>`).join('')}
               </select>
             </div>`).join('')
-              : `<div style="font-size:11px;color:var(--silver);text-align:center;padding:16px;">Sin pedidos</div>`}
+              : `<div style="font-size:11px;color:var(--silver);text-align:center;padding:24px 8px;border:1px dashed rgba(255,255,255,0.06);border-radius:8px;pointer-events:none;"><i class="bi bi-arrow-down-short"></i> Soltá pedidos acá</div>`}
         </div>
       </div>`;
         }).join('');
+        initKanbanDragAndDrop();
       }
 
       // ── FULL TABLE ────────────────────────────────────
@@ -17398,6 +17496,218 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
   `;
     }
 
+    // ── KANBAN DRAG & DROP ENGINE (DESKTOP MOUSE + TABLET/TOUCH) ─────────────
+    let kanbanDragOrderId = null;
+    let kanbanDragSourceState = null;
+    let kanbanTouchCard = null;
+    let kanbanTouchClone = null;
+    let kanbanTouchStartPos = null;
+    let kanbanTouchIsDragging = false;
+    let kanbanDragBound = false;
+
+    function initKanbanDragAndDrop() {
+      const board = document.getElementById('kanban-board');
+      if (!board || kanbanDragBound) return;
+      kanbanDragBound = true;
+
+      // ── MOUSE / HTML5 DRAG & DROP ──────────────────────────────────────────
+      board.addEventListener('dragstart', (e) => {
+        // Ignorar si se arrastra desde un botón, select, input, modal o link
+        if (e.target.closest('button, select, input, a, label')) {
+          e.preventDefault();
+          return;
+        }
+
+        const card = e.target.closest('.kanban-card');
+        if (!card) return;
+
+        kanbanDragOrderId = card.dataset.orderId;
+        kanbanDragSourceState = card.dataset.orderState;
+
+        if (e.dataTransfer) {
+          e.dataTransfer.setData('text/plain', kanbanDragOrderId);
+          e.dataTransfer.effectAllowed = 'move';
+        }
+
+        setTimeout(() => {
+          card.classList.add('kc-dragging');
+        }, 10);
+
+        if (navigator.vibrate) {
+          try { navigator.vibrate(25); } catch(ex) {}
+        }
+      });
+
+      board.addEventListener('dragover', (e) => {
+        const dropzone = e.target.closest('.kanban-cards');
+        if (!dropzone) return;
+
+        e.preventDefault();
+        if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+
+        // Resaltar columna destino si no lo estaba
+        if (!dropzone.classList.contains('drag-over')) {
+          board.querySelectorAll('.kanban-cards.drag-over').forEach(dz => dz.classList.remove('drag-over'));
+          dropzone.classList.add('drag-over');
+        }
+      });
+
+      board.addEventListener('dragleave', (e) => {
+        const dropzone = e.target.closest('.kanban-cards');
+        if (dropzone && !dropzone.contains(e.relatedTarget)) {
+          dropzone.classList.remove('drag-over');
+        }
+      });
+
+      board.addEventListener('drop', (e) => {
+        e.preventDefault();
+        board.querySelectorAll('.kanban-cards.drag-over').forEach(dz => dz.classList.remove('drag-over'));
+
+        const dropzone = e.target.closest('.kanban-cards');
+        if (!dropzone) return;
+
+        const targetState = dropzone.dataset.colState;
+        const orderId = (e.dataTransfer && e.dataTransfer.getData('text/plain')) || kanbanDragOrderId;
+
+        if (orderId && targetState) {
+          const o = (allOrders || []).find(x => x.id === orderId);
+          if (o && o.estado !== targetState) {
+            changeOrderEstado(orderId, targetState);
+            if (navigator.vibrate) {
+              try { navigator.vibrate([20, 40, 25]); } catch(ex) {}
+            }
+          }
+        }
+
+        kanbanDragOrderId = null;
+        kanbanDragSourceState = null;
+      });
+
+      board.addEventListener('dragend', () => {
+        board.querySelectorAll('.kanban-card.kc-dragging').forEach(c => c.classList.remove('kc-dragging'));
+        board.querySelectorAll('.kanban-cards.drag-over').forEach(dz => dz.classList.remove('drag-over'));
+        kanbanDragOrderId = null;
+        kanbanDragSourceState = null;
+      });
+
+      // ── TOUCH DRAG & DROP (TABLETS / CELULARES / TOUCHSCREENS) ─────────────
+      board.addEventListener('touchstart', (e) => {
+        if (e.touches.length !== 1) return;
+        if (e.target.closest('button, select, input, a, label')) return;
+
+        const card = e.target.closest('.kanban-card');
+        if (!card) return;
+
+        const touch = e.touches[0];
+        kanbanTouchCard = card;
+        kanbanTouchStartPos = { x: touch.clientX, y: touch.clientY, time: Date.now() };
+        kanbanTouchIsDragging = false;
+      }, { passive: true });
+
+      board.addEventListener('touchmove', (e) => {
+        if (!kanbanTouchCard || !kanbanTouchStartPos || e.touches.length !== 1) return;
+
+        const touch = e.touches[0];
+        const dx = touch.clientX - kanbanTouchStartPos.x;
+        const dy = touch.clientY - kanbanTouchStartPos.y;
+        const dist = Math.hypot(dx, dy);
+
+        // Si supera umbral de desplazamiento, activar drag táctil
+        if (!kanbanTouchIsDragging && dist > 10) {
+          kanbanTouchIsDragging = true;
+          kanbanDragOrderId = kanbanTouchCard.dataset.orderId;
+          kanbanDragSourceState = kanbanTouchCard.dataset.orderState;
+
+          const rect = kanbanTouchCard.getBoundingClientRect();
+          kanbanTouchClone = kanbanTouchCard.cloneNode(true);
+          kanbanTouchClone.classList.add('kanban-card-touch-clone');
+          kanbanTouchClone.style.width = rect.width + 'px';
+          kanbanTouchClone.style.left = rect.left + 'px';
+          kanbanTouchClone.style.top = rect.top + 'px';
+          document.body.appendChild(kanbanTouchClone);
+
+          kanbanTouchCard.classList.add('kc-dragging');
+
+          if (navigator.vibrate) {
+            try { navigator.vibrate(25); } catch(ex) {}
+          }
+        }
+
+        if (kanbanTouchIsDragging && kanbanTouchClone) {
+          if (e.cancelable) e.preventDefault();
+
+          kanbanTouchClone.style.transform = `translate3d(${dx}px, ${dy}px, 0) rotate(2.5deg) scale(1.02)`;
+
+          // Auto-scroll horizontal suave si el dedo se acerca a los extremos de la pantalla
+          const boardRect = board.getBoundingClientRect();
+          if (touch.clientX < boardRect.left + 50) {
+            board.scrollLeft -= 8;
+          } else if (touch.clientX > boardRect.right - 50) {
+            board.scrollLeft += 8;
+          }
+
+          // Detección de columna bajo el punto táctil
+          const elUnder = document.elementFromPoint(touch.clientX, touch.clientY);
+          const dropzone = elUnder ? elUnder.closest('.kanban-cards') : null;
+
+          board.querySelectorAll('.kanban-cards.drag-over').forEach(dz => {
+            if (dz !== dropzone) dz.classList.remove('drag-over');
+          });
+          if (dropzone && !dropzone.classList.contains('drag-over')) {
+            dropzone.classList.add('drag-over');
+          }
+        }
+      }, { passive: false });
+
+      const handleTouchEnd = (e) => {
+        if (!kanbanTouchCard) return;
+
+        if (kanbanTouchIsDragging) {
+          const changedTouch = (e.changedTouches && e.changedTouches[0]) || null;
+          let dropzone = null;
+
+          if (changedTouch) {
+            const elUnder = document.elementFromPoint(changedTouch.clientX, changedTouch.clientY);
+            dropzone = elUnder ? elUnder.closest('.kanban-cards') : null;
+          }
+
+          if (dropzone) {
+            const targetState = dropzone.dataset.colState;
+            const orderId = kanbanTouchCard.dataset.orderId;
+            if (orderId && targetState) {
+              const o = (allOrders || []).find(x => x.id === orderId);
+              if (o && o.estado !== targetState) {
+                changeOrderEstado(orderId, targetState);
+                if (navigator.vibrate) {
+                  try { navigator.vibrate([20, 40, 25]); } catch(ex) {}
+                }
+              }
+            }
+          }
+        }
+
+        if (kanbanTouchClone) {
+          kanbanTouchClone.remove();
+          kanbanTouchClone = null;
+        }
+        if (kanbanTouchCard) {
+          kanbanTouchCard.classList.remove('kc-dragging');
+          kanbanTouchCard = null;
+        }
+
+        board.querySelectorAll('.kanban-cards.drag-over').forEach(dz => dz.classList.remove('drag-over'));
+        kanbanTouchStartPos = null;
+        kanbanTouchIsDragging = false;
+        kanbanDragOrderId = null;
+        kanbanDragSourceState = null;
+      };
+
+      board.addEventListener('touchend', handleTouchEnd, { passive: true });
+      board.addEventListener('touchcancel', handleTouchEnd, { passive: true });
+      window.addEventListener('touchcancel', handleTouchEnd, { passive: true });
+    }
+    window.initKanbanDragAndDrop = initKanbanDragAndDrop;
+
     function filterOrdersTable() {
       const q = (document.getElementById('orders-search')?.value || '').toLowerCase();
       const estado = document.getElementById('orders-filter-estado')?.value || '';
@@ -17421,6 +17731,13 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const targetState = getStates().find(s => s.key === estado);
       const label = targetState?.label || estado;
       updateOrderEstado(id, label);
+
+      // Notificación toast de cambio de estado si no fue capturada por auto-impresión
+      if (previousEstado !== estado && targetState && (!targetState.printable || !isAutoPrintOrdersEnabled())) {
+        if (typeof showToastDash === 'function') {
+          showToastDash(`Pedido #${id} movido a "${targetState.label}"`);
+        }
+      }
 
       // ── VERIFICACIÓN DE AUTO-IMPRESIÓN DE COMANDA ─────────
       if (previousEstado !== estado && targetState && targetState.printable && isAutoPrintOrdersEnabled()) {
@@ -20305,13 +20622,79 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (modal) modal.style.display = 'flex';
     }
 
+    function getDashboardStoreId() {
+      const urlParams = new URLSearchParams(window.location.search);
+      let id = (typeof STORE_ID !== 'undefined' && STORE_ID ? STORE_ID : (window.STORE_ID || urlParams.get('store') || '')).toLowerCase();
+      if (!id) {
+        try {
+          const sess = JSON.parse(localStorage.getItem('daletepido_session') || '{}');
+          if (sess.store_id) id = sess.store_id.toLowerCase();
+        } catch(e) {}
+      }
+      return id;
+    }
+
+    function getDashboardAdminEmail() {
+      try {
+        const sess = JSON.parse(localStorage.getItem('daletepido_session') || '{}');
+        return sess.admin_email || sess.email || '';
+      } catch(e) {
+        return '';
+      }
+    }
+
+    function showToastVerification(msg, type = 'success') {
+      let toast = document.getElementById('dtp-verification-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'dtp-verification-toast';
+        toast.style.cssText = `
+          position: fixed;
+          bottom: 24px;
+          right: 24px;
+          z-index: 999999;
+          padding: 14px 20px;
+          border-radius: 12px;
+          font-family: inherit;
+          font-size: 13.5px;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          max-width: 440px;
+          backdrop-filter: blur(8px);
+        `;
+        document.body.appendChild(toast);
+      }
+      if (type === 'success') {
+        toast.style.background = 'rgba(6, 78, 59, 0.95)';
+        toast.style.color = '#34d399';
+        toast.style.border = '1px solid #059669';
+      } else {
+        toast.style.background = 'rgba(127, 29, 29, 0.95)';
+        toast.style.color = '#fca5a5';
+        toast.style.border = '1px solid #dc2626';
+      }
+      toast.innerHTML = `<i class="bi ${type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'}"></i> <span>${msg}</span>`;
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+      
+      clearTimeout(toast._timeout);
+      toast._timeout = setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(12px)';
+      }, 5000);
+    }
+
     function closePlanUpgradeModal() {
       const modal = document.getElementById('plan-upgrade-modal');
       if (modal) modal.style.display = 'none';
     }
 
     function contactPlanSales(planName) {
-      const storeId = window.STORE_ID || 'mi-tienda';
+      const storeId = getDashboardStoreId() || 'mi-tienda';
       const message = encodeURIComponent(`¡Hola Dale! Te Pido! Quisiera información y asistencia para contratar/actualizar mi tienda al Plan ${planName} (ID Comercio: ${storeId}).`);
       window.open(`https://wa.me/5491141819344?text=${message}`, '_blank');
     }
@@ -20337,19 +20720,21 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       } catch(e) {}
 
       try {
-        const storeId = window.STORE_ID || 'coquito';
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}&select=created_at,plan_level,billing_info`, {
-          headers: { 'apikey': SUPABASE_KEY }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.length > 0) {
-            let bInfo = data[0].billing_info || {};
-            if (typeof bInfo === 'string') try { bInfo = JSON.parse(bInfo); } catch(e){}
-            if (data[0].trial_ends_at) trialEndsAt = data[0].trial_ends_at;
-            else if (bInfo.trial_ends_at) trialEndsAt = bInfo.trial_ends_at;
-            if (data[0].created_at) createdAt = data[0].created_at;
-            if (data[0].plan_level) planLevel = data[0].plan_level;
+        const storeId = getDashboardStoreId();
+        if (storeId) {
+          const res = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}&select=created_at,plan_level,billing_info`, {
+            headers: { 'apikey': SUPABASE_KEY }
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.length > 0) {
+              let bInfo = data[0].billing_info || {};
+              if (typeof bInfo === 'string') try { bInfo = JSON.parse(bInfo); } catch(e){}
+              if (data[0].trial_ends_at) trialEndsAt = data[0].trial_ends_at;
+              else if (bInfo.trial_ends_at) trialEndsAt = bInfo.trial_ends_at;
+              if (data[0].created_at) createdAt = data[0].created_at;
+              if (data[0].plan_level) planLevel = data[0].plan_level;
+            }
           }
         }
       } catch(e) {}
@@ -20431,7 +20816,9 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
     function initVerificationBanner() {
       const urlParams = new URLSearchParams(window.location.search);
-      const storeId = (typeof STORE_ID !== 'undefined' ? STORE_ID : (window.STORE_ID || urlParams.get('store') || 'coquito')).toLowerCase();
+      const storeId = getDashboardStoreId();
+      if (!storeId) return;
+
       let verified = false;
       if (urlParams.get('verify') === 'true' || urlParams.get('demo') === '1' || urlParams.get('preview') === '1' || ['bighouse', 'lugonessilva', 'ferre-now', 'kioscojulio', 'noutacc', 'tecnomont', 'biuti', 'todolisto'].includes(storeId)) {
         verified = true;
@@ -20453,21 +20840,42 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Enviando...';
       }
       try {
-        const storeId = window.STORE_ID || 'coquito';
-        const sessionRaw = localStorage.getItem('daletepido_session');
-        let adminEmail = '';
-        if (sessionRaw) {
-          try { adminEmail = JSON.parse(sessionRaw).admin_email || ''; } catch(e){}
+        const storeId = getDashboardStoreId();
+        let adminEmail = getDashboardAdminEmail();
+
+        if (!adminEmail && storeId) {
+          try {
+            const resStore = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}&select=admin_email,contact_email`, {
+              headers: { 'apikey': SUPABASE_KEY }
+            });
+            if (resStore.ok) {
+              const rows = await resStore.json();
+              if (rows && rows.length > 0) {
+                adminEmail = rows[0].admin_email || rows[0].contact_email || '';
+              }
+            }
+          } catch(err) {}
         }
 
-        await fetch('/api/welcome-email', {
+        const resp = await fetch('/api/welcome-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ store_id: storeId, admin_email: adminEmail })
+          body: JSON.stringify({
+            type: 'resend_verification',
+            store_id: storeId,
+            admin_email: adminEmail
+          })
         });
-        alert('✓ Te hemos reenviado el correo de verificación. Por favor revisá tu casilla (y la carpeta de Spam).');
+
+        const resJson = await resp.json().catch(() => ({}));
+
+        if (resp.ok) {
+          showToastVerification('✓ Te hemos reenviado el correo de verificación. Por favor revisá tu casilla' + (adminEmail ? ` (${adminEmail})` : '') + ' y tu carpeta de Spam.', 'success');
+        } else {
+          showToastVerification(resJson.error || 'No se pudo enviar el correo de verificación.', 'error');
+        }
       } catch(e) {
-        alert('Error al reenviar correo de verificación.');
+        showToastVerification('Error al reenviar correo de verificación. Verificá tu conexión.', 'error');
       } finally {
         if (btn) {
           btn.disabled = false;

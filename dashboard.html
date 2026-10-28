@@ -20622,13 +20622,79 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (modal) modal.style.display = 'flex';
     }
 
+    function getDashboardStoreId() {
+      const urlParams = new URLSearchParams(window.location.search);
+      let id = (typeof STORE_ID !== 'undefined' && STORE_ID ? STORE_ID : (window.STORE_ID || urlParams.get('store') || '')).toLowerCase();
+      if (!id) {
+        try {
+          const sess = JSON.parse(localStorage.getItem('daletepido_session') || '{}');
+          if (sess.store_id) id = sess.store_id.toLowerCase();
+        } catch(e) {}
+      }
+      return id;
+    }
+
+    function getDashboardAdminEmail() {
+      try {
+        const sess = JSON.parse(localStorage.getItem('daletepido_session') || '{}');
+        return sess.admin_email || sess.email || '';
+      } catch(e) {
+        return '';
+      }
+    }
+
+    function showToastVerification(msg, type = 'success') {
+      let toast = document.getElementById('dtp-verification-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'dtp-verification-toast';
+        toast.style.cssText = `
+          position: fixed;
+          bottom: 24px;
+          right: 24px;
+          z-index: 999999;
+          padding: 14px 20px;
+          border-radius: 12px;
+          font-family: inherit;
+          font-size: 13.5px;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          max-width: 440px;
+          backdrop-filter: blur(8px);
+        `;
+        document.body.appendChild(toast);
+      }
+      if (type === 'success') {
+        toast.style.background = 'rgba(6, 78, 59, 0.95)';
+        toast.style.color = '#34d399';
+        toast.style.border = '1px solid #059669';
+      } else {
+        toast.style.background = 'rgba(127, 29, 29, 0.95)';
+        toast.style.color = '#fca5a5';
+        toast.style.border = '1px solid #dc2626';
+      }
+      toast.innerHTML = `<i class="bi ${type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'}"></i> <span>${msg}</span>`;
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+      
+      clearTimeout(toast._timeout);
+      toast._timeout = setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(12px)';
+      }, 5000);
+    }
+
     function closePlanUpgradeModal() {
       const modal = document.getElementById('plan-upgrade-modal');
       if (modal) modal.style.display = 'none';
     }
 
     function contactPlanSales(planName) {
-      const storeId = window.STORE_ID || 'mi-tienda';
+      const storeId = getDashboardStoreId() || 'mi-tienda';
       const message = encodeURIComponent(`¡Hola Dale! Te Pido! Quisiera información y asistencia para contratar/actualizar mi tienda al Plan ${planName} (ID Comercio: ${storeId}).`);
       window.open(`https://wa.me/5491141819344?text=${message}`, '_blank');
     }
@@ -20654,19 +20720,21 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       } catch(e) {}
 
       try {
-        const storeId = window.STORE_ID || 'coquito';
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}&select=created_at,plan_level,billing_info`, {
-          headers: { 'apikey': SUPABASE_KEY }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.length > 0) {
-            let bInfo = data[0].billing_info || {};
-            if (typeof bInfo === 'string') try { bInfo = JSON.parse(bInfo); } catch(e){}
-            if (data[0].trial_ends_at) trialEndsAt = data[0].trial_ends_at;
-            else if (bInfo.trial_ends_at) trialEndsAt = bInfo.trial_ends_at;
-            if (data[0].created_at) createdAt = data[0].created_at;
-            if (data[0].plan_level) planLevel = data[0].plan_level;
+        const storeId = getDashboardStoreId();
+        if (storeId) {
+          const res = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}&select=created_at,plan_level,billing_info`, {
+            headers: { 'apikey': SUPABASE_KEY }
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.length > 0) {
+              let bInfo = data[0].billing_info || {};
+              if (typeof bInfo === 'string') try { bInfo = JSON.parse(bInfo); } catch(e){}
+              if (data[0].trial_ends_at) trialEndsAt = data[0].trial_ends_at;
+              else if (bInfo.trial_ends_at) trialEndsAt = bInfo.trial_ends_at;
+              if (data[0].created_at) createdAt = data[0].created_at;
+              if (data[0].plan_level) planLevel = data[0].plan_level;
+            }
           }
         }
       } catch(e) {}
@@ -20748,7 +20816,9 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
     function initVerificationBanner() {
       const urlParams = new URLSearchParams(window.location.search);
-      const storeId = (typeof STORE_ID !== 'undefined' ? STORE_ID : (window.STORE_ID || urlParams.get('store') || 'coquito')).toLowerCase();
+      const storeId = getDashboardStoreId();
+      if (!storeId) return;
+
       let verified = false;
       if (urlParams.get('verify') === 'true' || urlParams.get('demo') === '1' || urlParams.get('preview') === '1' || ['bighouse', 'lugonessilva', 'ferre-now', 'kioscojulio', 'noutacc', 'tecnomont', 'biuti', 'todolisto'].includes(storeId)) {
         verified = true;
@@ -20770,21 +20840,42 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Enviando...';
       }
       try {
-        const storeId = window.STORE_ID || 'coquito';
-        const sessionRaw = localStorage.getItem('daletepido_session');
-        let adminEmail = '';
-        if (sessionRaw) {
-          try { adminEmail = JSON.parse(sessionRaw).admin_email || ''; } catch(e){}
+        const storeId = getDashboardStoreId();
+        let adminEmail = getDashboardAdminEmail();
+
+        if (!adminEmail && storeId) {
+          try {
+            const resStore = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(storeId)}&select=admin_email,contact_email`, {
+              headers: { 'apikey': SUPABASE_KEY }
+            });
+            if (resStore.ok) {
+              const rows = await resStore.json();
+              if (rows && rows.length > 0) {
+                adminEmail = rows[0].admin_email || rows[0].contact_email || '';
+              }
+            }
+          } catch(err) {}
         }
 
-        await fetch('/api/welcome-email', {
+        const resp = await fetch('/api/welcome-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ store_id: storeId, admin_email: adminEmail })
+          body: JSON.stringify({
+            type: 'resend_verification',
+            store_id: storeId,
+            admin_email: adminEmail
+          })
         });
-        alert('✓ Te hemos reenviado el correo de verificación. Por favor revisá tu casilla (y la carpeta de Spam).');
+
+        const resJson = await resp.json().catch(() => ({}));
+
+        if (resp.ok) {
+          showToastVerification('✓ Te hemos reenviado el correo de verificación. Por favor revisá tu casilla' + (adminEmail ? ` (${adminEmail})` : '') + ' y tu carpeta de Spam.', 'success');
+        } else {
+          showToastVerification(resJson.error || 'No se pudo enviar el correo de verificación.', 'error');
+        }
       } catch(e) {
-        alert('Error al reenviar correo de verificación.');
+        showToastVerification('Error al reenviar correo de verificación. Verificá tu conexión.', 'error');
       } finally {
         if (btn) {
           btn.disabled = false;
