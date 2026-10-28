@@ -421,7 +421,7 @@
         <button class="nav-btn" onclick="prevSlide()" title="Diapositiva Anterior (←)">
           <i class="bi bi-chevron-left"></i>
         </button>
-        <span id="slide-indicator" style="font-family: var(--font-mono); font-size: 12px; font-weight:700; color: #FFFFFF; min-width: 48px; text-align: center;">1 / 30</span>
+        <span id="slide-indicator" style="font-family: var(--font-mono); font-size: 12px; font-weight:700; color: #FFFFFF; min-width: 48px; text-align: center;">1 / 31</span>
         <button class="nav-btn primary" onclick="nextSlide()" title="Siguiente Diapositiva (→ o Espacio)">
           <i class="bi bi-chevron-right"></i>
         </button>
@@ -1881,6 +1881,52 @@
         </div>
       </section>
 
+      <!-- SLIDE 31: ESTANDARIZACIÓN DE ICONOGRAFÍA VECTORIAL BOOTSTRAP ICONS -->
+      <section class="slide" id="slide-31">
+        <span class="slide-badge" style="background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.4);color:#60A5FA;"><i class="bi bi-palette-fill"></i> Etapa 31 · Release 28 de Octubre 2026</span>
+        <h2 class="slide-title">Estandarización de Iconografía Vectorial (Bootstrap Icons en UI)</h2>
+        <p class="slide-desc">Reemplazo integral de emojis nativos dependientes del sistema operativo por iconografía SVG profesional (Bootstrap Icons) en accesos directos, tarjetas de métricas, wizard de setup, modales logísticos y notificaciones toast.</p>
+
+        <div class="grid-2" style="margin-top:16px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px;">
+          <div class="card">
+            <div class="card-title" style="color:#60A5FA;"><i class="bi bi-grid-fill"></i> Accesos Directos del Inicio (Grid 5x2)</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Los 10 atajos operativos (Analítica, Pedidos, PickUp, Productos, ABM, Categorías, Diseño, Configuración, Avanzado y Ver Tienda) disponen ahora de íconos vectoriales SVG armonizados con fondo de contraste y micro-animación en hover.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-bar-chart-line-fill"></i> Tarjetas de Métricas & Asistente Setup</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Los indicadores clave (Pedidos, Facturado, Ticket Promedio, Productos Activos) y las 8 tarjetas del asistente de configuración guiada exhiben glifos monocromáticos limpios alineados a la identidad visual de la plataforma.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#F59E0B;"><i class="bi bi-truck"></i> Modal Dale!QueVoy & Trazabilidad Multimodal</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Tanto en el dashboard como en la tienda web, los medidores de peso, categorías de bulto, flota multimodal (bicis/motos) y casillas de PIN de seguridad reemplazan los emojis por íconos nítidos independientes del renderizado de cada móvil o navegador.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#EC4899;"><i class="bi bi-bell-fill"></i> Notificaciones Toast Inteligentes</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Los métodos globales <code>showToastDash()</code> y <code>showToast()</code> reconocen el tipo de mensaje y reemplazan automáticamente prefijos de emojis por badges SVG vectoriales (éxito, advertencia, error e información), garantizando consistencia estética.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <a href="/dashboard.html?store=biuti" target="_blank" class="nav-btn primary" style="padding:10px 22px; font-size:13px; background:linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);">
+            <i class="bi bi-window-sidebar"></i> Ver Iconografía en Dashboard
+          </a>
+          <a href="/tienda.html?store=biuti" target="_blank" class="nav-btn secondary" style="padding:10px 22px; font-size:13px;">
+            <i class="bi bi-shop"></i> Ver Iconografía en Tienda
+          </a>
+        </div>
+      </section>
+
     </main>
 
     <!-- BOTTOMBAR -->
@@ -1892,7 +1938,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 4.13 Badges Dinámicos en Sidebar UX · Actualizado 28/10/2026
+        Dale! Te Pido © 2026 · Versión 4.14 Estandarización de Iconografía Vectorial · Actualizado 28/10/2026
       </div>
     </footer>
 
@@ -1901,7 +1947,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 30;
+  const totalSlides = 31;
 
   function showSlide(index) {
     if (index < 1) index = 1;

@@ -1010,6 +1010,15 @@
       justify-content: center;
       font-size: 16px;
       margin-bottom: 12px;
+      background: var(--iron);
+      color: var(--white);
+      border: 1px solid var(--zinc);
+      transition: all 0.2s ease;
+    }
+
+    .metric:hover .metric-icon {
+      border-color: var(--red);
+      color: var(--red);
     }
 
     .metric-label {
@@ -4490,10 +4499,19 @@
       font-size: 18px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      transition: transform 0.2s ease;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .sc-icon-wrap i {
+      font-size: 16px;
+      color: var(--white);
+      transition: color 0.15s ease;
     }
     .shortcut-card:hover .sc-icon-wrap {
       transform: scale(1.08);
+      border-color: rgba(246, 0, 0, 0.3);
+    }
+    .shortcut-card:hover .sc-icon-wrap i {
+      color: var(--red);
     }
     .sc-arrow-icon {
       font-size: 12px;
@@ -5834,7 +5852,7 @@
         <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; user-select: none;">
           <input type="checkbox" id="login-start-onboarding-chk" checked style="accent-color: var(--red); width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0;" />
           <div>
-            <span style="font-size: 12.5px; font-weight: 700; color: var(--white); display: block;">🚀 Iniciar Setup Guiado (8 pasos)</span>
+            <span style="font-size: 12.5px; font-weight: 700; color: var(--white); display: flex; align-items: center; gap: 6px;"><i class="bi bi-magic" style="color:var(--red);"></i> Iniciar Setup Guiado (8 pasos)</span>
             <span style="font-size: 11px; color: var(--silver); display: block; margin-top: 2px; line-height: 1.3;">Si es tu primera vez o querés configurar la tienda al ingresar. Si desmarcás, ingresarás directamente.</span>
           </div>
         </label>
@@ -6048,7 +6066,7 @@
             <div style="font-size:10px;color:#888;margin-top:6px;font-weight:600;">Escanear con la cámara</div>
           </div>
           <div>
-            <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:6px;">📸 ¿Estás desde tu computadora?</div>
+            <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:6px;display:flex;align-items:center;gap:6px;"><i class="bi bi-camera"></i> ¿Estás desde tu computadora?</div>
             <div style="font-size:12px;color:#bbb;line-height:1.5;margin-bottom:12px;">
               Abrí la cámara de tu celular, apuntá a este código QR y descargará la App al instante en 2 segundos.
             </div>
@@ -6094,7 +6112,7 @@
 
         <!-- GUÍA RÁPIDA DE 3 PASOS -->
         <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:16px;">
-          <div style="font-size:12px;font-weight:700;color:#ddd;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">⚡ Pasos para instalar en Android:</div>
+          <div style="font-size:12px;font-weight:700;color:#ddd;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;display:flex;align-items:center;gap:6px;"><i class="bi bi-android2"></i> Pasos para instalar en Android:</div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
             <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px;font-size:11px;color:#aaa;line-height:1.4;">
               <strong style="color:#fff;display:block;margin-bottom:4px;">1. Descargá el APK</strong>
@@ -6257,8 +6275,8 @@
               <span style="font-size:10px; color:#a1a1aa; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Orden a Despachar</span>
               <div id="dqv-order-title" style="font-family:'Josefin Sans', sans-serif; font-size:17px; font-weight:700; color:#fff;">Pedido #TP-0000</div>
             </div>
-            <div id="dqv-rubro-badge" style="font-size:11px; font-weight:700; background:rgba(246,0,0,0.15); border:1px solid rgba(246,0,0,0.3); color:#F60000; padding:4px 10px; border-radius:99px;">
-              🏪 Rubro General
+            <div id="dqv-rubro-badge" style="font-size:11px; font-weight:700; background:rgba(246,0,0,0.15); border:1px solid rgba(246,0,0,0.3); color:#F60000; padding:4px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;">
+              <i class="bi bi-shop"></i> <span>Rubro General</span>
             </div>
           </div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12.5px; color:#d4d4d8;">
@@ -6273,22 +6291,22 @@
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:12px;">
           <!-- Peso Acumulado -->
           <div style="background:#09090b; border:1px solid #27272a; border-radius:12px; padding:14px; text-align:center;">
-            <div style="font-size:11px; color:#a1a1aa; text-transform:uppercase; font-weight:700;">⚖️ Peso Acumulado</div>
+            <div style="font-size:11px; color:#a1a1aa; text-transform:uppercase; font-weight:700; display:flex; align-items:center; justify-content:center; gap:5px;"><i class="bi bi-speedometer2"></i> Peso Acumulado</div>
             <div id="dqv-calc-weight" style="font-family:'Josefin Sans', sans-serif; font-size:24px; font-weight:800; color:#fff; margin-top:4px;">0.5 kg</div>
             <div style="font-size:10px; color:#71717a; margin-top:2px;">Calculado por catálogo</div>
           </div>
 
           <!-- Categoría de Carga -->
           <div style="background:#09090b; border:1px solid #27272a; border-radius:12px; padding:14px; text-align:center;">
-            <div style="font-size:11px; color:#a1a1aa; text-transform:uppercase; font-weight:700;">📦 Categoría Carga</div>
+            <div style="font-size:11px; color:#a1a1aa; text-transform:uppercase; font-weight:700; display:flex; align-items:center; justify-content:center; gap:5px;"><i class="bi bi-box-seam"></i> Categoría Carga</div>
             <div id="dqv-calc-category" style="font-family:'Josefin Sans', sans-serif; font-size:16px; font-weight:700; color:#F60000; margin-top:6px;">SMALL_BOX</div>
             <div id="dqv-calc-cat-desc" style="font-size:10px; color:#71717a; margin-top:2px;">Paquete estándar</div>
           </div>
 
           <!-- Vehículo Sugerido -->
           <div style="background:#09090b; border:1px solid #27272a; border-radius:12px; padding:14px; text-align:center;">
-            <div style="font-size:11px; color:#a1a1aa; text-transform:uppercase; font-weight:700;">🚗 Flota Multimodal</div>
-            <div id="dqv-calc-vehicle" style="font-family:'Josefin Sans', sans-serif; font-size:16px; font-weight:700; color:#22c55e; margin-top:6px;">🛵 MOTO / BICI</div>
+            <div style="font-size:11px; color:#a1a1aa; text-transform:uppercase; font-weight:700; display:flex; align-items:center; justify-content:center; gap:5px;"><i class="bi bi-truck"></i> Flota Multimodal</div>
+            <div id="dqv-calc-vehicle" style="font-family:'Josefin Sans', sans-serif; font-size:16px; font-weight:700; color:#22c55e; margin-top:6px; display:flex; align-items:center; justify-content:center; gap:6px;"><i class="bi bi-bicycle"></i> MOTO / BICI</div>
             <div id="dqv-calc-vehicle-desc" style="font-size:10px; color:#71717a; margin-top:2px;">Ágil y veloz</div>
           </div>
         </div>
@@ -6319,8 +6337,8 @@
               SEARCHING
             </div>
           </div>
-          <div id="dqv-status-message" style="font-size:13px; font-weight:600; color:#fff; margin-bottom:8px;">
-            🔍 Buscando repartidor en la red multimodal...
+          <div id="dqv-status-message" style="font-size:13px; font-weight:600; color:#fff; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+            <i class="bi bi-search"></i> Buscando repartidor en la red multimodal...
           </div>
           <div style="width:100%; height:6px; background:#27272a; border-radius:3px; overflow:hidden;">
             <div id="dqv-progress-bar" style="width:25%; height:100%; background:linear-gradient(90deg, #F60000, #22c55e); transition:width 0.4s ease;"></div>
@@ -6518,13 +6536,13 @@
             Todas <span class="notif-filter-count" id="notif-count-all">0</span>
           </button>
           <button class="notif-filter-btn" data-filter="order" onclick="setNotifFilter('order', this)">
-            Pedidos 🛍️ <span class="notif-filter-count" id="notif-count-order">0</span>
+            <i class="bi bi-receipt"></i> Pedidos <span class="notif-filter-count" id="notif-count-order">0</span>
           </button>
           <button class="notif-filter-btn" data-filter="setup" onclick="setNotifFilter('setup', this)">
-            Configuración ⚙️ <span class="notif-filter-count" id="notif-count-setup">0</span>
+            <i class="bi bi-gear"></i> Configuración <span class="notif-filter-count" id="notif-count-setup">0</span>
           </button>
           <button class="notif-filter-btn" data-filter="system" onclick="setNotifFilter('system', this)">
-            Sistema 📢 <span class="notif-filter-count" id="notif-count-system">0</span>
+            <i class="bi bi-bell"></i> Sistema <span class="notif-filter-count" id="notif-count-system">0</span>
           </button>
         </div>
       </div>
@@ -6570,7 +6588,7 @@
           <!-- 1. Rubro -->
           <div class="rubro-card" onclick="openOnboardingStep(1)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-              <span style="font-size:24px;">🏪</span>
+              <i class="bi bi-shop" style="font-size:22px; color:var(--red);"></i>
               <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 1</span>
             </div>
             <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">1. Rubro de la Empresa</h3>
@@ -6580,7 +6598,7 @@
           <!-- 2. Tipos de Productos -->
           <div class="rubro-card" onclick="openOnboardingStep(2)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-              <span style="font-size:24px;">📦</span>
+              <i class="bi bi-box-seam" style="font-size:22px; color:var(--white);"></i>
               <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 2</span>
             </div>
             <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">2. Tipos de Productos</h3>
@@ -6590,7 +6608,7 @@
           <!-- 3. Medios de Pago -->
           <div class="rubro-card" onclick="openOnboardingStep(3)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-              <span style="font-size:24px;">💳</span>
+              <i class="bi bi-credit-card" style="font-size:22px; color:var(--white);"></i>
               <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 3</span>
             </div>
             <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">3. Medios de Pago</h3>
@@ -6600,7 +6618,7 @@
           <!-- 4. Delivery & PickUp -->
           <div class="rubro-card" onclick="openOnboardingStep(4)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-              <span style="font-size:24px;">🚚</span>
+              <i class="bi bi-truck" style="font-size:22px; color:var(--white);"></i>
               <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 4</span>
             </div>
             <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">4. Envíos y Delivery</h3>
@@ -6610,7 +6628,7 @@
           <!-- 5. Estilo Visual -->
           <div class="rubro-card" onclick="openOnboardingStep(5)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-              <span style="font-size:24px;">🎨</span>
+              <i class="bi bi-palette" style="font-size:22px; color:var(--white);"></i>
               <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 5</span>
             </div>
             <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">5. Estilo de Empresa</h3>
@@ -6634,7 +6652,7 @@
           <!-- 7. Tono -->
           <div class="rubro-card" onclick="openOnboardingStep(7)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-              <span style="font-size:24px;">🗣️</span>
+              <i class="bi bi-chat-quote" style="font-size:22px; color:var(--white);"></i>
               <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 7</span>
             </div>
             <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">7. Tono de Marca</h3>
@@ -6644,7 +6662,7 @@
           <!-- 8. Notificaciones -->
           <div class="rubro-card" onclick="openOnboardingStep(8)" style="background:var(--iron); border:1px solid var(--zinc); border-radius:14px; padding:18px; cursor:pointer; transition:all 0.2s ease;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-              <span style="font-size:24px;">🔔</span>
+              <i class="bi bi-bell" style="font-size:22px; color:var(--white);"></i>
               <span style="font-size:11px; font-weight:700; color:var(--silver); background:var(--steel); padding:2px 8px; border-radius:6px;">Paso 8</span>
             </div>
             <h3 style="font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px;">8. Avisos a Clientes</h3>
@@ -6875,7 +6893,7 @@
         <!-- 1. Analítica -->
         <div class="shortcut-card" onclick="goToView('reports')">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">📊</div>
+            <div class="sc-icon-wrap"><i class="bi bi-bar-chart-line"></i></div>
             <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -6887,7 +6905,7 @@
         <!-- 2. Pedidos -->
         <div class="shortcut-card" onclick="goToView('orders')">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">📦</div>
+            <div class="sc-icon-wrap"><i class="bi bi-receipt"></i></div>
             <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -6899,7 +6917,7 @@
         <!-- 3. PickUp -->
         <div class="shortcut-card" onclick="goToView('pickups')">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">🚚</div>
+            <div class="sc-icon-wrap"><i class="bi bi-truck"></i></div>
             <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -6911,7 +6929,7 @@
         <!-- 4. Productos -->
         <div class="shortcut-card" onclick="goToView('products')">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">🛍️</div>
+            <div class="sc-icon-wrap"><i class="bi bi-grid-3x3-gap"></i></div>
             <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -6923,7 +6941,7 @@
         <!-- 5. ABM -->
         <div class="shortcut-card" onclick="goToView('abm')">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">✏️</div>
+            <div class="sc-icon-wrap"><i class="bi bi-pencil-square"></i></div>
             <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -6935,7 +6953,7 @@
         <!-- 6. Categorías -->
         <div class="shortcut-card" onclick="goToView('categories')">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">🏷️</div>
+            <div class="sc-icon-wrap"><i class="bi bi-tags"></i></div>
             <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -6947,7 +6965,7 @@
         <!-- 7. Diseño -->
         <div class="shortcut-card" onclick="goToView('marca')">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">🎨</div>
+            <div class="sc-icon-wrap"><i class="bi bi-palette"></i></div>
             <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -6959,7 +6977,7 @@
         <!-- 8. Configuración -->
         <div class="shortcut-card" onclick="goToView('config-basica')">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">⚙️</div>
+            <div class="sc-icon-wrap"><i class="bi bi-gear"></i></div>
             <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -6971,7 +6989,7 @@
         <!-- 9. Avanzado -->
         <div class="shortcut-card" onclick="goToView('config-avanzada')">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">🔒</div>
+            <div class="sc-icon-wrap"><i class="bi bi-shield-lock"></i></div>
             <i class="bi bi-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -6983,7 +7001,7 @@
         <!-- 10. Ver tienda -->
         <div class="shortcut-card" onclick="openStore()">
           <div class="sc-card-head">
-            <div class="sc-icon-wrap">🏪</div>
+            <div class="sc-icon-wrap"><i class="bi bi-shop"></i></div>
             <i class="bi bi-box-arrow-up-right sc-arrow-icon"></i>
           </div>
           <div>
@@ -7012,25 +7030,25 @@
         <div style="flex:3;display:flex;flex-direction:column;gap:20px;min-width:320px;">
           <div class="metrics" id="metrics-row" style="margin-bottom:0;">
             <div class="metric">
-              <div class="metric-icon" style="background:rgba(215,38,56,.15);">📦</div>
+              <div class="metric-icon"><i class="bi bi-receipt"></i></div>
               <div class="metric-label">Pedidos</div>
               <div class="metric-val" id="m-ord">—</div>
               <div class="metric-delta up" id="m-ord-d"></div>
             </div>
             <div class="metric">
-              <div class="metric-icon" style="background:rgba(46,204,113,.15);">💰</div>
+              <div class="metric-icon"><i class="bi bi-currency-dollar"></i></div>
               <div class="metric-label">Facturado</div>
               <div class="metric-val" id="m-rev">—</div>
               <div class="metric-delta up" id="m-rev-d"></div>
             </div>
             <div class="metric">
-              <div class="metric-icon" style="background:rgba(52,152,219,.15);">🎯</div>
+              <div class="metric-icon"><i class="bi bi-bullseye"></i></div>
               <div class="metric-label">Ticket promedio</div>
               <div class="metric-val" id="m-avg">—</div>
               <div class="metric-delta dn" id="m-avg-d"></div>
             </div>
             <div class="metric">
-              <div class="metric-icon" style="background:rgba(243,156,18,.15);">👥</div>
+              <div class="metric-icon"><i class="bi bi-box-seam"></i></div>
               <div class="metric-label">Productos activos</div>
               <div class="metric-val" id="m-prods">—</div>
               <div class="metric-delta up" id="m-prods-d"></div>
@@ -7247,7 +7265,7 @@
         <div id="state-config"
           style="display:none;margin-bottom:16px;padding:16px;background:var(--iron);border-radius:10px;border:1px solid var(--zinc);position:relative;">
           <div style="font-size:11px;color:var(--silver);margin-bottom:12px;line-height:1.4;">
-            Editá los estados del tablero y selectores. Marcá la casilla <strong>🖨️ Imprimible</strong> en aquellos estados donde precises comandar el pedido (por ejemplo <em>En cocina</em> o <em>En preparación</em>) para enviar automáticamente el ticket térmico a la impresora.
+            Editá los estados del tablero y selectores. Marcá la casilla <strong><i class="bi bi-printer"></i> Imprimible</strong> en aquellos estados donde precises comandar el pedido (por ejemplo <em>En cocina</em> o <em>En preparación</em>) para enviar automáticamente el ticket térmico a la impresora.
           </div>
           <div id="state-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;"></div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
@@ -7334,9 +7352,9 @@
                   <div style="display:flex;align-items:center;gap:6px;color:var(--white);font-weight:700;">
                     <i class="bi bi-aspect-ratio" style="color:var(--red);"></i> Especificaciones recomendadas para el Logo:
                   </div>
-                  <div>📐 <strong>Dimensiones ideales:</strong> 500 × 500 px (cuadrado 1:1) o 400 × 120 px (horizontal). Mínimo 200 px.</div>
-                  <div>📁 <strong>Formatos permitidos:</strong> PNG (fondo transparente recomendado), SVG, WEBP o JPG.</div>
-                  <div>⚖️ <strong>Peso máximo:</strong> Hasta 2 MB para carga ultrarrápida en móviles.</div>
+                  <div><i class="bi bi-rulers"></i> <strong>Dimensiones ideales:</strong> 500 × 500 px (cuadrado 1:1) o 400 × 120 px (horizontal). Mínimo 200 px.</div>
+                  <div><i class="bi bi-file-earmark-image"></i> <strong>Formatos permitidos:</strong> PNG (fondo transparente recomendado), SVG, WEBP o JPG.</div>
+                  <div><i class="bi bi-speedometer2"></i> <strong>Peso máximo:</strong> Hasta 2 MB para carga ultrarrápida en móviles.</div>
                 </div>
               </div>
               <div class="ctrl-group">
@@ -7665,9 +7683,9 @@
                 <div style="display:flex;align-items:center;gap:6px;color:var(--white);font-weight:700;">
                   <i class="bi bi-aspect-ratio" style="color:var(--red);"></i> Especificaciones de Portada (Desktop / PC):
                 </div>
-                <div>📐 <strong>Dimensiones ideales:</strong> 1400 × 400 px o 1920 × 600 px (panorámica horizontal). Mínimo 1200 px de ancho.</div>
-                <div>📁 <strong>Formatos permitidos:</strong> JPG, WEBP o PNG (alta resolución).</div>
-                <div>⚖️ <strong>Peso recomendado:</strong> Menor a 3 MB. Podés mezclarla con el color de fondo regulando la opacidad abajo.</div>
+                <div><i class="bi bi-rulers"></i> <strong>Dimensiones ideales:</strong> 1400 × 400 px o 1920 × 600 px (panorámica horizontal). Mínimo 1200 px de ancho.</div>
+                <div><i class="bi bi-file-earmark-image"></i> <strong>Formatos permitidos:</strong> JPG, WEBP o PNG (alta resolución).</div>
+                <div><i class="bi bi-speedometer2"></i> <strong>Peso recomendado:</strong> Menor a 3 MB. Podés mezclarla con el color de fondo regulando la opacidad abajo.</div>
               </div>
 
               <!-- APARTADO BANNER MOBILE -->
@@ -7697,9 +7715,9 @@
                   <div style="display:flex;align-items:center;gap:6px;color:var(--white);font-weight:700;">
                     <i class="bi bi-aspect-ratio" style="color:var(--red);"></i> Medidas requeridas para el Banner Mobile:
                   </div>
-                  <div>📐 <strong>Medidas recomendadas:</strong> <strong>800 × 800 px (cuadrada 1:1)</strong> o <strong>1080 × 1350 px (vertical 4:5)</strong>. Mínimo 600 px de ancho.</div>
-                  <div>📱 <strong>Comportamiento inteligente:</strong> Se mostrará de manera automática a los clientes que naveguen desde celulares (pantallas de hasta 768px), impidiendo que el banner horizontal se recorte o deforme.</div>
-                  <div>📁 <strong>Formatos:</strong> JPG, WEBP o PNG (máx 3 MB).</div>
+                  <div><i class="bi bi-rulers"></i> <strong>Medidas recomendadas:</strong> <strong>800 × 800 px (cuadrada 1:1)</strong> o <strong>1080 × 1350 px (vertical 4:5)</strong>. Mínimo 600 px de ancho.</div>
+                  <div><i class="bi bi-phone"></i> <strong>Comportamiento inteligente:</strong> Se mostrará de manera automática a los clientes que naveguen desde celulares (pantallas de hasta 768px), impidiendo que el banner horizontal se recorte o deforme.</div>
+                  <div><i class="bi bi-file-earmark-image"></i> <strong>Formatos:</strong> JPG, WEBP o PNG (máx 3 MB).</div>
                 </div>
               </div>
 
@@ -8050,7 +8068,7 @@
                     <!-- prev topbar -->
                     <div id="prev-nav" style="display:flex;align-items:center;gap:8px;padding:12px 18px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);">
                       <div style="position:relative;display:inline-flex;">
-                        <div id="prev-icon" style="width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;background:#F60000;">🛍️</div>
+                        <div id="prev-icon" style="width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;background:#F60000;color:#fff;"><i class="bi bi-shop"></i></div>
                         <div class="prev-spotlight-label" id="spl-nav-icon">Ícono nav</div>
                       </div>
                       <span id="prev-name" style="font-weight:800;font-size:15px;color:#F5F5F0;">Dale! Te Pido</span>
@@ -9558,19 +9576,20 @@
         animation: toast-slide-in 0.3s ease forwards;
       `;
       
-      let icon = 'ℹ️';
+      let icon = '<i class="bi bi-info-circle-fill" style="color:var(--silver);font-size:16px;"></i>';
       if (msg.toLowerCase().includes('éxito') || msg.toLowerCase().includes('guardado') || msg.includes('✓') || msg.includes('¡') || msg.toLowerCase().includes('correcto')) {
-        icon = '✅';
+        icon = '<i class="bi bi-check-circle-fill" style="color:#10b981;font-size:16px;"></i>';
         el.style.borderLeftColor = '#10b981';
       } else if (msg.toLowerCase().includes('error') || msg.toLowerCase().includes('falló') || msg.includes('✕') || msg.toLowerCase().includes('fatal')) {
-        icon = '❌';
+        icon = '<i class="bi bi-x-circle-fill" style="color:#ef4444;font-size:16px;"></i>';
         el.style.borderLeftColor = '#ef4444';
       } else if (msg.toLowerCase().includes('advertencia') || msg.toLowerCase().includes('requerido') || msg.includes('⚠')) {
-        icon = '⚠️';
+        icon = '<i class="bi bi-exclamation-triangle-fill" style="color:#f59e0b;font-size:16px;"></i>';
         el.style.borderLeftColor = '#f59e0b';
       }
       
-      el.innerHTML = `<span>${icon}</span><span style="flex:1;">${msg}</span>`;
+      const cleanMsg = msg.replace(/^[ℹ️✅❌⚠️✓✕⚠]\s*/, '');
+      el.innerHTML = `<span style="display:flex;align-items:center;">${icon}</span><span style="flex:1;">${cleanMsg}</span>`;
       document.body.appendChild(el);
       
       if (!document.getElementById('toast-style')) {
@@ -9617,29 +9636,29 @@
       let bg = isLight ? '#F1F5F9' : 'rgba(255, 255, 255, 0.08)';
       let color = isLight ? '#1E293B' : '#E2E8F0';
       let border = isLight ? '#CBD5E1' : 'rgba(255, 255, 255, 0.15)';
-      let icon = '⚡';
+      let icon = '<i class="bi bi-lightning-charge"></i>';
 
       if (plan === 'pro') {
         text = 'PLAN PRO';
         bg = isLight ? '#FEF2F2' : 'rgba(215, 38, 56, 0.2)';
         color = isLight ? '#B91C1C' : '#FCA5A5';
         border = isLight ? '#FECACA' : 'rgba(252, 165, 165, 0.4)';
-        icon = '🚀';
+        icon = '<i class="bi bi-rocket-takeoff"></i>';
       } else if (plan === 'enterprise') {
         text = 'PLAN ENTERPRISE';
         bg = isLight ? '#EFF6FF' : 'rgba(59, 130, 246, 0.2)';
         color = isLight ? '#1D4ED8' : '#93C5FD';
         border = isLight ? '#93C5FD' : 'rgba(147, 197, 253, 0.4)';
-        icon = '👑';
+        icon = '<i class="bi bi-building"></i>';
       } else if (plan === 'exclusive') {
         text = 'PLAN EXCLUSIVE';
         bg = isLight ? '#FAF5FF' : 'rgba(168, 85, 247, 0.2)';
         color = isLight ? '#6B21A8' : '#E9D5FF';
         border = isLight ? '#E9D5FF' : 'rgba(233, 213, 255, 0.4)';
-        icon = '⭐';
+        icon = '<i class="bi bi-star"></i>';
       }
 
-      badge.innerHTML = `<span style="font-size: 12px; margin-right: 2px;">${icon}</span> ${text}`;
+      badge.innerHTML = `<span style="font-size: 12px; margin-right: 4px; display:inline-flex; align-items:center;">${icon}</span> ${text}`;
       badge.style.background = bg;
       badge.style.color = color;
       badge.style.border = `1px solid ${border}`;
@@ -9684,29 +9703,29 @@
       let text = 'PLAN STARTER';
       let bg = 'rgba(255, 255, 255, 0.08)';
       let color = 'var(--silver)';
-      let icon = '⚡';
+      let icon = '<i class="bi bi-lightning-charge"></i>';
       let isExclusive = false;
 
       if (plan === 'pro') {
         text = 'PLAN PRO';
         bg = 'rgba(215, 38, 56, 0.15)';
         color = 'var(--red)';
-        icon = '🚀';
+        icon = '<i class="bi bi-rocket-takeoff"></i>';
       } else if (plan === 'enterprise') {
         text = 'PLAN ENTERPRISE';
         bg = 'rgba(59, 130, 246, 0.15)';
         color = '#3b82f6';
-        icon = '👑';
+        icon = '<i class="bi bi-building"></i>';
       } else if (plan === 'exclusive') {
         text = 'PLAN EXCLUSIVE';
         bg = 'rgba(168, 85, 247, 0.15)';
         color = '#a855f7';
-        icon = '⭐';
+        icon = '<i class="bi bi-star"></i>';
         isExclusive = true;
       }
 
       if (planNameEl) {
-        planNameEl.innerHTML = `<span style="font-size: 14px; margin-right: 4px;">${icon}</span> ${text}`;
+        planNameEl.innerHTML = `<span style="font-size: 14px; margin-right: 6px; display:inline-flex; align-items:center;">${icon}</span> ${text}`;
         planNameEl.style.color = color;
       }
 
@@ -10126,7 +10145,7 @@
         if (statusEl) {
           statusEl.style.display = 'block';
           statusEl.style.color = '#ff6b6b';
-          statusEl.innerHTML = '⚠️ Por favor ingresá un correo electrónico válido.';
+          statusEl.innerHTML = '<i class="bi bi-exclamation-triangle"></i> Por favor ingresá un correo electrónico válido.';
         }
         return;
       }
@@ -10163,18 +10182,18 @@
         if (resp.ok && data.success) {
           if (statusEl) {
             statusEl.style.color = '#2ecc71';
-            statusEl.innerHTML = `✅ ${data.message || '¡Correo enviado con éxito! Revisá tu bandeja de entrada o spam.'}`;
+            statusEl.innerHTML = `<i class="bi bi-check-circle"></i> ${data.message || '¡Correo enviado con éxito! Revisá tu bandeja de entrada o spam.'}`;
           }
         } else {
           if (statusEl) {
             statusEl.style.color = '#ff6b6b';
-            statusEl.innerHTML = `❌ ${data.error || 'No se pudo enviar el correo en este momento.'}`;
+            statusEl.innerHTML = `<i class="bi bi-x-circle"></i> ${data.error || 'No se pudo enviar el correo en este momento.'}`;
           }
         }
       } catch(err) {
         if (statusEl) {
           statusEl.style.color = '#ff6b6b';
-          statusEl.innerHTML = '❌ Error de conexión al intentar enviar el correo.';
+          statusEl.innerHTML = '<i class="bi bi-wifi-off"></i> Error de conexión al intentar enviar el correo.';
         }
       } finally {
         btn.disabled = false;
@@ -14646,7 +14665,7 @@
       if (!calcEl) return;
       if (price > 0 && qty > 0) {
         const unitP = (price / qty).toFixed(2);
-        calcEl.innerHTML = `💡 Precio unitario: <b>$ ${parseFloat(unitP).toLocaleString('es-AR', {minimumFractionDigits: 2})}</b> por unidad`;
+        calcEl.innerHTML = `<i class="bi bi-lightbulb"></i> Precio unitario: <b>$ ${parseFloat(unitP).toLocaleString('es-AR', {minimumFractionDigits: 2})}</b> por unidad`;
       } else {
         calcEl.innerHTML = `Precio unitario estimado: $ 0.00`;
       }
