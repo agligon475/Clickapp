@@ -70,6 +70,8 @@ export default async function handler(req, res) {
     '/enviar-comprobante.html': 'enviar-comprobante.html',
     '/kit-imprimible': 'kit-imprimible.html',
     '/kit-imprimible.html': 'kit-imprimible.html',
+    '/tracking': 'tracking.html',
+    '/tracking.html': 'tracking.html',
     '/landing': 'landing.html',
     '/landing.html': 'landing.html',
     '/terminos': 'terminos.html',
@@ -209,7 +211,7 @@ export default async function handler(req, res) {
       'tienda', 'dashboard', 'alta-usuario', 'ayuda', 'dejar-resena',
       'terminos', 'privacidad', 'super-admin-login', 'super-admin-secret-dashboard',
       'super-admin-prospectos', 'super-admin-email-cms', 'super-admin-config',
-      'desarrollo', 'landing', 'kit-imprimible', 'enviar-comprobante',
+      'desarrollo', 'landing', 'kit-imprimible', 'tracking', 'enviar-comprobante',
       'presentacion-evolucion-clickapp', 'email-previews'
     ];
     if (cleanPath && !cleanPath.includes('.') && !cleanPath.includes('/') && !reservedSlugs.includes(cleanPath)) {

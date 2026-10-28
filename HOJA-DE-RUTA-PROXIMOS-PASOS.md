@@ -56,7 +56,7 @@ Para consolidar la plataforma como solución líder frente a competidores (Tiend
 | :---: | :--- | :--- | :--- | :---: |
 | 🟢 **COMPLETADO** | **Badges de Conteo Reactivos en Barra Lateral** | Verificar el volumen de pedidos, productos, categorías, cupones y cadetes sin ingresar a cada vista. | Badges circulares y de píldora adaptativos en el sidebar con ocultamiento automático en cero (`display: none`), soporte para modo claro/oscuro y actualización reactiva. *(Completado el 28/10/2026)* | Visualización de datos clave de un vistazo sin fricción |
 | 🟢 **COMPLETADO** | **Estandarización de Iconografía Vectorial (Bootstrap Icons)** | Emojis disonantes y dependientes del renderizado de cada sistema operativo en botones, métricas y modales. | Reemplazo total por íconos SVG vectoriales armonizados en los 10 accesos directos, tarjetas de métricas, wizard de setup, modales logísticos y notificaciones toast. *(Completado el 28/10/2026)* | Interfaz sobria, uniforme y de alta calidad visual |
-| 🟢 **COMPLETADO** | **Impresión de Comandas Térmicas (58mm / 80mm ESC/POS)** | En gastronomía, rotiserías y despachos es vital enviar la comanda impresa directamente a la cocina o empaque. | Botón *"Imprimir Ticket"* con hoja de estilos `@media print` optimizada para impresoras térmicas de tickets sin márgenes ni encabezados de navegador, auto-impresión en estados imprimibles del Kanban y selector dinámico. *(Completado el 28/10/2026)* | Integración total con operaciones de mostrador |
+| 🟢 **COMPLETADO** | **Tickets de "Pedido Interno" & Reposición (58mm / 80mm ESC/POS)** | En gastronomía, despachos y comercios de cercanía es vital preparar pedidos o registrar quiebres de stock para proveedores. | Botón *"Ticket / Pedido Interno"* con hoja de estilos `@media print` optimizada para impresoras térmicas de tickets (58/80mm) sin márgenes ni encabezados de navegador, auto-impresión en estados imprimibles del Kanban y selector dinámico. Útil para preparación y como recordatorio físico para pedir stock a distribuidores. *(Completado el 28/10/2026)* | Integración total con operaciones de mostrador y reposición |
 | 🟢 **COMPLETADO** | **Drag & Drop Táctil y con Mouse en el Tablero Kanban** | Cambio de estados de pedidos mediante arrastre dinámico entre columnas en lugar de únicamente selectores desplegables. | Motor de arrastre dual (HTML5 Drag & Drop para desktop + Touch Events con clon flotante para tablets/móviles), detección de columnas destino con dropzone resaltada, auto-scroll lateral y feedback háptico con vibración. *(Completado el 28/10/2026)* | Experiencia de uso ágil e intuitiva en tablets/pantallas táctiles |
 | 🟢 **COMPLETADO** | **Control de Catálogo Limpio & Erradicación de Categorías Fantasma** | Nuevos catálogos recibían 5 categorías forzadas e inconsultas ajenas a su rubro (como ocurrió en LicaLic). | Casilla opt-in desmarcada por defecto en `alta-usuario.html`, supresión de inserción silenciosa en `landing.html`, saneamiento total de LicaLic en Supabase y generación bajo demanda en Dashboard. *(Completado el 28/10/2026)* | Catálogos 100% limpios y en blanco para configuración manual |
 | 🟢 **COMPLETADO** | **Buscador Global con Command Palette (`Ctrl + K`)** | Dificultad para encontrar rápidamente un pedido, producto o cadete en comercios con alto volumen. | Modal de búsqueda omnibox estilo `Command Palette` flotante con atajo de teclado, búsqueda multi-criterio y navegación por flechas. *(Completado el 28/10/2026)* | Reducción del 90% en clics para operarios del panel |
@@ -65,21 +65,21 @@ Para consolidar la plataforma como solución líder frente a competidores (Tiend
 
 ---
 
-## 🛵 EJE 5: Ecosistema Logístico Dale!QueVoy
+## 🛵 EJE 5: Ecosistema Logístico Dale!QueVoy & Enfoque Amigable
 
 | Prioridad | Iniciativa | Diagnóstico / Oportunidad | Implementación Técnica | Impacto |
 | :---: | :--- | :--- | :--- | :---: |
-| 🟢 **COMPLETADO** | **Sincronización Bidireccional en Tiempo Real (WebSockets)** | Cuando el cadete de Dale!QueVoy valida el PIN de 4 dígitos en su celular, el dashboard del comercio requería F5 para ver el cambio de columna. | Suscripción a canal Supabase Realtime (`realtime-orders-${STORE_ID}`) en `dashboard.html` con actualización instantánea de tarjetas Kanban, SFX auditivo y hápticos. *(Completado el 28/10/2026)* | Operación 100% coordinada en vivo sin refrescar pantalla |
+| 🟢 **COMPLETADO** | **Pausa Estratégica & Desacople de Visibilidad de Dale!QueVoy** | Dale!QueVoy está en desarrollo y no posee base de usuarios activa todavía. Su exposición generaba dudas en comercios nuevos. | Ocultamiento proactivo de botones y referencias de despacho externo en landing.html y dashboard.html. Enfoque comercial amigable centrado en catálogo, mostrador y pedidos por WhatsApp sin fricciones ni términos técnicos innecesarios. *(Completado el 28/10/2026)* | Mensaje 100% claro y libre de confusión para prospectos |
 | 🟡 **MEDIA** | **Cálculo Automático de Costo de Envío por Distancia (Km)** | Los comercios cobran tarifas fijas de envío que a veces no cubren la distancia real a barrios alejados. | Integración con OpenStreetMap / OSRM para trazar ruta entre el local y la dirección del cliente, sugiriendo tarifa por km. | Precios de flete justos y automatizados |
 | 🟢 **COMPLETADO** | **Tracking Compartible para el Cliente Final (`tracking.html`)** | El comprador desconocía en qué etapa se encontraba su paquete luego de salir del local y saturaba el WhatsApp del comercio. | Vista pública interactiva `/tracking.html?order=...` con stepper de 4 etapas en vivo (WebSockets), PIN de entrega segura Dale!QueVoy y botón de WhatsApp. *(Completado el 28/10/2026)* | Reducción del 80% en consultas "¿Dónde está mi pedido?" |
 
 ---
 
-## 📈 EJE 6: Herramientas Comerciales & Crecimiento del Comercio
+## 📈 EJE 6: Herramientas Comerciales, SEO & Crecimiento del Comercio
 
 | Prioridad | Iniciativa | Diagnóstico / Oportunidad | Implementación Técnica | Impacto |
 | :---: | :--- | :--- | :--- | :---: |
-| 🟢 **COMPLETADO** | **Generador de QR Vectorizado para Vidrieras y Mostradores** | Los comercios necesitan colocar el QR de su tienda en mesas, vidrieras o folletos físicos en alta resolución. | Integración directa del Kit Imprimible A4/A5 en el Dashboard (topbar, sidebar y Command Palette) con descarga de QR HD y plantillas profesionales. *(Completado el 28/10/2026)* | Adopción inmediata del canal digital en el punto físico |
+| 🟢 **COMPLETADO** | **SEO Técnico, OpenGraph & Rich Previews en WhatsApp** | Al compartir el link de daletepido.com.ar en WhatsApp o redes sociales, no se generaba una tarjeta visual atractiva. | Inyección de metaetiquetas OpenGraph completas (og:title, og:description, og:image, og:url), Twitter Cards, eliminación de tokens de verificación placeholder y optimización de Core Web Vitals en imágenes de demos y jAIme. *(Completado el 28/10/2026)* | Mayor tasa de clics (CTR) y presencia de marca profesional |
 | 🟡 **MEDIA** | **Recuperación de Carritos Abandonados por WhatsApp** | Un 30% de usuarios llena el carrito pero abandona antes de tocar "Enviar Pedido por WhatsApp". | Almacenar borradores en localStorage / Supabase y ofrecer al comerciante un botón *"Enviar recordatorio con 10% OFF"* al WhatsApp del cliente. | Incremento directo del 15% al 25% en conversiones |
 | 🟡 **MEDIA** | **Reporte de Ventas en PDF / Excel para Contabilidad** | Los dueños de comercios solicitan cierres de caja semanales y mensuales para sus contadores. | Exportador que compile facturación por medio de pago (Efectivo, MP, Transferencia), productos más vendidos y comisiones de cadetería. | Mayor fidelización de las PyMEs a la plataforma |
 
@@ -116,3 +116,5 @@ Para maximizar el impacto visual y operativo sin demoras, la secuencia inmediata
 1. **Impresión de Comandas Térmicas:** Añadir el botón en el Kanban para que cualquier pedido pueda imprimirse con formato comanda para cocina/depósito.
 2. **Drag & Drop en Kanban:** Permitir arrastrar tarjetas entre estados para una experiencia premium.
 3. **Generador de QR Imprimible en PDF:** Dar a los comercios una herramienta física tangible para colocar en sus mostradores.
+
+

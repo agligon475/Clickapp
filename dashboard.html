@@ -8873,7 +8873,7 @@
 
               <!-- 3. Rubro principal -->
               <div class="ctrl-group" style="grid-column:1/-1;">
-                <label class="ctrl-label">Rubro del Comercio (Ecosistema Multi-Rubro & Red Dale!QueVoy)</label>
+                <label class="ctrl-label">Rubro del Comercio</label>
                 <select class="ctrl-input" id="cfg-store-rubro" onchange="syncRubroFromBasicConfig(this.value)">
                   <option value="PHARMACY">💊 Farmacia & Cosmética (PHARMACY)</option>
                   <option value="HARDWARE">🔧 Ferretería & Corralón (HARDWARE)</option>
@@ -8886,7 +8886,7 @@
                   <option value="ECOMMERCE">📦 Tienda Online & E-commerce General (ECOMMERCE)</option>
                   <option value="OTHER">✨ Otros Rubros Comerciales (OTHER)</option>
                 </select>
-                <div style="font-size:11px; color:var(--silver); margin-top:4px;">Determina el tipo de paquete y el vehículo óptimo (bici, moto, auto, camioneta) asignado en Dale!QueVoy.</div>
+                <div style="font-size:11px; color:var(--silver); margin-top:4px;">Categoriza tu tienda y optimiza la presentación de tu catálogo comercial.</div>
               </div>
 
               <!-- 5. Dirección física -->
@@ -17482,19 +17482,16 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       let logisticaBadge = '';
       let logisticaExtra = '';
       if (o.logistica === 'Envío a domicilio') {
-        if (o.delivery_id) {
-          logisticaBadge = '>>> 🚀 DELIVERY DALE!QUEVOY <<<';
-          logisticaExtra = `TRACKING: ${o.delivery_id}\nPIN DE ENTREGA SEGURO: *** ${o.pin_code || 'S/N'} ***\n(Solicitar PIN al entregar)`;
-        } else if (o.pickup_id) {
+        if (o.pickup_id) {
           const cadete = (window.currentPickups || []).find(p => p.id === o.pickup_id);
-          logisticaBadge = '>>> 🛵 CADETE DEL LOCAL (PARTICULAR) <<<';
-          logisticaExtra = `REPARTIDOR ASIGNADO: ${cadete ? cadete.name : 'Cadete Propio'}`;
+          logisticaBadge = '>>> 🛵 REPARTO A DOMICILIO <<<';
+          logisticaExtra = `CADETE ASIGNADO: ${cadete ? cadete.name : 'Cadete del Local'}`;
         } else {
-          logisticaBadge = '>>> 🛵 DELIVERY A DOMICILIO <<<';
+          logisticaBadge = '>>> 🛵 ENVÍO A DOMICILIO <<<';
           logisticaExtra = `CADETE: Pendiente de asignar`;
         }
       } else {
-        logisticaBadge = '>>> 🥡 TAKEAWAY / RETIRO EN MOSTRADOR <<<';
+        logisticaBadge = '>>> 🥡 RETIRO EN MOSTRADOR / LOCAL <<<';
         logisticaExtra = `RETIRA EN LOCAL: ${storeAddress}`;
       }
 
@@ -17554,7 +17551,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         <div style="border-top:1px dashed #000; margin:6px 0;"></div>
         
         <div style="display:flex; justify-content:space-between; font-weight:700; font-size:13px; margin:4px 0;">
-          <span>COMANDA:</span>
+          <span>PEDIDO INTERNO / TICKET:</span>
           <span>${o.id}</span>
         </div>
         <div style="display:flex; justify-content:space-between; font-size:10px; color:#444;">
@@ -17590,16 +17587,10 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
           ${pagoInfo}
         </div>
 
-        ${o.pin_code ? `
-        <div style="border:2px dashed #000; padding:6px; text-align:center; margin:10px 0; background:#f9f9f9;">
-          <div style="font-size:9px; font-weight:700; color:#555;">PIN DE SEGURIDAD DALE!QUEVOY</div>
-          <div style="font-size:18px; font-weight:900; letter-spacing:4px; color:#000;">${o.pin_code}</div>
-        </div>` : ''}
-
         <div style="border-top:1px dashed #000; margin:8px 0;"></div>
         <div style="text-align:center; font-size:9px; color:#666;">
-          *** ¡MUCHAS GRACIAS POR SU COMPRA! ***<br/>
-          daletepido.com.ar · Dale!QueVoy Logística
+          *** COMPROBANTE DE USO INTERNO Y MOSTRADOR ***<br/>
+          Preparación · Control de Entrega · Reposición
         </div>
       `;
 
@@ -17617,8 +17608,8 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         const sub = document.getElementById('comanda-modal-sub');
         if (sub) {
           sub.textContent = isAuto
-            ? `¡Auto-disparo activado por cambio a estado imprimible!`
-            : `Comanda #${o.id} · Formato para impresora térmica de cocina y mostrador`;
+            ? `¡Auto-impresión activada por estado de preparación!`
+            : `Ticket de Pedido Interno #${o.id} · Formato para impresora térmica (58/80mm)`;
         }
       }
 
@@ -17847,14 +17838,9 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
                   <i class="bi bi-grip-vertical kc-drag-handle" title="Arrastrar tarjeta para cambiar estado"></i>
                   <span>${o.id}${o.is_night_guard ? ' <span title="Pedido fuera de horario (Modo Sereno)" style="background:rgba(129,140,248,0.2);color:#A5B4FC;border:1px solid rgba(129,140,248,0.4);padding:1px 4px;border-radius:4px;font-size:9px;font-weight:600;"><i class="bi bi-moon-stars"></i> Sereno</span>' : ''}</span>
                 </span>
-                <div style="display:inline-flex;gap:3px;">
-                  <button type="button" onclick="copyOrderTracking('${o.id}')" title="Copiar link de seguimiento en vivo" style="background:transparent;border:1px solid var(--zinc);color:var(--fog);border-radius:5px;padding:2px 6px;font-size:10px;cursor:pointer;display:inline-flex;align-items:center;gap:3px;" onmouseover="this.style.color='#fff';this.style.borderColor='var(--fog)'" onmouseout="this.style.color='var(--fog)';this.style.borderColor='var(--zinc)'">
-                    <i class="bi bi-geo-alt"></i> <span>Tracking</span>
-                  </button>
-                  <button type="button" onclick="printComanda('${o.id}')" title="Imprimir Comanda Térmica (58/80mm)" style="background:transparent;border:1px solid var(--zinc);color:var(--fog);border-radius:5px;padding:2px 6px;font-size:10px;cursor:pointer;display:inline-flex;align-items:center;gap:3px;" onmouseover="this.style.color='#fff';this.style.borderColor='var(--fog)'" onmouseout="this.style.color='var(--fog)';this.style.borderColor='var(--zinc)'">
-                    <i class="bi bi-printer"></i> <span>Comanda</span>
-                  </button>
-                </div>
+                <button type="button" onclick="printComanda('${o.id}')" title="🖨️ Imprimir Ticket de Pedido Interno (58/80mm)" style="background:transparent;border:1px solid var(--zinc);color:var(--fog);border-radius:5px;padding:2px 6px;font-size:10px;cursor:pointer;display:inline-flex;align-items:center;gap:3px;" onmouseover="this.style.color='#fff';this.style.borderColor='var(--fog)'" onmouseout="this.style.color='var(--fog)';this.style.borderColor='var(--zinc)'">
+                  <i class="bi bi-receipt"></i> <span>Pedido Interno</span>
+                </button>
               </div>
               <div class="kc-client"><strong>${escapeHTML(o.cliente)}</strong> · <span style="font-size:10px;color:var(--silver);">${escapeHTML(o.logistica || 'Mostrador')}</span></div>
               <div class="kc-prods" style="font-size:11px;color:var(--fog);margin:4px 0;">${escapeHTML(o.productos)}</div>
@@ -17905,11 +17891,8 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         ${escapeHTML(o.logistica)}<br/>
         ${o.logistica === 'Envío a domicilio' ?
           `<div style="display:flex; flex-direction:column; gap:4px; margin-top:4px;">
-            <button type="button" onclick="openDaleQueVoyModal('${o.id}')" style="background:${o.delivery_id ? 'rgba(16,185,129,0.15)' : 'linear-gradient(135deg, #F60000 0%, #B80000 100%)'}; border:1px solid ${o.delivery_id ? 'rgba(16,185,129,0.4)' : '#F60000'}; color:${o.delivery_id ? '#10B981' : '#fff'}; font-size:10px; font-weight:700; padding:4px 8px; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:${o.delivery_id ? 'none' : '0 2px 8px rgba(246,0,0,0.3)'};">
-              <i class="bi ${o.delivery_id ? 'bi-shield-check' : 'bi-send-check-fill'}"></i> ${o.delivery_id ? 'Tracking QueVoy (' + (o.pin_code || 'PIN') + ')' : '🚀 Despachar Dale!QueVoy'}
-            </button>
-            <select class="ctrl-input" style="padding:2px 4px;font-size:10px;" onchange="assignPickUp('${o.id}', this.value)">
-              <option value="">O asignar cadete local...</option>
+            <select class="ctrl-input" style="padding:3px 6px;font-size:10px;" onchange="assignPickUp('${o.id}', this.value)">
+              <option value="">Asignar cadete / repartidor...</option>
               ${(window.currentPickups || []).filter(p => p.active).map(p => `<option value="${p.id}" ${o.pickup_id === p.id ? 'selected' : ''}>${p.name}</option>`).join('')}
             </select>
           </div>`
@@ -17938,11 +17921,8 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       </td>
       <td>
         <div style="display:flex;align-items:center;gap:4px;">
-          <button class="abm-action" onclick="copyOrderTracking('${o.id}')" title="📍 Copiar Link de Tracking para Cliente" style="background:var(--iron);border:1px solid var(--zinc);color:var(--fog);border-radius:6px;padding:4px 8px;cursor:pointer;">
-            <i class="bi bi-geo-alt"></i>
-          </button>
-          <button class="abm-action" onclick="printComanda('${o.id}')" title="🖨️ Imprimir Comanda Térmica (58/80mm)" style="background:var(--iron);border:1px solid var(--zinc);color:var(--fog);border-radius:6px;padding:4px 8px;cursor:pointer;">
-            <i class="bi bi-printer"></i>
+          <button class="abm-action" onclick="printComanda('${o.id}')" title="🖨️ Imprimir Ticket de Pedido Interno (58/80mm)" style="background:var(--iron);border:1px solid var(--zinc);color:var(--fog);border-radius:6px;padding:4px 8px;cursor:pointer;">
+            <i class="bi bi-receipt"></i>
           </button>
           <button class="abm-action del" onclick="deleteOrder('${o.id}')" title="Eliminar">
             <i class="bi bi-trash"></i>
@@ -17991,11 +17971,8 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
             <td style="font-family:var(--font-h);font-size:13px;font-weight:700;">$${Number(o.total || 0).toLocaleString('es-AR')}</td>
             <td style="padding-right:14px;">
               <div style="display:flex; align-items:center; gap:8px;">
-                <button type="button" onclick="openDaleQueVoyModal('${o.id}')" style="background:linear-gradient(135deg, #F60000 0%, #B80000 100%); border:none; color:#fff; font-size:11px; font-weight:700; padding:6px 12px; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap; box-shadow:0 2px 8px rgba(246,0,0,0.35);">
-                  <i class="bi bi-truck"></i> Despachar Dale!QueVoy
-                </button>
-                <select class="ctrl-input" style="padding:4px 8px;font-size:11px;width:100%;max-width:160px;" onchange="assignPickUp('${o.id}', this.value)">
-                  <option value="">O cadete propio...</option>
+                <select class="ctrl-input" style="padding:4px 8px;font-size:11px;width:100%;max-width:180px;" onchange="assignPickUp('${o.id}', this.value)">
+                  <option value="">Asignar cadete / repartidor...</option>
                   ${(window.currentPickups || []).filter(p => p.active).map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
                 </select>
               </div>
@@ -23780,11 +23757,11 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
             <div class="ctrl-group">
               <label class="ctrl-label" id="lbl-m-weight-kg" style="display:flex; justify-content:space-between; align-items:center;">
                 <span>Peso por unidad (kg) *</span>
-                <span style="font-size:10px; color:var(--red); font-weight:700;"><i class="bi bi-truck"></i> Flete Dale!QueVoy</span>
+                <span style="font-size:10px; color:var(--silver); font-weight:600;"><i class="bi bi-box-seam"></i> Envío</span>
               </label>
               <input class="ctrl-input" id="m-weight-kg" type="number" step="0.1" min="0.05" value="0.5" placeholder="0.5" />
               <div style="font-size:10px; color:var(--silver); margin-top:3px;">
-                Asigna el vehículo adecuado en Dale!QueVoy (moto &lt;5kg, auto 5-15kg, camioneta &gt;15kg).
+                Permite calcular costos de envío o embalaje según el peso del producto.
               </div>
             </div>
           </div>
@@ -25395,11 +25372,11 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
     let cmdFilteredItems = [];
 
     const CMD_SYSTEM_ACTIONS = [
-      { id: 'view-orders', title: 'Ver Pedidos y Tablero Kanban', sub: 'Tablero en tiempo real, estados y comandas', icon: 'bi-receipt', action: () => goToView('orders') },
+      { id: 'view-orders', title: 'Ver Pedidos y Tablero Kanban', sub: 'Tablero en tiempo real, estados y pedidos', icon: 'bi-receipt', action: () => goToView('orders') },
       { id: 'view-abm', title: 'Catálogo de Productos (ABM)', sub: 'Crear, editar precios y stock de productos', icon: 'bi-pencil-square', action: () => goToView('abm') },
       { id: 'view-categories', title: 'Gestión de Categorías', sub: 'Organizar rubros y secciones del catálogo', icon: 'bi-tags', action: () => goToView('categories') },
       { id: 'view-coupons', title: 'Cupones de Descuento', sub: 'Crear promociones y códigos con vencimiento', icon: 'bi-ticket-perforated', action: () => goToView('coupons') },
-      { id: 'view-pickups', title: 'Cadetería & Zonas de Entrega', sub: 'Repartidores locales y Dale!QueVoy', icon: 'bi-truck', action: () => goToView('pickups') },
+      { id: 'view-pickups', title: 'Cadetería & Zonas de Entrega', sub: 'Repartidores locales y zonas de entrega', icon: 'bi-truck', action: () => goToView('pickups') },
       { id: 'view-reports', title: 'Analítica, Finanzas y Reportes', sub: 'Ventas, ticket promedio y gráficos', icon: 'bi-bar-chart-line', action: () => goToView('reports') },
       { id: 'view-marca', title: 'Diseño, Marca y Estética', sub: 'Colores, tipografías, banners y logo', icon: 'bi-palette', action: () => goToView('marca') },
       { id: 'action-qr', title: 'Carteles & QR para Vidriera y Mostrador', sub: 'Kit imprimible en alta definición A4/A5', icon: 'bi-qr-code-scan', action: () => openPrintableKitModal() },

@@ -324,6 +324,10 @@
       "destination": "/kit-imprimible.html"
     },
     {
+      "source": "/tracking",
+      "destination": "/tracking.html"
+    },
+    {
       "source": "/landing",
       "destination": "/landing.html"
     },

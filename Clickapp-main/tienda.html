@@ -1592,12 +1592,36 @@ function optimizeImg(url, width = null, height = null) {
   if (!url || typeof url !== 'string') return '';
   url = url.trim();
   if (!url) return '';
+
+  // 1. Unsplash IDs o URLs completas
   if (url.startsWith('photo-')) {
-    url = 'https://images.unsplash.com/' + url + (url.includes('?') ? '' : '?auto=format&fit=crop&w=700&q=80');
+    const targetW = width || 500;
+    return `https://images.unsplash.com/${url}?auto=format&fit=crop&w=${targetW}&q=80`;
   }
   if (url.startsWith('//')) {
     url = 'https:' + url;
   }
+  if (url.includes('images.unsplash.com')) {
+    try {
+      const u = new URL(url);
+      u.searchParams.set('auto', 'format');
+      u.searchParams.set('fit', 'crop');
+      u.searchParams.set('q', '80');
+      if (width && !u.searchParams.has('w')) {
+        u.searchParams.set('w', width);
+      } else if (!u.searchParams.has('w')) {
+        u.searchParams.set('w', '500');
+      }
+      return u.toString();
+    } catch(e) {
+      if (!url.includes('auto=format')) {
+        url += (url.includes('?') ? '&' : '?') + `auto=format&fit=crop&w=${width || 500}&q=80`;
+      }
+      return url;
+    }
+  }
+
+  // 2. Cloudinary CDN al vuelo (WebP + Compresión Automática)
   if (url.includes('res.cloudinary.com') && url.includes('/upload/')) {
     if (!url.includes('/upload/f_')) {
       let params = 'f_webp,q_auto';
@@ -1606,6 +1630,14 @@ function optimizeImg(url, width = null, height = null) {
       return url.replace('/upload/', `/upload/${params}/`);
     }
   }
+
+  // 3. Supabase Storage (renderizado optimizado de imágenes si está disponible)
+  if (url.includes('.supabase.co/storage/v1/object/public/')) {
+    if (!url.includes('?width=') && width) {
+      return url.replace('/object/public/', '/render/image/public/') + `?width=${width}&quality=80&format=webp`;
+    }
+  }
+
   return url;
 }
 
@@ -2204,8 +2236,8 @@ function render() {
           <video class="card-micro-video" src="${p.video_url}" muted loop playsinline preload="metadata" onmouseenter="this.play()" onmouseleave="this.pause();this.currentTime=0;" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:2;opacity:0;transition:opacity 0.25s ease;" onplay="this.style.opacity='1'" onpause="this.style.opacity='0'"></video>
         ` : ''}
         ${p.img
-          ? `<img src="${optimizeImg(p.img)}" alt="${escapeHTML(p.name)}" loading="lazy" class="main-img" onerror="this.style.display='none';this.parentElement.querySelector('.product-img-fallback').style.display='flex'"/>
-             ${p.img2 ? `<img src="${optimizeImg(p.img2)}" alt="${escapeHTML(p.name)} detalle" loading="lazy" class="hover-img"/>` : ''}
+          ? `<img src="${optimizeImg(p.img, 450)}" alt="${escapeHTML(p.name)}" loading="lazy" decoding="async" class="main-img" onerror="this.style.display='none';this.parentElement.querySelector('.product-img-fallback').style.display='flex'"/>
+             ${p.img2 ? `<img src="${optimizeImg(p.img2, 450)}" alt="${escapeHTML(p.name)} detalle" loading="lazy" decoding="async" class="hover-img"/>` : ''}
              <div class="product-img-fallback" style="display:none;width:100%;height:100%;align-items:center;justify-content:center;">${p.emoji}</div>`
           : `<div class="product-img-fallback">${p.emoji}</div>`}
         <span class="stock-chip ${p.stock===0?'out':''}">${p.stock===0?'Sin stock':`Stock: ${p.stock}`}</span>
@@ -2291,7 +2323,7 @@ function renderBanners(bannerData) {
     }
     
     el.innerHTML = `
-      ${(data.img && data.img.trim()) ? `<img class="promo-banner-img" src="${optimizeImg(data.img)}" alt="${data.title || ''}" loading="lazy"/>` : ''}
+      ${(data.img && data.img.trim()) ? `<img class="promo-banner-img" src="${optimizeImg(data.img, 900)}" alt="${escapeHTML(data.title || '')}" loading="lazy" decoding="async"/>` : ''}
       ${(data.img && data.img.trim()) ? `<div class="promo-banner-overlay"></div>` : ''}
       <div class="promo-banner-content">
         ${data.label ? `<div class="promo-banner-label">${data.label}</div>` : ''}
@@ -3046,6 +3078,8 @@ async function enviarWhatsApp() {
       ? `🌙 *[PEDIDO FUERA DE HORARIO - MODO SERENO]*\n_Este pedido fue generado fuera del horario comercial y queda en espera para su confirmación al abrir._\n\n`
       : '';
 
+    const trackingUrl = `${window.location.origin}/tracking.html?order=${encodeURIComponent(pedidoId)}&store=${encodeURIComponent(STORE_ID)}`;
+
     const lines = items.map(i => `  • ${i.nombre} ×${i.cantidad}  →  ${getCurrencySymbol(i.currency)}${i.subtotal.toLocaleString('es-AR')}`);
     const msg = serenoHeader + [
       `🛒 *Nuevo pedido #${pedidoId}*`,
@@ -3059,6 +3093,7 @@ async function enviarWhatsApp() {
       dir ? `📍 *Dirección:* ${dir}` : '',
       totalWeightKg > 0 ? `⚖️ *Carga aprox:* ${totalWeightKg} kg ${logisticsInfo ? '(' + logisticsInfo.suggestedVehicleIcon + ' ' + logisticsInfo.suggestedVehicle + ')' : ''}` : null,
       pinCode ? `🔒 *PIN de Recepción Segura:* ${pinCode}\n_(El cliente dictará este PIN de 4 dígitos al repartidor de Dale!QueVoy al recibir su paquete)_` : null,
+      `🔍 *Seguimiento en vivo:* ${trackingUrl}`,
       ``,
       `👤 *Cliente:* ${nombre}`,
       `🪪 *DNI:* ${dni}`,
