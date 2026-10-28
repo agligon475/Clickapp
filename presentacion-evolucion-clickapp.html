@@ -421,7 +421,7 @@
         <button class="nav-btn" onclick="prevSlide()" title="Diapositiva Anterior (←)">
           <i class="bi bi-chevron-left"></i>
         </button>
-        <span id="slide-indicator" style="font-family: var(--font-mono); font-size: 12px; font-weight:700; color: #FFFFFF; min-width: 48px; text-align: center;">1 / 31</span>
+        <span id="slide-indicator" style="font-family: var(--font-mono); font-size: 12px; font-weight:700; color: #FFFFFF; min-width: 48px; text-align: center;">1 / 32</span>
         <button class="nav-btn primary" onclick="nextSlide()" title="Siguiente Diapositiva (→ o Espacio)">
           <i class="bi bi-chevron-right"></i>
         </button>
@@ -1927,6 +1927,49 @@
         </div>
       </section>
 
+      <!-- SLIDE 32: DRAG & DROP TÁCTIL Y CON MOUSE EN EL TABLERO KANBAN -->
+      <section class="slide" id="slide-32">
+        <span class="slide-badge" style="background:rgba(246,0,0,0.15);border-color:rgba(246,0,0,0.4);color:var(--red);"><i class="bi bi-arrows-move"></i> Etapa 32 · Release 28 de Octubre 2026</span>
+        <h2 class="slide-title">Drag & Drop Táctil y con Mouse en el Tablero Kanban (UX Operativa)</h2>
+        <p class="slide-desc">Modernización del flujo operativo de pedidos: transición de estados por arrastre directo entre columnas con soporte dual (ratón en escritorio y gestos táctiles en tablets/móviles), detección de dropzones y feedback háptico.</p>
+
+        <div class="grid-2" style="margin-top:16px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px;">
+          <div class="card">
+            <div class="card-title" style="color:var(--red);"><i class="bi bi-mouse3-fill"></i> Arrastre Dual (Desktop Mouse & Tablet Touch)</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Los pedidos pueden moverse tanto con el ratón mediante la API nativa HTML5 Drag & Drop como con el dedo en pantallas táctiles (iPads, tablets de mostrador y smartphones) mediante un clon flotante cinemático (<code>.kanban-card-touch-clone</code>) sin bloquear los botones internos ni selectores.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-bullseye"></i> Columnas Destino Activas & Zonas Vacías</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Al sobrevolar una columna, se activa un borde punteado con fondo de contraste (<code>.kanban-cards.drag-over</code>). Incluso en columnas que no tengan pedidos vigentes, se preserva un área receptora visible (<em>"Soltá pedidos acá"</em>) para arrastre inmediato.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#3B82F6;"><i class="bi bi-phone-vibrate-fill"></i> Feedback Háptico & Auto-scroll Lateral</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              En dispositivos móviles y tablets compatibles, la vibración háptica confirma el inicio del arrastre (25ms) y el éxito al soltar el pedido en el nuevo estado ([20, 40, 25]ms). Además, al arrastrar cerca de los extremos, el tablero realiza auto-scroll horizontal suave.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#F59E0B;"><i class="bi bi-printer-fill"></i> Sincronización y Disparador de Comandas</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Cada cambio de columna persiste inmediatamente en Supabase / Google Sheets, notifica con un toast estilizado y, si el estado de destino tiene activo el check de <strong>Imprimible</strong> (ej: <em>En preparación</em>), dispara automáticamente la comanda térmica de 58/80mm.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <a href="/dashboard.html?store=biuti#pedidos" target="_blank" class="nav-btn primary" style="padding:10px 22px; font-size:13px; background:linear-gradient(135deg, var(--red) 0%, #D60000 100%);">
+            <i class="bi bi-kanban"></i> Probar Drag & Drop en Tablero
+          </a>
+        </div>
+      </section>
+
     </main>
 
     <!-- BOTTOMBAR -->
@@ -1938,7 +1981,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 4.14 Estandarización de Iconografía Vectorial · Actualizado 28/10/2026
+        Dale! Te Pido © 2026 · Versión 4.15 Drag & Drop Táctil en Kanban UX · Actualizado 28/10/2026
       </div>
     </footer>
 
@@ -1947,7 +1990,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 31;
+  const totalSlides = 32;
 
   function showSlide(index) {
     if (index < 1) index = 1;
