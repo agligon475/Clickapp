@@ -421,7 +421,7 @@
         <button class="nav-btn" onclick="prevSlide()" title="Diapositiva Anterior (←)">
           <i class="bi bi-chevron-left"></i>
         </button>
-        <span id="slide-indicator" style="font-family: var(--font-mono); font-size: 12px; font-weight:700; color: #FFFFFF; min-width: 48px; text-align: center;">1 / 13</span>
+        <span id="slide-indicator" style="font-family: var(--font-mono); font-size: 12px; font-weight:700; color: #FFFFFF; min-width: 48px; text-align: center;">1 / 28</span>
         <button class="nav-btn primary" onclick="nextSlide()" title="Siguiente Diapositiva (→ o Espacio)">
           <i class="bi bi-chevron-right"></i>
         </button>
@@ -1746,6 +1746,52 @@
         </div>
       </section>
 
+      <!-- SLIDE 28: BLINDAJE SEO EN GOOGLE & CONTROL DE SUBDOMINIOS HUÉRFANOS -->
+      <section class="slide" id="slide-28">
+        <span class="slide-badge" style="background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.4);color:#60A5FA;"><i class="bi bi-search"></i> Etapa 28 · Release 27 de Octubre 2026</span>
+        <h2 class="slide-title">Blindaje SEO en Google, Redirección 301 de Subdominios Huérfanos & Snippets Limpios</h2>
+        <p class="slide-desc">Corrección integral de indexación en Google: mitigación del rastreo indebido de subdominios de ejemplo (<code>mi-negocio.daletepido.com.ar</code>), redirecciones canónicas 301, metatags descriptivos de fallback y protección anti-snippets con <code>data-nosnippet</code>.</p>
+
+        <div class="grid-2" style="margin-top:16px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px;">
+          <div class="card">
+            <div class="card-title" style="color:#60A5FA;"><i class="bi bi-signpost-split"></i> Redirección 301 Permanente & NoIndex Automático</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              En <code>api/store.js</code>, cualquier solicitud a subdominios de mockup (como <code>mi-negocio</code> o <code>tu-tienda</code>) o subdominios no registrados en Supabase ahora responde con <strong>redirección permanente 301 hacia <code>https://daletepido.com.ar/</code></strong> y cabecera <code>X-Robots-Tag: noindex, nofollow, noarchive</code>, transfiriendo autoridad a la home y purgando URLs huérfanas de Google.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-tag-fill"></i> Metatags Fallback & Título de Marca Oficial</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Se reemplazó el título estático obsoleto por el oficial <em>"Dale! Te Pido — Catálogo Online para WhatsApp"</em> y se integró una etiqueta <code>meta description</code> por defecto para evitar que los rastreadores concatenen textos aleatorios del DOM.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#F59E0B;"><i class="bi bi-eye-slash-fill"></i> Directiva data-nosnippet Anti-Cargando Productos</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Se blindaron los elementos de carga y badges estructurales (badges de tienda, pills de envío y labels de carga) con el atributo estándar <code>data-nosnippet</code>, asegurando que Google jamás vuelva a mostrar textos temporales o skeletons en sus snippets de búsqueda.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#EC4899;"><i class="bi bi-shield-lock-fill"></i> Higiene de Enlaces en el Comprobador de Nombres</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              En <code>landing.html</code>, el comprobador en tiempo real fue aislado con <code>data-nosnippet</code> y referencias canónicas seguras, evitando que los spiders de búsqueda interpreten los ejemplos visuales de registro como páginas activas independientes.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <a href="/" target="_blank" class="nav-btn primary" style="padding:10px 22px; font-size:13px; background:linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);">
+            <i class="bi bi-house-door-fill"></i> Visitar Home Oficial daletepido.com.ar
+          </a>
+          <a href="/tienda.html" target="_blank" class="nav-btn secondary" style="padding:10px 22px; font-size:13px;">
+            <i class="bi bi-code-slash"></i> Inspeccionar Metatags de Tienda
+          </a>
+        </div>
+      </section>
+
     </main>
 
     <!-- BOTTOMBAR -->
@@ -1757,7 +1803,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 4.10 Sincronización Omnicanal de Pedidos & Tiempo Real · Actualizado 27/10/2026
+        Dale! Te Pido © 2026 · Versión 4.11 Blindaje SEO & Redirecciones Canónicas · Actualizado 27/10/2026
       </div>
     </footer>
 
@@ -1766,7 +1812,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 27;
+  const totalSlides = 28;
 
   function showSlide(index) {
     if (index < 1) index = 1;

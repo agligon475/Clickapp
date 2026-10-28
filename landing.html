@@ -3177,15 +3177,15 @@
                     </label>
                     <input type="text" id="cta-input-store-name" class="cta-checker-input" placeholder="Ej: Mi Ferretería / Pizzería Don Juan / Boutique Roma" oninput="updateCtaGeneratedLink(this.value)">
 
-                    <div id="cta-status-box" class="cta-status-box">
+                    <div id="cta-status-box" class="cta-status-box" data-nosnippet>
                         <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:200px;">
                             <span style="font-size:18px;">🔗</span>
                             <div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;">
                                 <div style="font-size:10.5px; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Tu Enlace Web:</div>
-                                <span id="cta-generated-link-display" style="font-family:var(--font-mono); font-size:14.5px; font-weight:600; color:var(--green);">https://mi-negocio.daletepido.com.ar/</span>
+                                <span id="cta-generated-link-display" style="font-family:var(--font-mono); font-size:14.5px; font-weight:600; color:var(--green);" data-nosnippet>https://tu-comercio.daletepido.com.ar/</span>
                             </div>
                         </div>
-                        <div id="cta-status-badge" style="font-size:12px; font-weight:600; color:var(--green); background:var(--green-light); padding:5px 12px; border-radius:var(--radius-pill); border:1px solid #A7F3D0;">
+                        <div id="cta-status-badge" style="font-size:12px; font-weight:600; color:var(--green); background:var(--green-light); padding:5px 12px; border-radius:var(--radius-pill); border:1px solid #A7F3D0;" data-nosnippet>
                             🟢 Disponible para registrar
                         </div>
                     </div>
@@ -3701,7 +3701,7 @@
                 .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
                 .replace(/[^a-z0-9]+/g, '-')
                 .replace(/^-+|-+$/g, '');
-            const sub = cleanVal || 'mi-negocio';
+            const sub = cleanVal || 'tu-comercio';
             const displayEl = document.getElementById('cta-generated-link-display');
             const badgeEl = document.getElementById('cta-status-badge');
 
@@ -3728,7 +3728,7 @@
             const btnEl = document.getElementById('cta-register-btn');
             const boxEl = document.getElementById('cta-status-box');
 
-            if (!subdomain || subdomain === 'mi-negocio') {
+            if (!subdomain || subdomain === 'tu-comercio' || subdomain === 'mi-negocio') {
                 if (badgeEl) {
                     badgeEl.style.background = 'var(--green-light)';
                     badgeEl.style.borderColor = '#A7F3D0';

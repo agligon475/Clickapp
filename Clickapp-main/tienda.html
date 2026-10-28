@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
-<title>DaleTePido.com.ar - Arma tus pedidos antes de ir a la tienda</title>
+<title>Dale! Te Pido — Catálogo Online para WhatsApp</title>
+<meta name="description" content="Catálogo digital interactivo sin comisiones. Armá tu pedido online y coordiná la entrega directa por WhatsApp con tu comercio favorito."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"/>
 <script>
   (function() {
     try {
@@ -1144,13 +1146,13 @@ body:not(.light-theme) .stock-chip {
     <div>
       <div class="hero-title" id="hero-title">Bienvenidos a<br/><span id="hero-title-span">nuestra tienda.</span></div>
       <div class="hero-sub" id="hero-sub">Elegí tus productos, armá tu pedido y coordiná por WhatsApp.</div>
-      <div class="hero-pills">
+      <div class="hero-pills" data-nosnippet>
         <span class="hero-pill"><i class="bi bi-whatsapp"></i> Pedido por WhatsApp</span>
         <span class="hero-pill" id="hero-pay-pill"><i class="bi bi-cash-coin"></i> Efectivo · Transferencia</span>
         <span class="hero-pill"><i class="bi bi-truck"></i> Retiro o envío</span>
       </div>
     </div>
-    <div class="hero-badge" aria-hidden="true" id="hero-badge">TIENDA</div>
+    <div class="hero-badge" aria-hidden="true" id="hero-badge" data-nosnippet>TIENDA</div>
   </div>
 </div>
 
@@ -1158,7 +1160,7 @@ body:not(.light-theme) .stock-chip {
 <div class="page">
 
   <!-- Category rail -->
-  <div class="cat-rail" id="cat-rail" role="region" aria-label="Categorías de productos">
+  <div class="cat-rail" id="cat-rail" role="region" aria-label="Categorías de productos" data-nosnippet>
     <button class="cat-btn active" data-cat="all" onclick="filterCat(this,'all')" aria-label="Ver todos los productos">
       <i class="bi bi-grid-3x3-gap"></i> Todos
     </button>
@@ -1174,7 +1176,7 @@ body:not(.light-theme) .stock-chip {
   </div>
 
   <div class="section-head">
-    <span class="section-label" id="section-label">Cargando productos...</span>
+    <span class="section-label" id="section-label" data-nosnippet>Catálogo de Productos</span>
   </div>
 
   <div class="grid" id="grid">

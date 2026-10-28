@@ -32,6 +32,15 @@ export default async function handler(req, res) {
     ...Object.fromEntries(parsedUrl.searchParams.entries()),
     ...(req.query || {})
   };
+
+  // Immediate 301 redirect for placeholder / mockup subdomains (e.g. mi-negocio.daletepido.com.ar)
+  const blockedSubdomains = ['mi-negocio', 'tu-negocio', 'tu-tienda', 'mi-tienda', 'ejemplo', 'ejemplo-tienda', 'test', 'demo-store'];
+  const subPrefix = hostname.split('.')[0];
+  if (blockedSubdomains.includes(subPrefix)) {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    res.writeHead(301, { Location: 'https://daletepido.com.ar/' });
+    return res.end();
+  }
   
   // Static HTML pages map
   const routeMap = {
@@ -220,6 +229,14 @@ export default async function handler(req, res) {
     }
   }
 
+  // Handle placeholder / dummy demo subdomains that bots or crawlers might discover
+  const placeholderSlugs = ['mi-negocio', 'tu-negocio', 'tu-tienda', 'mi-tienda', 'ejemplo', 'ejemplo-tienda', 'test', 'demo-store'];
+  if (placeholderSlugs.includes(storeId)) {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    res.writeHead(301, { Location: 'https://daletepido.com.ar/' });
+    return res.end();
+  }
+
   // 3. Render the store HTML with injected OG tags and initial STORE_ID
   try {
     const filePath = path.join(process.cwd(), 'tienda.html');
@@ -365,6 +382,16 @@ export default async function handler(req, res) {
 `;
           // Replace default title with complete metadata tags
           html = html.replace(/<title>.*?<\/title>/, ogTags);
+        } else {
+          // Store DOES NOT EXIST in Supabase!
+          res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+          // If accessing via a subdomain, redirect permanently to the main domain
+          if (hostname.endsWith('.daletepido.com.ar') || hostname.endsWith('.clickapp.com')) {
+            res.writeHead(301, { Location: 'https://daletepido.com.ar/' });
+            return res.end();
+          }
+          // Otherwise inject noindex meta tag into the fallback HTML
+          html = html.replace('<head>', '<head>\n<meta name="robots" content="noindex, nofollow" />');
         }
       }
     }
