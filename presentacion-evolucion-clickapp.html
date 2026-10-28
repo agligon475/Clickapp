@@ -421,7 +421,7 @@
         <button class="nav-btn" onclick="prevSlide()" title="Diapositiva Anterior (←)">
           <i class="bi bi-chevron-left"></i>
         </button>
-        <span id="slide-indicator" style="font-family: var(--font-mono); font-size: 12px; font-weight:700; color: #FFFFFF; min-width: 48px; text-align: center;">1 / 29</span>
+        <span id="slide-indicator" style="font-family: var(--font-mono); font-size: 12px; font-weight:700; color: #FFFFFF; min-width: 48px; text-align: center;">1 / 30</span>
         <button class="nav-btn primary" onclick="nextSlide()" title="Siguiente Diapositiva (→ o Espacio)">
           <i class="bi bi-chevron-right"></i>
         </button>
@@ -1838,6 +1838,49 @@
         </div>
       </section>
 
+      <!-- SLIDE 30: BADGES DINÁMICOS DE CONTEO EN SIDEBAR -->
+      <section class="slide" id="slide-30">
+        <span class="slide-badge" style="background:rgba(246,0,0,0.15);border-color:rgba(246,0,0,0.4);color:var(--red);"><i class="bi bi-pin-angle-fill"></i> Etapa 30 · Release 28 de Octubre 2026</span>
+        <h2 class="slide-title">Badges Dinámicos de Conteo en Navegación Lateral (Sidebar UX)</h2>
+        <p class="slide-desc">Indicadores numéricos en tiempo real en la barra lateral para verificar volúmenes de pedidos, productos, categorías, cupones y cadetes sin necesidad de ingresar a cada sección, con ocultamiento automático cuando el conteo es cero.</p>
+
+        <div class="grid-2" style="margin-top:16px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px;">
+          <div class="card">
+            <div class="card-title" style="color:var(--red);"><i class="bi bi-eye-fill"></i> Verificación Inmediata sin Fricción</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              El comerciante puede ver de un vistazo en la barra lateral cuántos <strong>Pedidos</strong> tiene registrados, el volumen de <strong>Productos (ABM)</strong> en catálogo, el total de <strong>Categorías</strong> y los <strong>Cupones</strong> de descuento activos.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-slash-circle"></i> Ocultamiento Inteligente en Cero (Zero Noise)</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Si el comercio no posee elementos cargados en esa sección (o el conteo es 0), el badge se oculta automáticamente (<code>display: none</code>). La barra permanece limpia, profesional y libre de ruido visual.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#3B82F6;"><i class="bi bi-palette2"></i> Diseño Circular & Píldora de Alta Precisión</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Geometría adaptativa: círculo de 20px para números de 1 dígito y píldora expandible con espaciado óptimo para 2 o más dígitos. Incluye borde sutil de contraste, cifras tabulares monoespaciadas y armonía cromática al seleccionar o pasar el cursor (hover / active).
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#F59E0B;"><i class="bi bi-moon-stars-fill"></i> Reactividad y Soporte Modo Oscuro</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Actualización instantánea al crear, editar o eliminar registros sin recargar la página. Ajuste automático de paleta (<code>--zinc</code> / <code>--fog</code>) al alternar entre modo claro y modo oscuro (High Contrast Obsidian).
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <a href="/dashboard.html?store=biuti" target="_blank" class="nav-btn primary" style="padding:10px 22px; font-size:13px; background:linear-gradient(135deg, var(--red) 0%, #D60000 100%);">
+            <i class="bi bi-layout-sidebar-inset"></i> Ver Badges en el Dashboard
+          </a>
+        </div>
+      </section>
+
     </main>
 
     <!-- BOTTOMBAR -->
@@ -1849,7 +1892,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 4.12 Aislamiento Estricto RLS & Hardening BOLA/IDOR · Actualizado 28/10/2026
+        Dale! Te Pido © 2026 · Versión 4.13 Badges Dinámicos en Sidebar UX · Actualizado 28/10/2026
       </div>
     </footer>
 
@@ -1858,7 +1901,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 29;
+  const totalSlides = 30;
 
   function showSlide(index) {
     if (index < 1) index = 1;

@@ -373,6 +373,48 @@
       transition: transform 0.15s ease, color 0.15s ease;
     }
 
+    .sb-item .sb-badge {
+      margin-left: auto;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 5px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1;
+      border: 1.5px solid #2d3748;
+      color: #1f2937;
+      background: transparent;
+      box-sizing: border-box;
+      flex-shrink: 0;
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+      letter-spacing: -0.2px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    body.dark-mode .sb-item .sb-badge {
+      border-color: rgba(209, 213, 219, 0.45);
+      color: #F3F4F6;
+    }
+
+    .sb-item:hover .sb-badge {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .sb-item.active .sb-badge {
+      border-color: var(--red) !important;
+      color: var(--red) !important;
+      background: rgba(246, 0, 0, 0.08);
+    }
+
+    body.collapsed-sidebar .sb-item .sb-badge {
+      display: none !important;
+    }
+
     .sb-btn {
       width: 100%;
       margin-top: 6px;
@@ -5898,8 +5940,8 @@
         <i class="bi bi-chevron-up toggle-icon"></i>
       </div>
       <div class="sb-section-content">
-        <div class="sb-item" onclick="showView('orders',this)"><i class="bi bi-receipt"></i> <span>Pedidos</span></div>
-        <div class="sb-item" onclick="showView('pickups',this)"><i class="bi bi-truck"></i> <span>Envíos y Zonas</span></div>
+        <div class="sb-item" onclick="showView('orders',this)"><i class="bi bi-receipt"></i> <span>Pedidos</span><span class="sb-badge" id="sb-badge-orders" style="display:none;"></span></div>
+        <div class="sb-item" onclick="showView('pickups',this)"><i class="bi bi-truck"></i> <span>Envíos y Zonas</span><span class="sb-badge" id="sb-badge-pickups" style="display:none;"></span></div>
       </div>
     </div>
 
@@ -5910,9 +5952,9 @@
         <i class="bi bi-chevron-up toggle-icon"></i>
       </div>
       <div class="sb-section-content">
-        <div class="sb-item" onclick="showView('abm',this)"><i class="bi bi-pencil-square"></i> <span>Productos (ABM)</span></div>
-        <div class="sb-item" onclick="showView('categories',this)"><i class="bi bi-tags"></i> <span>Categorías</span></div>
-        <div class="sb-item" onclick="showView('coupons',this)"><i class="bi bi-ticket-perforated"></i> <span>Cupones</span></div>
+        <div class="sb-item" onclick="showView('abm',this)"><i class="bi bi-pencil-square"></i> <span>Productos (ABM)</span><span class="sb-badge" id="sb-badge-products" style="display:none;"></span></div>
+        <div class="sb-item" onclick="showView('categories',this)"><i class="bi bi-tags"></i> <span>Categorías</span><span class="sb-badge" id="sb-badge-categories" style="display:none;"></span></div>
+        <div class="sb-item" onclick="showView('coupons',this)"><i class="bi bi-ticket-perforated"></i> <span>Cupones</span><span class="sb-badge" id="sb-badge-coupons" style="display:none;"></span></div>
       </div>
     </div>
 
@@ -10784,12 +10826,114 @@
           if (cCats) cCats.resize();
         }, 50);
       }
+
+      if (typeof updateSidebarBadges === 'function') updateSidebarBadges();
     }
 
     function goToView(name) {
       const el = document.querySelector(`.sb-item[onclick*="'${name}'"]`) || document.querySelector(`.sb-item[onclick*="${name}"]`);
       showView(name, el);
     }
+
+    function updateSidebarBadges() {
+      try {
+        // 1. Pedidos (allOrders o localStorage)
+        let ordersCount = 0;
+        if (typeof allOrders !== 'undefined' && Array.isArray(allOrders) && allOrders.length > 0) {
+          ordersCount = allOrders.length;
+        } else {
+          try {
+            const saved = localStorage.getItem('storeapp_orders_' + STORE_ID);
+            if (saved) {
+              const parsed = JSON.parse(saved);
+              if (Array.isArray(parsed)) ordersCount = parsed.length;
+            }
+          } catch(e) {}
+        }
+
+        // 2. Repartidores / Pickups
+        let pickupsCount = 0;
+        if (window.currentPickups && Array.isArray(window.currentPickups) && window.currentPickups.length > 0) {
+          pickupsCount = window.currentPickups.length;
+        } else {
+          try {
+            const saved = localStorage.getItem('storeapp_pickups_' + STORE_ID);
+            if (saved) {
+              const parsed = JSON.parse(saved);
+              if (Array.isArray(parsed)) pickupsCount = parsed.length;
+            }
+          } catch(e) {}
+        }
+
+        // 3. Productos (localProducts o products o window.products o localStorage)
+        let productsCount = 0;
+        if (typeof localProducts !== 'undefined' && Array.isArray(localProducts) && localProducts.length > 0) {
+          productsCount = localProducts.length;
+        } else if (typeof products !== 'undefined' && Array.isArray(products) && products.length > 0) {
+          productsCount = products.length;
+        } else if (Array.isArray(window.products) && window.products.length > 0) {
+          productsCount = window.products.length;
+        } else {
+          try {
+            const saved = localStorage.getItem(`storeapp_local_products_${STORE_ID}`);
+            if (saved) {
+              const parsed = JSON.parse(saved);
+              if (Array.isArray(parsed)) productsCount = parsed.length;
+            }
+          } catch(e) {}
+        }
+
+        // 4. Categorías
+        let categoriesCount = 0;
+        if (Array.isArray(window.currentCategories) && window.currentCategories.length > 0) {
+          categoriesCount = window.currentCategories.length;
+        } else if (typeof supabaseCategories !== 'undefined' && Array.isArray(supabaseCategories) && supabaseCategories.length > 0) {
+          categoriesCount = supabaseCategories.length;
+        } else {
+          const prods = (typeof localProducts !== 'undefined' && Array.isArray(localProducts) && localProducts.length > 0)
+            ? localProducts
+            : ((typeof products !== 'undefined' && Array.isArray(products)) ? products : (window.products || []));
+          if (prods.length > 0) {
+            const uniqueCats = [...new Set(prods.map(p => p.cat || p.categoria).filter(Boolean))];
+            categoriesCount = uniqueCats.length;
+          }
+        }
+
+        // 5. Cupones
+        let couponsCount = 0;
+        if (typeof getStoreCoupons === 'function') {
+          const list = getStoreCoupons();
+          if (Array.isArray(list)) couponsCount = list.length;
+        } else if (typeof companySettings !== 'undefined' && companySettings?.billing_info?.coupons) {
+          const list = companySettings.billing_info.coupons;
+          if (Array.isArray(list)) couponsCount = list.length;
+        }
+
+        const badges = [
+          { id: 'sb-badge-orders', count: ordersCount },
+          { id: 'sb-badge-pickups', count: pickupsCount },
+          { id: 'sb-badge-products', count: productsCount },
+          { id: 'sb-badge-categories', count: categoriesCount },
+          { id: 'sb-badge-coupons', count: couponsCount }
+        ];
+
+        badges.forEach(b => {
+          const el = document.getElementById(b.id);
+          if (!el) return;
+          const num = Number(b.count) || 0;
+          if (num > 0) {
+            el.textContent = num > 99 ? '99+' : num;
+            el.style.display = 'inline-flex';
+          } else {
+            el.textContent = '';
+            el.style.display = 'none';
+          }
+        });
+      } catch (err) {
+        console.warn('Error al actualizar badges del sidebar:', err);
+      }
+    }
+    window.updateSidebarBadges = updateSidebarBadges;
 
     function hideDashboardLoader() {
       const loader = document.getElementById('dashboard-main-loader');
@@ -13600,6 +13744,8 @@
 
       document.getElementById('abm-count').textContent =
         `Mostrando ${filtered.length} de ${localProducts.length} productos`;
+
+      if (typeof updateSidebarBadges === 'function') updateSidebarBadges();
     }
 
     function quickStock(id, val) {
@@ -16197,6 +16343,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (typeof renderAllOrders === 'function') renderAllOrders(allOrders);
       if (typeof renderOrdersTable === 'function') renderOrdersTable(allOrders.slice(0, 10));
       if (typeof updateDashboardFromOrders === 'function') updateDashboardFromOrders(allOrders);
+      if (typeof updateSidebarBadges === 'function') updateSidebarBadges();
 
       const syncEl = document.getElementById('sheet-sync-info');
       if (syncEl) {
@@ -18556,6 +18703,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
       const allCats = window.currentCategories || [];
       if (totalCountEl) totalCountEl.textContent = `${allCats.length} categoría${allCats.length !== 1 ? 's' : ''}`;
+      if (typeof updateSidebarBadges === 'function') updateSidebarBadges();
 
       if (!allCats.length) {
         const emptyMsg = `
@@ -18773,6 +18921,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
       const coupons = getStoreCoupons();
       const tbody = document.getElementById('coupons-tbody');
+      if (typeof updateSidebarBadges === 'function') updateSidebarBadges();
       
       // Update Metrics
       const totalCount = coupons.length;
@@ -20631,6 +20780,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
     function renderPickupsTableUI() {
       const tbody = document.getElementById('pickups-tbody');
       if (!tbody) return;
+      if (typeof updateSidebarBadges === 'function') updateSidebarBadges();
 
       if (!window.currentPickups || !window.currentPickups.length) {
         tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--silver);padding:40px;">
@@ -21970,6 +22120,7 @@ Brindamos el mejor asesoramiento técnico y ofrecemos herramientas de primera ca
         if (typeof loadPages === 'function') loadPages();
         if (typeof loadCategoriesList === 'function') loadCategoriesList();
         if (typeof loadPickupsList === 'function') loadPickupsList();
+        if (typeof updateSidebarBadges === 'function') updateSidebarBadges();
         if (typeof hideDashboardLoader === 'function') hideDashboardLoader();
         setTimeout(() => { checkAndOpenOnboardingModal(); }, 600);
       }, 500);
