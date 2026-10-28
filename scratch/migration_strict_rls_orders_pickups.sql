@@ -107,9 +107,26 @@ ALTER TABLE public.pickups ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.pickups FORCE ROW LEVEL SECURITY;
 
 -- ------------------------------------------------------------------------------
--- PASO 4: PURGA TOTAL DE POLÍTICAS PREVIAS / INSEGURAS
+-- PASO 4: PURGA AUTOMÁTICA Y TOTAL DE TODAS LAS POLÍTICAS RESIDUALES
 -- ------------------------------------------------------------------------------
--- Limpieza en public.orders
+-- Elimina de raíz cualquier política heredada (incluso con nombres como
+-- 'Enable read access for all users', 'Permitir creación pública de pedidos', 'Dashboard pickups *')
+DO $$
+DECLARE
+    pol RECORD;
+BEGIN
+    FOR pol IN 
+        SELECT schemaname, tablename, policyname 
+        FROM pg_policies 
+        WHERE tablename IN ('orders', 'pickups', 'order_items')
+    LOOP
+        EXECUTE format('DROP POLICY IF EXISTS %I ON %I.%I;', pol.policyname, pol.schemaname, pol.tablename);
+    END LOOP;
+END $$;
+
+-- Purga explícita adicional de respaldo
+DROP POLICY IF EXISTS "Enable read access for all users" ON public.orders;
+DROP POLICY IF EXISTS "Permitir creación pública de pedidos" ON public.orders;
 DROP POLICY IF EXISTS "Public orders all" ON public.orders;
 DROP POLICY IF EXISTS "Public read orders" ON public.orders;
 DROP POLICY IF EXISTS "Public insert orders" ON public.orders;
@@ -126,7 +143,12 @@ DROP POLICY IF EXISTS "orders_authenticated_delete" ON public.orders;
 DROP POLICY IF EXISTS "orders_authenticated_insert" ON public.orders;
 DROP POLICY IF EXISTS "orders_service_role_all" ON public.orders;
 
--- Limpieza en public.pickups
+DROP POLICY IF EXISTS "Enable read access for all users" ON public.order_items;
+
+DROP POLICY IF EXISTS "Dashboard pickups read" ON public.pickups;
+DROP POLICY IF EXISTS "Dashboard pickups insert" ON public.pickups;
+DROP POLICY IF EXISTS "Dashboard pickups update" ON public.pickups;
+DROP POLICY IF EXISTS "Dashboard pickups delete" ON public.pickups;
 DROP POLICY IF EXISTS "Public pickups all" ON public.pickups;
 DROP POLICY IF EXISTS "Public pickups read" ON public.pickups;
 DROP POLICY IF EXISTS "Public pickups write" ON public.pickups;
@@ -266,6 +288,7 @@ BEGIN
     ALTER TABLE public.order_items FORCE ROW LEVEL SECURITY;
 
     DROP POLICY IF EXISTS "order_items_all" ON public.order_items;
+    DROP POLICY IF EXISTS "Enable read access for all users" ON public.order_items;
     DROP POLICY IF EXISTS "order_items_insert_policy" ON public.order_items;
     DROP POLICY IF EXISTS "order_items_select_policy" ON public.order_items;
     DROP POLICY IF EXISTS "order_items_anon_insert_only" ON public.order_items;
