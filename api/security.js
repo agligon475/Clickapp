@@ -217,3 +217,47 @@ export function sanitizeInput(text, maxLength = 1000) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#x27;');
 }
+
+/**
+ * Cifra un objeto o arreglo en formato AES-256-GCM autenticado para almacenamiento seguro en la nube
+ * @param {any} data Datos a cifrar
+ * @returns {string} Cadena cifrada iv:authTag:ciphertext en base64url
+ */
+export function encryptVault(data) {
+  try {
+    const key = crypto.createHash('sha256').update(JWT_SECRET).digest();
+    const iv = crypto.randomBytes(12);
+    const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
+    const plaintext = JSON.stringify(data);
+    const encrypted = Buffer.concat([cipher.update(plaintext, 'utf8'), cipher.final()]);
+    const tag = cipher.getAuthTag();
+    return `${iv.toString('base64url')}.${tag.toString('base64url')}.${encrypted.toString('base64url')}`;
+  } catch (err) {
+    console.error('Error en encryptVault:', err);
+    return null;
+  }
+}
+
+/**
+ * Descifra y verifica la autenticidad de un vault AES-256-GCM
+ * @param {string} token Cadena cifrada iv.tag.ciphertext
+ * @param {any} fallback Valor por defecto si falla o está vacío
+ * @returns {any} Datos descifrados
+ */
+export function decryptVault(token, fallback = []) {
+  if (!token || typeof token !== 'string' || !token.includes('.')) return fallback;
+  const parts = token.split('.');
+  if (parts.length !== 3) return fallback;
+  try {
+    const key = crypto.createHash('sha256').update(JWT_SECRET).digest();
+    const iv = Buffer.from(parts[0], 'base64url');
+    const tag = Buffer.from(parts[1], 'base64url');
+    const encrypted = Buffer.from(parts[2], 'base64url');
+    const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
+    decipher.setAuthTag(tag);
+    const decrypted = Buffer.concat([decipher.update(encrypted), decipher.final()]).toString('utf8');
+    return JSON.parse(decrypted);
+  } catch (err) {
+    return fallback;
+  }
+}

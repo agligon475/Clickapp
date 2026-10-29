@@ -452,16 +452,16 @@
 
     <!-- MODE TOGGLE TABS: LOGIN vs REGISTRO -->
     <div style="display:flex; background:#F6F6F6; border:1px solid var(--border); border-radius:12px; padding:4px; margin-bottom:28px;">
-      <button id="tab-login-btn" type="button" onclick="switchAuthTab('login')" style="flex:1; padding:9px 16px; background:var(--primary); color:#fff; border:none; border-radius:8px; font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s;">
+      <button id="tab-login-btn" type="button" onclick="switchAuthTab('login')" style="flex:1; padding:9px 16px; background:transparent; color:var(--text-muted); border:none; border-radius:8px; font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s;">
         <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
       </button>
-      <button id="tab-register-btn" type="button" onclick="switchAuthTab('register')" style="flex:1; padding:9px 16px; background:transparent; color:var(--text-muted); border:none; border-radius:8px; font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s;">
+      <button id="tab-register-btn" type="button" onclick="switchAuthTab('register')" style="flex:1; padding:9px 16px; background:var(--primary); color:#fff; border:none; border-radius:8px; font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s;">
         <i class="bi bi-plus-circle"></i> Registrar Comercio
       </button>
     </div>
 
     <!-- PANEL 1: LOGIN MODE -->
-    <div id="panel-login-mode" style="display: block;">
+    <div id="panel-login-mode" style="display: none;">
       <header style="margin-bottom: 24px; text-align:center;">
         <h1 style="font-size: 22px; font-weight: 700; color: #010101;">Acceso a tu Panel de Control</h1>
         <p class="subtitle">Ingresá tus credenciales de comercio para acceder al Dashboard</p>
@@ -546,7 +546,7 @@
   </div>
 
     <!-- PANEL 2: WIZARD REGISTRATION FORM -->
-    <div id="form-container" style="display: none;">
+    <div id="form-container" style="display: block;">
       <header style="margin-bottom: 24px;">
         <h1 style="font-size: 22px; font-weight: 700; color: #010101;">Alta de Comercio</h1>
         <p class="subtitle">Creá y registrá un nuevo comercio para tu plataforma multi-tienda</p>
@@ -1178,13 +1178,26 @@
         })
       }).catch(err => console.warn('Email trigger warning:', err));
 
+      let signedToken = 'auto-registered-' + Date.now();
+      try {
+        const authRes = await fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'login', store_id: storeId, password: password })
+        });
+        if (authRes.ok) {
+          const authData = await authRes.json();
+          if (authData && authData.token) signedToken = authData.token;
+        }
+      } catch (e) {}
       const sessionData = {
         store_id: storeId,
-        token: 'auto-registered-' + Date.now(),
+        token: signedToken,
         plan_level: 'trial',
         timestamp: Date.now()
       };
       sessionStorage.setItem('storeapp_logged_in_' + storeId, 'true');
+      sessionStorage.setItem('storeapp_token_' + storeId, signedToken);
       localStorage.setItem('storeapp_logged_in_' + storeId, 'true');
       localStorage.setItem('storeapp_store_id', storeId);
       localStorage.setItem('daletepido_store_id', storeId);
@@ -1280,6 +1293,7 @@
           timestamp: Date.now()
         };
         sessionStorage.setItem('storeapp_logged_in_' + data.store_id, 'true');
+        sessionStorage.setItem('storeapp_token_' + data.store_id, data.token);
         localStorage.setItem('storeapp_logged_in_' + data.store_id, 'true');
         localStorage.setItem('daletepido_session', JSON.stringify(sessionData));
         localStorage.setItem('storeapp_store_id', data.store_id);
@@ -1414,9 +1428,7 @@
     updateSubrubrosAlta();
     generateCaptchaChallenge();
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('action') === 'register') {
-      switchAuthTab('register');
-    } else {
+    if (urlParams.get('action') === 'login' || urlParams.get('reset_store')) {
       switchAuthTab('login');
       const savedStore = localStorage.getItem('storeapp_store_id') || localStorage.getItem('daletepido_store_id');
       const storeInp = document.getElementById('login-store-id');
@@ -1425,6 +1437,12 @@
       }
       setTimeout(() => {
         if (storeInp && !storeInp.value) storeInp.focus();
+      }, 100);
+    } else {
+      switchAuthTab('register');
+      setTimeout(() => {
+        const nameInp = document.getElementById('store-name');
+        if (nameInp && !nameInp.value) nameInp.focus();
       }, 100);
     }
 

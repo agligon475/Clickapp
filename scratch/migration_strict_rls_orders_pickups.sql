@@ -343,6 +343,10 @@ REVOKE ALL ON public.pickups FROM anon, public;
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.pickups TO authenticated;
 GRANT ALL ON public.pickups TO service_role;
 
+-- Purgar registros obsoletos marcados como DELETED en company_settings
+DELETE FROM public.company_settings
+WHERE status = 'DELETED' OR store_id LIKE 'deleted-%' OR business_name = 'Cuenta Eliminada';
+
 -- ------------------------------------------------------------------------------
 -- PASO 9: CONSULTA DE VALIDACIÓN AUTOMÁTICA
 -- ------------------------------------------------------------------------------

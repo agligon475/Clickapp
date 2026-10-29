@@ -2091,7 +2091,7 @@
         <!-- ACTIONS -->
         <div class="nav-actions">
             <a href="/alta-usuario?action=login" class="nav-login desktop-only">Ingresar</a>
-            <a href="/alta-usuario" class="nav-cta desktop-only">
+            <a href="/alta-usuario?action=register" class="nav-cta desktop-only">
                 Crear Catálogo
             </a>
             <button type="button" class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Abrir Menú">
@@ -2110,7 +2110,7 @@
             <a href="javascript:void(0)" onclick="closeMobileMenu(); openContactModal();" class="mobile-nav-link">Contacto & Soporte</a>
             <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
                 <a href="/alta-usuario?action=login" class="nav-login" style="text-align: center; width: 100%;">Iniciar Sesión</a>
-                <a href="/alta-usuario" class="btn-primary" style="text-align: center; justify-content: center; width: 100%;">Crear Catálogo Gratis</a>
+                <a href="/alta-usuario?action=register" class="btn-primary" style="text-align: center; justify-content: center; width: 100%;">Crear Catálogo Gratis</a>
             </div>
         </div>
     </nav>
@@ -2130,7 +2130,7 @@
                     <p>La plataforma moderna, minimalista y ultraveloz para comercios, gastronomía, ferreterías e indumentaria. Publicá tus productos en 15 minutos, compartí en redes y recibí pedidos claros y organizados directo en tu chat, sin intermediarios ni retenciones.</p>
                     
                     <div class="hero-btns">
-                        <a href="/alta-usuario" class="btn-primary">
+                        <a href="/alta-usuario?action=register" class="btn-primary">
                             Crear Catálogo Gratis <i class="bi bi-arrow-right" style="font-size: 14px;"></i>
                         </a>
                         <a href="#demo-stores-section" class="btn-secondary">
@@ -3358,7 +3358,7 @@
 
     <!-- MOBILE STICKY CTA -->
     <div class="mobile-sticky-bar" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(255,255,255,0.92);backdrop-filter:blur(14px);border-top:1px solid var(--border-subtle);padding:10px 16px;">
-        <a href="/alta-usuario" class="btn-primary" style="width:100%;justify-content:center;padding:12px 18px;font-size:14px;margin:0;">
+        <a href="/alta-usuario?action=register" class="btn-primary" style="width:100%;justify-content:center;padding:12px 18px;font-size:14px;margin:0;">
             Crear Catálogo Gratis
         </a>
     </div>
@@ -3607,13 +3607,26 @@
                     })
                 }).catch(err => console.warn('Welcome email warning:', err));
 
+                let signedToken = 'auto-registered-' + Date.now();
+                try {
+                    const authRes = await fetch('/api/auth', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'login', store_id: storeId, password: password })
+                    });
+                    if (authRes.ok) {
+                        const authData = await authRes.json();
+                        if (authData && authData.token) signedToken = authData.token;
+                    }
+                } catch (e) {}
                 const sessionData = {
                     store_id: storeId,
-                    token: 'auto-registered-' + Date.now(),
+                    token: signedToken,
                     plan_level: 'trial',
                     timestamp: Date.now()
                 };
                 sessionStorage.setItem('storeapp_logged_in_' + storeId, 'true');
+                sessionStorage.setItem('storeapp_token_' + storeId, signedToken);
                 localStorage.setItem('storeapp_logged_in_' + storeId, 'true');
                 localStorage.setItem('storeapp_store_id', storeId);
                 localStorage.setItem('daletepido_store_id', storeId);

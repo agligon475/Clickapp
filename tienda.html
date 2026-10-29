@@ -3027,6 +3027,17 @@ async function enviarWhatsApp() {
       console.warn('Advertencia al guardar orden en localStorage:', e.message);
     }
 
+    // ── 3.1 Sincronización Cloud Cifrada para Tablero Kanban & Tracking Multi-Dispositivo ──
+    fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'sync_order_create',
+        store_id: STORE_ID,
+        order: localOrder
+      })
+    }).catch(err => console.warn('Sync order vault warning:', err));
+
     // Aplicar descuento de cupón en base de datos si corresponde
     if (window.APPLIED_COUPON && window.STORE_COUPONS) {
       const cObj = window.STORE_COUPONS.find(c => c.id === window.APPLIED_COUPON.id);

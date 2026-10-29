@@ -412,7 +412,7 @@
       <div class="topbar-brand">
         <img src="https://res.cloudinary.com/deuog0r34/image/upload/v1778811606/daletepido-logo-white_zpcolq.png" onerror="this.src='/img-default/daletepido-logo-white-hq.png'" alt="Dale! Te Pido" class="topbar-logo" />
         <span class="topbar-tag"><i class="bi bi-clock-history"></i> RETROSPECTIVA HISTÓRICA</span>
-        <span class="topbar-tag" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.35); color: #10B981;"><i class="bi bi-calendar-check"></i> ACTUALIZADO: 28 OCTUBRE 2026</span>
+        <span class="topbar-tag" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.35); color: #10B981;"><i class="bi bi-calendar-check"></i> ACTUALIZADO: 29 OCTUBRE 2026</span>
       </div>
       <div class="topbar-actions">
         <a href="super-admin-secret-dashboard.html" class="nav-btn" title="Regresar al panel general">
@@ -421,7 +421,7 @@
         <button class="nav-btn" onclick="prevSlide()" title="Diapositiva Anterior (←)">
           <i class="bi bi-chevron-left"></i>
         </button>
-        <span id="slide-indicator" style="font-family: var(--font-mono); font-size: 12px; font-weight:700; color: #FFFFFF; min-width: 48px; text-align: center;">1 / 34</span>
+        <span id="slide-indicator" style="font-family: var(--font-mono); font-size: 12px; font-weight:700; color: #FFFFFF; min-width: 48px; text-align: center;">1 / 38</span>
         <button class="nav-btn primary" onclick="nextSlide()" title="Siguiente Diapositiva (→ o Espacio)">
           <i class="bi bi-chevron-right"></i>
         </button>
@@ -2200,6 +2200,43 @@
         </div>
       </section>
 
+      <!-- SLIDE 38: READINESS CAMPAÑAS, VAULT CLOUD AES-256-GCM & BLINDAJE DE DEMOS -->
+      <section class="slide" id="slide-38">
+        <span class="slide-badge" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4);color:#10B981;"><i class="bi bi-rocket-takeoff-fill"></i> Etapa 38 · Release 29 de Octubre 2026</span>
+        <h2 class="slide-title">Readiness Pre-Campaña: Embudo Directo de Alta, Vault Cloud AES-256-GCM & Blindaje de Tiendas Demo</h2>
+        <p class="slide-desc">Optimización integral anti-fricción para campañas de adquisición en redes sociales: apertura directa del wizard de creación, sincronización multi-dispositivo cifrada de pedidos/cadetes/tracking y bloqueo de edición no autorizada en los 7 catálogos de muestra.</p>
+
+        <div class="grid-2" style="margin-top:16px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px;">
+          <div class="card">
+            <div class="card-title" style="color:#10B981;"><i class="bi bi-funnel-fill"></i> Embudo de Alta sin Fricción (CTAs a Registro)</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Todos los botones <strong>"Crear Catálogo Gratis"</strong> en <code>landing.html</code> y la vista inicial de <code>alta-usuario.html</code> abren de inmediato el Paso 1 del creador de comercio y emiten un token JWT HMAC-SHA256 real al finalizar.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#3B82F6;"><i class="bi bi-cloud-check-fill"></i> Vault Cloud AES-256-GCM (Pedidos, Kanban & Tracking)</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Sincronización multi-dispositivo cifrada en <code>/api/auth</code> y <code>/api/security</code> para recepción de pedidos en el Kanban, persistencia de cambios de estado, gestión de repartidores y seguimiento en vivo cada 8s en <code>tracking.html</code>.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:#F59E0B;"><i class="bi bi-robot"></i> Sesión Criptográfica en Asistente IA Gemini</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Inyección automática del header <code>x-store-session</code> en todas las peticiones a <code>/api/gemini</code> desde <code>dashboard.html</code>, habilitando la asistencia por IA desde el minuto cero para comercios nuevos.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color:var(--red);"><i class="bi bi-shield-lock-fill"></i> Blindaje de las 7 Tiendas Demo & Redirección 301</div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:6px;">
+              Protección con hash criptográfico <code>salt:sha256</code> en <code>store_auth</code> para las 7 tiendas demo públicas (<code>bighouse</code>, <code>noutacc</code>, <code>ferre-now</code>, etc.) y redirección 301 en <code>/api/store</code> ante cuentas dadas de baja.
+            </p>
+          </div>
+        </div>
+      </section>
+
     </main>
 
     <!-- BOTTOMBAR -->
@@ -2211,7 +2248,7 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div>
-        Dale! Te Pido © 2026 · Versión 4.20 Alineación Comercial & SEO WhatsApp · Actualizado 28/10/2026
+        Dale! Te Pido © 2026 · Versión 4.21 Readiness Campañas & Vault AES-256-GCM · Actualizado 29/10/2026
       </div>
     </footer>
 
@@ -2220,7 +2257,7 @@
 
 <script>
   let currentSlide = 1;
-  const totalSlides = 37;
+  const totalSlides = 38;
 
   function showSlide(index) {
     if (index < 1) index = 1;

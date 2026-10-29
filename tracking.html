@@ -715,20 +715,40 @@
           return;
         }
 
-        // 1. Intentar buscar en Supabase por order_number o id
+        // 1. Consultar estado actualizado desde el Vault Cloud Seguro (/api/auth)
         let found = null;
         try {
-          const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?or=(order_number.eq.${encodeURIComponent(orderParam)},id.eq.${encodeURIComponent(orderParam)})&limit=1`, {
-            headers: { 'apikey': ANON_KEY, 'Authorization': `Bearer ${ANON_KEY}` }
+          const apiRes = await fetch('/api/auth', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'track_order', store_id: storeParam, order_id: orderParam })
           });
+          if (apiRes.ok) {
+            const apiData = await apiRes.json();
+            if (apiData && apiData.success && apiData.order) {
+              found = apiData.order;
+              if (!storeParam && apiData.store_id) {
+                loadStoreConfig(apiData.store_id);
+              }
+            }
+          }
+        } catch(e) {}
+
+        // 1b. Fallback directo a Supabase si no se halló en el vault
+        if (!found) {
+          try {
+            const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?or=(order_number.eq.${encodeURIComponent(orderParam)},id.eq.${encodeURIComponent(orderParam)})&limit=1`, {
+              headers: { 'apikey': ANON_KEY, 'Authorization': `Bearer ${ANON_KEY}` }
+            });
           if (res.ok) {
             const data = await res.json();
             if (data && data.length > 0) {
               found = data[0];
             }
           }
-        } catch(e) {
-          console.warn('[Tracking] Error buscando en Supabase:', e);
+          } catch(e) {
+            console.warn('[Tracking] Error buscando en Supabase:', e);
+          }
         }
 
         // 2. Si no está en Supabase, buscar en localStorage si es demo o pedido reciente
@@ -958,10 +978,19 @@
         `;
       }
 
-      // Inicio
+      // Inicio y refresco reactivo cada 8 segundos
       initSupabase();
       if (storeParam) loadStoreConfig(storeParam);
       fetchOrder();
+      setInterval(() => {
+        fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'track_order', store_id: storeParam, order_id: orderParam })
+        }).then(r => r.ok ? r.json() : null).then(d => {
+          if (d && d.success && d.order) renderOrder(d.order);
+        }).catch(() => {});
+      }, 8000);
     })();
   </script>
 </body>

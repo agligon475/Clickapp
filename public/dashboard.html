@@ -10390,7 +10390,7 @@
                 const storeRow = rows[0];
                 // Si la tienda tiene password configurada, verificarla
                 if (storeRow.password) {
-                  if (storeRow.password === passInput || passInput === 'admin123' || passInput === 'daletepido2026') {
+                  if (storeRow.password && storeRow.password === passInput) {
                     authSuccess = true;
                     finalStoreId = storeRow.store_id.toLowerCase();
                     if (storeRow.plan_level) sessionStorage.setItem('storeapp_plan_level_' + finalStoreId, storeRow.plan_level);
@@ -10422,7 +10422,7 @@
             const rows = await sbRes.json();
             if (rows && rows.length > 0) {
               const storeRow = rows[0];
-              if (!storeRow.password || storeRow.password === passInput || passInput === 'admin123' || passInput === 'daletepido2026') {
+              if (storeRow.password && storeRow.password === passInput) {
                 authSuccess = true;
                 finalStoreId = storeRow.store_id.toLowerCase();
               } else {
@@ -10441,8 +10441,11 @@
         // Logueado exitosamente
         sessionStorage.setItem('storeapp_logged_in_' + finalStoreId, 'true');
         originalLocalStorage.setItem('storeapp_logged_in_' + finalStoreId, 'true');
+        const savedTok = sessionStorage.getItem('storeapp_token_' + finalStoreId) || '';
         originalLocalStorage.setItem('daletepido_session', JSON.stringify({
           store_id: finalStoreId,
+          token: savedTok,
+          plan_level: sessionStorage.getItem('storeapp_plan_level_' + finalStoreId) || 'starter',
           timestamp: Date.now()
         }));
         
@@ -10770,6 +10773,19 @@
     let cOrders, cPago, cTop, cCats;
 
     /* ════════════════════════════════════════════ SUPABASE FUNCTIONS */
+    function getStoreSessionToken() {
+      try {
+        const stTok = sessionStorage.getItem('storeapp_token_' + STORE_ID);
+        if (stTok && stTok.includes('.')) return stTok;
+        const sessRaw = localStorage.getItem('daletepido_session');
+        if (sessRaw) {
+          const sess = JSON.parse(sessRaw);
+          if (sess && sess.token && sess.token.includes('.')) return sess.token;
+        }
+      } catch (e) {}
+      return '';
+    }
+
     async function safeFetchSupabase(url, options = {}) {
       options = options || {};
       options.headers = options.headers || {};
@@ -16210,6 +16226,7 @@ Si no reconocés el código, usá confianza "baja" e intentá igual.`;
             method: 'POST',
             headers: {
               'x-gemini-key': geminiKey,
+              'x-store-session': getStoreSessionToken(),
               'content-type': 'application/json'
             },
             body: JSON.stringify({
@@ -16375,6 +16392,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
             method: 'POST',
             headers: {
               'x-gemini-key': geminiKey,
+              'x-store-session': getStoreSessionToken(),
               'content-type': 'application/json'
             },
             body: JSON.stringify({
@@ -16662,14 +16680,33 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         localList = [];
       }
 
-      // 2. Sincronizar pedidos desde la base de datos Supabase
+      // 2. Sincronizar pedidos desde el Vault Cloud Cifrado (/api/auth) y Supabase
       let cloudList = [];
+      try {
+        const vaultRes = await fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'sync_orders_list', store_id: STORE_ID })
+        });
+        if (vaultRes.ok) {
+          const vaultData = await vaultRes.json();
+          if (vaultData && Array.isArray(vaultData.orders)) {
+            cloudList = vaultData.orders.map(o => ({
+              ...o,
+              id: o.id || o.order_number,
+              store_id: o.store_id || STORE_ID,
+              estado: o.estado || o.status || 'confirmar'
+            }));
+          }
+        }
+      } catch (e) {}
+
       try {
         const res = await safeFetchSupabase(`${SUPABASE_URL}/rest/v1/orders?store_id=eq.${encodeURIComponent(STORE_ID)}&order=created_at.desc`);
         if (res.ok) {
           const rawCloud = await res.json();
           if (Array.isArray(rawCloud)) {
-            cloudList = rawCloud.map(o => {
+            const directOrders = rawCloud.map(o => {
               const itemsArr = Array.isArray(o.items) ? o.items : [];
               const prodsText = itemsArr.map(it => `${it.nombre || it.name || 'Item'} ×${it.cantidad || it.qty || 1}`).join(' | ') || (o.items_text || 'Pedido');
               const d = o.created_at ? new Date(o.created_at) : new Date();
@@ -16710,6 +16747,10 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
                 category: 'SMALL_BOX'
               };
             });
+            const existingIds = new Set(cloudList.map(x => x.id));
+            directOrders.forEach(dOrd => {
+              if (!existingIds.has(dOrd.id)) cloudList.push(dOrd);
+            });
           }
         }
       } catch (e) {
@@ -16725,7 +16766,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
             map.set(o.id, o);
           } else {
             const localObj = map.get(o.id);
-            map.set(o.id, { ...o, ...localObj });
+            map.set(o.id, { ...localObj, ...o, estado: o.estado || localObj.estado });
           }
         }
       });
@@ -17760,9 +17801,14 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
         pago, logistica, direccion, total, estado,
       };
 
-      // Save to local list
+      // Save to local list & Cloud Vault
       allOrders.unshift(order);
       saveOrders(allOrders);
+      fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'sync_order_create', store_id: STORE_ID, order })
+      }).catch(() => {});
 
       // Save to Sheet via webhook if configured
       syncOrderToSheet(order);
@@ -18212,6 +18258,17 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       const previousEstado = o.estado;
       o.estado = estado;
       saveOrders(allOrders);
+      fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'sync_order_update',
+          store_id: STORE_ID,
+          order_id: id,
+          updates: { estado, status: estado },
+          full_order: o
+        })
+      }).catch(() => {});
       renderAllOrders(allOrders);
       updateDashboardFromOrders(allOrders);
 
@@ -18288,6 +18345,17 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
 
       o.pickup_id = pickupId;
       saveOrders(allOrders);
+      fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'sync_order_update',
+          store_id: STORE_ID,
+          order_id: orderId,
+          updates: { pickup_id: pickupId, pickup_cost: o.pickup_cost },
+          full_order: o
+        })
+      }).catch(() => {});
       renderAllOrders(allOrders);
 
       if (pickupId && window.currentPickups) {
@@ -18397,6 +18465,16 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (!confirm('¿Eliminar este pedido?')) return;
       allOrders = allOrders.filter(x => x.id !== id);
       saveOrders(allOrders);
+      fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'sync_order_update',
+          store_id: STORE_ID,
+          order_id: id,
+          delete: true
+        })
+      }).catch(() => {});
       renderAllOrders(allOrders);
       updateDashboardFromOrders(allOrders);
     }
@@ -20402,6 +20480,7 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
           method: 'POST',
           headers: {
             'x-gemini-key': key,
+            'x-store-session': getStoreSessionToken(),
             'content-type': 'application/json'
           },
           body: JSON.stringify({
@@ -21620,6 +21699,16 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
           window.currentPickups.push(payload);
         }
         localStorage.setItem('storeapp_pickups_' + STORE_ID, JSON.stringify(window.currentPickups));
+        fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'sync_pickups',
+            store_id: STORE_ID,
+            sub_action: 'replace_all',
+            pickups: window.currentPickups
+          })
+        }).catch(() => {});
         showView('pickups');
         renderPickupsTableUI();
         if (allOrders && allOrders.length) {
@@ -21644,6 +21733,16 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       if (window.currentPickups) {
         window.currentPickups = window.currentPickups.filter(p => String(p.id) !== String(id));
         localStorage.setItem('storeapp_pickups_' + STORE_ID, JSON.stringify(window.currentPickups));
+        fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'sync_pickups',
+            store_id: STORE_ID,
+            sub_action: 'delete',
+            pickup_id: id
+          })
+        }).catch(() => {});
       }
       renderPickupsTableUI();
       if (allOrders && allOrders.length) {
@@ -21662,10 +21761,18 @@ Solo especificaciones técnicas clave. Sin precio. Sin emojis. En español argen
       try {
         let pickups = null;
         try {
-          pickups = await fetchFromSupabase('pickups', { filter: 'order=id.asc' });
-        } catch (e) {
-          console.warn('Supabase fetch pickups error:', e);
-        }
+          const puVaultRes = await fetch('/api/auth', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'sync_pickups', store_id: STORE_ID, sub_action: 'list' })
+          });
+          if (puVaultRes.ok) {
+            const puVaultData = await puVaultRes.json();
+            if (puVaultData && Array.isArray(puVaultData.pickups) && puVaultData.pickups.length > 0) {
+              pickups = puVaultData.pickups;
+            }
+          }
+        } catch (e) {}
 
         const localSaved = localStorage.getItem('storeapp_pickups_' + STORE_ID);
         if (Array.isArray(pickups) && pickups.length > 0) {

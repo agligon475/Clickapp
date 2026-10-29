@@ -233,7 +233,7 @@ export default async function handler(req, res) {
 
   // Handle placeholder / dummy demo subdomains that bots or crawlers might discover
   const placeholderSlugs = ['mi-negocio', 'tu-negocio', 'tu-tienda', 'mi-tienda', 'ejemplo', 'ejemplo-tienda', 'test', 'demo-store'];
-  if (placeholderSlugs.includes(storeId)) {
+  if (placeholderSlugs.includes(storeId) || String(storeId).startsWith('deleted-')) {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
     res.writeHead(301, { Location: 'https://daletepido.com.ar/' });
     return res.end();
@@ -269,6 +269,11 @@ export default async function handler(req, res) {
         const data = await configRes.json().catch(() => []);
         if (data && data.length > 0) {
           const cfg = data[0];
+          if (cfg.status === 'DELETED' || cfg.business_name === 'Cuenta Eliminada') {
+            res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+            res.writeHead(301, { Location: 'https://daletepido.com.ar/' });
+            return res.end();
+          }
           const storeName = cfg.business_name || 'Dale! Te Pido';
           
           let title = `${storeName} — Catálogo Online`;

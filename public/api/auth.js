@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 import { getEmailLayout, getAppDownloadEmailTemplate } from './email-templates.js';
-import { signToken, verifyToken, setSecureCors, checkRateLimit } from './security.js';
+import { signToken, verifyToken, setSecureCors, checkRateLimit, encryptVault, decryptVault } from './security.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://iaylgsthwildjkiiwgfd.supabase.co';
 const DEFAULT_SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWxnc3Rod2lsZGpraWl3Z2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTQwODksImV4cCI6MjA5Mzg3MDA4OX0.4aysjORaQ_158r9CFgLSkcqmwpHFXsxZ9T18jEMF6z4';
@@ -67,6 +67,54 @@ export default async function handler(req, res) {
 
   try {
     const { action, store_id, password, new_password } = req.body || {};
+
+    // Acción especial: Seguimiento público de un pedido puntual por order_number / id (sin requerir store_id obligatorio)
+    if (action === 'track_order') {
+      const orderIdQuery = String(req.body?.order_id || '').trim();
+      const storeHint = String(store_id || '').trim().toLowerCase();
+      if (!orderIdQuery) {
+        return res.status(400).json({ success: false, error: 'El número de pedido es requerido' });
+      }
+
+      // 1. Intentar consultar en tabla nativa orders si la key tiene privilegio
+      try {
+        const directRes = await fetch(`${SUPABASE_URL}/rest/v1/orders?or=(order_number.eq.${encodeURIComponent(orderIdQuery)},id.eq.${encodeURIComponent(orderIdQuery)})&limit=1`, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        if (directRes.ok) {
+          const directRows = await directRes.json();
+          if (Array.isArray(directRows) && directRows.length > 0) {
+            return res.status(200).json({ success: true, order: directRows[0] });
+          }
+        }
+      } catch (e) {}
+
+      // 2. Consultar en el vault cifrado AES-256-GCM de la tienda (o tiendas activas si no se especificó store_id)
+      const csQuery = storeHint
+        ? `store_id=eq.${encodeURIComponent(storeHint)}&select=store_id,billing_info`
+        : `status=neq.DELETED&select=store_id,billing_info`;
+      const csRes = await fetch(`${SUPABASE_URL}/rest/v1/company_settings?${csQuery}`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
+      if (csRes.ok) {
+        const storesList = await csRes.json();
+        for (const st of (storesList || [])) {
+          const bInfo = st.billing_info || {};
+          if (bInfo._orders_vault) {
+            const vaultOrders = decryptVault(bInfo._orders_vault, []);
+            const found = (vaultOrders || []).find(o =>
+              String(o.id || '').toLowerCase() === orderIdQuery.toLowerCase() ||
+              String(o.order_number || '').toLowerCase() === orderIdQuery.toLowerCase()
+            );
+            if (found) {
+              return res.status(200).json({ success: true, order: found, store_id: st.store_id });
+            }
+          }
+        }
+      }
+
+      return res.status(404).json({ success: false, error: 'Pedido no encontrado' });
+    }
 
     if (!store_id) {
       return res.status(400).json({ success: false, error: 'El nombre de la tienda o correo electrónico es requerido' });
@@ -502,6 +550,167 @@ export default async function handler(req, res) {
       } else {
         return res.status(503).json({ success: false, error: 'Servicio de correo temporalmente no disponible' });
       }
+    }
+
+    // =========================================================================
+    // SINCRONIZACIÓN CLOUD SEGURA DE PEDIDOS Y CADETES (AES-256-GCM VAULT)
+    // =========================================================================
+    const currentBillingInfo = (settings.billing_info && typeof settings.billing_info === 'object')
+      ? { ...settings.billing_info }
+      : {};
+
+    // A. Crear / Registrar un nuevo pedido desde tienda.html o dashboard.html
+    if (action === 'sync_order_create') {
+      const incomingOrder = req.body?.order;
+      if (!incomingOrder || typeof incomingOrder !== 'object') {
+        return res.status(400).json({ success: false, error: 'Datos de pedido inválidos' });
+      }
+
+      const normalizedOrder = {
+        ...incomingOrder,
+        id: incomingOrder.id || incomingOrder.order_number || ('PED-' + Date.now()),
+        order_number: incomingOrder.order_number || incomingOrder.id || ('PED-' + Date.now()),
+        store_id: actualStoreId,
+        estado: incomingOrder.estado || incomingOrder.status || 'confirmar',
+        status: incomingOrder.status || incomingOrder.estado || 'confirmar',
+        created_at: incomingOrder.created_at || new Date().toISOString()
+      };
+
+      const existingOrders = decryptVault(currentBillingInfo._orders_vault, []);
+      const filtered = (Array.isArray(existingOrders) ? existingOrders : []).filter(
+        o => o && String(o.id) !== String(normalizedOrder.id) && String(o.order_number) !== String(normalizedOrder.order_number)
+      );
+      filtered.unshift(normalizedOrder);
+      const trimmed = filtered.slice(0, 200);
+
+      currentBillingInfo._orders_vault = encryptVault(trimmed);
+
+      await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(actualStoreId)}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`
+        },
+        body: JSON.stringify({ billing_info: currentBillingInfo })
+      });
+
+      return res.status(200).json({ success: true, order: normalizedOrder });
+    }
+
+    // B. Listar pedidos del comercio para el Dashboard (sync_orders_list)
+    if (action === 'sync_orders_list') {
+      const vaultOrders = decryptVault(currentBillingInfo._orders_vault, []);
+      return res.status(200).json({
+        success: true,
+        store_id: actualStoreId,
+        orders: Array.isArray(vaultOrders) ? vaultOrders : []
+      });
+    }
+
+    // C. Actualizar estado, repartidor o eliminar pedido en el Kanban (sync_order_update)
+    if (action === 'sync_order_update') {
+      const orderId = String(req.body?.order_id || '').trim();
+      const updates = req.body?.updates || {};
+      const isDelete = req.body?.delete === true;
+
+      if (!orderId) {
+        return res.status(400).json({ success: false, error: 'order_id es requerido' });
+      }
+
+      let vaultOrders = decryptVault(currentBillingInfo._orders_vault, []);
+      if (!Array.isArray(vaultOrders)) vaultOrders = [];
+
+      let updatedOrder = null;
+      if (isDelete) {
+        vaultOrders = vaultOrders.filter(o => o && String(o.id) !== orderId && String(o.order_number) !== orderId);
+      } else {
+        const idx = vaultOrders.findIndex(o => o && (String(o.id) === orderId || String(o.order_number) === orderId));
+        if (idx >= 0) {
+          vaultOrders[idx] = {
+            ...vaultOrders[idx],
+            ...updates,
+            updated_at: new Date().toISOString()
+          };
+          updatedOrder = vaultOrders[idx];
+        } else if (req.body?.full_order) {
+          updatedOrder = {
+            ...req.body.full_order,
+            ...updates,
+            store_id: actualStoreId,
+            updated_at: new Date().toISOString()
+          };
+          vaultOrders.unshift(updatedOrder);
+        }
+      }
+
+      currentBillingInfo._orders_vault = encryptVault(vaultOrders.slice(0, 200));
+
+      await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(actualStoreId)}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`
+        },
+        body: JSON.stringify({ billing_info: currentBillingInfo })
+      });
+
+      // Intentar también sincronizar en public.orders si la política lo permite
+      try {
+        if (!isDelete && updates.estado) {
+          await fetch(`${SUPABASE_URL}/rest/v1/orders?or=(id.eq.${encodeURIComponent(orderId)},order_number.eq.${encodeURIComponent(orderId)})&store_id=eq.${encodeURIComponent(actualStoreId)}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${SUPABASE_KEY}`
+            },
+            body: JSON.stringify({ status: updates.estado, updated_at: new Date().toISOString() })
+          });
+        }
+      } catch (e) {}
+
+      return res.status(200).json({ success: true, order: updatedOrder });
+    }
+
+    // D. Sincronizar Cadetes / Puntos de Retiro (sync_pickups)
+    if (action === 'sync_pickups') {
+      const subAction = req.body?.sub_action || 'list';
+      let vaultPickups = decryptVault(currentBillingInfo._pickups_vault, []);
+      if (!Array.isArray(vaultPickups)) vaultPickups = [];
+
+      if (subAction === 'list') {
+        return res.status(200).json({ success: true, pickups: vaultPickups });
+      }
+
+      if (subAction === 'save' && req.body?.pickup) {
+        const pu = { ...req.body.pickup, store_id: actualStoreId };
+        const idx = vaultPickups.findIndex(p => p && String(p.id) === String(pu.id));
+        if (idx >= 0) {
+          vaultPickups[idx] = { ...vaultPickups[idx], ...pu };
+        } else {
+          vaultPickups.push(pu);
+        }
+      } else if (subAction === 'delete' && req.body?.pickup_id) {
+        vaultPickups = vaultPickups.filter(p => p && String(p.id) !== String(req.body.pickup_id));
+      } else if (subAction === 'replace_all' && Array.isArray(req.body?.pickups)) {
+        vaultPickups = req.body.pickups.map(p => ({ ...p, store_id: actualStoreId }));
+      }
+
+      currentBillingInfo._pickups_vault = encryptVault(vaultPickups);
+
+      await fetch(`${SUPABASE_URL}/rest/v1/company_settings?store_id=eq.${encodeURIComponent(actualStoreId)}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`
+        },
+        body: JSON.stringify({ billing_info: currentBillingInfo })
+      });
+
+      return res.status(200).json({ success: true, pickups: vaultPickups });
     }
 
     return res.status(400).json({ success: false, error: 'Acción no válida' });
