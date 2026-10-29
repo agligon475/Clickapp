@@ -42,15 +42,15 @@ Es una plataforma SaaS multi-rubro que permite a cualquier comercio, emprendedor
    - Aumentos masivos por porcentaje, por rubro/categoría o importación/exportación Excel/CSV en segundos.
 
 ### 4. URLs Oficiales de Campaña y Tiendas Demo (Blindadas en Producción)
-- **Landing Principal:** `https://www.daletepido.com`
-- **Registro Directo (Paso 1):** `https://www.daletepido.com/alta-usuario.html?mode=register`
+- **Landing Principal:** `https://www.daletepido.com.ar`
+- **Registro Directo (Paso 1):** `https://www.daletepido.com.ar/alta-usuario.html?mode=register`
 - **7 Tiendas Demo Públicas (Solo lectura):**
-  - Gastronomía: `bighouse` (Big House Burgers)
-  - Kiosco / Bebidas: `kioscojulio` (Kiosco Julio)
-  - Ferretería: `ferre-now` (Ferre Now)
-  - Tecnología: `noutacc` (Nout Accesorios)
-  - Computación: `tecnomont` (TecnoMont)
-  - Indumentaria: `biuti` (Biuti Indumentaria)
+  - Gastronomía: `bighouse` (`https://www.daletepido.com.ar/tienda?store=bighouse`)
+  - Kiosco / Bebidas: `kioscojulio` (`https://www.daletepido.com.ar/tienda?store=kioscojulio`)
+  - Ferretería: `ferre-now` (`https://www.daletepido.com.ar/tienda?store=ferre-now`)
+  - Tecnología: `noutacc` (`https://www.daletepido.com.ar/tienda?store=noutacc`)
+  - Computación: `tecnomont` (`https://www.daletepido.com.ar/tienda?store=tecnomont`)
+  - Indumentaria: `biuti` (`https://www.daletepido.com.ar/tienda?store=biuti`)
   - Librería / Corralón: `todolisto` y `lugonessilva`
 
 
