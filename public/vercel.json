@@ -292,6 +292,18 @@
       "destination": "/presentacion-evolucion-clickapp.html"
     },
     {
+      "source": "/presentacion-evolucion-clickapp.md",
+      "destination": "/presentacion-evolucion-clickapp.md"
+    },
+    {
+      "source": "/contexto-ia",
+      "destination": "/contexto-ia.html"
+    },
+    {
+      "source": "/contexto-ia.html",
+      "destination": "/contexto-ia.html"
+    },
+    {
       "source": "/desarrollo",
       "destination": "/desarrollo.html"
     },

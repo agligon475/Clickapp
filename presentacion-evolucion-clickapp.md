@@ -1,8 +1,60 @@
-# Dale! Te Pido (Clickapp) — Evolución Integral de Plataforma & Registro de Hitos Técnicos
+# Dale! Te Pido (Clickapp) — Evolución Integral de Plataforma & Contexto Maestro para IA
 
-**Documento de Fuente Optimizado para Google NotebookLM**  
+**Documento Oficial de Fuente Viva para Google NotebookLM y Gemini**  
+*URL Pública Permanente:* https://www.daletepido.com/contexto-ia  
 *Fecha de Corte:* 29 de Octubre de 2026 · Versión de Plataforma: v4.21 · Operatividad Global: 98.5% (Ready for Paid Social Ads)  
-*Resumen:* Registro maestro cronológico, arquitectónico y técnico de la evolución de Dale! Te Pido (Clickapp) a lo largo de sus 38 etapas correlativas. Cubre arquitectura cloud serverless en Vercel, persistencia relacional en Supabase (`store_auth`, `store_config`, `store_products`, `store_orders`, `pickup_requests`), seguridad bancaria HMAC-SHA256 + RLS + Bóveda Criptográfica AES-256-GCM, suite integral de comercio multi-rubro (Storefront + Dashboard + SuperAdmin + Tracking Público), logística multimodal Dale!QueVoy, video commerce, onboarding sin fricción e inteligencia financiera.
+*Resumen:* Registro maestro cronológico, comercial, arquitectónico y técnico de Dale! Te Pido (Clickapp) a lo largo de sus 38 etapas correlativas. Incluye las reglas comerciales vigentes anti-cortocircuito para campañas de marketing y el detalle técnico de su arquitectura serverless en Vercel, Supabase, Vault Cloud AES-256-GCM, Tablero Kanban, Tracking en vivo y Suite Multi-rubro.
+
+---
+
+## 0. CONTEXTO MAESTRO OFICIAL & REGLAS ANTI-CORTOCIRCUITO PARA GEMINI / NOTEBOOKLM (VIGENTE v4.21)
+
+> **INSTRUCCIÓN DE PRIORIDAD ABSOLUTA PARA IA:** Si existe cualquier diferencia entre etapas históricas anteriores (Etapas 1 a 36) y esta sección, **ESTA SECCIÓN Y LAS ETAPAS 37–38 TIENEN PRIORIDAD ABSOLUTA** porque reflejan el estado vivo en producción hoy.
+
+### 1. Qué es y qué resuelve "Dale! Te Pido" hoy (Operatividad: 98.5%)
+Es una plataforma SaaS multi-rubro que permite a cualquier comercio, emprendedor, gastronómico, ferretería o mayorista crear en menos de 2 minutos su propio **Catálogo Digital Interactivo + Sistema de Gestión de Pedidos (Tablero Kanban)** conectado a WhatsApp.
+- **Propuesta de valor central:** *"Vendé como las grandes apps de delivery o e-commerce, pero desde tu WhatsApp y pagando 0% de comisión por venta"*.
+- **Rubros principales (Multi-rubro):** Gastronomía/Restaurantes, Kioscos/Bebidas, Ferreterías/Corralones, Indumentaria/Moda, Tecnología/Accesorios, Computación/Hardware, Librerías/Papelerías y Mayoristas/Distribuidoras.
+
+### 2. Reglas Anti-Cortocircuito (Lo que NO se debe prometer ni confundir en Marketing)
+1. **NO prometer flota de cadetes propia ("Dale!QueVoy" está en Pausa Estratégica Comercial — ver Etapa 37):**
+   - Aunque el motor logístico existe en el código, comercialmente está oculto en la Landing y el Dashboard para priorizar un mensaje simple.
+   - **Cómo comunicar los envíos:** El comercio ofrece *"Retiro en local (Take Away)"* o *"Envío a domicilio con sus propios cadetes/repartidores"*, asignándolos desde el panel y brindándole al comprador un **Link de Seguimiento en Vivo (Tracking Público)** con código PIN de entrega.
+2. **NO decir que Dale! Te Pido retiene el dinero ni que es una pasarela intermedia:**
+   - El comercio cobra el 100% directo en su cuenta (**0% comisión por venta**). Soporta **Efectivo** (con cálculo de vuelto), **Transferencia Bancaria** (el cliente copia el Alias/CBU en 1 clic desde la tienda y adjunta el comprobante) y **Mercado Pago** propio del comercio.
+3. **NO hablar de facturación fiscal AFIP/ARCA:**
+   - El sistema imprime comandas térmicas de 58mm/80mm llamadas **"Tickets de Pedido Interno"** (Etapa 37), diseñadas para la cocina, el mostrador, el armado de pedidos o como recordatorio físico para reponer mercadería agotada con proveedores.
+4. **NO decir que el comprador necesita descargar una App para comprar:**
+   - El comprador final entra desde un link web ultra-rápido (`daletepido.com/tienda?store=nombre`) o escaneando un QR en el mostrador, sin instalar nada ni registrarse.
+
+### 3. Diferenciales Reales ("Efecto ¡Wow!") listos para Campañas de Marketing
+1. **Onboarding sin fricción en 2 minutos (Etapa 38):** Todos los botones de *"Crear Catálogo Gratis"* abren directo el Paso 1 del creador de tienda (`alta-usuario.html?mode=register`), emiten sesión criptográfica automática y dejan al comerciante dentro de su panel con su catálogo 100% limpio (o con opción opt-in de precargar 5 categorías sugeridas).
+2. **Doble impacto del Pedido (WhatsApp + Tablero Kanban en Tiempo Real con Vault Cloud AES-256-GCM):**
+   - Cuando un cliente compra desde su celular, el pedido llega estructurado al WhatsApp del comercio y **al mismo tiempo entra en vivo como tarjeta al Tablero Kanban** en la PC o tablet del local, haciendo sonar la campanita de caja registradora.
+3. **Tracking Público en Vivo para el Comprador (`tracking.html`):**
+   - Cada compra genera un link único con 4 pasos en tiempo real (*Recibido ➔ En Preparación ➔ En Camino ➔ Entregado*). Cuando el comerciante arrastra la tarjeta en su Kanban (con mouse o con el dedo en pantalla táctil), el comprador ve avanzar su pedido en su celular sin preguntar *"¿Por dónde viene?"*.
+4. **Video Commerce (Micro-Videos en Productos):**
+   - Permite mostrar videos cortos en las tarjetas de producto que se reproducen al instante sin frenar la carga móvil.
+5. **Kit Imprimible QR HD para Mostrador y Vidriera (`kit-imprimible.html`):**
+   - Generador automático de carteles A4/A5 listos para imprimir con el logo y QR de la tienda.
+6. **Asistente IA Integrado (jAIme / Gemini):**
+   - Redacta descripciones vendedoras, sugiere precios y busca fotos de productos desde adentro del panel.
+7. **Gestión de Precios Anti-Inflación:**
+   - Aumentos masivos por porcentaje, por rubro/categoría o importación/exportación Excel/CSV en segundos.
+
+### 4. URLs Oficiales de Campaña y Tiendas Demo (Blindadas en Producción)
+- **Landing Principal:** `https://www.daletepido.com`
+- **Registro Directo (Paso 1):** `https://www.daletepido.com/alta-usuario.html?mode=register`
+- **URL de Contexto Vivo para IA (NotebookLM / Gemini):** `https://www.daletepido.com/contexto-ia`
+- **7 Tiendas Demo Públicas (Solo lectura, protegidas contra edición):**
+  - Gastronomía: `bighouse` (Big House Burgers)
+  - Kiosco / Bebidas: `kioscojulio` (Kiosco Julio)
+  - Ferretería: `ferre-now` (Ferre Now)
+  - Tecnología: `noutacc` (Nout Accesorios)
+  - Computación: `tecnomont` (TecnoMont)
+  - Indumentaria: `biuti` (Biuti Indumentaria)
+  - Librería / Corralón: `todolisto` y `lugonessilva`
+
 
 ---
 
