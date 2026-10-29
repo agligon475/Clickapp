@@ -1,16 +1,35 @@
 const fs = require('fs');
 const path = require('path');
 
+const SECRET_AI_SLUG = 'ai-vault-9f4c8e2a7b1d';
 const htmlPath = path.join(__dirname, '..', 'presentacion-evolucion-clickapp.html');
 const outputMdPath = path.join(__dirname, '..', 'presentacion-evolucion-clickapp.md');
-const outputHtmlPath = path.join(__dirname, '..', 'contexto-ia.html');
+const outputHtmlPath = path.join(__dirname, '..', `${SECRET_AI_SLUG}.html`);
 const outputLlmsPath = path.join(__dirname, '..', 'llms.txt');
+
+// Remove old guessable public files if present
+['contexto-ia.html', 'public/contexto-ia.html', 'Clickapp-main/contexto-ia.html', 'Clickapp/contexto-ia.html', 'public/presentacion-evolucion-clickapp.md'].forEach(rel => {
+  const p = path.join(__dirname, '..', rel);
+  if (fs.existsSync(p)) {
+    try { fs.unlinkSync(p); } catch (e) {}
+  }
+});
 
 const html = fs.readFileSync(htmlPath, 'utf8');
 
-function cleanText(str) {
+function sanitizeSensitiveInfo(str) {
   if (!str) return '';
   return str
+    .replace(/daletepido@gmail\.com/gi, '[correo-administrador]')
+    .replace(/super-admin-secret-dashboard\.html/gi, '[panel-superadmin]')
+    .replace(/super-admin-[a-z-]+\.html/gi, '[panel-superadmin]')
+    .replace(/store_id:\s*licalic/gi, 'store_id: [tienda-test]')
+    .replace(/\bLicaLic\b/g, 'TiendaTest');
+}
+
+function cleanText(str) {
+  if (!str) return '';
+  const cleaned = str
     .replace(/<br\s*[\/]?>/gi, '\n')
     .replace(/<strong>([\s\S]*?)<\/strong>/gi, '**$1**')
     .replace(/<b>([\s\S]*?)<\/b>/gi, '**$1**')
@@ -26,6 +45,7 @@ function cleanText(str) {
     .replace(/&#39;/g, "'")
     .replace(/\n\s*\n\s*\n/g, '\n\n')
     .trim();
+  return sanitizeSensitiveInfo(cleaned);
 }
 
 function escapeHtml(str) {
@@ -53,7 +73,7 @@ Es una plataforma SaaS multi-rubro que permite a cualquier comercio, emprendedor
 
 ### 2. Reglas Anti-Cortocircuito (Lo que NO se debe prometer ni confundir en Marketing)
 1. **NO prometer flota de cadetes propia ("Dale!QueVoy" está en Pausa Estratégica Comercial — ver Etapa 37):**
-   - Aunque el motor logístico existe en el código, comercialmente está oculto en la Landing y el Dashboard para priorizar un mensaje simple.
+   - Aunque el motor logístico existe en el código, comercialmente está en pausa para priorizar un mensaje simple.
    - **Cómo comunicar los envíos:** El comercio ofrece *"Retiro en local (Take Away)"* o *"Envío a domicilio con sus propios cadetes/repartidores"*, asignándolos desde el panel y brindándole al comprador un **Link de Seguimiento en Vivo (Tracking Público)** con código PIN de entrega.
 2. **NO decir que Dale! Te Pido retiene el dinero ni que es una pasarela intermedia:**
    - El comercio cobra el 100% directo en su cuenta (**0% comisión por venta**). Soporta **Efectivo** (con cálculo de vuelto), **Transferencia Bancaria** (el cliente copia el Alias/CBU en 1 clic desde la tienda y adjunta el comprobante) y **Mercado Pago** propio del comercio.
@@ -63,8 +83,8 @@ Es una plataforma SaaS multi-rubro que permite a cualquier comercio, emprendedor
    - El comprador final entra desde un link web ultra-rápido (\`daletepido.com/tienda?store=nombre\`) o escaneando un QR en el mostrador, sin instalar nada ni registrarse.
 
 ### 3. Diferenciales Reales ("Efecto ¡Wow!") listos para Campañas de Marketing
-1. **Onboarding sin fricción en 2 minutos (Etapa 38):** Todos los botones de *"Crear Catálogo Gratis"* abren directo el Paso 1 del creador de tienda (\`alta-usuario.html?mode=register\`), emiten sesión criptográfica automática y dejan al comerciante dentro de su panel con su catálogo 100% limpio (o con opción opt-in de precargar 5 categorías sugeridas).
-2. **Doble impacto del Pedido (WhatsApp + Tablero Kanban en Tiempo Real con Vault Cloud AES-256-GCM):**
+1. **Onboarding sin fricción en 2 minutos (Etapa 38):** Todos los botones de *"Crear Catálogo Gratis"* abren directo el Paso 1 del creador de tienda (\`alta-usuario.html?mode=register\`), emiten sesión automática y dejan al comerciante dentro de su panel con su catálogo 100% limpio (o con opción opt-in de precargar 5 categorías sugeridas).
+2. **Doble impacto del Pedido (WhatsApp + Tablero Kanban en Tiempo Real):**
    - Cuando un cliente compra desde su celular, el pedido llega estructurado al WhatsApp del comercio y **al mismo tiempo entra en vivo como tarjeta al Tablero Kanban** en la PC o tablet del local, haciendo sonar la campanita de caja registradora.
 3. **Tracking Público en Vivo para el Comprador (\`tracking.html\`):**
    - Cada compra genera un link único con 4 pasos en tiempo real (*Recibido ➔ En Preparación ➔ En Camino ➔ Entregado*). Cuando el comerciante arrastra la tarjeta en su Kanban (con mouse o con el dedo en pantalla táctil), el comprador ve avanzar su pedido en su celular sin preguntar *"¿Por dónde viene?"*.
@@ -80,8 +100,7 @@ Es una plataforma SaaS multi-rubro que permite a cualquier comercio, emprendedor
 ### 4. URLs Oficiales de Campaña y Tiendas Demo (Blindadas en Producción)
 - **Landing Principal:** \`https://www.daletepido.com\`
 - **Registro Directo (Paso 1):** \`https://www.daletepido.com/alta-usuario.html?mode=register\`
-- **URL de Contexto Vivo para IA (NotebookLM / Gemini):** \`https://www.daletepido.com/contexto-ia\`
-- **7 Tiendas Demo Públicas (Solo lectura, protegidas contra edición):**
+- **7 Tiendas Demo Públicas (Solo lectura):**
   - Gastronomía: \`bighouse\` (Big House Burgers)
   - Kiosco / Bebidas: \`kioscojulio\` (Kiosco Julio)
   - Ferretería: \`ferre-now\` (Ferre Now)
@@ -92,10 +111,9 @@ Es una plataforma SaaS multi-rubro que permite a cualquier comercio, emprendedor
 `;
 
 let md = `# Dale! Te Pido (Clickapp) — Evolución Integral de Plataforma & Contexto Maestro para IA\n\n`;
-md += `**Documento Oficial de Fuente Viva para Google NotebookLM y Gemini**  \n`;
-md += `*URL Pública Permanente:* https://www.daletepido.com/contexto-ia  \n`;
+md += `**Documento Privado de Fuente Viva para Google NotebookLM y Gemini**  \n`;
 md += `*Fecha de Corte:* 29 de Octubre de 2026 · Versión de Plataforma: v4.21 · Operatividad Global: 98.5% (Ready for Paid Social Ads)  \n`;
-md += `*Resumen:* Registro maestro cronológico, comercial, arquitectónico y técnico de Dale! Te Pido (Clickapp) a lo largo de sus 38 etapas correlativas. Incluye las reglas comerciales vigentes anti-cortocircuito para campañas de marketing y el detalle técnico de su arquitectura serverless en Vercel, Supabase, Vault Cloud AES-256-GCM, Tablero Kanban, Tracking en vivo y Suite Multi-rubro.\n\n`;
+md += `*Resumen:* Registro maestro cronológico, comercial, arquitectónico y técnico de Dale! Te Pido (Clickapp) a lo largo de sus 38 etapas correlativas. Incluye las reglas comerciales vigentes anti-cortocircuito para campañas de marketing y el detalle funcional de la plataforma.\n\n`;
 md += `---\n\n`;
 md += masterContextMd + `\n\n---\n\n`;
 
@@ -222,15 +240,15 @@ while ((slideMatch = slideRegex.exec(html)) !== null) {
 
 fs.writeFileSync(outputMdPath, md, 'utf8');
 
-// Generate clean, 100%-visible semantic HTML for NotebookLM & Gemini URL ingestion
+// Generate unlisted, noindex semantic HTML for private NotebookLM & Gemini URL ingestion
 let semanticHtml = `<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dale! Te Pido (Clickapp) — Contexto Maestro Oficial & Evolución v4.21 (Etapas 1 a ${slideIndex})</title>
-  <meta name="description" content="Fuente viva oficial de contexto comercial, arquitectura y evolución histórica de Dale! Te Pido (Clickapp) optimizada para Google NotebookLM y Gemini." />
-  <meta name="robots" content="index, follow" />
+  <title>Dale! Te Pido — Contexto Maestro IA v4.21 (Etapas 1 a ${slideIndex})</title>
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+  <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet" />
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -283,10 +301,9 @@ let semanticHtml = `<!DOCTYPE html>
 <body>
   <article>
     <header>
-      <span class="badge">FUENTE VIVA OFICIAL PARA GEMINI &amp; GOOGLE NOTEBOOKLM · ACTUALIZADO 29/10/2026 (v4.21)</span>
+      <span class="badge">FUENTE PRIVADA NO INDEXADA PARA GEMINI &amp; NOTEBOOKLM · ACTUALIZADO 29/10/2026 (v4.21)</span>
       <h1>Dale! Te Pido (Clickapp) — Contexto Maestro Oficial &amp; Evolución de Plataforma (Etapas 1 a ${slideIndex})</h1>
-      <p><strong>URL Permanente de Sincronización:</strong> <code>https://www.daletepido.com/contexto-ia</code> | <strong>Versión Markdown:</strong> <code>https://www.daletepido.com/presentacion-evolucion-clickapp.md</code></p>
-      <p><strong>Estado Operativo Actual:</strong> 98.5% Operativo (Ready for Paid Social Ads) · +825 Commits · Seguridad 98/100 (HMAC-SHA256 + RLS + Vault Cloud AES-256-GCM).</p>
+      <p><strong>Estado Operativo Actual:</strong> 98.5% Operativo (Ready for Paid Social Ads) · +825 Commits · Seguridad 98/100.</p>
     </header>
 
     <section class="alert-box" id="contexto-maestro-vigente">
@@ -302,7 +319,7 @@ let semanticHtml = `<!DOCTYPE html>
 
       <h3>2. Reglas Anti-Cortocircuito (Lo que NO se debe prometer ni confundir en Marketing)</h3>
       <ol>
-        <li><strong>NO prometer flota de cadetes propia ("Dale!QueVoy" está en Pausa Estratégica Comercial — Etapa 37):</strong> Aunque el motor logístico existe en el código, comercialmente está oculto en la Landing y el Dashboard para priorizar un mensaje simple. Comunicá que el comercio puede ofrecer <em>"Retiro en local (Take Away)"</em> o <em>"Envío a domicilio con sus propios cadetes/repartidores"</em>, asignándolos desde el panel y brindándole al comprador un <strong>Link de Seguimiento en Vivo (Tracking Público)</strong> con código PIN de entrega.</li>
+        <li><strong>NO prometer flota de cadetes propia ("Dale!QueVoy" está en Pausa Estratégica Comercial — Etapa 37):</strong> Aunque el motor logístico existe en el código, comercialmente está en pausa para priorizar un mensaje simple. Comunicá que el comercio puede ofrecer <em>"Retiro en local (Take Away)"</em> o <em>"Envío a domicilio con sus propios cadetes/repartidores"</em>, asignándolos desde el panel y brindándole al comprador un <strong>Link de Seguimiento en Vivo (Tracking Público)</strong> con código PIN de entrega.</li>
         <li><strong>NO decir que Dale! Te Pido retiene el dinero ni que somos intermediarios de pago:</strong> El comercio cobra el 100% directo en su cuenta (0% comisión por venta). Soporta <strong>Efectivo</strong> (con cálculo de vuelto), <strong>Transferencia Bancaria</strong> (el cliente copia el Alias/CBU en 1 clic desde la tienda y adjunta el comprobante) y <strong>Mercado Pago</strong> propio del comercio.</li>
         <li><strong>NO hablar de facturación fiscal AFIP/ARCA:</strong> El sistema imprime comandas térmicas de 58mm/80mm llamadas <strong>"Tickets de Pedido Interno"</strong> (Etapa 37), diseñadas para cocina, mostrador, armado de pedidos o como recordatorio físico para reponer mercadería agotada con proveedores.</li>
         <li><strong>NO decir que el comprador necesita descargar una App para comprar:</strong> El comprador final entra desde un link web ultra-rápido (<code>daletepido.com/tienda?store=nombre</code>) o escaneando un QR en el mostrador, sin instalar nada ni registrarse.</li>
@@ -310,8 +327,8 @@ let semanticHtml = `<!DOCTYPE html>
 
       <h3>3. Diferenciales Reales ("Efecto ¡Wow!") listos para Campañas de Marketing</h3>
       <ul>
-        <li><strong>Onboarding sin fricción en 2 minutos (Etapa 38):</strong> Todos los botones de "Crear Catálogo Gratis" abren directo el Paso 1 del creador de tienda (<code>alta-usuario.html?mode=register</code>), emiten sesión criptográfica automática y dejan al comerciante dentro de su panel con su catálogo 100% limpio (con opción opt-in de precargar 5 categorías sugeridas).</li>
-        <li><strong>Doble impacto del Pedido (WhatsApp + Tablero Kanban en Tiempo Real con Vault Cloud AES-256-GCM):</strong> Cuando un cliente compra desde su celular, el pedido llega estructurado al WhatsApp del comercio y al mismo tiempo entra en vivo como tarjeta al Tablero Kanban en la PC o tablet del local, haciendo sonar la campanita de caja registradora.</li>
+        <li><strong>Onboarding sin fricción en 2 minutos (Etapa 38):</strong> Todos los botones de "Crear Catálogo Gratis" abren directo el Paso 1 del creador de tienda (<code>alta-usuario.html?mode=register</code>), emiten sesión automática y dejan al comerciante dentro de su panel con su catálogo 100% limpio (con opción opt-in de precargar 5 categorías sugeridas).</li>
+        <li><strong>Doble impacto del Pedido (WhatsApp + Tablero Kanban en Tiempo Real):</strong> Cuando un cliente compra desde su celular, el pedido llega estructurado al WhatsApp del comercio y al mismo tiempo entra en vivo como tarjeta al Tablero Kanban en la PC o tablet del local, haciendo sonar la campanita de caja registradora.</li>
         <li><strong>Tracking Público en Vivo para el Comprador (<code>tracking.html</code>):</strong> Cada compra genera un link único con 4 pasos en tiempo real (Recibido ➔ En Preparación ➔ En Camino ➔ Entregado). Cuando el comerciante arrastra la tarjeta en su Kanban (con mouse o dedo en pantalla táctil), el comprador ve avanzar su pedido en vivo.</li>
         <li><strong>Video Commerce (Micro-Videos en Productos):</strong> Videos cortos en tarjetas de producto con reproducción instantánea.</li>
         <li><strong>Kit Imprimible QR HD para Mostrador y Vidriera (<code>kit-imprimible.html</code>):</strong> Carteles A4/A5 listos para imprimir en 1 clic con el logo y QR del comercio.</li>
@@ -323,12 +340,12 @@ let semanticHtml = `<!DOCTYPE html>
       <ul>
         <li><strong>Landing Principal:</strong> <code>https://www.daletepido.com</code></li>
         <li><strong>Registro Directo (Paso 1):</strong> <code>https://www.daletepido.com/alta-usuario.html?mode=register</code></li>
-        <li><strong>7 Tiendas Demo Públicas (Solo lectura, protegidas contra edición en Supabase):</strong> <code>bighouse</code> (Gastronomía), <code>kioscojulio</code> (Kiosco/Bebidas), <code>ferre-now</code> (Ferretería), <code>noutacc</code> (Tecnología), <code>tecnomont</code> (Hardware/Computación), <code>biuti</code> (Indumentaria), <code>todolisto</code> y <code>lugonessilva</code> (Librería/Corralón).</li>
+        <li><strong>7 Tiendas Demo Públicas (Solo lectura):</strong> <code>bighouse</code> (Gastronomía), <code>kioscojulio</code> (Kiosco/Bebidas), <code>ferre-now</code> (Ferretería), <code>noutacc</code> (Tecnología), <code>tecnomont</code> (Hardware/Computación), <code>biuti</code> (Indumentaria), <code>todolisto</code> y <code>lugonessilva</code> (Librería/Corralón).</li>
       </ul>
     </section>
 
     <section id="historial-etapas">
-      <h2>REGISTRO CRONOLÓGICO COMPLETO DE LAS ${slideIndex} ETAPAS DE EVOLUCIÓN</h2>
+      <h2>REGISTRO CRONOLÓGICO DE LAS ${slideIndex} ETAPAS DE EVOLUCIÓN</h2>
 `;
 
 parsedSlides.forEach(s => {
@@ -379,28 +396,34 @@ semanticHtml += `    </section>
 
 fs.writeFileSync(outputHtmlPath, semanticHtml, 'utf8');
 
-// Also update llms.txt so standard AI crawlers find /contexto-ia and the current v4.21 rules
-const llmsContent = `# Dale! Te Pido (Clickapp) — Plataforma SaaS de Catálogos Interactivos y Gestión de Pedidos por WhatsApp (v4.21)
+// Public llms.txt: strictly commercial public overview (no secret links, no internal strategy)
+const publicLlmsContent = `# Dale! Te Pido - Catálogo Digital Interactivo y Gestión de Pedidos por WhatsApp
 
-> Fuente viva completa para Google NotebookLM y Gemini: https://www.daletepido.com/contexto-ia
-> Documento Markdown completo (38 etapas): https://www.daletepido.com/presentacion-evolucion-clickapp.md
+> Dale! Te Pido es la plataforma SaaS multi-rubro que permite a comercios, gastronómicos, ferreterías, tiendas de indumentaria y mayoristas crear su catálogo digital interactivo en 2 minutos con 0% de comisión por venta.
 
-${masterContextMd}
+## Características Comerciales Principales
+- **0% Comisión por Venta:** Cobrás el 100% directo en tu Efectivo, Transferencia Bancaria (con copia de Alias en 1 clic) o Mercado Pago.
+- **Doble Recepción (WhatsApp + Tablero Kanban en Tiempo Real):** El pedido llega estructurado al WhatsApp del comercio y al Tablero Kanban en vivo.
+- **Seguimiento en Vivo para Compradores (Tracking Público):** Link en tiempo real con las 4 etapas del pedido (Recibido, En Preparación, En Camino, Entregado).
+- **Video Commerce:** Soporte para micro-videos en tarjetas de producto.
+- **Kit Imprimible QR HD:** Cartelería A4/A5 lista para imprimir para mostrador y vidriera.
+- **Asistente IA Integrado:** Redacción automática de descripciones y búsqueda inteligente de fotos de productos.
+
+## Enlaces Públicos Oficiales
+- [Sitio Principal](https://www.daletepido.com)
+- [Crear Catálogo Gratis](https://www.daletepido.com/alta-usuario.html?mode=register)
+- [Centro de Ayuda](https://www.daletepido.com/ayuda)
 `;
-fs.writeFileSync(outputLlmsPath, llmsContent, 'utf8');
+fs.writeFileSync(outputLlmsPath, publicLlmsContent, 'utf8');
 
-// Mirror into public/ and Clickapp-main/ so Vercel static serving always has the latest version
 ['public', 'Clickapp-main', 'Clickapp'].forEach(dir => {
   const dirPath = path.join(__dirname, '..', dir);
   if (fs.existsSync(dirPath)) {
-    fs.writeFileSync(path.join(dirPath, 'presentacion-evolucion-clickapp.md'), md, 'utf8');
-    fs.writeFileSync(path.join(dirPath, 'contexto-ia.html'), semanticHtml, 'utf8');
-    fs.writeFileSync(path.join(dirPath, 'llms.txt'), llmsContent, 'utf8');
+    fs.writeFileSync(path.join(dirPath, `${SECRET_AI_SLUG}.html`), semanticHtml, 'utf8');
+    fs.writeFileSync(path.join(dirPath, 'llms.txt'), publicLlmsContent, 'utf8');
   }
 });
 
-console.log(`Exportación completada exitosamente:`);
-console.log(`- Markdown: ${outputMdPath}`);
-console.log(`- HTML Semántico para URL IA (NotebookLM / Gemini): ${outputHtmlPath}`);
-console.log(`- LLMs.txt: ${outputLlmsPath}`);
-console.log(`Total de diapositivas procesadas: ${slideIndex}`);
+console.log(`Exportación privada completada exitosamente:`);
+console.log(`- Slug secreto no listado: /${SECRET_AI_SLUG}`);
+console.log(`- Total de diapositivas procesadas: ${slideIndex}`);

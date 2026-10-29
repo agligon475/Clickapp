@@ -1,9 +1,8 @@
 # Dale! Te Pido (Clickapp) — Evolución Integral de Plataforma & Contexto Maestro para IA
 
-**Documento Oficial de Fuente Viva para Google NotebookLM y Gemini**  
-*URL Pública Permanente:* https://www.daletepido.com/contexto-ia  
+**Documento Privado de Fuente Viva para Google NotebookLM y Gemini**  
 *Fecha de Corte:* 29 de Octubre de 2026 · Versión de Plataforma: v4.21 · Operatividad Global: 98.5% (Ready for Paid Social Ads)  
-*Resumen:* Registro maestro cronológico, comercial, arquitectónico y técnico de Dale! Te Pido (Clickapp) a lo largo de sus 38 etapas correlativas. Incluye las reglas comerciales vigentes anti-cortocircuito para campañas de marketing y el detalle técnico de su arquitectura serverless en Vercel, Supabase, Vault Cloud AES-256-GCM, Tablero Kanban, Tracking en vivo y Suite Multi-rubro.
+*Resumen:* Registro maestro cronológico, comercial, arquitectónico y técnico de Dale! Te Pido (Clickapp) a lo largo de sus 38 etapas correlativas. Incluye las reglas comerciales vigentes anti-cortocircuito para campañas de marketing y el detalle funcional de la plataforma.
 
 ---
 
@@ -18,7 +17,7 @@ Es una plataforma SaaS multi-rubro que permite a cualquier comercio, emprendedor
 
 ### 2. Reglas Anti-Cortocircuito (Lo que NO se debe prometer ni confundir en Marketing)
 1. **NO prometer flota de cadetes propia ("Dale!QueVoy" está en Pausa Estratégica Comercial — ver Etapa 37):**
-   - Aunque el motor logístico existe en el código, comercialmente está oculto en la Landing y el Dashboard para priorizar un mensaje simple.
+   - Aunque el motor logístico existe en el código, comercialmente está en pausa para priorizar un mensaje simple.
    - **Cómo comunicar los envíos:** El comercio ofrece *"Retiro en local (Take Away)"* o *"Envío a domicilio con sus propios cadetes/repartidores"*, asignándolos desde el panel y brindándole al comprador un **Link de Seguimiento en Vivo (Tracking Público)** con código PIN de entrega.
 2. **NO decir que Dale! Te Pido retiene el dinero ni que es una pasarela intermedia:**
    - El comercio cobra el 100% directo en su cuenta (**0% comisión por venta**). Soporta **Efectivo** (con cálculo de vuelto), **Transferencia Bancaria** (el cliente copia el Alias/CBU en 1 clic desde la tienda y adjunta el comprobante) y **Mercado Pago** propio del comercio.
@@ -28,8 +27,8 @@ Es una plataforma SaaS multi-rubro que permite a cualquier comercio, emprendedor
    - El comprador final entra desde un link web ultra-rápido (`daletepido.com/tienda?store=nombre`) o escaneando un QR en el mostrador, sin instalar nada ni registrarse.
 
 ### 3. Diferenciales Reales ("Efecto ¡Wow!") listos para Campañas de Marketing
-1. **Onboarding sin fricción en 2 minutos (Etapa 38):** Todos los botones de *"Crear Catálogo Gratis"* abren directo el Paso 1 del creador de tienda (`alta-usuario.html?mode=register`), emiten sesión criptográfica automática y dejan al comerciante dentro de su panel con su catálogo 100% limpio (o con opción opt-in de precargar 5 categorías sugeridas).
-2. **Doble impacto del Pedido (WhatsApp + Tablero Kanban en Tiempo Real con Vault Cloud AES-256-GCM):**
+1. **Onboarding sin fricción en 2 minutos (Etapa 38):** Todos los botones de *"Crear Catálogo Gratis"* abren directo el Paso 1 del creador de tienda (`alta-usuario.html?mode=register`), emiten sesión automática y dejan al comerciante dentro de su panel con su catálogo 100% limpio (o con opción opt-in de precargar 5 categorías sugeridas).
+2. **Doble impacto del Pedido (WhatsApp + Tablero Kanban en Tiempo Real):**
    - Cuando un cliente compra desde su celular, el pedido llega estructurado al WhatsApp del comercio y **al mismo tiempo entra en vivo como tarjeta al Tablero Kanban** en la PC o tablet del local, haciendo sonar la campanita de caja registradora.
 3. **Tracking Público en Vivo para el Comprador (`tracking.html`):**
    - Cada compra genera un link único con 4 pasos en tiempo real (*Recibido ➔ En Preparación ➔ En Camino ➔ Entregado*). Cuando el comerciante arrastra la tarjeta en su Kanban (con mouse o con el dedo en pantalla táctil), el comprador ve avanzar su pedido en su celular sin preguntar *"¿Por dónde viene?"*.
@@ -45,8 +44,7 @@ Es una plataforma SaaS multi-rubro que permite a cualquier comercio, emprendedor
 ### 4. URLs Oficiales de Campaña y Tiendas Demo (Blindadas en Producción)
 - **Landing Principal:** `https://www.daletepido.com`
 - **Registro Directo (Paso 1):** `https://www.daletepido.com/alta-usuario.html?mode=register`
-- **URL de Contexto Vivo para IA (NotebookLM / Gemini):** `https://www.daletepido.com/contexto-ia`
-- **7 Tiendas Demo Públicas (Solo lectura, protegidas contra edición):**
+- **7 Tiendas Demo Públicas (Solo lectura):**
   - Gastronomía: `bighouse` (Big House Burgers)
   - Kiosco / Bebidas: `kioscojulio` (Kiosco Julio)
   - Ferretería: `ferre-now` (Ferre Now)
@@ -222,7 +220,7 @@ Módulo secreto de administración global para supervisar la salud de la red, au
 ### Componentes e Innovaciones Implementadas:
 
 #### Super Admin Dashboard
-Panel maestro (`super-admin-secret-dashboard.html`) con monitoreo en vivo de todas las tiendas, auditoría de eventos de altas y accesos, y diagnóstico de APIs (DB, Gemini, Claude, Cloudinary).
+Panel maestro (`[panel-superadmin]`) con monitoreo en vivo de todas las tiendas, auditoría de eventos de altas y accesos, y diagnóstico de APIs (DB, Gemini, Claude, Cloudinary).
 
 #### Gestión de Cuentas DEMO
 Identificador visual con badge ámbar, filtros dedicados y exclusión de métricas de facturación para cuentas de prueba, evitando distorsionar los datos de negocios reales.
@@ -234,7 +232,7 @@ Editor visual de plantillas y cronograma de seguimiento automatizado (Día 2 red
 Generación de videos cinéticos de 15s y 30s con HyperFrames y el asset oficial de marca para pauta publicitaria en TikTok e Instagram Reels.
 
 #### Enviador de Prospectos
-Herramienta `super-admin-prospectos.html` para contactar negocios fríos y enviar invitaciones personalizadas con previsualización del catálogo.
+Herramienta `[panel-superadmin]` para contactar negocios fríos y enviar invitaciones personalizadas con previsualización del catálogo.
 
 ---
 
@@ -750,12 +748,12 @@ Cada cambio de columna persiste inmediatamente en Supabase / Google Sheets, noti
 
 > **Hito / Estado:** Etapa 33 · Release 28 de Octubre 2026
 
-Aislamiento estricto entre el reenvío de confirmación de correo para comercios y la alerta de nuevas tiendas a SuperAdmin (daletepido@gmail.com), plantilla transaccional dedicada, eliminación de fallbacks hardcodeados y feedback moderno con toasts no bloqueantes.
+Aislamiento estricto entre el reenvío de confirmación de correo para comercios y la alerta de nuevas tiendas a SuperAdmin ([correo-administrador]), plantilla transaccional dedicada, eliminación de fallbacks hardcodeados y feedback moderno con toasts no bloqueantes.
 
 ### Componentes e Innovaciones Implementadas:
 
 #### Desacoplamiento de Alertas SuperAdmin
-En `api/welcome-email.js`, el disparador `notifyAdminNewAccount` quedó estrictamente restringido a registros genuinos (`type === 'new_registration' || type === 'welcome'`). El reenvío de verificación jamás enviará alertas engañosas de "¡Nueva Cuenta Registrada!" a `daletepido@gmail.com` ni generará falsas alarmas sobre tiendas ya existentes.
+En `api/welcome-email.js`, el disparador `notifyAdminNewAccount` quedó estrictamente restringido a registros genuinos (`type === 'new_registration' || type === 'welcome'`). El reenvío de verificación jamás enviará alertas engañosas de "¡Nueva Cuenta Registrada!" a `[correo-administrador]` ni generará falsas alarmas sobre tiendas ya existentes.
 
 #### Plantilla Transaccional getVerificationEmail
 En `api/email-templates.js`, se diseñó la plantilla oficial `getVerificationEmail` con el asunto *"Confirmá tu correo electrónico - Dale! Te Pido"*, enlace directo de verificación de un solo clic (`?verify=true`), tipografía limpia y diseño responsivo adaptado a clientes de correo modernos.
@@ -772,12 +770,12 @@ Se erradicó el uso del diálogo invasivo `alert()` nativo del navegador, sustit
 
 > **Hito / Estado:** Etapa 34 · Release 28 de Octubre 2026
 
-Resolución integral de precargas automáticas inconsultas de categorías en el registro de tiendas: catálogos 100% en blanco por defecto, casilla de verificación opt-in explícita, y saneamiento total del catálogo de pruebas LicaLic.
+Resolución integral de precargas automáticas inconsultas de categorías en el registro de tiendas: catálogos 100% en blanco por defecto, casilla de verificación opt-in explícita, y saneamiento total del catálogo de pruebas TiendaTest.
 
 ### Componentes e Innovaciones Implementadas:
 
-#### Saneamiento Inmediato de LicaLic en Supabase
-Se purgaron de la base de datos las 5 categorías de ferretería inyectadas automáticamente por el antiguo script de registro. La cuenta `store_id: licalic` quedó en estado **100% limpio y en blanco** (0 productos, 0 categorías), lista para pruebas manuales paso a paso sin interferencias.
+#### Saneamiento Inmediato de TiendaTest en Supabase
+Se purgaron de la base de datos las 5 categorías de ferretería inyectadas automáticamente por el antiguo script de registro. La cuenta `store_id: [tienda-test]` quedó en estado **100% limpio y en blanco** (0 productos, 0 categorías), lista para pruebas manuales paso a paso sin interferencias.
 
 #### Casilla Opt-in Explícita en Onboarding (alta-usuario.html)
 Se desactivó la ejecución forzada de `seedCategoriesForNewStore`. Ahora se exhibe un control claro: *"Precargar 5 categorías sugeridas para este rubro"*, **desmarcado por defecto**. Solo si el comerciante lo elige activamente se inyectarán sugerencias iniciales.

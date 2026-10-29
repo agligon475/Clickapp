@@ -292,16 +292,12 @@
       "destination": "/presentacion-evolucion-clickapp.html"
     },
     {
-      "source": "/presentacion-evolucion-clickapp.md",
-      "destination": "/presentacion-evolucion-clickapp.md"
+      "source": "/ai-vault-9f4c8e2a7b1d",
+      "destination": "/ai-vault-9f4c8e2a7b1d.html"
     },
     {
-      "source": "/contexto-ia",
-      "destination": "/contexto-ia.html"
-    },
-    {
-      "source": "/contexto-ia.html",
-      "destination": "/contexto-ia.html"
+      "source": "/ai-vault-9f4c8e2a7b1d.html",
+      "destination": "/ai-vault-9f4c8e2a7b1d.html"
     },
     {
       "source": "/desarrollo",
