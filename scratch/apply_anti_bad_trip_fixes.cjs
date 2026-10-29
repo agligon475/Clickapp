@@ -465,3 +465,4 @@ function assertReplaced(before, after, label) {
   assertReplaced(prev, content, 'tracking.html cloud tracking updates');
   fs.writeFileSync('tracking.html', content, 'utf8');
 }
+

@@ -1,21 +1,21 @@
 # Dale! Te Pido (Clickapp) — Evolución Integral de Plataforma & Registro de Hitos Técnicos
 
 **Documento de Fuente Optimizado para Google NotebookLM**  
-*Fecha de Corte:* 27 de Octubre de 2026 · Versión de Plataforma: v4.10  
-*Resumen:* Registro maestro cronológico y técnico de la evolución de Dale! Te Pido (Clickapp) a lo largo de sus 27 etapas correlativas. Cubre arquitectura cloud serverless, persistencia relacional en Supabase, seguridad bancaria HMAC & RLS, suite integral de comercio (Storefront + Dashboard + SuperAdmin), logística multimodal Dale!QueVoy, video commerce y sincronización en tiempo real.
+*Fecha de Corte:* 29 de Octubre de 2026 · Versión de Plataforma: v4.21 · Operatividad Global: 98.5% (Ready for Paid Social Ads)  
+*Resumen:* Registro maestro cronológico, arquitectónico y técnico de la evolución de Dale! Te Pido (Clickapp) a lo largo de sus 38 etapas correlativas. Cubre arquitectura cloud serverless en Vercel, persistencia relacional en Supabase (`store_auth`, `store_config`, `store_products`, `store_orders`, `pickup_requests`), seguridad bancaria HMAC-SHA256 + RLS + Bóveda Criptográfica AES-256-GCM, suite integral de comercio multi-rubro (Storefront + Dashboard + SuperAdmin + Tracking Público), logística multimodal Dale!QueVoy, video commerce, onboarding sin fricción e inteligencia financiera.
 
 ---
 
 ## Diapositiva 1: De un Catálogo por WhatsApp a una Plataforma SaaS Multi-tenant
 
-> **Hito / Estado:** MEMORIA DE DESARROLLO INTEGRAL · ACTUALIZADO 25/10/2026
+> **Hito / Estado:** MEMORIA DE DESARROLLO INTEGRAL · ACTUALIZADO 29/10/2026 (v4.21)
 
-Recorrido cronológico y técnico de todo lo construido en Dale! Te Pido / Clickapp desde el día cero hasta hoy: arquitectura cloud, seguridad de grado bancario, suite de comercio, Android TWA y automatizaciones de venta.
+Recorrido cronológico y técnico de todo lo construido en Dale! Te Pido / Clickapp a lo largo de 38 etapas correlativas: arquitectura cloud serverless, bóveda criptográfica AES-256-GCM, suite de comercio, Android TWA, logística Dale!QueVoy y automatización omnicanal lista para campañas.
 
 ### Métricas Clave de la Plataforma:
-- **+775 Commits:** Evolución continua, resiliencia y sincronización automática.
-- **94/100 Seguridad:** Auditoría bancaria SEC-01 a SEC-08 mitigada con HMAC & RLS.
-- **100% Vanilla JS:** Velocidad extrema en móvil sin pesados frameworks JS.
+- **+825 Commits:** 38 etapas correlativas, resiliencia cloud y sincronización automática.
+- **98/100 Seguridad:** Auditoría bancaria SEC-01 a SEC-08 mitigada + Vault AES-256-GCM, HMAC & RLS.
+- **98.5% Operatividad:** Embudos de onboarding, checkout, dashboard y tracking listos para campañas Ads.
 - **360° Suite:** Tienda, Dashboard, Superadmin, APK, PWA y Campañas.
 
 ---
@@ -581,6 +581,248 @@ Si la inserción en Supabase falla por cualquier causa, el bloque `catch` restau
 
 #### Limpieza Atómica & Redirección Formateada
 Únicamente tras la respuesta exitosa del servidor se vacía el carrito en memoria/localStorage y se abre WhatsApp con el identificador oficial `#TP-XXXX`, incorporando fallback automático a `location.href` ante bloqueadores de popups móviles.
+
+---
+
+## Diapositiva 28: Blindaje SEO en Google, Redirección 301 de Subdominios Huérfanos & Snippets Limpios
+
+> **Hito / Estado:** Etapa 28 · Release 27 de Octubre 2026
+
+Corrección integral de indexación en Google: mitigación del rastreo indebido de subdominios de ejemplo (`mi-negocio.daletepido.com.ar`), redirecciones canónicas 301, metatags descriptivos de fallback y protección anti-snippets con `data-nosnippet`.
+
+### Componentes e Innovaciones Implementadas:
+
+#### Redirección 301 Permanente & NoIndex Automático
+En `api/store.js`, cualquier solicitud a subdominios de mockup (como `mi-negocio` o `tu-tienda`) o subdominios no registrados en Supabase ahora responde con **redirección permanente 301 hacia `https://daletepido.com.ar/`** y cabecera `X-Robots-Tag: noindex, nofollow, noarchive`, transfiriendo autoridad a la home y purgando URLs huérfanas de Google.
+
+#### Metatags Fallback & Título de Marca Oficial
+Se reemplazó el título estático obsoleto por el oficial *"Dale! Te Pido — Catálogo Online para WhatsApp"* y se integró una etiqueta `meta description` por defecto para evitar que los rastreadores concatenen textos aleatorios del DOM.
+
+#### Directiva data-nosnippet Anti-Cargando Productos
+Se blindaron los elementos de carga y badges estructurales (badges de tienda, pills de envío y labels de carga) con el atributo estándar `data-nosnippet`, asegurando que Google jamás vuelva a mostrar textos temporales o skeletons en sus snippets de búsqueda.
+
+#### Higiene de Enlaces en el Comprobador de Nombres
+En `landing.html`, el comprobador en tiempo real fue aislado con `data-nosnippet` y referencias canónicas seguras, evitando que los spiders de búsqueda interpreten los ejemplos visuales de registro como páginas activas independientes.
+
+---
+
+## Diapositiva 29: Aislamiento Estricto RLS en Supabase (public.orders & public.pickups)
+
+> **Hito / Estado:** Etapa 29 · Release 28 de Octubre 2026
+
+Blindaje definitivo contra Broken Object Level Authorization (BOLA / IDOR): inserción anónima segura sin exposición de lecturas (Zero-Read Insert) y control de acceso estricto para comercios autenticados.
+
+### Componentes e Innovaciones Implementadas:
+
+#### Inserción Anónima Segura (Zero-Read Insert)
+Los clientes en el storefront (`tienda.html`) cuentan con permiso exclusivo de `INSERT` con validación de `store_id` y estados iniciales permitidos. Se revocaron por completo los permisos de `SELECT`, `UPDATE` y `DELETE` para el rol anónimo.
+
+#### Bloqueo Total de Fugas BOLA / IDOR con anon_key
+Cualquier consulta con la clave anónima hacia `/rest/v1/orders` o `/rest/v1/pickups` (incluso manipulando `?store_id=...` o `?id=...`) es bloqueada al 100% por PostgreSQL con **0 filas devueltas**, protegiendo datos personales de clientes.
+
+#### Función Determinística get_auth_store_id()
+Se implementó la función `SECURITY DEFINER` en PostgreSQL que resuelve de manera infalsificable la identidad del comercio desde los claims JWT (`store_id`, `app_metadata` o email verificado), asegurando aislamiento multi-tenant estricto.
+
+#### Protección Integral de Cadetería (public.pickups)
+La tabla de cadetes y puntos de entrega propios queda 100% oculta para usuarios anónimos. Solo el comercio titular autenticado puede visualizar, dar de alta y asignar sus repartidores y ubicaciones de retiro.
+
+---
+
+## Diapositiva 30: Badges Dinámicos de Conteo en Navegación Lateral (Sidebar UX)
+
+> **Hito / Estado:** Etapa 30 · Release 28 de Octubre 2026
+
+Indicadores numéricos en tiempo real en la barra lateral para verificar volúmenes de pedidos, productos, categorías, cupones y cadetes sin necesidad de ingresar a cada sección, con ocultamiento automático cuando el conteo es cero.
+
+### Componentes e Innovaciones Implementadas:
+
+#### Verificación Inmediata sin Fricción
+El comerciante puede ver de un vistazo en la barra lateral cuántos **Pedidos** tiene registrados, el volumen de **Productos (ABM)** en catálogo, el total de **Categorías** y los **Cupones** de descuento activos.
+
+#### Ocultamiento Inteligente en Cero (Zero Noise)
+Si el comercio no posee elementos cargados en esa sección (o el conteo es 0), el badge se oculta automáticamente (`display: none`). La barra permanece limpia, profesional y libre de ruido visual.
+
+#### Diseño Circular & Píldora de Alta Precisión
+Geometría adaptativa: círculo de 20px para números de 1 dígito y píldora expandible con espaciado óptimo para 2 o más dígitos. Incluye borde sutil de contraste, cifras tabulares monoespaciadas y armonía cromática al seleccionar o pasar el cursor (hover / active).
+
+#### Reactividad y Soporte Modo Oscuro
+Actualización instantánea al crear, editar o eliminar registros sin recargar la página. Ajuste automático de paleta (`--zinc` / `--fog`) al alternar entre modo claro y modo oscuro (High Contrast Obsidian).
+
+---
+
+## Diapositiva 31: Estandarización de Iconografía Vectorial (Bootstrap Icons en UI)
+
+> **Hito / Estado:** Etapa 31 · Release 28 de Octubre 2026
+
+Reemplazo integral de emojis nativos dependientes del sistema operativo por iconografía SVG profesional (Bootstrap Icons) en accesos directos, tarjetas de métricas, wizard de setup, modales logísticos y notificaciones toast.
+
+### Componentes e Innovaciones Implementadas:
+
+#### Accesos Directos del Inicio (Grid 5x2)
+Los 10 atajos operativos (Analítica, Pedidos, PickUp, Productos, ABM, Categorías, Diseño, Configuración, Avanzado y Ver Tienda) disponen ahora de íconos vectoriales SVG armonizados con fondo de contraste y micro-animación en hover.
+
+#### Tarjetas de Métricas & Asistente Setup
+Los indicadores clave (Pedidos, Facturado, Ticket Promedio, Productos Activos) y las 8 tarjetas del asistente de configuración guiada exhiben glifos monocromáticos limpios alineados a la identidad visual de la plataforma.
+
+#### Modal Dale!QueVoy & Trazabilidad Multimodal
+Tanto en el dashboard como en la tienda web, los medidores de peso, categorías de bulto, flota multimodal (bicis/motos) y casillas de PIN de seguridad reemplazan los emojis por íconos nítidos independientes del renderizado de cada móvil o navegador.
+
+#### Notificaciones Toast Inteligentes
+Los métodos globales `showToastDash()` y `showToast()` reconocen el tipo de mensaje y reemplazan automáticamente prefijos de emojis por badges SVG vectoriales (éxito, advertencia, error e información), garantizando consistencia estética.
+
+---
+
+## Diapositiva 32: Drag & Drop Táctil y con Mouse en el Tablero Kanban (UX Operativa)
+
+> **Hito / Estado:** Etapa 32 · Release 28 de Octubre 2026
+
+Modernización del flujo operativo de pedidos: transición de estados por arrastre directo entre columnas con soporte dual (ratón en escritorio y gestos táctiles en tablets/móviles), detección de dropzones y feedback háptico.
+
+### Componentes e Innovaciones Implementadas:
+
+#### Arrastre Dual (Desktop Mouse & Tablet Touch)
+Los pedidos pueden moverse tanto con el ratón mediante la API nativa HTML5 Drag & Drop como con el dedo en pantallas táctiles (iPads, tablets de mostrador y smartphones) mediante un clon flotante cinemático (`.kanban-card-touch-clone`) sin bloquear los botones internos ni selectores.
+
+#### Columnas Destino Activas & Zonas Vacías
+Al sobrevolar una columna, se activa un borde punteado con fondo de contraste (`.kanban-cards.drag-over`). Incluso en columnas que no tengan pedidos vigentes, se preserva un área receptora visible (*"Soltá pedidos acá"*) para arrastre inmediato.
+
+#### Feedback Háptico & Auto-scroll Lateral
+En dispositivos móviles y tablets compatibles, la vibración háptica confirma el inicio del arrastre (25ms) y el éxito al soltar el pedido en el nuevo estado ([20, 40, 25]ms). Además, al arrastrar cerca de los extremos, el tablero realiza auto-scroll horizontal suave.
+
+#### Sincronización y Disparador de Comandas
+Cada cambio de columna persiste inmediatamente en Supabase / Google Sheets, notifica con un toast estilizado y, si el estado de destino tiene activo el check de **Imprimible** (ej: *En preparación*), dispara automáticamente la comanda térmica de 58/80mm.
+
+---
+
+## Diapositiva 33: Desacoplamiento de Verificación de Email y Blindaje de Alertas SuperAdmin
+
+> **Hito / Estado:** Etapa 33 · Release 28 de Octubre 2026
+
+Aislamiento estricto entre el reenvío de confirmación de correo para comercios y la alerta de nuevas tiendas a SuperAdmin (daletepido@gmail.com), plantilla transaccional dedicada, eliminación de fallbacks hardcodeados y feedback moderno con toasts no bloqueantes.
+
+### Componentes e Innovaciones Implementadas:
+
+#### Desacoplamiento de Alertas SuperAdmin
+En `api/welcome-email.js`, el disparador `notifyAdminNewAccount` quedó estrictamente restringido a registros genuinos (`type === 'new_registration' || type === 'welcome'`). El reenvío de verificación jamás enviará alertas engañosas de "¡Nueva Cuenta Registrada!" a `daletepido@gmail.com` ni generará falsas alarmas sobre tiendas ya existentes.
+
+#### Plantilla Transaccional getVerificationEmail
+En `api/email-templates.js`, se diseñó la plantilla oficial `getVerificationEmail` con el asunto *"Confirmá tu correo electrónico - Dale! Te Pido"*, enlace directo de verificación de un solo clic (`?verify=true`), tipografía limpia y diseño responsivo adaptado a clientes de correo modernos.
+
+#### Limpieza de Fallbacks & Detección Dinámica
+En `dashboard.html`, se eliminaron los fallbacks residuales que forzaban la tienda 'coquito' ante la ausencia de variables globales. Se introdujeron las funciones `getDashboardStoreId()` y `getDashboardAdminEmail()` que resuelven limpiamente desde URL, sesión y Supabase.
+
+#### Notificaciones Toast UX No Bloqueantes
+Se erradicó el uso del diálogo invasivo `alert()` nativo del navegador, sustituyéndolo por un componente toast (`showToastVerification`) flotante, con desenfoque de fondo (backdrop blur), auto-cierre en 5 segundos y micro-animación en tiempo real.
+
+---
+
+## Diapositiva 34: Control de Catálogo Limpio & Erradicación de Categorías Fantasma en Altas
+
+> **Hito / Estado:** Etapa 34 · Release 28 de Octubre 2026
+
+Resolución integral de precargas automáticas inconsultas de categorías en el registro de tiendas: catálogos 100% en blanco por defecto, casilla de verificación opt-in explícita, y saneamiento total del catálogo de pruebas LicaLic.
+
+### Componentes e Innovaciones Implementadas:
+
+#### Saneamiento Inmediato de LicaLic en Supabase
+Se purgaron de la base de datos las 5 categorías de ferretería inyectadas automáticamente por el antiguo script de registro. La cuenta `store_id: licalic` quedó en estado **100% limpio y en blanco** (0 productos, 0 categorías), lista para pruebas manuales paso a paso sin interferencias.
+
+#### Casilla Opt-in Explícita en Onboarding (alta-usuario.html)
+Se desactivó la ejecución forzada de `seedCategoriesForNewStore`. Ahora se exhibe un control claro: *"Precargar 5 categorías sugeridas para este rubro"*, **desmarcado por defecto**. Solo si el comerciante lo elige activamente se inyectarán sugerencias iniciales.
+
+#### Supresión de Inserciones Silenciosas en Landing
+En `landing.html` se eliminó la inserción automática en segundo plano de categorías dummy (*Productos Destacados, Promociones, Novedades, Catálogo General*). Toda nueva cuenta registrada inicia de forma impecable sin registros no deseados.
+
+#### Generación Asistida Bajo Demanda en Dashboard
+Cuando una tienda tiene 0 categorías, el panel de control despliega un estado vacío intuitivo con accesos a *"Crear Categoría"* manual y *"Generar Categorías Iniciales"* con 1 solo clic, preservando la libertad total del usuario sin imponer datos predefinidos.
+
+---
+
+## Diapositiva 35: Blindaje de Seguridad OWASP & Experiencia de Usuario Premium
+
+> **Hito / Estado:** Etapa 35 · Release 28 de Octubre 2026
+
+Despliegue integral de sanitización universal Anti-XSS, cabeceras HTTP de seguridad estricta en Edge (CSP, HSTS, X-XSS-Protection), honeypot anti-bot en checkout, buscador global Command Palette (Ctrl+K), micro-feedback sonoro sintetizado y suite de cartelería QR para vidrieras y mostradores.
+
+### Componentes e Innovaciones Implementadas:
+
+#### Sanitización Universal Anti-XSS (escapeHTML)
+Implementación de la utilidad centralizada `escapeHTML(str)` en `dashboard.html` y `tienda.html`. Se neutralizó la posibilidad de inyecciones Stored XSS en nombres de clientes, direcciones, notas de pedido y campos de catálogo al renderizar tarjetas Kanban y tablas.
+
+#### Headers Edge CSP, HSTS & Honeypot Anti-Bot
+Configuración en `vercel.json` de cabeceras de máxima protección: *Content-Security-Policy*, *Strict-Transport-Security* (HSTS preload) y *X-XSS-Protection*. En el checkout de la tienda se incorporó un honeypot oculto y debounce de 4s para repeler flooding de bots.
+
+#### Buscador Omnibox Command Palette (Ctrl + K)
+Paleta de comandos flotante accesible vía atajo de teclado `Ctrl + K` o botón en la barra superior. Búsqueda instantánea multi-criterio sobre pedidos (#ID, clientes), productos, cadetes de reparto y acceso directo a todas las vistas operativas del panel.
+
+#### Audio Sintetizado, Hápticos & Kit QR Mostrador
+Micro-interacciones con Web Audio API sintetizada (clicks sutiles y timbre de caja registradora al mover pedidos en Kanban) con botón de muteo y feedback háptico. Acceso directo al generador de cartelería y códigos QR en resolución HD A4/A5 para vidrieras y mostradores.
+
+---
+
+## Diapositiva 36: Tiempo Real Supabase WebSockets, Tracking Público & Optimización WebP
+
+> **Hito / Estado:** Etapa 36 · Release 28 de Octubre 2026
+
+Despliegue de sincronización bidireccional en vivo para el Dashboard del comercio, pantalla pública de seguimiento en tiempo real para el comprador final y optimización de medios con compresión CDN al vuelo.
+
+### Componentes e Innovaciones Implementadas:
+
+#### Sincronización Bidireccional en Vivo (supabase.channel)
+Conexión WebSocket activa en `dashboard.html` con filtrado por tienda. Cuando un repartidor de Dale!QueVoy valida el PIN de 4 dígitos o se actualiza un pedido en Supabase, la tarjeta se mueve sola de columna en el Kanban con micro-animación elástica y feedback auditivo, sin requerir recargar la pantalla (F5).
+
+#### Tracking Público para Compradores (tracking.html)
+Pantalla pública ultra-rápida y adaptada a móviles con stepper interactivo de 4 etapas (Recibido ➔ En Preparación ➔ En Camino ➔ Entregado). Exhibe el código PIN seguro de entrega, detalle de productos y botón de WhatsApp, reduciendo drásticamente las consultas de "¿Dónde viene mi pedido?".
+
+#### Compresión Dinámica WebP & Core Web Vitals
+Optimización al vuelo de imágenes en `tienda.html` mediante parámetros dinámicos de CDN (`auto=format&fit=crop&q=80`, Cloudinary `f_webp,q_auto` y Supabase render), combinados con dimensiones fijas, `loading="lazy"` y `decoding="async"` para acelerar la carga en redes móviles 4G/3G.
+
+#### Botón "Copiar Tracking" & Link en WhatsApp
+Integración de botón de un clic para copiar el enlace de seguimiento desde las tarjetas del Kanban y la tabla de pedidos del Dashboard. Además, el checkout de la tienda genera e incluye automáticamente la URL directa de tracking en el mensaje enviado por WhatsApp.
+
+---
+
+## Diapositiva 37: Alineación Comercial: Pausa Estratégica de Dale!QueVoy, Tickets de Pedido Interno & SEO WhatsApp
+
+> **Hito / Estado:** Etapa 37 · Release 28 de Octubre 2026
+
+Ajuste de abordaje comercial centrado en la simpleza: resguardo de visibilidad de Dale!QueVoy mientras evoluciona su red, evolución del ticket a "Pedido Interno" para preparación y reposición de proveedores, OpenGraph para WhatsApp y Core Web Vitals.
+
+### Componentes e Innovaciones Implementadas:
+
+#### Pausa Estratégica de Dale!QueVoy
+Ocultamiento proactivo de botones y referencias a la red logística en la landing page y el Dashboard. Evita generar dudas en comerciantes potenciales mientras la infraestructura de cadetes continúa su maduración técnica tras bambalinas.
+
+#### Tickets de "Pedido Interno" (Uso Mostrador / Proveedores)
+Reorientación de la comanda térmica tradicional: ahora llamada **"Pedido Interno"**, útil no sólo para cocina o empaque, sino como recordatorio físico tipo post-it para reponer mercadería agotada ante distribuidores y proveedores.
+
+#### SEO Técnico, OpenGraph & Rich Previews en WhatsApp
+Implementación de meta tags OpenGraph completos (`og:title`, `og:description`, `og:image`, `og:url`) y Twitter Card para que los links compartidos por WhatsApp o redes muestren previews atractivos y profesionales.
+
+#### Core Web Vitals & Optimización de Medios
+Atributos `loading="lazy"`, `decoding="async"` y dimensiones explícitas en todos los logos de tiendas demo, jAIme y navbar de la landing page, eliminando Cumulative Layout Shift (CLS) y reduciendo el consumo de datos móviles.
+
+---
+
+## Diapositiva 38: Readiness Pre-Campaña: Embudo Directo de Alta, Vault Cloud AES-256-GCM & Blindaje de Tiendas Demo
+
+> **Hito / Estado:** Etapa 38 · Release 29 de Octubre 2026
+
+Optimización integral anti-fricción para campañas de adquisición en redes sociales: apertura directa del wizard de creación, sincronización multi-dispositivo cifrada de pedidos/cadetes/tracking y bloqueo de edición no autorizada en los 7 catálogos de muestra.
+
+### Componentes e Innovaciones Implementadas:
+
+#### Embudo de Alta sin Fricción (CTAs a Registro)
+Todos los botones **"Crear Catálogo Gratis"** en `landing.html` y la vista inicial de `alta-usuario.html` abren de inmediato el Paso 1 del creador de comercio y emiten un token JWT HMAC-SHA256 real al finalizar.
+
+#### Vault Cloud AES-256-GCM (Pedidos, Kanban & Tracking)
+Sincronización multi-dispositivo cifrada en `/api/auth` y `/api/security` para recepción de pedidos en el Kanban, persistencia de cambios de estado, gestión de repartidores y seguimiento en vivo cada 8s en `tracking.html`.
+
+#### Sesión Criptográfica en Asistente IA Gemini
+Inyección automática del header `x-store-session` en todas las peticiones a `/api/gemini` desde `dashboard.html`, habilitando la asistencia por IA desde el minuto cero para comercios nuevos.
+
+#### Blindaje de las 7 Tiendas Demo & Redirección 301
+Protección con hash criptográfico `salt:sha256` en `store_auth` para las 7 tiendas demo públicas (`bighouse`, `noutacc`, `ferre-now`, etc.) y redirección 301 en `/api/store` ante cuentas dadas de baja.
 
 ---
 

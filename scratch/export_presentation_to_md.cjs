@@ -28,8 +28,8 @@ function cleanText(str) {
 
 let md = `# Dale! Te Pido (Clickapp) — Evolución Integral de Plataforma & Registro de Hitos Técnicos\n\n`;
 md += `**Documento de Fuente Optimizado para Google NotebookLM**  \n`;
-md += `*Fecha de Corte:* 27 de Octubre de 2026 · Versión de Plataforma: v4.10  \n`;
-md += `*Resumen:* Registro maestro cronológico y técnico de la evolución de Dale! Te Pido (Clickapp) a lo largo de sus 27 etapas correlativas. Cubre arquitectura cloud serverless, persistencia relacional en Supabase, seguridad bancaria HMAC & RLS, suite integral de comercio (Storefront + Dashboard + SuperAdmin), logística multimodal Dale!QueVoy, video commerce y sincronización en tiempo real.\n\n`;
+md += `*Fecha de Corte:* 29 de Octubre de 2026 · Versión de Plataforma: v4.21 · Operatividad Global: 98.5% (Ready for Paid Social Ads)  \n`;
+md += `*Resumen:* Registro maestro cronológico, arquitectónico y técnico de la evolución de Dale! Te Pido (Clickapp) a lo largo de sus 38 etapas correlativas. Cubre arquitectura cloud serverless en Vercel, persistencia relacional en Supabase (` + '`store_auth`' + `, ` + '`store_config`' + `, ` + '`store_products`' + `, ` + '`store_orders`' + `, ` + '`pickup_requests`' + `), seguridad bancaria HMAC-SHA256 + RLS + Bóveda Criptográfica AES-256-GCM, suite integral de comercio multi-rubro (Storefront + Dashboard + SuperAdmin + Tracking Público), logística multimodal Dale!QueVoy, video commerce, onboarding sin fricción e inteligencia financiera.\n\n`;
 md += `---\n\n`;
 
 const slideRegex = /<section\s+class="slide[^"]*"[^>]*id="([^"]*)"[^>]*>([\s\S]*?)<\/section>/gi;
