@@ -389,6 +389,16 @@ ${masterContextMd}
 `;
 fs.writeFileSync(outputLlmsPath, llmsContent, 'utf8');
 
+// Mirror into public/ and Clickapp-main/ so Vercel static serving always has the latest version
+['public', 'Clickapp-main', 'Clickapp'].forEach(dir => {
+  const dirPath = path.join(__dirname, '..', dir);
+  if (fs.existsSync(dirPath)) {
+    fs.writeFileSync(path.join(dirPath, 'presentacion-evolucion-clickapp.md'), md, 'utf8');
+    fs.writeFileSync(path.join(dirPath, 'contexto-ia.html'), semanticHtml, 'utf8');
+    fs.writeFileSync(path.join(dirPath, 'llms.txt'), llmsContent, 'utf8');
+  }
+});
+
 console.log(`Exportación completada exitosamente:`);
 console.log(`- Markdown: ${outputMdPath}`);
 console.log(`- HTML Semántico para URL IA (NotebookLM / Gemini): ${outputHtmlPath}`);
