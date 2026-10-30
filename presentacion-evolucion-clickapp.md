@@ -876,3 +876,26 @@ Protección con hash criptográfico `salt:sha256` en `store_auth` para las 7 tie
 
 ---
 
+## Diapositiva 39: Sistema Anti-Pérdida de Prospectos: Setup Opal & Meta DM (Instagram)
+
+> **Hito / Estado:** Etapa 39 · Release 30 de Octubre 2026
+
+Embudo automatizado de captura y bienvenida en caliente para prospectos en Instagram: respuesta inmediata transparente ante nuevos seguidores y palabras clave ("DEMO", "INFO", "PRUEBA"), con filtro anti-spam de ejecución única y derivación humana prioritaria.
+
+### Componentes e Innovaciones Implementadas:
+
+#### Triggers Inteligentes & Filtro Anti-Spam
+Disparo en tiempo real mediante Opal / Meta Business Suite al seguir la cuenta o comentar `DEMO`, `INFO` o `PRUEBA` en publicaciones. Condición mandataria de **ejecución única por usuario** para proteger la reputación y evitar spam.
+
+#### Copywriting Transparente & Enlace Limpio
+Mensaje honesto que declara explícitamente su naturaleza automática, resalta la propuesta de valor (0% comisiones, catálogo en 5 minutos, comandas a WhatsApp) y entrega link directo sin intermediarios (`daletepido.com.ar`) para activar 15 días gratis.
+
+#### Handover Humano Inmediato (Pausa de Bot)
+Trigger secundario: si el prospecto responde con una consulta o duda, el bot se suspende automáticamente y asigna la etiqueta **"Atención Manual / Lead Calificado"** en la bandeja de entrada para intervención humana sin interferencias.
+
+#### Protocolo Operativo & SLA de Cierre Comercial
+Monitoreo diario de la bandeja en horarios pico (10-14 hs y 18-22 hs), SLA de respuesta menor a 15 minutos con guión de asesoramiento personalizado por rubro e integración con el módulo `super-admin-prospectos.html`.
+
+---
+
+
